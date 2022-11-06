@@ -12,7 +12,8 @@
     "homepage": "https://github.com/red-jasmine/support",
     "keywords": ["Laravel", "Support"],
     "require": {
-        "illuminate/support": "~9"
+        "illuminate/support": "~9",
+        "liushoukun/laravel-project-tools": "^1.0.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",
