@@ -37,6 +37,10 @@
             "aliases": {
                 "Support": "RedJasmine\\Support\\Facades\\Support"
             }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     }
 }
