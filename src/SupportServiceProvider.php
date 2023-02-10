@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Support;
 
+
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Support\Helpers\DomainRoute;
 
 class SupportServiceProvider extends ServiceProvider
 {
@@ -11,17 +13,19 @@ class SupportServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(): void
+    public function boot() : void
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-         $this->loadRoutesFrom(__DIR__.'/Routes/admin.php');
+        $this->loadRoutesFrom(__DIR__ . '/Routes/admin.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        DomainRoute::boot();
     }
 
     /**
@@ -29,9 +33,9 @@ class SupportServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(): void
+    public function register() : void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/support.php', 'support');
+        $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'support');
 
         // Register the service the package provides.
         $this->app->singleton('support', function ($app) {
@@ -46,7 +50,7 @@ class SupportServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['support'];
+        return [ 'support' ];
     }
 
     /**
@@ -54,12 +58,12 @@ class SupportServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function bootForConsole(): void
+    protected function bootForConsole() : void
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/support.php' => config_path('support.php'),
-        ], 'support.config');
+                             __DIR__ . '/../config/support.php' => config_path('support.php'),
+                         ], 'support.config');
 
         // Publishing the views.
         /*$this->publishes([
