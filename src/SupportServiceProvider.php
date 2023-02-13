@@ -4,6 +4,7 @@ namespace RedJasmine\Support;
 
 
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Helpers\DomainRoute;
 
 class SupportServiceProvider extends ServiceProvider
@@ -17,8 +18,8 @@ class SupportServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/Routes/admin.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/admin/admin.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -26,6 +27,10 @@ class SupportServiceProvider extends ServiceProvider
         }
 
         DomainRoute::boot();
+
+        Blueprint::boot();
+
+
     }
 
     /**
