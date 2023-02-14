@@ -4,6 +4,7 @@ namespace RedJasmine\Support;
 
 
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Support\Helpers\Admin\AdminProvider;
 use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Helpers\DomainRoute;
 
@@ -30,6 +31,8 @@ class SupportServiceProvider extends ServiceProvider
 
         Blueprint::boot();
 
+
+        AdminProvider::boot();
 
     }
 

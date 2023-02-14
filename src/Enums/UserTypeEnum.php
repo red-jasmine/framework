@@ -20,4 +20,19 @@ enum UserTypeEnum: string
     case SUPPLIER = 'supplier'; // 供应商
 
 
+    /**
+     * @return array
+     */
+    public static function options() : array
+    {
+        return [
+            self::USER->value     => '用户',
+            self::ADMIN->value    => '管理员',
+            self::SELLER->value   => '卖家',
+            self::SYSTEM->value   => '系统',
+            self::GUEST->value    => '游客',
+            self::SUPPLIER->value => '供应商',
+        ];
+
+    }
 }
