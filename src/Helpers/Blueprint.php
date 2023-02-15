@@ -21,6 +21,11 @@ class Blueprint
             $this->string('updater_type', 10)->nullable()->comment('更新者类型');
             $this->unsignedBigInteger('updater_uid')->nullable()->comment('更新者UID');
         });
+
+        \Illuminate\Database\Schema\Blueprint::macro('user', function (string $name = 'user', string $comment = '用户') {
+            $this->string("{$name}_type", 10)->nullable()->comment("{$comment}类型");
+            $this->unsignedBigInteger("{$name}_id")->nullable()->comment("{$comment}UID");
+        });
     }
 
 
