@@ -7,6 +7,8 @@ namespace RedJasmine\Support\Enums;
  */
 enum UserType: string
 {
+    case  NULL = '';
+
     case USER = 'user'; // 用户
 
     case SHOP = 'shop'; // 商家
