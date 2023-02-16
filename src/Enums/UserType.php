@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Enums;
 /**
  * 用户类型
  */
-enum UserTypeEnum: string
+enum UserType: string
 {
     case USER = 'user'; // 用户
 
