@@ -9,9 +9,9 @@ enum UserType: string
 {
     case USER = 'user'; // 用户
 
-    case ADMIN = 'admin'; // 管理员
+    case SHOP = 'shop'; // 商家
 
-    case SELLER = 'seller'; // 卖家
+    case ADMIN = 'admin'; // 管理员
 
     case SYSTEM = 'system'; // 系统
 
@@ -28,10 +28,10 @@ enum UserType: string
         return [
             self::USER->value     => '用户',
             self::ADMIN->value    => '管理员',
-            self::SELLER->value   => '卖家',
+            self::SHOP->value     => '商家',
             self::SYSTEM->value   => '系统',
-            self::GUEST->value    => '游客',
             self::SUPPLIER->value => '供应商',
+            self::GUEST->value    => '游客',
         ];
 
     }

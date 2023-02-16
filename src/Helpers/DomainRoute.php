@@ -12,6 +12,7 @@ class DomainRoute
 
     public static function boot() : void
     {
+        // 是否开启子域名
         self::$subDomain = config('app.sub_domain', false);
 
         if (self::$subDomain) {
@@ -25,15 +26,18 @@ class DomainRoute
     }
 
     /**
-     * 域名
+     * 设置域名
      * @param string|null $domain
-     * @return null|string
+     * @param bool $isApi
+     * @return string|null
      */
-    public static function domain(string $domain = null) : ?string
+    public static function domain(string $domain = null, bool $isApi = false) : ?string
     {
+        // 是否开启子域名
         self::$subDomain = config('app.sub_domain', false);
         if (self::$subDomain) {
             if (filled($domain)) {
+                $domain = $isApi ? ('api.' . $domain) : $domain;
                 return $domain . '.{sld}.{tld}';
             } else {
                 return '{sld}.{tld}';
@@ -41,6 +45,38 @@ class DomainRoute
         } else {
             return null;
         }
+    }
+
+
+    /**
+     * 路由前缀
+     * @param string $module
+     * @param string|null $guard
+     * @param bool $isApi
+     * @return string
+     */
+    public static function prefix(string $module, string $guard = null, bool $isApi = false) : string
+    {
+        $prefix = $isApi ? 'api/' : '';
+        $prefix .= $guard;
+        return $prefix . '/' . $module;
+    }
+
+
+    public static function adminWebPrefix(string $module) : string
+    {
+        return config('admin.route.prefix') . '/' . $module;
+
+    }
+
+    public static function userApiPrefix(string $module) : string
+    {
+        return self::prefix($module, 'user', true);
+    }
+
+    public static function shopApiPrefix(string $module) : string
+    {
+        return self::prefix($module, 'shop', true);
     }
 
 }
