@@ -9,7 +9,7 @@ Admin::routes();
 
 Route::group([
                  'domain'     => DomainRoute::domain('admin'),
-                 'prefix'     => DomainRoute::adminWebPrefix('user'),
+                 'prefix'     => DomainRoute::adminWebPrefix(),
                  'namespace'  => 'RedJasmine\Support\Http\Controllers\Admin',
                  'middleware' => config('admin.route.middleware'),
              ], function (Router $router) {

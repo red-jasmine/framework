@@ -63,10 +63,12 @@ class DomainRoute
     }
 
 
-    public static function adminWebPrefix(string $module) : string
+    public static function adminWebPrefix(string $module = null) : string
     {
-        return config('admin.route.prefix') . '/' . $module;
-
+        if (filled($module)) {
+            return config('admin.route.prefix') . '/' . $module;
+        }
+        return config('admin.route.prefix');
     }
 
     public static function userApiPrefix(string $module) : string
