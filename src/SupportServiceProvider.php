@@ -31,7 +31,6 @@ class SupportServiceProvider extends ServiceProvider
 
         Blueprint::boot();
 
-
         AdminProvider::boot();
 
     }
@@ -49,6 +48,7 @@ class SupportServiceProvider extends ServiceProvider
         $this->app->singleton('support', function ($app) {
             return new Support;
         });
+        DomainRoute::register();
     }
 
     /**

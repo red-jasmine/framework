@@ -8,7 +8,7 @@ use RedJasmine\Support\Helpers\DomainRoute;
 Admin::routes();
 
 Route::group([
-                 'domain'     => DomainRoute::domain('admin'),
+                 'domain'     => DomainRoute::adminDomain(),
                  'prefix'     => DomainRoute::adminWebPrefix(),
                  'namespace'  => 'RedJasmine\Support\Http\Controllers\Admin',
                  'middleware' => config('admin.route.middleware'),
