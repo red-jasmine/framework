@@ -1,6 +1,6 @@
 {
     "name": "red-jasmine/support",
-    "description": ":package_description",
+    "description": "red-jasmine support",
     "license": "MIT",
     "authors": [
         {
@@ -12,7 +12,9 @@
     "homepage": "https://github.com/red-jasmine/support",
     "keywords": ["Laravel", "Support"],
     "require": {
-        "liushoukun/laravel-project-tools": "^1.0.x-dev"
+        "php": "^8.1",
+        "liushoukun/laravel-project-tools": "^1.0.x-dev",
+        "dcat/laravel-admin": "2.*"
     },
     "require-dev": {
     },
