@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Services\Contracts;
+namespace RedJasmine\Support\Contracts;
 
 /**
  * 用户协议
