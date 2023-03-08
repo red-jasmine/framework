@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use RedJasmine\Support\Http\Middlewares\DomainRouteMiddleware;
+
 
 class DomainRoute
 {
