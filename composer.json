@@ -1,6 +1,6 @@
 {
     "name": "red-jasmine/address",
-    "description": ":package_description",
+    "description": "address service",
     "license": "MIT",
     "authors": [
         {
@@ -12,11 +12,10 @@
     "homepage": "https://github.com/red-jasmine/address",
     "keywords": ["Laravel", "Address"],
     "require": {
-        "illuminate/support": "~9"
+        "red-jasmine/support": "1.0.x-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.0",
-        "orchestra/testbench": "~7"
+
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +35,10 @@
             "aliases": {
                 "Address": "RedJasmine\\Address\\Facades\\Address"
             }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     }
 }
