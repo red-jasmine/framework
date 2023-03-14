@@ -1,0 +1,50 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up()
+    {
+        Schema::create('address', function (Blueprint $table) {
+            $table->id();
+            $table->string('owner_type', 8)->comment('所属者类型');
+            $table->unsignedBigInteger('owner_uid')->comment('所属者UID');
+
+            $table->string('contacts', 30)->nullable()->comment('联系人');
+            $table->string('mobile', 20)->nullable()->comment('手机号');
+
+            $table->unsignedBigInteger('country_id')->nullable()->comment('国家');
+            $table->unsignedBigInteger('province_id')->nullable()->comment('省份');
+            $table->unsignedBigInteger('city_id')->nullable()->comment('城市');
+            $table->unsignedBigInteger('district_id')->nullable()->comment('县市区');
+            $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道');
+            $table->string('country',20)->nullable()->comment('国家');
+            $table->string('province',20)->nullable()->comment('省份');
+            $table->string('city',30)->nullable()->comment('城市');
+            $table->string('district',40)->nullable()->comment('县市区');
+            $table->string('street',50)->nullable()->comment('乡镇街道');
+            $table->string('address')->nullable()->comment('详细地址');
+            $table->string('zip_code', 10)->nullable()->comment('邮政编码');
+
+
+            $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
+            $table->unsignedTinyInteger('sort')->default(0)->comment('排序');
+
+            $table->string('creator_type', 8)->nullable()->comment('创建者类型');
+            $table->unsignedBigInteger('creator_uid')->nullable()->comment('创建者ID');
+            $table->string('updater_type', 8)->nullable()->comment('更新者类型');
+            $table->unsignedBigInteger('updater_uid')->nullable()->comment('更新者UID');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->comment('地址表');
+
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('address');
+    }
+};
