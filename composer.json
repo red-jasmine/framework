@@ -12,7 +12,8 @@
     "homepage": "https://github.com/red-jasmine/address",
     "keywords": ["Laravel", "Address"],
     "require": {
-        "red-jasmine/support": "1.0.x-dev"
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/region": "1.0.x-dev"
     },
     "require-dev": {
 

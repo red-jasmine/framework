@@ -4,6 +4,9 @@ namespace RedJasmine\Address\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @mixin \RedJasmine\Address\Address
+ */
 class Address extends Facade
 {
     /**

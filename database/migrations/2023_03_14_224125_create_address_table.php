@@ -15,19 +15,21 @@ return new class extends Migration {
             $table->string('contacts', 30)->nullable()->comment('联系人');
             $table->string('mobile', 20)->nullable()->comment('手机号');
 
-            $table->unsignedBigInteger('country_id')->nullable()->comment('国家');
-            $table->unsignedBigInteger('province_id')->nullable()->comment('省份');
-            $table->unsignedBigInteger('city_id')->nullable()->comment('城市');
-            $table->unsignedBigInteger('district_id')->nullable()->comment('县市区');
-            $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道');
-            $table->string('country',20)->nullable()->comment('国家');
-            $table->string('province',20)->nullable()->comment('省份');
-            $table->string('city',30)->nullable()->comment('城市');
-            $table->string('district',40)->nullable()->comment('县市区');
-            $table->string('street',50)->nullable()->comment('乡镇街道');
+            $table->unsignedBigInteger('country_id')->nullable()->comment('国家ID');
+            $table->unsignedBigInteger('province_id')->nullable()->comment('省份ID');
+            $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
+            $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
+            $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
+
+            $table->string('country', 20)->nullable()->comment('国家');
+            $table->string('province', 20)->nullable()->comment('省份');
+            $table->string('city', 30)->nullable()->comment('城市');
+            $table->string('district', 40)->nullable()->comment('区县');
+            $table->string('street', 50)->nullable()->comment('乡镇街道');
             $table->string('address')->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
-
+            $table->string('tag', 10)->nullable()->comment('标签');
+            $table->string('remarks')->nullable()->comment('备注');
 
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->unsignedTinyInteger('sort')->default(0)->comment('排序');
