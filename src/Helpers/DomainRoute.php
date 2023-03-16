@@ -54,7 +54,7 @@ class DomainRoute
      * @param Closure $next
      * @return Response
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next) : Response
     {
 
         try {
