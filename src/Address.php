@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\Address\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
+use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Region\Facades\Region;
 use RedJasmine\Support\Contracts\User;
 
@@ -57,8 +58,9 @@ class Address
         // 基础信息验证
         $data = $this->validator($data);
         // 验证省份
-        $data                  = $this->regionValidate($data, $validateLevel);
-        $address               = Models\Address::findOrFail($id);
+        $data    = $this->regionValidate($data, $validateLevel);
+        $address = Models\Address::findOrFail($id);
+
         $address->updater_type = $updater->getUserType();
         $address->updater_uid  = $updater->getUID();
         $address->fill($data);
@@ -66,6 +68,13 @@ class Address
         return $address;
     }
 
+
+    /**
+     * 验证区域
+     * @param array $data
+     * @param AddressValidateLevel $validateLevel
+     * @return array
+     */
     public function regionValidate(array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : array
     {
 
@@ -74,28 +83,28 @@ class Address
                 'field'           => 'province_id',
                 'name'            => '省份',
                 'parent_id_field' => '',
-                'level'           => 0,
+                'level'           => RegionLevel::PROVINCE->value,
                 'validate_level'  => AddressValidateLevel::PROVINCE,
             ],
             [
                 'field'           => 'city_id',
                 'name'            => '城市',
                 'parent_id_field' => 'province_id',
-                'level'           => 1,
+                'level'           => RegionLevel::CITY->value,
                 'validate_level'  => AddressValidateLevel::CITY,
             ],
             [
                 'field'           => 'district_id',
                 'name'            => '区|县',
                 'parent_id_field' => 'city_id',
-                'level'           => 2,
+                'level'           => RegionLevel::DISTRICT->value,
                 'validate_level'  => AddressValidateLevel::DISTRICT,
             ],
             [
                 'field'           => 'street_id',
                 'name'            => '乡镇街道',
                 'parent_id_field' => 'district_id',
-                'level'           => 3,
+                'level'           => RegionLevel::STREET->value,
                 'validate_level'  => AddressValidateLevel::STREET,
             ],
         ];
@@ -122,8 +131,10 @@ class Address
                 if (filled($rule['parent_id_field'] ?? null) && $region->parent_id !== (int)$data[$rule['parent_id_field']]) {
                     throw new AddressException("{$rule['name']} 关系不一致");
                 }
-
                 $data[Str::replace('_id', '', $rule['field'])] = $region->full_name;
+            } else {
+                $data[$rule['field']]                          = null;
+                $data[Str::replace('_id', '', $rule['field'])] = '';
             }
         }
 

@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->string('remarks')->nullable()->comment('备注');
 
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
-            $table->unsignedTinyInteger('sort')->default(0)->comment('排序');
+            $table->integer('sort')->default(0)->comment('排序');
 
             $table->string('creator_type', 8)->nullable()->comment('创建者类型');
             $table->unsignedBigInteger('creator_uid')->nullable()->comment('创建者ID');
