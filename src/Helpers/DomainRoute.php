@@ -52,9 +52,8 @@ class DomainRoute
      * 中间件处理
      * @param Request $request
      * @param Closure $next
-     * @return Response
      */
-    public function handle(Request $request, Closure $next) : Response
+    public function handle(Request $request, Closure $next)
     {
 
         try {
