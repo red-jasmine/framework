@@ -34,8 +34,8 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
 
-            $table->string('creator_type')->nullable()->comment('创建者类型');
-            $table->string('creator_uid')->nullable()->comment('创建者ID');
+            $table->string('creator_type')->comment('创建者类型');
+            $table->string('creator_uid')->comment('创建者ID');
             $table->string('updater_type')->nullable()->comment('更新者类型');
             $table->string('updater_uid')->nullable()->comment('更新者UID');
             $table->timestamps();
