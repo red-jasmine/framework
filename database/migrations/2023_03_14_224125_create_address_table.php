@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('address', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_type', 8)->comment('所属者类型');
-            $table->unsignedBigInteger('owner_uid')->comment('所属者UID');
+            $table->string('owner_type')->comment('所属者类型');
+            $table->string('owner_uid')->comment('所属者UID');
 
             $table->string('contacts', 30)->nullable()->comment('联系人');
             $table->string('mobile', 20)->nullable()->comment('手机号');
@@ -34,10 +34,10 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
 
-            $table->string('creator_type', 8)->nullable()->comment('创建者类型');
-            $table->unsignedBigInteger('creator_uid')->nullable()->comment('创建者ID');
-            $table->string('updater_type', 8)->nullable()->comment('更新者类型');
-            $table->unsignedBigInteger('updater_uid')->nullable()->comment('更新者UID');
+            $table->string('creator_type')->nullable()->comment('创建者类型');
+            $table->string('creator_uid')->nullable()->comment('创建者ID');
+            $table->string('updater_type')->nullable()->comment('更新者类型');
+            $table->string('updater_uid')->nullable()->comment('更新者UID');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('地址表');
