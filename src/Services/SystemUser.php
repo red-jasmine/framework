@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Services;
 
-use Liushoukun\LaravelProjectTools\Contracts\User;
+use RedJasmine\Support\Contracts\User;
 use RedJasmine\Support\Enums\UserType;
 
 class SystemUser implements User
@@ -24,10 +24,7 @@ class SystemUser implements User
         return $this->uid;
     }
 
-    public function getOwner() : User|null
-    {
-        return null;
-    }
+
 
 
 }
