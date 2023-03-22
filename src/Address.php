@@ -131,7 +131,7 @@ class Address
                 if (filled($rule['parent_id_field'] ?? null) && $region->parent_id !== (int)$data[$rule['parent_id_field']]) {
                     throw new AddressException("{$rule['name']} 关系不一致");
                 }
-                $data[Str::replace('_id', '', $rule['field'])] = $region->full_name;
+                $data[Str::replace('_id', '', $rule['field'])] = $region->name;
             } else {
                 $data[$rule['field']]                          = null;
                 $data[Str::replace('_id', '', $rule['field'])] = '';
