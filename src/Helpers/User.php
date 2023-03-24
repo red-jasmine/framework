@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Support\Helpers;
 
-class User implements \RedJasmine\Support\Contracts\User
+use RedJasmine\Support\Contracts\UserInterface;
+
+class User implements UserInterface
 {
     public function __construct(public string $userType, public int $uid)
     {
@@ -19,9 +21,14 @@ class User implements \RedJasmine\Support\Contracts\User
         return $this->uid;
     }
 
-    public function getOwner() : static|null
+    public function getNickname() : ?string
     {
-        return null;
+        return  '';
+    }
+
+    public function getAvatar() : ?string
+    {
+        return  '';
     }
 
 

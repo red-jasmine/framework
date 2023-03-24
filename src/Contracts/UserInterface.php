@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Contracts;
 /**
  * 用户协议
  */
-interface User
+interface UserInterface
 {
     /**
      * 用户类型
@@ -18,6 +18,20 @@ interface User
      * @return int|string
      */
     public function getUID() : string|int;
+
+
+    /**
+     * 获取昵称
+     * @return string|null
+     */
+    public function getNickname() : ?string;
+
+
+    /**
+     * 获取头像
+     * @return string|null
+     */
+    public function getAvatar() : ?string;
 
 
 }

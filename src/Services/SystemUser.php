@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Support\Services;
 
-use RedJasmine\Support\Contracts\User;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Enums\UserType;
 
-class SystemUser implements User
+class SystemUser implements UserInterface
 {
 
 
@@ -24,7 +24,15 @@ class SystemUser implements User
         return $this->uid;
     }
 
+    public function getNickname() : ?string
+    {
+        return '';
+    }
 
+    public function getAvatar() : ?string
+    {
+        return null;
+    }
 
 
 }
