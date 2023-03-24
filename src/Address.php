@@ -9,7 +9,7 @@ use RedJasmine\Address\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Region\Facades\Region;
-use RedJasmine\Support\Contracts\User;
+use RedJasmine\Support\Contracts\UserInterface as User;
 
 class Address
 {
