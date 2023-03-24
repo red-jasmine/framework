@@ -74,6 +74,7 @@ class Address
      * @param array $data
      * @param AddressValidateLevel $validateLevel
      * @return array
+     * @throws AddressException
      */
     public function regionValidate(array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : array
     {
