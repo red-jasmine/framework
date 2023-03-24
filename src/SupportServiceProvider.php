@@ -6,6 +6,7 @@ namespace RedJasmine\Support;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Helpers\DomainRoute;
+use RedJasmine\Support\Services\SqlLogService;
 
 class SupportServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,8 @@ class SupportServiceProvider extends ServiceProvider
 
         DomainRoute::boot();
 
+        SqlLogService::boot();
+
     }
 
     /**
@@ -37,7 +40,7 @@ class SupportServiceProvider extends ServiceProvider
      */
     public function register() : void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'support');
+        $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'red-jasmine.support');
 
         // Register the service the package provides.
         $this->app->singleton('support', function ($app) {

@@ -5,7 +5,6 @@ namespace RedJasmine\Support\Contracts;
 interface ClientInterface
 {
 
-
     /**
      * 请求IP
      * @return string|null
@@ -18,7 +17,6 @@ interface ClientInterface
      */
     public function getUserAgent() : ?string;
 
-
     /**
      * SDK 信息
      * @return string|null
@@ -30,5 +28,12 @@ interface ClientInterface
      * @return string|null
      */
     public function getVersion() : ?string;
+
+
+    /**
+     * 其他信息
+     * @return array
+     */
+    public function others() : array;
 
 }

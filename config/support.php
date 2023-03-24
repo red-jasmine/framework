@@ -2,4 +2,9 @@
 
 return [
     //
+
+
+    'sql-log' => [
+        'channel' => 'sql'
+    ],
 ];
