@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('address', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_type')->comment('所属者类型');
-            $table->string('owner_uid')->comment('所属者UID');
+            $table->string('owner_type',20)->comment('所属者类型');
+            $table->string('owner_uid',64)->comment('所属者UID');
 
             $table->string('contacts', 30)->nullable()->comment('联系人');
             $table->string('mobile', 20)->nullable()->comment('手机号');
