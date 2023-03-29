@@ -12,9 +12,10 @@ return new class extends Migration {
             $table->string('owner_type',20)->comment('所属者类型');
             $table->string('owner_uid',64)->comment('所属者UID');
 
-            $table->string('contacts', 30)->nullable()->comment('联系人');
-            $table->string('mobile', 20)->nullable()->comment('手机号');
 
+            $table->string('contacts', 30)->nullable()->comment('联系人');
+            $table->string('mobile')->nullable()->comment('手机');
+            $table->string('phone')->nullable()->comment('电话');
             $table->unsignedBigInteger('country_id')->nullable()->comment('国家ID');
             $table->unsignedBigInteger('province_id')->nullable()->comment('省份ID');
             $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
@@ -26,8 +27,13 @@ return new class extends Migration {
             $table->string('city', 30)->nullable()->comment('城市');
             $table->string('district', 40)->nullable()->comment('区县');
             $table->string('street', 50)->nullable()->comment('乡镇街道');
+
             $table->string('address')->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
+            $table->decimal('lng', 13, 10)->nullable()->comment('经度');
+            $table->decimal('lat', 13, 10)->nullable()->comment('纬度');
+
+
             $table->string('tag', 10)->nullable()->comment('标签');
             $table->string('remarks')->nullable()->comment('备注');
 
