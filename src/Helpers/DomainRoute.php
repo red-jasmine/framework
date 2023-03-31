@@ -96,7 +96,7 @@ class DomainRoute
         return self::domain('admin', $isApi);
     }
 
-    public static function adminWebPrefix(string $module = null) : string
+    public static function adminWebPrefix(string $module = null) : ?string
     {
         if (filled($module)) {
             return config('admin.route.prefix') . '/' . $module;
