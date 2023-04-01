@@ -2,9 +2,10 @@
 
 namespace RedJasmine\Support\Contracts;
 
-interface ClientInterface
-{
+use Illuminate\Contracts\Support\Arrayable;
 
+interface ClientInterface extends Arrayable
+{
     /**
      * 请求IP
      * @return string|null
@@ -21,7 +22,7 @@ interface ClientInterface
      * SDK 信息
      * @return string|null
      */
-    public function getSdkInfo() : ?string;
+    public function getSdk() : ?string;
 
     /**
      * 客户端版本
@@ -29,6 +30,17 @@ interface ClientInterface
      */
     public function getVersion() : ?string;
 
+    /**
+     * 来源
+     * @return string|null
+     */
+    public function getReferer() : ?string;
+
+    /**
+     * page or url
+     * @return string|null
+     */
+    public function getUrl() : ?string;
 
     /**
      * 其他信息
