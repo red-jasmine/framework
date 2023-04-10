@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Helpers;
 use Illuminate\Http\Request;
 use RedJasmine\Support\Contracts\ClientInterface;
 
-class Client implements ClientInterface
+class ClientObjectBuilder implements ClientInterface
 {
     public function __construct(public Request $request)
     {
