@@ -2,24 +2,30 @@
 
 namespace RedJasmine\Support\Http\Controllers;
 
-use RedJasmine\Support\Services\Contracts\User;
+
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Contracts\UserInterface;
 
 trait UserOwnerTools
 {
     /**
      * 当前所属人
-     * @return null|User
+     * @return UserInterface|null
      */
-    public function getOwner() : ?User
+    public function getOwner() : ?UserInterface
     {
-        return request()->user()->owner() ?? request()->user();
+        if ($this->getUser() instanceof BelongsToOwnerInterface) {
+            request()->user()->owner();
+        }
+
+        return $this->getUser();
     }
 
     /**
      * 当前所属人
      * @return null|User
      */
-    public function getUser() : ?User
+    public function getUser() : ?UserInterface
     {
         return request()->user();
     }
