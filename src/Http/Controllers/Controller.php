@@ -14,3 +14,4 @@ class Controller extends BaseController
     use ResponseJson;
     use UserOwnerTools;
 }
+

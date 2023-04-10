@@ -33,7 +33,7 @@ trait OperatorActionService
 
     /**
      * @param UserInterface $operator
-     * @return $this
+     * @return self
      */
     public function setOperator(UserInterface $operator) : self
     {
@@ -51,7 +51,7 @@ trait OperatorActionService
 
     /**
      * @param ClientInterface $client
-     * @return $this
+     * @return self
      */
     public function setClient(ClientInterface $client) : self
     {
