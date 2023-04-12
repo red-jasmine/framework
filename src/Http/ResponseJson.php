@@ -33,11 +33,14 @@ trait ResponseJson
 
     private static function wrapData(mixed $data, string $message, int|string $code, array $errors = []) : array
     {
-        return [
+        $data = [
             'data'    => $data,
             'code'    => $code,
             'message' => $message,
-            'errors'  => $errors,
         ];
+        if (filled($errors)) {
+            $data['errors'] = $errors;
+        }
+        return $data;
     }
 }

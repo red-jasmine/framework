@@ -4,8 +4,8 @@ namespace RedJasmine\Support;
 
 
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\MallCore\Helpers\DomainRoute;
 use RedJasmine\Support\Helpers\Blueprint;
-use RedJasmine\Support\Helpers\DomainRoute;
 use RedJasmine\Support\Services\SqlLogService;
 
 class SupportServiceProvider extends ServiceProvider

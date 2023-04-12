@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Http\Controllers;
 
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Helpers\UserObjectBuilder;
 
 trait UserOwnerTools
 {
@@ -28,6 +29,23 @@ trait UserOwnerTools
     public function getUser() : ?UserInterface
     {
         return request()->user();
+    }
+
+    /**
+     * 获取游客信息
+     * @return UserInterface|null
+     */
+    public function getGuest() : ?UserInterface
+    {
+        // TODO  根据 设备ID、 ip 等信息
+        $guest = [
+            'type'     => 'guest',
+            'uid'      => 0,
+            'nickname' => '游客',
+            'avatar'   => '',
+        ];
+        return new UserObjectBuilder($guest);
+
     }
 
 
