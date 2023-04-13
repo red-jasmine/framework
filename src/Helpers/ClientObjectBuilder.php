@@ -7,28 +7,55 @@ use RedJasmine\Support\Contracts\ClientInterface;
 
 class ClientObjectBuilder implements ClientInterface
 {
-    public function __construct(public Request $request)
+    public function __construct(Request $request)
     {
+
+        $this->ip        = $request->getClientIp();
+        $this->userAgent = $request->userAgent();
+        $this->sdk       = $request->header('x-sdk', 'anr');
+        $this->version   = $request->header('x-version', 'v1.0.0');
+        $this->referer   = $request->header('referer', '');
+        $this->url       = $request->getUri();
     }
 
+
+    public ?string $ip;
+    public ?string $userAgent;
+    public ?string $sdk;
+    public ?string $version;
+    public ?string $referer;
+    public ?string $url;
+
+    /**
+     * @return string|null
+     */
     public function getIp() : ?string
     {
-        return $this->request->getClientIp();
+        return $this->ip;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUserAgent() : ?string
     {
-        return $this->request->userAgent();
+        return $this->userAgent;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSdk() : ?string
     {
-        return $this->request->header('x-sdk', 'anr');
+        return $this->sdk;
     }
 
+    /**
+     * @return string|null
+     */
     public function getVersion() : ?string
     {
-        return $this->request->header('x-version', 'v1.0.0');
+        return $this->version;
     }
 
     /**
@@ -36,7 +63,7 @@ class ClientObjectBuilder implements ClientInterface
      */
     public function getReferer() : ?string
     {
-        return $this->request->header('referer', '');
+        return $this->referer;
     }
 
     /**
@@ -44,7 +71,7 @@ class ClientObjectBuilder implements ClientInterface
      */
     public function getUrl() : ?string
     {
-        return $this->request->getUri();
+        return $this->url;
     }
 
 

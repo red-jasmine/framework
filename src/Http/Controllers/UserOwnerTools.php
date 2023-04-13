@@ -4,7 +4,9 @@ namespace RedJasmine\Support\Http\Controllers;
 
 
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Contracts\ClientInterface;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Helpers\ClientObjectBuilder;
 use RedJasmine\Support\Helpers\UserObjectBuilder;
 
 trait UserOwnerTools
@@ -46,6 +48,16 @@ trait UserOwnerTools
         ];
         return new UserObjectBuilder($guest);
 
+    }
+
+
+    /**
+     * 客户端信息
+     * @return ClientInterface
+     */
+    public function getClient() : ClientInterface
+    {
+        return new ClientObjectBuilder(request());
     }
 
 
