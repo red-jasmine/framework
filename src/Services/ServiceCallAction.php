@@ -13,7 +13,7 @@ trait ServiceCallAction
     /**
      * 关联 操作人
      */
-    use OperatorActionService;
+    use WithOperator;
 
 
     public function __call(string $name, array $arguments)

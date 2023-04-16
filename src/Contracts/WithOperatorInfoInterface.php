@@ -6,15 +6,15 @@ interface WithOperatorInfoInterface
 {
 
     /**
-     * @param UserInterface $operator
-     * @return self
+     * @param UserInterface|null $operator
+     * @return $this
      */
-    public function setOperator(UserInterface $operator) : self;
+    public function setOperator(?UserInterface $operator = null) : self;
 
     /**
-     * @param ClientInterface $client
-     * @return self
+     * @param ClientInterface|null $client
+     * @return $this
      */
-    public function setClient(ClientInterface $client) : self;
+    public function setClient(?ClientInterface $client = null) : self;
 
 }
