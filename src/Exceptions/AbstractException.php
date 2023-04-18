@@ -37,6 +37,49 @@ abstract class AbstractException extends Exception implements HttpExceptionInter
         // 校验设置
     }
 
+    /**
+     * @param array $errors
+     * @return AbstractException
+     */
+    public function setErrors(array $errors) : AbstractException
+    {
+        $this->errors = $errors;
+        return $this;
+    }
+
+    /**
+     * @param int $statusCode
+     * @return AbstractException
+     */
+    public function setStatusCode(int $statusCode) : AbstractException
+    {
+        $this->statusCode = $statusCode;
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     * @return AbstractException
+     */
+    public function setHeaders(array $headers) : AbstractException
+    {
+        $this->headers = $headers;
+        return $this;
+    }
+
+    /**
+     * @param mixed $data
+     * @return AbstractException
+     */
+    public function setData(mixed $data) : AbstractException
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+
+
+
 
     public function formatCode(int $code) : int
     {
