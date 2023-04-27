@@ -6,6 +6,9 @@ use RedJasmine\Support\Contracts\UserInterface;
 
 class UserObjectBuilder implements UserInterface
 {
+    /**
+     * @param array{type:string,uid:string,nickname:string|null,avatar:string|null} $data
+     */
     public function __construct(public array $data)
     {
     }
