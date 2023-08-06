@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 trait ResourceWith
 {
@@ -13,7 +14,7 @@ trait ResourceWith
         'message' => 'ok'
     ];
 
-    public function with(Request $request)
+    public function with(Request $request) : array
     {
         return self::$commons;
     }
@@ -22,9 +23,9 @@ trait ResourceWith
      * Create a new anonymous resource collection.
      *
      * @param mixed $resource
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public static function collection($resource)
+    public static function collection($resource) : AnonymousResourceCollection
     {
         return tap(static::newCollection($resource), function ($collection) {
             $collection->additional(self::$commons);

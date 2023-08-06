@@ -3,7 +3,7 @@
 namespace RedJasmine\Support\Contracts;
 
 /**
- * 用户协议
+ * 用户接口
  */
 interface UserInterface
 {

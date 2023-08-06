@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Exceptions;
 
-class InvalidArgumentException extends AbstractException
+class InvalidArgumentException extends CommonRuntimeException
 {
 
 }

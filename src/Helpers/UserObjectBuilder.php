@@ -9,9 +9,58 @@ class UserObjectBuilder implements UserInterface
     /**
      * @param array{type:string,uid:string,nickname:string|null,avatar:string|null} $data
      */
-    public function __construct(public array $data)
+    public function __construct(array $data)
     {
+        $this->userType = $data['type'] ?? '';
+        $this->uid      = $data['uid'] ?? '';
+        $this->avatar   = $data['avatar'] ?? '';
+        $this->nickname = $data['nickname'] ?? '';
     }
+
+    /**
+     * @param int|string $userType
+     * @return UserObjectBuilder
+     */
+    public function setUserType(int|string $userType) : UserObjectBuilder
+    {
+        $this->userType = $userType;
+        return $this;
+    }
+
+    /**
+     * @param int|string $uid
+     * @return UserObjectBuilder
+     */
+    public function setUid(int|string $uid) : UserObjectBuilder
+    {
+        $this->uid = $uid;
+        return $this;
+    }
+
+    /**
+     * @param string|null $nickname
+     * @return UserObjectBuilder
+     */
+    public function setNickname(?string $nickname) : UserObjectBuilder
+    {
+        $this->nickname = $nickname;
+        return $this;
+    }
+
+    /**
+     * @param string|null $avatar
+     * @return UserObjectBuilder
+     */
+    public function setAvatar(?string $avatar) : UserObjectBuilder
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
+
+
+
+
+    protected string|int $userType;
 
     /**
      * 用户类型
@@ -19,8 +68,10 @@ class UserObjectBuilder implements UserInterface
      */
     public function getUserType() : string|int
     {
-        return $this->data['type'];
+        return $this->userType;
     }
+
+    protected string|int $uid;
 
     /**
      * 获取用户ID
@@ -28,8 +79,11 @@ class UserObjectBuilder implements UserInterface
      */
     public function getUID() : string|int
     {
-        return $this->data['uid'];
+        return $this->uid;
     }
+
+
+    protected string|null $nickname;
 
     /**
      * 获取昵称
@@ -37,8 +91,10 @@ class UserObjectBuilder implements UserInterface
      */
     public function getNickname() : ?string
     {
-        return (string)($this->data['nickname'] ?? null);
+        return $this->nickname;
     }
+
+    protected string|null $avatar;
 
     /**
      * 获取头像
@@ -46,7 +102,7 @@ class UserObjectBuilder implements UserInterface
      */
     public function getAvatar() : ?string
     {
-        return (string)($this->data['avatar'] ?? null);
+        return $this->avatar;
     }
 
 

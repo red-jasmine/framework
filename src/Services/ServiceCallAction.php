@@ -50,10 +50,6 @@ trait ServiceCallAction
         if (property_exists($this, 'actions')) {
             $actions = self::$actions;
         }
-        if (property_exists($this, 'composerConfigName')) {
-            $composerActions = app(PackageManifest::class)->config(self::$composerConfigName)['actions'] ?? [];
-            $actions         = array_merge($actions, $composerActions);
-        }
         return $actions;
     }
 
