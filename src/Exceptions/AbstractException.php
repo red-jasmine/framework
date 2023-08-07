@@ -17,7 +17,7 @@ use Throwable;
 /**
  * 业务异常
  */
-abstract class AbstractException extends Exception implements HttpExceptionInterface
+class AbstractException extends Exception implements HttpExceptionInterface
 {
 
     // 通用错误码
