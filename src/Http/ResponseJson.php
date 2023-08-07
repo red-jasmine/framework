@@ -17,8 +17,9 @@ trait ResponseJson
      *
      * @return JsonResponse
      */
-    public function error(string $message = 'error', int|string $code = 1, int $statusCode = 400, array $errors = [], mixed $data) : JsonResponse
+    public function error(string $message = 'error', int|string $code = 1, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
     {
+
         return response()->json(self::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
     }
 
