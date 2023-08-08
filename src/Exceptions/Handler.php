@@ -61,6 +61,7 @@ class Handler extends ExceptionHandler
 
         if (config('app.debug')) {
             $arrData['exception'] = get_class($e);
+            $arrData['message']   = $e->getMessage();
             $arrData['file']      = $e->getFile();
             $arrData['line']      = $e->getLine();
             $arrData['trace']     = collect($e->getTrace())->map(fn($trace) => Arr::except($trace, [ 'args' ]))->all();
