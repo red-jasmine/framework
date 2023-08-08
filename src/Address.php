@@ -4,7 +4,6 @@ namespace RedJasmine\Address;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use RedJasmine\Address\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
 use RedJasmine\Region\Enums\RegionLevel;
@@ -18,61 +17,76 @@ class Address
 
     /**
      * 创建地址
-     * @param User $owner
-     * @param array $data
-     * @param User $creator
+     *
+     * @param User                 $owner
+     * @param array                $data
+     * @param User                 $operator
      * @param AddressValidateLevel $validateLevel
+     *
      * @return Models\Address
+     * @throws AddressException
      */
-    public function createForID(User $owner, array $data, User $creator, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT,) : Models\Address
+    public function create(User $owner, array $data, User $operator, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT,) : Models\Address
     {
 
-        $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
-        $data['sort']       = (int)($data['sort'] ?? 0);
-        // 基础信息验证
-        $data = $this->validator($data);
-        // 验证省份
-        $data                  = $this->regionValidate($data, $validateLevel);
-        $address               = new Models\Address();
-        $address->owner_type   = $owner->getUserType();
-        $address->owner_uid    = $owner->getUID();
-        $address->creator_type = $creator->getUserType();
-        $address->creator_uid  = $creator->getUID();
-        $address->fill($data);
-        $address->save();
-        return $address;
-    }
-
-    /**
-     * 更新地址
-     * @param int $id
-     * @param array $data
-     * @param User $updater
-     * @param AddressValidateLevel $validateLevel
-     * @return Models\Address
-     */
-    public function updateForID(int $id, array $data, User $updater, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
-    {
         $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
         $data['sort']       = (int)($data['sort'] ?? 0);
         // 基础信息验证
         $data = $this->validator($data);
         // 验证省份
         $data    = $this->regionValidate($data, $validateLevel);
-        $address = Models\Address::findOrFail($id);
+        $address = new Models\Address();
+        // 所属人
+        $address->owner_type = $owner->getUserType();
+        $address->owner_uid  = $owner->getUID();
 
-        $address->updater_type = $updater->getUserType();
-        $address->updater_uid  = $updater->getUID();
+        $address->creator_type     = $operator->getUserType();
+        $address->creator_uid      = $operator->getUID();
+        $address->creator_nickname = $operator->getNickname();
         $address->fill($data);
         $address->save();
         return $address;
     }
 
+    /**
+     * 基础验证
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function validator(array $data = []) : array
+    {
+        $rules      = [
+            'contacts' => [ 'required', 'max:30', ],
+            'mobile'   => [ 'required', 'max:20', ],
+            'address'  => [ 'sometimes', 'max:100', ],
+            'tag'      => [ 'sometimes', 'max:10', ],
+            'remarks'  => [ 'sometimes', 'max:100', ],
+            'zip_code' => [ 'sometimes', 'max:6', ],
+        ];
+        $messages   = [
+            'max' => ':attribute 长度不能超过:max个字符'
+        ];
+        $attributes = [
+            'contacts' => '联系人',
+            'mobile'   => '手机号',
+            'address'  => '地址',
+            'tag'      => '标签',
+            'remarks'  => '备注',
+            'zip_code' => '邮政编码',
+        ];
+        Validator::make($data, $rules, $messages, $attributes)->validate();
+
+        return $data;
+    }
 
     /**
      * 验证区域
-     * @param array $data
+     *
+     * @param array                $data
      * @param AddressValidateLevel $validateLevel
+     *
      * @return array
      * @throws AddressException
      */
@@ -144,33 +158,31 @@ class Address
     }
 
     /**
-     * 基础验证
-     * @param array $data
-     * @return array
+     * 更新地址
+     *
+     * @param int                  $id
+     * @param array                $data
+     * @param User                 $operator
+     * @param AddressValidateLevel $validateLevel
+     *
+     * @return Models\Address
+     * @throws AddressException
      */
-    public function validator(array $data = []) : array
+    public function update(int $id, array $data, User $operator, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
     {
-        $rules      = [
-            'contacts' => [ 'required', 'max:30', ],
-            'mobile'   => [ 'required', 'max:20', ],
-            'address'  => [ 'sometimes', 'max:100', ],
-            'tag'      => [ 'sometimes', 'max:10', ],
-            'remarks'  => [ 'sometimes', 'max:100', ],
-            'zip_code' => [ 'sometimes', 'max:6', ],
-        ];
-        $messages   = [
-            'max' => ':attribute 长度不能超过:max个字符'
-        ];
-        $attributes = [
-            'contacts' => '联系人',
-            'mobile'   => '手机号',
-            'address'  => '地址',
-            'tag'      => '标签',
-            'remarks'  => '备注',
-            'zip_code' => '邮政编码',
-        ];
-        Validator::make($data, $rules, $messages, $attributes)->validate();
+        $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
+        $data['sort']       = (int)($data['sort'] ?? 0);
+        // 基础信息验证
+        $data = $this->validator($data);
+        // 验证省份
+        $data    = $this->regionValidate($data, $validateLevel);
+        $address = Models\Address::findOrFail($id);
 
-        return $data;
+        $address->updater_type     = $operator->getUserType();
+        $address->updater_uid      = $operator->getUID();
+        $address->updater_nickname = $operator->getNickname();
+        $address->fill($data);
+        $address->save();
+        return $address;
     }
 }

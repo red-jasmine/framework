@@ -13,6 +13,7 @@ class Address extends Model
     use HasDateTimeFormatter;
 
     use SoftDeletes;
+
     protected $table = 'address';
 
 
@@ -20,10 +21,10 @@ class Address extends Model
         'contacts', 'mobile',
         'country', 'province', 'city', 'district', 'street',
         'country_id', 'province_id', 'city_id', 'district_id', 'street_id',
-        'address', 'zip_code', 'sort', 'tag', 'zip_code', 'remarks'
+        'address', 'zip_code', 'sort', 'tag', 'zip_code', 'remarks', 'group_id'
     ];
 
-    protected $appends =[
+    protected $appends = [
         'full_address'
     ];
 

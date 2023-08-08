@@ -33,17 +33,19 @@ return new class extends Migration {
             $table->decimal('lng', 13, 10)->nullable()->comment('经度');
             $table->decimal('lat', 13, 10)->nullable()->comment('纬度');
 
-
+            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
             $table->string('tag', 10)->nullable()->comment('标签');
             $table->string('remarks')->nullable()->comment('备注');
 
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
 
-            $table->string('creator_type')->comment('创建者类型');
-            $table->string('creator_uid')->comment('创建者ID');
-            $table->string('updater_type')->nullable()->comment('更新者类型');
-            $table->string('updater_uid')->nullable()->comment('更新者UID');
+            $table->string('creator_type', 64)->nullable()->comment('创建者类型');
+            $table->string('creator_uid', 64)->nullable()->comment('创建者ID');
+            $table->string('creator_nickname', 64)->nullable()->comment('创建者昵称');
+            $table->string('updater_type', 64)->nullable()->comment('更新者类型');
+            $table->string('updater_uid', 64)->nullable()->comment('更新者UID');
+            $table->string('updater_nickname', 64)->nullable()->comment('更新者UID');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('地址表');
