@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
             $arrData['message'] = '登入失效';
 
         }
-        if ($e instanceof CommonRuntimeException) {
+        if ($e instanceof AbstractException) {
             $arrData['data']    = $e->getData();
             $arrData['code']    = $e->getCode();
             $arrData['message'] = $e->getMessage();
