@@ -82,7 +82,7 @@ class Handler extends ExceptionHandler
     protected function invalidJson($request, ValidationException $exception) : JsonResponse
     {
 
-        return response()->json($this->convertExceptionToArray($exception), $exception->status);
+        return response()->json($this->convertExceptionToArray($exception), $exception->status,[],JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -98,6 +98,23 @@ class Handler extends ExceptionHandler
         return $this->shouldReturnJson($request, $exception)
             ? response()->json($this->convertExceptionToArray($exception), 401)
             : redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
+    /**
+     * Prepare a JSON response for the given exception.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $e
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function prepareJsonResponse($request, Throwable $e)
+    {
+        return new JsonResponse(
+            $this->convertExceptionToArray($e),
+            $this->isHttpException($e) ? $e->getStatusCode() : 500,
+            $this->isHttpException($e) ? $e->getHeaders() : [],
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+        );
     }
 
 }
