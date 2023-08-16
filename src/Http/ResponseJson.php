@@ -6,22 +6,7 @@ use Illuminate\Http\JsonResponse;
 
 trait ResponseJson
 {
-    /**
-     * 失败响应
-     *
-     * @param string     $message
-     * @param int|string $code
-     * @param int        $statusCode
-     * @param array      $errors
-     * @param mixed      $data
-     *
-     * @return JsonResponse
-     */
-    public function error(string $message = 'error', int|string $code = 1, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
-    {
 
-        return response()->json(self::wrapData($data, $message, $code, $errors),200,[],JSON_UNESCAPED_UNICODE)->setStatusCode($statusCode);
-    }
 
     private static function wrapData(mixed $data, string $message, int|string $code, array $errors = []) : array
     {
@@ -46,6 +31,23 @@ trait ResponseJson
      */
     public function success(mixed $data = null, string $message = 'ok') : JsonResponse
     {
-        return response()->json(self::wrapData($data, $message, 0),200,[],JSON_UNESCAPED_UNICODE);
+        return response()->json(self::wrapData($data, $message, 0));
+    }
+
+    /**
+     * 失败响应
+     *
+     * @param string     $message
+     * @param int|string $code
+     * @param int        $statusCode
+     * @param array      $errors
+     * @param mixed      $data
+     *
+     * @return JsonResponse
+     */
+    public function error(string $message = 'error', int|string $code = 1, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
+    {
+
+        return response()->json(self::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
     }
 }
