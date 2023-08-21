@@ -2,7 +2,10 @@
 
 中华人民共和国行政区划（五级）：省级、地级、县级、乡级和村级
 
-> 国内  [gitee https://gitee.com/red-jasmine/region](https://gitee.com/red-jasmine/region)
+> [Gitee]  [https://gitee.com/red-jasmine/region](https://gitee.com/red-jasmine/region)
+
+> [GitHub]  [https://github.com/red-jasmine/region](https://github.com/red-jasmine/region)
+
 ## 数据来源
 - 国家统计局
   - [数据源 - http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/index.html](http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/index.html)
@@ -25,14 +28,15 @@
 ##  数据下载
 
 
-| 数据                | CSV                                                 | SQL                                                 |
-|-------------------|-----------------------------------------------------|-----------------------------------------------------|
-| 省市区   三级          | [regions_level3.csv](./dist/csv/regions_level3.csv) | [regions_level3.sql](./dist/sql/regions_level3.sql) |
-| 省市区+乡镇街道    四级    | [regions_level4.csv](./dist/csv/regions_level4.csv) | [regions_level4.sql](./dist/sql/regions_level4.sql) |                                       |
-| 省市区+乡镇街道 +社区、村 五级 | [regions_level5.csv](./dist/csv/regions_level5.csv) | [regions_level5.sql](./dist/sql/regions_level5.sql) |                   |
+| 数据                | SQL                                                                  |
+|-------------------|----------------------------------------------------------------------|
+| 省市区   三级          | [regions_level3.sql](https://github.com/red-jasmine/region/releases) |
+| 省市区+乡镇街道    四级    | [regions_level4.sql](https://github.com/red-jasmine/region/releases) |   
+| 省市区+乡镇街道 +社区、村 五级 | [regions_level5.sql](https://github.com/red-jasmine/region/releases) |
 
 
-- sql
+### 数据表
+
 ```sql
 # 数据表
 CREATE TABLE `regions` (

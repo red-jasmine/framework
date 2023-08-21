@@ -19,7 +19,9 @@ class Region
 
     /**
      * 查询区划数据
+     *
      * @param array|int|string $id
+     *
      * @return  RegionModel[]|Collection|array
      */
     public function query(array|int|string $id) : array|Collection
@@ -48,7 +50,9 @@ class Region
 
     /**
      * 查询子集
+     *
      * @param int $parentID
+     *
      * @return RegionModel[]|Collection
      */
     public function children(int $parentID) : array|Collection
@@ -59,6 +63,7 @@ class Region
     /**
      *
      * @param int|string $province
+     *
      * @return Models\Region[]|array|Collection
      */
     public function cities(int|string $province) : Collection|array
@@ -71,5 +76,35 @@ class Region
             return $query->where('name', (string)$name)->get();
         }
 
+    }
+
+
+    public function tree(int $level = RegionLevel::DISTRICT->value) : array
+    {
+        $regionLevel = RegionLevel::tryFrom($level);
+
+        $query = RegionModel::query();
+
+        $regions = $query
+            ->where('level', '<=', $regionLevel->value)
+            ->get()->toArray();
+        return $this->buildTree($regions);
+    }
+
+
+    protected function buildTree(array $array, $parentId = 0) : array
+    {
+        $tree = array ();
+        foreach ($array as $item) {
+            if ($item['parent_id'] === $parentId) {
+                $children = $this->buildTree($array, $item['id']);
+                if ($children) {
+                    $item['children'] = $children;
+                }
+                $tree[] = $item;
+            }
+        }
+
+        return $tree;
     }
 }
