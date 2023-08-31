@@ -136,15 +136,16 @@ class Address
             if (filled($data[$rule['field']] ?? null) || $validateLevel->value >= $rule['validate_level']->value) {
                 $region = $regions[(int)$data[$rule['field']]] ?? null;
                 if (blank($region)) {
+                    // TODO 存在一些 没有 划分区县的城市 比如东莞
                     throw new AddressException("{$rule['name']}不存在");
                 }
                 // 验证等级
                 if ($region->level !== $rule['level']) {
                     throw new AddressException("{$rule['name']} 等级不一致");
                 }
-                // 验证关系
+                // 验证关系 TODO 可能是间接的关系
                 if (filled($rule['parent_id_field'] ?? null) && $region->parent_id !== (int)$data[$rule['parent_id_field']]) {
-                    throw new AddressException("{$rule['name']} 关系不一致");
+                    //throw new AddressException("{$rule['name']} 关系不一致");
                 }
                 $data[Str::replace('_id', '', $rule['field'])] = $region->name;
             } else {
