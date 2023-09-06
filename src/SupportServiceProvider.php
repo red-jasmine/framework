@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use RedJasmine\Support\Services\DomainRoute;
 use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Services\RequestIDService;
-use RedJasmine\Support\Services\SqlLogService;
+use RedJasmine\Support\Services\SQLLogService;
 
 class SupportServiceProvider extends ServiceProvider
 {
@@ -29,7 +29,7 @@ class SupportServiceProvider extends ServiceProvider
 
         RequestIDService::boot();
         DomainRoute::boot();
-        SqlLogService::boot();
+        SQLLogService::boot();
 
     }
 

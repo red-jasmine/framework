@@ -9,10 +9,12 @@ use Throwable;
 /**
  * SQL 记录
  */
-class SqlLogService
+class SQLLogService
 {
     public static function boot() : void
     {
+
+
         DB::listen(function ($query) {
             try {
                 $sql = str_replace("?", "'%s'", $query->sql);
@@ -25,7 +27,13 @@ class SqlLogService
                 'connectionName' => $query->connectionName,
                 'sql'            => $sql,
             ];
-            Log::info('SQL', $data);
+
+            Log::build([
+                           'driver' => 'daily',
+                           'path'   => storage_path('logs/sql.log'),
+                           'level'  => env('LOG_LEVEL', 'debug'),
+                           'days'   => 14,
+                       ])->info('SQL', $data);
         });
 
     }
