@@ -11,6 +11,18 @@ class Region
     // Build wonderful things
 
 
+    protected array $fields = [
+        'id', 'parent_id', 'name', 'pinyin', 'pinyin_prefix', 'level'
+    ];
+
+    public function fileds(array $fields = null)
+    {
+        if (filled($fields)) {
+            $this->fields = $fields;
+        }
+        return $this;
+    }
+
     public function find(int $id) : RegionModel
     {
         return RegionModel::find($id);
@@ -43,7 +55,8 @@ class Region
      */
     public function provinces() : array|Collection
     {
-        return RegionModel::where('parent_id', 0)
+        return RegionModel::select($this->fields)
+                          ->where('parent_id', 0)
                           ->where('level', RegionLevel::PROVINCE->value)
                           ->get();
     }
@@ -57,7 +70,7 @@ class Region
      */
     public function children(int $parentID) : array|Collection
     {
-        return RegionModel::where('parent_id', (int)$parentID)->get();
+        return RegionModel::select($this->fields)->where('parent_id', (int)$parentID)->get();
     }
 
     /**
@@ -69,6 +82,7 @@ class Region
     public function cities(int|string $province) : Collection|array
     {
         $query = RegionModel::query();
+        $query->select($this->fields);
         if (is_numeric($province)) {
             return $this->children($province);
         } else {
@@ -86,6 +100,7 @@ class Region
         $query = RegionModel::query();
 
         $regions = $query
+            ->select($this->fields)
             ->where('level', '<=', $regionLevel->value)
             ->get()->toArray();
         return $this->buildTree($regions);
