@@ -9,6 +9,8 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Throwable;
 
 class RequestIDService
 {
@@ -116,8 +118,15 @@ class RequestIDService
 
     protected static function withResponse($response, $requestID)
     {
+        try {
+            if ($response instanceof JsonResponse) {
+                $response->header(self::getFieldName(), $requestID);
+            }
+        } catch (Throwable $throwable) {
 
-        $response->header(self::getFieldName(), $requestID);
+        }
+
+
         return $response;
     }
 
