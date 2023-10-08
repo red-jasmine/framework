@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-
+use Throwable;
 
 
 class DomainRoute
@@ -50,8 +50,10 @@ class DomainRoute
 
     /**
      * 中间件处理
+     *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next) : mixed
@@ -63,7 +65,7 @@ class DomainRoute
 
             $route->forgetParameter('domain');
             URL::defaults([ 'domain' => $domain ]);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
 
         }
 
@@ -73,22 +75,19 @@ class DomainRoute
 
     /**
      * 设置域名
+     *
      * @param string|null $domain
+     *
      * @return string|null
      */
     public static function domain(string $domain = null) : ?string
     {
         // 是否开启子域名
-        self::$subDomain = config('app.sub_domain', false);
-        if (self::$subDomain) {
-            if (filled($domain)) {
-                return $domain . '.{domain}';
-            } else {
-                return '{domain}';
-            }
-        } else {
+        if ((boolean)config('app.sub_domain', false) === false) {
             return null;
         }
+        return filled($domain) ? $domain . '.{domain}' : '.{domain}';
+
     }
 
     public static function adminDomain() : ?string
@@ -106,9 +105,11 @@ class DomainRoute
 
     /**
      * 路由前缀
-     * @param string $module
+     *
+     * @param string      $module
      * @param string|null $guard
-     * @param bool $isApi
+     * @param bool        $isApi
+     *
      * @return string
      */
     public static function prefix(string $module, string $guard = null, bool $isApi = false) : string
@@ -117,7 +118,6 @@ class DomainRoute
         $prefix .= $guard;
         return $prefix . '/' . $module;
     }
-
 
 
 }
