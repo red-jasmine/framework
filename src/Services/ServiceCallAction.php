@@ -10,10 +10,7 @@ use RedJasmine\Support\Contracts\WithOperatorInfoInterface;
  */
 trait ServiceCallAction
 {
-    /**
-     * 关联 操作人
-     */
-    use WithOperator;
+
 
 
     public function __call(string $name, array $arguments)
@@ -25,13 +22,15 @@ trait ServiceCallAction
             $serviceConfig = [ $serviceConfig, $name ];
         }
         [ $serviceClass, $method ] = $serviceConfig;
+
         if (!$serviceClass) {
             throw new \BadMethodCallException('Call to undefined method ' . $name);
         }
         $service = app($serviceClass);
+
         if ($service instanceof WithOperatorInfoInterface) {
-            $service->setOperator($this->operator);
-            $service->setClient($this->client);
+            $service->setOperator($this->getOperator());
+            $service->setClient($this->getClient());
         }
         if (method_exists($service, $method)) {
             return $service->{$method}(...$arguments);
