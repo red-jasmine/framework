@@ -2,7 +2,8 @@
 
 namespace RedJasmine\Support\Services;
 
-use Illuminate\Foundation\PackageManifest;
+use BadMethodCallException;
+use Illuminate\Support\Traits\Macroable;
 use RedJasmine\Support\Contracts\WithOperatorInfoInterface;
 
 /**
@@ -10,23 +11,39 @@ use RedJasmine\Support\Contracts\WithOperatorInfoInterface;
  */
 trait ServiceCallAction
 {
+    use Macroable {
+        __call as macroCall;
+    }
 
-
-
-    public function __call(string $name, array $arguments)
+    // 扩展
+    public static function extends($name, $class) : void
     {
+        static::$actions[$name] = $class;
+
+    }
+
+    /**
+     * @return $this
+     */
+    public function make()
+    {
+        return $this;
+    }
+
+
+    public function __call(string $method, array $arguments)
+    {
+
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $arguments);
+        }
+
         $actions = $this->getActions();
-
-        $serviceConfig = $actions[$name] ?? null;
-        if (is_string($serviceConfig)) {
-            $serviceConfig = [ $serviceConfig, $name ];
+        $class = $actions[$method] ?? null;
+        if (!$class) {
+            throw new BadMethodCallException('Call to undefined method ' . $method);
         }
-        [ $serviceClass, $method ] = $serviceConfig;
-
-        if (!$serviceClass) {
-            throw new \BadMethodCallException('Call to undefined method ' . $name);
-        }
-        $service = app($serviceClass);
+        $service = app($class);
 
         if ($service instanceof WithOperatorInfoInterface) {
             $service->setOperator($this->getOperator());
@@ -35,7 +52,10 @@ trait ServiceCallAction
         if (method_exists($service, $method)) {
             return $service->{$method}(...$arguments);
         }
-        return $service->handle(...$arguments);
+        if (method_exists($service, 'handle')) {
+            return $service->handle(...$arguments);
+        }
+        throw new BadMethodCallException('Call to undefined method ' . $method);
     }
 
     /**
