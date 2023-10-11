@@ -13,11 +13,11 @@ return new class extends Migration {
             $table->string('owner_uid', 64)->comment('所属者UID');
             $table->string('owner_nickname', 64)->nullable()->comment('所属者昵称');
 
-            $table->string('item_type')->comment('商品类型');
+            $table->string('item_type')->default('')->comment('商品类型');
             $table->unsignedBigInteger('item_id')->default(0)->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
 
-            $table->unsignedTinyInteger('batch')->default(0)->comment('批次');
+            $table->unsignedTinyInteger('batch')->default(0)->comment('批次号');
             $table->text('card')->comment('卡密');
 
             $table->unsignedTinyInteger('quantity')->default(0)->comment('数量');

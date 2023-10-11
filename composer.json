@@ -33,7 +33,7 @@
                 "RedJasmine\\Card\\CardServiceProvider"
             ],
             "aliases": {
-                "Captcha": "RedJasmine\\Card\\Facades\\Card"
+                "Card": "RedJasmine\\Card\\Facades\\Card"
             }
         },
         "branch-alias": {
