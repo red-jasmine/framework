@@ -13,6 +13,32 @@ trait ServiceTools
 {
 
     /**
+     * 所属人
+     * @var UserInterface|null
+     */
+    private ?UserInterface $owner = null;
+
+    /**
+     * @return UserInterface|null
+     */
+    public function getOwner() : ?UserInterface
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param UserInterface|null $owner
+     *
+     * @return static
+     */
+    public function setOwner(?UserInterface $owner) : static
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
+
+    /**
      * 操作人
      * @var UserInterface|null
      */
@@ -23,6 +49,7 @@ trait ServiceTools
      * @var ClientInterface|null
      */
     private ?ClientInterface $client = null;
+
 
     /**
      * @return ?ClientInterface
@@ -35,9 +62,9 @@ trait ServiceTools
     /**
      * @param ClientInterface|null $client
      *
-     * @return $this
+     * @return static
      */
-    public function setClient(?ClientInterface $client = null) : self
+    public function setClient(?ClientInterface $client = null) : static
     {
         $this->client = $client;
         return $this;
@@ -79,7 +106,7 @@ trait ServiceTools
      *
      * @return $this
      */
-    public function setOperator(?UserInterface $operator = null) : self
+    public function setOperator(?UserInterface $operator = null)
     {
         $this->operator = $operator;
         return $this;
