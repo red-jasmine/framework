@@ -19,6 +19,7 @@ trait ServiceTools
     private ?UserInterface $owner = null;
 
     /**
+     * 获取调用服务所属人
      * @return UserInterface|null
      */
     public function getOwner() : ?UserInterface
@@ -75,6 +76,56 @@ trait ServiceTools
         return new ClientObjectBuilder(request());
     }
 
+
+    /**
+     * 获取操作人
+     * @return UserInterface|null
+     */
+    public function getOperator() : ?UserInterface
+    {
+        return $this->operator ?: $this->defaultOperator();
+    }
+
+    /**
+     * 设置操作人
+     *
+     * @param UserInterface|null $operator
+     *
+     * @return $this
+     */
+    public function setOperator(?UserInterface $operator = null)
+    {
+        $this->operator = $operator;
+        return $this;
+    }
+
+    /**
+     * 默认操作人
+     * @return UserInterface|null
+     */
+    protected function defaultOperator() : ?UserInterface
+    {
+
+        // 如果是 CLI 环境 那么设置为系统
+        if (app()->runningInConsole()) {
+
+        }
+        // 如果是 web 环境 那么就需要设置为游客
+        $user = Auth::user();
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+        foreach (Config::get('auth.guards') as $guard => $config) {
+            $user = Auth::guard($guard)->user();
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
+
+        }
+        return null;
+    }
+
+
     /**
      * 管理创建人
      *
@@ -94,49 +145,7 @@ trait ServiceTools
     }
 
     /**
-     * @return UserInterface|null
-     */
-    public function getOperator() : ?UserInterface
-    {
-        return $this->operator ?: $this->defaultOperator();
-    }
-
-    /**
-     * @param UserInterface|null $operator
-     *
-     * @return $this
-     */
-    public function setOperator(?UserInterface $operator = null)
-    {
-        $this->operator = $operator;
-        return $this;
-    }
-
-    /**
-     * 默认操作人
-     * @return UserInterface|null
-     */
-    protected function defaultOperator() : ?UserInterface
-    {
-        // TODO
-        // 如果是 CLI 环境 那么设置为系统
-        // 如果是 web 环境 那么就需要设置为游客
-        $user = Auth::user();
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-        foreach (Config::get('auth.guards') as $guard => $config) {
-            $user = Auth::guard($guard)->user();
-            if ($user instanceof UserInterface) {
-                return $user;
-            }
-
-        }
-        return null;
-    }
-
-    /**
-     * 管理创建人
+     * 管理更新者
      *
      * @param mixed $model
      *
