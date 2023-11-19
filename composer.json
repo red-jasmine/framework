@@ -30,10 +30,7 @@
         "laravel": {
             "providers": [
                 "RedJasmine\\Support\\SupportServiceProvider"
-            ],
-            "aliases": {
-                "Support": "RedJasmine\\Support\\Facades\\Support"
-            }
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",

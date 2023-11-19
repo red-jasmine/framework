@@ -26,7 +26,7 @@ class SystemUser implements UserInterface
 
     public function getNickname() : ?string
     {
-        return '系统';
+        return 'system';
     }
 
     public function getAvatar() : ?string

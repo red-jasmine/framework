@@ -42,8 +42,8 @@ class SupportServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-                             __DIR__ . '/../config/support.php' => config_path('support.php'),
-                         ], 'support.config');
+                             __DIR__ . '/../config/support.php' => config_path('red-jasmine/support.php'),
+                         ], 'red-jasmine/support.config');
 
         // Publishing the views.
         /*$this->publishes([
@@ -73,10 +73,7 @@ class SupportServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'red-jasmine.support');
 
-        // Register the service the package provides.
-        $this->app->singleton('support', function ($app) {
-            return new Support;
-        });
+
         DomainRoute::register();
     }
 
@@ -87,6 +84,6 @@ class SupportServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [ 'support' ];
+        return [];
     }
 }
