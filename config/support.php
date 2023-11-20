@@ -6,7 +6,8 @@ return [
     'user_type' => [
         'admin'    => 'Admin',
         'user'     => 'User',
-        'shop'     => 'Shop',
+        'buyer'    => 'Buyer',
+        'seller'   => 'Seller',
         'system'   => 'System',
         'guest'    => 'Guest',
         'supplier' => 'Supplier',
