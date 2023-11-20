@@ -2,10 +2,18 @@
 
 namespace RedJasmine\Support\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Contracts\UserInterface;
 
 trait WithOperatorModel
 {
+
+    public function scopeOwner(Builder $query, UserInterface $owner) : Builder
+    {
+        return $query->where('owner_type', $owner->getUserType())
+                     ->where('owner_uid', $owner->getUID());
+
+    }
 
     public function withOwner(?UserInterface $user) : void
     {
