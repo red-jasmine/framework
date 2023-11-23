@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Traits;
+namespace RedJasmine\Support\Traits\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -8,23 +8,20 @@ use RedJasmine\Support\Contracts\UserInterface;
 trait WithOperatorModel
 {
 
-    public function scopeOwner(Builder $query, UserInterface $owner) : Builder
+
+    public function scopeCreator(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('owner_type', $owner->getUserType())
-                     ->where('owner_uid', $owner->getUID());
+        return $query->where('creator_type', $owner->getUserType())
+                     ->where('creator_uid', $owner->getUID());
 
     }
 
-    public function withOwner(?UserInterface $user) : void
+    public function scopeUpdater(Builder $query, UserInterface $owner) : Builder
     {
-        if (!$user) {
-            return;
-        }
-        $this->owner_type     = $user->getUserType();
-        $this->owner_uid      = $user->getUID();
-        $this->owner_nickname = $user->getNickname();
-    }
+        return $query->where('updater_type', $owner->getUserType())
+                     ->where('updater_uid', $owner->getUID());
 
+    }
 
     public function withCreator(?UserInterface $user) : void
     {

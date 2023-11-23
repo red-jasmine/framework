@@ -8,6 +8,7 @@ use RedJasmine\Support\Contracts\ClientInterface;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Helpers\ClientObjectBuilder;
 use RedJasmine\Support\Helpers\UserObjectBuilder;
+use RedJasmine\Support\Services\SystemUser;
 
 trait UserOwnerTools
 {
@@ -30,6 +31,7 @@ trait UserOwnerTools
      */
     public function getUser() : ?UserInterface
     {
+        return new UserObjectBuilder([ 'type' => 'system', 'uid' => '0', 'nickname' => '系统' ]);
         return request()->user();
     }
 
