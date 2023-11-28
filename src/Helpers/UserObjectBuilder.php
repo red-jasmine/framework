@@ -64,9 +64,9 @@ class UserObjectBuilder implements UserInterface
 
     /**
      * 用户类型
-     * @return string|int
+     * @return string
      */
-    public function getUserType() : string|int
+    public function getUserType() : string
     {
         return $this->userType;
     }
@@ -75,9 +75,9 @@ class UserObjectBuilder implements UserInterface
 
     /**
      * 获取用户ID
-     * @return int|string
+     * @return int
      */
-    public function getUID() : string|int
+    public function getUID() : int
     {
         return $this->uid;
     }

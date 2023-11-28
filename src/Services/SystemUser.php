@@ -14,12 +14,12 @@ class SystemUser implements UserInterface
     }
 
 
-    public function getUserType() : string|int
+    public function getUserType() : string
     {
         return UserType::SYSTEM->value;
     }
 
-    public function getUID() : string|int
+    public function getUID() : int
     {
         return $this->uid;
     }

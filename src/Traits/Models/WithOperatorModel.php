@@ -23,25 +23,22 @@ trait WithOperatorModel
 
     }
 
-    public function withCreator(?UserInterface $user) : void
+    public function withCreator(?UserInterface $creator) : void
     {
-        if (!$user) {
-            return;
+        if ($creator) {
+            $this->creator_type = $creator->getUserType();
+            $this->creator_uid  = $creator->getUID();
         }
-        $this->creator_type     = $user->getUserType();
-        $this->creator_uid      = $user->getUID();
-        $this->creator_nickname = $user->getNickname();
+
     }
 
 
-    public function withUpdater(?UserInterface $user) : void
+    public function withUpdater(?UserInterface $updater) : void
     {
-        if (!$user) {
-            return;
+        if ($updater) {
+            $this->updater_type = $updater->getUserType();
+            $this->updater_uid  = $updater->getUID();
         }
-        $this->updater_type     = $user->getUserType();
-        $this->updater_uid      = $user->getUID();
-        $this->updater_nickname = $user->getNickname();
     }
 
 

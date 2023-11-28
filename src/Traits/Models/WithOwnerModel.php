@@ -15,14 +15,14 @@ trait WithOwnerModel
 
     }
 
-    public function withOwner(?UserInterface $user) : void
+    public function withOwner(?UserInterface $owner) : void
     {
-        if (!$user) {
-            return;
+        if ($owner) {
+            $this->owner_type = $owner->getUserType();
+            $this->owner_uid  = $owner->getUID();
         }
-        $this->owner_type     = $user->getUserType();
-        $this->owner_uid      = $user->getUID();
-        $this->owner_nickname = $user->getNickname();
+
+
     }
 
 }
