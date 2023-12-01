@@ -27,8 +27,14 @@ trait WithCollectionResource
      */
     public static function collection($resource) : AnonymousResourceCollection
     {
+
         return tap(static::newCollection($resource), function ($collection) {
+            /**
+             * @var $collection AnonymousResourceCollection
+             */
             $collection->additional(self::$commons);
+            $collection->preserveQuery();
+
             if (property_exists(static::class, 'preserveKeys')) {
                 $collection->preserveKeys = (new static([]))->preserveKeys === true;
             }
