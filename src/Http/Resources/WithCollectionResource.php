@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
 
 trait WithCollectionResource
 {
@@ -23,6 +24,7 @@ trait WithCollectionResource
      * Create a new anonymous resource collection.
      *
      * @param mixed $resource
+     *
      * @return AnonymousResourceCollection
      */
     public static function collection($resource) : AnonymousResourceCollection
@@ -33,6 +35,16 @@ trait WithCollectionResource
              * @var $collection AnonymousResourceCollection
              */
             $collection->additional(self::$commons);
+            AnonymousResourceCollection::macro('paginationInformation', function ($request, $paginated, $default) {
+                return [ 'mate' => Arr::except($paginated, [
+                    'data',
+                    'first_page_url',
+                    'last_page_url',
+                    'prev_page_url',
+                    'next_page_url',
+                    'links',
+                ]) ];
+            });
             $collection->preserveQuery();
 
             if (property_exists(static::class, 'preserveKeys')) {
