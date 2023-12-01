@@ -3,12 +3,25 @@
 namespace RedJasmine\Support\Traits\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 trait HasQueryBuilder
 {
 
 
+    /**
+     *
+     *
+     * AllowedFilter::callback('keyword', function ($query, $value, $property) {
+     *     $query->where(function ($query) use ($value, $property) {
+     *         $query->where('name', 'like', '%' . $value . '%')
+     *               ->orWhere('logo', 'like', '%' . $value . '%');
+     *
+     *     });
+     * }),
+     * @return array
+     */
     public function filters() : array
     {
         return [

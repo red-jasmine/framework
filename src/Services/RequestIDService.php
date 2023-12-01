@@ -15,7 +15,7 @@ use Throwable;
 class RequestIDService
 {
 
-    protected static string $fieldName = 'x-Request-Id';
+    protected static string $fieldName = 'x-Request-ID';
 
     /**
      * @return void
