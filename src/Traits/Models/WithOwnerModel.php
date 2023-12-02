@@ -5,6 +5,10 @@ namespace RedJasmine\Support\Traits\Models;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Contracts\UserInterface;
 
+/**
+ * @property string $owner_type
+ * @property int    $owner_uid
+ */
 trait WithOwnerModel
 {
 

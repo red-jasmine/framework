@@ -5,6 +5,12 @@ namespace RedJasmine\Support\Traits\Models;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Contracts\UserInterface;
 
+/**
+ * @property  string $creator_type
+ * @property  int    $creator_uid
+ * @property  string $updater_type
+ * @property  int    $updater_uid
+ */
 trait WithOperatorModel
 {
 
