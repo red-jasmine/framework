@@ -10,6 +10,25 @@ trait HasQueryBuilder
 {
 
 
+    public static function searchFilter($fields, $name = 'search')
+    {
+        $fields = is_array($fields) ? $fields : func_get_args();
+        if (blank($fields)) {
+            return;
+        }
+        $function = function ($query, $value, $property) use ($fields) {
+            $query->where(function ($query) use ($value, $property, $fields) {
+                $query->where($fields[0], 'like', '%' . $value . '%');
+                unset($fields[0]);
+                foreach ($fields as $field) {
+                    $query->orWhere($field, 'like', '%' . $value . '%');
+                }
+            });
+        };
+        return AllowedFilter::callback($name, $function);
+
+    }
+
     /**
      *
      *
