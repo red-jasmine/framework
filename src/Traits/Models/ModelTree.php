@@ -4,6 +4,9 @@ namespace RedJasmine\Support\Traits\Models;
 
 use Closure;
 
+/**
+ * @property  $children
+ */
 trait ModelTree
 {
 

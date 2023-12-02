@@ -3,11 +3,25 @@
 namespace RedJasmine\Support\Traits\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 trait HasQueryBuilder
 {
+
+    public bool $disableRequest = false;
+
+    public function isDisableRequest() : bool
+    {
+        return $this->disableRequest;
+    }
+
+    public function disableRequest(bool $disableRequest = true) : static
+    {
+        $this->disableRequest = $disableRequest;
+        return $this;
+    }
 
 
     public static function searchFilter($fields, $name = 'search')
@@ -29,18 +43,6 @@ trait HasQueryBuilder
 
     }
 
-    /**
-     *
-     *
-     * AllowedFilter::callback('keyword', function ($query, $value, $property) {
-     *     $query->where(function ($query) use ($value, $property) {
-     *         $query->where('name', 'like', '%' . $value . '%')
-     *               ->orWhere('logo', 'like', '%' . $value . '%');
-     *
-     *     });
-     * }),
-     * @return array
-     */
     public function filters() : array
     {
         return [
@@ -67,7 +69,14 @@ trait HasQueryBuilder
 
     public function query() : QueryBuilder
     {
-        $queryBuilder = QueryBuilder::for($this->model);
+        /**
+         * 如果是 不是当前请求调用 会出现 自动加载条件问题
+         */
+        $request = null;
+        if ($this->disableRequest) {
+            $request = new Request();
+        }
+        $queryBuilder = QueryBuilder::for($this->model, $request);
         if (filled($this->filters())) {
             $queryBuilder->allowedFilters($this->filters());
         }
