@@ -135,4 +135,74 @@ trait ModelTree
         return $branch;
     }
 
+    /**
+     * Get options for Select field in form.
+     *
+     * @param Closure|null $closure
+     * @param string       $rootText
+     *
+     * @return array
+     */
+    public static function selectOptions(Closure $closure = null,$needRoot= true, $rootText = null)
+    {
+        $rootText = $rootText ?: '顶级';
+
+        $options = (new static())->withQuery($closure)->buildSelectOptions();
+        if($needRoot){
+            return collect($options)->prepend($rootText, 0)->all();
+        }
+        return collect($options)->all();
+    }
+
+    /**
+     * Build options of select field in form.
+     *
+     * @param  array  $nodes
+     * @param  int  $parentId
+     * @param  string  $prefix
+     * @param  string  $space
+     * @return array
+     */
+    protected function buildSelectOptions(array $nodes = [], $parentId = 0, $prefix = '', $space = '&nbsp;')
+    {
+        $d = '├─';
+        $prefix = $prefix ?: $d.$space;
+
+        $options = [];
+
+        if (empty($nodes)) {
+            $nodes = $this->allNodes()->toArray();
+        }
+
+        foreach ($nodes as $index => $node) {
+            if ($node[$this->getParentColumn()] == $parentId) {
+                $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()], $index) ? $prefix : str_replace($d, '└─', $prefix);
+
+                $node[$this->getTitleColumn()] = $currentPrefix.$space.$node[$this->getTitleColumn()];
+
+                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix).$d.str_replace([$d, $space], '', $prefix);
+
+                $children = $this->buildSelectOptions($nodes, $node[$this->getKeyName()], $childrenPrefix);
+
+                $options[$node[$this->getKeyName()]] = $node[$this->getTitleColumn()];
+
+                if ($children) {
+                    $options += $children;
+                }
+            }
+        }
+
+        return $options;
+    }
+
+    protected function hasNextSibling($nodes, $parentId, $index)
+    {
+        foreach ($nodes as $i => $node) {
+            if ($node[$this->getParentColumn()] == $parentId && $i > $index) {
+                return true;
+            }
+        }
+    }
+
+
 }

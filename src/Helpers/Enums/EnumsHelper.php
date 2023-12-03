@@ -20,7 +20,7 @@ trait EnumsHelper
     public static function options() : array
     {
         $names = self::names();
-
+        return  $names;
         return array_map(function ($key, $value) {
             return [
                 'value' => $key,
