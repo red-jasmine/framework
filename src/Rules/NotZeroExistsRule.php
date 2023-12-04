@@ -34,7 +34,7 @@ class NotZeroExistsRule implements ValidationRule, ValidatorAwareRule, DataAware
 
     public function validate(string $attribute, mixed $value, Closure $fail) : void
     {
-        if (($value !== 0) && !$this->validator->validateExists($attribute, $value, $this->parameters)) {
+        if (((int)$value !== 0) && !$this->validator->validateExists($attribute, $value, $this->parameters)) {
             $fail(':attribute 无效');
         }
 
