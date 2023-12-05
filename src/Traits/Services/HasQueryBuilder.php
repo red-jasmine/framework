@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 trait HasQueryBuilder
 {
 
-    public bool $disableRequest = false;
+    protected bool $disableRequest = false;
 
     public function isDisableRequest() : bool
     {
