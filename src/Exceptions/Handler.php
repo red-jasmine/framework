@@ -38,6 +38,7 @@ class Handler extends ExceptionHandler
         if ($this->isHttpException($e)) {
             $arrData['code']    = $e->getStatusCode();
             $arrData['message'] = $e->getMessage();
+            $arrData['errors']  = $e->errors();
         }
 
         if ($e instanceof AuthenticationException) {
@@ -46,6 +47,7 @@ class Handler extends ExceptionHandler
 
         }
         if ($e instanceof AbstractException) {
+
             $arrData['data']    = $e->getData();
             $arrData['code']    = $e->getCode();
             $arrData['message'] = $e->getMessage();
