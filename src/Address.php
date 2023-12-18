@@ -37,11 +37,11 @@ class Address
         $data    = $this->regionValidate($data, $validateLevel);
         $address = new Models\Address();
         // 所属人
-        $address->owner_type = $owner->getUserType();
-        $address->owner_uid  = $owner->getUID();
+        $address->owner_type = $owner->getType();
+        $address->owner_id  = $owner->getID();
 
-        $address->creator_type     = $operator->getUserType();
-        $address->creator_uid      = $operator->getUID();
+        $address->creator_type     = $operator->getType();
+        $address->creator_id      = $operator->getID();
         $address->creator_nickname = $operator->getNickname();
         $address->fill($data);
         $address->save();
@@ -180,7 +180,7 @@ class Address
         $address = Models\Address::findOrFail($id);
 
         $address->updater_type     = $operator->getUserType();
-        $address->updater_uid      = $operator->getUID();
+        $address->updater_id      = $operator->getID();
         $address->updater_nickname = $operator->getNickname();
         $address->fill($data);
         $address->save();
