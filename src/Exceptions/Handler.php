@@ -38,7 +38,10 @@ class Handler extends ExceptionHandler
         if ($this->isHttpException($e)) {
             $arrData['code']    = $e->getStatusCode();
             $arrData['message'] = $e->getMessage();
-            $arrData['errors']  = $e->errors();
+
+            if(method_exists($e,'errors')){
+                $arrData['errors']  = $e->errors();
+            }
         }
 
         if ($e instanceof AuthenticationException) {

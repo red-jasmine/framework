@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Traits\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Helpers\UserObjectBuilder;
 
 /**
  * @property string $owner_type
@@ -11,6 +12,11 @@ use RedJasmine\Support\Contracts\UserInterface;
  */
 trait WithOwnerModel
 {
+
+    public function getOwner() : UserInterface
+    {
+        return new UserObjectBuilder([ 'type' => $this->owner_type, 'uid' => $this->owner_uid ]);
+    }
 
     public function scopeOwner(Builder $query, UserInterface $owner) : Builder
     {
@@ -25,8 +31,6 @@ trait WithOwnerModel
             $this->owner_type = $owner->getUserType();
             $this->owner_uid  = $owner->getUID();
         }
-
-
     }
 
 }

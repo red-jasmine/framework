@@ -27,7 +27,7 @@ class SupportServiceProvider extends ServiceProvider
             $this->bootForConsole();
         }
 
-        RequestIDService::boot();
+        //RequestIDService::boot();
         DomainRoute::boot();
         SQLLogService::boot();
 
