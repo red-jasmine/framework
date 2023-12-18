@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Traits;
+namespace RedJasmine\Support\Traits\Services;
 
 use RedJasmine\Support\Contracts\UserInterface;
 

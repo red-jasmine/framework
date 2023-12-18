@@ -7,17 +7,20 @@ namespace RedJasmine\Support\Contracts;
  */
 interface UserInterface
 {
-    /**
-     * 用户类型
-     * @return string
-     */
-    public function getUserType() : string;
+
 
     /**
-     * 获取用户ID
+     * 类型
+     * @return string
+     */
+    public function getType() : string;
+
+
+    /**
+     * ID
      * @return int
      */
-    public function getUID() : int;
+    public function getID() : int;
 
 
     /**

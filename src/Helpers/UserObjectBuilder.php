@@ -7,79 +7,37 @@ use RedJasmine\Support\Contracts\UserInterface;
 class UserObjectBuilder implements UserInterface
 {
     /**
-     * @param array{type:string,uid:string,nickname:string|null,avatar:string|null} $data
+     * @param array{type:string,id:string,nickname:string|null,avatar:string|null} $data
      */
     public function __construct(array $data)
     {
-        $this->userType = $data['type'] ?? '';
-        $this->uid      = $data['uid'] ?? '';
+        $this->type     = $data['type'] ?? '';
+        $this->id       = $data['id'] ?? '';
         $this->avatar   = $data['avatar'] ?? '';
         $this->nickname = $data['nickname'] ?? '';
     }
 
-    /**
-     * @param int|string $userType
-     * @return UserObjectBuilder
-     */
-    public function setUserType(int|string $userType) : UserObjectBuilder
-    {
-        $this->userType = $userType;
-        return $this;
-    }
 
-    /**
-     * @param int|string $uid
-     * @return UserObjectBuilder
-     */
-    public function setUid(int|string $uid) : UserObjectBuilder
-    {
-        $this->uid = $uid;
-        return $this;
-    }
-
-    /**
-     * @param string|null $nickname
-     * @return UserObjectBuilder
-     */
-    public function setNickname(?string $nickname) : UserObjectBuilder
-    {
-        $this->nickname = $nickname;
-        return $this;
-    }
-
-    /**
-     * @param string|null $avatar
-     * @return UserObjectBuilder
-     */
-    public function setAvatar(?string $avatar) : UserObjectBuilder
-    {
-        $this->avatar = $avatar;
-        return $this;
-    }
-
-
-
-
-    protected string|int $userType;
+    protected string|int $type;
 
     /**
      * 用户类型
      * @return string
      */
-    public function getUserType() : string
+    public function getType() : string
     {
-        return $this->userType;
+        return $this->type;
     }
 
-    protected string|int $uid;
+    protected string|int $id;
 
     /**
      * 获取用户ID
      * @return int
      */
-    public function getUID() : int
+    public function getID() : int
     {
-        return $this->uid;
+        return $this->id;
     }
 
 

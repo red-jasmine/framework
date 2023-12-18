@@ -31,7 +31,7 @@ trait UserOwnerTools
      */
     public function getUser() : ?UserInterface
     {
-        return new UserObjectBuilder([ 'type' => 'system', 'uid' => 0, 'nickname' => '系统' ]);
+        return new UserObjectBuilder([ 'type' => 'system', 'id' => 0, 'nickname' => '系统' ]);
         return request()->user();
     }
 
@@ -44,7 +44,7 @@ trait UserOwnerTools
         // TODO  根据 设备ID、 ip 等信息
         $guest = [
             'type'     => 'guest',
-            'uid'      => 0,
+            'id'      => 0,
             'nickname' => '游客',
             'avatar'   => '',
         ];

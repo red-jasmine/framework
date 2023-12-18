@@ -8,28 +8,28 @@ use RedJasmine\Support\Helpers\UserObjectBuilder;
 
 /**
  * @property string $owner_type
- * @property int    $owner_uid
+ * @property int    $owner_id
  */
 trait WithOwnerModel
 {
 
     public function getOwner() : UserInterface
     {
-        return new UserObjectBuilder([ 'type' => $this->owner_type, 'uid' => $this->owner_uid ]);
+        return new UserObjectBuilder([ 'type' => $this->owner_type, 'id' => $this->owner_id ]);
     }
 
     public function scopeOwner(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('owner_type', $owner->getUserType())
-                     ->where('owner_uid', $owner->getUID());
+        return $query->where('owner_type', $owner->getType())
+                     ->where('owner_id', $owner->getID());
 
     }
 
     public function withOwner(?UserInterface $owner) : void
     {
         if ($owner) {
-            $this->owner_type = $owner->getUserType();
-            $this->owner_uid  = $owner->getUID();
+            $this->owner_type = $owner->getType();
+            $this->owner_id   = $owner->getID();
         }
     }
 

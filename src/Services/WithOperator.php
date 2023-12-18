@@ -85,7 +85,7 @@ trait WithOperator
         return tap($model, function ($model) {
             if ($this->getOperator()) {
                 $model->creator_type     = $this->getOperator()->getUserType();
-                $model->creator_uid      = $this->getOperator()->getUID();
+                $model->creator_id      = $this->getOperator()->getUID();
                 $model->creator_nickname = $this->getOperator()->getNickname();
             }
         });
@@ -101,7 +101,7 @@ trait WithOperator
         return tap($model, function ($model) {
             if ($this->getOperator()) {
                 $model->updater_type     = $this->getOperator()->getUserType();
-                $model->updater_uid      = $this->getOperator()->getUID();
+                $model->updater_id      = $this->getOperator()->getUID();
                 $model->updater_nickname = $this->getOperator()->getNickname();
             }
         });

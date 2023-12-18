@@ -9,19 +9,19 @@ class SystemUser implements UserInterface
 {
 
 
-    public function __construct(public int $uid = 0)
+    public function __construct(public int $id = 0)
     {
     }
 
 
-    public function getUserType() : string
+    public function getType() : string
     {
         return UserType::SYSTEM->value;
     }
 
-    public function getUID() : int
+    public function getID() : int
     {
-        return $this->uid;
+        return $this->id;
     }
 
     public function getNickname() : ?string
