@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('owner_type', 20)->comment('所属者类型');
-            $table->string('owner_uid', 64)->comment('所属者UID');
+            $table->string('owner_id', 64)->comment('所属者UID');
             $table->string('owner_nickname', 64)->nullable()->comment('所属者昵称');
 
             $table->string('item_type')->default('')->comment('商品类型');
@@ -27,11 +27,11 @@ return new class extends Migration {
             $table->string('remark')->default()->comment('备注');
 
             $table->string('creator_type', 20)->nullable()->comment('创建者类型');
-            $table->string('creator_uid', 64)->nullable()->comment('创建者ID');
+            $table->string('creator_id', 64)->nullable()->comment('创建者ID');
             $table->string('creator_nickname', 64)->nullable()->comment('创建者昵称');
 
             $table->string('updater_type', 20)->nullable()->comment('更新者类型');
-            $table->string('updater_uid', 64)->nullable()->comment('更新者UID');
+            $table->string('updater_id', 64)->nullable()->comment('更新者UID');
             $table->string('updater_nickname', 64)->nullable()->comment('更新者昵称');
 
             $table->timestamps();
