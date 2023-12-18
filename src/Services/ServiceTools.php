@@ -138,7 +138,7 @@ trait ServiceTools
         return tap($model, function ($model) {
             if ($this->getOperator()) {
                 $model->creator_type     = $this->getOperator()->getUserType();
-                $model->creator_id      = $this->getOperator()->getUID();
+                $model->creator_id      = $this->getOperator()->getID();
                 $model->creator_nickname = $this->getOperator()->getNickname();
             }
         });
@@ -156,7 +156,7 @@ trait ServiceTools
         return tap($model, function ($model) {
             if ($this->getOperator()) {
                 $model->updater_type     = $this->getOperator()->getUserType();
-                $model->updater_id      = $this->getOperator()->getUID();
+                $model->updater_id      = $this->getOperator()->getID();
                 $model->updater_nickname = $this->getOperator()->getNickname();
             }
         });
