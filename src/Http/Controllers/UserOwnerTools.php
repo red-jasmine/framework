@@ -31,7 +31,6 @@ trait UserOwnerTools
      */
     public function getUser() : ?UserInterface
     {
-        return new UserObjectBuilder([ 'type' => 'system', 'id' => 0, 'nickname' => '系统' ]);
         return request()->user();
     }
 
