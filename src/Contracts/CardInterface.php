@@ -11,15 +11,22 @@ use RedJasmine\Trade\Contracts\ItemInterface;
 interface CardInterface extends BelongsToOwnerInterface
 {
 
-    public function card() : string;
+    /**
+     * @return string
+     */
+    public function content() : string;
 
-    public function quantity() : int;
+    /**
+     * 库存
+     * @return int
+     */
+    public function stock() : int;
 
     /**
      * 批次号
      * @return int
      */
-    public function batch() : int;
+    public function batchNo() : int;
 
 
 }

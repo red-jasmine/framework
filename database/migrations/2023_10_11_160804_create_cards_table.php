@@ -8,32 +8,19 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('cards', function (Blueprint $table) {
-            $table->id();
-            $table->string('owner_type', 20)->comment('所属者类型');
-            $table->string('owner_id', 64)->comment('所属者UID');
-            $table->string('owner_nickname', 64)->nullable()->comment('所属者昵称');
-
-            $table->string('item_type')->default('')->comment('商品类型');
-            $table->unsignedBigInteger('item_id')->default(0)->comment('商品ID');
+            $table->unsignedBigInteger('id')->primary();
+            $table->morphs('owner');
+            $table->morphs('product');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
-
-            $table->unsignedTinyInteger('batch')->default(0)->comment('批次号');
-            $table->text('card')->comment('卡密');
-
-            $table->unsignedTinyInteger('quantity')->default(0)->comment('数量');
-            $table->unsignedTinyInteger('sold')->default(0)->comment('销量');
-
-            $table->unsignedTinyInteger('status')->default(0)->comment('商品状态');
-            $table->string('remark')->default()->comment('备注');
-
-            $table->string('creator_type', 20)->nullable()->comment('创建者类型');
-            $table->string('creator_id', 64)->nullable()->comment('创建者ID');
-            $table->string('creator_nickname', 64)->nullable()->comment('创建者昵称');
-
-            $table->string('updater_type', 20)->nullable()->comment('更新者类型');
-            $table->string('updater_id', 64)->nullable()->comment('更新者UID');
-            $table->string('updater_nickname', 64)->nullable()->comment('更新者昵称');
-
+            $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
+            $table->unsignedTinyInteger('stock_type')->default(1)->comment('库存类型');
+            $table->unsignedBigInteger('stock')->default(1)->comment('库存');
+            $table->unsignedBigInteger('sales')->default(0)->comment('销量');
+            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
+            $table->text('content')->comment('内容');
+            $table->string('remarks')->nullable()->comment('备注');
+            $table->nullableMorphs('creator');
+            $table->nullableMorphs('updater');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('卡密表');
