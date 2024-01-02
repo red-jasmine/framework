@@ -16,7 +16,7 @@ class CrawlDataCommand extends Command
 
     protected $description = '数据爬取';
 
-    public static string $baseUrl = 'http://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2022/';
+    public static string $baseUrl = 'https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/';
 
     public static array $tableClass = [
         'province'        => '.provincetable .provincetr td', // 省
@@ -51,7 +51,7 @@ class CrawlDataCommand extends Command
                 $name = $result->find('td')[1]->text;
             }
             $lists[] = [
-                'id'        => str_pad($id, 12, 0),
+                'id'        => $this->encoding($id,RegionLevel::DISTRICT),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -109,7 +109,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'        => str_pad($id, 12, 0),
+                'id'        => $this->encoding($id,RegionLevel::STREET),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -151,7 +151,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'        => str_pad($id, 12, 0),
+                'id'        => $this->encoding($id,RegionLevel::STREET),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -193,7 +193,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'           => str_pad($id, 12, 0),
+                'id'           => $this->encoding($id,RegionLevel::VILLAGE),
                 'name'         => $name,
                 'href'         => $href,
                 'parent_id'    => $parent['id'],
@@ -260,7 +260,7 @@ class CrawlDataCommand extends Command
             preg_match("/\d+/", $href, $matches);
             $id      = $matches[0];
             $lists[] = [
-                'id'        => str_pad($id, 12, 0),
+                'id'        => $this->encoding($id,RegionLevel::PROVINCE),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => 0,
@@ -291,7 +291,7 @@ class CrawlDataCommand extends Command
             $href    = $result->find('td a')[0]->getAttribute('href');
             $name    = $result->find('td a')[1]->text;
             $lists[] = [
-                'id'        => str_pad($id, 12, 0),
+                'id'        => $this->encoding($id,RegionLevel::CITY),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -309,16 +309,18 @@ class CrawlDataCommand extends Command
 
 
         $provinces = $this->provinces();
-        //$this->toDB($provinces);
+
+        $this->toDB($provinces);
         foreach ($provinces as $province) {
             $cities = $this->cities($province);
+
             $this->toDB($cities);
             foreach ($cities as $city) {
                 if ($city['name'] === '省直辖县级行政区划' || $city['name'] === '自治区直辖县级行政区划') {
                     $city['id'] = $province['id']; // 替换ID
                 }
                 $districts = $this->findData($city);
-                //$this->toDB($districts);
+                $this->toDB($districts);
                 if ($level <= RegionLevel::DISTRICT->value) {
                     continue;
                 }
@@ -329,7 +331,7 @@ class CrawlDataCommand extends Command
                     } else {
                         $streets = $this->villages($district);
                     }
-                    //$this->toDB($streets);
+                    $this->toDB($streets);
                     if ($level <= RegionLevel::STREET->value) {
                         continue;
                     }
@@ -349,7 +351,7 @@ class CrawlDataCommand extends Command
 
     public function toDB(array $lists) : void
     {
-        $pinyin = app('pinyin');
+        //$pinyin = app('pinyin');
         foreach ($lists as $list) {
 
             if ($list['level'] === RegionLevel::DISTRICT->value && $list['name'] === '市辖区') {
@@ -368,12 +370,31 @@ class CrawlDataCommand extends Command
                                        'id'            => (int)$list['id'],
                                        'parent_id'     => (int)$list['parent_id'],
                                        'name'          => $list['name'],
-                                       'level'         => $list['level'],
-                                       //'pinyin_prefix' => Str::upper($pinyin->abbr($list['name'])[0]),
-                                       //'pinyin'        => $pinyin->sentence($list['name'])
+                                       'level'         => $list['level']
                                    ]
             );
 
         }
+    }
+
+
+    public function encoding($id,RegionLevel $level)
+    {
+        switch ($level){
+            case RegionLevel::COUNTRY:
+                return $id;
+                break;
+            case RegionLevel::DISTRICT:
+            case RegionLevel::CITY:
+            case RegionLevel::PROVINCE:
+               return str_pad(Str::limit($id,6), 6, 0);
+                break;
+            case RegionLevel::STREET:
+                return str_pad(Str::limit($id,9), 9, 0);
+                break;
+            case RegionLevel::VILLAGE:
+                return str_pad($id, 12, 0);
+        }
+
     }
 }
