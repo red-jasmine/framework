@@ -9,18 +9,11 @@ return new class extends Migration {
     {
         Schema::create('address', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_type',20)->comment('所属者类型');
-            $table->string('owner_id',64)->comment('所属者UID');
-
+            $table->string('owner_type', 20)->comment('所属者类型');
+            $table->string('owner_id', 64)->comment('所属者UID');
 
             $table->string('contacts', 30)->nullable()->comment('联系人');
             $table->string('mobile')->nullable()->comment('手机');
-            $table->string('phone')->nullable()->comment('电话');
-            $table->unsignedBigInteger('country_id')->nullable()->comment('国家ID');
-            $table->unsignedBigInteger('province_id')->nullable()->comment('省份ID');
-            $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
-            $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
-            $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
 
             $table->string('country', 20)->nullable()->comment('国家');
             $table->string('province', 20)->nullable()->comment('省份');
@@ -28,24 +21,30 @@ return new class extends Migration {
             $table->string('district', 40)->nullable()->comment('区县');
             $table->string('street', 50)->nullable()->comment('乡镇街道');
 
+            $table->unsignedBigInteger('country_id')->nullable()->comment('国家ID');
+            $table->unsignedBigInteger('province_id')->nullable()->comment('省份ID');
+            $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
+            $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
+            $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
+
             $table->string('address')->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
             $table->decimal('lng', 13, 10)->nullable()->comment('经度');
             $table->decimal('lat', 13, 10)->nullable()->comment('纬度');
 
-            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
-            $table->string('tag', 10)->nullable()->comment('标签');
+            $table->string('tag')->nullable()->comment('标签');
             $table->string('remarks')->nullable()->comment('备注');
 
+            $table->string('type')->nullable()->comment('地址类型');
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
 
             $table->string('creator_type', 64)->nullable()->comment('创建者类型');
             $table->string('creator_id', 64)->nullable()->comment('创建者ID');
-            $table->string('creator_nickname', 64)->nullable()->comment('创建者昵称');
+
             $table->string('updater_type', 64)->nullable()->comment('更新者类型');
             $table->string('updater_id', 64)->nullable()->comment('更新者UID');
-            $table->string('updater_nickname', 64)->nullable()->comment('更新者UID');
+
             $table->timestamps();
             $table->softDeletes();
             $table->comment('地址表');

@@ -8,25 +8,23 @@ use RedJasmine\Address\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Region\Facades\Region;
-use RedJasmine\Support\Contracts\UserInterface as User;
+use RedJasmine\Support\Services\ServiceTools;
 
 class Address
 {
-    // Build wonderful things
+    use ServiceTools;
 
 
     /**
      * 创建地址
      *
-     * @param User                 $owner
      * @param array                $data
-     * @param User                 $operator
      * @param AddressValidateLevel $validateLevel
      *
      * @return Models\Address
      * @throws AddressException
      */
-    public function create(User $owner, array $data, User $operator, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT,) : Models\Address
+    public function create(array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
     {
 
         $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
@@ -36,13 +34,10 @@ class Address
         // 验证省份
         $data    = $this->regionValidate($data, $validateLevel);
         $address = new Models\Address();
-        // 所属人
-        $address->owner_type = $owner->getType();
-        $address->owner_id  = $owner->getID();
 
-        $address->creator_type     = $operator->getType();
-        $address->creator_id      = $operator->getID();
-        $address->creator_nickname = $operator->getNickname();
+        $address->withOwner($this->getOwner());
+        $address->withCreator($this->getOperator());
+
         $address->fill($data);
         $address->save();
         return $address;
@@ -61,6 +56,7 @@ class Address
             'contacts' => [ 'required', 'max:30', ],
             'mobile'   => [ 'required', 'max:20', ],
             'address'  => [ 'sometimes', 'max:100', ],
+            'type'     => [ 'sometimes', 'max:100', ],
             'tag'      => [ 'sometimes', 'max:10', ],
             'remarks'  => [ 'sometimes', 'max:100', ],
             'zip_code' => [ 'sometimes', 'max:6', ],
@@ -123,38 +119,34 @@ class Address
                 'validate_level'  => AddressValidateLevel::STREET,
             ],
         ];
+        $levels      = [
+            AddressValidateLevel::COUNTRY->value  => 'country',
+            AddressValidateLevel::PROVINCE->value => 'province',
+            AddressValidateLevel::CITY->value     => 'city',
+            AddressValidateLevel::DISTRICT->value => 'district',
+            AddressValidateLevel::STREET->value   => 'street',
+        ];
         $id          = [];
         foreach ($regionRules as $rule) {
             if ($data[$rule['field']] ?? null) {
                 $id[] = (int)$data[$rule['field']];
             }
         }
-
         $regions = Region::query($id)->keyBy('id')->all();
-        foreach ($regionRules as $rule) {
-            // ID 存在必须验证
-            if (filled($data[$rule['field']] ?? null) || $validateLevel->value >= $rule['validate_level']->value) {
-                $region = $regions[(int)$data[$rule['field']]] ?? null;
-                if (blank($region)) {
-                    // TODO 存在一些 没有 划分区县的城市 比如东莞
-                    throw new AddressException("{$rule['name']}不存在");
-                }
-                // 验证等级
-                if ($region->level !== $rule['level']) {
-                    throw new AddressException("{$rule['name']} 等级不一致");
-                }
-                // 验证关系 TODO 可能是间接的关系
-                if (filled($rule['parent_id_field'] ?? null) && $region->parent_id !== (int)$data[$rule['parent_id_field']]) {
-                    //throw new AddressException("{$rule['name']} 关系不一致");
-                }
-                $data[Str::replace('_id', '', $rule['field'])] = $region->name;
-            } else {
-                $data[$rule['field']]                          = null;
-                $data[Str::replace('_id', '', $rule['field'])] = '';
+
+        // 判断是否为连续
+        //$maps = collect($regions)->pluck('parent_id', 'id')->sortKeysDesc();
+        foreach ($regions as $id => $region) {
+            // 没有上级了
+            if (!isset($regions[$region->parent_id]) && $region->parent_id !== 0) {
+                throw new AddressException("地址选择不正确");
             }
         }
+        foreach (collect($regions)->sortKeys()->values() as $index => $region) {
 
-
+            $field        = $levels[($index + 1)];
+            $data[$field] = $region->name;
+        }
         return $data;
     }
 
@@ -163,13 +155,12 @@ class Address
      *
      * @param int                  $id
      * @param array                $data
-     * @param User                 $operator
      * @param AddressValidateLevel $validateLevel
      *
      * @return Models\Address
      * @throws AddressException
      */
-    public function update(int $id, array $data, User $operator, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
+    public function update(int $id, array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
     {
         $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
         $data['sort']       = (int)($data['sort'] ?? 0);
@@ -179,9 +170,8 @@ class Address
         $data    = $this->regionValidate($data, $validateLevel);
         $address = Models\Address::findOrFail($id);
 
-        $address->updater_type     = $operator->getUserType();
-        $address->updater_id      = $operator->getID();
-        $address->updater_nickname = $operator->getNickname();
+
+        $address->withUpdater($this->getOperator());
         $address->fill($data);
         $address->save();
         return $address;
