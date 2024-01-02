@@ -93,7 +93,7 @@ trait ServiceTools
      *
      * @return $this
      */
-    public function setOperator(?UserInterface $operator = null)
+    public function setOperator(?UserInterface $operator = null): static
     {
         $this->operator = $operator;
         return $this;
@@ -160,6 +160,12 @@ trait ServiceTools
                 $model->updater_nickname = $this->getOperator()->getNickname();
             }
         });
+    }
+
+
+    public function make():static
+    {
+        return new static();
     }
 
 
