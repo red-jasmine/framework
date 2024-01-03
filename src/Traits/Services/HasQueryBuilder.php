@@ -67,7 +67,7 @@ trait HasQueryBuilder
         return [];
     }
 
-    public function query() : QueryBuilder
+    public function queryBuilder() : QueryBuilder
     {
         /**
          * 如果是 不是当前请求调用 会出现 自动加载条件问题

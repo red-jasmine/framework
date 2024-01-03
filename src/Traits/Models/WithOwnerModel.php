@@ -13,6 +13,7 @@ use RedJasmine\Support\Helpers\UserObjectBuilder;
 trait WithOwnerModel
 {
 
+
     public function getOwner() : UserInterface
     {
         return new UserObjectBuilder([ 'type' => $this->owner_type, 'id' => $this->owner_id ]);
