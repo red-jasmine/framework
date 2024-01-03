@@ -29,7 +29,7 @@ return new class extends Migration {
 
             $table->string('address')->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
-            $table->decimal('lng', 13, 10)->nullable()->comment('经度');
+            $table->decimal('long', 13, 10)->nullable()->comment('经度');
             $table->decimal('lat', 13, 10)->nullable()->comment('纬度');
 
             $table->string('tag')->nullable()->comment('标签');
