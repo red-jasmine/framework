@@ -15,7 +15,7 @@ enum CardStatus: int
     case DISABLE = 0; // 禁用
 
 
-    public static function names() : array
+    public static function labels() : array
     {
         return [
             self::ENABLE->value => '启用',
