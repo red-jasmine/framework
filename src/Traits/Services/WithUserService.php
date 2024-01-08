@@ -41,9 +41,7 @@ trait WithUserService
 
     public function getOperator() : ?UserInterface
     {
-        Auth::setUser();
-        $user = Auth::attempt();
-        dd($user);
+
         return $this->operator;
     }
 
@@ -55,7 +53,6 @@ trait WithUserService
         $this->operator = $operator;
         return $this;
     }
-
 
 
 }
