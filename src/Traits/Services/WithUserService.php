@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Traits\Services;
 
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Support\Contracts\UserInterface;
 
 trait WithUserService
@@ -40,11 +41,17 @@ trait WithUserService
 
     public function getOperator() : ?UserInterface
     {
+        Auth::setUser();
+        $user = Auth::attempt();
+        dd($user);
         return $this->operator;
     }
 
     public function setOperator(?UserInterface $operator) : static
     {
+
+
+
         $this->operator = $operator;
         return $this;
     }

@@ -8,7 +8,12 @@ trait EnumsHelper
 
     public function name() : string
     {
-        return self::names()[$this->value] ?? $this->value;
+        return self::label()[$this->value] ?? $this->value;
+    }
+
+    public function label() : string
+    {
+        return self::labels()[$this->value] ?? $this->name;
     }
 
     public function color()
@@ -16,18 +21,13 @@ trait EnumsHelper
         return self::colors()[$this->value] ?? $this->value;
     }
 
-
+    public static function names() : array
+    {
+        return self::labels();
+    }
     public static function options() : array
     {
-        $names = self::names();
-        return  $names;
-        return array_map(function ($key, $value) {
-            return [
-                'value' => $key,
-                'label' => $value
-            ];
-        }, array_keys($names), $names);
-
+        return self::labels();
     }
 
 }

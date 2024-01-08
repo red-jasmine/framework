@@ -14,7 +14,7 @@ enum BoolIntEnum: int
     case NO = 0;
 
 
-    public static function names() : array
+    public static function labels() : array
     {
         return [
             self::YES->value => '是',

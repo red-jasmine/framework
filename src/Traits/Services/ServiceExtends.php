@@ -26,6 +26,7 @@ trait ServiceExtends
      */
     public function __call($method, $parameters)
     {
+
         if (method_exists($this->service, $method)) {
             return call_user_func_array([ $this->service, $method ], $parameters);
         }
