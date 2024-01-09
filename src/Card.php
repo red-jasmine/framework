@@ -2,12 +2,8 @@
 
 namespace RedJasmine\Card;
 
-use RedJasmine\Support\Services\ServiceTools;
-
 class Card
 {
-    use ServiceTools;
-
 
     public function create()
     {
