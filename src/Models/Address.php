@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Traits\Models\WithOperatorModel;
-use RedJasmine\Support\Traits\Models\WithOwnerModel;
+use RedJasmine\Support\Traits\Models\HasOperator;
+use RedJasmine\Support\Traits\Models\HasOwner;
 
 class Address extends Model
 {
@@ -16,9 +16,9 @@ class Address extends Model
 
     use SoftDeletes;
 
-    use WithOwnerModel;
+    use HasOwner;
 
-    use WithOperatorModel;
+    use HasOperator;
 
     protected $table = 'address';
 
@@ -37,6 +37,7 @@ class Address extends Model
 
     public function fullAddress() : Attribute
     {
+
         return Attribute::make(
             get: fn($value, $attributes) => implode([ $attributes['province'], $attributes['city'], $attributes['district'], $attributes['street'], $attributes['address'] ])
         );

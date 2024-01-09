@@ -3,17 +3,14 @@
 namespace RedJasmine\Address;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use RedJasmine\Address\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Region\Facades\Region;
-use RedJasmine\Support\Services\ServiceTools;
+use RedJasmine\Support\Foundation\Service\Service;
 
-class Address
+class Address extends Service
 {
-    use ServiceTools;
-
 
     /**
      * 创建地址
@@ -35,9 +32,8 @@ class Address
         $data    = $this->regionValidate($data, $validateLevel);
         $address = new Models\Address();
 
-        $address->withOwner($this->getOwner());
-        $address->withCreator($this->getOperator());
-
+        $address->owner   = $this->getOwner();
+        $address->creator = $this->getOperator();
         $address->fill($data);
         $address->save();
         return $address;
@@ -171,7 +167,7 @@ class Address
         $address = Models\Address::findOrFail($id);
 
 
-        $address->withUpdater($this->getOperator());
+        $address->updater = $this->getOperator();
         $address->fill($data);
         $address->save();
         return $address;
