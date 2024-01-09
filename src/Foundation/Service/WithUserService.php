@@ -1,8 +1,7 @@
 <?php
 
-namespace RedJasmine\Support\Traits\Services;
+namespace RedJasmine\Support\Foundation\Service;
 
-use Illuminate\Support\Facades\Auth;
 use RedJasmine\Support\Contracts\UserInterface;
 
 trait WithUserService
@@ -47,9 +46,6 @@ trait WithUserService
 
     public function setOperator(?UserInterface $operator) : static
     {
-
-
-
         $this->operator = $operator;
         return $this;
     }

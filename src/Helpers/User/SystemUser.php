@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Services;
+namespace RedJasmine\Support\Helpers\User;
 
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Enums\UserType;
@@ -9,7 +9,7 @@ class SystemUser implements UserInterface
 {
 
 
-    public function __construct(public int $id = 0)
+    public function __construct(public int $id = 0, protected string $nickname = 'system')
     {
     }
 
@@ -26,7 +26,7 @@ class SystemUser implements UserInterface
 
     public function getNickname() : ?string
     {
-        return 'system';
+        return $this->nickname;
     }
 
     public function getAvatar() : ?string

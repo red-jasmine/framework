@@ -7,8 +7,7 @@ use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Contracts\ClientInterface;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Helpers\ClientObjectBuilder;
-use RedJasmine\Support\Helpers\UserObjectBuilder;
-use RedJasmine\Support\Services\SystemUser;
+use RedJasmine\Support\Helpers\User\UserObject;
 
 trait UserOwnerTools
 {
@@ -47,7 +46,7 @@ trait UserOwnerTools
             'nickname' => '游客',
             'avatar'   => '',
         ];
-        return new UserObjectBuilder($guest);
+        return new UserObject($guest);
 
     }
 

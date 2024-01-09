@@ -1,10 +1,10 @@
 <?php
 
-namespace RedJasmine\Support\Helpers;
+namespace RedJasmine\Support\Helpers\User;
 
 use RedJasmine\Support\Contracts\UserInterface;
 
-class UserObjectBuilder implements UserInterface
+class UserObject implements UserInterface
 {
     /**
      * @param array{type:string,id:string,nickname:string|null,avatar:string|null} $data

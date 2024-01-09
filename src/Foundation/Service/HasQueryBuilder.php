@@ -1,8 +1,7 @@
 <?php
 
-namespace RedJasmine\Support\Traits\Services;
+namespace RedJasmine\Support\Foundation\Service;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;

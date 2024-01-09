@@ -27,18 +27,18 @@ class AbstractException extends Exception implements HttpExceptionInterface
     protected mixed $data;
 
 
-    public function __construct(string $message = '', int $code = 999999, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 1, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
     {
-        parent::__construct($message, $this->formatCode($code), $previous);
+        parent::__construct($message, $code, $previous);
         $this->errors     = $errors;
         $this->headers    = $headers;
         $this->statusCode = $statusCode;
         $this->data       = $data;
-        // 校验设置
     }
 
     /**
      * @param array $errors
+     *
      * @return AbstractException
      */
     public function setErrors(array $errors) : AbstractException
@@ -49,6 +49,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
 
     /**
      * @param int $statusCode
+     *
      * @return AbstractException
      */
     public function setStatusCode(int $statusCode) : AbstractException
@@ -59,6 +60,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
 
     /**
      * @param array $headers
+     *
      * @return AbstractException
      */
     public function setHeaders(array $headers) : AbstractException
@@ -69,6 +71,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
 
     /**
      * @param mixed $data
+     *
      * @return AbstractException
      */
     public function setData(mixed $data) : AbstractException
@@ -76,9 +79,6 @@ class AbstractException extends Exception implements HttpExceptionInterface
         $this->data = $data;
         return $this;
     }
-
-
-
 
 
     public function formatCode(int $code) : int

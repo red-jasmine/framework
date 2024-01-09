@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Http;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 trait ResponseJson
 {
@@ -21,16 +22,20 @@ trait ResponseJson
         return $data;
     }
 
+
     /**
      * 成功响应
      *
      * @param mixed|null $data
      * @param string     $message
      *
-     * @return JsonResponse
+     * @return JsonResponse|JsonResource
      */
-    public function success(mixed $data = null, string $message = 'ok') : JsonResponse
+    public function success(mixed $data = null, string $message = 'ok') : JsonResponse|JsonResource
     {
+        if ($data instanceof JsonResource) {
+            return $data;
+        }
         return response()->json(self::wrapData($data, $message, 0));
     }
 
