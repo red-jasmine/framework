@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Foundation\Service;
 
 use BadMethodCallException;
 use Closure;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Traits\Macroable;
 
 class Service
@@ -17,7 +18,25 @@ class Service
         __call as macroCall;
     }
 
-    protected static array $actions = [];
+    private static array $actions = [];
+
+    private static bool $loadConfigActions = false;
+
+    protected static string $actionsConfigKey = '';
+
+    protected static function getConfigActions() : array
+    {
+        return Config::get(static::$actionsConfigKey, []);
+    }
+
+    protected static function loadConfigActions() : void
+    {
+        if (static::$loadConfigActions === false) {
+            static::$actions           = array_merge(self::$actions, self::getConfigActions());
+            static::$loadConfigActions = true;
+        }
+
+    }
 
     /**
      * 扩展 操作
@@ -29,6 +48,7 @@ class Service
      */
     public static function extends(string $name, string|object|callable $action) : void
     {
+        static::loadConfigActions();
         static::$actions[$name] = $action;
     }
 
@@ -41,15 +61,15 @@ class Service
      */
     public static function hasAction(string $name) : bool
     {
+        static::loadConfigActions();
         return isset(static::$actions[$name]);
     }
 
 
-    public function getActions()
+    public static function getActions() : array
     {
-        // TODO
-        // 配置化
-        // 扩展化
+        static::loadConfigActions();
+        return static::$actions;
     }
 
     /**
@@ -80,20 +100,16 @@ class Service
     protected function actionCall($method, $parameters) : mixed
     {
         $action = static::$actions[$method];
-
         if ($action instanceof Closure) {
             $action = $action->bindTo($this, static::class);
             return $action(...$parameters);
         }
         $action = app($action);
-
         if ($action instanceof ServiceAwareAction) {
             $action->setService($this);
         }
-        if (method_exists($action, $method)) {
-            return $action->{$method}(...$parameters);
-        }
-        return $action(...$parameters);
+        // 操作
+        return $action;
     }
 
 
