@@ -17,7 +17,7 @@ class Action implements ServiceAwareAction
 
     protected bool $loadPipelines = false;
 
-    protected ?string $pipelinesKey = null;
+    protected ?string $pipelinesConfigKey = null;
 
     public function addPipeline($pipeline) : static
     {
@@ -27,7 +27,7 @@ class Action implements ServiceAwareAction
 
     public function loadConfigPipelines() : static
     {
-        if ($this->loadPipelines === false && $this->pipelinesKey) {
+        if ($this->loadPipelines === false && $this->pipelinesConfigKey) {
             $this->pipelines = array_merge($this->pipelines, $this->getConfigPipelines());
         }
         return $this;
@@ -35,7 +35,7 @@ class Action implements ServiceAwareAction
 
     protected function getConfigPipelines() : array
     {
-        return Config::get($this->pipelinesKey, []);
+        return Config::get($this->pipelinesConfigKey, []);
     }
 
     public function getPipelines() : array
