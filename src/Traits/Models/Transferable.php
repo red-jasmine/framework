@@ -29,12 +29,4 @@ trait Transferable
         $model->parameters = $parameters;
         return $model;
     }
-
-    public static function makeParameters(array $parameters) : static
-    {
-        $model             = static::make($parameters);
-        $model->parameters = $parameters;
-        return $model;
-    }
-
 }

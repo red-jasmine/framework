@@ -4,5 +4,5 @@ namespace RedJasmine\Support\Foundation\Service;
 
 interface ServiceAwareAction
 {
-    public function setService(Service $service) : static;
+    public function setService($service) : static;
 }
