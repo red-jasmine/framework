@@ -29,12 +29,10 @@ return new class extends Migration {
 
             $table->string('address')->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
-            $table->decimal('long', 13, 10)->nullable()->comment('经度');
-            $table->decimal('lat', 13, 10)->nullable()->comment('纬度');
-
+            $table->string('lon')->nullable()->comment('经度');
+            $table->string('lat')->nullable()->comment('纬度');
             $table->string('tag')->nullable()->comment('标签');
             $table->string('remarks')->nullable()->comment('备注');
-
             $table->string('type')->nullable()->comment('地址类型');
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
