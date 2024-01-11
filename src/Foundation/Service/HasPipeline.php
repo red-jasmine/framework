@@ -8,9 +8,24 @@ use Illuminate\Support\Facades\Config;
 trait HasPipeline
 {
 
-    private array $pipelines = [];
 
-    protected bool $loadPipelines = false;
+    /**
+     * 公共 管道
+     * @var array
+     */
+    protected static array $commonPipes = [];
+
+    /**
+     * 扩展公共管道
+     *
+     * @param $pipe
+     *
+     * @return void
+     */
+    public static function extendPipes($pipe) : void
+    {
+        static::$commonPipes[] = $pipe;
+    }
 
     /**
      * 管道 配置
@@ -18,42 +33,27 @@ trait HasPipeline
      */
     protected ?string $pipelinesConfigKey = null;
 
-    public function addPipeline($pipeline) : static
+    /**
+     * 管道
+     * @var array
+     */
+    protected array $pipes = [];
+
+    public function addPipe($pipe) : static
     {
-        $this->pipelines[] = $pipeline;
+        $this->pipes[] = $pipe;
         return $this;
     }
 
-    public function loadConfigPipelines() : static
-    {
-        if ($this->loadPipelines === false && $this->pipelinesConfigKey) {
-            $this->pipelines = array_merge($this->pipelines, $this->getConfigPipelines());
-        }
-        return $this;
-    }
-
-    protected function getConfigPipelines() : array
+    protected function getConfigPipes() : array
     {
         return Config::get($this->pipelinesConfigKey, []);
     }
 
-    public function getPipelines() : array
-    {
-        $this->loadConfigPipelines();
-        return $this->pipelines;
-    }
 
-    protected function pipelines($passable, ?callable $destination = null)
+    protected function pipelines($passable) : Pipeline
     {
-        if ($destination === null) {
-            $destination = function ($passable) {
-                return $passable;
-            };
-        }
-        return app(Pipeline::class)
-            ->send($passable)
-            ->through($this->getPipelines())
-            ->then($destination);
+        return app(Pipeline::class)->send($passable)->pipe(static::$commonPipes)->pipe($this->getConfigPipes())->pipe($this->pipes);
     }
 
 }
