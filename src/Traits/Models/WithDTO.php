@@ -5,10 +5,9 @@ namespace RedJasmine\Support\Traits\Models;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\WithData;
 
-trait HasCarryData
+trait WithDTO
 {
 
-    use WithData;
 
     protected ?Data $_DTO = null;
 
@@ -17,7 +16,7 @@ trait HasCarryData
         return $this->_DTO;
     }
 
-    public function setData(Data $data) : static
+    public function setDTO(Data $data) : static
     {
         $this->_DTO = $data;
         return $this;
