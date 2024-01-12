@@ -54,18 +54,9 @@ class Pipeline extends \Illuminate\Pipeline\Pipeline
                         // since the object we're given was already a fully instantiated object.
                         $parameters = [ $passable, $stack ];
                     }
-                    if (in_array($this->method, [ 'before', 'after' ])) {
-                        if (method_exists($pipe, $this->method)) {
-                            $carry = $pipe->{$this->method}(...$parameters);
-                        } else {
-                            $carry = $stack($passable);
-                        }
-                    } else {
-                        $carry = method_exists($pipe, $this->method)
-                            ? $pipe->{$this->method}(...$parameters)
-                            : $pipe(...$parameters);
-                    }
-
+                    $carry = method_exists($pipe, $this->method)
+                        ? $pipe->{$this->method}(...$parameters)
+                        : $stack($passable);
 
                     return $this->handleCarry($carry);
                 } catch (Throwable $e) {
