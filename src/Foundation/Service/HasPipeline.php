@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
-use Illuminate\Pipeline\Pipeline;
+
 use Illuminate\Support\Facades\Config;
 
 trait HasPipeline
@@ -45,7 +45,6 @@ trait HasPipeline
 
     protected function pipelines($passable) : Pipeline
     {
-
         return app(Pipeline::class)->send($passable)
                                    ->pipe(static::$commonPipes)
                                    ->pipe($this->getConfigPipes())
