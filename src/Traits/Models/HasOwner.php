@@ -8,8 +8,8 @@ use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\DataTransferObjects\UserDTO;
 
 /**
- * @property string                                      $owner_type
- * @property int                                         $owner_id
+ * @property string $owner_type
+ * @property int    $owner_id
  */
 trait HasOwner
 {
@@ -31,9 +31,7 @@ trait HasOwner
 
     public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('owner_type', $owner->getType())
-                     ->where('owner_id', $owner->getID());
-
+        return $query->where('owner_type', $owner->getType())->where('owner_id', $owner->getID());
     }
 
 }

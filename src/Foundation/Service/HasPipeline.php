@@ -43,7 +43,15 @@ trait HasPipeline
         return $this;
     }
 
+    protected Pipeline $pipeline;
+
     protected function pipelines($passable) : Pipeline
+    {
+        $this->pipeline = $this->newPipelines($passable);
+        return $this->pipeline;
+    }
+
+    protected function newPipelines($passable) : Pipeline
     {
         return app(Pipeline::class)->send($passable)
                                    ->pipe(static::$commonPipes)
