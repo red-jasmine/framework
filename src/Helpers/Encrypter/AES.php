@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Helpers\Encrypter;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
-use function openssl_decrypt;
+
 
 class AES
 {
@@ -71,7 +71,7 @@ class AES
      *
      * @return string
      *
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
+     * @throws DecryptException
      */
     public function decryptString($payload)
     {

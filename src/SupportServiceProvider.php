@@ -4,7 +4,10 @@ namespace RedJasmine\Support;
 
 
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Services\DomainRoute;
 use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Services\RequestIDService;
@@ -31,6 +34,46 @@ class SupportServiceProvider extends ServiceProvider
         DomainRoute::boot();
         SQLLogService::boot();
 
+    }
+
+
+    protected function registerAES() : void
+    {
+        $this->app->singleton('aes', function ($app) {
+            $config = $app->make('config')->get('app');
+            return new AES($this->parseKey($config));
+        });
+    }
+    /**
+     * Parse the encryption key.
+     *
+     * @param  array  $config
+     * @return string
+     */
+    protected function parseKey(array $config)
+    {
+        if (Str::startsWith($key = $this->key($config), $prefix = 'base64:')) {
+            $key = base64_decode(Str::after($key, $prefix));
+        }
+
+        return $key;
+    }
+
+    /**
+     * Extract the encryption key from the given configuration.
+     *
+     * @param  array  $config
+     * @return string
+     *
+     * @throws \Illuminate\Encryption\MissingAppKeyException
+     */
+    protected function key(array $config)
+    {
+        return tap($config['key'], function ($key) {
+            if (empty($key)) {
+                throw new MissingAppKeyException;
+            }
+        });
     }
 
     /**
@@ -75,6 +118,8 @@ class SupportServiceProvider extends ServiceProvider
 
 
         DomainRoute::register();
+
+        $this->registerAes();
     }
 
     /**
