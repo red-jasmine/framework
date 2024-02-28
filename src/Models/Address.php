@@ -30,6 +30,12 @@ class Address extends Model
         'address', 'zip_code', 'sort', 'tag', 'zip_code', 'remarks', 'group_id'
     ];
 
+    protected $casts = [
+        'contacts' => 'encrypted',
+        'mobile'   => 'encrypted',
+        'address'  => 'encrypted'
+    ];
+
     protected $appends = [
         'full_address'
     ];
