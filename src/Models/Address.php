@@ -3,7 +3,6 @@
 namespace RedJasmine\Address\Models;
 
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
@@ -12,6 +11,8 @@ use RedJasmine\Support\Traits\Models\HasOwner;
 
 class Address extends Model
 {
+
+
     use HasDateTimeFormatter;
 
     use SoftDeletes;
@@ -19,6 +20,9 @@ class Address extends Model
     use HasOwner;
 
     use HasOperator;
+
+
+
 
     protected $table = 'address';
 
@@ -36,17 +40,5 @@ class Address extends Model
         'address'  => 'encrypted'
     ];
 
-    protected $appends = [
-        'full_address'
-    ];
 
-
-    public function fullAddress() : Attribute
-    {
-
-        return Attribute::make(
-            get: fn($value, $attributes) => implode([ $attributes['province'], $attributes['city'], $attributes['district'], $attributes['street'], $attributes['address'] ])
-        );
-
-    }
 }
