@@ -1,0 +1,49 @@
+<?php
+
+namespace RedJasmine\Wallet;
+
+use Exception;
+use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Helpers\ID\Snowflake;
+use RedJasmine\Wallet\Actions\Recharges\RechargeCreateAction;
+use RedJasmine\Wallet\Actions\Recharges\RechargePaidAction;
+use RedJasmine\Wallet\DataTransferObjects\Recharges\RechargePaymentDTO;
+use RedJasmine\Wallet\DataTransferObjects\Recharges\WalletRechargeDTO;
+use RedJasmine\Wallet\Models\WalletRecharge;
+
+/**
+ * @see RechargeCreateAction::execute()
+ * @method WalletRecharge create(int $walletId, WalletRechargeDTO $DTO)
+ * @see RechargePaidAction::execute()
+ * @method WalletRecharge paid(int $id, RechargePaymentDTO $DTO)
+ */
+class WalletRechargeService extends Service
+{
+
+    protected static ?string $actionsConfigKey = 'red-jasmine.wallet.actions.recharges';
+
+    public function __construct(public WalletService $walletService)
+    {
+    }
+
+
+    public function find(int $id) : WalletRecharge
+    {
+        return WalletRecharge::findOrFail($id);
+    }
+
+    public function findLock(int $id) : WalletRecharge
+    {
+        return WalletRecharge::lockForUpdate()->findOrFail($id);
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function buildID() : int
+    {
+        return Snowflake::getInstance()->nextId();
+    }
+
+}

@@ -15,7 +15,7 @@ class WalletServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         // Publishing is only necessary when using the CLI.
@@ -31,7 +31,7 @@ class WalletServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/wallet.php', 'wallet');
+        $this->mergeConfigFrom(__DIR__.'/../config/wallet.php', 'red-jasmine.wallet');
 
         // Register the service the package provides.
         $this->app->singleton('wallet', function ($app) {
@@ -58,8 +58,8 @@ class WalletServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/wallet.php' => config_path('wallet.php'),
-        ], 'wallet.config');
+            __DIR__.'/../config/wallet.php' => config_path('red-jasmine/wallet.php'),
+        ], 'red-jasmine.wallet.config');
 
         // Publishing the views.
         /*$this->publishes([
