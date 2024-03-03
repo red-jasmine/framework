@@ -14,6 +14,7 @@ enum TransactionTypeEnum: string
     case PAYMENT = 'payment'; // 支付
     case REFUND = 'refund'; // 退款
     case FROZEN = 'frozen'; // 冻结
+    case UNFROZEN = 'unfrozen'; // 解冻
 
 
     public static function labels() : array
@@ -26,6 +27,7 @@ enum TransactionTypeEnum: string
             self::REFUND->value     => '退款',
             self::PAYMENT->value    => '支付',
             self::FROZEN->value     => '冻结',
+            self::UNFROZEN->value   => '解冻',
         ];
     }
 

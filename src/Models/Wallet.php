@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Traits\Models\HasOwner;
 use RedJasmine\Support\Traits\Models\WithDTO;
+use RedJasmine\Wallet\Enums\WalletStatusEnum;
 
 class Wallet extends Model
 {
@@ -26,7 +27,7 @@ class Wallet extends Model
         'id'
     ];
     protected $casts    = [
-        'status' => WalletStatuaEnum::class
+        'status' => WalletStatusEnum::class
     ];
 
     public function transactions() : HasMany
