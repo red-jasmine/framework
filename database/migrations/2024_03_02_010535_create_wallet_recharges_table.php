@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
             $table->morphs('owner');
             $table->decimal('amount', 12)->default(0)->comment('金额');
+            $table->decimal('fee', 12)->default(0)->comment('费用');
             $table->string('status')->comment('状态');
             $table->decimal('pay_amount', 12)->default(0)->comment('支付金额');
             $table->string('payment_type')->nullable()->comment('支付单类型');

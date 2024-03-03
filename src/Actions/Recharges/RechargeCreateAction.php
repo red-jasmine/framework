@@ -19,7 +19,7 @@ class RechargeCreateAction extends Action
 
     public WalletRechargeService $service;
 
-    protected ?string $pipelinesConfigKey = 'red-jasmine.wallet.pipelines.recharges.recharging';
+    protected ?string $pipelinesConfigKey = 'red-jasmine.wallet.pipelines.recharges.create';
 
     /**
      * 充值比例
@@ -41,7 +41,7 @@ class RechargeCreateAction extends Action
         $this->pipeline->before();
         try {
             DB::beginTransaction();
-            $this->pipeline->then(fn(WalletRecharge $walletRecharge) => $this->recharging($walletRecharge));
+            $this->pipeline->then(fn(WalletRecharge $walletRecharge) => $this->create($walletRecharge));
             DB::commit();
         } catch (AbstractException $exception) {
             DB::rollBack();
@@ -55,7 +55,7 @@ class RechargeCreateAction extends Action
         return $walletRecharge;
     }
 
-    protected function recharging(WalletRecharge $walletRecharge) : WalletRecharge
+    protected function create(WalletRecharge $walletRecharge) : WalletRecharge
     {
         $walletRecharge->save();
         return $walletRecharge;

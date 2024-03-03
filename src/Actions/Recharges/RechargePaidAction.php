@@ -32,7 +32,7 @@ class RechargePaidAction extends Action
         if (in_array($walletRecharge->status, [
             RechargeStatusEnum::PAID,
             RechargeStatusEnum::SUCCESS,
-        ],            true)) {
+        ],           true)) {
             throw new WalletException('当前状态不可操作');
         }
 
@@ -40,6 +40,8 @@ class RechargePaidAction extends Action
     }
 
     /**
+     * 支付成功
+     *
      * @throws AbstractException
      * @throws WalletException
      * @throws Throwable
@@ -74,7 +76,7 @@ class RechargePaidAction extends Action
     }
 
     /**
-     * 充值
+     * 充值单支付成功
      *
      * @param WalletRecharge     $walletRecharge
      * @param RechargePaymentDTO $DTO

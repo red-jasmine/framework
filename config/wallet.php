@@ -4,22 +4,24 @@ return [
     //
 
     'actions' => [
-        'recharges' => [
+        'recharges'   => [
             'create' => \RedJasmine\Wallet\Actions\Recharges\RechargeCreateAction::class,
             'paid'   => \RedJasmine\Wallet\Actions\Recharges\RechargePaidAction::class,
+        ],
+        'withdrawals' => [
+            'create' => \RedJasmine\Wallet\Actions\Withdrawals\WithdrawalCreateAction::class
         ],
 
     ],
 
     'pipelines' => [
-        'recharges' => [
-            'recharging' => [
+        'recharges'   => [
+            'create' => [
 
             ],
         ],
-    ],
-
-    'recharge' => [
-        'fee_ratio' => 0, // 手续费比例
+        'withdrawals' => [
+            'create' => []
+        ],
     ],
 ];
