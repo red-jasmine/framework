@@ -20,7 +20,8 @@ return new class extends Migration {
             $table->string('transfer_account')->comment('转账账户');
             $table->string('transfer_account_real_name')->nullable()->comment('转账账户实名');
 
-            $table->string('payment_type')->nullable()->comment('支付单ID');
+            $table->string('payment_status')->nullable()->comment('支付状态');
+            $table->string('payment_type')->nullable()->comment('支付单类型');
             $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单ID');
             $table->string('payment_channel_trade_no', '64')->nullable()->comment('支付渠道单号');
             $table->timestamp('payment_time')->nullable()->comment('支付时间');

@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Wallet;
 
+use Exception;
 use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Helpers\ID\Snowflake;
 
 class WalletWithdrawalService extends Service
 {
@@ -12,5 +14,14 @@ class WalletWithdrawalService extends Service
     {
     }
 
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function buildID() : int
+    {
+        return Snowflake::getInstance()->nextId();
+    }
 
 }

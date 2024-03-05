@@ -4,12 +4,11 @@ namespace RedJasmine\Wallet\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Traits\Models\HasOperator;
 use RedJasmine\Support\Traits\Models\HasOwner;
 use RedJasmine\Support\Traits\Models\WithDTO;
-use RedJasmine\Wallet\Enums\Recharges\RechargeStatusEnum;
+use RedJasmine\Wallet\Enums\Withdrawals\WithdrawalStatusEnum;
 
 class WalletWithdrawal extends Model
 {
@@ -25,7 +24,7 @@ class WalletWithdrawal extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'status' => RechargeStatusEnum::class
+        'status' => WithdrawalStatusEnum::class
     ];
 
 
