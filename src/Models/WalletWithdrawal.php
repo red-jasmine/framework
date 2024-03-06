@@ -24,7 +24,8 @@ class WalletWithdrawal extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'status' => WithdrawalStatusEnum::class
+        'status'                     => WithdrawalStatusEnum::class,
+        'transfer_account_real_name' => 'encrypted'
     ];
 
 
