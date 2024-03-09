@@ -2,4 +2,7 @@
 
 return [
     //
+    'actions' => [
+
+    ],
 ];
