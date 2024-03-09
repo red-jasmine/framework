@@ -1,0 +1,49 @@
+{
+    "name": "red-jasmine/logistics",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/logistics",
+    "keywords": ["Laravel", "Logistics"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Logistics\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Logistics\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Logistics\\LogisticsServiceProvider"
+            ],
+            "aliases": {
+                "LogisticsService": "RedJasmine\\Logistics\\Facades\\LogisticsService"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
