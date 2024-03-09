@@ -3,18 +3,35 @@
 namespace RedJasmine\Region\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Traits\Models\ModelTree;
 
 class Region extends Model
 {
 
     use HasDateTimeFormatter;
 
-    public $timestamps = false;
+    use ModelTree;
+
+    public $timestamps   = false;
     public $incrementing = false;
 
-    protected $fillable =[
-        'parent_id','id','name','level','pinyin','pinyin_prefix'
+    protected $casts = [
+        'level' => RegionLevel::class
     ];
+
+    protected $fillable = [
+        'parent_id', 'id', 'name', 'level', 'pinyin', 'pinyin_prefix'
+    ];
+
+
+    // 父级ID字段名称，默认值为 parent_id
+    protected string $parentColumn = 'parent_id';
+    // 排序字段名称，默认值为 order
+    protected string $orderColumn = 'id';
+
+    // 标题字段名称，默认值为 title
+    protected string $titleColumn = 'name';
 
 }

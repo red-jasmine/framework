@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Region\Enums;
 
+use RedJasmine\Support\Helpers\Enums\EnumsHelper;
+
 enum RegionLevel: int
 {
+    use EnumsHelper;
     case  COUNTRY = 0; // 省
     case  PROVINCE = 1; // 省
     case  CITY = 2; // 市
@@ -12,7 +15,7 @@ enum RegionLevel: int
     case  VILLAGE = 5; // 村庄
 
 
-    public static function options() : array
+    public static function labels() : array
     {
         return [
             self::COUNTRY->value  => '国家',

@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('pinyin')->nullable()->comment('拼音');
             $table->string('pinyin_prefix', 1)->nullable()->comment('首字母');
             $table->unsignedTinyInteger('level')->default(0)->comment('等级');
-//            $table->timestamps();
             $table->comment('行政区划表');
         });
     }
