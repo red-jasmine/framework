@@ -12,7 +12,8 @@
     "homepage": "https://github.com/red-jasmine/logistics",
     "keywords": ["Laravel", "Logistics"],
     "require": {
-        "red-jasmine/support": "1.0.x-dev"
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/region": "1.0.x-dev"
     },
     "require-dev": {
         "orchestra/testbench": "^8.0"

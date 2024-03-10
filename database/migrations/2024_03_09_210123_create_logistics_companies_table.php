@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
+        // 运费
         Schema::create('logistics_companies', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('名称');

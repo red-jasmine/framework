@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LogisticsCompany extends Model
 {
-
     protected $fillable = [
         'code',
         'name',
