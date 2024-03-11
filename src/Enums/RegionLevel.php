@@ -7,7 +7,8 @@ use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 enum RegionLevel: int
 {
     use EnumsHelper;
-    case  COUNTRY = 0; // 省
+
+    case  COUNTRY = 0; // 国家
     case  PROVINCE = 1; // 省
     case  CITY = 2; // 市
     case  DISTRICT = 3; // 区、县

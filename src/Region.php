@@ -49,14 +49,27 @@ class Region
         return RegionModel::whereIn('id', $id)->get();
     }
 
+
+    /**
+     * 国家
+     * @return RegionModel[]|Collection
+     */
+    public function countries() : array|Collection
+    {
+        return RegionModel::select($this->fields)
+                          ->where('parent_id', 0)
+                          ->where('level', RegionLevel::COUNTRY->value)
+                          ->get();
+    }
+
     /**
      * 省份
      * @return RegionModel[]|Collection
      */
-    public function provinces() : array|Collection
+    public function provinces(int $parentID = 1) : array|Collection
     {
         return RegionModel::select($this->fields)
-                          ->where('parent_id', 0)
+                          ->where('parent_id', $parentID)
                           ->where('level', RegionLevel::PROVINCE->value)
                           ->get();
     }
@@ -97,8 +110,7 @@ class Region
     {
         $regionLevel = RegionLevel::tryFrom($level);
 
-        $query = RegionModel::query();
-
+        $query   = RegionModel::query();
         $regions = $query
             ->select($this->fields)
             ->where('level', '<=', $regionLevel->value)
@@ -107,7 +119,7 @@ class Region
     }
 
 
-    protected function buildTree(array $array, $parentId = 0) : array
+    protected function buildTree(array $array, $parentId = 1) : array
     {
         $tree = array ();
         foreach ($array as $item) {

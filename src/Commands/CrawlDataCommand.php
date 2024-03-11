@@ -28,6 +28,60 @@ class CrawlDataCommand extends Command
     ];
 
 
+    public function handle() : void
+    {
+
+        $this->output->info('数据获取中');
+
+        $level = (int)$this->argument('level');
+
+        // 初始化国家
+        $this->toDB($this->countries());
+        $this->output->success('初始化国家完成');
+        // 获取省份
+        $provinces = $this->provinces();
+        $this->toDB($provinces);
+
+        foreach ($provinces as $province) {
+            $cities = $this->cities($province);
+
+            $this->toDB($cities);
+            foreach ($cities as $city) {
+                if ($city['name'] === '省直辖县级行政区划' || $city['name'] === '自治区直辖县级行政区划') {
+                    $city['id'] = $province['id']; // 替换ID
+                }
+                $districts = $this->findData($city);
+                $this->toDB($districts);
+                if ($level <= RegionLevel::DISTRICT->value) {
+                    continue;
+                }
+                foreach ($districts as $district) {
+                    // 判断是乡镇还是县区
+                    if ($district['level'] === RegionLevel::DISTRICT->value) {
+                        $streets = $this->streets($district);
+                    } else {
+                        $streets = $this->villages($district);
+                    }
+                    $this->toDB($streets);
+                    if ($level <= RegionLevel::STREET->value) {
+                        continue;
+                    }
+                    foreach ($streets as $street) {
+                        if ($street['level'] === RegionLevel::STREET->value) {
+                            $villages = $this->villages($street);
+                            $this->toDB($villages);
+                        }
+
+                    }
+                }
+            }
+
+            $this->output->success('获取成功:'.$province['name']);
+        }
+
+    }
+
+
     public function districts(array $parent) : array
     {
         $parentHref = $parent['href'];
@@ -51,7 +105,7 @@ class CrawlDataCommand extends Command
                 $name = $result->find('td')[1]->text;
             }
             $lists[] = [
-                'id'        => $this->encoding($id,RegionLevel::DISTRICT),
+                'id'        => $this->encoding($id, RegionLevel::DISTRICT),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -109,7 +163,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'        => $this->encoding($id,RegionLevel::STREET),
+                'id'        => $this->encoding($id, RegionLevel::STREET),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -151,7 +205,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'        => $this->encoding($id,RegionLevel::STREET),
+                'id'        => $this->encoding($id, RegionLevel::STREET),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -193,7 +247,7 @@ class CrawlDataCommand extends Command
             }
 
             $lists[] = [
-                'id'           => $this->encoding($id,RegionLevel::VILLAGE),
+                'id'           => $this->encoding($id, RegionLevel::VILLAGE),
                 'name'         => $name,
                 'href'         => $href,
                 'parent_id'    => $parent['id'],
@@ -209,7 +263,9 @@ class CrawlDataCommand extends Command
 
     /**
      * 获取页面数据
+     *
      * @param $orgHref
+     *
      * @return string
      */
     public function getHtmlBody($orgHref) : string
@@ -243,6 +299,21 @@ class CrawlDataCommand extends Command
     }
 
 
+    /**
+     * 初始化国家
+     * @return array
+     */
+    public function countries() : array
+    {
+        $lists[] = [
+            'id'        => 1,
+            'name'      => '中国',
+            'parent_id' => 0,
+            'level'     => RegionLevel::COUNTRY->value
+        ];
+        return $lists;
+    }
+
     public function provinces() : array
     {
         $body = $this->getHtmlBody('index.html');
@@ -260,10 +331,10 @@ class CrawlDataCommand extends Command
             preg_match("/\d+/", $href, $matches);
             $id      = $matches[0];
             $lists[] = [
-                'id'        => $this->encoding($id,RegionLevel::PROVINCE),
+                'id'        => $this->encoding($id, RegionLevel::PROVINCE),
                 'name'      => $name,
                 'href'      => $href,
-                'parent_id' => 0,
+                'parent_id' => 1,
                 'level'     => RegionLevel::PROVINCE->value
             ];
 
@@ -291,7 +362,7 @@ class CrawlDataCommand extends Command
             $href    = $result->find('td a')[0]->getAttribute('href');
             $name    = $result->find('td a')[1]->text;
             $lists[] = [
-                'id'        => $this->encoding($id,RegionLevel::CITY),
+                'id'        => $this->encoding($id, RegionLevel::CITY),
                 'name'      => $name,
                 'href'      => $href,
                 'parent_id' => $parent['id'],
@@ -300,52 +371,6 @@ class CrawlDataCommand extends Command
 
         }
         return $lists;
-    }
-
-    public function handle() : void
-    {
-
-        $level = (int)$this->argument('level');
-
-
-        $provinces = $this->provinces();
-
-        $this->toDB($provinces);
-        foreach ($provinces as $province) {
-            $cities = $this->cities($province);
-
-            $this->toDB($cities);
-            foreach ($cities as $city) {
-                if ($city['name'] === '省直辖县级行政区划' || $city['name'] === '自治区直辖县级行政区划') {
-                    $city['id'] = $province['id']; // 替换ID
-                }
-                $districts = $this->findData($city);
-                $this->toDB($districts);
-                if ($level <= RegionLevel::DISTRICT->value) {
-                    continue;
-                }
-                foreach ($districts as $district) {
-                    // 判断是乡镇还是县区
-                    if ($district['level'] === RegionLevel::DISTRICT->value) {
-                        $streets = $this->streets($district);
-                    } else {
-                        $streets = $this->villages($district);
-                    }
-                    $this->toDB($streets);
-                    if ($level <= RegionLevel::STREET->value) {
-                        continue;
-                    }
-                    foreach ($streets as $street) {
-                        if ($street['level'] === RegionLevel::STREET->value) {
-                            $villages = $this->villages($street);
-                            $this->toDB($villages);
-                        }
-
-                    }
-                }
-            }
-        }
-
     }
 
 
@@ -367,10 +392,10 @@ class CrawlDataCommand extends Command
                                        'id' => (int)$list['id'],
                                    ],
                                    [
-                                       'id'            => (int)$list['id'],
-                                       'parent_id'     => (int)$list['parent_id'],
-                                       'name'          => $list['name'],
-                                       'level'         => $list['level']
+                                       'id'        => (int)$list['id'],
+                                       'parent_id' => (int)$list['parent_id'],
+                                       'name'      => $list['name'],
+                                       'level'     => $list['level']
                                    ]
             );
 
@@ -378,19 +403,19 @@ class CrawlDataCommand extends Command
     }
 
 
-    public function encoding($id,RegionLevel $level)
+    public function encoding($id, RegionLevel $level)
     {
-        switch ($level){
+        switch ($level) {
             case RegionLevel::COUNTRY:
                 return $id;
                 break;
             case RegionLevel::DISTRICT:
             case RegionLevel::CITY:
             case RegionLevel::PROVINCE:
-               return str_pad(Str::limit($id,6), 6, 0);
+                return str_pad(Str::limit($id, 6), 6, 0);
                 break;
             case RegionLevel::STREET:
-                return str_pad(Str::limit($id,9), 9, 0);
+                return str_pad(Str::limit($id, 9), 9, 0);
                 break;
             case RegionLevel::VILLAGE:
                 return str_pad($id, 12, 0);
