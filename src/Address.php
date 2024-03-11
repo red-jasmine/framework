@@ -75,6 +75,7 @@ class Address extends Service
 
     /**
      * 验证区域
+     * @deprecated
      *
      * @param array                $data
      * @param AddressValidateLevel $validateLevel
@@ -86,6 +87,13 @@ class Address extends Service
     {
 
         $regionRules = [
+            [
+                'field'           => 'country_id',
+                'name'            => '国家',
+                'parent_id_field' => '',
+                'level'           => RegionLevel::COUNTRY->value,
+                'validate_level'  => AddressValidateLevel::COUNTRY,
+            ],
             [
                 'field'           => 'province_id',
                 'name'            => '省份',
@@ -128,6 +136,7 @@ class Address extends Service
                 $id[] = (int)$data[$rule['field']];
             }
         }
+
         $regions = Region::query($id)->keyBy('id')->all();
 
         // 判断是否为连续
@@ -139,8 +148,7 @@ class Address extends Service
             }
         }
         foreach (collect($regions)->sortKeys()->values() as $index => $region) {
-
-            $field        = $levels[($index + 1)];
+            $field        = $levels[($index)];
             $data[$field] = $region->name;
         }
         return $data;
