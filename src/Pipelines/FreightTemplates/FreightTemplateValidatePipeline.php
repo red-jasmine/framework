@@ -5,6 +5,7 @@ namespace RedJasmine\Logistics\Pipelines\FreightTemplates;
 use Closure;
 use Illuminate\Support\Facades\Validator;
 use RedJasmine\Logistics\Models\LogisticsFreightTemplate;
+use RedJasmine\Region\Rules\RegionsExistRule;
 
 class FreightTemplateValidatePipeline
 {
@@ -17,7 +18,7 @@ class FreightTemplateValidatePipeline
             'is_free'                      => [ 'required', 'boolean' ],
             'sort'                         => [ 'required', 'integer', 'min:0' ],
             'fee_regions'                  => [ 'sometimes' ],
-            'fee_regions.*.regions'        => [ 'required' ], // TODO 区域验证
+            'fee_regions.*.regions'        => [ 'required',new RegionsExistRule() ], // TODO 区域验证
             'fee_regions.*.start_standard' => [ 'required' ],
             'fee_regions.*.start_fee'      => [ 'required' ],
             'fee_regions.*.add_standard'   => [ 'required' ],
