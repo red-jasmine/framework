@@ -12,8 +12,8 @@
     "homepage": "https://github.com/red-jasmine/support",
     "keywords": ["Laravel", "Support"],
     "require": {
-        "illuminate/contracts": "^10.0",
-        "spatie/laravel-data": "^3.11",
+        "illuminate/contracts": "^10.0|^11.0",
+        "spatie/laravel-data": "^4",
         "spatie/laravel-query-builder": "^5.7"
     },
     "require-dev": {

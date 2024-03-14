@@ -2,10 +2,12 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
-abstract class Action implements ServiceAwareAction
+abstract class Actions implements ServiceAwareAction
 {
-    use HasPipeline;
+    use HasPipelines;
     use CanUseDatabaseTransactions;
+
+    public $service;
 
     public function setService($service) : static
     {

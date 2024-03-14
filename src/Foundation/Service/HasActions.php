@@ -15,7 +15,7 @@ trait HasActions
         __call as macroCall;
     }
 
-    private static array $actions = [];
+    protected static array $actions = [];
 
     private static bool $loadConfigActions = false;
 
@@ -29,7 +29,7 @@ trait HasActions
     protected static function loadConfigActions() : void
     {
         if (static::$loadConfigActions === false) {
-            static::$actions           = array_merge(self::$actions, self::getConfigActions());
+            static::$actions           = array_merge(static::$actions, static::getConfigActions());
             static::$loadConfigActions = true;
         }
 

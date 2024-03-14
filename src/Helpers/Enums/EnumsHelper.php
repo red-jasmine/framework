@@ -25,9 +25,25 @@ trait EnumsHelper
     {
         return self::labels();
     }
+
     public static function options() : array
     {
         return self::labels();
     }
+
+    public static function values() : array
+    {
+        return array_map(fn($case) => $case->value, static::cases());
+    }
+
+    public static function comments(string $title = '') : string
+    {
+        $enums = array_map(function ($key, $value) {
+            return $key . ':' . $value;
+        }, array_keys(static::labels()), static::labels());
+        return $title . ' ' . implode(';', $enums);
+
+    }
+
 
 }
