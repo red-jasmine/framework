@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Foundation\Service;
 
 
 use Closure;
+use function Symfony\Component\Translation\t;
 
 /**
  * 管道集合
@@ -15,6 +16,16 @@ class Pipelines extends \Illuminate\Pipeline\Pipeline
     // 保存  save
     // 事件  event
     // 返回  return
+
+
+    public function call($method, Closure $destination)
+    {
+        try {
+            return $this->via($method)->then($destination);
+        } finally {
+            $this->method = 'handle';
+        }
+    }
 
     protected array $pipesObjects = [];
 

@@ -2,12 +2,18 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property Model $model
+ * @property Service $service
+ */
 abstract class Actions implements ServiceAwareAction
 {
     use HasPipelines;
-    use CanUseDatabaseTransactions;
 
-    public $service;
+    use CanUseDatabaseTransactions;
 
     public function setService($service) : static
     {

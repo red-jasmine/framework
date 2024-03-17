@@ -16,16 +16,6 @@ trait HasPipelines
      * @var array
      */
     protected static array $commonPipes = [];
-    /**
-     * 管道 配置
-     * @var string|null
-     */
-    protected ?string $pipelinesConfigKey = null;
-    /**
-     * 所有管道集合
-     * @var array
-     */
-    protected array $pipes = [];
 
     /**
      * 扩展公共管道
@@ -38,6 +28,14 @@ trait HasPipelines
     {
         static::$commonPipes[] = $pipe;
     }
+
+
+    /**
+     * 所有管道集合
+     * @var array
+     */
+    private array $pipes = [];
+
 
     /**
      * 对实例添加管道
@@ -71,8 +69,19 @@ trait HasPipelines
 
     private function newPipelines($passable) : Pipelines
     {
-        return app(Pipelines::class)->send($passable)->pipe(static::$commonPipes)->pipe($this->getConfigPipes())->pipe($this->pipes);
+        return app(Pipelines::class)
+            ->send($passable)
+            ->pipe(static::$commonPipes)
+            ->pipe($this->getConfigPipes())
+            ->pipe($this->pipes);
     }
+
+
+    /**
+     * 管道 配置
+     * @var string|null
+     */
+    protected ?string $pipelinesConfigKey = null;
 
     /**
      * 获取当前操作配置的管道

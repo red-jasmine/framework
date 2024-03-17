@@ -75,7 +75,7 @@ trait HasQueryBuilder
         if ($this->disableRequest) {
             $request = new Request();
         }
-        $queryBuilder = QueryBuilder::for($this->model, $request);
+        $queryBuilder = QueryBuilder::for($this->service::getModel(), $request);
         if (filled($this->filters())) {
             $queryBuilder->allowedFilters($this->filters());
         }
