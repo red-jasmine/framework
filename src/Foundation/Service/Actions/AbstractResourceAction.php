@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\DataTransferObjects\UserData;
 use RedJasmine\Support\Foundation\Pipelines\ModelWithOperator;
@@ -18,23 +19,6 @@ use ReflectionClass;
  */
 abstract class AbstractResourceAction extends Actions
 {
-
-
-    protected function conversionData(Data|array $data) : Data
-    {
-        if (is_array($data)) {
-            $data['owner'] = $this->service->getOwner()->toArray();
-            // dd($this->service->getOwner());
-            try {
-                $data = (new ReflectionClass($this))->getProperty('data')->getType()->getName()::from($data);
-            } catch (\ReflectionException) {
-                $data = $this->service::getDataClass()::from($data);
-            }
-        }
-
-
-        return $data;
-    }
 
     protected static array $commonPipes = [
         ModelWithOperator::class,
@@ -105,11 +89,10 @@ abstract class AbstractResourceAction extends Actions
     }
 
 
-    public function validate() : array
+    public function validate() : void
     {
-        // 验证数据
-        $this->data->toArray();
-        return $this->data->toArray();
+
+
     }
 
     public function fill() : void
@@ -131,11 +114,38 @@ abstract class AbstractResourceAction extends Actions
     protected function fillData() : void
     {
         if ($this->data instanceof Data) {
+            // TODO 通过验证的数据
             $this->model->fill($this->data->toArray());
-            if ($this->data->owner instanceof UserData) {
+            if ($this->data?->owner instanceof UserInterface) {
                 $this->model->owner = $this->data->owner;
             }
         }
+    }
+
+
+    /**
+     * 转换数据
+     *
+     * @param Data|array $data
+     *
+     * @return Data
+     */
+    protected function conversionData(Data|array $data) : Data
+    {
+        if (is_array($data)) {
+            $data['owner'] = $this->service->getOwner();
+            if ($this->service->getOwner() instanceof UserData) {
+                $data['owner'] = $this->service->getOwner()->toArray();
+            } elseif ($this->service->getOwner() instanceof UserInterface) {
+                $data['owner'] = UserData::fromUserInterface($this->service->getOwner())->toArray();
+            }
+            try {
+                $data = (new ReflectionClass($this))->getProperty('data')->getType()->getName()::from($data);
+            } catch (\ReflectionException) {
+                $data = $this->service::getDataClass()::from($data);
+            }
+        }
+        return $data;
     }
 
 }

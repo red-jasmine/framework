@@ -17,9 +17,27 @@ trait HasActions
 
     protected static array $actions = [];
 
-    private static bool $loadConfigActions = false;
+    /**
+     * 定义
+     * @return array
+     */
+    protected static function actions() : array
+    {
+        return [];
+    }
 
+
+    /**
+     * 配置 KEY
+     * @var string|null
+     */
     protected static ?string $actionsConfigKey = null;
+
+    public static function getActions() : array
+    {
+        return static::$actions = array_merge(static::$actions, static::actions(), static::getConfigActions());
+    }
+
 
     protected static function getConfigActions() : array
     {
@@ -27,15 +45,6 @@ trait HasActions
             return [];
         }
         return Config::get(static::$actionsConfigKey, []);
-    }
-
-    protected static function loadConfigActions() : void
-    {
-        if (static::$loadConfigActions === false) {
-            static::$actions           = array_merge(static::$actions, static::getConfigActions());
-            static::$loadConfigActions = true;
-        }
-
     }
 
     /**
@@ -48,7 +57,6 @@ trait HasActions
      */
     public static function extends(string $name, string|object|callable $action) : void
     {
-        static::loadConfigActions();
         static::$actions[$name] = $action;
     }
 
@@ -61,17 +69,10 @@ trait HasActions
      */
     public static function hasAction(string $name) : bool
     {
-        static::loadConfigActions();
-
+        static::getActions();
         return isset(static::$actions[$name]);
     }
 
-
-    public static function getActions() : array
-    {
-        static::loadConfigActions();
-        return static::$actions;
-    }
 
     /**
      * Dynamically handle calls to the class.
@@ -126,16 +127,14 @@ trait HasActions
     }
 
 
-    protected array $actionObject = [];
+    private array $actionObjects = [];
+
 
     public function __get(string $name)
     {
         if (static::hasAction($name)) {
-            if (isset($this->actionObject[$name])) {
-                return $this->actionObject[$name];
-            }
-            $this->actionObject[$name] = $this->getAction($name);
-            return $this->actionObject[$name];
+            return $this->actionObjects[$name] = $this->actionObjects[$name] ?? $this->getAction($name);
+
         }
         throw new MissingAttributeException($this, $name);
     }

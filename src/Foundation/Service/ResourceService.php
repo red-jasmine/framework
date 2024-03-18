@@ -9,7 +9,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * @property Actions\ResourceQueryAction  $query
- * @property Actions\ResourceQueryAction  $create
+ * @property Actions\ResourceCreateAction $create
  * @property Actions\ResourceUpdateAction $update
  * @property Actions\ResourceDeleteAction $delete
  * @method  QueryBuilder query()
@@ -41,6 +41,9 @@ class ResourceService extends Service
         return $query;
     }
 
+    // TODO 修改为方法 支持重写
+    // 当前最为包发布的时候 支持配置
+    // 如果一个包 支持别人扩展时 支持扩展
     protected static array $actions = [
         'create' => Actions\ResourceCreateAction::class,
         'query'  => Actions\ResourceQueryAction::class,

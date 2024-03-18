@@ -22,8 +22,7 @@ trait WithUserService
         if ($this->owner) {
             return $this->owner;
         }
-        if ($this->withOwner) {
-            $callback = $this->withOwner;
+        if ($callback = $this->withOwner) {
             return $callback();
         }
         return null;
@@ -48,6 +47,15 @@ trait WithUserService
         return $this;
     }
 
+
+    protected ?Closure $withOperator = null;
+
+    public function setWithOperator(Closure $closure) : static
+    {
+        $this->withOperator = $closure;
+        return $this;
+    }
+
     /**
      * 操作人
      * @var UserInterface|null
@@ -56,7 +64,12 @@ trait WithUserService
 
     public function getOperator() : ?UserInterface
     {
-
+        if ($this->operator) {
+            return $this->operator;
+        }
+        if ($callback = $this->withOperator) {
+            return $callback();
+        }
         return $this->operator;
     }
 
