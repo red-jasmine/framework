@@ -9,7 +9,7 @@ use RedJasmine\Support\Foundation\Service\Actions;
 use RedJasmine\Support\Foundation\Service\HasQueryBuilder;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class AbstractQueryAction extends Actions
+class ResourceQueryAction extends Actions
 {
 
     use HasQueryBuilder;

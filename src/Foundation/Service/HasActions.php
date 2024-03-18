@@ -23,6 +23,9 @@ trait HasActions
 
     protected static function getConfigActions() : array
     {
+        if(blank(static::$actionsConfigKey)){
+            return  [];
+        }
         return Config::get(static::$actionsConfigKey, []);
     }
 
@@ -59,6 +62,7 @@ trait HasActions
     public static function hasAction(string $name) : bool
     {
         static::loadConfigActions();
+
         return isset(static::$actions[$name]);
     }
 

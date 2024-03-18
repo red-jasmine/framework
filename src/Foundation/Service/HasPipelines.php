@@ -95,4 +95,16 @@ trait HasPipelines
         return Config::get($this->pipelinesConfigKey, []);
     }
 
+    protected function getPipelinesConfigKey() : string
+    {
+        // 从实例中获取
+        if (filled($this->pipelinesConfigKey)) {
+            $this->pipelinesConfigKey;
+        }
+
+        //
+
+
+    }
+
 }

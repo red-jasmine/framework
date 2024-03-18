@@ -10,18 +10,20 @@ use RedJasmine\Support\Foundation\Service\Service;
 /**
  * @property Service $service
  */
-class AbstractUpdateAction extends AbstractResourceAction
+class ResourceCreateAction extends AbstractResourceAction
 {
 
-
-    public int|string|null $key = null;
-
-    public function execute(int|string $key, Data|array $data) : Model
+    /**
+     * @param Data|array $data
+     *
+     * @return Model
+     */
+    public function execute(Data|array $data) : Model
     {
-        $this->key  = $key;
         $this->data = $this->conversionData($data);
         return $this->save();
     }
+
 
     /**
      * @return Model
@@ -29,9 +31,11 @@ class AbstractUpdateAction extends AbstractResourceAction
      */
     public function handle() : Model
     {
+        if ($this->model->incrementing === false) {
+            $this->model->{$this->model->getKeyName()} = $this->service::buildID();
+        }
         $this->model->save();
         return $this->model;
     }
-
 
 }
