@@ -5,7 +5,7 @@ namespace RedJasmine\Support\DataTransferObjects;
 use RedJasmine\Support\Contracts\UserInterface;
 use Spatie\LaravelData\Data;
 
-class UserDTO extends Data implements UserInterface
+class UserData extends Data implements UserInterface
 {
 
     /**

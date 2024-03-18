@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
+use Closure;
 use RedJasmine\Support\Contracts\UserInterface;
 
 trait WithUserService
@@ -18,7 +19,22 @@ trait WithUserService
      */
     public function getOwner() : ?UserInterface
     {
-        return $this->owner;
+        if ($this->owner) {
+            return $this->owner;
+        }
+        if ($this->withOwner) {
+            $callback = $this->withOwner;
+            return $callback();
+        }
+        return null;
+    }
+
+    protected ?Closure $withOwner = null;
+
+    public function setWithOwner(Closure $closure) : static
+    {
+        $this->withOwner = $closure;
+        return $this;
     }
 
     /**

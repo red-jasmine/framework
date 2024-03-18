@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Traits\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\DataTransferObjects\UserDTO;
+use RedJasmine\Support\DataTransferObjects\UserData;
 
 /**
  * @property string $owner_type
@@ -19,7 +19,7 @@ trait HasOwner
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
-                return UserDTO::from([ 'type' => $attributes['owner_type'], 'id' => $attributes['owner_id'], ]);
+                return UserData::from([ 'type' => $attributes['owner_type'], 'id' => $attributes['owner_id'], ]);
             },
             set: fn(?UserInterface $user) => [
                 'owner_type' => $user?->getType(),

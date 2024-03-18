@@ -89,22 +89,27 @@ trait HasPipelines
      */
     protected function getConfigPipes() : array
     {
-        if (blank($this->pipelinesConfigKey)) {
+        $pipelinesConfigKey = $this->getPipelinesConfigKey();
+        if (blank($pipelinesConfigKey)) {
             return [];
         }
-        return Config::get($this->pipelinesConfigKey, []);
+        return Config::get($pipelinesConfigKey, []);
     }
 
-    protected function getPipelinesConfigKey() : string
+    /**
+     * 获取 配置的 key
+     * @return string|null
+     */
+    protected function getPipelinesConfigKey() : ?string
     {
         // 从实例中获取
         if (filled($this->pipelinesConfigKey)) {
             $this->pipelinesConfigKey;
         }
-
-        //
-
-
+        if (filled($this->service::$actionPipelinesConfigPrefix)) {
+            return $this->service::$actionPipelinesConfigPrefix . '.' . $this->callName;
+        }
+        return null;
     }
 
 }

@@ -4,6 +4,9 @@ namespace RedJasmine\Support\Foundation\Service;
 
 abstract class Action implements ServiceAwareAction
 {
+
+
+    public ?string $callName = null;
     use HasPipeline;
     use CanUseDatabaseTransactions;
 

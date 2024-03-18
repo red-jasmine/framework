@@ -5,14 +5,16 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 use Illuminate\Database\Eloquent\Model;
 
 use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\DataTransferObjects\UserData;
 use RedJasmine\Support\Foundation\Pipelines\ModelWithOperator;
 use RedJasmine\Support\Foundation\Service\Actions;
+use RedJasmine\Support\Foundation\Service\ResourceService;
 use RedJasmine\Support\Foundation\Service\Service;
 use ReflectionClass;
 
 /**
- * @property Data|null $data
- * @property Service   $service
+ * @property Data|null       $data
+ * @property ResourceService $service
  */
 abstract class AbstractResourceAction extends Actions
 {
@@ -21,12 +23,16 @@ abstract class AbstractResourceAction extends Actions
     protected function conversionData(Data|array $data) : Data
     {
         if (is_array($data)) {
+            $data['owner'] = $this->service->getOwner()->toArray();
+            // dd($this->service->getOwner());
             try {
                 $data = (new ReflectionClass($this))->getProperty('data')->getType()->getName()::from($data);
             } catch (\ReflectionException) {
                 $data = $this->service::getDataClass()::from($data);
             }
         }
+
+
         return $data;
     }
 
@@ -42,7 +48,8 @@ abstract class AbstractResourceAction extends Actions
     public function init() : void
     {
         if ($this->key) {
-            $this->model = $this->service::getModel()::findOrFail($this->key);
+            $query       = $this->service::getModel()::query();
+            $this->model = $this->service->callQueryCallbacks($query)->findOrFail($this->key);
         } else {
             $this->model = app($this->getModel());
         }
@@ -125,6 +132,9 @@ abstract class AbstractResourceAction extends Actions
     {
         if ($this->data instanceof Data) {
             $this->model->fill($this->data->toArray());
+            if ($this->data->owner instanceof UserData) {
+                $this->model->owner = $this->data->owner;
+            }
         }
     }
 

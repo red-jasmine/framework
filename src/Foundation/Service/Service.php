@@ -2,12 +2,9 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
-use BadMethodCallException;
-use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Traits\Macroable;
+use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 abstract class Service
@@ -18,6 +15,16 @@ abstract class Service
     use WithUserService;
 
     use WithClientService;
+
+    protected static string $model = Model::class;
+
+    protected static string $data = Data::class;
+
+    /**
+     * 操作管道配置前缀
+     * @var string|null
+     */
+    public static ?string $actionPipelinesConfigPrefix = null;
 
 
     /**

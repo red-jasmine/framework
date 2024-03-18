@@ -23,8 +23,8 @@ trait HasActions
 
     protected static function getConfigActions() : array
     {
-        if(blank(static::$actionsConfigKey)){
-            return  [];
+        if (blank(static::$actionsConfigKey)) {
+            return [];
         }
         return Config::get(static::$actionsConfigKey, []);
     }
@@ -116,8 +116,9 @@ trait HasActions
 
     private function getAction($name)
     {
-        $action = static::$actions[$name];
-        $action = app($action);
+        $action           = static::$actions[$name];
+        $action           = app($action);
+        $action->callName = $name;
         if ($action instanceof ServiceAwareAction) {
             $action->setService($this);
         }

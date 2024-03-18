@@ -17,8 +17,9 @@ trait UserOwnerTools
      */
     public function getOwner() : ?UserInterface
     {
+
         if ($this->getUser() instanceof BelongsToOwnerInterface) {
-            request()->user()->owner();
+           return $this->getUser()->owner();
         }
 
         return $this->getUser();

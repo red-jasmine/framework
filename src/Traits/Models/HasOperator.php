@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Traits\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\DataTransferObjects\UserDTO;
+use RedJasmine\Support\DataTransferObjects\UserData;
 
 /**
  * @property  string $creator_type
@@ -35,7 +35,7 @@ trait HasOperator
                 if (blank($attributes['creator_type'] ?? null)) {
                     return null;
                 }
-                return UserDTO::from([ 'type' => $attributes['creator_type'], 'id' => $attributes['creator_id'], ]);
+                return UserData::from([ 'type' => $attributes['creator_type'], 'id' => $attributes['creator_id'], ]);
             },
             set: fn(?UserInterface $user) => [
                 'creator_type' => $user?->getType(),
@@ -52,7 +52,7 @@ trait HasOperator
                 if (blank($attributes['updater_type'] ?? null)) {
                     return null;
                 }
-                return UserDTO::from([ 'type' => $attributes['updater_type'], 'id' => $attributes['updater_id'], ]);
+                return UserData::from([ 'type' => $attributes['updater_type'], 'id' => $attributes['updater_id'], ]);
             }, set: fn(?UserInterface $user) => [
             'updater_type' => $user?->getType(),
             'updater_id'   => $user?->getID()
