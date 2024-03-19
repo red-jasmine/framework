@@ -16,9 +16,7 @@ abstract class Service
 
     use WithClientService;
 
-    protected static string $model = Model::class;
 
-    protected static string $data = Data::class;
 
     /**
      * 操作管道配置前缀
@@ -37,16 +35,4 @@ abstract class Service
     }
 
 
-    /**
-     * @return string|null|Model
-     */
-    public static function getModel() : ?string
-    {
-        return static::$model;
-    }
-
-    public static function getDataClass()
-    {
-        return static::$data;
-    }
 }

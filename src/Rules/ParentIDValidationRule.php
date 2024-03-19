@@ -38,6 +38,7 @@ class ParentIDValidationRule implements ValidationRule, ValidatorAwareRule, Data
 
     public function validate(string $attribute, mixed $value, Closure $fail) : void
     {
+
         if ((string)$this->id === (string)$value) {
             $fail(':attribute 不能为当前ID');
             return;

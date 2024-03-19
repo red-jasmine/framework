@@ -2,14 +2,18 @@
 
 namespace RedJasmine\Support\Foundation\Service\Actions;
 
-use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Foundation\Service\ResourceService;
 
 /**
- * @property Service $service
+ * @property ResourceService $service
  */
 class ResourceDeleteAction extends AbstractResourceAction
 {
 
+    public static function name() : string
+    {
+        return 'delete';
+    }
 
     public int|string|null $key = null;
 
@@ -24,9 +28,9 @@ class ResourceDeleteAction extends AbstractResourceAction
         return $this->delete();
     }
 
-    public function handle() : void
+    public function handle() : ?bool
     {
-        $this->model->delete();
+        return $this->model->delete();
     }
 
 

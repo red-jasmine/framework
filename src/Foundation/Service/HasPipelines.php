@@ -31,11 +31,10 @@ trait HasPipelines
 
 
     /**
-     * 所有管道集合
+     * 实例配置
      * @var array
      */
     private array $pipes = [];
-
 
     /**
      * 对实例添加管道
@@ -50,21 +49,26 @@ trait HasPipelines
         return $this;
     }
 
+
+    /**
+     * 实例配置的
+     * @return array
+     */
+    protected function pipes() : array
+    {
+        return [];
+    }
+
+
     /**
      * 管道组合
      * @var Pipelines
      */
     protected Pipelines $pipelines;
 
-    /**
-     * @param $passable
-     *
-     * @return $this
-     */
-    protected function initPipelines($passable) : static
+    protected function getPipelines() : Pipelines
     {
-        $this->pipelines = $this->newPipelines($passable);
-        return $this;
+        return $this->pipelines = $this->pipelines ?? $this->newPipelines($this);
     }
 
     private function newPipelines($passable) : Pipelines
@@ -73,6 +77,7 @@ trait HasPipelines
             ->send($passable)
             ->pipe(static::$commonPipes)
             ->pipe($this->getConfigPipes())
+            ->pipe($this->pipes())
             ->pipe($this->pipes);
     }
 
@@ -106,6 +111,7 @@ trait HasPipelines
         if (filled($this->pipelinesConfigKey)) {
             $this->pipelinesConfigKey;
         }
+        // 服务配置中获取
         if (filled($this->service::$actionPipelinesConfigPrefix)) {
             return $this->service::$actionPipelinesConfigPrefix . '.' . $this->callName;
         }

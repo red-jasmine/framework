@@ -17,6 +17,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 class ResourceQueryAction extends Actions
 {
 
+    public static function name() : string
+    {
+        return 'query';
+    }
+
     use HasQueryBuilder;
 
 
@@ -73,7 +78,6 @@ class ResourceQueryAction extends Actions
         if ($nodes === null) {
             $nodes = $this->query()->get();
         }
-
         return static::buildNestedArray($nodes,);
     }
 
