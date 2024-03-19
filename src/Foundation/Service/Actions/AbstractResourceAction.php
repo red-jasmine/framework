@@ -188,13 +188,12 @@ abstract class AbstractResourceAction extends Actions
             } elseif ($this->service->getOwner() instanceof UserInterface) {
                 $data['owner'] = UserData::fromUserInterface($this->service->getOwner())->toArray();
             }
-            dd($data);
             try {
                 $data = (new ReflectionClass($this))->getProperty('data')->getType()->getName()::from($data);
             } catch (\ReflectionException) {
                 $data = $this->service::getDataClass()::from($data);
             }
-            dd($data);
+
         }
         return $data;
     }
