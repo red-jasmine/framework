@@ -2,6 +2,9 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
+/**
+ * @property Service $service
+ */
 abstract class Action implements ServiceAwareAction
 {
 
@@ -14,6 +17,14 @@ abstract class Action implements ServiceAwareAction
     {
         $this->service = $service;
         return $this;
+    }
+
+    /**
+     * @return Service
+     */
+    public function getService()
+    {
+        return $this->service;
     }
 
 

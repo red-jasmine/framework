@@ -13,12 +13,6 @@ use RedJasmine\Support\Foundation\Service\Service;
  */
 class ResourceCreateAction extends ResourceAction
 {
-    public static function name() : string
-    {
-        return 'create';
-    }
-
-
     /**
      * @param Data|array $data
      *

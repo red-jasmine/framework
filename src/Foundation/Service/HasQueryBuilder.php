@@ -42,29 +42,56 @@ trait HasQueryBuilder
 
     }
 
-    public function filters() : array
-    {
-        return [
 
-        ];
+    protected array $filters  = [];
+    protected array $includes = [];
+    protected array $fields   = [];
+    protected array $sorts    = [];
+
+    public function setFilters(array $filters) : static
+    {
+        $this->filters = $filters;
+        return $this;
     }
 
-    public function includes() : array
+    public function setIncludes(array $includes) : static
     {
-        return [];
+        $this->includes = $includes;
+        return $this;
     }
 
-    public function fields() : array
+    public function setFields(array $fields) : static
     {
-        return [
-
-        ];
+        $this->fields = $fields;
+        return $this;
     }
 
-    public function sorts() : array
+    public function setSorts(array $sorts) : static
     {
-        return [];
+        $this->sorts = $sorts;
+        return $this;
     }
+
+    protected function filters() : array
+    {
+        return $this->filters;
+    }
+
+    protected function includes() : array
+    {
+        return $this->includes;
+    }
+
+    protected function fields() : array
+    {
+        return $this->fields;
+    }
+
+    protected function sorts() : array
+    {
+        return $this->sorts;
+    }
+
 
     public function queryBuilder() : QueryBuilder
     {
@@ -79,9 +106,17 @@ trait HasQueryBuilder
         if (filled($this->filters())) {
             $queryBuilder->allowedFilters($this->filters());
         }
-        $queryBuilder->allowedFields($this->fields());
-        $queryBuilder->allowedIncludes($this->includes());
-        $queryBuilder->allowedSorts($this->sorts());
+        if (filled($this->fields())) {
+            $queryBuilder->allowedFields($this->fields());
+        }
+        if (filled($this->includes())) {
+            $queryBuilder->allowedIncludes($this->includes());
+        }
+
+        if (filled($this->sorts())) {
+            $queryBuilder->allowedSorts($this->sorts());
+        }
+
         return $queryBuilder;
     }
 

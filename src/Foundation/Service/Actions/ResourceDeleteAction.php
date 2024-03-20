@@ -10,10 +10,7 @@ use RedJasmine\Support\Foundation\Service\ResourceService;
 class ResourceDeleteAction extends ResourceAction
 {
 
-    public static function name() : string
-    {
-        return 'delete';
-    }
+
 
     public int|string|null $key = null;
 

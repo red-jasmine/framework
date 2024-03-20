@@ -142,7 +142,7 @@ abstract class ResourceAction extends Actions
         if ($this->model->exists === false && $this->model->incrementing === false) {
             $this->model->{$this->model->getKeyName()} = $this->service::buildID();
         }
-        if ($this->service::$modelWithOwner) {
+        if ($this->service::$autoModelWithOwner) {
             $this->model->{$this->service::$modelOwnerKey} = $this->data->owner;
         }
         return $this->model;
@@ -153,20 +153,6 @@ abstract class ResourceAction extends Actions
     {
         return $handleResult;
     }
-
-
-    /**
-     * 填充数据
-     *
-     * @param array $data
-     *
-     * @return void
-     */
-    protected function fillData(array $data) : void
-    {
-
-    }
-
 
     /**
      * 转换数据

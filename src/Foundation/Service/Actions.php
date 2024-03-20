@@ -16,7 +16,13 @@ abstract class Actions implements ServiceAwareAction
     use CanUseDatabaseTransactions;
 
 
-
+    /**
+     * @return Service
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
 
 
     public function setService($service) : static

@@ -13,10 +13,6 @@ use RedJasmine\Support\Foundation\Service\Service;
  */
 class ResourceUpdateAction extends ResourceAction
 {
-    public static function name() : string
-    {
-        return 'update';
-    }
 
     public int|string|null $key = null;
 

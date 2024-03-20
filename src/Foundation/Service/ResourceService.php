@@ -3,8 +3,8 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Services\Brand\Data\BrandData;
 use RedJasmine\Support\DataTransferObjects\Data;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -27,10 +27,7 @@ class ResourceService extends Service
 
     protected static ?string $validatorManageClass = null;
 
-
-    public static bool $autoModelWithOwner = true;
-
-    public static bool $modelWithOwner = true;
+    public static bool $autoModelWithOwner = false;
 
     public static string $modelOwnerKey = 'owner';
 
@@ -55,7 +52,7 @@ class ResourceService extends Service
 
     protected array $queryCallbacks = [];
 
-    public function withQuery(\Closure $query = null) : static
+    public function withQuery(Closure $query = null) : static
     {
         $this->queryCallbacks[] = $query;
 
@@ -82,5 +79,27 @@ class ResourceService extends Service
         'update' => Actions\ResourceUpdateAction::class,
         'delete' => Actions\ResourceDeleteAction::class,
     ];
+
+
+    public static function filters() : array
+    {
+        return [];
+    }
+
+    public static function sorts() : array
+    {
+        return [];
+    }
+
+    public static function includes() : array
+    {
+        return [];
+    }
+
+    public static function fields() : array
+    {
+        return [];
+    }
+
 
 }

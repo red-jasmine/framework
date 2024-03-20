@@ -14,16 +14,13 @@ use Spatie\QueryBuilder\QueryBuilder;
 /**
  * @property ResourceService $service
  */
-class ResourceQueryAction extends Actions
+class ResourceQueryAction extends ResourceAction
 {
-
-    public static function name() : string
-    {
-        return 'query';
-    }
 
     use HasQueryBuilder;
 
+
+    protected ?QueryBuilder $query = null;
 
     /**
      * @return QueryBuilder
@@ -33,45 +30,51 @@ class ResourceQueryAction extends Actions
         return $this->query();
     }
 
-    protected ?QueryBuilder $query = null;
-
-
     public function query() : QueryBuilder
     {
-        if (!$this->query) {
-            $this->query = $this->queryBuilder();
+        return $this->query = $this->query ?? $this->newQuery();
+    }
+
+    public function newQuery() : QueryBuilder
+    {
+        $query = $this->queryBuilder();
+        return $this->service->callQueryCallbacks($query);
+    }
+
+
+    protected function filters() : array
+    {
+        if (filled($this->filters)) {
+            return $this->filters;
         }
-        return $this->service->callQueryCallbacks($this->query);
+
+        return $this->service::filters();
     }
 
-
-    /**
-     * @return Collection|array
-     */
-    public function get() : Collection|array
+    protected function includes() : array
     {
-        return $this->query()->get();
+        if (filled($this->includes)) {
+            return $this->includes;
+        }
+        return $this->service::includes();
     }
 
-    public function find($id) : ?Model
+    protected function fields() : array
     {
-        return $this->query()->find($id);
+        if (filled($this->fields)) {
+            return $this->fields;
+        }
+        return $this->service::fields();
     }
 
-    public function findOrFail($id) : Model
+    protected function sorts() : array
     {
-        return $this->query()->findOrFail($id);
+        if (filled($this->sorts)) {
+            return $this->sorts;
+        }
+        return $this->service::sorts();
     }
 
-    public function paginate() : LengthAwarePaginator
-    {
-        return $this->query->paginate();
-    }
-
-    public function simplePaginate() : LengthAwarePaginator
-    {
-        return $this->query->simplePaginate();
-    }
 
     public function tree(array $nodes = null) : array
     {
