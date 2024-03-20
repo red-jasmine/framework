@@ -79,9 +79,13 @@ class ResourceService extends Service
         return $this;
     }
 
+    /**
+     * @param $query
+     *
+     * @return QueryBuilder
+     */
     public function callQueryCallbacks($query)
     {
-
         foreach ($this->queryCallbacks as $callback) {
             if ($callback) {
                 $callback($query);
