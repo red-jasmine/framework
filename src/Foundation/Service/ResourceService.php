@@ -21,14 +21,34 @@ use Spatie\QueryBuilder\QueryBuilder;
 class ResourceService extends Service
 {
 
+    /**
+     * 资源模型
+     * @var string
+     */
     protected static string $model = Model::class;
 
+    /**
+     * 值对象
+     * @var string
+     */
     protected static string $dataClass = Data::class;
 
+    /**
+     * 验证管理器
+     * @var string|null
+     */
     protected static ?string $validatorManageClass = null;
 
+    /**
+     * 有所属人
+     * @var bool
+     */
     public static bool $autoModelWithOwner = false;
 
+    /**
+     * 所属人 前缀
+     * @var string
+     */
     public static string $modelOwnerKey = 'owner';
 
     /**
