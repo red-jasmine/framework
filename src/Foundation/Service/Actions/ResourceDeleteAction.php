@@ -7,7 +7,7 @@ use RedJasmine\Support\Foundation\Service\ResourceService;
 /**
  * @property ResourceService $service
  */
-class ResourceDeleteAction extends AbstractResourceAction
+class ResourceDeleteAction extends ResourceAction
 {
 
     public static function name() : string

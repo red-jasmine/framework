@@ -11,7 +11,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 /**
  * @property ResourceService $service
  */
-class ResourceCreateAction extends AbstractResourceAction
+class ResourceCreateAction extends ResourceAction
 {
     public static function name() : string
     {

@@ -28,6 +28,12 @@ class ResourceService extends Service
     protected static ?string $validatorManageClass = null;
 
 
+    public static bool $autoModelWithOwner = true;
+
+    public static bool $modelWithOwner = true;
+
+    public static string $modelOwnerKey = 'owner';
+
     /**
      * @return string|null|Model
      */
@@ -36,7 +42,7 @@ class ResourceService extends Service
         return static::$model;
     }
 
-    public static function getDataClass()
+    public static function getDataClass() : ?string
     {
         return static::$dataClass;
     }

@@ -20,7 +20,16 @@ class Data extends \Spatie\LaravelData\Data
 {
 
 
-    // 自动转换
+    // public static function pipeline() : DataPipeline
+    // {
+    //     return parent::pipeline()->firstThrough(MorphsDataPipe::class);
+    // }
+
+
+    public static function morphs() : array
+    {
+        return [];
+    }
 
 
 }

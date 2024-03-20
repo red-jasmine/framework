@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Foundation\Pipelines;
 
-use Illuminate\Support\Facades\Auth;
+
 use RedJasmine\Support\Foundation\Service\Actions;
 
 class ModelWithOperator

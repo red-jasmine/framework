@@ -5,6 +5,8 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Validator;
+use phpDocumentor\Reflection\Types\This;
+use RedJasmine\Product\Services\Category\Data\ProductSellerCategoryData;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\DataTransferObjects\UserData;
@@ -17,7 +19,7 @@ use ReflectionClass;
  * @property Data|null       $data
  * @property ResourceService $service
  */
-abstract class AbstractResourceAction extends Actions
+abstract class ResourceAction extends Actions
 {
 
     protected static ?string $validatorManageClass = null;
@@ -93,7 +95,6 @@ abstract class AbstractResourceAction extends Actions
 
     protected function init($data) : Data
     {
-
         return $this->conversionData($data);
     }
 
@@ -138,13 +139,11 @@ abstract class AbstractResourceAction extends Actions
     protected function fill(array $data) : ?Model
     {
         $this->model->fill($data);
-
         if ($this->model->exists === false && $this->model->incrementing === false) {
             $this->model->{$this->model->getKeyName()} = $this->service::buildID();
         }
-
-        if ($this->data?->owner instanceof UserInterface) {
-            $this->model->owner = $this->data->owner;
+        if ($this->service::$modelWithOwner) {
+            $this->model->{$this->service::$modelOwnerKey} = $this->data->owner;
         }
         return $this->model;
     }
@@ -178,22 +177,65 @@ abstract class AbstractResourceAction extends Actions
      */
     protected function conversionData(Data|array $data = null) : ?Data
     {
-        if ($data === null) {
-            return null;
-        }
         if (is_array($data)) {
+            $data = $this->morphsData($data);
+            $data = $this->dataWithOwner($data);
+        }
 
+        return $this->getDataClass()::validateAndCreate($data);
+    }
+
+    /**
+     * @return string|null|Data
+     */
+    protected function getDataClass() : ?string
+    {
+        try {
+            $dataClass = (new ReflectionClass($this))->getProperty('data')->getType()->getName();
+        } catch (\ReflectionException) {
+            $dataClass = $this->service::getDataClass();
+        }
+        return $dataClass;
+    }
+
+
+    protected function dataWithOwner(array $data) : array
+    {
+        if ($this->service::$autoModelWithOwner && !isset($data[$this->service::$modelOwnerKey])) {
             if ($this->service->getOwner() instanceof UserData) {
-                $data['owner'] = $this->service->getOwner()->toArray();
+                $data[$this->service::$modelOwnerKey] = $this->service->getOwner()->toArray();
             } elseif ($this->service->getOwner() instanceof UserInterface) {
-                $data['owner'] = UserData::fromUserInterface($this->service->getOwner())->toArray();
+                $data[$this->service::$modelOwnerKey] = UserData::fromUserInterface($this->service->getOwner())->toArray();
             }
-            try {
-                $data = (new ReflectionClass($this))->getProperty('data')->getType()->getName()::from($data);
-            } catch (\ReflectionException) {
-                $data = $this->service::getDataClass()::from($data);
-            }
+        }
+        return $data;
+    }
 
+    protected function morphsData(array $data) : array
+    {
+        if (!method_exists($this->getDataClass(), 'morphs')) {
+            return $data;
+        }
+        $morphs = $this->getDataClass()::morphs();
+        foreach ($morphs as $morph) {
+            $data = $this->initMorphFromArray($data, $morph);
+        }
+        return $data;
+    }
+
+    protected function initMorphFromArray(array $data, string $morph) : array
+    {
+        $typeKey     = $morph . '_type';
+        $idKey       = $morph . '_id';
+        $nicknameKey = $morph . '_nickname';
+        $avatarKey   = $morph . '_avatar';
+        if (!isset($data[$morph]) && (isset($data[$typeKey]) || isset($data[$idKey]))) {
+            $data[$morph] = [
+                'id'       => (int)$data[$idKey],
+                'type'     => $data[$typeKey],
+                'nickname' => $data[$nicknameKey] ?? null,
+                'avatar'   => $data[$avatarKey] ?? null,
+            ];
         }
         return $data;
     }

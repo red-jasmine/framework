@@ -3,12 +3,19 @@
 namespace RedJasmine\Support\Foundation;
 
 use Illuminate\Support\Facades\Validator;
+use RedJasmine\Support\Foundation\Service\Actions\ResourceAction;
+use RedJasmine\Support\Foundation\Service\ResourceService;
 
 abstract class ValidatorManage
 {
 
 
+    protected ResourceService $service;
+
+    protected ResourceAction $action;
+
     protected \Illuminate\Validation\Validator $validator;
+
 
     public function __construct(array $data = [])
     {

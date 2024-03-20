@@ -23,4 +23,12 @@ enum BoolIntEnum: int
     }
 
 
+    public static function boolLabels() : array
+    {
+        return [
+            (boolean)(self::YES->value) => '是',
+            (boolean)(self::NO->value ) => '否',
+        ];
+    }
+
 }
