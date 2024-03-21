@@ -18,7 +18,7 @@ class ResourceCreateAction extends ResourceAction
      *
      * @return Model
      */
-    public function execute(Data|array $data) : Model
+    public function execute($data) : Model
     {
         $this->data = $data;
         return $this->save();

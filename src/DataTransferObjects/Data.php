@@ -15,16 +15,10 @@ use Spatie\LaravelData\DataPipes\ValidatePropertiesDataPipe;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 
-#[MapName(SnakeCaseMapper::class)]
+#[MapInputName(SnakeCaseMapper::class)]
+#[MapOutputName(SnakeCaseMapper::class)]
 class Data extends \Spatie\LaravelData\Data
 {
-
-
-    // public static function pipeline() : DataPipeline
-    // {
-    //     return parent::pipeline()->firstThrough(MorphsDataPipe::class);
-    // }
-
 
     public static function morphs() : array
     {

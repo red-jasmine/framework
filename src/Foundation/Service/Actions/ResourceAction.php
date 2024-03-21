@@ -168,7 +168,7 @@ abstract class ResourceAction extends Actions
             $data = $this->dataWithOwner($data);
         }
 
-        return $this->getDataClass()::validateAndCreate($data);
+        return $this->getDataClass()::from($data);
     }
 
     /**
