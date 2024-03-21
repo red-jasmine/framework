@@ -11,7 +11,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\DataTransferObjects\UserData;
 use RedJasmine\Support\Foundation\Pipelines\ModelWithOperator;
-use RedJasmine\Support\Foundation\Service\Actions;
+use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Support\Foundation\Service\ResourceService;
 use ReflectionClass;
 
@@ -19,7 +19,7 @@ use ReflectionClass;
  * @property Data|null       $data
  * @property ResourceService $service
  */
-abstract class ResourceAction extends Actions
+abstract class ResourceAction extends Action
 {
 
     protected static ?string $validatorManageClass = null;
@@ -54,7 +54,7 @@ abstract class ResourceAction extends Actions
             $this->beginDatabaseTransaction();
             $this->resolveModel();
             $this->authorizeAccess();
-            // 初始化
+            // 数据转换 对象
             $this->data = $this->getPipelines()->call('init', fn() => $this->init($this->data));
             // 验证 获取验证后的值
             $this->getValidator();
@@ -98,6 +98,10 @@ abstract class ResourceAction extends Actions
         return $this->conversionData($data);
     }
 
+
+
+
+
     /**
      * 验证通过后的数据
      * @return array
@@ -110,8 +114,6 @@ abstract class ResourceAction extends Actions
         }
         return $data;
     }
-
-    protected ?Validator $validator = null;
 
     public function getValidator()
     {

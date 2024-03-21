@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Foundation\Service\Actions;
+use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Support\Foundation\Service\HasQueryBuilder;
 use RedJasmine\Support\Foundation\Service\ResourceService;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -23,21 +23,23 @@ class ResourceQueryAction extends ResourceAction
     protected ?QueryBuilder $query = null;
 
     /**
+     * @param bool $isRequest
+     *
      * @return QueryBuilder
      */
-    public function execute() : QueryBuilder
+    public function execute(bool $isRequest = true) : QueryBuilder
     {
-        return $this->query();
+        return $this->query($isRequest);
     }
 
-    public function query() : QueryBuilder
+    public function query(bool $isRequest = false) : QueryBuilder
     {
-        return $this->query = $this->query ?? $this->newQuery();
+        return $this->query = $this->query ?? $this->newQuery($isRequest);
     }
 
-    public function newQuery() : QueryBuilder
+    protected function newQuery(bool $isRequest = false) : QueryBuilder
     {
-        $query = $this->queryBuilder();
+        $query = $this->queryBuilder($isRequest);
         return $this->service->callQueryCallbacks($query);
     }
 

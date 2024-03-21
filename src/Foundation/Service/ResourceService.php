@@ -13,7 +13,7 @@ use Spatie\QueryBuilder\QueryBuilder;
  * @property Actions\ResourceCreateAction $create
  * @property Actions\ResourceUpdateAction $update
  * @property Actions\ResourceDeleteAction $delete
- * @method  QueryBuilder query()
+ * @method  QueryBuilder query(bool $isRequest = true)
  * @method  Model create(Data|array $data)
  * @method  Model update(int $id, Data|array $data)
  * @method  bool delete(int $id)

@@ -93,15 +93,12 @@ trait HasQueryBuilder
     }
 
 
-    public function queryBuilder() : QueryBuilder
+    public function queryBuilder(bool $isRequest = false) : QueryBuilder
     {
         /**
          * 如果是 不是当前请求调用 会出现 自动加载条件问题
          */
-        $request = null;
-        if ($this->disableRequest) {
-            $request = new Request();
-        }
+        $request      = $isRequest === false ? request() : (new Request());
         $queryBuilder = QueryBuilder::for($this->service::getModel(), $request);
         if (filled($this->filters())) {
             $queryBuilder->allowedFilters($this->filters());

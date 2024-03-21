@@ -3,12 +3,12 @@
 namespace RedJasmine\Support\Foundation\Pipelines;
 
 
-use RedJasmine\Support\Foundation\Service\Actions;
+use RedJasmine\Support\Foundation\Service\Action;
 
 class ModelWithOperator
 {
 
-    public function handle(Actions $action, \Closure $closure)
+    public function handle(Action $action, \Closure $closure)
     {
         if ($action->model->hasOperator()) {
             if ($action->model->exists) {
