@@ -94,6 +94,16 @@ class ResourceService extends Service
         return $query;
     }
 
+
+    protected static array $globalActions = [
+        'create' => [
+            'action'              => Actions\ResourceCreateAction::class,
+            'data'                => '',
+            'pipelines'           => [],
+            'validator_combiners' => [],
+        ],
+    ];
+
     // TODO 修改为方法 支持重写
     // 当前最为包发布的时候 支持配置
     // 如果一个包 支持别人扩展时 支持扩展

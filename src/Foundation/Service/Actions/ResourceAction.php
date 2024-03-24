@@ -5,8 +5,8 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Validator;
-use phpDocumentor\Reflection\Types\This;
-use RedJasmine\Product\Services\Category\Data\ProductSellerCategoryData;
+use RedJasmine\Product\Services\Product\Validators\ActionAwareValidatorCombiner;
+use RedJasmine\Product\Services\Product\Validators\ValidatorAwareValidatorCombiner;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\DataTransferObjects\UserData;
@@ -21,6 +21,25 @@ use ReflectionClass;
  */
 abstract class ResourceAction extends Action
 {
+
+    // 操作方法名
+
+    // 权限验证策略 // TODO 发放在这一层
+    // 操作是否需要事务
+    // 模型类
+    // 能力 可以静态外部扩展
+    // 能力 可以配置重置
+    // 能力 可以实例添加
+    //  有管道能力 管道 List
+
+    // 数据对象类   DataClass
+    //  有 验证组合器  能力 List
+    // 事件
+
+    // 入参 key,Data
+    // 数据持久化   定义接口
+    // 返回值
+
 
     protected static ?string $validatorManageClass = null;
 
@@ -45,6 +64,7 @@ abstract class ResourceAction extends Action
 
     protected function authorizeAccess() : void
     {
+
 
     }
 
@@ -99,9 +119,6 @@ abstract class ResourceAction extends Action
     }
 
 
-
-
-
     /**
      * 验证通过后的数据
      * @return array
@@ -115,8 +132,33 @@ abstract class ResourceAction extends Action
         return $data;
     }
 
+    protected ?Validator $validator = null;
+
+    protected function initValidator() : Validator
+    {
+        // 创建验证器
+        $validator = \Illuminate\Support\Facades\Validator::make($this->data->toArray(), [], [], []);
+        // 验证管理器
+        foreach ($this->getValidatorCombiner() as $validatorCombiner) {
+            $validatorCombiner = app($validatorCombiner);
+            if ($validatorCombiner instanceof ActionAwareValidatorCombiner) {
+                $validatorCombiner->setAction($this);
+            }
+            if ($validatorCombiner instanceof ValidatorAwareValidatorCombiner) {
+                $validatorCombiner->setValidator($validator);
+            }
+            $validator->addRules($validatorCombiner->rules());
+            $validator->setCustomMessages($validatorCombiner->messages());
+            $validator->addCustomAttributes($validatorCombiner->attributes());
+        }
+
+        return $validator;
+    }
+
     public function getValidator()
     {
+
+
         if ($this->validator) {
             return $this->validator;
         }
@@ -166,6 +208,7 @@ abstract class ResourceAction extends Action
     protected function conversionData(Data|array $data = null) : ?Data
     {
         if (is_array($data)) {
+
             $data = $this->morphsData($data);
             $data = $this->dataWithOwner($data);
         }

@@ -12,21 +12,25 @@ trait HasPipelines
 {
 
     /**
-     * 公共 管道
+     * 静态管道
      * @var array
      */
-    protected static array $commonPipes = [];
+    protected static array $globalPipes = [];
 
-    /**
-     * 扩展公共管道
-     *
-     * @param $pipe
-     *
-     * @return void
-     */
+
     public static function extendPipes($pipe) : void
     {
-        static::$commonPipes[] = $pipe;
+        static::$globalPipes[] = $pipe;
+    }
+
+    public static function getGlobalPipes() : array
+    {
+        return self::$globalPipes;
+    }
+
+    public static function setGlobalPipes(array $globalPipes) : void
+    {
+        self::$globalPipes = $globalPipes;
     }
 
 
@@ -34,18 +38,23 @@ trait HasPipelines
      * 实例配置
      * @var array
      */
-    private array $pipes = [];
+    protected array $pipes = [];
 
-    /**
-     * 对实例添加管道
-     *
-     * @param $pipe
-     *
-     * @return $this
-     */
-    public function addPipe($pipe) : static
+
+    protected function addPipe($pipe) : static
     {
         $this->pipes[] = $pipe;
+        return $this;
+    }
+
+    public function getPipes() : array
+    {
+        return $this->pipes;
+    }
+
+    public function setPipes(array $pipes) : static
+    {
+        $this->pipes = $pipes;
         return $this;
     }
 
@@ -54,9 +63,9 @@ trait HasPipelines
      * 实例配置的
      * @return array
      */
-    protected function pipes() : array
+    public function pipes() : array
     {
-        return [];
+        return array_merge(static::$globalPipes, $this->pipes);
     }
 
 
@@ -71,51 +80,11 @@ trait HasPipelines
         return $this->pipelines = $this->pipelines ?? $this->newPipelines($this);
     }
 
-    private function newPipelines($passable) : Pipelines
+    protected function newPipelines($passable) : Pipelines
     {
-        return app(Pipelines::class)
-            ->send($passable)
-            ->pipe(static::$commonPipes)
-            ->pipe($this->getConfigPipes())
-            ->pipe($this->pipes())
-            ->pipe($this->pipes);
+        return app(Pipelines::class)->send($passable)->pipe($this->pipes());
     }
 
 
-    /**
-     * 管道 配置
-     * @var string|null
-     */
-    protected ?string $pipelinesConfigKey = null;
-
-    /**
-     * 获取当前操作配置的管道
-     * @return array
-     */
-    protected function getConfigPipes() : array
-    {
-        $pipelinesConfigKey = $this->getPipelinesConfigKey();
-        if (blank($pipelinesConfigKey)) {
-            return [];
-        }
-        return Config::get($pipelinesConfigKey, []);
-    }
-
-    /**
-     * 获取 配置的 key
-     * @return string|null
-     */
-    protected function getPipelinesConfigKey() : ?string
-    {
-        // 从实例中获取
-        if (filled($this->pipelinesConfigKey)) {
-            $this->pipelinesConfigKey;
-        }
-        // 服务配置中获取
-        if (filled($this->service::$actionPipelinesConfigPrefix)) {
-            return $this->service::$actionPipelinesConfigPrefix . '.' . $this->callName;
-        }
-        return null;
-    }
 
 }

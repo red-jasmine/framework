@@ -29,16 +29,19 @@ class ResourceQueryAction extends ResourceAction
      */
     public function execute(bool $isRequest = true) : QueryBuilder
     {
+
         return $this->query($isRequest);
     }
 
     public function query(bool $isRequest = false) : QueryBuilder
     {
+
         return $this->query = $this->query ?? $this->newQuery($isRequest);
     }
 
     protected function newQuery(bool $isRequest = false) : QueryBuilder
     {
+
         $query = $this->queryBuilder($isRequest);
         return $this->service->callQueryCallbacks($query);
     }

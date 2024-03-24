@@ -15,36 +15,16 @@ trait HasActions
         __call as macroCall;
     }
 
-    protected static array $actions = [];
+    protected static array $globalActions = [];
 
-    /**
-     * 定义
-     * @return array
-     */
-    protected static function actions() : array
+    public static function getGlobalActions() : array
     {
-        return [];
+        return self::$globalActions;
     }
 
-
-    /**
-     * 配置 KEY
-     * @var string|null
-     */
-    protected static ?string $actionsConfigKey = null;
-
-    public static function getActions() : array
+    public static function setGlobalActions(array $globalActions) : void
     {
-        return static::$actions = array_merge(static::$actions, static::actions(), static::getConfigActions());
-    }
-
-
-    protected static function getConfigActions() : array
-    {
-        if (blank(static::$actionsConfigKey)) {
-            return [];
-        }
-        return Config::get(static::$actionsConfigKey, []);
+        self::$globalActions = $globalActions;
     }
 
     /**
@@ -55,10 +35,51 @@ trait HasActions
      *
      * @return void
      */
-    public static function extends(string $name, string|object|callable $action) : void
+    public static function extendAction(string $name, string|object|callable $action) : void
     {
-        static::$actions[$name] = $action;
+        static::$globalActions[$name] = $action;
     }
+
+
+    protected array $actions = [];
+
+    protected function addAction(string $name, string|object|callable $action) : static
+    {
+        $this->actions[$name] = $action;
+        return $this;
+    }
+
+    public function getActions() : array
+    {
+        return $this->actions;
+    }
+
+    public function setAction(array $actions) : static
+    {
+        $this->actions = $actions;
+        return $this;
+    }
+
+    protected function actions() : array
+    {
+        return array_merge($this->actions, static::$globalActions);
+    }
+
+    /**
+     * 配置 KEY
+     * @var string|null
+     */
+    protected static ?string $actionsConfigKey = null;
+
+
+    protected static function getConfigActions() : array
+    {
+        if (blank(static::$actionsConfigKey)) {
+            return [];
+        }
+        return Config::get(static::$actionsConfigKey, []);
+    }
+
 
     /**
      * Checks if macro is registered.
@@ -67,10 +88,10 @@ trait HasActions
      *
      * @return bool
      */
-    public static function hasAction(string $name) : bool
+    public function hasAction(string $name) : bool
     {
-        static::getActions();
-        return isset(static::$actions[$name]);
+        $actions = $this->actions();
+        return isset($actions[$name]);
     }
 
 
@@ -90,7 +111,7 @@ trait HasActions
             return $this->macroCall($method, $parameters);
         }
 
-        if (static::hasAction($method)) {
+        if ($this->hasAction($method)) {
             return $this->actionCall($method, $parameters);
         }
         throw new BadMethodCallException(sprintf(
@@ -101,7 +122,7 @@ trait HasActions
 
     protected function actionCall($method, $parameters) : mixed
     {
-        $action = static::$actions[$method];
+        $action = $this->actions()[$method];
         if ($action instanceof Closure) {
             $action = $action->bindTo($this, static::class);
             return $action(...$parameters);
@@ -114,6 +135,17 @@ trait HasActions
         return $action;
     }
 
+    protected function makeAction($name)
+    {
+        $action           = $this->actions()[$name];
+        $action           = app($action);
+        $action->callName = $name;
+        if ($action instanceof ServiceAwareAction) {
+            $action->setService($this);
+        }
+        // 如果是有
+        return $action;
+    }
 
     private function getAction($name)
     {
