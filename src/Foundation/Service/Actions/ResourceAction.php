@@ -12,15 +12,18 @@ use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\DataTransferObjects\UserData;
 use RedJasmine\Support\Foundation\Pipelines\ModelWithOperator;
 use RedJasmine\Support\Foundation\Service\Action;
+use RedJasmine\Support\Foundation\Service\HasValidatorCombiners;
 use RedJasmine\Support\Foundation\Service\ResourceService;
 use ReflectionClass;
 
 /**
  * @property Data|null       $data
  * @property ResourceService $service
+ * @method  handle
  */
 abstract class ResourceAction extends Action
 {
+
 
     // 操作方法名
 
@@ -39,6 +42,12 @@ abstract class ResourceAction extends Action
     // 入参 key,Data
     // 数据持久化   定义接口
     // 返回值
+
+
+    /**
+     * @var ?string
+     */
+    protected ?string $dataClass = null;
 
 
     protected static ?string $validatorManageClass = null;
@@ -68,7 +77,33 @@ abstract class ResourceAction extends Action
 
     }
 
-    public function save() : Model
+    protected function store() : Model
+    {
+        return $this->save();
+    }
+
+    protected function update() : Model
+    {
+        return $this->save();
+    }
+
+    public function delete() : bool|null
+    {
+        try {
+            $this->beginDatabaseTransaction();
+            $this->resolveModel();
+            $this->authorizeAccess();
+            $handleResult = $this->getPipelines()->call('handle', fn() => $this->handle());
+            $this->commitDatabaseTransaction();
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
+        return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
+
+    }
+
+    protected function save() : Model
     {
         try {
             $this->beginDatabaseTransaction();
@@ -91,22 +126,6 @@ abstract class ResourceAction extends Action
         return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
     }
 
-    public function delete() : bool|null
-    {
-        try {
-            $this->beginDatabaseTransaction();
-            $this->resolveModel();
-            $this->authorizeAccess();
-            $handleResult = $this->getPipelines()->call('handle', fn() => $this->handle());
-            $this->commitDatabaseTransaction();
-        } catch (Throwable $throwable) {
-            $this->rollBackDatabaseTransaction();
-            throw $throwable;
-        }
-        return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
-
-    }
-
 
     protected function getModel() : string
     {
@@ -119,59 +138,37 @@ abstract class ResourceAction extends Action
     }
 
 
-    /**
-     * 验证通过后的数据
-     * @return array
-     */
-    protected function validate() : array
-    {
-        $data = $this->data->toArray();
-        if ($this->getValidator()) {
-            return $this->getValidator()->safe()->all();
-        }
-        return $data;
-    }
-
     protected ?Validator $validator = null;
 
-    protected function initValidator() : Validator
+    public function getValidator() : ?Validator
     {
-        // 创建验证器
-        $validator = \Illuminate\Support\Facades\Validator::make($this->data->toArray(), [], [], []);
-        // 验证管理器
-        foreach ($this->getValidatorCombiner() as $validatorCombiner) {
-            $validatorCombiner = app($validatorCombiner);
-            if ($validatorCombiner instanceof ActionAwareValidatorCombiner) {
-                $validatorCombiner->setAction($this);
-            }
-            if ($validatorCombiner instanceof ValidatorAwareValidatorCombiner) {
-                $validatorCombiner->setValidator($validator);
-            }
-            $validator->addRules($validatorCombiner->rules());
-            $validator->setCustomMessages($validatorCombiner->messages());
-            $validator->addCustomAttributes($validatorCombiner->attributes());
-        }
-
-        return $validator;
+        return $this->validator = $this->validator ?? $this->combinerValidator(\Illuminate\Support\Facades\Validator::make($this->data->toArray(), []));
     }
 
-    public function getValidator()
+    public function setValidator(?Validator $validator) : ResourceAction
     {
-
-
-        if ($this->validator) {
-            return $this->validator;
-        }
-        if ($this->getValidatorManageClass()) {
-            $this->validator = app($this->getValidatorManageClass(), [ 'data' => $this->data?->toArray() ?? [] ])->validator();
-        }
-        return $this->validator;
+        $this->validator = $validator;
+        return $this;
     }
 
-    protected function getValidatorManageClass() : ?string
+    protected function validate() : array
     {
-        return static::$validatorManageClass ?? $this->service::getValidatorManageClass();
+        $this->getValidator()->validate();
+        return $this->getValidator()->safe()->all();
+    }
 
+
+    /**
+     * @param Model $model
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function generateId(Model $model) : void
+    {
+        if ($model->exists === false && $model->incrementing === false) {
+            $model->{$this->model->getKeyName()} = $this->service::buildID();
+        }
     }
 
     /**
@@ -182,12 +179,10 @@ abstract class ResourceAction extends Action
      */
     protected function fill(array $data) : ?Model
     {
+        $this->generateId($this->data);
         $this->model->fill($data);
-        if ($this->model->exists === false && $this->model->incrementing === false) {
-            $this->model->{$this->model->getKeyName()} = $this->service::buildID();
-        }
         if ($this->service::$autoModelWithOwner) {
-            $this->model->{$this->service::$modelOwnerKey} = $this->data->owner;
+            $this->model->{$this->service::$modelOwnerKey} = $this->data->owner ?? $this->service->getOwner() ?? null;
         }
         return $this->model;
     }
@@ -208,11 +203,10 @@ abstract class ResourceAction extends Action
     protected function conversionData(Data|array $data = null) : ?Data
     {
         if (is_array($data)) {
-
             $data = $this->morphsData($data);
             $data = $this->dataWithOwner($data);
         }
-
+        // Data 验证存在问题 如果有两个类型
         return $this->getDataClass()::from($data);
     }
 
@@ -227,6 +221,12 @@ abstract class ResourceAction extends Action
             $dataClass = $this->service::getDataClass();
         }
         return $dataClass;
+    }
+
+    public function setDataClass(?string $dataClass) : static
+    {
+        $this->dataClass = $dataClass;
+        return $this;
     }
 
 

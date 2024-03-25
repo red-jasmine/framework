@@ -19,16 +19,12 @@ class Json
         }
         if (is_string($value)) {
             try {
-                return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
             } catch (\Throwable $throwable) {
                 return null;
             }
         }
-        if (is_array($value)) {
-            return (array)$value;
-        }
-
-        return (array)$value;
+        return filled(((array)$value)) ? (array)$value : null;
 
     }
 

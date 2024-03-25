@@ -2,20 +2,25 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
-use Illuminate\Contracts\Validation\Validator;
-use RedJasmine\Product\Services\Product\Validators\ActionAwareValidatorCombiner;
-use RedJasmine\Product\Services\Product\Validators\ValidatorAwareValidatorCombiner;
-use RedJasmine\Product\Services\Product\Validators\ValidatorCombinerInterface;
+use Illuminate\Validation\Validator;
+use RedJasmine\Support\Foundation\Validators\ActionAwareValidatorCombiner;
+use RedJasmine\Support\Foundation\Validators\ValidatorAwareValidatorCombiner;
+use RedJasmine\Support\Foundation\Validators\ValidatorCombinerInterface;
 
 trait HasValidatorCombiners
 {
     /**
      *
      * 验证组合器
-     * @var array
+     * @var array|string[]|ValidatorCombinerInterface[]
      */
     protected static array $globalValidatorCombiners = [];
 
+    /**
+     * @param $validatorCombiner
+     *
+     * @return void
+     */
     public static function extendValidatorCombiner($validatorCombiner) : void
     {
         static::$globalValidatorCombiners[] = $validatorCombiner;
@@ -31,8 +36,6 @@ trait HasValidatorCombiners
         self::$globalValidatorCombiners = $globalValidatorCombiners;
     }
 
-
-    // 当前实例
 
     protected array $validatorCombiners = [];
 

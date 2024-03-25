@@ -22,7 +22,7 @@ class ResourceUpdateAction extends ResourceAction
 
         $this->data = $data;
 
-        return $this->save();
+        return $this->update();
     }
 
     /**

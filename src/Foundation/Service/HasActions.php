@@ -122,12 +122,12 @@ trait HasActions
 
     protected function actionCall($method, $parameters) : mixed
     {
-        $action = $this->actions()[$method];
-        if ($action instanceof Closure) {
-            $action = $action->bindTo($this, static::class);
+        $actionConfig = $this->actions()[$method];
+        if ($actionConfig instanceof Closure) {
+            $action = $actionConfig->bindTo($this, static::class);
             return $action(...$parameters);
         }
-        $action = $this->getAction($method);
+        $action = $this->makeAction($method);
         if (method_exists($action, 'execute')) {
             return $action->execute(...$parameters);
         }
@@ -135,26 +135,46 @@ trait HasActions
         return $action;
     }
 
-    protected function makeAction($name)
-    {
-        $action           = $this->actions()[$name];
-        $action           = app($action);
-        $action->callName = $name;
-        if ($action instanceof ServiceAwareAction) {
-            $action->setService($this);
-        }
-        // 如果是有
-        return $action;
-    }
 
-    private function getAction($name)
+    protected function makeAction($name) : Action
     {
-        $action           = static::$actions[$name];
-        $action           = app($action);
+        $actionConfig   = $this->actions()[$name];
+        $abstractAction = null;
+        if (is_object($actionConfig)) {
+            $action       = $actionConfig;
+            $actionConfig = [];
+        } else {
+            if (is_string($actionConfig)) {
+                $abstractAction = $actionConfig;
+            } else if (is_array($actionConfig)) {
+                $abstractAction = $actionConfig['class'];
+            }
+            if (blank($abstractAction)) {
+                throw new BadMethodCallException(sprintf('Method %s::%s does not exist.', static::class, $name));
+            }
+            $action = app($abstractAction);
+        }
+
+        /**
+         * @var Action $action
+         */
         $action->callName = $name;
         if ($action instanceof ServiceAwareAction) {
             $action->setService($this);
         }
+
+        if (filled($actionConfig['data'] ?? null)) {
+            $action->setDataClass($actionConfig['data']);
+        }
+
+        if (filled($actionConfig['pipelines'] ?? null)) {
+            $action->setPipes($actionConfig['pipelines']);
+        }
+
+        if (filled($actionConfig['validator_combiners'] ?? null)) {
+            $action->setValidatorCombiners($actionConfig['validator_combiners']);
+        }
+
         return $action;
     }
 
@@ -165,7 +185,7 @@ trait HasActions
     public function __get(string $name)
     {
         if (static::hasAction($name)) {
-            return $this->actionObjects[$name] = $this->actionObjects[$name] ?? $this->getAction($name);
+            return $this->actionObjects[$name] = $this->actionObjects[$name] ?? $this->makeAction($name);
 
         }
         throw new MissingAttributeException($this, $name);

@@ -21,6 +21,13 @@ abstract class Action implements ServiceAwareAction
 
     use CanUseDatabaseTransactions;
 
+    public function validatorCombiners() : array
+    {
+        // TODO 合并配置
+        return $this->coreValidatorCombiners();
+    }
+
+
     /**
      * @return Service
      */
