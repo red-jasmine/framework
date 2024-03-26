@@ -52,6 +52,7 @@ class ResourceQueryAction extends ResourceAction
         if (filled($this->filters)) {
             return $this->filters;
         }
+        return  [];
 
         return $this->service::filters();
     }
@@ -61,6 +62,7 @@ class ResourceQueryAction extends ResourceAction
         if (filled($this->includes)) {
             return $this->includes;
         }
+        return  [];
         return $this->service::includes();
     }
 
@@ -69,6 +71,7 @@ class ResourceQueryAction extends ResourceAction
         if (filled($this->fields)) {
             return $this->fields;
         }
+        return  [];
         return $this->service::fields();
     }
 
@@ -77,6 +80,7 @@ class ResourceQueryAction extends ResourceAction
         if (filled($this->sorts)) {
             return $this->sorts;
         }
+        return  [];
         return $this->service::sorts();
     }
 

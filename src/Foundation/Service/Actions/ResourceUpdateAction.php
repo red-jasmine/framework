@@ -14,7 +14,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 class ResourceUpdateAction extends ResourceAction
 {
 
-    public int|string|null $key = null;
+    protected int|string|null $key = null;
 
     public function execute(int|string $key, Data|array $data) : Model
     {

@@ -3,30 +3,18 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
 /**
- * @property Model   $model
  * @property Service $service
  */
 abstract class Action implements ServiceAwareAction
 {
-    use HasPipelines {
-        HasPipelines::pipes as corePipes;
-    }
-    use HasValidatorCombiners {
-        HasValidatorCombiners::validatorCombiners as coreValidatorCombiners;
-    }
+    use HasPipelines;
+
+    use HasValidatorCombiners;
 
     use CanUseDatabaseTransactions;
-
-    public function validatorCombiners() : array
-    {
-        // TODO 合并配置
-        return $this->coreValidatorCombiners();
-    }
-
 
     /**
      * @return Service
@@ -41,25 +29,6 @@ abstract class Action implements ServiceAwareAction
     {
         $this->service = $service;
         return $this;
-    }
-
-    public function pipes() : array
-    {
-        return array_merge($this->corePipes(), $this->getConfigPipes());
-    }
-
-    protected ?string $actionConfigKey = null;
-
-
-    protected array $config = [];
-
-    protected function actionConfig()
-    {
-        //  配置,当前实例
-        return [
-            'pipelines'           => [], // 操作管道
-            'validator_combiners' => [],// 验证组合器
-        ];
     }
 
 

@@ -22,7 +22,6 @@ trait HasQueryBuilder
         return $this;
     }
 
-
     public static function searchFilter($fields, $name = 'search')
     {
         $fields = is_array($fields) ? $fields : func_get_args();
@@ -72,24 +71,44 @@ trait HasQueryBuilder
         return $this;
     }
 
+    public function getFilters() : array
+    {
+        return $this->filters;
+    }
+
+    public function getIncludes() : array
+    {
+        return $this->includes;
+    }
+
+    public function getFields() : array
+    {
+        return $this->fields;
+    }
+
+    public function getSorts() : array
+    {
+        return $this->sorts;
+    }
+
     protected function filters() : array
+    {
+        return $this->filters;
+    }
+
+    protected function fields() : array
     {
         return $this->filters;
     }
 
     protected function includes() : array
     {
-        return $this->includes;
-    }
-
-    protected function fields() : array
-    {
-        return $this->fields;
+        return $this->filters;
     }
 
     protected function sorts() : array
     {
-        return $this->sorts;
+        return $this->filters;
     }
 
 
@@ -100,7 +119,7 @@ trait HasQueryBuilder
          * 如果是 不是当前请求调用 会出现 自动加载条件问题
          */
         $request      = $isRequest === true ? request() : (new Request());
-        $queryBuilder = QueryBuilder::for($this->service::getModel(), $request);
+        $queryBuilder = QueryBuilder::for($this->service::getModelClass(), $request);
         if (filled($this->filters())) {
             $queryBuilder->allowedFilters($this->filters());
         }

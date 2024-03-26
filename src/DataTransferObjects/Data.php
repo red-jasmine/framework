@@ -6,13 +6,6 @@ namespace RedJasmine\Support\DataTransferObjects;
 use Illuminate\Contracts\Support\Arrayable;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapOutputName;
-use Spatie\LaravelData\DataPipeline;
-use Spatie\LaravelData\DataPipes\AuthorizedDataPipe;
-use Spatie\LaravelData\DataPipes\CastPropertiesDataPipe;
-use Spatie\LaravelData\DataPipes\DefaultValuesDataPipe;
-use Spatie\LaravelData\DataPipes\FillRouteParameterPropertiesDataPipe;
-use Spatie\LaravelData\DataPipes\MapPropertiesDataPipe;
-use Spatie\LaravelData\DataPipes\ValidatePropertiesDataPipe;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 
@@ -31,6 +24,37 @@ class Data extends \Spatie\LaravelData\Data
         return [
 
         ];
+    }
+
+    public static function from(mixed ...$payloads) : static
+    {
+        return static::factory()->from(...$payloads);
+    }
+
+    protected static function morphsData(array $data) : array
+    {
+        $morphs = static::morphs();
+        foreach ($morphs as $morph) {
+            $data = static::initMorphFromArray($data, $morph);
+        }
+        return $data;
+    }
+
+    protected static function initMorphFromArray(array $data, string $morph) : array
+    {
+        $typeKey     = $morph . '_type';
+        $idKey       = $morph . '_id';
+        $nicknameKey = $morph . '_nickname';
+        $avatarKey   = $morph . '_avatar';
+        if (!isset($data[$morph]) && (isset($data[$typeKey]) || isset($data[$idKey]))) {
+            $data[$morph] = [
+                'id'       => (int)$data[$idKey],
+                'type'     => $data[$typeKey],
+                'nickname' => $data[$nicknameKey] ?? null,
+                'avatar'   => $data[$avatarKey] ?? null,
+            ];
+        }
+        return $data;
     }
 
 

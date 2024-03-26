@@ -65,9 +65,14 @@ trait HasPipelines
      */
     public function pipes() : array
     {
-        return array_merge(static::$globalPipes, $this->pipes);
+        return [];
     }
 
+
+    protected function mergePipes() : array
+    {
+        return array_merge(static::$globalPipes, $this->getPipes(), $this->pipes());
+    }
 
     /**
      * 管道组合
@@ -82,9 +87,8 @@ trait HasPipelines
 
     protected function newPipelines($passable) : Pipelines
     {
-        return app(Pipelines::class)->send($passable)->pipe($this->pipes());
+        return app(Pipelines::class)->send($passable)->pipe($this->mergePipes());
     }
-
 
 
 }

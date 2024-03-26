@@ -9,6 +9,31 @@ use RedJasmine\Support\Foundation\Validators\ValidatorCombinerInterface;
 
 trait HasValidatorCombiners
 {
+
+    protected ?Validator $validator = null;
+
+    public function makeValidator(array $data, array $rules = [], array $messages = [], array $attributes = []) : ?Validator
+    {
+        if ($this->mergeValidatorCombiners()) {
+            return $this->validator = $this->validator ?? $this->combinerValidator(\Illuminate\Support\Facades\Validator::make($data, $rules, $messages, $attributes));
+        }
+        $this->validator = null;
+        return $this->validator;
+    }
+
+    public function getValidator() : ?Validator
+    {
+        return $this->validator;
+    }
+
+
+    public function setValidator(?Validator $validator) : static
+    {
+        $this->validator = $validator;
+        return $this;
+    }
+
+
     /**
      *
      * 验证组合器
@@ -37,11 +62,11 @@ trait HasValidatorCombiners
     }
 
 
-    protected array $validatorCombiners = [];
+    protected ?array $validatorCombiners = null;
 
     public function getValidatorCombiners() : array
     {
-        return $this->validatorCombiners;
+        return $this->validatorCombiners??$this->service::getValidatorCombiners();
     }
 
 
@@ -63,20 +88,13 @@ trait HasValidatorCombiners
      */
     public function validatorCombiners() : array
     {
-        // 查看配置的
-
         return [];
     }
 
 
-    protected function mergeValidatorCombiners()
+    protected function mergeValidatorCombiners() : array
     {
-        return array_merge(static::$globalValidatorCombiners,
-                           $this->validatorCombiners(),
-                           $this->getValidatorCombiners()
-
-        );
-
+        return array_merge(static::$globalValidatorCombiners, $this->validatorCombiners(), $this->getValidatorCombiners());
     }
 
 

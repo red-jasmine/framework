@@ -10,6 +10,10 @@ use RedJasmine\Support\Helpers\ID\Snowflake;
 abstract class Service
 {
 
+    /**
+     * TODO
+     * 引入可配置化
+     */
     use HasActions;
 
     use WithUserService;
@@ -17,12 +21,6 @@ abstract class Service
     use WithClientService;
 
 
-
-    /**
-     * 操作管道配置前缀
-     * @var string|null
-     */
-    public static ?string $actionPipelinesConfigPrefix = null;
 
 
     /**

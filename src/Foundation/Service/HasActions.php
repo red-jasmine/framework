@@ -180,21 +180,6 @@ trait HasActions
             $action->setService($this);
         }
 
-        if (filled($actionConfig['data'] ?? null)) {
-            $action->setDataClass($actionConfig['data']);
-        }
-
-        if (filled($actionConfig['pipelines'] ?? null)) {
-            $action->setPipes($actionConfig['pipelines']);
-        }
-
-        if (filled($actionConfig['validator_combiners'] ?? null)) {
-            $action->setValidatorCombiners($actionConfig['validator_combiners']);
-        }
-
-        if (filled($actionConfig['includes'] ?? null)) {
-            $action->setIncludes($actionConfig['includes']);
-        }
 
         return $action;
     }
