@@ -39,6 +39,12 @@ trait HasValidatorCombiners
 
     protected array $validatorCombiners = [];
 
+    public function getValidatorCombiners() : array
+    {
+        return $this->validatorCombiners;
+    }
+
+
     public function setValidatorCombiners(array $validatorCombiners) : static
     {
         $this->validatorCombiners = $validatorCombiners;
@@ -58,7 +64,19 @@ trait HasValidatorCombiners
     public function validatorCombiners() : array
     {
         // 查看配置的
-        return array_merge(static::$globalValidatorCombiners, $this->validatorCombiners);
+
+        return [];
+    }
+
+
+    protected function mergeValidatorCombiners()
+    {
+        return array_merge(static::$globalValidatorCombiners,
+                           $this->validatorCombiners(),
+                           $this->getValidatorCombiners()
+
+        );
+
     }
 
 
@@ -71,7 +89,7 @@ trait HasValidatorCombiners
      */
     protected function combinerValidator(Validator $validator) : Validator
     {
-        foreach ($this->validatorCombiners() as $validatorCombiner) {
+        foreach ($this->mergeValidatorCombiners() as $validatorCombiner) {
             $validatorCombiner = app($validatorCombiner);
             if ($validatorCombiner instanceof ActionAwareValidatorCombiner) {
                 $validatorCombiner->setAction($this);

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Config;
 abstract class Action implements ServiceAwareAction
 {
     use HasPipelines {
-        pipes as corePipes;
+        HasPipelines::pipes as corePipes;
     }
     use HasValidatorCombiners {
-        validatorCombiners as coreValidatorCombiners;
+        HasValidatorCombiners::validatorCombiners as coreValidatorCombiners;
     }
 
     use CanUseDatabaseTransactions;

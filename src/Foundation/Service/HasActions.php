@@ -15,6 +15,12 @@ trait HasActions
         __call as macroCall;
     }
 
+    // 配置信息  > 属性的(外部修改)  > 方法的() > 全局
+    // 静态的
+    /**
+     * 静态可扩展
+     * @var array
+     */
     protected static array $globalActions = [];
 
     public static function getGlobalActions() : array
@@ -62,8 +68,19 @@ trait HasActions
 
     protected function actions() : array
     {
-        return array_merge($this->actions, static::$globalActions);
+        return [];
     }
+
+    protected function mergeActions() : array
+    {
+        // 配置信息  > 属性的(外部修改)  > 方法的() > 全局
+        return array_merge(static::$globalActions,
+                           $this->actions(),
+                           $this->getActions(),
+        // TODO 配置的
+        );
+    }
+
 
     /**
      * 配置 KEY
@@ -90,7 +107,7 @@ trait HasActions
      */
     public function hasAction(string $name) : bool
     {
-        $actions = $this->actions();
+        $actions = $this->mergeActions();
         return isset($actions[$name]);
     }
 
@@ -122,7 +139,7 @@ trait HasActions
 
     protected function actionCall($method, $parameters) : mixed
     {
-        $actionConfig = $this->actions()[$method];
+        $actionConfig = $this->mergeActions()[$method];
         if ($actionConfig instanceof Closure) {
             $action = $actionConfig->bindTo($this, static::class);
             return $action(...$parameters);
@@ -138,7 +155,7 @@ trait HasActions
 
     protected function makeAction($name) : Action
     {
-        $actionConfig   = $this->actions()[$name];
+        $actionConfig   = $this->mergeActions()[$name];
         $abstractAction = null;
         if (is_object($actionConfig)) {
             $action       = $actionConfig;
@@ -173,6 +190,10 @@ trait HasActions
 
         if (filled($actionConfig['validator_combiners'] ?? null)) {
             $action->setValidatorCombiners($actionConfig['validator_combiners']);
+        }
+
+        if (filled($actionConfig['includes'] ?? null)) {
+            $action->setIncludes($actionConfig['includes']);
         }
 
         return $action;
