@@ -42,73 +42,74 @@ trait HasQueryBuilder
     }
 
 
-    protected array $filters  = [];
-    protected array $includes = [];
-    protected array $fields   = [];
-    protected array $sorts    = [];
+    protected ?array $filters  = null;
+    protected ?array $includes = null;
+    protected ?array $fields   = null;
+    protected ?array $sorts    = null;
 
-    public function setFilters(array $filters) : static
+    public function getFilters() : ?array
+    {
+        return $this->filters;
+    }
+
+    public function setFilters(?array $filters) : static
     {
         $this->filters = $filters;
         return $this;
     }
 
-    public function setIncludes(array $includes) : static
+    public function getIncludes() : ?array
+    {
+        return $this->includes;
+    }
+
+    public function setIncludes(?array $includes) : static
     {
         $this->includes = $includes;
         return $this;
     }
 
-    public function setFields(array $fields) : static
+    public function getFields() : ?array
+    {
+        return $this->fields;
+    }
+
+    public function setFields(?array $fields) : static
     {
         $this->fields = $fields;
         return $this;
     }
 
-    public function setSorts(array $sorts) : static
+    public function getSorts() : ?array
+    {
+        return $this->sorts;
+    }
+
+    public function setSorts(?array $sorts) : static
     {
         $this->sorts = $sorts;
         return $this;
     }
 
-    public function getFilters() : array
-    {
-        return $this->filters;
-    }
-
-    public function getIncludes() : array
-    {
-        return $this->includes;
-    }
-
-    public function getFields() : array
-    {
-        return $this->fields;
-    }
-
-    public function getSorts() : array
-    {
-        return $this->sorts;
-    }
 
     protected function filters() : array
     {
-        return $this->filters;
+        return [];
     }
 
     protected function fields() : array
     {
-        return $this->filters;
+        return [];
     }
 
     protected function includes() : array
     {
-        return $this->filters;
+        return [];
     }
 
     protected function sorts() : array
     {
-        return $this->filters;
+        return [];
     }
 
 
@@ -119,20 +120,16 @@ trait HasQueryBuilder
          * 如果是 不是当前请求调用 会出现 自动加载条件问题
          */
         $request      = $isRequest === true ? request() : (new Request());
-        $queryBuilder = QueryBuilder::for($this->service::getModelClass(), $request);
-        if (filled($this->filters())) {
-            $queryBuilder->allowedFilters($this->filters());
-        }
-        if (filled($this->fields())) {
-            $queryBuilder->allowedFields($this->fields());
-        }
-        if (filled($this->includes())) {
-            $queryBuilder->allowedIncludes($this->includes());
-        }
+        $queryBuilder = QueryBuilder::for($this->getModelClass(), $request);
 
-        if (filled($this->sorts())) {
-            $queryBuilder->allowedSorts($this->sorts());
-        }
+        // TODO
+        // 支持 设置为空
+        // 支持外部设置
+        // 支持重写
+        $queryBuilder->allowedFilters(array_merge($this->getFilters() ?? [], $this->filters()));
+        $queryBuilder->allowedFields(array_merge($this->getFields() ?? [], $this->fields()));
+        $queryBuilder->allowedIncludes(array_merge($this->getIncludes() ?? [], $this->includes()));
+        $queryBuilder->allowedSorts(array_merge($this->getSorts() ?? [], $this->sorts()));
 
         return $queryBuilder;
     }

@@ -47,42 +47,6 @@ class ResourceQueryAction extends ResourceAction
     }
 
 
-    protected function filters() : array
-    {
-        if (filled($this->filters)) {
-            return $this->filters;
-        }
-        return  [];
-
-        return $this->service::filters();
-    }
-
-    protected function includes() : array
-    {
-        if (filled($this->includes)) {
-            return $this->includes;
-        }
-        return  [];
-        return $this->service::includes();
-    }
-
-    protected function fields() : array
-    {
-        if (filled($this->fields)) {
-            return $this->fields;
-        }
-        return  [];
-        return $this->service::fields();
-    }
-
-    protected function sorts() : array
-    {
-        if (filled($this->sorts)) {
-            return $this->sorts;
-        }
-        return  [];
-        return $this->service::sorts();
-    }
 
 
     public function tree(array $nodes = null) : array
