@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Logistics\DataTransferObjects\FreightTemplates;
 
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 
 class FreightTemplateFreeRegionDTO extends Data
 {

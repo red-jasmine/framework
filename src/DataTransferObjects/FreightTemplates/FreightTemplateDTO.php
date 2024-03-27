@@ -3,7 +3,7 @@
 namespace RedJasmine\Logistics\DataTransferObjects\FreightTemplates;
 
 use RedJasmine\Logistics\Enums\FreightTemplates\FreightChargeTypeEnum;
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\DataCollection;
 
 class FreightTemplateDTO extends Data
