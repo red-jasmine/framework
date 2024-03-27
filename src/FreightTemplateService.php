@@ -36,14 +36,6 @@ class FreightTemplateService extends Service implements ServiceAwareAction
         return LogisticsFreightTemplate::findOrFail($id);
     }
 
-    /**
-     * @return int
-     * @throws Exception
-     */
-    public function buildID() : int
-    {
-        return Snowflake::getInstance()->nextId();
-    }
 
 
 }
