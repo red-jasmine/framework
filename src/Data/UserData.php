@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Support\DataTransferObjects;
+namespace RedJasmine\Support\Data;
 
 use RedJasmine\Support\Contracts\UserInterface;
-use Spatie\LaravelData\Data;
 
-class SystemUserDTO extends Data implements UserInterface
+
+class UserData extends Data implements UserInterface
 {
 
     /**
@@ -15,9 +15,9 @@ class SystemUserDTO extends Data implements UserInterface
      * @param string|null $avatar
      */
     public function __construct(
-        public string  $type = 'system',
-        public int     $id = 0,
-        public ?string $nickname = '系统',
+        public string  $type,
+        public int     $id,
+        public ?string $nickname = null,
         public ?string $avatar = null,
     )
     {

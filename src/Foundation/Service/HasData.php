@@ -3,8 +3,8 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\DataTransferObjects\Data;
-use RedJasmine\Support\DataTransferObjects\UserData;
+use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Data\UserData;
 
 /**
  * @property Data|array $data

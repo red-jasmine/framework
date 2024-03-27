@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Services\Product\Validators\ActionAwareValidatorCombiner;
 use RedJasmine\Product\Services\Product\Validators\ValidatorAwareValidatorCombiner;
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Support\Foundation\Service\HasData;
 use RedJasmine\Support\Foundation\Service\HasModel;

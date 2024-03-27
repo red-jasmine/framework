@@ -6,8 +6,8 @@ namespace RedJasmine\Support\Http\Controllers;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Contracts\ClientInterface;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Helpers\ClientObjectBuilder;
-use RedJasmine\Support\Helpers\User\UserObject;
 
 trait UserOwnerTools
 {
@@ -19,7 +19,7 @@ trait UserOwnerTools
     {
 
         if ($this->getUser() instanceof BelongsToOwnerInterface) {
-           return $this->getUser()->owner();
+            return $this->getUser()->owner();
         }
 
         return $this->getUser();
@@ -43,11 +43,11 @@ trait UserOwnerTools
         // TODO  根据 设备ID、 ip 等信息
         $guest = [
             'type'     => 'guest',
-            'id'      => 0,
+            'id'       => 0,
             'nickname' => '游客',
             'avatar'   => '',
         ];
-        return new UserObject($guest);
+        return UserData::from($guest);
 
     }
 

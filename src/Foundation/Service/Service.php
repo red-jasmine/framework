@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Foundation\Service;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 abstract class Service

@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Foundation\Service\ResourceService;
 
 /**

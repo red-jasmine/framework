@@ -6,7 +6,7 @@ namespace RedJasmine\Support\Foundation\Service;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
