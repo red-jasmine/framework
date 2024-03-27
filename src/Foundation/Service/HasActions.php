@@ -15,6 +15,17 @@ trait HasActions
         __call as macroCall;
     }
 
+    protected function initializeHasActions($config = null) : void
+    {
+        $config        = $config ?? [];
+        $this->actions = $this->mergeActions((array)$config);
+    }
+
+    protected function mergeActions(array $actions = []) : array
+    {
+        return array_merge($this->actions, $this->actions(), static::$globalActions, $actions);
+    }
+
     // 配置信息  > 属性的(外部修改)  > 方法的() > 全局
     // 静态的
     /**
@@ -71,17 +82,6 @@ trait HasActions
         return [];
     }
 
-    protected function mergeActions() : array
-    {
-        // 配置信息  > 属性的(外部修改)  > 方法的() > 全局
-        return array_merge(static::$globalActions,
-                           $this->actions(),
-                           $this->getActions(),
-        // TODO 配置的
-        );
-    }
-
-
     /**
      * 配置 KEY
      * @var string|null
@@ -107,8 +107,7 @@ trait HasActions
      */
     public function hasAction(string $name) : bool
     {
-        $actions = $this->mergeActions();
-        return isset($actions[$name]);
+        return isset($this->actions[$name]);
     }
 
 
@@ -137,9 +136,14 @@ trait HasActions
     }
 
 
+    protected function getAction($method)
+    {
+        return $this->actions[$method];
+    }
+
     protected function actionCall($method, $parameters) : mixed
     {
-        $actionConfig = $this->mergeActions()[$method];
+        $actionConfig = $this->getAction($method);
         if ($actionConfig instanceof Closure) {
             $action = $actionConfig->bindTo($this, static::class);
             return $action(...$parameters);
@@ -155,14 +159,16 @@ trait HasActions
 
     protected function makeAction($name) : Action
     {
-        $actionConfig   = $this->mergeActions()[$name];
+        $actionConfig   = $this->getAction($name);
         $abstractAction = null;
         if (is_object($actionConfig)) {
             $action       = $actionConfig;
             $actionConfig = [];
         } else {
             if (is_string($actionConfig)) {
-                $abstractAction = $actionConfig;
+                $abstractAction        = $actionConfig;
+                $actionConfig          = [];
+                $actionConfig['class'] = $abstractAction;
             } else if (is_array($actionConfig)) {
                 $abstractAction = $actionConfig['class'];
             }
@@ -172,14 +178,11 @@ trait HasActions
             $action = app($abstractAction);
         }
 
-        /**
-         * @var Action $action
-         */
-        $action->callName = $name;
-        if ($action instanceof ServiceAwareAction) {
-            $action->setService($this);
-        }
 
+        if (method_exists($this, 'initializeAction')) {
+
+            $this->initializeAction($action, $actionConfig);
+        }
 
         return $action;
     }

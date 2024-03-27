@@ -10,11 +10,18 @@ use RedJasmine\Support\Foundation\Validators\ValidatorCombinerInterface;
 trait HasValidatorCombiners
 {
 
+
+    protected function initializeHasValidatorCombiners() : void
+    {
+        $this->validatorCombiners = array_merge($this->validatorCombiners, $this->validatorCombiners(), static::$globalValidatorCombiners);
+    }
+
+
     protected ?Validator $validator = null;
 
     public function makeValidator(array $data, array $rules = [], array $messages = [], array $attributes = []) : ?Validator
     {
-        if ($this->mergeValidatorCombiners()) {
+        if (count($this->validatorCombiners) > 0) {
             return $this->validator = $this->validator ?? $this->combinerValidator(\Illuminate\Support\Facades\Validator::make($data, $rules, $messages, $attributes));
         }
         $this->validator = null;
@@ -62,11 +69,11 @@ trait HasValidatorCombiners
     }
 
 
-    protected ?array $validatorCombiners = null;
+    protected array $validatorCombiners = [];
 
     public function getValidatorCombiners() : array
     {
-        return $this->validatorCombiners??$this->service::getValidatorCombiners();
+        return $this->validatorCombiners;
     }
 
 
@@ -91,13 +98,6 @@ trait HasValidatorCombiners
         return [];
     }
 
-
-    protected function mergeValidatorCombiners() : array
-    {
-        return array_merge(static::$globalValidatorCombiners, $this->validatorCombiners(), $this->getValidatorCombiners());
-    }
-
-
     /**
      * 组合验证器
      *
@@ -107,7 +107,7 @@ trait HasValidatorCombiners
      */
     protected function combinerValidator(Validator $validator) : Validator
     {
-        foreach ($this->mergeValidatorCombiners() as $validatorCombiner) {
+        foreach ($this->validatorCombiners as $validatorCombiner) {
             $validatorCombiner = app($validatorCombiner);
             if ($validatorCombiner instanceof ActionAwareValidatorCombiner) {
                 $validatorCombiner->setAction($this);

@@ -8,18 +8,12 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 trait HasQueryBuilder
 {
-
-    protected bool $disableRequest = false;
-
-    public function isDisableRequest() : bool
+    protected function initializeHasQueryBuilder() : void
     {
-        return $this->disableRequest;
-    }
-
-    public function disableRequest(bool $disableRequest = true) : static
-    {
-        $this->disableRequest = $disableRequest;
-        return $this;
+        $this->filters  = array_merge($this->filters, $this->filters());
+        $this->includes = array_merge($this->includes, $this->includes());
+        $this->sorts    = array_merge($this->includes, $this->sorts());
+        $this->fields   = array_merge($this->fields, $this->fields());
     }
 
     public static function searchFilter($fields, $name = 'search')
@@ -42,50 +36,50 @@ trait HasQueryBuilder
     }
 
 
-    protected ?array $filters  = null;
-    protected ?array $includes = null;
-    protected ?array $fields   = null;
-    protected ?array $sorts    = null;
+    protected array $filters  = [];
+    protected array $includes = [];
+    protected array $fields   = [];
+    protected array $sorts    = [];
 
-    public function getFilters() : ?array
+    public function getFilters() : array
     {
         return $this->filters;
     }
 
-    public function setFilters(?array $filters) : static
+    public function setFilters(array $filters) : static
     {
         $this->filters = $filters;
         return $this;
     }
 
-    public function getIncludes() : ?array
+    public function getIncludes() : array
     {
         return $this->includes;
     }
 
-    public function setIncludes(?array $includes) : static
+    public function setIncludes(array $includes) : static
     {
         $this->includes = $includes;
         return $this;
     }
 
-    public function getFields() : ?array
+    public function getFields() : array
     {
         return $this->fields;
     }
 
-    public function setFields(?array $fields) : static
+    public function setFields(array $fields) : static
     {
         $this->fields = $fields;
         return $this;
     }
 
-    public function getSorts() : ?array
+    public function getSorts() : array
     {
         return $this->sorts;
     }
 
-    public function setSorts(?array $sorts) : static
+    public function setSorts(array $sorts) : static
     {
         $this->sorts = $sorts;
         return $this;
@@ -113,9 +107,8 @@ trait HasQueryBuilder
     }
 
 
-    public function queryBuilder(bool $isRequest = false) : QueryBuilder
+    protected function queryBuilder(bool $isRequest = false) : QueryBuilder
     {
-
         /**
          * 如果是 不是当前请求调用 会出现 自动加载条件问题
          */
@@ -126,10 +119,11 @@ trait HasQueryBuilder
         // 支持 设置为空
         // 支持外部设置
         // 支持重写
-        $queryBuilder->allowedFilters(array_merge($this->getFilters() ?? [], $this->filters()));
-        $queryBuilder->allowedFields(array_merge($this->getFields() ?? [], $this->fields()));
-        $queryBuilder->allowedIncludes(array_merge($this->getIncludes() ?? [], $this->includes()));
-        $queryBuilder->allowedSorts(array_merge($this->getSorts() ?? [], $this->sorts()));
+        $queryBuilder->allowedFilters($this->filters);
+        $queryBuilder->allowedFields($this->fields);
+
+        $queryBuilder->allowedIncludes($this->includes);
+        $queryBuilder->allowedSorts($this->sorts);
 
         return $queryBuilder;
     }

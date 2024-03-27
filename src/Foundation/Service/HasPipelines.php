@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Config;
 trait HasPipelines
 {
 
+
+    protected function initializeHasPipelines() : void
+    {
+        $this->pipes = array_merge($this->pipes, static::$globalPipes, $this->pipes());
+    }
+
     /**
      * 静态管道
      * @var array
@@ -32,7 +38,6 @@ trait HasPipelines
     {
         self::$globalPipes = $globalPipes;
     }
-
 
     /**
      * 实例配置
@@ -68,12 +73,6 @@ trait HasPipelines
         return [];
     }
 
-
-    protected function mergePipes() : array
-    {
-        return array_merge(static::$globalPipes, $this->getPipes(), $this->pipes());
-    }
-
     /**
      * 管道组合
      * @var Pipelines
@@ -87,7 +86,7 @@ trait HasPipelines
 
     protected function newPipelines($passable) : Pipelines
     {
-        return app(Pipelines::class)->send($passable)->pipe($this->mergePipes());
+        return app(Pipelines::class)->send($passable)->pipe($this->pipes);
     }
 
 

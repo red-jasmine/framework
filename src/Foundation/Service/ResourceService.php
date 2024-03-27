@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\Foundation\Service\Actions\ResourceAction;
+use RedJasmine\Support\Foundation\Service\Actions\ResourceQueryAction;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -22,11 +23,6 @@ use Spatie\QueryBuilder\QueryBuilder;
  */
 class ResourceService extends Service
 {
-    use HasActions {
-        HasActions::makeAction as coreMakeAction;
-    }
-
-
     /**
      * 所属人
      * @var bool
@@ -47,15 +43,18 @@ class ResourceService extends Service
      * @var string
      */
     protected static string $dataClass = Data::class;
-
-
     /**
      * 验证组合器
      * @var array
      */
     protected static array $validatorCombiners = [];
 
+    /**
+     * 默认管道
+     * @var array
+     */
     protected static array $pipelines = [];
+
     /**
      * @var array
      */
@@ -84,31 +83,34 @@ class ResourceService extends Service
     }
 
 
-    protected function actions() : array
+    protected array $actions = [
+        'create' => Actions\ResourceCreateAction::class,
+        'query'  => Actions\ResourceQueryAction::class,
+        'update' => Actions\ResourceUpdateAction::class,
+        'delete' => Actions\ResourceDeleteAction::class,
+    ];
+
+    protected function initializeAction($action, array $config = []) : void
     {
-        return [
-            'create' => Actions\ResourceCreateAction::class,
-            'query'  => Actions\ResourceQueryAction::class,
-            'update' => Actions\ResourceUpdateAction::class,
-            'delete' => Actions\ResourceDeleteAction::class,
-        ];
-    }
+        parent::initializeAction($action, $config);
+        $action->setValidatorCombiners($config['validator_combiners'] ?? static::getValidatorCombiners());
+        $action->setModelClass($config['model_class'] ?? static::getModelClass());
+        $action->setDataClass($config['data_class'] ?? static::getDataClass());
+        $action->setPipes($config['pipelines'] ?? static::getPipelines());
 
-    protected function makeAction($name) : Action
-    {
-        // 获取配置信息 TODO
-        $actionConfig = $this->mergeActions()[$name];
+        if (method_exists($action, 'filters')) {
+            $action->setFilters($config['filters'] ?? []);
+        }
+        if (method_exists($action, 'fields')) {
+            $action->setFields($config['fields'] ?? []);
+        }
+        if (method_exists($action, 'includes')) {
+            $action->setIncludes($config['includes'] ?? []);
+        }
+        if (method_exists($action, 'sorts')) {
+            $action->setSorts($config['sorts'] ?? []);
+        }
 
-        /**
-         * @var ResourceAction $action
-         */
-
-        $action = $this->coreMakeAction($name);
-        $action->setValidatorCombiners($actionConfig['validator_combiners'] ?? static::getValidatorCombiners());
-        $action->setModelClass($actionConfig['model_class'] ?? static::getModelClass());
-        $action->setDataClass($actionConfig['data_class'] ?? static::getDataClass());
-        $action->setPipes($actionConfig['pipelines'] ?? static::getPipelines());
-        return $action;
     }
 
     public static function getValidatorCombiners() : array
