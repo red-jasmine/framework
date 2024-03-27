@@ -173,4 +173,9 @@ abstract class Service
         }
     }
 
+    public static function filters() : array
+    {
+        return  [];
+    }
+
 }

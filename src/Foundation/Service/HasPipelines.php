@@ -46,9 +46,13 @@ trait HasPipelines
     protected array $pipes = [];
 
 
-    protected function addPipe($pipe) : static
+    public function addPipe($pipe) : static
     {
-        $this->pipes[] = $pipe;
+        if (!is_array($pipe)) {
+            $pipe = [ $pipe ];
+        }
+        array_push($this->pipes, ...$pipe);
+
         return $this;
     }
 

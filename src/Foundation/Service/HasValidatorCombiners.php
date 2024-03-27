@@ -83,9 +83,13 @@ trait HasValidatorCombiners
         return $this;
     }
 
-    protected function addValidatorCombiner($validatorCombiner) : static
+    public function addValidatorCombiner($validatorCombiner) : static
     {
-        $this->validatorCombiners[] = $validatorCombiner;
+        if (!is_array($validatorCombiner)) {
+            $validatorCombiner = [ $validatorCombiner ];
+        }
+        array_push($this->validatorCombiners, ...$validatorCombiner);
+
         return $this;
     }
 

@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Service\Actions\ResourceAction;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
@@ -14,7 +15,7 @@ use Spatie\QueryBuilder\QueryBuilder;
  * @property Actions\CreateAction $create
  * @property Actions\UpdateAction $update
  * @property Actions\DeleteAction $delete
- * @method  QueryBuilder query(bool $isRequest = true)
+ * @method  QueryBuilder query(bool $isRequest = false)
  * @method  Model create(Data|array $data)
  * @method  Model update(int $id, Data|array $data)
  * @method  bool delete(int $id)
@@ -94,13 +95,25 @@ class ResourceService extends Service
     {
         parent::initializeAction($action, $config);
 
-        $action->setValidatorCombiners($config['validator_combiners'] ?? static::getValidatorCombiners());
+
+        /**
+         * @var ResourceAction $action
+         */
+        $action->addValidatorCombiner(static::getValidatorCombiners());
+        $action->addPipe(static::getPipelines());
+
+        if (isset($config['validator_combiners'])) {
+            $action->setValidatorCombiners($config['validator_combiners'] ?? []);
+        }
+        if (isset($config['pipelines'])) {
+            $action->setPipes($config['pipelines'] ?? []);
+        }
         $action->setModelClass($config['model_class'] ?? static::getModelClass());
         $action->setDataClass($config['data_class'] ?? static::getDataClass());
-        $action->setPipes($config['pipelines'] ?? static::getPipelines());
+
 
         if (method_exists($action, 'filters')) {
-            $action->setFilters($config['filters'] ?? []);
+            $action->setFilters($config['filters'] ?? static::filters());
         }
         if (method_exists($action, 'fields')) {
             $action->setFields($config['fields'] ?? []);
