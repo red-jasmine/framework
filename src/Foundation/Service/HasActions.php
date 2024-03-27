@@ -82,21 +82,6 @@ trait HasActions
         return [];
     }
 
-    /**
-     * 配置 KEY
-     * @var string|null
-     */
-    protected static ?string $actionsConfigKey = null;
-
-
-    protected static function getConfigActions() : array
-    {
-        if (blank(static::$actionsConfigKey)) {
-            return [];
-        }
-        return Config::get(static::$actionsConfigKey, []);
-    }
-
 
     /**
      * Checks if macro is registered.

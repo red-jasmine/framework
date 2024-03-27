@@ -4,6 +4,9 @@ namespace RedJasmine\Support\Foundation\Service;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property Model $model
+ */
 trait HasModel
 {
 

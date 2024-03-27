@@ -40,6 +40,22 @@ abstract class ResourceAction extends Action
 
     }
 
+    public function forceDelete() : bool|null
+    {
+        try {
+            $this->beginDatabaseTransaction();
+            $this->resolveModel();
+            $this->authorizeAccess();
+            $handleResult = $this->getPipelines()->call('handle', fn() => $this->handle());
+            $this->commitDatabaseTransaction();
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
+        return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
+    }
+
+
     public function getModel() : string
     {
         return $this->model;

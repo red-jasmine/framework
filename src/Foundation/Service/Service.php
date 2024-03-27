@@ -20,6 +20,10 @@ abstract class Service
 
     use WithClientService;
 
+    /**
+     * 服务配置
+     * @var string|null
+     */
     protected static ?string $serviceConfigKey = null;
 
     /**
