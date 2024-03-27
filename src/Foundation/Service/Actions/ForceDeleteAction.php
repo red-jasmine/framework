@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Foundation\Service\Actions;
 
-class ResourceRestoreAction extends ResourceAction
+class ForceDeleteAction extends ResourceAction
 {
 
     public int|string|null $key = null;
@@ -15,12 +15,11 @@ class ResourceRestoreAction extends ResourceAction
     public function execute(int|string $key) : bool|null
     {
         $this->key = $key;
-        return $this->restore();
+        return $this->forceDelete();
     }
 
     public function handle() : ?bool
     {
-        return $this->model->restore();
+        return $this->model->forceDelete();
     }
-
 }

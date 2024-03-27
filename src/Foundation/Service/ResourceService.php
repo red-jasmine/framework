@@ -7,19 +7,19 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\DataTransferObjects\Data;
-use RedJasmine\Support\Foundation\Service\Actions\ResourceAction;
-use RedJasmine\Support\Foundation\Service\Actions\ResourceQueryAction;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
- * @property Actions\ResourceQueryAction  $query
- * @property Actions\ResourceCreateAction $create
- * @property Actions\ResourceUpdateAction $update
- * @property Actions\ResourceDeleteAction $delete
+ * @property Actions\QueryAction  $query
+ * @property Actions\CreateAction $create
+ * @property Actions\UpdateAction $update
+ * @property Actions\DeleteAction $delete
  * @method  QueryBuilder query(bool $isRequest = true)
  * @method  Model create(Data|array $data)
  * @method  Model update(int $id, Data|array $data)
  * @method  bool delete(int $id)
+ * @method  bool forceDelete(int $id)
+ * @method  bool restore(int $id)
  */
 class ResourceService extends Service
 {
@@ -84,15 +84,16 @@ class ResourceService extends Service
 
 
     protected array $actions = [
-        'create' => Actions\ResourceCreateAction::class,
-        'query'  => Actions\ResourceQueryAction::class,
-        'update' => Actions\ResourceUpdateAction::class,
-        'delete' => Actions\ResourceDeleteAction::class,
+        'create' => Actions\CreateAction::class,
+        'query'  => Actions\QueryAction::class,
+        'update' => Actions\UpdateAction::class,
+        'delete' => Actions\DeleteAction::class,
     ];
 
     protected function initializeAction($action, array $config = []) : void
     {
         parent::initializeAction($action, $config);
+
         $action->setValidatorCombiners($config['validator_combiners'] ?? static::getValidatorCombiners());
         $action->setModelClass($config['model_class'] ?? static::getModelClass());
         $action->setDataClass($config['data_class'] ?? static::getDataClass());

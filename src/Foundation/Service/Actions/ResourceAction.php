@@ -15,6 +15,7 @@ use RedJasmine\Support\Foundation\Service\ResourceService;
 /**
  * @property Data|null       $data
  * @property ResourceService $service
+ * @property Model $model
  * @method  handle
  */
 abstract class ResourceAction extends Action
@@ -54,6 +55,23 @@ abstract class ResourceAction extends Action
         }
         return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
     }
+    public function restore() : bool|null
+    {
+        try {
+            $this->beginDatabaseTransaction();
+            $this->resolveModel();
+            $this->authorizeAccess();
+            $handleResult = $this->getPipelines()->call('handle', fn() => $this->handle());
+            $this->commitDatabaseTransaction();
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
+        return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
+    }
+
+
+
 
 
     public function getModel() : string

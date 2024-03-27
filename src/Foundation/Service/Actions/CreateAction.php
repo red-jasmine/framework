@@ -5,14 +5,12 @@ namespace RedJasmine\Support\Foundation\Service\Actions;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\DataTransferObjects\Data;
-use RedJasmine\Support\Foundation\Service\HasValidatorCombiners;
 use RedJasmine\Support\Foundation\Service\ResourceService;
-use RedJasmine\Support\Foundation\Service\Service;
 
 /**
  * @property ResourceService $service
  */
-class ResourceCreateAction extends ResourceAction
+class CreateAction extends ResourceAction
 {
 
     /**

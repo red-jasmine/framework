@@ -14,7 +14,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 /**
  * @property ResourceService $service
  */
-class ResourceQueryAction extends ResourceAction
+class QueryAction extends ResourceAction
 {
 
     use HasQueryBuilder;

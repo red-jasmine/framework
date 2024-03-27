@@ -6,12 +6,11 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\DataTransferObjects\Data;
 use RedJasmine\Support\Foundation\Service\ResourceService;
-use RedJasmine\Support\Foundation\Service\Service;
 
 /**
  * @property ResourceService $service
  */
-class ResourceUpdateAction extends ResourceAction
+class UpdateAction extends ResourceAction
 {
 
     protected int|string|null $key = null;

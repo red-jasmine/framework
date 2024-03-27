@@ -4,19 +4,13 @@ namespace RedJasmine\Support\Foundation\Service;
 
 
 use Closure;
-use function Symfony\Component\Translation\t;
+use Illuminate\Pipeline\Pipeline;
 
 /**
  * 管道集合
  */
-class Pipelines extends \Illuminate\Pipeline\Pipeline
+class Pipelines extends Pipeline
 {
-    // 初始化 init
-    // 验证  validate
-    // 保存  save
-    // 事件  event
-    // 返回  return
-
 
     public function call($method, Closure $destination)
     {
@@ -28,32 +22,6 @@ class Pipelines extends \Illuminate\Pipeline\Pipeline
     }
 
     protected array $pipesObjects = [];
-
-    public function init(Closure $destination)
-    {
-        return $this->via('init')->then($destination);
-    }
-
-    public function validate(Closure $destination)
-    {
-        return $this->via('validate')->then($destination);
-    }
-
-    public function fill(Closure $destination)
-    {
-        return $this->via('fill')->then($destination);
-    }
-
-
-    public function handle(Closure $destination)
-    {
-        return $this->via('handle')->then($destination);
-    }
-
-    public function event(Closure $destination)
-    {
-        return $this->via('event')->then($destination);
-    }
 
     /**
      * Get a Closure that represents a slice of the application onion.
