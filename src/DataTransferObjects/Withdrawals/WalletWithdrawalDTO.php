@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\DataTransferObjects\Withdrawals;
 
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 
 class WalletWithdrawalDTO extends Data
 {

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\DataTransferObjects\Recharges;
 
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 
 class WalletRechargeDTO extends Data
 {

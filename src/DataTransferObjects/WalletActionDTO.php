@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\DataTransferObjects;
 
-use RedJasmine\Support\DataTransferObjects\Data;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Wallet\Enums\TransactionTypeEnum;
 
 class WalletActionDTO extends Data
