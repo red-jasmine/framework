@@ -19,16 +19,10 @@ class WalletWithdrawalService extends Service
 
     public function __construct(public WalletService $walletService)
     {
+        parent::__construct();
     }
 
 
-    /**
-     * @return int
-     * @throws Exception
-     */
-    public function buildID() : int
-    {
-        return Snowflake::getInstance()->nextId();
-    }
+
 
 }

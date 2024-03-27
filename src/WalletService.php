@@ -459,12 +459,5 @@ class WalletService extends Service
     }
 
 
-    /**
-     * @return int
-     * @throws Exception
-     */
-    public function buildID() : int
-    {
-        return Snowflake::getInstance()->nextId();
-    }
+
 }
