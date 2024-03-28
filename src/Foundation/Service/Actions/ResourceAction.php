@@ -11,6 +11,7 @@ use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Support\Foundation\Service\HasData;
 use RedJasmine\Support\Foundation\Service\HasModel;
 use RedJasmine\Support\Foundation\Service\ResourceService;
+use Throwable;
 
 /**
  * @property Data|null       $data

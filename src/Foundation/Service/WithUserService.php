@@ -7,6 +7,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 
 trait WithUserService
 {
+    // TODO 采用全局管理 操作人员 子服务 不用再次嵌套 用山下文保存
     /**
      * 所属人
      * @var UserInterface|null
