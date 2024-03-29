@@ -73,7 +73,6 @@ class ResourceService extends Service
     }
 
 
-
     public function withQuery(Closure $query = null) : static
     {
         $this->queryCallbacks[] = $query;
@@ -116,30 +115,28 @@ class ResourceService extends Service
         $action->addPipe(static::getPipelines());
 
         if (isset($config['validator_combiners'])) {
-            $action->setValidatorCombiners($config['validator_combiners'] ?? []);
+            $action->setValidatorCombiners($config['validator_combiners']);
         }
         if (isset($config['pipelines'])) {
-            $action->setPipes($config['pipelines'] ?? []);
+            $action->setPipes($config['pipelines']);
         }
-        if (!$action->getModelClass()){
+        if (!$action->getModelClass()) {
             $action->setModelClass($config['model_class'] ?? static::getModelClass());
         }
-        if (!$action->getDataClass()){
+        if (!$action->getDataClass()) {
             $action->setDataClass($config['data_class'] ?? static::getDataClass());
         }
 
-
-        if(method_exists($action,'setFilters')){
-
-            $action->setFilters($config['filters']??static::filters());
+        if (method_exists($action, 'setFilters')) {
+            $action->setFilters($config['filters'] ?? static::filters());
         }
-        if(method_exists($action,'setFields')){
-            $action->setFields($config['fields']??[]);
+        if (isset($config['fields']) && method_exists($action, 'setFields')) {
+            $action->setFields($config['fields']);
         }
-        if(method_exists($action,'setIncludes')){
-            $action->setIncludes($config['includes']??[]);
+        if (isset($config['includes']) && method_exists($action, 'setIncludes')) {
+            $action->setIncludes($config['includes']);
         }
-        if(method_exists($action,'setSorts') && isset($config['sorts'])){
+        if (isset($config['sorts']) && method_exists($action, 'setSorts')) {
             $action->setSorts($config['sorts']);
         }
 
