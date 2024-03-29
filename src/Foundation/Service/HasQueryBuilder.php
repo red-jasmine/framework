@@ -14,6 +14,8 @@ trait HasQueryBuilder
         $this->includes = array_merge($this->includes, $this->includes());
         $this->sorts    = array_merge($this->includes, $this->sorts());
         $this->fields   = array_merge($this->fields, $this->fields());
+        $this->select   = array_merge($this->select, $this->select());
+
     }
 
     public static function searchFilter($fields, $name = 'search')
@@ -40,6 +42,20 @@ trait HasQueryBuilder
     protected array $includes = [];
     protected array $fields   = [];
     protected array $sorts    = [];
+    protected array $select   = [];
+
+    public function getSelect() : array
+    {
+        return $this->select;
+    }
+
+    public function setSelect(array $select) : static
+    {
+        $this->select = $select;
+        return $this;
+    }
+
+
 
     public function getFilters() : array
     {
@@ -91,6 +107,11 @@ trait HasQueryBuilder
         return [];
     }
 
+    protected function select():array
+    {
+        return [];
+    }
+
     protected function fields() : array
     {
         return [];
@@ -120,8 +141,10 @@ trait HasQueryBuilder
         // 支持外部设置
         // 支持重写
         $queryBuilder->allowedFilters($this->filters);
+        if(filled($this->select)){
+            $queryBuilder->select($this->select);
+        }
         $queryBuilder->allowedFields($this->fields);
-
         $queryBuilder->allowedIncludes($this->includes);
         $queryBuilder->allowedSorts($this->sorts);
 
