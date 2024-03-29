@@ -41,7 +41,7 @@ trait HasData
     /**
      * @return string|null|Data
      */
-    protected function getDataClass() : ?string
+    public function getDataClass() : ?string
     {
         return $this->dataClass;
     }
@@ -67,6 +67,11 @@ trait HasData
 
     protected function morphsData(array $data) : array
     {
+
+        if(!$this->getDataClass()){
+            return  $data;
+        }
+
         if (!method_exists($this->getDataClass(), 'morphs')) {
             return $data;
         }

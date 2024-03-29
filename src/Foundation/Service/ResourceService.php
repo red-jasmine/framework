@@ -72,7 +72,7 @@ class ResourceService extends Service
         return $this;
     }
 
-    
+
 
     public function withQuery(Closure $query = null) : static
     {
@@ -124,21 +124,22 @@ class ResourceService extends Service
         if (!$action->getModelClass()){
             $action->setModelClass($config['model_class'] ?? static::getModelClass());
         }
+        if (!$action->getDataClass()){
+            $action->setDataClass($config['data_class'] ?? static::getDataClass());
+        }
 
 
-        $action->setDataClass($config['data_class'] ?? static::getDataClass());
+        if(method_exists($action,'setFilters')){
 
-
-        if(method_exists($this,'setFilters')){
             $action->setFilters($config['filters']??static::filters());
         }
-        if(method_exists($this,'setFields')){
+        if(method_exists($action,'setFields')){
             $action->setFields($config['fields']??[]);
         }
-        if(method_exists($this,'setIncludes')){
+        if(method_exists($action,'setIncludes')){
             $action->setIncludes($config['includes']??[]);
         }
-        if(method_exists($this,'setSorts') && isset($config['sorts'])){
+        if(method_exists($action,'setSorts') && isset($config['sorts'])){
             $action->setSorts($config['sorts']);
         }
 
