@@ -16,7 +16,7 @@ use Throwable;
 /**
  * @property Data|null       $data
  * @property ResourceService $service
- * @property Model $model
+ * @property Model           $model
  * @method  handle
  */
 abstract class ResourceAction extends Action
@@ -56,6 +56,7 @@ abstract class ResourceAction extends Action
         }
         return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
     }
+
     public function restore() : bool|null
     {
         try {
@@ -72,19 +73,18 @@ abstract class ResourceAction extends Action
     }
 
 
-
-
-
-    public function getModel() : string
-    {
-        return $this->model;
-    }
-
+    /**
+     * @return Model
+     * @throws Throwable
+     */
     protected function store() : Model
     {
         return $this->save();
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function save() : Model
     {
         try {
@@ -96,7 +96,7 @@ abstract class ResourceAction extends Action
             // 验证 获取验证后的值
             $this->makeValidator($this->data->toArray());
             $data = $this->getPipelines()->call('validate', fn() => $this->validate());
-            // 填充 model
+            //
             $this->getPipelines()->call('fill', fn() => $this->fill($data));
             // 存储数据
             $handleResult = $this->getPipelines()->call('handle', fn() => $this->handle());
@@ -105,14 +105,21 @@ abstract class ResourceAction extends Action
             $this->rollBackDatabaseTransaction();
             throw $throwable;
         }
+
         return $this->getPipelines()->call('after', fn() => $this->after($handleResult));
     }
+
+    protected bool $lockForUpdate = false;
 
     protected function resolveModel() : void
     {
         if ($this->key) {
-            $query       = $this->getModelClass()::query();
-            $this->model = $this->service->callQueryCallbacks($query)->findOrFail($this->key);
+            $query = $this->service->callQueryCallbacks($this->getModelClass()::query());
+            if ($this->lockForUpdate) {
+                $query->lockForUpdate();
+            }
+            $this->model = $query->findOrFail($this->key);
+
         } else {
             $this->model = app($this->getModelClass());
         }
@@ -147,7 +154,7 @@ abstract class ResourceAction extends Action
      */
     protected function fill(array $data) : ?Model
     {
-
+        // TODO 这里需要改造
         $this->generateId($this->model);
         $this->model->fill($data);
         // TODO 改造不依赖service

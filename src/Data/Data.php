@@ -31,6 +31,16 @@ class Data extends \Spatie\LaravelData\Data
         return static::factory()->from(...$payloads);
     }
 
+    public function toArray() : array
+    {
+        $data   = parent::toArray();
+        $morphs = static::morphs();
+        foreach ($morphs as $morph) {
+            $data = static::dotMorphFromArray($data, $morph);
+        }
+        return $data;
+    }
+
     protected static function morphsData(array $data) : array
     {
         $morphs = static::morphs();
@@ -57,6 +67,18 @@ class Data extends \Spatie\LaravelData\Data
         return $data;
     }
 
+    protected static function dotMorphFromArray(array $data, string $morph) : array
+    {
+        if (isset($data[$morph])) {
+            foreach ($data[$morph] as $key => $value) {
+                $castKey        = $morph . '_' . $key;
+                $data[$castKey] = $value;
+            }
+
+
+        }
+        return $data;
+    }
 
     public static function validate(array|Arrayable $payload) : Arrayable|array
     {

@@ -20,6 +20,26 @@ trait HasData
     protected ?string $dataClass = null;
 
 
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data) : static
+    {
+        $this->data = $data;
+        return  $this;
+    }
+
+
+
     /**
      * 转换数据
      *
