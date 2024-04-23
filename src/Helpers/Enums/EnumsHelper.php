@@ -39,9 +39,9 @@ trait EnumsHelper
     public static function comments(string $title = '') : string
     {
         $enums = array_map(function ($key, $value) {
-            return $key . ':' . $value;
+            return $key . '(' . $value.')';
         }, array_keys(static::labels()), static::labels());
-        return $title . ' ' . implode(';', $enums);
+        return $title . ': ' . implode(',', $enums);
 
     }
 
