@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Foundation\Service;
+namespace RedJasmine\Support\Foundation\Pipeline;
 
 
 use Closure;
@@ -57,7 +57,7 @@ class Pipeline extends IlluminatePipeline
                         : $stack($passable);
 
                     return $this->handleCarry($carry);
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
 
                     return $this->handleException($passable, $e);
                 }
