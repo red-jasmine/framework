@@ -12,9 +12,9 @@ trait ResponseJson
     private static function wrapData(mixed $data, string $message, int|string $code, array $errors = []) : array
     {
         $data = [
-            'data'    => $data,
-            'code'    => $code,
-            'message' => $message,
+            'data'       => $data,
+            'error_code' => $code,
+            'message'    => $message,
         ];
         if (filled($errors)) {
             $data['errors'] = $errors;
@@ -31,7 +31,7 @@ trait ResponseJson
      *
      * @return JsonResponse|JsonResource
      */
-    public function success(mixed $data = null, string $message = 'ok') : JsonResponse|JsonResource
+    public static function success(mixed $data = null, string $message = 'ok') : JsonResponse|JsonResource
     {
         if ($data instanceof JsonResource) {
             return $data;
@@ -50,7 +50,7 @@ trait ResponseJson
      *
      * @return JsonResponse
      */
-    public function error(string $message = 'error', int|string $code = 1, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
+    public function error(string $message = 'error', int|string $code = 100000, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
     {
 
         return response()->json(self::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);

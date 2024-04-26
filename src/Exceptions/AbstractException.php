@@ -11,6 +11,7 @@ namespace RedJasmine\Support\Exceptions;
 
 
 use Exception;
+use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
@@ -26,8 +27,20 @@ class AbstractException extends Exception implements HttpExceptionInterface
     protected array $headers;
     protected mixed $data;
 
+    protected static array $codes = [];
 
-    public function __construct(string $message = '', int $code = 1, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
+    public static function getCodes() : array
+    {
+        return static::$codes;
+    }
+
+    public static function extendCode(int $code, string $message) : void
+    {
+        static::$codes[$code] = $message;
+    }
+
+
+    public function __construct(string $message = '', int $code = 999999, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->errors     = $errors;
@@ -36,12 +49,19 @@ class AbstractException extends Exception implements HttpExceptionInterface
         $this->data       = $data;
     }
 
+
+    public static function newFromCodes(int $code, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null) : static
+    {
+        return new static(static::$codes[$code], $code, $errors, $statusCode, $headers, $data, $previous);
+    }
+
+
     /**
      * @param array $errors
      *
      * @return AbstractException
      */
-    public function setErrors(array $errors) : AbstractException
+    public function setErrors(array $errors) : static
     {
         $this->errors = $errors;
         return $this;
@@ -52,7 +72,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
      *
      * @return AbstractException
      */
-    public function setStatusCode(int $statusCode) : AbstractException
+    public function setStatusCode(int $statusCode) : static
     {
         $this->statusCode = $statusCode;
         return $this;
@@ -63,7 +83,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
      *
      * @return AbstractException
      */
-    public function setHeaders(array $headers) : AbstractException
+    public function setHeaders(array $headers) : static
     {
         $this->headers = $headers;
         return $this;
@@ -74,7 +94,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
      *
      * @return AbstractException
      */
-    public function setData(mixed $data) : AbstractException
+    public function setData(mixed $data) : static
     {
         $this->data = $data;
         return $this;
