@@ -11,7 +11,6 @@ namespace RedJasmine\Support\Exceptions;
 
 
 use Exception;
-use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
