@@ -31,7 +31,7 @@ class AES
     }
 
 
-    public function encrypt($value, $serialize = true)
+    public function encrypt($value, $serialize = true) : string
     {
         $value = openssl_encrypt($serialize ? serialize($value) : $value,
                                  strtolower($this->cipher),
@@ -48,7 +48,7 @@ class AES
         return $this->encrypt($value, false);
     }
 
-    public function decrypt($value, $unserialize = true)
+    public function decrypt($value, $unserialize = true) : string
     {
         $value = base64_decode($value);
 
