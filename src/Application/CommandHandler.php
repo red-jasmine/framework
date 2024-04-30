@@ -45,17 +45,25 @@ abstract class CommandHandler implements CommandHandlerInterface
     }
 
 
-    protected function handle(Closure $execute, ?Closure $persistence = null) : void
+    /**
+     * @param Closure      $execute
+     * @param Closure|null $persistence
+     *
+     * @return mixed
+     */
+    protected function handle(Closure $execute, ?Closure $persistence = null) : mixed
     {
 
         $this->pipelineManager()->call('executing');
 
-        $this->pipelineManager()->call('execute', $execute);
+        $result = $this->pipelineManager()->call('execute', $execute);
         // 持久化
         if ($persistence) {
             $persistence();
         }
         $this->pipelineManager()->call('executed');
+
+        return $result;
     }
 
 

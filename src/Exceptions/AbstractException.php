@@ -49,9 +49,10 @@ class AbstractException extends Exception implements HttpExceptionInterface
     }
 
 
-    public static function newFromCodes(int $code, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null) : static
+    public static function newFromCodes(int $code, string $message = null, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null) : static
     {
-        return new static(static::$codes[$code], $code, $errors, $statusCode, $headers, $data, $previous);
+        $message = $message ?? static::$codes[$code] ?? 'exception';
+        return new static($message, $code, $errors, $statusCode, $headers, $data, $previous);
     }
 
 
