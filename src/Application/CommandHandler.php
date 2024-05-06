@@ -67,19 +67,22 @@ abstract class CommandHandler implements CommandHandlerInterface
     }
 
 
-    protected array $executeArgs = [];
+    protected array $arguments = [];
 
-
-    public function getExecuteArgs() : array
+    public function getArguments() : array
     {
-        return $this->executeArgs;
+        return $this->arguments;
     }
 
-    public function setExecuteArgs(array $executeArgs) : static
+    public function setArguments(array $arguments) : static
     {
-        $this->executeArgs = $executeArgs;
+        $this->arguments = $arguments;
         return $this;
     }
+
+
+
+
 
 
     protected ?string $pipelinesConfigKeyPrefix = 'pipelines';
