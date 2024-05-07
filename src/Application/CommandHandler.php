@@ -28,7 +28,7 @@ abstract class CommandHandler implements CommandHandlerInterface
     /**
      * @return mixed
      */
-    public function getAggregate()
+    public function getAggregate() : mixed
     {
         return $this->aggregate;
     }
@@ -51,7 +51,7 @@ abstract class CommandHandler implements CommandHandlerInterface
      *
      * @return mixed
      */
-    protected function handle(Closure $execute, ?Closure $persistence = null) : mixed
+    protected function execute(Closure $execute, ?Closure $persistence = null) : mixed
     {
 
         $this->pipelineManager()->call('executing');
@@ -79,10 +79,6 @@ abstract class CommandHandler implements CommandHandlerInterface
         $this->arguments = $arguments;
         return $this;
     }
-
-
-
-
 
 
     protected ?string $pipelinesConfigKeyPrefix = 'pipelines';

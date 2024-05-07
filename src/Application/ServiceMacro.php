@@ -43,7 +43,7 @@ trait ServiceMacro
         }
         if ($macro instanceof CommandHandler) {
             // TODO 调用 可以做依赖注入
-            return $macro->setArguments($parameters)->execute(...$parameters);
+            return $macro->setArguments($parameters)->handle(...$parameters);
         }
         return $macro(...$parameters);
     }
