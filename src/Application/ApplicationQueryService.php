@@ -39,7 +39,9 @@ class ApplicationQueryService
 
     public function withQuery(Closure $queryCallback = null) : static
     {
-        $this->queryCallbacks[] = $queryCallback;
+        if ($queryCallback) {
+            $this->queryCallbacks[] = $queryCallback;
+        }
         return $this;
     }
 

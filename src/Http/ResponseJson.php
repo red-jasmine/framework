@@ -13,7 +13,7 @@ trait ResponseJson
     {
         $data = [
             'data'       => $data,
-            'error_code' => $code,
+            'code' => $code,
             'message'    => $message,
         ];
         if (filled($errors)) {
@@ -50,7 +50,7 @@ trait ResponseJson
      *
      * @return JsonResponse
      */
-    public function error(string $message = 'error', int|string $code = 100000, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
+    public static function error(string $message = 'error', int|string $code = 100000, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
     {
 
         return response()->json(self::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
