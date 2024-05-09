@@ -9,7 +9,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\ReadRepositoryInterface;
 /**
  * @property ReadRepositoryInterface $readRepository
  */
-class ApplicationQueryService
+abstract class ApplicationQueryService
 {
 
     public function __construct()
