@@ -4,17 +4,20 @@ namespace RedJasmine\Support\Application;
 
 use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 use RedJasmine\Support\Infrastructure\ReadRepositories\ReadRepositoryInterface;
 
 /**
  * @property ReadRepositoryInterface $readRepository
  */
-abstract class ApplicationQueryService
+abstract class ApplicationQueryService extends Service
 {
+
 
     public function __construct()
     {
         $this->initReadRepository();
+        parent::__construct();
     }
 
     protected function initReadRepository() : void
