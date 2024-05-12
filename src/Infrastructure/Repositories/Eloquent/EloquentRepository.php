@@ -11,13 +11,13 @@ class EloquentRepository implements RepositoryInterface
 {
 
     /**
-     * @var $modelClass class-string
+     * @var $eloquentModelClass class-string
      */
-    protected static string $modelClass = Model::class;
+    protected static string $eloquentModelClass = Model::class;
 
     public function find($id)
     {
-        return static::$modelClass::findOrFail($id);
+        return static::$eloquentModelClass::findOrFail($id);
     }
 
     /**
@@ -39,7 +39,13 @@ class EloquentRepository implements RepositoryInterface
         return $model;
     }
 
-    public function update(Model $model)
+    /**
+     * @param Model $model
+     *
+     * @return void
+     * @throws Throwable
+     */
+    public function update(Model $model) : void
     {
         try {
             DB::beginTransaction();
