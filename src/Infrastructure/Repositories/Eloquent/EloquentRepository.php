@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Infrastructure\Repositories\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use RedJasmine\Support\Infrastructure\Repositories\RepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Throwable;
 
 class EloquentRepository implements RepositoryInterface

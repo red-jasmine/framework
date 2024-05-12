@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Infrastructure\Repositories;
+namespace RedJasmine\Support\Domain\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 

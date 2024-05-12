@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
 use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
 use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
-use RedJasmine\Support\Infrastructure\Repositories\RepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 
 /**
