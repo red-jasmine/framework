@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
 use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
 use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 
 /**
+ * @method mixed  create(Data $command)
+ * @method void  update(Data $command)
+ * @method void  delete(Data $command)
  * @property RepositoryInterface $repository
  */
 abstract class ApplicationCommandService extends ApplicationService

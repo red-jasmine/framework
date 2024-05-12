@@ -17,11 +17,13 @@ class CreateCommandHandler extends CommandHandler
          */
         $model           = $this->getService()->newModel();
         $this->aggregate = $model;
+        $model->fill($data->toArray());
         if (method_exists($model, 'setOperator')) {
             $model->setOperator($this->getOperator());
         }
-        $model->fill($data->toArray());
-
+        if (method_exists($model, 'creator')) {
+            $model->creator = $this->getOperator();
+        }
         $execute = method_exists($model, 'create') ? fn() => $model->create() : null;
         $this->execute(
             execute: $execute,
