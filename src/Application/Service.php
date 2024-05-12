@@ -25,7 +25,6 @@ abstract class Service
     {
         if (is_string($macro)) {
             $macro = app($macro);
-
             // 设置为当前服务
             if (method_exists($macro, 'setService')) {
                 $macro->setService($this);

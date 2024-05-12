@@ -12,6 +12,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 use RedJasmine\Support\Infrastructure\ReadRepositories\ReadRepositoryInterface;
 
 /**
+ *
  * @property ReadRepositoryInterface    $readRepository
  * @property QueryBuilderReadRepository $repository
  */
