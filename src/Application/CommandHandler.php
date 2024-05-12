@@ -11,11 +11,14 @@ use RedJasmine\Support\Foundation\Service\PipelineTrait;
 
 /**
  * @property $aggregate
+ * @property $service
  */
 abstract class CommandHandler implements CommandHandlerInterface
 {
 
     use BootTrait;
+
+    use WithService;
 
     /**
      * 如何进行可配置化
@@ -46,21 +49,22 @@ abstract class CommandHandler implements CommandHandlerInterface
 
 
     /**
-     * @param Closure      $execute
+     * @param Closure|null $execute
      * @param Closure|null $persistence
      *
      * @return mixed
      */
-    protected function execute(Closure $execute, ?Closure $persistence = null) : mixed
+    protected function execute(?Closure $execute = null, ?Closure $persistence = null) : mixed
     {
 
         $this->pipelineManager()->call('executing');
 
+        $execute = $execute ?: function () {
+        };
+
         $result = $this->pipelineManager()->call('execute', $execute);
         // 持久化
-        if ($persistence) {
-            $persistence();
-        }
+        $persistence ? $persistence() : null;
         $this->pipelineManager()->call('executed');
 
         return $result;
@@ -81,11 +85,13 @@ abstract class CommandHandler implements CommandHandlerInterface
     }
 
 
-    protected ?string $pipelinesConfigKeyPrefix = 'pipelines';
+    protected ?string $pipelinesConfigKeyPrefix = null;
 
     public function getPipelinesConfigKey() : string
     {
-        return Str::finish($this->pipelinesConfigKeyPrefix, '.') . Str::remove('CommandHandler', class_basename(static::class));
+
+        $pipelinesConfigKeyPrefix = $this->pipelinesConfigKeyPrefix ?? 'pipelines';
+        return Str::finish($pipelinesConfigKeyPrefix, '.') . Str::remove('CommandHandler', class_basename(static::class));
     }
 
 

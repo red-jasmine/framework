@@ -10,6 +10,18 @@ trait PipelineTrait
 
     protected array $pipelines = [];
 
+    public function getPipelines() : array
+    {
+        return $this->pipelines;
+    }
+
+    public function setPipelines(array $pipelines) : void
+    {
+        $this->pipelines = $pipelines;
+    }
+
+
+
     protected function initializePipelineTrait() : void
     {
         $this->pipelines = array_merge($this->pipelines, $this->getConfigPipelines(), static::$globalPipelines[static::class] ?? []);

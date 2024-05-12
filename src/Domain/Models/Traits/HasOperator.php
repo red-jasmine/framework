@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Traits\Models;
+namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -45,6 +45,14 @@ trait HasOperator
         );
     }
 
+
+    public function scopeOnlyUpdater(Builder $query, UserInterface $owner) : Builder
+    {
+        return $query->where('updater_type', $owner->getType())->where('updater_id', $owner->getID());
+
+    }
+
+
     public function updater() : Attribute
     {
         return Attribute::make(
@@ -60,13 +68,5 @@ trait HasOperator
 
         );
     }
-
-
-    public function scopeOnlyUpdater(Builder $query, UserInterface $owner) : Builder
-    {
-        return $query->where('updater_type', $owner->getType())->where('updater_id', $owner->getID());
-
-    }
-
 
 }

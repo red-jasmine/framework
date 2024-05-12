@@ -2,14 +2,16 @@
 
 namespace RedJasmine\Support\Infrastructure\ReadRepositories;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * @property Model $modelClass
  */
-abstract class QueryBuilderReadRepository
+abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 {
     protected ?array $allowedFilters  = null;
     protected ?array $allowedIncludes = null;
@@ -78,4 +80,28 @@ abstract class QueryBuilderReadRepository
     }
 
 
+    public function findAll(array $query = []) : LengthAwarePaginator
+    {
+        return $this->query($query)->paginate();
+    }
+
+    public function findById($id, array $query = [])
+    {
+        return $this->query($query)->find($id);
+    }
+
+    public function find($id, ?FindQuery $findQuery = null)
+    {
+        return $this->query($findQuery?->toArray() ?? [])->find($id);
+    }
+
+    public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
+    {
+        return $this->query($query?->toArray())->paginate($query?->perPage);
+    }
+
+    public function simplePaginate(?PaginateQuery $query = null) : Paginator
+    {
+        return $this->query($query?->toArray())->simplePaginate($query?->perPage);
+    }
 }

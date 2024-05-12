@@ -41,10 +41,10 @@ trait ServiceMacro
         if (method_exists($this, 'makeMacro')) {
             $macro = $this->makeMacro($macro);
         }
-        if ($macro instanceof CommandHandler) {
-            // TODO 调用 可以做依赖注入
-            return $macro->setArguments($parameters)->handle(...$parameters);
+        if (method_exists($this, 'callMacro')) {
+            return $this->callMacro($macro, $method, $parameters);
         }
+
         return $macro(...$parameters);
     }
 
