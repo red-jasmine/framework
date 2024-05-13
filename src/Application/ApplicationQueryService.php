@@ -27,17 +27,31 @@ abstract class ApplicationQueryService extends Service
 
     protected function initReadRepository() : void
     {
-        $this->repository->setAllowedFilters($this->allowedFilters);
-        $this->repository->setAllowedFields($this->allowedFields);
-        $this->repository->setAllowedIncludes($this->allowedIncludes);
-        $this->repository->setAllowedSorts($this->allowedSorts);
+        $this->repository->setAllowedFilters($this->allowedFilters());
+        $this->repository->setAllowedFields($this->allowedFields());
+        $this->repository->setAllowedIncludes($this->allowedIncludes());
+        $this->repository->setAllowedSorts($this->allowedSorts());
     }
 
-    // 每个查询
-    protected array $allowedFilters  = [];
-    protected array $allowedIncludes = [];
-    protected array $allowedFields   = [];
-    protected array $allowedSorts    = [];
+    public function allowedFilters() : array
+    {
+        return [];
+    }
+
+    public function allowedIncludes() : array
+    {
+        return [];
+    }
+
+    public function allowedFields() : array
+    {
+        return [];
+    }
+
+    public function allowedSorts() : array
+    {
+        return [];
+    }
 
     /**
      * @var array

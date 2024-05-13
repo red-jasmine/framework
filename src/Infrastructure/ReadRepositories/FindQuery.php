@@ -6,7 +6,7 @@ use RedJasmine\Support\Data\Data;
 
 class FindQuery extends Data
 {
-    public string|array|null $includes;
+    public string|array|null $include;
 
     public string|array|null $fields;
 

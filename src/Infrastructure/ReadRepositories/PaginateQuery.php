@@ -11,7 +11,7 @@ class PaginateQuery extends Data
 
     public ?int $perPage = null;
 
-    public string|array|null $includes;
+    public string|array|null $include;
 
     public string|array|null $fields;
 

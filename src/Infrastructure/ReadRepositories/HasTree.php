@@ -7,8 +7,9 @@ use RedJasmine\Support\Data\Data;
 trait HasTree
 {
 
-    public function tree(Data $query) : array
+    public function tree(?Data $query = null) : array
     {
+
         $nodes = $this->query($query?->toArray())->get();
         return static::buildNestedArray($nodes);
     }

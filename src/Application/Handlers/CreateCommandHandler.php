@@ -18,6 +18,10 @@ class CreateCommandHandler extends CommandHandler
         $model           = $this->getService()->newModel();
         $this->aggregate = $model;
         $model->fill($data->toArray());
+
+        foreach ($data::morphs() as $key) {
+            $model->{$key} = $data->{$key};
+        }
         if (method_exists($model, 'setOperator')) {
             $model->setOperator($this->getOperator());
         }
