@@ -12,7 +12,7 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 
 /**
- * @method mixed  create(Data $command)
+ * @method Model create(Data $command)
  * @method void  update(Data $command)
  * @method void  delete(Data $command)
  * @property RepositoryInterface $repository

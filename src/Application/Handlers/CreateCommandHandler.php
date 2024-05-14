@@ -34,6 +34,6 @@ class CreateCommandHandler extends CommandHandler
             persistence: fn() => $this->getService()->getRepository()->store($model),
         );
 
-        return $model->getKey();
+        return $model;
     }
 }
