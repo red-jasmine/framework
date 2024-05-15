@@ -21,6 +21,17 @@ abstract class ApplicationCommandService extends ApplicationService
 {
     protected static string $modelClass;
 
+    protected function pipelines() : array
+    {
+        return [
+            'create' => [],
+            'update' => [],
+            'delete' => [],
+        ];
+    }
+
+    protected ?string $pipelinesConfigKeyPrefix = null;
+
     protected static $macros = [
         'create' => CreateCommandHandler::class,
         'update' => UpdateCommandHandler::class,
@@ -36,6 +47,21 @@ abstract class ApplicationCommandService extends ApplicationService
     public function newModel() : Model
     {
         return new  static::$modelClass;
+    }
+
+    public function makeMacro(mixed $macro, $method, $parameters) : mixed
+    {
+        $macro = parent::makeMacro($macro, $method, $parameters);
+        if ($macro instanceof CommandHandler) {
+            if ($this->pipelinesConfigKeyPrefix) {
+                // 设置配置的
+                $macro->setPipelinesConfigKeyPrefix($this->pipelinesConfigKeyPrefix);
+                $macro->addPipeline($this->pipelines()[$method] ?? []);
+                // 设置
+                $macro->initializePipelineTrait();
+            }
+        }
+        return $macro;
     }
 
 

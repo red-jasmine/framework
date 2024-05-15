@@ -21,8 +21,7 @@ trait PipelineTrait
     }
 
 
-
-    protected function initializePipelineTrait() : void
+    public function initializePipelineTrait() : void
     {
         $this->pipelines = array_merge($this->pipelines, $this->getConfigPipelines(), static::$globalPipelines[static::class] ?? []);
     }
@@ -30,10 +29,21 @@ trait PipelineTrait
 
     protected ?string $pipelinesConfigKey = null;
 
+    public function getPipelinesConfigKey() : ?string
+    {
+        return $this->pipelinesConfigKey;
+    }
+
+    public function setPipelinesConfigKey(?string $pipelinesConfigKey) : void
+    {
+        $this->pipelinesConfigKey = $pipelinesConfigKey;
+    }
+
+
     protected function getConfigPipelines() : array
     {
-        if (method_exists($this, 'getPipelinesConfigKey')) {
-            $this->pipelinesConfigKey = $this->getPipelinesConfigKey();
+        if (method_exists($this, 'getPipelinesConfigKey') && $pipelinesConfigKey = $this->getPipelinesConfigKey()) {
+            $this->pipelinesConfigKey = $pipelinesConfigKey;
         }
         if ($this->pipelinesConfigKey) {
             return (array)Config::get((string)$this->pipelinesConfigKey, []);
@@ -44,9 +54,15 @@ trait PipelineTrait
 
     public function addPipeline($pipeline) : static
     {
-        $this->pipelines[] = $pipeline;
+        if (is_array($pipeline)) {
+            array_push($this->pipelines, ...$pipeline);
+        } else {
+            $this->pipelines[] = $pipeline;
+        }
+
         return $this;
     }
+
 
     /**
      * 静态管道

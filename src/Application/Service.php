@@ -21,7 +21,7 @@ abstract class Service
      *
      * @return T
      */
-    public function makeMacro(mixed $macro) : mixed
+    public function makeMacro(mixed $macro, $method, $parameters) : mixed
     {
         if (is_string($macro)) {
             $macro = app($macro);

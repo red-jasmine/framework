@@ -87,11 +87,19 @@ abstract class CommandHandler implements CommandHandlerInterface
 
     protected ?string $pipelinesConfigKeyPrefix = null;
 
-    public function getPipelinesConfigKey() : string
+    public function setPipelinesConfigKeyPrefix(?string $pipelinesConfigKeyPrefix) : void
     {
+        $this->pipelinesConfigKeyPrefix = $pipelinesConfigKeyPrefix;
+    }
 
-        $pipelinesConfigKeyPrefix = $this->pipelinesConfigKeyPrefix ?? 'pipelines';
-        return Str::finish($pipelinesConfigKeyPrefix, '.') . Str::remove('CommandHandler', class_basename(static::class));
+
+    public function getPipelinesConfigKey() : ?string
+    {
+        if (blank($this->pipelinesConfigKeyPrefix)) {
+            return null;
+        }
+        $pipelinesConfigKeyPrefix = $this->pipelinesConfigKeyPrefix;
+        return Str::finish($pipelinesConfigKeyPrefix, '.') . Str::lower(Str::remove('CommandHandler', class_basename(static::class)));
     }
 
 

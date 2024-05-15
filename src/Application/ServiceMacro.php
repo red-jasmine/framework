@@ -39,7 +39,7 @@ trait ServiceMacro
         }
 
         if (method_exists($this, 'makeMacro')) {
-            $macro = $this->makeMacro($macro);
+            $macro = $this->makeMacro($macro, $method, $parameters);
         }
         if (method_exists($this, 'callMacro')) {
             return $this->callMacro($macro, $method, $parameters);
