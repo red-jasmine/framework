@@ -10,17 +10,17 @@ class CreateCommandHandler extends CommandHandler
 {
 
 
-    public function handle(Data $data) : mixed
+    public function handle(Data $command) : mixed
     {
         /**
          * @var $model Model
          */
         $model           = $this->getService()->newModel();
         $this->aggregate = $model;
-        $model->fill($data->toArray());
+        $model->fill($command->toArray());
 
-        foreach ($data::morphs() as $key) {
-            $model->{$key} = $data->{$key};
+        foreach ($command::morphs() as $key) {
+            $model->{$key} = $command->{$key};
         }
         if (method_exists($model, 'setOperator')) {
             $model->setOperator($this->getOperator());
