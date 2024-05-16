@@ -9,6 +9,7 @@ use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
 use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Helpers\ID\Snowflake;
 
 
 /**
@@ -46,7 +47,14 @@ abstract class ApplicationCommandService extends ApplicationService
 
     public function newModel() : Model
     {
-        return new  static::$modelClass;
+        /**
+         * @var $model Model
+         */
+        $model = new  static::$modelClass;
+        if ($model->incrementing === false) {
+            $model->{$model->getKeyName()} = Snowflake::getInstance()->nextId();
+        }
+        return $model;
     }
 
     public function makeMacro(mixed $macro, $method, $parameters) : mixed

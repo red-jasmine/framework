@@ -10,8 +10,9 @@ use RedJasmine\Support\Foundation\Service\PipelineTrait;
 
 
 /**
- * @property $aggregate
- * @property $service
+ * @property                           $aggregate
+ * @property ApplicationCommandService $service
+ * @method  ApplicationCommandService getService()
  */
 abstract class CommandHandler implements CommandHandlerInterface
 {
