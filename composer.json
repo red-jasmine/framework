@@ -14,8 +14,7 @@
   "homepage": "https://github.com/red-jasmine/ecommerce",
   "keywords": ["Laravel", "Ecommerce"],
   "require": {
-    "illuminate/contracts": "^10.0|^11.0",
-    "spatie/laravel-data": "^4"
+    "red-jasmine/support": "1.0.x-dev"
   },
   "autoload": {
     "psr-4": {

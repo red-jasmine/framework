@@ -5,8 +5,13 @@ namespace RedJasmine\Ecommerce\Domain\Models\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
+use Spatie\LaravelData\Casts\Cast;
+use Spatie\LaravelData\Support\Creation\CreationContext;
+use Spatie\LaravelData\Support\DataProperty;
+use Spatie\LaravelData\Support\Transformation\TransformationContext;
+use Spatie\LaravelData\Transformers\Transformer;
 
-class PromiseServicesCastTransformer implements CastsAttributes
+class PromiseServicesCastTransformer implements CastsAttributes, Cast, Transformer
 {
 
     public function get(Model $model, string $key, mixed $value, array $attributes) : PromiseServices
@@ -45,6 +50,16 @@ class PromiseServicesCastTransformer implements CastsAttributes
             $array[$keyValue[0]] = $keyValue[1];
         }
         return $array;
+    }
+
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : mixed
+    {
+        return PromiseServices::from($value);
+    }
+
+    public function transform(DataProperty $property, mixed $value, TransformationContext $context) : mixed
+    {
+        dd($value);
     }
 
 
