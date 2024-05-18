@@ -18,10 +18,10 @@ trait HasOwner
     public function owner() : Attribute
     {
         return Attribute::make(
-            get: function (mixed $value, array $attributes) {
+            get: static function (mixed $value, array $attributes) {
                 return UserData::from([ 'type' => $attributes['owner_type'], 'id' => $attributes['owner_id'], ]);
             },
-            set: fn(?UserInterface $user) => [
+            set: static fn(?UserInterface $user) => [
                 'owner_type' => $user?->getType(),
                 'owner_id'   => $user?->getID()
             ]
