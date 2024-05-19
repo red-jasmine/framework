@@ -59,7 +59,7 @@ class PromiseServicesCastTransformer implements CastsAttributes, Cast, Transform
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : mixed
     {
-        dd($value);
+        return $value->toArray();
     }
 
 
