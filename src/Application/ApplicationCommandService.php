@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Application;
 
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
 use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
@@ -45,16 +46,31 @@ abstract class ApplicationCommandService extends ApplicationService
         return $this->repository;
     }
 
-    public function newModel() : Model
+    /**
+     * @param null $data
+     *
+     * @return Model
+     * @throws Exception
+     */
+    public function newModel($data = null) : Model
     {
         /**
          * @var $model Model
          */
         $model = new  static::$modelClass;
         if ($model->incrementing === false) {
-            $model->{$model->getKeyName()} = Snowflake::getInstance()->nextId();
+            $model->{$model->getKeyName()} = $this->buildId();
         }
         return $model;
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function buildId() : int
+    {
+        return Snowflake::getInstance()->nextId();
     }
 
     public function makeMacro(mixed $macro, $method, $parameters) : mixed
@@ -84,6 +100,7 @@ abstract class ApplicationCommandService extends ApplicationService
      */
     public function callMacro($macro, $method, $parameters) : mixed
     {
+        // 在调用层 可以 设置 管道 TODO
         if ($macro instanceof CommandHandler) {
             return $macro->setArguments($parameters)->handle(...$parameters);
         }

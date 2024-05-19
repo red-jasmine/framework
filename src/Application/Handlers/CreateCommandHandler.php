@@ -15,10 +15,9 @@ class CreateCommandHandler extends CommandHandler
         /**
          * @var $model Model
          */
-        $model           = $this->getService()->newModel();
+        $model           = $this->getService()->newModel($command);
         $this->aggregate = $model;
         $model->fill($command->toArray());
-
         foreach ($command::morphs() as $key) {
             $model->{$key} = $command->{$key};
         }

@@ -58,7 +58,8 @@ abstract class CommandHandler implements CommandHandlerInterface
     protected function execute(?Closure $execute = null, ?Closure $persistence = null) : mixed
     {
 
-        $this->pipelineManager()->call('executing');
+        // 需要进行改造
+        $result =  $this->pipelineManager()->call('executing');
 
         $execute = $execute ?: function () {
         };
