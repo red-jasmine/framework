@@ -88,12 +88,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function findById($id, array $query = [])
     {
-        return $this->query($query)->find($id);
+        return $this->query($query)->findOrFail($id);
     }
 
     public function find($id, ?FindQuery $findQuery = null)
     {
-        return $this->query($findQuery?->toArray() ?? [])->find($id);
+        return $this->query($findQuery?->toArray() ?? [])->findOrFail($id);
     }
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
