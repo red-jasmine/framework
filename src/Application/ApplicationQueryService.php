@@ -13,7 +13,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\ReadRepositoryInterface;
 
 /**
  *
- * @property ReadRepositoryInterface    $readRepository
+ *
  * @property QueryBuilderReadRepository $repository
  */
 abstract class ApplicationQueryService extends Service
