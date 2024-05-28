@@ -11,6 +11,9 @@ namespace RedJasmine\Support\Exceptions;
 
 
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
@@ -39,7 +42,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
     }
 
 
-    public function __construct(string $message = '', int $code = 999999, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
+    public function __construct(string $message = 'error', int $code = 999999, array $errors = [], int $statusCode = 400, array $headers = [], mixed $data = null, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->errors     = $errors;
@@ -124,7 +127,7 @@ class AbstractException extends Exception implements HttpExceptionInterface
         return $this->data;
     }
 
-    public function errors() : ?array
+    public function getErrors() : ?array
     {
         return count($this->errors) > 0 ? $this->errors : null;
     }
@@ -136,5 +139,29 @@ class AbstractException extends Exception implements HttpExceptionInterface
         return $this;
     }
 
+
+    public function render(Request $request) : ?JsonResponse
+    {
+        if (!$request->wantsJson()) {
+            return null;
+        }
+
+        // 响应Json
+        $arrData['data']    = $this->getData();
+        $arrData['code']    = $this->getCode();
+        $arrData['message'] = $this->getMessage();
+        $arrData['errors']  = $this->getErrors();
+
+        if (config('app.debug')) {
+            $arrData['exception'] = get_class($this);
+            $arrData['message']   = $this->getMessage();
+            $arrData['file']      = $this->getFile();
+            $arrData['line']      = $this->getLine();
+            $arrData['trace']     = collect($this->getTrace())->map(fn($trace) => Arr::except($trace, [ 'args' ]))->all();
+        }
+        return response()->json($arrData, $this->getStatusCode());
+
+
+    }
 
 }

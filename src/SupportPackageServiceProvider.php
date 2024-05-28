@@ -10,15 +10,14 @@ use Illuminate\Support\Str;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Services\DomainRoute;
 use RedJasmine\Support\Helpers\Blueprint;
-use RedJasmine\Support\Services\RequestIDService;
-use RedJasmine\Support\Services\SQLLogService;
 
-class SupportServiceProvider extends ServiceProvider
+
+
+class SupportPackageServiceProvider extends ServiceProvider
 {
 
     /**
      * @return void
-     * @throws BindingResolutionException
      */
     public function boot() : void
     {
@@ -30,9 +29,8 @@ class SupportServiceProvider extends ServiceProvider
             $this->bootForConsole();
         }
 
-        //RequestIDService::boot();
-        DomainRoute::boot();
-        SQLLogService::boot();
+
+
 
     }
 
@@ -117,7 +115,7 @@ class SupportServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'red-jasmine.support');
 
 
-        DomainRoute::register();
+
 
         $this->registerAes();
     }

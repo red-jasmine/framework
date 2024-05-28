@@ -12,9 +12,9 @@ trait ResponseJson
     private static function wrapData(mixed $data, string $message, int|string $code, array $errors = []) : array
     {
         $data = [
-            'data'       => $data,
-            'code' => $code,
-            'message'    => $message,
+            'data'    => $data,
+            'code'    => $code,
+            'message' => $message,
         ];
         if (filled($errors)) {
             $data['errors'] = $errors;

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Traits\Models;
+namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Closure;
 

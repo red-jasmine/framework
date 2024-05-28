@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Support\\SupportServiceProvider"
+                "RedJasmine\\Support\\SupportPackageServiceProvider"
             ]
         },
         "branch-alias": {

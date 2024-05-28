@@ -58,6 +58,7 @@ class Handler extends ExceptionHandler
         if (($e instanceof NotFoundHttpException) && $e->getPrevious() instanceof ModelNotFoundException) {
             $arrData['message'] = '未找到当前资源';
         }
+        // 这些无法处理
         if ($e instanceof ValidationException) {
             $arrData['code']    = 422;
             $arrData['message'] = $e->getMessage();
