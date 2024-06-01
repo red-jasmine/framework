@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Foundation\Pipeline;
+namespace RedJasmine\Support\Foundation\Service;
 
 
 use Closure;

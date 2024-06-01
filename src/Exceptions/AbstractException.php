@@ -17,8 +17,12 @@ use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
+
 /**
- * 业务异常
+ * 需要统一的异常处理
+ * - 上报格式
+ * - 响应数据
+ * 业务状态码可有地方列出
  */
 class AbstractException extends Exception implements HttpExceptionInterface
 {
@@ -147,9 +151,9 @@ class AbstractException extends Exception implements HttpExceptionInterface
         }
 
         // 响应Json
-        $arrData['data']    = $this->getData();
         $arrData['code']    = $this->getCode();
         $arrData['message'] = $this->getMessage();
+        $arrData['data']    = $this->getData();
         $arrData['errors']  = $this->getErrors();
 
         if (config('app.debug')) {

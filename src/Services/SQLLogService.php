@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Services;
 
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -11,20 +12,23 @@ use Throwable;
  */
 class SQLLogService
 {
-    public static function boot() : void
+    public static function register() : void
     {
 
 
-        DB::listen(function ($query) {
+        DB::listen(function (QueryExecuted $query) {
             try {
                 $sql = str_replace("?", "'%s'", $query->sql);
                 $sql = vsprintf($sql, $query->bindings ?? []);
             } catch (Throwable $e) {
                 $sql = '';
             }
+
             $data = [
                 'time'           => $query->time,
                 'connectionName' => $query->connectionName,
+                'host'           => $query->connection->getConfig('host'),
+                'database'       => $query->connection->getConfig('database'),
                 'sql'            => $sql,
             ];
 

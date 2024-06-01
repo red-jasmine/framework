@@ -4,13 +4,15 @@ namespace RedJasmine\Support;
 
 
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use RedJasmine\Support\Foundation\Service\ServiceContext;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Services\DomainRoute;
 use RedJasmine\Support\Helpers\Blueprint;
-
+use RedJasmine\Support\Services\SQLLogService;
 
 
 class SupportPackageServiceProvider extends ServiceProvider
@@ -30,8 +32,6 @@ class SupportPackageServiceProvider extends ServiceProvider
         }
 
 
-
-
     }
 
 
@@ -42,10 +42,12 @@ class SupportPackageServiceProvider extends ServiceProvider
             return new AES($this->parseKey($config));
         });
     }
+
     /**
      * Parse the encryption key.
      *
-     * @param  array  $config
+     * @param array $config
+     *
      * @return string
      */
     protected function parseKey(array $config)
@@ -60,7 +62,8 @@ class SupportPackageServiceProvider extends ServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
-     * @param  array  $config
+     * @param array $config
+     *
      * @return string
      *
      * @throws \Illuminate\Encryption\MissingAppKeyException
@@ -114,10 +117,17 @@ class SupportPackageServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'red-jasmine.support');
 
-
+        $this->app->bind(ServiceContext::class, function ($app) {
+            return new ServiceContext($app);
+        });
+        $this->app->singleton(ServiceContext::class, function () {
+            return new ServiceContext(fn() => Container::getInstance());
+        });
 
 
         $this->registerAes();
+
+        SQLLogService::register();
     }
 
     /**

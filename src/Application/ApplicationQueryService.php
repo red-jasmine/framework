@@ -4,8 +4,8 @@ namespace RedJasmine\Support\Application;
 
 use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
 use Illuminate\Contracts\Pagination\Paginator;
+use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;

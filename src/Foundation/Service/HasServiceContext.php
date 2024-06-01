@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Foundation;
+namespace RedJasmine\Support\Foundation\Service;
 
 use Closure;
 use RedJasmine\Support\Contracts\UserInterface;

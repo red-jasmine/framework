@@ -10,7 +10,7 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
- * @property  Model $modelClass
+ * @property  Model  $modelClass
  */
 abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 {
@@ -70,6 +70,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     {
         $request = (new Request());
         $request->initialize($query);
+
         $query = QueryBuilder::for(static::$modelClass::query(), $request);
         $query->defaultSort($this->defaultSort);
         $this->allowedFilters ? $query->allowedFilters($this->allowedFilters) : null;

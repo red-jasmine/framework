@@ -1,9 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Application;
-
-use RedJasmine\Support\Foundation\HasServiceContext;
-use RedJasmine\Support\Foundation\Service\BootTrait;
+namespace RedJasmine\Support\Foundation\Service;
 
 abstract class Service
 {
@@ -29,6 +26,7 @@ abstract class Service
             if (method_exists($macro, 'setService')) {
                 $macro->setService($this);
             }
+
             if (method_exists($macro, 'setOperator')) {
                 $macro->setOperator($this->getOperator());
             }

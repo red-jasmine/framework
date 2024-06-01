@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Support\Application;
 
-use RedJasmine\Support\Foundation\HasServiceContext;
 use RedJasmine\Support\Foundation\Service\BootTrait;
+use RedJasmine\Support\Foundation\Service\HasServiceContext;
 use RedJasmine\Support\Foundation\Service\PipelineTrait;
 
 class QueryHandler

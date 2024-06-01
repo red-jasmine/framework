@@ -1,9 +1,10 @@
 <?php
 
-namespace RedJasmine\Support\Application;
+namespace RedJasmine\Support\Foundation\Service;
 
 use BadMethodCallException;
 use Illuminate\Support\Traits\Macroable;
+use RedJasmine\Support\Application\Closure;
 
 
 trait ServiceMacro

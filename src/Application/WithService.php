@@ -2,6 +2,8 @@
 
 namespace RedJasmine\Support\Application;
 
+use RedJasmine\Support\Foundation\Service\Service;
+
 trait WithService
 {
     protected Service $service;

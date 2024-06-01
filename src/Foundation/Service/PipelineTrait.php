@@ -3,7 +3,6 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 use Illuminate\Support\Facades\Config;
-use RedJasmine\Support\Foundation\Pipeline\Pipeline;
 
 trait PipelineTrait
 {

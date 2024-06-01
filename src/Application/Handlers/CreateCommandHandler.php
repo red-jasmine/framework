@@ -21,9 +21,6 @@ class CreateCommandHandler extends CommandHandler
         foreach ($command::morphs() as $key) {
             $model->{$key} = $command->{$key};
         }
-        if (method_exists($model, 'setOperator')) {
-            $model->setOperator($this->getOperator());
-        }
         if (method_exists($model, 'creator')) {
             $model->creator = $this->getOperator();
         }
