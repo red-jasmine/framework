@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Foundation\Service;
 
 use BadMethodCallException;
 use Illuminate\Support\Traits\Macroable;
-use RedJasmine\Support\Application\Closure;
+
 
 
 trait ServiceMacro
@@ -35,7 +35,7 @@ trait ServiceMacro
 
         $macro = static::$macros[$method];
 
-        if ($macro instanceof Closure) {
+        if ($macro instanceof \Closure) {
             $macro = $macro->bindTo($this, static::class);
         }
 

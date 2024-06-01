@@ -9,7 +9,6 @@ use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
-use RedJasmine\Support\Infrastructure\ReadRepositories\ReadRepositoryInterface;
 
 /**
  *

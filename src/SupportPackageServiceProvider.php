@@ -3,15 +3,10 @@
 namespace RedJasmine\Support;
 
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use RedJasmine\Support\Foundation\Service\ServiceContext;
 use RedJasmine\Support\Helpers\Encrypter\AES;
-use RedJasmine\Support\Services\DomainRoute;
-use RedJasmine\Support\Helpers\Blueprint;
 use RedJasmine\Support\Services\SQLLogService;
 
 
@@ -116,14 +111,6 @@ class SupportPackageServiceProvider extends ServiceProvider
     public function register() : void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/support.php', 'red-jasmine.support');
-
-        $this->app->bind(ServiceContext::class, function ($app) {
-            return new ServiceContext($app);
-        });
-        $this->app->singleton(ServiceContext::class, function () {
-            return new ServiceContext(fn() => Container::getInstance());
-        });
-
 
         $this->registerAes();
 
