@@ -11,12 +11,12 @@ class PaginateQuery extends Data
 
     public ?int $perPage = null;
 
-    public string|array|null $include;
+    public mixed $include;
 
-    public string|array|null $fields;
+    public mixed $fields;
 
-    public string|array|null $append;
+    public mixed $append;
 
-    public string|array|null $sort;
+    public mixed $sort;
 
 }

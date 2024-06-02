@@ -99,6 +99,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {
+
         return $this->query($query?->toArray())->paginate($query?->perPage);
     }
 

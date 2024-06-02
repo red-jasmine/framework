@@ -6,11 +6,11 @@ use RedJasmine\Support\Data\Data;
 
 class FindQuery extends Data
 {
-    public string|array|null $include;
+    public mixed $include;
 
-    public string|array|null $fields;
+    public mixed $fields;
 
-    public string|array|null $append;
+    public mixed $append;
 
 
 }
