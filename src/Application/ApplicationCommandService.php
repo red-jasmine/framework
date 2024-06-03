@@ -77,11 +77,10 @@ abstract class ApplicationCommandService extends ApplicationService
     {
         $macro = parent::makeMacro($macro, $method, $parameters);
         if ($macro instanceof CommandHandler) {
+            $macro->addPipeline($this->pipelines()[$method] ?? []);
             if ($this->pipelinesConfigKeyPrefix) {
                 // 设置配置的
                 $macro->setPipelinesConfigKeyPrefix($this->pipelinesConfigKeyPrefix);
-                $macro->addPipeline($this->pipelines()[$method] ?? []);
-                // 设置
                 $macro->initializePipelineTrait();
             }
         }

@@ -17,6 +17,8 @@ use RedJasmine\Support\Foundation\Service\PipelineTrait;
 abstract class CommandHandler implements CommandHandlerInterface
 {
 
+
+
     use BootTrait;
 
     use WithService;
@@ -58,7 +60,7 @@ abstract class CommandHandler implements CommandHandlerInterface
     protected function execute(?Closure $execute = null, ?Closure $persistence = null) : mixed
     {
 
-        // 需要进行改造
+        // 需要进行改造 TODO
         $result =  $this->pipelineManager()->call('executing');
 
         $execute = $execute ?: function () {

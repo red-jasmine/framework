@@ -9,6 +9,11 @@ use RedJasmine\Support\Data\Data;
 class UpdateCommandHandler extends CommandHandler
 {
 
+    /**
+     * @param Data $command
+     *
+     * @return void
+     */
     public function handle(Data $command) : void
     {
 
