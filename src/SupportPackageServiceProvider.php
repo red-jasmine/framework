@@ -3,10 +3,13 @@
 namespace RedJasmine\Support;
 
 
+use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use RedJasmine\Support\Helpers\Encrypter\AES;
+
+use RedJasmine\Support\Infrastructure\ServiceContextManage;
 use RedJasmine\Support\Services\SQLLogService;
 
 
@@ -115,6 +118,11 @@ class SupportPackageServiceProvider extends ServiceProvider
         $this->registerAes();
 
         SQLLogService::register();
+
+
+        $this->app->singleton(ServiceContextManage::class, function () {
+            return new ServiceContextManage(fn() => Container::getInstance());
+        });
     }
 
     /**

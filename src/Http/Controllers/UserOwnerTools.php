@@ -31,7 +31,15 @@ trait UserOwnerTools
      */
     public function getUser() : ?UserInterface
     {
-        return request()->user();
+        $user = request()->user();
+        if ($user) {
+            if ($user instanceof UserInterface) {
+                return $user;
+            }
+
+            return UserData::from([ 'id' => $user->getKey(), 'type' => get_class($user) ]);
+        }
+        return  $user;
     }
 
     /**

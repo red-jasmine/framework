@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Application\Handlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Facades\ServiceContext;
 
 class CreateCommandHandler extends CommandHandler
 {
@@ -22,7 +23,7 @@ class CreateCommandHandler extends CommandHandler
             $model->{$key} = $command->{$key};
         }
         if (method_exists($model, 'creator')) {
-            $model->creator = $this->getOperator();
+            $model->creator = ServiceContext::getOperator();
         }
         $execute = method_exists($model, 'create') ? fn() => $model->create() : null;
         $this->execute(

@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Application\Handlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Facades\ServiceContext;
 
 class UpdateCommandHandler extends CommandHandler
 {
@@ -21,7 +22,7 @@ class UpdateCommandHandler extends CommandHandler
         $this->aggregate = $model;
         $model->fill($command->toArray());
         if (method_exists($model, 'updater')) {
-            $model->updater = $this->getOperator();
+            $model->updater =ServiceContext::getOperator();
         }
         $execute = method_exists($model, 'modify') ? fn() => $model->modify() : null;
         $this->execute(

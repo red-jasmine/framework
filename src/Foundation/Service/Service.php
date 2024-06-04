@@ -9,8 +9,6 @@ abstract class Service
 
     use ServiceMacro;
 
-    use HasServiceContext;
-
 
     /**
      * @template T
@@ -23,12 +21,8 @@ abstract class Service
         if (is_string($macro)) {
             $macro = app($macro);
             // 设置为当前服务
-            if (method_exists($macro, 'setService')) {
+            if ($macro instanceof MacroAwareService) {
                 $macro->setService($this);
-            }
-
-            if (method_exists($macro, 'setOperator')) {
-                $macro->setOperator($this->getOperator());
             }
             return $macro;
         }

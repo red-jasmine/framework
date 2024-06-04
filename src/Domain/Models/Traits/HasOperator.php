@@ -31,13 +31,13 @@ trait HasOperator
     public function creator() : Attribute
     {
         return Attribute::make(
-            get: function (mixed $value, array $attributes) {
+            get: static function (mixed $value, array $attributes) {
                 if (blank($attributes['creator_type'] ?? null)) {
                     return null;
                 }
                 return UserData::from([ 'type' => $attributes['creator_type'], 'id' => $attributes['creator_id'], ]);
             },
-            set: fn(?UserInterface $user) => [
+            set: static fn(?UserInterface $user) => [
                 'creator_type' => $user?->getType(),
                 'creator_id'   => $user?->getID()
             ]
@@ -56,12 +56,12 @@ trait HasOperator
     public function updater() : Attribute
     {
         return Attribute::make(
-            get: function (mixed $value, array $attributes) {
+            get: static function (mixed $value, array $attributes) {
                 if (blank($attributes['updater_type'] ?? null)) {
                     return null;
                 }
                 return UserData::from([ 'type' => $attributes['updater_type'], 'id' => $attributes['updater_id'], ]);
-            }, set: fn(?UserInterface $user) => [
+            }, set: static fn(?UserInterface $user) => [
             'updater_type' => $user?->getType(),
             'updater_id'   => $user?->getID()
         ]

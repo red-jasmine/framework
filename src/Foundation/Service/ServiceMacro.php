@@ -6,7 +6,6 @@ use BadMethodCallException;
 use Illuminate\Support\Traits\Macroable;
 
 
-
 trait ServiceMacro
 {
 

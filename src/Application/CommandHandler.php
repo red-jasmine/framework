@@ -4,31 +4,59 @@ namespace RedJasmine\Support\Application;
 
 use Closure;
 use Illuminate\Support\Str;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Foundation\Service\BootTrait;
-use RedJasmine\Support\Foundation\Service\HasServiceContext;
+use RedJasmine\Support\Foundation\Service\MacroAwareService;
 use RedJasmine\Support\Foundation\Service\PipelineTrait;
 
 
 /**
  * @property                           $aggregate
+ * @property                           $model
  * @property ApplicationCommandService $service
  * @method  ApplicationCommandService getService()
  */
-abstract class CommandHandler implements CommandHandlerInterface
+abstract class CommandHandler implements CommandHandlerInterface, MacroAwareService
 {
 
+
+    /**
+     * @var mixed
+     */
+    protected mixed $command;
+
+    public function setCommand($command) : static
+    {
+        $this->command = $command;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel() : mixed
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param mixed $model
+     *
+     * @return CommandHandler
+     */
+    public function setModel(mixed $model) : static
+    {
+        $this->model = $model;
+        return $this;
+    }
 
 
     use BootTrait;
 
-    use WithService;
+    use AwareServiceHelper;
 
-    /**
-     * 如何进行可配置化
-     */
+
     use PipelineTrait;
-
-    use HasServiceContext;
 
 
     /**
@@ -61,7 +89,7 @@ abstract class CommandHandler implements CommandHandlerInterface
     {
 
         // 需要进行改造 TODO
-        $result =  $this->pipelineManager()->call('executing');
+        $result = $this->pipelineManager()->call('executing');
 
         $execute = $execute ?: function () {
         };

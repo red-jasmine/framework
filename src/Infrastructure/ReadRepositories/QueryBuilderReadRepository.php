@@ -10,7 +10,7 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
- * @property  Model  $modelClass
+ * @property  Model $modelClass
  */
 abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 {
@@ -65,6 +65,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
 
     protected mixed $defaultSort = '-id';
+
+
+    public function getModelQuery() : \Illuminate\Database\Eloquent\Builder
+    {
+        return static::$modelClass::query();
+    }
 
     protected function query(array $query = []) : QueryBuilder
     {

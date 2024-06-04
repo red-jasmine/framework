@@ -67,6 +67,11 @@ abstract class ApplicationQueryService extends Service
     }
 
 
+    public function getModelQuery() : \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->repository->getModelQuery();
+    }
+
     /**
      * @param PaginateQuery|null $query
      *

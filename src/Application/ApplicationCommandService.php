@@ -77,6 +77,7 @@ abstract class ApplicationCommandService extends ApplicationService
     {
         $macro = parent::makeMacro($macro, $method, $parameters);
         if ($macro instanceof CommandHandler) {
+            // 这里的业务需要 加到 组件中去 TODO
             $macro->addPipeline($this->pipelines()[$method] ?? []);
             if ($this->pipelinesConfigKeyPrefix) {
                 // 设置配置的
@@ -99,9 +100,11 @@ abstract class ApplicationCommandService extends ApplicationService
      */
     public function callMacro($macro, $method, $parameters) : mixed
     {
-        // 在调用层 可以 设置 管道 TODO
+
         if ($macro instanceof CommandHandler) {
-            return $macro->setArguments($parameters)->handle(...$parameters);
+            // 调用流程 TODO 需要自定义解析参数
+            $macro->setArguments($parameters);
+            return $macro->handle(...$parameters);
         }
 
         return $macro(...$parameters);

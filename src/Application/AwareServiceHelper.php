@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Application;
 
 use RedJasmine\Support\Foundation\Service\Service;
 
-trait WithService
+trait AwareServiceHelper
 {
     protected Service $service;
 
