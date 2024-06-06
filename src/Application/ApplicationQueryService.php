@@ -5,6 +5,8 @@ namespace RedJasmine\Support\Application;
 use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
+use RedJasmine\Support\Application\Handlers\FindQueryHandler;
+use RedJasmine\Support\Application\Handlers\PaginateQueryHandler;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
@@ -12,7 +14,8 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 
 /**
  *
- *
+ * @method LengthAwarePaginator paginate(?PaginateQuery $query = null)
+ * @method mixed find(int $id, ?FindQuery $query = null)
  * @property QueryBuilderReadRepository $repository
  */
 abstract class ApplicationQueryService extends Service
@@ -22,6 +25,17 @@ abstract class ApplicationQueryService extends Service
     {
         $this->initReadRepository();
         parent::__construct();
+    }
+
+
+    protected static $macros = [
+        'paginate' => PaginateQueryHandler::class,
+        'find'     => FindQueryHandler::class,
+    ];
+
+    public function getRepository() : QueryBuilderReadRepository
+    {
+        return $this->repository;
     }
 
     protected function initReadRepository() : void
@@ -57,6 +71,11 @@ abstract class ApplicationQueryService extends Service
      */
     protected array $queryCallbacks = [];
 
+    public function getQueryCallbacks() : array
+    {
+        return $this->queryCallbacks;
+    }
+
 
     public function withQuery(Closure $queryCallback = null) : static
     {
@@ -72,25 +91,10 @@ abstract class ApplicationQueryService extends Service
         return $this->repository->getModelQuery();
     }
 
-    /**
-     * @param PaginateQuery|null $query
-     *
-     * @return LengthAwarePaginator
-     */
-    public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
-    {
-        return $this->repository->setQueryCallbacks($this->queryCallbacks)->paginate($query);
-    }
 
     public function simplePaginate(?PaginateQuery $query = null) : Paginator
     {
         return $this->repository->setQueryCallbacks($this->queryCallbacks)->simplePaginate($query);
-    }
-
-    public function find(int $id, ?FindQuery $query = null) : mixed
-    {
-
-        return $this->repository->setQueryCallbacks($this->queryCallbacks)->find($id, $query);
     }
 
 

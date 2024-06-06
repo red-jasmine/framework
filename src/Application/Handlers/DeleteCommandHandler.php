@@ -13,7 +13,7 @@ class DeleteCommandHandler extends CommandHandler
     {
 
         $model           = $this->getService()->getRepository()->find($command->id);
-        $this->aggregate = $model;
+        $this->model = $model;
         if (method_exists($model, 'updater')) {
             $model->updater = ServiceContext::getOperator();
         }

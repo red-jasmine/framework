@@ -73,21 +73,6 @@ abstract class ApplicationCommandService extends ApplicationService
         return Snowflake::getInstance()->nextId();
     }
 
-    public function makeMacro(mixed $macro, $method, $parameters) : mixed
-    {
-        $macro = parent::makeMacro($macro, $method, $parameters);
-        if ($macro instanceof CommandHandler) {
-            // 这里的业务需要 加到 组件中去 TODO
-            $macro->addPipeline($this->pipelines()[$method] ?? []);
-            if ($this->pipelinesConfigKeyPrefix) {
-                // 设置配置的
-                $macro->setPipelinesConfigKeyPrefix($this->pipelinesConfigKeyPrefix);
-                $macro->initializePipelineTrait();
-            }
-        }
-        return $macro;
-    }
-
 
     /**
      * 自定义调用
@@ -98,12 +83,11 @@ abstract class ApplicationCommandService extends ApplicationService
      *
      * @return mixed
      */
-    public function callMacro($macro, $method, $parameters) : mixed
+    public function callMacros($macro, $method, $parameters) : mixed
     {
 
         if ($macro instanceof CommandHandler) {
-            // 调用流程 TODO 需要自定义解析参数
-            $macro->setArguments($parameters);
+
             return $macro->handle(...$parameters);
         }
 

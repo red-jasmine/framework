@@ -3,6 +3,8 @@
 namespace RedJasmine\Support\Application\Handlers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Facades\ServiceContext;
@@ -16,8 +18,8 @@ class CreateCommandHandler extends CommandHandler
         /**
          * @var $model Model
          */
-        $model           = $this->getService()->newModel($command);
-        $this->aggregate = $model;
+        $model       = $this->getService()->newModel($command);
+        $this->model = $model;
         $model->fill($command->toArray());
         foreach ($command::morphs() as $key) {
             $model->{$key} = $command->{$key};

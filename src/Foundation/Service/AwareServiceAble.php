@@ -1,10 +1,8 @@
 <?php
 
-namespace RedJasmine\Support\Application;
+namespace RedJasmine\Support\Foundation\Service;
 
-use RedJasmine\Support\Foundation\Service\Service;
-
-trait AwareServiceHelper
+trait AwareServiceAble
 {
     protected Service $service;
 

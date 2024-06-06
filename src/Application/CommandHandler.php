@@ -3,21 +3,28 @@
 namespace RedJasmine\Support\Application;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Foundation\Service\BootTrait;
+use RedJasmine\Support\Foundation\Service\AwareArgumentsAble;
+use RedJasmine\Support\Foundation\Service\AwareServiceAble;
+use RedJasmine\Support\Foundation\Service\MacroAwareArguments;
 use RedJasmine\Support\Foundation\Service\MacroAwareService;
-use RedJasmine\Support\Foundation\Service\PipelineTrait;
 
 
 /**
- * @property                           $aggregate
+ *
  * @property                           $model
  * @property ApplicationCommandService $service
  * @method  ApplicationCommandService getService()
  */
-abstract class CommandHandler implements CommandHandlerInterface, MacroAwareService
+abstract class CommandHandler implements MacroAwareService, MacroAwareArguments
 {
+
+
+    use AwareServiceAble;
+
+
+    use AwareArgumentsAble;
 
 
     /**
@@ -30,6 +37,8 @@ abstract class CommandHandler implements CommandHandlerInterface, MacroAwareServ
         $this->command = $command;
         return $this;
     }
+
+    protected Model|null $model = null;
 
     /**
      * @return mixed
@@ -51,34 +60,6 @@ abstract class CommandHandler implements CommandHandlerInterface, MacroAwareServ
     }
 
 
-    use BootTrait;
-
-    use AwareServiceHelper;
-
-
-    use PipelineTrait;
-
-
-    /**
-     * @return mixed
-     */
-    public function getAggregate() : mixed
-    {
-        return $this->aggregate;
-    }
-
-    /**
-     * @param mixed $aggregate
-     *
-     * @return CommandHandler
-     */
-    public function setAggregate(mixed $aggregate) : static
-    {
-        $this->aggregate = $aggregate;
-        return $this;
-    }
-
-
     /**
      * @param Closure|null $execute
      * @param Closure|null $persistence
@@ -88,6 +69,7 @@ abstract class CommandHandler implements CommandHandlerInterface, MacroAwareServ
     protected function execute(?Closure $execute = null, ?Closure $persistence = null) : mixed
     {
 
+        return $persistence();
         // 需要进行改造 TODO
         $result = $this->pipelineManager()->call('executing');
 
@@ -100,20 +82,6 @@ abstract class CommandHandler implements CommandHandlerInterface, MacroAwareServ
         $this->pipelineManager()->call('executed');
 
         return $result;
-    }
-
-
-    protected array $arguments = [];
-
-    public function getArguments() : array
-    {
-        return $this->arguments;
-    }
-
-    public function setArguments(array $arguments) : static
-    {
-        $this->arguments = $arguments;
-        return $this;
     }
 
 

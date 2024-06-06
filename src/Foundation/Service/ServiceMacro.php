@@ -3,7 +3,9 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 use BadMethodCallException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Traits\Macroable;
+use ReflectionException;
 
 
 trait ServiceMacro
@@ -14,14 +16,12 @@ trait ServiceMacro
     }
 
     /**
-     * Dynamically handle calls to the class.
-     *
-     * @param string $method
-     * @param array  $parameters
+     * @param $method
+     * @param $parameters
      *
      * @return mixed
-     *
-     * @throws BadMethodCallException
+     * @throws BindingResolutionException
+     * @throws ReflectionException
      */
     public function __call($method, $parameters)
     {
@@ -42,6 +42,7 @@ trait ServiceMacro
             $macro = $this->makeMacro($macro, $method, $parameters);
         }
         if (method_exists($this, 'callMacro')) {
+
             return $this->callMacro($macro, $method, $parameters);
         }
 
