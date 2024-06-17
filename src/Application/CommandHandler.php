@@ -4,11 +4,7 @@ namespace RedJasmine\Support\Application;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use RedJasmine\Support\Foundation\Service\AwareArgumentsAble;
-use RedJasmine\Support\Foundation\Service\AwareServiceAble;
-use RedJasmine\Support\Foundation\Service\MacroAwareArguments;
-use RedJasmine\Support\Foundation\Service\MacroAwareService;
+use RedJasmine\Support\Foundation\Service\ServiceMacro;
 
 
 /**
@@ -17,14 +13,9 @@ use RedJasmine\Support\Foundation\Service\MacroAwareService;
  * @property ApplicationCommandService $service
  * @method  ApplicationCommandService getService()
  */
-abstract class CommandHandler implements MacroAwareService, MacroAwareArguments
+abstract class CommandHandler extends ServiceMacro
 {
 
-
-    use AwareServiceAble;
-
-
-    use AwareArgumentsAble;
 
 
     /**
@@ -70,36 +61,7 @@ abstract class CommandHandler implements MacroAwareService, MacroAwareArguments
     {
 
         return $persistence();
-        // 需要进行改造 TODO
-        $result = $this->pipelineManager()->call('executing');
 
-        $execute = $execute ?: function () {
-        };
-
-        $result = $this->pipelineManager()->call('execute', $execute);
-        // 持久化
-        $persistence ? $persistence() : null;
-        $this->pipelineManager()->call('executed');
-
-        return $result;
-    }
-
-
-    protected ?string $pipelinesConfigKeyPrefix = null;
-
-    public function setPipelinesConfigKeyPrefix(?string $pipelinesConfigKeyPrefix) : void
-    {
-        $this->pipelinesConfigKeyPrefix = $pipelinesConfigKeyPrefix;
-    }
-
-
-    public function getPipelinesConfigKey() : ?string
-    {
-        if (blank($this->pipelinesConfigKeyPrefix)) {
-            return null;
-        }
-        $pipelinesConfigKeyPrefix = $this->pipelinesConfigKeyPrefix;
-        return Str::finish($pipelinesConfigKeyPrefix, '.') . Str::lower(Str::remove('CommandHandler', class_basename(static::class)));
     }
 
 

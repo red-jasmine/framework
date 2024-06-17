@@ -7,7 +7,22 @@ use Illuminate\Support\Facades\Config;
 trait PipelineTrait
 {
 
-    protected array $pipelines = [];
+
+    protected function pipeline()
+    {
+
+    }
+
+    // 可以公共的
+    // 可以配置的
+    // 可以对象内的
+
+    public function pipelines() : array
+    {
+        return [];
+    }
+
+    private array $pipelines = [];
 
     public function getPipelines() : array
     {
@@ -76,29 +91,12 @@ trait PipelineTrait
 
     public static function getGlobalPipelines() : array
     {
-        return static::$globalPipelines[static::class];
+        return static::$globalPipelines[static::class] ?? [];
     }
 
     public static function setGlobalPipelines(array $globalPipelines) : void
     {
         static::$globalPipelines[static::class] = $globalPipelines;
-    }
-
-
-    /**
-     * 管道组合
-     * @var Pipeline
-     */
-    protected Pipeline $pipelineManager;
-
-    protected function pipelineManager() : Pipeline
-    {
-        return $this->pipelineManager = $this->pipelineManager ?? $this->newPipelineManager($this);
-    }
-
-    protected function newPipelineManager($passable) : Pipeline
-    {
-        return app(Pipeline::class)->send($passable)->pipe($this->pipelines);
     }
 
 

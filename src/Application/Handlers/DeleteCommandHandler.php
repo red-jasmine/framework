@@ -12,14 +12,14 @@ class DeleteCommandHandler extends CommandHandler
     public function handle(Data $command) : void
     {
 
-        $model           = $this->getService()->getRepository()->find($command->id);
-        $this->model = $model;
-        if (method_exists($model, 'updater')) {
-            $model->updater = ServiceContext::getOperator();
+        $this->model = $this->getService()->getRepository()->find($command->id);
+
+        if (method_exists($this->model, 'updater')) {
+            $this->model->updater = ServiceContext::getOperator();
         }
         $this->execute(
             execute: null,
-            persistence: fn() => $this->getService()->getRepository()->delete($model),
+            persistence: fn() => $this->getService()->getRepository()->delete($this->model),
         );
     }
 }

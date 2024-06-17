@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Application\Handlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Facades\ServiceContext;
 
 class UpdateCommandHandler extends CommandHandler
@@ -17,17 +18,18 @@ class UpdateCommandHandler extends CommandHandler
      */
     public function handle(Data $command) : void
     {
+        $this->model = $this->getService()->getRepository()->find($command->id);
 
-        $model           = $this->getService()->getRepository()->find($command->id);
-        $this->model = $model;
-        $model->fill($command->toArray());
-        if (method_exists($model, 'updater')) {
-            $model->updater =ServiceContext::getOperator();
+        $this->model->fill($command->toArray());
+
+        if ($this->model instanceof OperatorInterface) {
+            $this->model->updater = ServiceContext::getOperator();
         }
-        $execute = method_exists($model, 'modify') ? fn() => $model->modify() : null;
+
+        $execute = method_exists($this->model, 'modify') ? fn() => $this->model->modify() : null;
         $this->execute(
             execute: $execute,
-            persistence: fn() => $this->getService()->getRepository()->update($model),
+            persistence: fn() => $this->getService()->getRepository()->update($this->model),
         );
     }
 }

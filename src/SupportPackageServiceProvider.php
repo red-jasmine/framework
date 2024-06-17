@@ -7,6 +7,9 @@ use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use RedJasmine\Support\Casts\UserInterfaceCastTransformer;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
@@ -28,6 +31,10 @@ class SupportPackageServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+
+        $config = $this->app->make('config');
+
 
 
     }

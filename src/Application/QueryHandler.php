@@ -2,21 +2,13 @@
 
 namespace RedJasmine\Support\Application;
 
-use RedJasmine\Support\Foundation\Service\AwareArgumentsAble;
-use RedJasmine\Support\Foundation\Service\AwareServiceAble;
-use RedJasmine\Support\Foundation\Service\MacroAwareArguments;
-use RedJasmine\Support\Foundation\Service\MacroAwareService;
+use RedJasmine\Support\Foundation\Service\ServiceMacro;
 
 /**
  * @property ApplicationQueryService $service
  * @method  ApplicationQueryService getService()
  */
-class QueryHandler implements MacroAwareService, MacroAwareArguments
+abstract class QueryHandler extends ServiceMacro
 {
 
-
-    use AwareServiceAble;
-
-
-    use AwareArgumentsAble;
 }

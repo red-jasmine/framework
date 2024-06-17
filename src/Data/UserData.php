@@ -8,6 +8,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 class UserData extends Data implements UserInterface
 {
 
+
     /**
      * @param string      $type
      * @param int         $id
@@ -72,6 +73,5 @@ class UserData extends Data implements UserInterface
     {
         return $this->avatar;
     }
-
 
 }

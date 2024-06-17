@@ -17,16 +17,19 @@ trait HasOperator
 {
 
 
-    public function hasOperator() : bool
-    {
-        return true;
-    }
-
     public function scopeOnlyCreator(Builder $query, UserInterface $owner) : Builder
     {
         return $query->where('creator_type', $owner->getType())->where('creator_id', $owner->getID());
 
     }
+
+
+    public function scopeOnlyUpdater(Builder $query, UserInterface $owner) : Builder
+    {
+        return $query->where('updater_type', $owner->getType())->where('updater_id', $owner->getID());
+
+    }
+
 
     public function creator() : Attribute
     {
@@ -43,13 +46,6 @@ trait HasOperator
             ]
 
         );
-    }
-
-
-    public function scopeOnlyUpdater(Builder $query, UserInterface $owner) : Builder
-    {
-        return $query->where('updater_type', $owner->getType())->where('updater_id', $owner->getID());
-
     }
 
 

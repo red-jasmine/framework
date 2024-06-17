@@ -9,6 +9,7 @@ use Illuminate\Routing\ResolvesRouteDependencies;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use ReflectionException;
+use \Illuminate\Pipeline\Pipeline;
 
 abstract class Service
 {
@@ -20,7 +21,7 @@ abstract class Service
 
     use BootTrait;
 
-    use ServiceMacro;
+    use ServiceMacroAble;
 
 
     protected Container $container;
@@ -65,14 +66,14 @@ abstract class Service
      */
     public function callMacro($macro, $method, $parameters) : mixed
     {
-
-
-        $pipeline = new \Illuminate\Pipeline\Pipeline($this->container);
-        // TODO 这里不能修改 中间件处理过后的参数
-        return $pipeline->send($macro)
-                        ->pipe($this->resolveMacroMiddleware($macro, $method))
-                        ->then(fn() => $macro->handle(...array_values($this->resolveClassMethodDependencies($parameters, $macro, $this->macroMethod)))
-                        );
+        return app(Pipeline::class)
+            ->send($macro)
+            ->pipe($this->resolveMacroMiddleware($macro, $method))
+            ->then(
+                fn() => $macro->handle(
+                    ...array_values($this->resolveClassMethodDependencies($parameters, $macro, $this->macroMethod))
+                )
+            );
     }
 
     protected function pipelines() : array
