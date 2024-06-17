@@ -15,7 +15,10 @@ class AmountCastTransformer implements CastsAttributes, Cast, Transformer
 {
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : Amount
     {
-        return new Amount($value);
+        if ($value instanceof Amount) {
+            return $value;
+        }
+        return new Amount((string)$value);
     }
 
 

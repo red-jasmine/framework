@@ -29,7 +29,7 @@ class PromiseServicesCastTransformer implements CastsAttributes, Cast, Transform
      */
     public function set(Model $model, string $key, mixed $value, array $attributes) : string
     {
-        return $this->encode($value->toArray());
+        return $this->encode($value?->toArray() ?? []);
     }
 
 
@@ -42,14 +42,17 @@ class PromiseServicesCastTransformer implements CastsAttributes, Cast, Transform
 
     protected function decode(string $string) : array
     {
-        $array = [];
-        $parts = explode(';', $string);
+        if (filled($string)) {
+            $array = [];
+            $parts = explode(';', $string);
 
-        foreach ($parts as $part) {
-            $keyValue            = explode(':', $part);
-            $array[$keyValue[0]] = $keyValue[1];
+            foreach ($parts as $part) {
+                $keyValue            = explode(':', $part);
+                $array[$keyValue[0]] = $keyValue[1];
+            }
+            return $array;
         }
-        return $array;
+        return [];
     }
 
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : mixed

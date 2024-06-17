@@ -9,6 +9,8 @@ use RedJasmine\Ecommerce\Domain\Models\Casts\PromiseServiceValueCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
+use RedJasmine\Support\Casts\UserInterfaceCastTransformer;
+use RedJasmine\Support\Contracts\UserInterface;
 
 class EcommercePackageServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,8 @@ class EcommercePackageServiceProvider extends ServiceProvider
 
         $config->set('data.casts.' . Amount::class, AmountCastTransformer::class);
         $config->set('data.transformers.' . Amount::class, AmountCastTransformer::class);
+
+
         $config->set('data.casts.' . PromiseServiceValue::class, PromiseServiceValueCastTransformer::class);
         $config->set('data.transformers.' . PromiseServiceValue::class, PromiseServiceValueCastTransformer::class);
 
@@ -33,7 +37,8 @@ class EcommercePackageServiceProvider extends ServiceProvider
         $config->set('data.casts.' . PromiseServices::class, PromiseServicesCastTransformer::class);
         $config->set('data.transformers.' . PromiseServices::class, PromiseServicesCastTransformer::class);
 
-
+        $config->set('data.casts.' . UserInterface::class, UserInterfaceCastTransformer::class);
+        $config->set('data.transformers.' . UserInterface::class, UserInterfaceCastTransformer::class);
 
     }
 }
