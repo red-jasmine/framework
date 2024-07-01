@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Application\Handlers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Facades\ServiceContext;
@@ -51,5 +52,11 @@ class CreateCommandHandler extends CommandHandler
         );
 
         return $this->model;
+    }
+
+
+    protected function validate(Model $model, Data $command) : void
+    {
+
     }
 }
