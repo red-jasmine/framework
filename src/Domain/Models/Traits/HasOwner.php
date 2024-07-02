@@ -15,15 +15,17 @@ trait HasOwner
 {
 
 
+    protected string $ownerColumn = 'owner';
+
     public function owner() : Attribute
     {
         return Attribute::make(
-            get: static function (mixed $value, array $attributes) {
-                return UserData::from([ 'type' => $attributes['owner_type'], 'id' => $attributes['owner_id'], ]);
+            get: function (mixed $value, array $attributes) {
+                return UserData::from([ 'type' => $attributes[$this->ownerColumn . '_type'], 'id' => $attributes[$this->ownerColumn . '_type'], ]);
             },
-            set: static fn(?UserInterface $user) => [
-                'owner_type' => $user?->getType(),
-                'owner_id'   => $user?->getID()
+            set: fn(?UserInterface $user) => [
+                $this->ownerColumn . '_type' => $user?->getType(),
+                $this->ownerColumn . '_id'   => $user?->getID()
             ]
 
         );
@@ -31,7 +33,7 @@ trait HasOwner
 
     public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('owner_type', $owner->getType())->where('owner_id', $owner->getID());
+        return $query->where($this->ownerColumn . '_type', $owner->getType())->where($this->ownerColumn . '_type', $owner->getID());
     }
 
 }
