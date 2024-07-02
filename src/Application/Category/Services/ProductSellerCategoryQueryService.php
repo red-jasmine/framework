@@ -32,6 +32,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     public function allowedFilters() : array
     {
         return [
+            AllowedFilter::exact('parent_id'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
 

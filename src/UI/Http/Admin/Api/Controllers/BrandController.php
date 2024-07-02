@@ -30,19 +30,20 @@ class BrandController extends Controller
     {
 
         $result = $this->queryService->paginate(BrandPaginateQuery::from($request));
+
         return BrandResource::collection($result->appends($request->query()));
     }
 
     public function show(Request $request, $id) : BrandResource
     {
         $result = $this->queryService->find($id, FindQuery::from($request));
+
         return BrandResource::make($result);
     }
 
     public function store(Request $request) : BrandResource
     {
         $command = BrandCreateCommand::from($request);
-
         $result = $this->commandService->create($command);
 
         return BrandResource::make($result);
@@ -51,6 +52,7 @@ class BrandController extends Controller
     public function update($id, Request $request) : JsonResponse
     {
         $request->offsetSet('id', $id);
+
         $command = BrandUpdateCommand::from($request);
         $this->commandService->update($command);
 
@@ -64,6 +66,7 @@ class BrandController extends Controller
 
         $command = BrandDeleteCommand::from($request);
         $this->commandService->delete($command);
+
         return static::success();
     }
 }

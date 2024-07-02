@@ -13,7 +13,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 // TODO 需要验证名称重复
 
 /**
- * @method int create(ProductCategoryCreateCommand $command)
+ * @method  create(ProductCategoryCreateCommand $command)
  * @method void update(ProductCategoryUpdateCommand $command)
  * @method void delete(ProductCategoryDeleteCommand $command)
  * @method ProductCategory find(int $id)

@@ -26,8 +26,8 @@ class SellerCategoryResource extends JsonResource
             'creator_type' => $this->creator_type,
             'updater_id'   => $this->updater_id,
             'updater_type' => $this->updater_type,
-            'created_at'   => $this->created_at,
-            'updated_at'   => $this->updated_at,
+            'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
+            'updated_at'   => $this->updated_at?->format('Y-m-d H:i:s'),
             'children'     => $this->children,
 
             'parent_id' => $this->parent_id,

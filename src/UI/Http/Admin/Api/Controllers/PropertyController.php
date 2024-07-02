@@ -26,9 +26,7 @@ class PropertyController extends Controller
 
     public function index(Request $request) : AnonymousResourceCollection
     {
-
         $result = $this->queryService->paginate(PropertyPaginateQuery::from($request));
-
         return PropertyResource::collection($result);
     }
 
@@ -48,7 +46,7 @@ class PropertyController extends Controller
     public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->commandService->create(ProductPropertyUpdateCommand::from($request));
+        $this->commandService->update(ProductPropertyUpdateCommand::from($request));
         return static::success();
     }
 

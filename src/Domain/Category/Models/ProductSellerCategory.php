@@ -5,14 +5,16 @@ namespace RedJasmine\Product\Domain\Category\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
-class ProductSellerCategory extends Model implements OperatorInterface
+class ProductSellerCategory extends Model implements OperatorInterface,OwnerInterface
 {
     use HasDateTimeFormatter;
 
@@ -21,6 +23,8 @@ class ProductSellerCategory extends Model implements OperatorInterface
     use HasOperator;
 
     use ModelTree;
+
+    use SoftDeletes;
 
     public $incrementing = false;
 
@@ -32,6 +36,7 @@ class ProductSellerCategory extends Model implements OperatorInterface
 
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
+
 
 
     protected $fillable = [
@@ -48,9 +53,9 @@ class ProductSellerCategory extends Model implements OperatorInterface
 
     protected $casts = [
         'expands' => 'array',
-        'status'      => CategoryStatusEnum::class,
-        'is_leaf'     => 'boolean',
-        'is_show'     => 'boolean',
+        'status'  => CategoryStatusEnum::class,
+        'is_leaf' => 'boolean',
+        'is_show' => 'boolean',
     ];
 
     public function parent() : BelongsTo

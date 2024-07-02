@@ -10,10 +10,6 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 class ProductSellerCategoryCreateCommand extends Data
 {
 
-    public static function morphs() : array
-    {
-        return [ 'owner' ];
-    }
 
     public UserData           $owner;
     public string             $name;

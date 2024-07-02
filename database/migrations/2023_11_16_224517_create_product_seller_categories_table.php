@@ -21,11 +21,10 @@ return new class extends Migration {
             $table->string('status', 32)->comment(CategoryStatusEnum::comments('状态'));
             $table->json('expands')->nullable()->comment('扩展信息');
 
-
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
-
             $table->timestamps();
+            $table->softDeletes();
             $table->comment('商品-卖家分类表');
         });
     }

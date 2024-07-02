@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Domain\Category\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -18,6 +19,8 @@ class ProductCategory extends Model implements OperatorInterface
     use HasOperator;
 
     use ModelTree;
+
+    use SoftDeletes;
 
     public $incrementing = false;
 
