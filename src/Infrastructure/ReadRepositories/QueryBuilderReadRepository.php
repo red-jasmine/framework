@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -74,17 +75,38 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     protected function query(array $query = []) : QueryBuilder
     {
-        $request = (new Request());
-        $request->initialize($query);
-
-        $query = QueryBuilder::for(static::$modelClass::query(), $request);
+        $query = QueryBuilder::for(static::$modelClass::query(), $this->buildRequest($query));
         $query->defaultSort($this->defaultSort);
         $this->allowedFilters ? $query->allowedFilters($this->allowedFilters) : null;
         $this->allowedFields ? $query->allowedFields($this->allowedFields) : null;
         $this->allowedIncludes ? $query->allowedIncludes($this->allowedIncludes) : null;
         $this->allowedSorts ? $query->allowedSorts($this->allowedSorts) : null;
+
+
         $this->queryCallbacks($query);
         return $query;
+    }
+
+    protected function buildRequest(array $query = []) : Request
+    {
+
+        $includeParameterName = config('query-builder.parameters.include', 'include');
+        $appendParameterName = config('query-builder.parameters.append', 'append');
+        $fieldsParameterName = config('query-builder.parameters.fields', 'fields');
+        $sortParameterName = config('query-builder.parameters.sort', 'sort');
+        $filterParameterName = config('query-builder.parameters.filter', 'filter');
+
+
+        if (filled($filterParameterName)) {
+            $query[$filterParameterName] = Arr::except($query,[
+                'include','append','fields','append','sort','page','per_page'
+            ]);
+        }
+
+        $request = (new Request());
+        $request->initialize($query);
+
+        return $request;
     }
 
 
@@ -105,7 +127,6 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {
-
         return $this->query($query?->toArray())->paginate($query?->perPage);
     }
 
