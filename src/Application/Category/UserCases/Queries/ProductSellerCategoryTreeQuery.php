@@ -8,12 +8,9 @@ use RedJasmine\Support\Data\UserData;
 class ProductSellerCategoryTreeQuery extends Data
 {
 
-    public static function morphs() : array
-    {
-        return [ 'owner' ];
-    }
+    public ?string $ownerType = null;
 
-    public UserData $owner;
+    public ?int $ownerId   = null;
 
     public string|array|null $include;
 

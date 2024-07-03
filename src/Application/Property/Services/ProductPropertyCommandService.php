@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyGroupRulePipeline;
 use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyPipeline;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyCreateCommand;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyUpdateCommand;
@@ -22,13 +23,22 @@ class ProductPropertyCommandService extends ApplicationCommandService
 {
     protected static string $modelClass = ProductProperty::class;
 
+    /**
+     * 管道配置前缀
+     * @var string|null
+     */
     protected ?string $pipelinesConfigKeyPrefix = 'pipelines.product.properties';
 
     protected function pipelines() : array
     {
         return [
+            'create' => [
+                ProductPropertyGroupRulePipeline::class,
+            ],
+            'update' => [
+                ProductPropertyGroupRulePipeline::class,
+            ],
         ];
-
     }
 
     // TODO 重名判断

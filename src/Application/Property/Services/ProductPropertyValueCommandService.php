@@ -3,6 +3,8 @@
 namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyGroupRulePipeline;
+use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyRulePipeline;
 use RedJasmine\Product\Application\Property\Services\Pipelines\PropertyValueUpdatePipeline;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueCreateCommand;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueUpdateCommand;
@@ -29,8 +31,15 @@ class ProductPropertyValueCommandService extends ApplicationCommandService
     protected function pipelines() : array
     {
         return [
+
+            'create' => [
+                ProductPropertyRulePipeline::class,
+                ProductPropertyGroupRulePipeline::class,
+            ],
             'update' => [
-                PropertyValueUpdatePipeline::class
+                ProductPropertyRulePipeline::class,
+                PropertyValueUpdatePipeline::class,
+                ProductPropertyGroupRulePipeline::class,
             ],
         ];
     }

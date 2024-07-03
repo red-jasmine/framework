@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Property\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -15,6 +16,8 @@ class ProductPropertyGroup extends Model implements OperatorInterface
     use HasDateTimeFormatter;
 
     use HasOperator;
+
+    use SoftDeletes;
 
     public $incrementing = false;
 
@@ -28,7 +31,7 @@ class ProductPropertyGroup extends Model implements OperatorInterface
 
     protected $casts = [
         'expands' => 'array',
-        'status'      => PropertyStatusEnum::class
+        'status'  => PropertyStatusEnum::class
     ];
 
     public function scopeAvailable(Builder $query) : Builder

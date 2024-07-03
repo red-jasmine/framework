@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();
+            $table->softDeletes();
             $table->comment('商品-属性表');
         });
     }

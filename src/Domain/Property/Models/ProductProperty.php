@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -19,8 +20,7 @@ class ProductProperty extends Model implements OperatorInterface
 
     use HasOperator;
 
-
-    protected $primaryKey = 'id';
+    use SoftDeletes;
 
 
     public $incrementing = false;
