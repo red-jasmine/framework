@@ -76,6 +76,10 @@ abstract class Service
             );
     }
 
+    /**
+     * 扩展管道配置
+     * @return array
+     */
     protected function pipelines() : array
     {
         return [];

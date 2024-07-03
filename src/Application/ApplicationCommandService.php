@@ -23,6 +23,11 @@ abstract class ApplicationCommandService extends ApplicationService
 {
     protected static string $modelClass;
 
+
+    /**
+     * 扩展管道配置
+     * @return array
+     */
     protected function pipelines() : array
     {
         return [
@@ -32,6 +37,10 @@ abstract class ApplicationCommandService extends ApplicationService
         ];
     }
 
+    /**
+     * 管道配置前缀
+     * @var string|null
+     */
     protected ?string $pipelinesConfigKeyPrefix = null;
 
     protected static $macros = [
