@@ -9,8 +9,8 @@ use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
 class PromiseServiceValue extends ValueObject
 {
 
-    public const  UNSUPPORTED     = 'unsupported';
-    public const  BEFORE_SHIPMENT = 'before_shipping';
+    public const  string UNSUPPORTED     = 'unsupported';
+    public const  string BEFORE_SHIPMENT = 'before_shipping';
 
 
     /**
