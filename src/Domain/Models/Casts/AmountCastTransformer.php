@@ -13,6 +13,13 @@ use Spatie\LaravelData\Transformers\Transformer;
 
 class AmountCastTransformer implements CastsAttributes, Cast, Transformer
 {
+
+
+    // |-------------------------------------------------------------------
+    // | Data 转换
+    // |-------------------------------------------------------------------
+
+
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : Amount
     {
         if ($value instanceof Amount) {
@@ -33,6 +40,12 @@ class AmountCastTransformer implements CastsAttributes, Cast, Transformer
     {
         return (string)$value;
     }
+
+
+    // |-------------------------------------------------------------------
+    // | Model 转换
+    // |-------------------------------------------------------------------
+
 
 
     public function get(Model $model, string $key, mixed $value, array $attributes) : Amount
