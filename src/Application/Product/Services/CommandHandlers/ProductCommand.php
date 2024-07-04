@@ -104,7 +104,6 @@ class ProductCommand extends CommandHandler
         $product->info->keywords    = $command->keywords;
         $product->info->description = $command->description;
         $product->info->detail      = $command->detail;
-        $product->info->images      = $command->images;
         $product->info->videos      = $command->videos;
         $product->info->weight      = $command->weight;
         $product->info->width       = $command->width;

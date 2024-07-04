@@ -10,23 +10,17 @@ use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
+use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Data\UserData;
-use Spatie\LaravelData\Support\Validation\ValidationContext;
+
 
 class Product extends Data
 {
-    public static function morphs() : array
-    {
-        return [
-            'owner',
-            'supplier'
-        ];
-    }
+
 
     public Amount $price;
-
 
     public UserInterface $owner;
 
@@ -73,22 +67,46 @@ class Product extends Data
     public ?int $supplierProductId = null;
 
 
-    public ?string $keywords    = null;
+    /**
+     * 关键字
+     * @var string|null
+     */
+    public ?string $keywords = null;
+    /**
+     * 描述
+     * @var string|null
+     */
     public ?string $description = null;
 
     public ?string $detail = null;
-    public ?array  $images = null;
-    public ?array  $videos = null;
-    public ?string $weight;
-    public ?string $width;
-    public ?string $height;
-    public ?string $length;
-    public ?string $size;
-    public ?string $remarks;
-    public ?array  $tools;
-    public ?array  $expands;
+
 
     /**
+     * 基础属性
+     * @var Medium[]|null
+     */
+    public ?array $images = null;
+
+    /**
+     * 基础属性
+     * @var Medium[]|null
+     */
+    public ?array $videos = null;
+
+
+
+
+    public ?string     $weight;
+    public ?string     $width;
+    public ?string     $height;
+    public ?string     $length;
+    public ?string     $size;
+    public ?string     $remarks;
+    public ?array      $tools;
+    public ?array      $expands;
+
+    /**
+     * 承诺服务
      * @var PromiseServices|null
      */
     public ?PromiseServices $promiseServices;
@@ -99,6 +117,7 @@ class Product extends Data
      * @var Collection<Property>|null
      */
     public ?Collection $basicProps = null;
+
     /**
      * 销售属性
      * @var Collection<Property>|null
@@ -111,12 +130,5 @@ class Product extends Data
      */
     public ?Collection $skus = null;
 
-
-    public static function rules(ValidationContext $context) : array
-    {
-        return [
-            'owner' => 'nullable',
-        ];
-    }
 
 }
