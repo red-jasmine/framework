@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Casts\PromiseServicesCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -26,7 +27,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 
 
-class Product extends Model implements OperatorInterface,OwnerInterface
+class Product extends Model implements OperatorInterface, OwnerInterface
 {
     use HasDateTimeFormatter;
 
@@ -39,23 +40,29 @@ class Product extends Model implements OperatorInterface,OwnerInterface
     public $incrementing = false;
 
 
-    protected $casts = [
-        'product_type'     => ProductTypeEnum::class,  // 商品类型
-        'shipping_type'    => ShippingTypeEnum::class,// 发货类型
-        'status'           => ProductStatusEnum::class,// 状态
-        'sub_stock'        => SubStockTypeEnum::class,// 扣库存方式
-        'freight_payer'    => FreightPayerEnum::class,// 运费承担方
-        'is_multiple_spec' => 'boolean',
-        'off_sale_time'    => 'datetime',
-        'on_sale_time'     => 'datetime',
-        'sold_out_time'    => 'datetime',
-        'modified_time'    => 'datetime',
-        'is_hot'           => 'boolean',
-        'is_new'           => 'boolean',
-        'is_best'          => 'boolean',
-        'is_benefit'       => 'boolean',
-        'promise_services' => PromiseServicesCastTransformer::class
-    ];
+    public function casts() : array
+    {
+        return [
+            'product_type'     => ProductTypeEnum::class,  // 商品类型
+            'shipping_type'    => ShippingTypeEnum::class,// 发货类型
+            'status'           => ProductStatusEnum::class,// 状态
+            'sub_stock'        => SubStockTypeEnum::class,// 扣库存方式
+            'freight_payer'    => FreightPayerEnum::class,// 运费承担方
+            'is_multiple_spec' => 'boolean',
+            'off_sale_time'    => 'datetime',
+            'on_sale_time'     => 'datetime',
+            'sold_out_time'    => 'datetime',
+            'modified_time'    => 'datetime',
+            'is_hot'           => 'boolean',
+            'is_new'           => 'boolean',
+            'is_best'          => 'boolean',
+            'is_benefit'       => 'boolean',
+            'promise_services' => PromiseServicesCastTransformer::class,
+            'price'            => AmountCastTransformer::class,
+            'market_price'     => AmountCastTransformer::class,
+            'cost_price'       => AmountCastTransformer::class,
+        ];
+    }
 
 
     /**

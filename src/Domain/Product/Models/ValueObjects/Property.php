@@ -14,8 +14,19 @@ class Property extends ValueObject
      */
     public int $pid;
 
-    public string $name;
     /**
+     * 名称
+     * @var string
+     */
+    public string $name;
+
+    /**
+     * 单位
+     * @var string|null
+     */
+    public ?string $unit;
+    /**
+     * 属性值
      * @var Collection<PropValue>
      */
     public Collection $values;

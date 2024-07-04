@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Support\Collection;
+use JsonException;
 use RedJasmine\Product\Application\Product\UserCases\Commands\Sku;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Property;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
@@ -29,26 +30,62 @@ class PropertyValidateService
 
 
     /**
+     * 获取属性
+     *
+     * @param array $props
+     *
+     * @return Collection
+     * @throws ProductPropertyException
+     */
+    protected function getProperties(array $props = []) : Collection
+    {
+
+        $pid = collect($props)->pluck('pid')->unique()->toArray();
+        // 验证重复
+        if (count($pid) !== count($props)) {
+            throw new ProductPropertyException('属性重复');
+        }
+        if (blank($pid)) {
+            return collect();
+        }
+
+        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
+
+
+        if (count($pid) !== count($properties)) {
+            throw new ProductPropertyException('属性ID存在错误');
+        }
+
+
+        return $properties;
+
+    }
+
+
+    /**
      * 基础属性验证
      *
      * @param array $props
      *
      * @return Collection
+     * @throws ProductPropertyException
      */
     public function basicProps(array $props = []) : Collection
     {
-        $pid        = collect($props)->pluck('pid')->unique()->toArray();
-        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
-        $saleProps  = collect();
+
+        $properties = $this->getProperties($props);
+
+        $basicProps = collect();
         foreach ($props as $prop) {
-            $saleProp = new Property();
+            $basicProp = new Property();
             /**
              * @var $property ProductProperty
              */
-            $property         = $properties[$prop['pid']];
-            $saleProp->pid    = $property->id;
-            $saleProp->name   = $property->name;
-            $saleProp->values = collect();
+            $property          = $properties[$prop['pid']];
+            $basicProp->pid    = $property->id;
+            $basicProp->name   = $property->name;
+            $basicProp->unit   = $property->unit;
+            $basicProp->values = collect();
 
             $values = $prop['values'] ?? [];
 
@@ -60,33 +97,53 @@ class PropertyValidateService
                     $salePropValue->vid   = 0;
                     $salePropValue->name  = (string)($values[0]['name'] ?? '');
                     $salePropValue->alias = (string)($values[0]['alias'] ?? '');
-                    $saleProp->values->add($salePropValue);
+                    $basicProp->values->add($salePropValue);
                     break;
                 case PropertyTypeEnum::SELECT:
                 case PropertyTypeEnum::MULTIPLE:
 
-                    $propValues       = $this->valueReadRepository->findByIdsInProperty($saleProp->pid, collect($values)->pluck('vid')->toArray())->keyBy('id');
-                    $saleProp->values = collect();
+                    $propValues        = $this->valueReadRepository->findByIdsInProperty($basicProp->pid, collect($values)->pluck('vid')->toArray())->keyBy('id');
+                    $basicProp->values = collect();
+
                     foreach ($values as $value) {
-                        $vid                  = $value['vid'];
-                        $alias                = $value['alias'] ?? '';
+                        $vid   = $value['vid'];
+                        $alias = $value['alias'] ?? '';
+
                         $salePropValue        = new PropValue();
                         $salePropValue->vid   = $vid;
                         $salePropValue->name  = $propValues[$salePropValue->vid]->name;
                         $salePropValue->alias = $alias;
-                        $saleProp->values->add($salePropValue);
+
+                        $basicProp->values->add($salePropValue);
+                    }
+
+                    if ($basicProp->values->count() > 1 && !$this->isAllowMultipleValues($property)) {
+                        // TODO 优化提示
+                        throw new ProductPropertyException('属性不支持多选');
                     }
 
                     break;
             }
-            $saleProps->push($saleProp);
+            $basicProps->push($basicProp);
 
         }
 
 
-        return $saleProps;
+        return $basicProps;
 
 
+    }
+
+    /**
+     * 是否允许多个值
+     *
+     * @param ProductProperty $property
+     *
+     * @return bool
+     */
+    protected function isAllowMultipleValues(ProductProperty $property) : bool
+    {
+        return $property->type === PropertyTypeEnum::MULTIPLE;
     }
 
 
@@ -96,32 +153,47 @@ class PropertyValidateService
      * @param array $props
      *
      * @return Collection<Property>
+     * @throws ProductPropertyException
      */
     public function saleProps(array $props = []) : Collection
     {
 
-        $pid        = collect($props)->pluck('pid')->unique()->toArray();
-        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
-        $saleProps  = collect();
+        $properties = $this->getProperties($props);
+
+
+        $saleProps = collect();
         foreach ($props as $prop) {
-            $saleProp       = new Property();
+            $saleProp = new Property();
+            /**
+             * @var $property ProductProperty
+             */
             $property       = $properties[$prop['pid']];
             $saleProp->pid  = $property->id;
             $saleProp->name = $property->name;
+            $saleProp->unit = $property->unit;
             $values         = $prop['values'] ?? [];
 
+            // 查询属性的值
             $propValues = $this->valueReadRepository->findByIdsInProperty($saleProp->pid, collect($values)->pluck('vid')->toArray())->keyBy('id');
 
             $saleProp->values = collect();
             foreach ($values as $value) {
+
                 $vid                  = $value['vid'];
                 $alias                = $value['alias'] ?? '';
                 $salePropValue        = new PropValue();
                 $salePropValue->vid   = $vid;
                 $salePropValue->name  = $propValues[$salePropValue->vid]->name;
                 $salePropValue->alias = $alias;
+
+
                 $saleProp->values->add($salePropValue);
             }
+
+            if ($saleProp->values->count() <= 0) {
+                throw new ProductPropertyException('属性值不支持为空');
+            }
+
             $saleProps[] = $saleProp;
         }
         return $saleProps;
@@ -133,23 +205,27 @@ class PropertyValidateService
      * @param Collection<Sku>      $skus
      *
      * @return Collection
-     * @throws ProductPropertyException
+     * @throws ProductPropertyException|JsonException
      */
     public function validateSkus(Collection $saleProps, Collection $skus) : Collection
     {
+
+        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512, JSON_THROW_ON_ERROR));
+
+        $skuProperties = $skus->pluck('properties')->unique()->toArray();
+
+
+        // 对比数量
+        if (count($crossJoinString) !== count($skus)) {
+            throw new ProductPropertyException('规则数量不一致');
+        }
+
         // 验证总数量
         foreach ($skus as $sku) {
             $sku->properties     = $this->propertyFormatter->formatString($sku->properties);
             $sku->propertiesName = $this->buildSkuName($saleProps, $sku);
         }
 
-        $crossJoinString = $this->propertyFormatter->crossJoinToString($saleProps->toArray());
-        $skuProperties   = $skus->pluck('properties')->unique()->toArray();
-        // 对比数量
-
-        if (count($crossJoinString) !== count($skus)) {
-            throw new ProductPropertyException('cross join too many properties');
-        }
 
         $diff = collect($crossJoinString)->diff($skuProperties);
 
