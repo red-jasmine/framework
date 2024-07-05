@@ -16,7 +16,12 @@ class UserInterfacePipeline implements DataPipe
             if ($property->type->type->acceptsType(UserInterface::class) || $property->type->type->findAcceptedTypeForBaseType(UserInterface::class)) {
                 $idKey   = $property->name . '_id';
                 $typeKey = $property->name . '_type';
-                if (isset($payload[$idKey], $payload[$typeKey]) && !isset($payload[$property->name])) {
+
+                if (isset($payload[$idKey], $payload[$typeKey])
+                    && !isset($payload[$property->name])
+
+                    && filled($payload[$idKey]) && filled($payload[$typeKey])
+                ) {
                     $properties[$property->name] = [
                         'id'       => $payload[$idKey],
                         'type'     => $payload[$typeKey],

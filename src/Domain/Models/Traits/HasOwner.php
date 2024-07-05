@@ -33,7 +33,8 @@ trait HasOwner
 
     public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where($this->ownerColumn . '_type', $owner->getType())->where($this->ownerColumn . '_type', $owner->getID());
+        return $query->where($this->ownerColumn . '_type', $owner->getType())
+                     ->where($this->ownerColumn . '_id', $owner->getID());
     }
 
 }
