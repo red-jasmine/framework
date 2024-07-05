@@ -24,6 +24,7 @@ class ProductAdminRoute
 
 
             Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
+            Route::post('skus/{id}', [SkuController::class,'action'])->name('admin.product.skus.action');
 
 
             Route::get('categories/tree', [ CategoryController::class, 'tree' ])->name('admin.product.categories.tree');
