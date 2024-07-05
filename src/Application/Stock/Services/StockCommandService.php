@@ -70,9 +70,13 @@ class StockCommandService extends ApplicationCommandService
         }
     }
 
-
-
-
+    /**
+     * @param StockCommand $command
+     *
+     * @return void
+     * @throws ProductStockException
+     * @throws Throwable
+     */
     public function add(StockCommand $command) : void
     {
         try {
@@ -88,6 +92,13 @@ class StockCommandService extends ApplicationCommandService
         }
     }
 
+    /**
+     * @param StockCommand $command
+     *
+     * @return void
+     * @throws ProductStockException
+     * @throws Throwable
+     */
     public function sub(StockCommand $command) : void
     {
         try {
@@ -103,6 +114,13 @@ class StockCommandService extends ApplicationCommandService
         }
     }
 
+    /**
+     * @param StockCommand $command
+     *
+     * @return void
+     * @throws ProductStockException
+     * @throws Throwable
+     */
     public function lock(StockCommand $command) : void
     {
         try {
@@ -118,6 +136,13 @@ class StockCommandService extends ApplicationCommandService
         }
     }
 
+    /**
+     * @param StockCommand $command
+     *
+     * @return void
+     * @throws ProductStockException
+     * @throws Throwable
+     */
     public function unlock(StockCommand $command) : void
     {
         try {
@@ -134,6 +159,13 @@ class StockCommandService extends ApplicationCommandService
 
     }
 
+    /**
+     * @param StockCommand $command
+     *
+     * @return void
+     * @throws ProductStockException
+     * @throws Throwable
+     */
     public function confirm(StockCommand $command) : void
     {
         try {

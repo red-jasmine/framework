@@ -36,6 +36,7 @@ class ProductCreateCommandHandler extends ProductCommand
                 persistence: fn() => $this->getService()->getRepository()->store($product)
             );
 
+            // 设置库存
             $this->handleStock($product, $command);
 
             DB::commit();

@@ -13,41 +13,31 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Data\UserData;
 
 
 class Product extends Data
 {
 
-
-    public Amount $price;
-
-    public UserInterface $owner;
-
-    public ?UserData $supplier;
-
-
-    public string $title;
-
-    public int $stock = 0;
-
-    public Amount  $marketPrice;
-    public Amount  $costPrice;
-    public ?string $image   = null;
-    public ?string $barcode = null;
-    public ?string $outerId = null;
-    public int     $unit    = 1;
-
-
     public ProductTypeEnum   $productType;
     public ShippingTypeEnum  $shippingType;
-    public ProductStatusEnum $status       = ProductStatusEnum::ON_SALE;
-    public FreightPayerEnum  $freightPayer = FreightPayerEnum::DEFAULT;
-    public SubStockTypeEnum  $subStock     = SubStockTypeEnum::DEFAULT;
-    public int               $deliveryTime = 0;
+    public UserInterface     $owner;
+    public string            $title;
+    public Amount            $price;
+    public Amount            $marketPrice;
+    public Amount            $costPrice;
+    public ProductStatusEnum $status         = ProductStatusEnum::ON_SALE;
+    public FreightPayerEnum  $freightPayer   = FreightPayerEnum::SELLER;
+    public SubStockTypeEnum  $subStock       = SubStockTypeEnum::DEFAULT;
+    public int               $stock          = 0;
+    public ?string           $image          = null;
+    public ?string           $barcode        = null;
+    public ?string           $outerId        = null;
+    public bool              $isMultipleSpec = false;
 
+
+    public int  $unit             = 1;
+    public int  $deliveryTime     = 0;
     public ?int $sort             = 0;
-    public bool $isMultipleSpec   = false;
     public int  $brandId          = 0;
     public int  $categoryId       = 0;
     public int  $sellerCategoryId = 0;
@@ -55,16 +45,21 @@ class Product extends Data
     public ?int $minLimit         = 0;
     public ?int $maxLimit         = 0;
     public int  $stepLimit        = 1;
+    public int  $vip              = 0;
+    public int  $points           = 0;
+    public bool $isHot            = false;
+    public bool $isNew            = false;
+    public bool $isBest           = false;
+    public bool $isBenefit        = false;
+    public int  $safetyStock      = 0;
 
-    public int  $vip         = 0;
-    public int  $points      = 0;
-    public bool $isHot       = false;
-    public bool $isNew       = false;
-    public bool $isBest      = false;
-    public bool $isBenefit   = false;
-    public int  $safetyStock = 0;
 
-    public ?int $supplierProductId = null;
+    /**
+     * 供应商
+     * @var UserInterface|null
+     */
+    public ?UserInterface $supplier;
+    public ?int           $supplierProductId = null;
 
 
     /**
@@ -78,6 +73,10 @@ class Product extends Data
      */
     public ?string $description = null;
 
+    /**
+     * 产品详情
+     * @var string|null
+     */
     public ?string $detail = null;
 
 
@@ -94,16 +93,14 @@ class Product extends Data
     public ?array $videos = null;
 
 
-
-
-    public ?string     $weight;
-    public ?string     $width;
-    public ?string     $height;
-    public ?string     $length;
-    public ?string     $size;
-    public ?string     $remarks;
-    public ?array      $tools;
-    public ?array      $expands;
+    public ?string $weight;
+    public ?string $width;
+    public ?string $height;
+    public ?string $length;
+    public ?string $size;
+    public ?string $remarks;
+    public ?array  $tools;
+    public ?array  $expands;
 
     /**
      * 承诺服务

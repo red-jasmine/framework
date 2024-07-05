@@ -81,7 +81,15 @@ class ProductSellerCategory extends Model implements OperatorInterface,OwnerInte
      */
     public function isAllowUse() : bool
     {
-        return $this->is_leaf;
+        if ($this->is_leaf === false) {
+            return false;
+        }
+
+        if ($this->status !== CategoryStatusEnum::ENABLE) {
+            return false;
+        }
+        // TODO 所有上级是否支持使用
+        return true;
     }
 
 }

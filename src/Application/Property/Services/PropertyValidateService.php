@@ -124,7 +124,7 @@ class PropertyValidateService
 
                     break;
             }
-            $basicProps->push($basicProp);
+            $basicProps->add($basicProp);
 
         }
 
@@ -193,8 +193,7 @@ class PropertyValidateService
             if ($saleProp->values->count() <= 0) {
                 throw new ProductPropertyException('属性值不支持为空');
             }
-
-            $saleProps[] = $saleProp;
+            $saleProps->add($saleProp);
         }
         return $saleProps;
     }
@@ -238,6 +237,8 @@ class PropertyValidateService
     }
 
     /**
+     * 生成规格名称
+     *
      * @param Collection $saleProps
      * @param Sku        $sku
      *
@@ -249,11 +250,21 @@ class PropertyValidateService
         $propertiesArray = $this->propertyFormatter->toArray($sku->properties);
         $labels          = [];
         foreach ($propertiesArray as $property) {
-            $pid      = $property['pid'];
-            $vid      = $property['vid'][0];
+            $pid = $property['pid'];
+            $vid = $property['vid'][0];
+
             $property = $saleProps->where('pid', $pid)->first();
 
+            if (blank($property)) {
+                throw new ProductPropertyException('属性不存在');
+            }
+
             $value = $property->values->where('vid', $vid)->first();
+
+            if (blank($value)) {
+                throw new ProductPropertyException('属性值不存在');
+            }
+
 
             $labels[] = [
                 'pid'   => $property->pid,

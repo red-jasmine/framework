@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Application\Category\Services;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryTreeQuery;
 use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Support\Contracts\UserInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
@@ -24,7 +25,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
             'image',
             'group_name', 'sort',
             'is_leaf', 'is_show',
-            'status',  'expands',
+            'status', 'expands',
         ];
 
     }
@@ -43,5 +44,15 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     {
         return $this->repository->tree($query);
     }
+
+
+    public function isAllowUse(int $id, UserInterface $owner) : bool
+    {
+
+        return (bool)($this->withQuery(function ($query) use ($owner) {
+            return $query->onlyOwner($owner);
+        })->find($id)?->isAllowUse());
+    }
+
 
 }

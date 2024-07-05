@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Exceptions\ProductException;
+use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductStockException;
+use RedJasmine\Product\Exceptions\StockException;
 use Throwable;
 
 /**
@@ -15,7 +19,18 @@ class ProductUpdateCommandHandler extends ProductCommand
 {
 
 
-    public function handle(ProductUpdateCommand $command)
+    /**
+     * @param ProductUpdateCommand $command
+     *
+     * @return Product|null
+     * @throws Throwable
+     * @throws \JsonException
+     * @throws ProductException
+     * @throws ProductPropertyException
+     * @throws ProductStockException
+     * @throws StockException
+     */
+    public function handle(ProductUpdateCommand $command) : ?Product
     {
         try {
             DB::beginTransaction();
@@ -29,6 +44,7 @@ class ProductUpdateCommandHandler extends ProductCommand
                 $sku->setDeleted();
             });
 
+
             $this->handleCore($product, $command);
 
 
@@ -38,6 +54,8 @@ class ProductUpdateCommandHandler extends ProductCommand
             );
 
             $this->handleStock($product, $command);
+
+
             DB::commit();
 
             return $product;

@@ -9,7 +9,6 @@ enum FreightPayerEnum: string
 
     use EnumsHelper;
 
-    case DEFAULT = 'default';
 
     case SELLER = 'seller';
 
@@ -18,7 +17,6 @@ enum FreightPayerEnum: string
     public static function labels() : array
     {
         return [
-            self::DEFAULT->value => '默认',
             self::SELLER->value  => '卖家',
             self::BUYER->value   => '买家',
         ];

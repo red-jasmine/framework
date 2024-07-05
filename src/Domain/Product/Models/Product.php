@@ -12,6 +12,7 @@ use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Casts\PromiseServicesCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\HasSupplier;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
@@ -36,6 +37,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     use HasOperator;
 
     use SoftDeletes;
+
+    use HasSupplier;
 
     public $incrementing = false;
 
@@ -132,5 +135,41 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         )->with([ 'products' ]);
     }
 
+
+    /**
+     * 设置状态
+     *
+     * @param ProductStatusEnum $status
+     *
+     * @return void
+     */
+    public function setStatus(ProductStatusEnum $status) : void
+    {
+
+        $this->status = $status;
+
+        if (!$this->isDirty('status')) {
+            return;
+        }
+        switch ($status) {
+            case ProductStatusEnum::ON_SALE:
+                $this->on_sale_time = now();
+                break;
+            case ProductStatusEnum::SOLD_OUT:
+                $this->sold_out_time = now();
+                break;
+            case ProductStatusEnum::OFF_SHELF:
+                $this->off_sale_time = now();
+                break;
+            case ProductStatusEnum::PRE_SALE:
+
+                break;
+            case ProductStatusEnum::FORBID:
+                $this->off_sale_time = now();
+                break;
+            case ProductStatusEnum::DELETED:
+                $this->off_sale_time = now();
+        }
+    }
 
 }

@@ -3,8 +3,10 @@
 namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
 
 
+use JsonException;
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
+use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryQueryService;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\UserCases\Commands\Sku;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
@@ -29,15 +31,16 @@ class ProductCommand extends CommandHandler
 {
 
     public function __construct(
-        protected BrandQueryService           $brandQueryService,
-        protected StockCommandService         $stockCommandService,
-        protected PropertyFormatter           $propertyFormatter,
-        protected PropertyValidateService     $propertyValidateService,
-        protected ProductCategoryQueryService $categoryQueryService,
+        protected BrandQueryService                 $brandQueryService,
+        protected StockCommandService               $stockCommandService,
+        protected PropertyFormatter                 $propertyFormatter,
+        protected PropertyValidateService           $propertyValidateService,
+        protected ProductCategoryQueryService       $categoryQueryService,
+        protected ProductSellerCategoryQueryService $sellerCategoryQueryService,
     )
     {
 
-     parent::__construct();
+        parent::__construct();
 
     }
 
@@ -56,12 +59,14 @@ class ProductCommand extends CommandHandler
         $sku->barcode         = $product->barcode;
         $sku->outer_id        = $product->outer_id;
         $sku->status          = ProductStatusEnum::ON_SALE;
+        $sku->deleted_at      = null;
         return $sku;
     }
 
     protected function fillProduct(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
     {
         $product->owner               = $command->owner;
+        $product->supplier            = $command->supplier;
         $product->product_type        = $command->productType;
         $product->shipping_type       = $command->shippingType;
         $product->title               = $command->title;
@@ -71,7 +76,6 @@ class ProductCommand extends CommandHandler
         $product->is_multiple_spec    = $command->isMultipleSpec;
         $product->sort                = $command->sort;
         $product->unit                = $command->unit;
-        $product->status              = $command->status;
         $product->price               = $command->price;
         $product->market_price        = $command->marketPrice;
         $product->cost_price          = $command->costPrice;
@@ -93,8 +97,6 @@ class ProductCommand extends CommandHandler
         $product->is_benefit          = $command->isBenefit;
         $product->promise_services    = $command->promiseServices;
         $product->safety_stock        = $command->safetyStock;
-        $product->supplier_type       = $command->supplier?->getType();
-        $product->supplier_id         = $command->supplier?->getID();
         $product->supplier_product_id = $command->supplierProductId;
 
 
@@ -115,6 +117,9 @@ class ProductCommand extends CommandHandler
         $product->info->expands     = $command->expands;
 
         $product->info->basic_props = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
+
+
+        $product->setStatus($command->status);
     }
 
 
@@ -137,19 +142,13 @@ class ProductCommand extends CommandHandler
 
 
     /**
-     * @param Product                                                            $product
-     * @param \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command
+     * @param Product $product
      *
      * @return void
-     * @throws ProductPropertyException
      * @throws ProductException
      */
-    public function handleCore(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
+    protected function validateBrand(Product $product) : void
     {
-        // 基础验证
-        // 验证 销售属性和 规格一一对应
-        $this->fillProduct($product, $command);
-
         try {
             if ($product->brand_id && !$this->brandQueryService->isAllowUse($product->brand_id)) {
                 throw new ProductException('品牌不可使用');
@@ -157,6 +156,18 @@ class ProductCommand extends CommandHandler
         } catch (\Throwable $exception) {
             throw new ProductException('品牌不可使用');
         }
+    }
+
+
+    /**
+     * @param Product $product
+     *
+     * @return void
+     * @throws ProductException
+     */
+    protected function validateCategory(Product $product) : void
+    {
+
         try {
             if ($product->category_id && !$this->categoryQueryService->isAllowUse($product->category_id)) {
                 throw new ProductException('类目不可使用');
@@ -164,6 +175,48 @@ class ProductCommand extends CommandHandler
         } catch (\Throwable $exception) {
             throw new ProductException('类目不可使用');
         }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return void
+     * @throws ProductException
+     */
+    protected function validateSellerCategory(Product $product) : void
+    {
+
+
+        try {
+            if ($product->seller_category_id
+                && !$this->sellerCategoryQueryService->isAllowUse($product->seller_category_id, $product->owner)) {
+                throw new ProductException('卖家分类不可使用');
+            }
+        } catch (\Throwable $exception) {
+            throw  $exception;
+            throw new ProductException('卖家分类不可使用');
+        }
+    }
+
+    /**
+     * @param Product                                                            $product
+     * @param \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command
+     *
+     * @return void
+     * @throws ProductPropertyException
+     * @throws ProductException|JsonException
+     */
+    public function handleCore(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
+    {
+        // 基础验证
+        // 验证 销售属性和 规格一一对应
+        $this->fillProduct($product, $command);
+
+        $this->validateBrand($product);
+
+        $this->validateCategory($product);
+
+        $this->validateSellerCategory($product);
 
         // 多规格区别处理
         switch ($command->isMultipleSpec) {
@@ -191,8 +244,9 @@ class ProductCommand extends CommandHandler
             case false: // 单规格
 
                 $product->info->sale_props = [];
-                $sku                       = $this->defaultSku($product);
-                $product->addSku($sku);
+                $defaultSku                = $product->skus->where('properties', '')->first() ?? $this->defaultSku($product);
+                $defaultSku->setOnSale();
+                $product->addSku($defaultSku);
                 break;
         }
     }
@@ -202,29 +256,33 @@ class ProductCommand extends CommandHandler
      * @param \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command
      *
      * @return void
-     * @throws \RedJasmine\Product\Exceptions\StockException
+     * @throws StockException
      * @throws ProductStockException
      * @throws Throwable
      */
     protected function handleStock(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
     {
 
-        // 修改库存 把 删除的库存设置为 0
+
         $skuCommand = $command->skus?->keyBy('properties');
 
         foreach ($product->skus as $sku) {
-            $stock = $skuCommand[$sku->properties]?->stock ?? $command->stock;
+
+            // 修改库存 把 删除的库存设置为 0
             if ($sku->deleted_at) {
                 $stock = 0;
+            } else {
+                $stock = $skuCommand[$sku->properties]?->stock ?? $command->stock;
             }
-            $this->stockCommandService->set(StockCommand::from(
-                [
-                    'product_id'  => $sku->product_id,
-                    'sku_id'      => $sku->id,
-                    'stock'       => $stock,
-                    'change_type' => ProductStockChangeTypeEnum::SELLER->value
-                ])
-            );
+
+            $stockCommand             = new StockCommand();
+            $stockCommand->productId  = $sku->product_id;
+            $stockCommand->skuId      = $sku->id;
+            $stockCommand->stock      = $stock;
+            $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
+
+            // 设置库存
+            $this->stockCommandService->set($stockCommand);
         }
     }
 

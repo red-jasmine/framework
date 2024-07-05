@@ -38,10 +38,16 @@ class ProductSku extends Model implements OperatorInterface
     }
 
 
-    public function setDeleted()
+    public function setDeleted() : void
     {
         $this->deleted_at = $this->deleted_at ?? now();
         $this->status     = ProductStatusEnum::DELETED;
+    }
+
+    public function setOnSale() : void
+    {
+        $this->deleted_at = null;
+        $this->status     = ProductStatusEnum::ON_SALE;
     }
 
 }
