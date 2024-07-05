@@ -10,6 +10,7 @@ use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyGroupController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyValueController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SellerCategoryController;
+use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SkuController;
 
 class ProductAdminRoute
 {
@@ -20,6 +21,9 @@ class ProductAdminRoute
 
             Route::apiResource('brands', BrandController::class)->names('admin.product.brands');
             Route::apiResource('products', ProductController::class)->names('admin.product.products');
+
+
+            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
 
 
             Route::get('categories/tree', [ CategoryController::class, 'tree' ])->name('admin.product.categories.tree');

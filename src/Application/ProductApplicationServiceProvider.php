@@ -19,6 +19,7 @@ use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueReadRepo
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuReadRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\BrandReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductCategoryReadRepository;
@@ -28,6 +29,7 @@ use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyValu
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSellerCategoryReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSeriesReadRepository;
+use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSkuReadRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\BrandRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductCategoryRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyGroupRepository;
@@ -68,7 +70,11 @@ class ProductApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind(ProductReadRepositoryInterface::class, ProductReadRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+
+
+        // 库存
         $this->app->bind(ProductSkuRepositoryInterface::class, ProductSkuRepository::class);
+        $this->app->bind(ProductSkuReadRepositoryInterface::class,ProductSkuReadRepository::class);
 
 
     }

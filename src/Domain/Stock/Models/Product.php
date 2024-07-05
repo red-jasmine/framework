@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 
 
 class Product extends Model implements OperatorInterface
@@ -15,6 +16,8 @@ class Product extends Model implements OperatorInterface
     use HasDateTimeFormatter;
 
     use SoftDeletes;
+
+    use HasOwner;
 
     use HasOperator;
 
