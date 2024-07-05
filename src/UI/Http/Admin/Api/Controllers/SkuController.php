@@ -60,6 +60,7 @@ class SkuController extends Controller
         $request->offsetSet('sku_id', $sku->id);
         $request->offsetSet('product_id', $sku->product_id);
         $command = StockCommand::from($request);
+
         switch ($type) {
             case 'add':
                 $this->commandService->add($command);

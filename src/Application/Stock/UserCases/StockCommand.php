@@ -12,7 +12,7 @@ class StockCommand extends Data
     public int                        $skuId;
     public int                        $productId;
     public int                        $stock;
-    public ProductStockChangeTypeEnum $changeType   = ProductStockChangeTypeEnum::SALE;
+    public ProductStockChangeTypeEnum $changeType   = ProductStockChangeTypeEnum::SELLER;
     public ?string                    $changeDetail = null;
     public ?string                    $channelType  = null;
     public ?int                       $channelId    = null;
