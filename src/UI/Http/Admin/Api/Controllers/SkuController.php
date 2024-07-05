@@ -10,6 +10,7 @@ use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Application\Stock\UserCases\Queries\ProductStockPaginateQuery;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
+use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockSkuResource;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 
@@ -47,11 +48,10 @@ class SkuController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \RedJasmine\Product\Exceptions\ProductStockException
-     * @throws \RedJasmine\Product\Exceptions\StockException
+     * @throws StockException
      * @throws \Throwable
      */
-    public function action($id, Request $request):JsonResponse
+    public function action($id, Request $request) : JsonResponse
     {
         $type = $request->input('type', 'add');
 

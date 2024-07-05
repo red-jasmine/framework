@@ -9,7 +9,6 @@ use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
-use RedJasmine\Product\Exceptions\ProductStockException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Facades\ServiceContext;
@@ -34,23 +33,23 @@ class StockCommandService extends ApplicationCommandService
      * @param int $quantity
      *
      * @return int
-     * @throws ProductStockException
+     * @throws StockException
      */
     public function validateQuantity(int $quantity) : int
     {
         // 核心操作 $quantity 都为 正整数
         if (bccomp($quantity, 0, 0) < 0) {
-            throw new ProductStockException('操作库存 数量必须大于 0');
+            throw new StockException('操作库存 数量必须大于 0');
         }
         return $quantity;
     }
+
     /**
      * 重置库存
      *
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      * @throws StockException
      */
@@ -74,7 +73,6 @@ class StockCommandService extends ApplicationCommandService
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      */
     public function add(StockCommand $command) : void
@@ -96,7 +94,6 @@ class StockCommandService extends ApplicationCommandService
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      */
     public function sub(StockCommand $command) : void
@@ -118,7 +115,6 @@ class StockCommandService extends ApplicationCommandService
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      */
     public function lock(StockCommand $command) : void
@@ -140,7 +136,6 @@ class StockCommandService extends ApplicationCommandService
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      */
     public function unlock(StockCommand $command) : void
@@ -163,7 +158,6 @@ class StockCommandService extends ApplicationCommandService
      * @param StockCommand $command
      *
      * @return void
-     * @throws ProductStockException
      * @throws Throwable
      */
     public function confirm(StockCommand $command) : void

@@ -19,7 +19,7 @@ use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
-use RedJasmine\Product\Exceptions\ProductStockException;
+
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\CommandHandler;
 use Throwable;
@@ -257,7 +257,7 @@ class ProductCommand extends CommandHandler
      *
      * @return void
      * @throws StockException
-     * @throws ProductStockException
+     
      * @throws Throwable
      */
     protected function handleStock(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
