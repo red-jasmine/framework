@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Application\Series\UserCases\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Application\Command;
 
-class ProductSeriesDeleteCommand extends Data
+class ProductSeriesDeleteCommand extends Command
 {
 
     public int $id;

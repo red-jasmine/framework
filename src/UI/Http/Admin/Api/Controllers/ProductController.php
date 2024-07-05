@@ -33,6 +33,13 @@ class ProductController extends Controller
 
         return ProductResource::collection($result->appends($request->query()));
     }
+    public function show($id, Request $request) : ProductResource
+    {
+        $result = $this->queryService->find($id, FindQuery::from($request));
+        return ProductResource::make($result);
+    }
+
+
 
     public function store(Request $request) : ProductResource
     {
@@ -42,11 +49,6 @@ class ProductController extends Controller
         return ProductResource::make($result);
     }
 
-    public function show($id, Request $request) : ProductResource
-    {
-        $result = $this->queryService->find($id, FindQuery::from($request));
-        return ProductResource::make($result);
-    }
 
     public function update(Request $request, $id) : JsonResponse
     {

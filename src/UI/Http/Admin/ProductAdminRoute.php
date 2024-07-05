@@ -10,6 +10,7 @@ use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyGroupController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyValueController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SellerCategoryController;
+use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SeriesController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SkuController;
 
 class ProductAdminRoute
@@ -20,12 +21,6 @@ class ProductAdminRoute
         Route::group([ 'prefix' => 'product' ], function () {
 
             Route::apiResource('brands', BrandController::class)->names('admin.product.brands');
-            Route::apiResource('products', ProductController::class)->names('admin.product.products');
-
-
-            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
-            Route::post('skus/{id}', [SkuController::class,'action'])->name('admin.product.skus.action');
-
 
             Route::get('categories/tree', [ CategoryController::class, 'tree' ])->name('admin.product.categories.tree');
             Route::apiResource('categories', CategoryController::class)->names('admin.product.categories');
@@ -38,6 +33,15 @@ class ProductAdminRoute
             Route::apiResource('property/properties', PropertyController::class)->names('admin.product.property.properties');
             Route::apiResource('property/values', PropertyValueController::class)->names('admin.product.property.values');
             Route::apiResource('property/groups', PropertyGroupController::class)->names('admin.product.property.groups');
+
+
+            Route::apiResource('products', ProductController::class)->names('admin.product.products');
+
+            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
+            Route::post('skus/{id}', [ SkuController::class, 'action' ])->name('admin.product.skus.action');
+
+
+            Route::apiResource('series', SeriesController::class)->names('admin.product.series');
 
         });
     }

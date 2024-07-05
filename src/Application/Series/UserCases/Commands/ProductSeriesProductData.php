@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Application\Series\UserCases\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Application\Command;
 
-class ProductSeriesProductData extends Data
+class ProductSeriesProductData extends Command
 {
     public int $productId;
 
