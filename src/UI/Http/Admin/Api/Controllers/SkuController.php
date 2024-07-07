@@ -78,4 +78,10 @@ class SkuController extends Controller
 
         return static::success();
     }
+
+
+    public function log(Request $request)
+    {
+
+    }
 }
