@@ -21,7 +21,10 @@ trait HasOwner
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
-                return UserData::from([ 'type' => $attributes[$this->ownerColumn . '_type'], 'id' => $attributes[$this->ownerColumn . '_type'], ]);
+                return UserData::from([
+                                          'type' => $attributes[$this->ownerColumn . '_type'],
+                                          'id'   => $attributes[$this->ownerColumn . '_id']
+                                      ]);
             },
             set: fn(?UserInterface $user) => [
                 $this->ownerColumn . '_type' => $user?->getType(),
