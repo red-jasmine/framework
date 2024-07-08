@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('product_stock_logs', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
+            $table->morphs('owner');
             $table->unsignedBigInteger('product_id')->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->comment('SKU ID');
             $table->string('type', 32)->comment('操作类型');
@@ -21,6 +22,8 @@ return new class extends Migration {
             $table->json('expands')->nullable()->comment('扩展');
             $table->timestamps();
             $table->comment('商品-库存-记录');
+            $table->index([ 'product_id', ], 'idx_product');
+            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
         });
     }
 

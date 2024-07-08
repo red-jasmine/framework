@@ -88,6 +88,9 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品表');
+
+
+            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
         });
 
     }

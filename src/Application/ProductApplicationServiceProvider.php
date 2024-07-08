@@ -21,6 +21,7 @@ use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInt
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuReadRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogReadRepositoryInterface;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\BrandReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductCategoryReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyGroupReadRepository;
@@ -30,6 +31,7 @@ use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductReadReposito
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSellerCategoryReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSeriesReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSkuReadRepository;
+use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductStockLogReadRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\BrandRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductCategoryRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyGroupRepository;
@@ -74,7 +76,8 @@ class ProductApplicationServiceProvider extends ServiceProvider
 
         // 库存
         $this->app->bind(ProductSkuRepositoryInterface::class, ProductSkuRepository::class);
-        $this->app->bind(ProductSkuReadRepositoryInterface::class,ProductSkuReadRepository::class);
+        $this->app->bind(ProductSkuReadRepositoryInterface::class, ProductSkuReadRepository::class);
+        $this->app->bind(ProductStockLogReadRepositoryInterface::class, ProductStockLogReadRepository::class);
 
 
     }

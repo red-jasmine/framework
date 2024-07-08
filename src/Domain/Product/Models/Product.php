@@ -111,6 +111,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function addSku(ProductSku $sku) : static
     {
+        $sku->owner      = $this->owner;
         $sku->product_id = $this->id;
         if (!$this->skus->where('id', $sku->id)->first()) {
             $this->skus->push($sku);

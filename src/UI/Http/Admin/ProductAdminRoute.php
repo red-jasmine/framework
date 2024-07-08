@@ -37,8 +37,9 @@ class ProductAdminRoute
 
             Route::apiResource('products', ProductController::class)->names('admin.product.products');
 
-            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
+            Route::get('skus/logs', [ SkuController::class, 'logs' ])->name('admin.product.skus.logs');
             Route::post('skus/{id}', [ SkuController::class, 'action' ])->name('admin.product.skus.action');
+            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
 
 
             Route::apiResource('series', SeriesController::class)->names('admin.product.series');

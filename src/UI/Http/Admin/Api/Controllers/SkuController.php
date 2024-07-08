@@ -7,18 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockLogQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
+use RedJasmine\Product\Application\Stock\UserCases\Queries\ProductStockLogPaginateQuery;
 use RedJasmine\Product\Application\Stock\UserCases\Queries\ProductStockPaginateQuery;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Exceptions\StockException;
+use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockLogResource;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockSkuResource;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 
 class SkuController extends Controller
 {
     public function __construct(
-        protected StockCommandService $commandService,
-        protected StockQueryService   $queryService,
+        protected StockCommandService  $commandService,
+        protected StockQueryService    $queryService,
+        protected StockLogQueryService $logQueryService,
     )
     {
     }
@@ -80,8 +84,13 @@ class SkuController extends Controller
     }
 
 
-    public function log(Request $request)
+    public function logs(Request $request) : AnonymousResourceCollection
     {
+
+        $result = $this->logQueryService->paginate(ProductStockLogPaginateQuery::from($request->all()));
+
+        return StockLogResource::collection($result->appends($request->all()));
+
 
     }
 }

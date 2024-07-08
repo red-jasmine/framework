@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockTypeEnum;
+use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
@@ -60,7 +61,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $stock          = $this->repository->reset($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::SET, $command, $stock);
+            $this->log($sku, ProductStockTypeEnum::SET, $command, $stock);
 
             DB::commit();
         } catch (\Throwable $throwable) {
@@ -82,7 +83,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $this->repository->add($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::ADD, $command);
+            $this->log($sku, ProductStockTypeEnum::ADD, $command);
             DB::commit();
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -103,7 +104,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $this->repository->sub($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::SUB, $command);
+            $this->log($sku, ProductStockTypeEnum::SUB, $command);
             DB::commit();
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -124,7 +125,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $this->repository->lock($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::LOCK, $command);
+            $this->log($sku, ProductStockTypeEnum::LOCK, $command);
             DB::commit();
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -145,7 +146,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $this->repository->unlock($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::UNLOCK, $command);
+            $this->log($sku, ProductStockTypeEnum::UNLOCK, $command);
             DB::commit();
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -167,7 +168,7 @@ class StockCommandService extends ApplicationCommandService
             $command->stock = $this->validateQuantity($command->stock);
             $sku            = $this->repository->find($command->skuId);
             $this->repository->confirm($sku, $command->stock);
-            $this->log(ProductStockTypeEnum::CONFIRM, $command);
+            $this->log($sku, ProductStockTypeEnum::CONFIRM, $command);
             DB::commit();
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -179,6 +180,7 @@ class StockCommandService extends ApplicationCommandService
     /**
      * 重置库存
      *
+     * @param ProductSku           $sku
      * @param ProductStockTypeEnum $stockType
      * @param StockCommand         $command
      * @param int|null             $restStock
@@ -186,11 +188,12 @@ class StockCommandService extends ApplicationCommandService
      * @return void
      * @throws Exception
      */
-    protected function log(ProductStockTypeEnum $stockType, StockCommand $command, ?int $restStock = 0) : void
+    protected function log(ProductSku $sku, ProductStockTypeEnum $stockType, StockCommand $command, ?int $restStock = 0) : void
     {
-        $log     = new ProductStockLog;
-        $log->id = $this->buildId();
 
+        $log                = new ProductStockLog;
+        $log->owner         = $sku->owner;
+        $log->id            = $this->buildId();
         $log->product_id    = $command->productId;
         $log->sku_id        = $command->skuId;
         $log->change_type   = $command->changeType;

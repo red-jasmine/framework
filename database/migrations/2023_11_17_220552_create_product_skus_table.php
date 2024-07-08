@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('product_skus', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
+            $table->morphs('owner');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
             $table->string('properties_name')->nullable()->comment('规格属性名称');
             $table->string('properties')->nullable()->comment('规格属性值字符串');
@@ -38,6 +39,8 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品-SKU表');
+            $table->index([ 'product_id', ], 'idx_product');
+            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
         });
     }
 

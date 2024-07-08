@@ -10,6 +10,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 
 
 class ProductSku extends Model implements OperatorInterface
@@ -20,6 +21,8 @@ class ProductSku extends Model implements OperatorInterface
     use SoftDeletes;
 
     use HasOperator;
+
+    use HasOwner;
 
     public $incrementing = false;
 
