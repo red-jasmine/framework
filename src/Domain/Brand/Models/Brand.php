@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Brand\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
@@ -53,6 +54,17 @@ class Brand extends Model implements OperatorInterface
         'logo',
         'sort',
     ];
+
+
+    public function scopeShow(Builder $query) : Builder
+    {
+        return $query->enable()->where('is_show', true);
+    }
+
+    public function scopeEnable(Builder $query) : Builder
+    {
+        return $query->where('status', BrandStatusEnum::ENABLE->value);
+    }
 
 
     public function create() : static

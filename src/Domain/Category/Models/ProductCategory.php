@@ -59,9 +59,15 @@ class ProductCategory extends Model implements OperatorInterface
     }
 
 
+    public function scopeShow(Builder $query) : Builder
+    {
+        return $query->enable()->where('is_show', true);
+    }
+
+
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', 'enable');
+        return $query->where('status', CategoryStatusEnum::ENABLE->value);
     }
 
     /**

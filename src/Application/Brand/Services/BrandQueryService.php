@@ -35,4 +35,12 @@ class BrandQueryService extends ApplicationQueryService
     {
         return (bool)($this->find($id)?->isAllowUse());
     }
+
+
+    public function onlyShow()
+    {
+        $this->withQuery(function ($query) {
+            $query->show();
+        });
+    }
 }

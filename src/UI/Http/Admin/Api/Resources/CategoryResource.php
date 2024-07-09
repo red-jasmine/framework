@@ -12,6 +12,7 @@ class CategoryResource extends JsonResource
     {
         return [
             'id'           => $this->id,
+            'parent_id'    => $this->parent_id,
             'name'         => $this->name,
             'image'        => $this->image,
             'group_name'   => $this->group_name,
@@ -26,10 +27,7 @@ class CategoryResource extends JsonResource
             'updater_type' => $this->updater_type,
             'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'   => $this->updated_at?->format('Y-m-d H:i:s'),
-            'children'     => $this->children,
-
-            'parent_id' => $this->parent_id,
-
+            'children'     => static::collection(collect($this->children)),
             'parent' => new static($this->whenLoaded('parent')),
         ];
     }

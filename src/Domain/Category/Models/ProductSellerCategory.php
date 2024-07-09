@@ -63,6 +63,14 @@ class ProductSellerCategory extends Model implements OperatorInterface,OwnerInte
         return $this->belongsTo(static::class, 'parent_id', 'id');
     }
 
+
+    public function scopeShow(Builder $query) : Builder
+    {
+        return $query->enable()->where('is_show', true);
+    }
+
+
+
     /**
      * 叶子目录
      *
