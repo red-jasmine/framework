@@ -32,6 +32,8 @@ class StockLogResource extends JsonResource
             'creator_id'    => $this->creator_id,
             'creator_type'  => $this->creator_type,
             'expands'       => $this->expands,
+            'product'       => new StockProductResource($this->whenLoaded('product')),
+            'sku'           => new StockSkuResource($this->whenLoaded('sku')),
 
         ];
     }

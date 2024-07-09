@@ -16,6 +16,14 @@ class StockLogQueryService extends ApplicationQueryService
     }
 
 
+    public function allowedIncludes() : array
+    {
+        return [
+            'product',
+            'sku',
+        ];
+    }
+
     public function allowedFilters() : array
     {
         return [

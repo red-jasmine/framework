@@ -35,4 +35,10 @@ class ProductStockLog extends Model implements OperatorInterface
         return $this->belongsTo(ProductSku::class, 'sku_id', 'id');
     }
 
+
+    public function product() : BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
 }
