@@ -37,7 +37,7 @@ class BrandQueryService extends ApplicationQueryService
     }
 
 
-    public function onlyShow()
+    public function onlyShow() : void
     {
         $this->withQuery(function ($query) {
             $query->show();

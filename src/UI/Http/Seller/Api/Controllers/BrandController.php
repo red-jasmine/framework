@@ -16,6 +16,7 @@ class BrandController extends Controller
         protected BrandQueryService $queryService
     )
     {
+        $this->queryService->onlyShow();
     }
 
 
