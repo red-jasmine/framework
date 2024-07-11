@@ -16,7 +16,6 @@ class ProductSkuResource extends JsonResource
             'properties_name' => $this->properties_name,
             'image'           => $this->image,
             'barcode'         => $this->barcode,
-            'outer_id'        => $this->outer_id,
             'status'          => $this->status,
             'supplier_sku_id' => $this->supplier_sku_id,
             'price'           => (string)$this->price,
@@ -25,12 +24,7 @@ class ProductSkuResource extends JsonResource
             'sales'           => $this->sales,
             'stock'           => $this->stock,
             'safety_stock'    => $this->safety_stock,
-            'version'         => $this->version,
-            'modified_time'   => $this->modified_time,
-            'creator_type'    => $this->creator_type,
-            'creator_id'      => $this->creator_id,
-            'updater_type'    => $this->updater_type,
-            'updater_id'      => $this->updater_id,
+            'version'         => $this->version
         ];
     }
 

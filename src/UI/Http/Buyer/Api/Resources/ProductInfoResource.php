@@ -24,7 +24,6 @@ class ProductInfoResource extends JsonResource
             'height'      => $this->height,
             'length'      => $this->length,
             'size'        => $this->size,
-            'remarks'     => $this->remarks,
             'tools'       => $this->tools,
             'expands'     => $this->expands,
 

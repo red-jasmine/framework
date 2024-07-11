@@ -30,7 +30,9 @@ class StockQueryService extends ApplicationQueryService
     {
 
         return [
-            AllowedFilter::exact('sku_id','id'),
+            AllowedFilter::exact('sku_id', 'id'),
+            AllowedFilter::exact('owner_type'),
+            AllowedFilter::exact('owner_id'),
             AllowedFilter::exact('product_id'),
             AllowedFilter::exact('safety_stock'),
             AllowedFilter::exact('status'),

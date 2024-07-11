@@ -17,6 +17,8 @@ class StockSkuResource extends JsonResource
         return [
             'id'              => $this->id,
             'product_id'      => $this->product_id,
+            'owner_type'      => $this->owner_type,
+            'owner_id'        => $this->owner_id,
             'stock'           => $this->stock,
             'status'          => $this->status,
             'lock_stock'      => $this->lock_stock,

@@ -3,6 +3,8 @@
 namespace RedJasmine\Product\UI\Http\Seller;
 
 use Illuminate\Support\Facades\Route;
+use RedJasmine\Product\UI\Http\Seller\Api\Controllers\SeriesController;
+use RedJasmine\Product\UI\Http\Seller\Api\Controllers\SkuController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\ProductController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\PropertyController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\PropertyGroupController;
@@ -34,6 +36,14 @@ class ProductSellerRoute
             Route::apiResource('seller-categories', SellerCategoryController::class)->names('seller.product.seller-categories');
 
             Route::apiResource('products', ProductController::class)->names('seller.product.products');
+
+
+            Route::get('skus/logs', [ SkuController::class, 'logs' ])->name('seller.product.skus.logs');
+            Route::post('skus/{id}', [ SkuController::class, 'action' ])->name('seller.product.skus.action');
+            Route::apiResource('skus', SkuController::class)->only([ 'index', 'show' ])->names('seller.product.skus');
+
+            Route::apiResource('series', SeriesController::class)->names('seller.product.series');
+
         });
     }
 }
