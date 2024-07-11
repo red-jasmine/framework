@@ -24,8 +24,9 @@ class PropertyValueResource extends JsonResource
             'updater_type' => $this->updater_type,
             'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'   => $this->updated_at?->format('Y-m-d H:i:s'),
+            'property'     => new PropertyResource($this->whenLoaded('property')),
+            'group'        => new PropertyGroupResource($this->whenLoaded('group')),
 
-            'property' => new PropertyResource($this->whenLoaded('property')),
         ];
     }
 }

@@ -39,21 +39,9 @@ class SellerCategoryController extends Controller
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-
         $result = $this->queryService->paginate(ProductSellerCategoryPaginateQuery::from($request));
 
         return SellerCategoryResource::collection($result->appends($request->query()));
-    }
-
-    public function store(Request $request) : SellerCategoryResource
-    {
-        $request->offsetSet('owner', $this->getOwner());
-
-        $command = ProductSellerCategoryCreateCommand::from($request);
-
-        $result = $this->commandService->create($command);
-
-        return SellerCategoryResource::make($result);
     }
 
     public function show($id, Request $request) : SellerCategoryResource
@@ -64,10 +52,27 @@ class SellerCategoryController extends Controller
         return SellerCategoryResource::make($result);
     }
 
+
+    public function store(Request $request) : SellerCategoryResource
+    {
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
+
+        $command = ProductSellerCategoryCreateCommand::from($request);
+
+        $result = $this->commandService->create($command);
+
+        return SellerCategoryResource::make($result);
+    }
+
+
     public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
         $request->offsetSet('id', $id);
         $this->queryService->find($id, FindQuery::from($request));
+
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
         $command = ProductSellerCategoryUpdateCommand::from($request);
         $this->commandService->update($command);
 

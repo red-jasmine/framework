@@ -18,6 +18,8 @@ class SellerCategoryController extends Controller
     )
     {
 
+        $this->queryService->onlyShow();
+
     }
 
     public function tree(Request $request) : AnonymousResourceCollection

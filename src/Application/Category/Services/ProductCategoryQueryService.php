@@ -58,13 +58,24 @@ class ProductCategoryQueryService extends ApplicationQueryService
 
     public function tree(ProductCategoryTreeQuery $query) : array
     {
-        return $this->repository->tree($query);
+
+        return $this->repository
+            ->setQueryCallbacks($this->getQueryCallbacks())
+            ->tree($query);
     }
 
 
     public function isAllowUse(int $id) : bool
     {
         return (bool)($this->find($id)?->isAllowUse());
+    }
+
+
+    public function onlyShow() : void
+    {
+        $this->withQuery(function ($query) {
+            $query->show();
+        });
     }
 
 }

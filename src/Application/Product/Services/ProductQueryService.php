@@ -62,5 +62,10 @@ class ProductQueryService extends ApplicationQueryService
         ];
     }
 
+    public function onlyOwner()
+    {
+
+    }
+
 
 }

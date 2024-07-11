@@ -7,6 +7,7 @@ use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGr
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupUpdateCommand;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyGroup;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupRepositoryInterface;
+use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 
@@ -29,7 +30,8 @@ class ProductPropertyGroupCommandService extends ApplicationCommandService
     public function newModel($data = null) : Model
     {
         if ($model = $this->repository->findByName($data->name)) {
-            return $model;
+            throw new ProductPropertyException('名称已存在');
+
         }
         return parent::newModel($data);
     }

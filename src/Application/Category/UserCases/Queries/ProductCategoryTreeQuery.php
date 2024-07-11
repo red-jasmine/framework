@@ -6,6 +6,9 @@ use RedJasmine\Support\Data\Data;
 
 class ProductCategoryTreeQuery extends Data
 {
+
+    public ?string $status;
+
     public string|array|null $include;
 
     public string|array|null $fields;

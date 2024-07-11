@@ -9,6 +9,7 @@ use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyCr
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyUpdateCommand;
 use RedJasmine\Product\Domain\Property\Models\ProductProperty;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
+use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
 use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
@@ -54,6 +55,7 @@ class ProductPropertyCommandService extends ApplicationCommandService
     public function newModel($data = null) : Model
     {
         if ($model = $this->repository->findByName($data->name)) {
+            throw new ProductPropertyException('名称已存在');
             return $model;
         }
         return parent::newModel($data);

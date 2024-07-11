@@ -33,6 +33,10 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     public function allowedFilters() : array
     {
         return [
+            AllowedFilter::exact('status'),
+            AllowedFilter::exact('is_show'),
+            AllowedFilter::exact('is_leaf'),
+            AllowedFilter::exact('group_name'),
             AllowedFilter::exact('parent_id'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
@@ -42,7 +46,16 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
 
     public function tree(ProductSellerCategoryTreeQuery $query) : array
     {
-        return $this->repository->tree($query);
+        return $this->repository
+            ->setQueryCallbacks($this->getQueryCallbacks())
+            ->tree($query);
+    }
+
+    public function onlyShow() : void
+    {
+        $this->withQuery(function ($query) {
+            $query->show();
+        });
     }
 
 

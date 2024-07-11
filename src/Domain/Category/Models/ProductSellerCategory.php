@@ -70,6 +70,10 @@ class ProductSellerCategory extends Model implements OperatorInterface,OwnerInte
     }
 
 
+    public function scopeEnable(Builder $query) : Builder
+    {
+        return $query->where('status', CategoryStatusEnum::ENABLE->value);
+    }
 
     /**
      * 叶子目录

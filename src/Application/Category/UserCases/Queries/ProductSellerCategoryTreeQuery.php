@@ -10,7 +10,11 @@ class ProductSellerCategoryTreeQuery extends Data
 
     public ?string $ownerType = null;
 
-    public ?int $ownerId   = null;
+    public ?int $ownerId = null;
+
+    public ?string $status;
+    public ?bool   $isShow;
+
 
     public string|array|null $include;
 
