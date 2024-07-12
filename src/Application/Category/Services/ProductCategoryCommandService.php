@@ -8,9 +8,9 @@ use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryDe
 use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryUpdateCommand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
+use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
-// TODO 需要验证名称重复
 
 /**
  * @method  create(ProductCategoryCreateCommand $command)
@@ -32,7 +32,7 @@ class ProductCategoryCommandService extends ApplicationCommandService
     public function newModel($data = null) : Model
     {
         if ($model = $this->repository->findByName($data->name)) {
-            return $model;
+            throw new CategoryException('名称存在重复');
         }
         return parent::newModel($data);
     }
