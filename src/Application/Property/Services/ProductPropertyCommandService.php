@@ -42,8 +42,6 @@ class ProductPropertyCommandService extends ApplicationCommandService
         ];
     }
 
-    // TODO 重名判断
-
 
     public function __construct(
         protected ProductPropertyRepositoryInterface $repository
@@ -54,9 +52,8 @@ class ProductPropertyCommandService extends ApplicationCommandService
 
     public function newModel($data = null) : Model
     {
-        if ($model = $this->repository->findByName($data->name)) {
+        if ($this->repository->findByName($data->name)) {
             throw new ProductPropertyException('名称已存在');
-            return $model;
         }
         return parent::newModel($data);
     }

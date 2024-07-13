@@ -1,4 +1,4 @@
-# Product
+# 商品
 
 [Latest Version on Packagist][link-packagist]
 [Total Downloads][link-downloads]
@@ -17,21 +17,16 @@ $ composer require red-jasmine/product
 ## Usage
 
 ## 服务
-
-- [x] 商品
-- [x] 品牌
 - [x] 类目
-  - [x] 系统类目
-  - [x] 买家分类
-  - [x] 运营类目
+- [x] 买家分类
+- [x] 品牌
+- [x] 商品
 - [x] 属性
   - [x] 属性组
   - [x] 属性名
   - [x] 属性值
 - [x] 库存
-- [x] 库存
-- [ ] 渠道库存
-- [x] 商品系列
+- [x] 系列
 - [ ] 服务
 - [ ] 标签
 - [ ] 评价

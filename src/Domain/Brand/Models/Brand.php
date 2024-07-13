@@ -9,6 +9,7 @@ use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 
@@ -22,7 +23,7 @@ class Brand extends Model implements OperatorInterface
     use HasOperator;
 
 
-    use \RedJasmine\Support\Domain\Models\Traits\ModelTree;
+    use ModelTree;
 
     // 父级ID字段名称，默认值为 parent_id
     protected string $parentColumn = 'parent_id';
