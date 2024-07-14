@@ -119,7 +119,7 @@ class PropertyValidateService
 
                     if ($basicProp->values->count() > 1 && !$this->isAllowMultipleValues($property)) {
                         // TODO 优化提示
-                        throw new ProductPropertyException('属性不支持多选');
+                        throw new ProductPropertyException('属性不支持多选!');
                     }
 
                     break;
