@@ -11,15 +11,20 @@ enum CardStatus: string
 {
     use EnumsHelper;
 
-    case ENABLE = 'enable'; // 启用
+    case UNSOLD = 'unsold'; // 未售
+
+    case SOLD = 'sold'; // 已售
+
+
     case DISABLE = 'disable'; // 禁用
 
 
     public static function labels() : array
     {
         return [
-            self::ENABLE->value => '启用',
-            self::ENABLE->value => '禁用',
+            self::UNSOLD->value  => '未售',
+            self::SOLD->value    => '已售',
+            self::DISABLE->value => '禁用',
         ];
     }
 }

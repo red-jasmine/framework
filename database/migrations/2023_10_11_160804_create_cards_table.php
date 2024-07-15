@@ -12,12 +12,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary();
             $table->morphs('owner');
             $table->morphs('product');
-            $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
-            $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
-            $table->unsignedTinyInteger('stock_type')->default(1)->comment('库存类型');
-            $table->unsignedBigInteger('stock')->default(1)->comment('库存');
-            $table->unsignedBigInteger('sales')->default(0)->comment('销量');
+            $table->unsignedBigInteger('sku_id')->comment('SKU ID');
+            $table->unsignedTinyInteger('is_loop')->default(0)->comment('是否循环卡密');
             $table->enum('status', CardStatus::values())->comment(CardStatus::comments('状态'));
+            $table->timestamp('sold_time')->nullable()->comment('出售时间');
             $table->text('content')->comment('内容');
             $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator');

@@ -20,7 +20,8 @@ class Card extends Model
     protected function casts() : array
     {
         return [
-            'status' => CardStatus::class
+            'status'  => CardStatus::class,
+            'is_loop' => 'boolean',
         ];
     }
 }
