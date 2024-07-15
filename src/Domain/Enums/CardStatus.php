@@ -1,18 +1,18 @@
 <?php
 
-namespace RedJasmine\Card\Enums;
+namespace RedJasmine\Card\Domain\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
 /**
  * 卡密状态
  */
-enum CardStatus: int
+enum CardStatus: string
 {
     use EnumsHelper;
 
-    case ENABLE = 1; // 启用
-    case DISABLE = 0; // 禁用
+    case ENABLE = 'enable'; // 启用
+    case DISABLE = 'disable'; // 禁用
 
 
     public static function labels() : array

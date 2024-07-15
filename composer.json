@@ -10,12 +10,11 @@
         }
     ],
     "homepage": "https://github.com/red-jasmine/captcha",
-    "keywords": ["Laravel", "Captcha"],
+    "keywords": ["Laravel", "Card"],
     "require": {
         "red-jasmine/support": "1.0.x-dev"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -30,11 +29,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Card\\CardServiceProvider"
-            ],
-            "aliases": {
-                "Card": "RedJasmine\\Card\\Facades\\Card"
-            }
+                "RedJasmine\\Card\\CardServicePackageProvider"
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",

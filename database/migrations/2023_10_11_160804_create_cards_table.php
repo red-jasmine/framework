@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Card\Domain\Enums\CardStatus;
 
 return new class extends Migration {
     public function up() : void
@@ -16,7 +17,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('stock_type')->default(1)->comment('库存类型');
             $table->unsignedBigInteger('stock')->default(1)->comment('库存');
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
-            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
+            $table->enum('status', CardStatus::values())->comment(CardStatus::comments('状态'));
             $table->text('content')->comment('内容');
             $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator');

@@ -4,16 +4,14 @@ namespace RedJasmine\Card;
 
 use Illuminate\Support\ServiceProvider;
 
-class CardServiceProvider extends ServiceProvider
+class CardServicePackageProvider extends ServiceProvider
 {
     public function register() : void
     {
 
         $this->mergeConfigFrom(__DIR__ . '/../config/card.php', 'red-jasmine');
 
-        $this->app->singleton('card', function ($app) {
-            return new Card;
-        });
+
     }
 
     public function boot() : void
