@@ -29,7 +29,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Card\\CardServicePackageProvider"
+                "RedJasmine\\Card\\CardServicePackageProvider",
+                "RedJasmine\\Card\\Application\\CardServiceApplicationProvider"
             ]
         },
         "branch-alias": {
