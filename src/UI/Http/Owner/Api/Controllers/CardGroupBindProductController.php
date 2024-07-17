@@ -1,0 +1,97 @@
+<?php
+
+namespace RedJasmine\Card\UI\Http\Owner\Api\Controllers;
+
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
+use RedJasmine\Card\Application\Services\CardGroupBindProductQueryService;
+use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
+use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductDeleteCommand;
+use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductUpdateCommand;
+use RedJasmine\Card\Application\UserCases\Queries\CardGroupBindProductPaginateQuery;
+use RedJasmine\Card\UI\Http\Owner\Api\Resources\CardGroupBindProductResource;
+use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+
+class CardGroupBindProductController extends Controller
+{
+    public function __construct(
+
+        protected CardGroupBindProductCommandService $commandService,
+        protected CardGroupBindProductQueryService   $queryService,
+
+    )
+    {
+        $this->queryService->withQuery(function ($query) {
+            $query->onlyOwner($this->getOwner());
+        });
+
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function index(Request $request) : AnonymousResourceCollection
+    {
+
+        $result = $this->queryService->paginate(CardGroupBindProductPaginateQuery::from($request));
+
+        return CardGroupBindProductResource::collection($result->appends($request->query()));
+
+    }
+
+    public function store(Request $request) : CardGroupBindProductResource
+    {
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+
+        $command = CardGroupBindProductCreateCommand::from($request);
+        $result  = $this->commandService->create($command);
+
+
+        return CardGroupBindProductResource::make($result);
+
+
+    }
+
+    public function show($id, Request $request) : CardGroupBindProductResource
+    {
+        $result = $this->queryService->find($id, FindQuery::from($request));
+        return CardGroupBindProductResource::make($result);
+    }
+
+    public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
+    {
+        $request->offsetSet('id', $id);
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+
+
+        $this->queryService->find($id);
+
+        $command = CardGroupBindProductUpdateCommand::from($request);
+        $this->commandService->update($command);
+
+        return static::success();
+
+    }
+
+    public function destroy($id, Request $request) : \Illuminate\Http\JsonResponse
+    {
+        $request->offsetSet('id', $id);
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+        $this->queryService->find($id);
+        $command = CardGroupBindProductDeleteCommand::from($request);
+
+        $this->commandService->delete($command);
+
+        return static::success();
+
+
+    }
+}

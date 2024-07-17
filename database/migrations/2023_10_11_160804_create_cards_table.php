@@ -11,8 +11,7 @@ return new class extends Migration {
         Schema::create('cards', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->morphs('owner');
-            $table->morphs('product');
-            $table->unsignedBigInteger('sku_id')->comment('SKU ID');
+            $table->unsignedBigInteger('group_id')->default(0)->comment('卡密分组ID');
             $table->unsignedTinyInteger('is_loop')->default(0)->comment('是否循环卡密');
             $table->enum('status', CardStatus::values())->comment(CardStatus::comments('状态'));
             $table->timestamp('sold_time')->nullable()->comment('出售时间');
@@ -23,6 +22,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('卡密表');
+            $table->index([ 'group_id', 'status' ], 'idx_group_status');
         });
     }
 

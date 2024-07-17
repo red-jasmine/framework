@@ -12,17 +12,13 @@ class CardCreateCommand extends Command
 
     public UserInterface $owner;
 
-    public string $productType;
-
-    public int $productId;
-
-    public int $skuId;
-
-    public CardStatus $status = CardStatus::UNSOLD;
+    public int $groupId = 0;
 
     public string $content;
 
     public ?string $remarks;
+
+    public CardStatus $status = CardStatus::UNSOLD;
 
 
 }

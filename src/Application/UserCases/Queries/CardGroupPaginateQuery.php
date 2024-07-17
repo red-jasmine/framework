@@ -4,11 +4,9 @@ namespace RedJasmine\Card\Application\UserCases\Queries;
 
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 
-class CardPaginateQuery extends PaginateQuery
+class CardGroupPaginateQuery extends PaginateQuery
 {
+    public ?string $name;
 
-
-    public ?string $status;
-    public ?bool   $isLoop;
 
 }
