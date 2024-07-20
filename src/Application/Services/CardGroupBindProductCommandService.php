@@ -10,6 +10,10 @@ use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
 use RedJasmine\Card\Exceptions\CardException;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
+
+/**
+ * @method CardGroupBindProductRepositoryInterface  getRepository()
+ */
 class CardGroupBindProductCommandService extends ApplicationCommandService
 {
 
@@ -18,7 +22,7 @@ class CardGroupBindProductCommandService extends ApplicationCommandService
 
 
     public function __construct(
-        protected CardGroupBindProductRepositoryInterface $repository,
+        public CardGroupBindProductRepositoryInterface $repository,
     )
     {
 
