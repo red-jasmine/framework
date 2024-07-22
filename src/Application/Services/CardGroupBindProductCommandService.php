@@ -3,15 +3,21 @@
 namespace RedJasmine\Card\Application\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Card\Application\Services\CommandHandlers\CardGroupBindProduct\CardGroupBindProductBindCommandHandler;
 use RedJasmine\Card\Application\Services\Pipelines\CardGroupPipeline;
+use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
 use RedJasmine\Card\Exceptions\CardException;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
+use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
+use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
 
 
 /**
+ * @method bind(CardGroupBindProductBindCommand $command)
  * @method CardGroupBindProductRepositoryInterface  getRepository()
  */
 class CardGroupBindProductCommandService extends ApplicationCommandService
@@ -49,6 +55,13 @@ class CardGroupBindProductCommandService extends ApplicationCommandService
     }
 
 
+    protected static $macros = [
+        'create' => CreateCommandHandler::class,
+        'update' => UpdateCommandHandler::class,
+        'delete' => DeleteCommandHandler::class,
+        'bind'   => CardGroupBindProductBindCommandHandler::class
+    ];
+
     protected function pipelines() : array
     {
         return [
@@ -56,6 +69,9 @@ class CardGroupBindProductCommandService extends ApplicationCommandService
                 CardGroupPipeline::class
             ],
             'update' => [
+                CardGroupPipeline::class
+            ],
+            'bind'   => [
                 CardGroupPipeline::class
             ],
         ];

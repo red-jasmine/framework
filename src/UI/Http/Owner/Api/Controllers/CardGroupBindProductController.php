@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
 use RedJasmine\Card\Application\Services\CardGroupBindProductQueryService;
+use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductUpdateCommand;
 use RedJasmine\Card\Application\UserCases\Queries\CardGroupBindProductPaginateQuery;
 use RedJasmine\Card\UI\Http\Owner\Api\Resources\CardGroupBindProductResource;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+
 
 class CardGroupBindProductController extends Controller
 {
@@ -44,6 +46,13 @@ class CardGroupBindProductController extends Controller
 
     }
 
+    public function show($id, Request $request) : CardGroupBindProductResource
+    {
+        $result = $this->queryService->find($id, FindQuery::from($request));
+        return CardGroupBindProductResource::make($result);
+    }
+
+
     public function store(Request $request) : CardGroupBindProductResource
     {
         $request->offsetSet('owner_id', $this->getOwner()->getID());
@@ -52,17 +61,23 @@ class CardGroupBindProductController extends Controller
         $command = CardGroupBindProductCreateCommand::from($request);
         $result  = $this->commandService->create($command);
 
-
         return CardGroupBindProductResource::make($result);
-
 
     }
 
-    public function show($id, Request $request) : CardGroupBindProductResource
+
+    public function bind(Request $request) : CardGroupBindProductResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $request->offsetSet('owner_id', $this->getOwner()->getID());
+        $request->offsetSet('owner_type', $this->getOwner()->getType());
+
+        $command = CardGroupBindProductBindCommand::from($request);
+        $result  = $this->commandService->bind($command);
+
         return CardGroupBindProductResource::make($result);
+
     }
+
 
     public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
     {

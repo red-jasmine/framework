@@ -17,6 +17,7 @@ class CardOwnerRoute
             Route::apiResource('card-groups', CardGroupController::class)->names('owner.api.card.card-groups');
             Route::apiResource('cards', CardController::class)->names('owner.api.card.cards');
             Route::apiResource('card-group-bind-products', CardGroupBindProductController::class)->names('owner.api.card.card-group-bind-products');
+            Route::post('card-group-bind-products/bind', [CardGroupBindProductController::class,'bind'])->name('owner.api.card.card-group-bind-products.bind');
 
         });
 
