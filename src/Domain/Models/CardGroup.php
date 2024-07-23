@@ -22,7 +22,8 @@ class CardGroup extends Model implements OwnerInterface, OperatorInterface
 
     protected $fillable = [
         'name',
-        'remarks'
+        'remarks',
+        'content_template'
     ];
 
 

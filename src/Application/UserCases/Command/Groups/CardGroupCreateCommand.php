@@ -15,5 +15,11 @@ class CardGroupCreateCommand extends Command
 
     public ?string $remarks;
 
+    /**
+     * 内容模板
+     * @var string|null
+     */
+    public ?string $contentTemplate;
+
 
 }

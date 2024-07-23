@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->morphs('owner');
             $table->string('name')->comment('分组名称');
             $table->string('remarks')->nullable()->comment('备注');
+            $table->text('content_template')->nullable()->comment('内容模板');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();
