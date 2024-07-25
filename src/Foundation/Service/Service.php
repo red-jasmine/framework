@@ -14,17 +14,33 @@ use \Illuminate\Pipeline\Pipeline;
 abstract class Service
 {
 
+    /**
+     * 容器
+     * @var Container
+     */
+    protected Container $container;
+
+
+    protected  array $pipelines  = []; // 管道
+
+    // 支持扩展方法
+    // 动态调用方法 支持配置 管道能力
+    // 管道能力支持 全局扩展、配置扩展、类内部实现、实例设置 能力
+    // 方法内支持 hook 调用 内部的执行流程节点 颗粒度控制 //TODO
     // halt TODO
 
+    /**
+     * 自定
+     */
     use ResolvesRouteDependencies;
 
 
-    use BootTrait;
+    //use BootTrait;
 
     use ServiceMacroAble;
 
 
-    protected Container $container;
+
 
     protected string $macroMethod = 'handle';
 
@@ -77,7 +93,7 @@ abstract class Service
     }
 
     /**
-     * 扩展管道配置
+     *
      * @return array
      */
     protected function pipelines() : array

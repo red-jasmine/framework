@@ -2,6 +2,9 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
+/**
+ * 能感知服务
+ */
 trait AwareServiceAble
 {
     protected Service $service;

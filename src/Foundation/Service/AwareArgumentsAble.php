@@ -2,6 +2,9 @@
 
 namespace RedJasmine\Support\Foundation\Service;
 
+/**
+ * 能感知参数
+ */
 trait AwareArgumentsAble
 {
 
