@@ -4,9 +4,8 @@ namespace RedJasmine\Card\Application\Services\Pipelines;
 
 use RedJasmine\Card\Application\Services\CardGroupQueryService;
 use RedJasmine\Support\Application\CommandHandler;
-use RedJasmine\Support\Foundation\Service\Pipeline;
 
-class CardGroupPipeline extends Pipeline
+class CardGroupPipeline
 {
     public function __construct(
         protected CardGroupQueryService $groupQueryService
