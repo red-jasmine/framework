@@ -28,7 +28,6 @@ $ composer require red-jasmine/product
 - [x] 库存
 - [x] 系列
 - [ ] 服务
-- [ ] 标签
 - [ ] 评价
 
 
