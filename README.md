@@ -10,6 +10,27 @@ Via Composer
 $ composer require red-jasmine/card
 ```
 
-## 使用
+## 卡密模型设计
+
+```plantuml
+package 卡密 {
+	class 卡密内容{
+	 分组
+	 内容
+	 是否循环
+	}
+	class 卡密组{
+	 分组名称
+	}
+
+	class 卡密绑定商品{
+		 商品类型
+		 商品ID
+		 SKU ID
+		 卡密分组
+		}
+}
+
+```
 
 ### 
