@@ -25,6 +25,9 @@ return new class extends Migration {
             $table->timestamp('dispatch_time')->nullable()->comment('派送时间');
             $table->timestamp('signed_time')->nullable()->comment('签收时间');
             $table->json('extends')->nullable()->comment('扩展');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            // 收件码
+            // 取件码
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();

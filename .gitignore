@@ -1,12 +1,9 @@
-### Example user template template
-### Example user template
-
-# IntelliJ project files
+vendor
 .idea
+.env
 *.iml
 out
 gen
-vendor
 composer.lock
 .phpunit.cache
 
