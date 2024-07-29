@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->string('barcode', 32)->nullable()->comment('条形码');
             $table->string('outer_id')->nullable()->comment('商家编码');
             // 状态
-            $table->string('status')->comment('状态');
+            $table->string('status',32)->comment('状态');
             // 供应商
             $table->unsignedBigInteger('supplier_sku_id')->nullable()->comment('供应商 SKU ID');
             // 操作

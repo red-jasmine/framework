@@ -18,9 +18,9 @@ return new class extends Migration {
             // 卖家信息
             $table->morphs('owner');
             $table->string('title')->comment('标题');
-            $table->enum('product_type', ProductTypeEnum::values())->comment(ProductTypeEnum::comments('商品类型'));
-            $table->enum('shipping_type', ShippingTypeEnum::values())->comment(ShippingTypeEnum::comments('发货类型'));
-            $table->enum('status', ProductStatusEnum::values())->comment(ProductStatusEnum::comments('状态'));
+            $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
+            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+            $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
 
 
             $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
@@ -31,21 +31,21 @@ return new class extends Migration {
             // 状态相关
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             //单位
-            $table->string('unit_name')->nullable()->comment('单位名称');
+            $table->string('unit_name',10)->nullable()->comment('单位名称');
             $table->unsignedBigInteger('unit')->default(1)->comment('单位数量');
             // 类目信息
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
             $table->unsignedBigInteger('seller_category_id')->default(0)->comment('卖家分类ID');
             // 运费
-            $table->enum('freight_payer', FreightPayerEnum::values())->comment(FreightPayerEnum::comments('运费承担方'));
+            $table->string('freight_payer',32)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('postage_id')->default(0)->comment('运费模板ID');
             // 价格
             $table->decimal('price', 10)->default(0)->comment('销售价');
             $table->decimal('market_price', 10)->default(0)->comment('市场价');
             $table->decimal('cost_price', 10)->default(0)->comment('成本价');
             // 库存
-            $table->enum('sub_stock', SubStockTypeEnum::values())->comment(SubStockTypeEnum::comments('减库存方式'));
+            $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             $table->unsignedBigInteger('stock')->default(0)->comment('库存');
             $table->unsignedBigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->unsignedBigInteger('lock_stock')->default(0)->comment('锁定库存');
