@@ -51,7 +51,7 @@ return new class extends Migration {
             $table->decimal('divided_payment_amount', 12)->default(0)->comment('分摊后付款金额');
             $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
 
-            $table->string('order_status', OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
+            $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
