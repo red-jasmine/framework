@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->morphs('owner');
             $table->unsignedBigInteger('group_id')->default(0)->comment('卡密分组ID');
             $table->unsignedTinyInteger('is_loop')->default(0)->comment('是否循环卡密');
-            $table->enum('status', CardStatus::values())->comment(CardStatus::comments('状态'));
+            $table->string('status',32)->comment(CardStatus::comments('状态'));
             $table->timestamp('sold_time')->nullable()->comment('出售时间');
             $table->text('content')->comment('内容');
             $table->string('remarks')->nullable()->comment('备注');
