@@ -24,7 +24,7 @@ abstract class ApplicationQueryService extends Service
     public function __construct()
     {
         $this->initReadRepository();
-        parent::__construct();
+
     }
 
 

@@ -21,6 +21,11 @@ use RedJasmine\Support\Helpers\ID\Snowflake;
  */
 abstract class ApplicationCommandService extends ApplicationService
 {
+    public function __construct()
+    {
+    }
+
+
     protected static string $modelClass;
 
 
@@ -56,12 +61,12 @@ abstract class ApplicationCommandService extends ApplicationService
     }
 
     /**
-     * @param null $data
+     * @param null $command
      *
      * @return Model
      * @throws Exception
      */
-    public function newModel($data = null) : Model
+    public function newModel($command = null) : Model
     {
         /**
          * @var $model Model
