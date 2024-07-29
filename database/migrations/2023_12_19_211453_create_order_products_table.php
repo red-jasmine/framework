@@ -22,8 +22,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
-            $table->enum('order_product_type', OrderProductTypeEnum::values())->comment(OrderProductTypeEnum::comments('订单商品类型'));
-            $table->enum('shipping_type', ShippingTypeEnum::values())->comment(ShippingTypeEnum::comments('发货类型'));
+            $table->string('order_product_type', 32)->comment(OrderProductTypeEnum::comments('订单商品类型'));
+            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('title')->comment('商品标题');
             $table->string('sku_name')->nullable()->comment('SKU名称');
             $table->string('image')->nullable()->comment('图片');
@@ -51,14 +51,14 @@ return new class extends Migration {
             $table->decimal('divided_payment_amount', 12)->default(0)->comment('分摊后付款金额');
             $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
 
-            $table->enum('order_status', OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
-            $table->enum('payment_status', PaymentStatusEnum::values())->default(PaymentStatusEnum::NIL->value)->comment(PaymentStatusEnum::comments('付款状态'));
-            $table->enum('shipping_status', ShippingStatusEnum::values())->default(ShippingStatusEnum::NIL->value)->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->enum('refund_status', OrderRefundStatusEnum::values())->default(OrderRefundStatusEnum::NIL->value)->comment(OrderRefundStatusEnum::comments('退款状态'));
-            $table->enum('rate_status', RateStatusEnum::values())->default(RateStatusEnum::NIL->value)->comment(RateStatusEnum::comments('评价状态'));
-            $table->enum('settlement_status', SettlementStatusEnum::values())->default(SettlementStatusEnum::NIL->value)->comment(SettlementStatusEnum::comments('结算状态'));
-            $table->string('seller_custom_status', 32)->default('nil')->comment('卖家自定义状态');
-            $table->string('abnormal_status', 32)->default('nil')->comment('异常状态');
+            $table->string('order_status', OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
+            $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
+            $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
+            $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
+            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
+            $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
+            $table->string('abnormal_status', 32)->nullable()->comment('异常状态');
             // 自动确认时间
             $table->unsignedBigInteger('progress')->nullable()->comment('进度');
             $table->unsignedBigInteger('progress_total')->nullable()->comment('进度总数');

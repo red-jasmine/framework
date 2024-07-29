@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家ID');
 
-            $table->enum('amount_type', AmountTypeEnum::values())->comment(AmountTypeEnum::comments('金额类型'));
+            $table->string('amount_type', 32)->comment(AmountTypeEnum::comments('金额类型'));
             $table->decimal('payment_amount', 12)->comment('支付金额');
-            $table->enum('status', PaymentStatusEnum::values())->comment(PaymentStatusEnum::comments('状态'));
+            $table->string('status', 32)->comment(PaymentStatusEnum::comments('状态'));
             $table->timestamp('payment_time')->nullable()->comment('支付时间');
 
             $table->string('payment_type', 32)->nullable()->comment('支付单类型');

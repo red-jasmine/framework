@@ -25,16 +25,15 @@ return new class extends Migration {
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
             $table->string('title')->nullable()->comment('标题');
 
-            $table->enum('order_type', OrderTypeEnum::values())->comment(OrderTypeEnum::comments('订单类型'));
-            $table->enum('pay_type', PayTypeEnum::values())->comment(PayTypeEnum::comments('支付方式'));
-
-            $table->enum('order_status', OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
-            $table->enum('payment_status', PaymentStatusEnum::values())->default(PaymentStatusEnum::NIL->value)->comment(PaymentStatusEnum::comments('付款状态'));
-            $table->enum('shipping_status', ShippingStatusEnum::values())->default(ShippingStatusEnum::NIL->value)->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->enum('refund_status', OrderRefundStatusEnum::values())->default(OrderRefundStatusEnum::NIL->value)->comment(OrderRefundStatusEnum::comments('退款状态'));
-            $table->enum('rate_status', RateStatusEnum::values())->default(RateStatusEnum::NIL->value)->comment(RateStatusEnum::comments('评价状态'));
-            $table->enum('settlement_status', SettlementStatusEnum::values())->default(SettlementStatusEnum::NIL->value)->comment(SettlementStatusEnum::comments('结算状态'));
-            $table->string('seller_custom_status', 32)->default('nil')->comment('卖家自定义状态');
+            $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
+            $table->string('pay_type', 32)->comment(PayTypeEnum::comments('支付类型'));
+            $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
+            $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
+            $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
+            $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
+            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
+            $table->string('settlement_status',32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
 
             // 订单锁
             // 发票信息

@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
             $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
             $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
-            $table->json('extends')->nullable()->comment('扩展字段');
+            $table->json('expands')->nullable()->comment('扩展字段');
 
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('num')->default(1)->comment('数量');
             $table->text('content')->nullable()->comment('内容');
             $table->string('status')->nullable()->comment('状态');
-            $table->json('extends')->nullable()->comment('扩展');
+            $table->json('expands')->nullable()->comment('扩展');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();
