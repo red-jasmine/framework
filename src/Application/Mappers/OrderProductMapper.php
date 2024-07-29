@@ -31,15 +31,15 @@ class OrderProductMapper
         $orderProduct->outer_id               = $orderProductData->outerId;
         $orderProduct->outer_sku_id           = $orderProductData->outerSkuId;
         $orderProduct->promise_services       = $orderProductData->promiseServices;
-        $orderProduct->seller_custom_status   = $orderProductData->sellerCustomStatus ?? 'nil';
+        $orderProduct->seller_custom_status   = $orderProductData->sellerCustomStatus;
         $orderProduct->outer_order_product_id = $orderProductData->outerOrderProductId;
         $orderProduct->info->seller_remarks   = $orderProductData->info?->sellerRemarks;
         $orderProduct->info->seller_message   = $orderProductData->info?->sellerMessage;
         $orderProduct->info->buyer_remarks    = $orderProductData->info?->buyerRemarks;
         $orderProduct->info->buyer_message    = $orderProductData->info?->buyerMessage;
-        $orderProduct->info->seller_extends   = $orderProductData->info?->sellerExtends;
-        $orderProduct->info->buyer_extends    = $orderProductData->info?->buyerExtends;
-        $orderProduct->info->other_extends    = $orderProductData->info?->otherExtends;
+        $orderProduct->info->seller_expands   = $orderProductData->info?->sellerExpands;
+        $orderProduct->info->buyer_remarks    = $orderProductData->info?->buyerExpands;
+        $orderProduct->info->other_expands    = $orderProductData->info?->otherExpands;
         $orderProduct->info->tools            = $orderProductData->info?->tools;
         return $orderProduct;
     }

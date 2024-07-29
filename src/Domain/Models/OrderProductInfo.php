@@ -17,9 +17,9 @@ class OrderProductInfo extends Model
 
 
     protected $casts = [
-        'buyer_extends'  => 'array',
-        'seller_extends' => 'array',
-        'other_extends'  => 'array',
+        'buyer_expands'  => 'array',
+        'seller_expands' => 'array',
+        'other_expands'  => 'array',
         'tools'          => 'array',
     ];
 

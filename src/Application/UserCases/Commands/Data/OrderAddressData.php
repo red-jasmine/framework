@@ -23,6 +23,6 @@ class OrderAddressData extends Data
     public ?int    $cityId;
     public ?int    $districtId;
     public ?int    $streetId;
-    public ?array  $extends;
+    public ?array  $expands;
 
 }

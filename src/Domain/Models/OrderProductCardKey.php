@@ -23,7 +23,7 @@ class OrderProductCardKey extends Model
     use SoftDeletes;
 
     protected $casts = [
-        'extends' => 'array',
+        'expands' => 'array',
         'status'  => OrderCardKeyStatusEnum::class,
     ];
 

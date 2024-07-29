@@ -29,7 +29,7 @@ class OrderLogistics extends Model
         'order_product_id' => 'array',
         'shipper'          => LogisticsShipperEnum::class,
         'status'           => LogisticsStatusEnum::class,
-        'extends'          => 'array',
+        'expands'          => 'array',
         'shipping_time'    => 'datetime',
         'collect_time'     => 'datetime',
         'dispatch_time'    => 'datetime',

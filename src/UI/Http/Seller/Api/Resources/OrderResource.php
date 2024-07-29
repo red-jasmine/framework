@@ -72,13 +72,11 @@ class OrderResource extends JsonResource
             'creator_id'             => $this->creator_id,
             'updater_type'           => $this->updater_type,
             'updater_id'             => $this->updater_id,
-
-
-            'info'      => new OrderInfoResource($this->whenLoaded('info')),
-            'address'   => new OrderAddressResource($this->whenLoaded('address')),
-            'products'  => OrderProductResource::collection($this->whenLoaded('products')),
-            'payments'  => OrderPaymentResource::collection($this->whenLoaded('payments')),
-            'logistics' => OrderLogisticsResource::collection($this->whenLoaded('logistics')),
+            'info'                   => new OrderInfoResource($this->whenLoaded('info')),
+            'address'                => new OrderAddressResource($this->whenLoaded('address')),
+            'products'               => OrderProductResource::collection($this->whenLoaded('products')),
+            'payments'               => OrderPaymentResource::collection($this->whenLoaded('payments')),
+            'logistics'              => OrderLogisticsResource::collection($this->whenLoaded('logistics')),
         ];
     }
 }

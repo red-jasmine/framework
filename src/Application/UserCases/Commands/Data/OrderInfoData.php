@@ -11,9 +11,9 @@ class OrderInfoData extends Data
     public ?string $sellerMessage;
     public ?string $buyerRemarks;
     public ?string $buyerMessage;
-    public ?array  $sellerExtends;
-    public ?array  $buyerExtends;
-    public ?array  $otherExtends;
+    public ?array  $sellerExpands;
+    public ?array  $buyerExpands;
+    public ?array  $otherExpands;
     public ?array  $tools;
 
 }

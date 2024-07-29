@@ -16,7 +16,7 @@ class OrderInfoResource extends JsonResource
             'seller_message' => $this->seller_message,
             'seller_remarks' => $this->seller_message,
             'buyer_message'  => $this->buyer_message,
-            'other_extends'  => $this->other_extends,
+            'other_expands'  => $this->other_expands,
             'tools'          => $this->tools,
         ];
     }

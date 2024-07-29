@@ -19,7 +19,7 @@ class OrderMapper
         $order->pay_type             = $orderData->payType;
         $order->source_type          = $orderData->sourceType;
         $order->source_id            = $orderData->sourceId;
-        $order->seller_custom_status = $orderData->sellerCustomStatus ?? 'nil';
+        $order->seller_custom_status = $orderData->sellerCustomStatus;
         $order->freight_amount       = $orderData->freightAmount;
         $order->discount_amount      = $orderData->discountAmount;
         $order->contact              = $orderData->contact;
@@ -37,9 +37,9 @@ class OrderMapper
         $order->info->seller_message = $orderData->info?->sellerMessage;
         $order->info->buyer_remarks  = $orderData->info?->buyerRemarks;
         $order->info->buyer_message  = $orderData->info?->buyerMessage;
-        $order->info->seller_extends = $orderData->info?->sellerExtends;
-        $order->info->buyer_extends  = $orderData->info?->buyerExtends;
-        $order->info->other_extends  = $orderData->info?->otherExtends;
+        $order->info->seller_expands = $orderData->info?->sellerExpands;
+        $order->info->buyer_expands  = $orderData->info?->buyerExpands;
+        $order->info->other_expands  = $orderData->info?->otherExpands;
         $order->info->tools          = $orderData->info?->tools;
 
 

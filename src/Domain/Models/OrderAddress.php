@@ -40,7 +40,7 @@ class OrderAddress extends Model
         'zip_code',
         'lon',
         'lat',
-        'extends',
+        'expands',
     ];
 
     protected $casts = [
