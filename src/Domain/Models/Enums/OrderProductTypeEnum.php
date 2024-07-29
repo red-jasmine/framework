@@ -14,7 +14,7 @@ enum OrderProductTypeEnum: string
 
     case TICKET = 'ticket'; // 票据
 
-    case SERVICE = 'SERVICE'; // 服务
+    case SERVICE = 'service'; // 服务
 
     // 服务
 
@@ -24,7 +24,7 @@ enum OrderProductTypeEnum: string
             self::GOODS->value   => '普通',
             self::VIRTUAL->value => '虚拟',
             self::TICKET->value  => '票据',
-            self::SERVICE->value => '票据',
+            self::SERVICE->value => '服务',
         ];
     }
 }
