@@ -26,7 +26,6 @@ class ProductStockLog extends Model implements OperatorInterface
     protected $casts = [
         'type'        => ProductStockTypeEnum::class,
         'change_type' => ProductStockChangeTypeEnum::class,
-        'expands'     => 'array'
     ];
 
 

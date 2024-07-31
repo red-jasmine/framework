@@ -34,7 +34,6 @@ class ProductPropertyValue extends Model implements OperatorInterface
         'name',
         'group_id',
         'status',
-        'expands',
         'sort',
         'creator_type',
         'creator_id',

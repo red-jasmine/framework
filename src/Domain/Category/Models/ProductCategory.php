@@ -43,11 +43,10 @@ class ProductCategory extends Model implements OperatorInterface
         'is_leaf',
         'is_show',
         'status',
-        'expands',
+
     ];
 
     protected $casts = [
-        'expands' => 'array',
         'status'  => CategoryStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',

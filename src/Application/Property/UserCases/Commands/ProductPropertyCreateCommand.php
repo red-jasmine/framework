@@ -19,7 +19,6 @@ class ProductPropertyCreateCommand extends Data
     public int                $groupId = 0;
     public PropertyTypeEnum   $type    = PropertyTypeEnum::SELECT;
     public PropertyStatusEnum $status  = PropertyStatusEnum::ENABLE;
-    public ?array             $expands = null;
 
 
     public static function attributes(...$args) : array

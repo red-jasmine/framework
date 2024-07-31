@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_leaf')->default(0)->comment('是否叶子类目');
             $table->unsignedTinyInteger('is_show')->default(0)->comment('是否展示');
             $table->string('status', 32)->comment(CategoryStatusEnum::comments('状态'));
-            $table->json('expands')->nullable()->comment('扩展信息');
 
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');

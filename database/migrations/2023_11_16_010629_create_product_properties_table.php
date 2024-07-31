@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('unit', 10)->nullable()->comment('单位');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('status', 32)->comment(PropertyStatusEnum::comments('状态'));
-            $table->json('expands')->nullable()->comment('扩展信息');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();

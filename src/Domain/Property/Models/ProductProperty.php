@@ -32,14 +32,12 @@ class ProductProperty extends Model implements OperatorInterface
         'unit',
         'status',
         'group_id',
-        'expands',
         'sort',
         'creator_type',
         'creator_id',
     ];
 
     protected $casts = [
-        'expands' => 'array',
         'type'    => PropertyTypeEnum::class,
         'status'  => PropertyStatusEnum::class
     ];

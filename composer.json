@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-4": {
-            "RedJasmine\\Product\\": "src/"
+            "RedJasmine\\Product\\": "src/",
+            "RedJasmine\\Product\\Database\\Seeders\\": "./database/seeders/"
         }
     },
     "autoload-dev": {

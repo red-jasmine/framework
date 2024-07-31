@@ -14,7 +14,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
-class ProductSellerCategory extends Model implements OperatorInterface,OwnerInterface
+class ProductSellerCategory extends Model implements OperatorInterface, OwnerInterface
 {
     use HasDateTimeFormatter;
 
@@ -38,7 +38,6 @@ class ProductSellerCategory extends Model implements OperatorInterface,OwnerInte
     protected string $titleColumn = 'name';
 
 
-
     protected $fillable = [
         'parent_id',
         'name',
@@ -48,11 +47,10 @@ class ProductSellerCategory extends Model implements OperatorInterface,OwnerInte
         'status',
         'is_leaf',
         'is_show',
-        'expands',
+
     ];
 
     protected $casts = [
-        'expands' => 'array',
         'status'  => CategoryStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',

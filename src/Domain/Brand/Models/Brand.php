@@ -37,7 +37,6 @@ class Brand extends Model implements OperatorInterface
     public $incrementing = false;
 
     protected $casts = [
-        'expands' => 'array',
         'is_show' => 'boolean',
         'status'  => BrandStatusEnum::class
     ];
@@ -51,7 +50,6 @@ class Brand extends Model implements OperatorInterface
         'initial',
         'is_show',
         'status',
-        'expands',
         'logo',
         'sort',
     ];

@@ -17,7 +17,7 @@ class ProductCategoryCreateCommand extends Data
     public bool               $isShow    = false;
     public ?string            $groupName = null;
     public ?string            $image     = null;
-    public ?array             $expands   = null;
+
 
 
     public static function attributes() : array

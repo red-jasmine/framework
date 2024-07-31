@@ -15,7 +15,7 @@ class ProductPropertyValueCreateCommand extends Data
     public int                $sort    = 0;
     public int                $groupId = 0;
     public PropertyStatusEnum $status  = PropertyStatusEnum::ENABLE;
-    public ?array             $expands = null;
+
 
     public static function attributes(...$args) : array
     {

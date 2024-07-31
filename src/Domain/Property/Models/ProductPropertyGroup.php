@@ -25,12 +25,10 @@ class ProductPropertyGroup extends Model implements OperatorInterface
         'id',
         'name',
         'status',
-        'expands',
         'sort',
     ];
 
     protected $casts = [
-        'expands' => 'array',
         'status'  => PropertyStatusEnum::class
     ];
 
