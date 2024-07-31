@@ -38,7 +38,7 @@ class OrderData extends Data
 
     /**
      * 订单类型
-     * @var \RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum
+     * @var OrderTypeEnum
      */
     public OrderTypeEnum $orderType;
 
