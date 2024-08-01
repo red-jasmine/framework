@@ -17,6 +17,7 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
@@ -322,7 +323,7 @@ class OrderRefund extends Model
         $this->refund_status = RefundStatusEnum::REFUND_SUCCESS;
         $this->end_time      = now();
 
-        $orderLogistics->shippable_type = 'refund';
+        $orderLogistics->shippable_type = LogisticsShippableTypeEnum::REFUND;
 
         $this->logistics->add($orderLogistics);
 

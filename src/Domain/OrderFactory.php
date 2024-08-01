@@ -4,6 +4,7 @@ namespace RedJasmine\Order\Domain;
 
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderAddress;
 use RedJasmine\Order\Domain\Models\OrderInfo;
@@ -88,7 +89,7 @@ class OrderFactory
     {
         $orderLogistics                 = new OrderLogistics();
         $orderLogistics->id             = $this->buildID();
-        $orderLogistics->shippable_type = 'order';
+        $orderLogistics->shippable_type = LogisticsShippableTypeEnum::ORDER;
         return $orderLogistics;
     }
 

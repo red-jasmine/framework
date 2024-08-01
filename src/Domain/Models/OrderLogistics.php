@@ -5,6 +5,7 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -28,6 +29,7 @@ class OrderLogistics extends Model
     protected $casts = [
         'order_product_id' => 'array',
         'shipper'          => LogisticsShipperEnum::class,
+        'shippable_type'   => LogisticsShippableTypeEnum::class,
         'status'           => LogisticsStatusEnum::class,
         'expands'          => 'array',
         'shipping_time'    => 'datetime',
