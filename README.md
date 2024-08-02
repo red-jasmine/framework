@@ -15,19 +15,23 @@ $ composer require red-jasmine/card
 ```plantuml
 package 卡密 {
 	class 卡密内容{
-	 分组
+	 所属者【类型、ID】
+	 所在分组
 	 内容
 	 是否循环
 	}
 	class 卡密组{
+	 所属者【类型、ID】
 	 分组名称
 	}
 
 	class 卡密绑定商品{
+	 	 所属者【类型、ID】
+		 卡密分组
 		 商品类型
 		 商品ID
 		 SKU ID
-		 卡密分组
+		 
 		}
 }
 
