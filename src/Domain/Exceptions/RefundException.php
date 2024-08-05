@@ -8,11 +8,11 @@ class RefundException extends AbstractException
 {
 
 
-    public const  REFUND_AMOUNT_OVERFLOW = 111001;
+    public const int  REFUND_AMOUNT_OVERFLOW = 111001;
 
-    public const  REFUND_STATUS_NOT_ALLOW = 211510;
+    public const int  REFUND_STATUS_NOT_ALLOW = 211510;
 
-    public const  REFUND_TYPE_NOT_ALLOW = 311520;
+    public const int  REFUND_TYPE_NOT_ALLOW = 311520;
 
 
     protected static array $codes = [

@@ -9,16 +9,16 @@ class OrderException extends AbstractException
 
 
     // 状态类限制错误
-    public const ORDER_STATUS_NOT_ALLOW    = 102510;
-    public const PAYMENT_STATUS_NOT_ALLOW  = 102511;
-    public const SHIPPING_STATUS_NOT_ALLOW = 102512;
+    public const int ORDER_STATUS_NOT_ALLOW   = 102510;
+    public const int PAYMENT_STATUS_NOT_ALLOW  = 102511;
+    public const int SHIPPING_STATUS_NOT_ALLOW = 102512;
     // 类型错误
-    public const SHIPPING_TYPE_NOT_ALLOW = 102520;
+    public const int SHIPPING_TYPE_NOT_ALLOW = 102520;
 
     // 其他错误
-    public const PROGRESS_NOT_ALLOW_LESS = 102610;
+    public const int PROGRESS_NOT_ALLOW_LESS = 102610;
     // 发货错误
-    public const NO_EFFECTIVE_SHIPPING = 102611;
+    public const int NO_EFFECTIVE_SHIPPING = 102611;
 
     protected static array $codes = [
         self::SHIPPING_TYPE_NOT_ALLOW   => '发货类型限制操作',
