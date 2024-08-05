@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use RedJasmine\Region\Commands\CrawlDataCommand;
 use RedJasmine\Region\Commands\OptimizeCommand;
 
-class RegionServiceProvider extends ServiceProvider
+class RegionPackageServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
@@ -35,10 +35,7 @@ class RegionServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/region.php', 'region');
 
-        // Register the service the package provides.
-        $this->app->singleton('region', function ($app) {
-            return new Region;
-        });
+
     }
 
     /**

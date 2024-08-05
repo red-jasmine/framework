@@ -3,8 +3,8 @@
 namespace RedJasmine\Region;
 
 use Illuminate\Database\Eloquent\Collection;
+use RedJasmine\Region\Domain\Models\Region as RegionModel;
 use RedJasmine\Region\Enums\RegionLevel;
-use RedJasmine\Region\Models\Region as RegionModel;
 
 class Region
 {
@@ -90,7 +90,7 @@ class Region
      *
      * @param int|string $province
      *
-     * @return Models\Region[]|array|Collection
+     * @return \RedJasmine\Region\Domain\Models\Region[]|array|Collection
      */
     public function cities(int|string $province) : Collection|array
     {

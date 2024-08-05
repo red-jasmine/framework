@@ -4,7 +4,7 @@ namespace RedJasmine\Region\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use RedJasmine\Region\Models\Region;
+use RedJasmine\Region\Domain\Models\Region;
 use Tymon\JWTAuth\JWT;
 
 class RegionsExistRule implements ValidationRule

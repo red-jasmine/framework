@@ -1,11 +1,13 @@
 <?php
 
-namespace RedJasmine\Region\Models;
+namespace RedJasmine\Region\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Region\Enums\RegionLevel;
-use RedJasmine\Support\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Traits\Models\ModelTree;
+use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\ModelTree;
+
+
 
 class Region extends Model
 {

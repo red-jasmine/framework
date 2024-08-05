@@ -32,11 +32,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Region\\RegionServiceProvider"
-            ],
-            "aliases": {
-                "Region": "RedJasmine\\Region\\Facades\\Region"
-            }
+                "RedJasmine\\Region\\RegionPackageServiceProvider"
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",

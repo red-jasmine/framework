@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PHPHtmlParser\Dom;
+use RedJasmine\Region\Domain\Models\Region;
 use RedJasmine\Region\Enums\RegionLevel;
-use RedJasmine\Region\Models\Region;
 
 class CrawlDataCommand extends Command
 {

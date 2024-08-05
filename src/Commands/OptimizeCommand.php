@@ -5,8 +5,7 @@ namespace RedJasmine\Region\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Overtrue\LaravelPinyin\Facades\Pinyin;
-use RedJasmine\Region\Enums\RegionLevel;
-use RedJasmine\Region\Models\Region;
+use RedJasmine\Region\Domain\Models\Region;
 
 class OptimizeCommand extends Command
 {
