@@ -1,0 +1,25 @@
+{
+    "name": "red-jasmine/shopping",
+    "description": "red-jasmine shopping",
+    "license": "MIT",
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/order": "1.0.x-dev",
+        "red-jasmine/product": "1.0.x-dev",
+        "ext-bcmath": "*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Shopping\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
