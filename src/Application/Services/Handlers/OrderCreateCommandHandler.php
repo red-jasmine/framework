@@ -8,6 +8,7 @@ use RedJasmine\Order\Application\Mappers\OrderAddressMapper;
 use RedJasmine\Order\Application\Mappers\OrderMapper;
 use RedJasmine\Order\Application\Mappers\OrderProductMapper;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\OrderFactory;
 use RedJasmine\Support\Facades\ServiceContext;
@@ -51,6 +52,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
             persistence: fn() => $this->orderRepository->store($order)
         );
 
+        OrderCreatedEvent::dispatch($order);
         return $order;
 
     }

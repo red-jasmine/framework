@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Handlers;
 
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
+use RedJasmine\Order\Domain\Events\OrderPayingEvent;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\OrderFactory;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
@@ -25,6 +26,7 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
             execute: fn() => $order->paying($orderPayment),
             persistence: fn() => $this->orderRepository->store($order)
         );
+        OrderPayingEvent::dispatch($order);
         return $orderPayment;
     }
 
