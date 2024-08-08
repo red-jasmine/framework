@@ -2,10 +2,12 @@
 
 namespace RedJasmine\Shopping\Application\UserCases\Commands;
 
-use Illuminate\Support\Collection;
 use RedJasmine\Support\Application\Command;
 use RedJasmine\Support\Data\UserData;
 
+/**
+ * 商品立即购买
+ */
 class ProductBuyCommand extends Command
 {
 
@@ -16,13 +18,13 @@ class ProductBuyCommand extends Command
     public UserData $buyer;
 
 
-
     public ?string $address;
 
 
-    public Collection $products;
+    public int $productId;
 
 
+    public int $skuId;
 
 
 }
