@@ -76,12 +76,14 @@ class OrderBuyCommandHandler extends CommandHandler
                     'changeType'   => 'sale',
                     'changeDetail' => $orderId
                 ]
-
             );
+
             // 锁库存
             $this->stockCommandService->lock($stockCommand);
 
             // 创建订单
+
+            // 构建订单
 
 
             DB::commit();
@@ -94,7 +96,7 @@ class OrderBuyCommandHandler extends CommandHandler
         }
 
 
-        $this->orderCommandService->create($command);
+
     }
 
 }
