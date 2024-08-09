@@ -27,4 +27,13 @@ class ProductBuyCommand extends Command
     public int $skuId;
 
 
+    public int $quantity = 1;
+
+
+
+
+
+
+
+
 }
