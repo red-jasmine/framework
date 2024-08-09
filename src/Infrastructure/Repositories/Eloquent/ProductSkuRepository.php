@@ -104,7 +104,7 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
     {
         $attributes = [
             'stock' => DB::raw("stock - $stock"),
-            'lock'  => DB::raw("lock_stock + $stock"),
+            'lock_stock'  => DB::raw("lock_stock + $stock"),
         ];
         $rows       = ProductSku::where('id', $sku->id)->where('stock', '>=', $stock)->update($attributes);
         if ($rows <= 0) {
@@ -127,7 +127,7 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
     {
         $attributes = [
             'stock' => DB::raw("stock + $stock"),
-            'lock'  => DB::raw("lock_stock - $stock"),
+            'lock_stock'  => DB::raw("lock_stock - $stock"),
         ];
         $rows       = ProductSku::where('id', $sku->id)->where('lock_stock', '>=', $stock)->update($attributes);
         if ($rows <= 0) {
