@@ -28,12 +28,9 @@ class OrderController extends Controller
 
     public function buy(Request $request)
     {
-        $params  = $request->all();
-        $command = ProductBuyCommand::from(array_merge($params, [ 'buyer' => $this->getOwner() ]));
-
-
+        $command = ProductBuyCommand::from(array_merge($request->all(), [ 'buyer' => $this->getOwner() ]));
         $this->commandService->buy($command);
-        dd($command);
+
     }
 
     public function store(Request $request)

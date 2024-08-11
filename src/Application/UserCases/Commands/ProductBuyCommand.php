@@ -2,38 +2,13 @@
 
 namespace RedJasmine\Shopping\Application\UserCases\Commands;
 
-use RedJasmine\Support\Application\Command;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
 
 /**
  * 商品立即购买
  */
-class ProductBuyCommand extends Command
+class ProductBuyCommand extends OrderData
 {
-
-    /**
-     * 买家
-     * @var UserData
-     */
-    public UserData $buyer;
-
-
-    public ?string $address;
-
-
-    public int $productId;
-
-
-    public int $skuId;
-
-
-    public int $quantity = 1;
-
-
-
-
-
-
 
 
 }

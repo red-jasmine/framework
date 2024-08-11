@@ -36,11 +36,19 @@ class OrderBuyCommandHandler extends CommandHandler
 
 
 
-        // 商品验证
-        $product = $this->productQueryService->find($command->productId);
+        // 单个订单处理流程
+
+        $products = [];
+
+        foreach ($command->products as $productData) {
+            $product = $this->productQueryService->find($productData->productId);
+            $stock   = $this->stockQueryService->find($productData->skuId);
+        }
+
+
 
         // 验证库存
-        $stock = $this->stockQueryService->find($command->skuId);
+
 
         // 计算邮费 TODO
 
@@ -49,13 +57,11 @@ class OrderBuyCommandHandler extends CommandHandler
 
         // 生成 订单的 Command
 
-        $orderCreateCommand = new OrderCreateCommand;
-
+        $orderCreateCommand         = new OrderCreateCommand;
         $orderCreateCommand->seller = $product->owner;
-        $orderCreateCommand->buyer = $command->buyer;
+        $orderCreateCommand->buyer  = $command->buyer;
 
-
-
+        dd($orderCreateCommand);
 
         // 创建订单
 
@@ -63,7 +69,11 @@ class OrderBuyCommandHandler extends CommandHandler
 
         try {
             DB::beginTransaction();
-            // 生成单号
+            // 创建订单
+
+            $order = $this->orderCommandService->create($orderCreateCommand);
+
+            // 减库存
 
             $orderId = $this->getService()->buildId();
 
@@ -79,7 +89,7 @@ class OrderBuyCommandHandler extends CommandHandler
             );
 
             // 锁库存
-            $this->stockCommandService->lock($stockCommand);
+            $this->stockCommandService->sub($stockCommand);
 
             // 创建订单
 
@@ -94,7 +104,6 @@ class OrderBuyCommandHandler extends CommandHandler
             DB::rollBack();
             throw  $throwable;
         }
-
 
 
     }
