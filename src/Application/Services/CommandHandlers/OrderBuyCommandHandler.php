@@ -12,6 +12,7 @@ use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Domain\Services\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
@@ -24,6 +25,7 @@ class OrderBuyCommandHandler extends CommandHandler
         protected StockQueryService     $stockQueryService,
         protected StockCommandService   $stockCommandService,
         protected OrderCommandService   $orderCommandService,
+        protected OrderDomainService   $orderDomainService
     )
     {
         parent::__construct();
@@ -34,6 +36,8 @@ class OrderBuyCommandHandler extends CommandHandler
     {
 
 
+        $this->orderDomainService->product($command);
+        dd($command);
 
 
         // 单个订单处理流程
