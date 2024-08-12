@@ -12,4 +12,16 @@ class ProductSkuReadRepository extends QueryBuilderReadRepository implements Pro
      * @var $modelClass class-string
      */
     protected static string $modelClass = ProductSku::class;
+
+    /**
+     * @param array $ids
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function findList(array $ids)
+    {
+       return $this->query()->whereIn('id', $ids)->get();
+    }
+
+
 }

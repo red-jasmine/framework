@@ -173,4 +173,23 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         }
     }
 
+
+    /**
+     * 是否允许销售
+     * @return boolean
+     */
+    public function isAllowSale():bool
+    {
+        if(in_array($this->status, [
+            ProductStatusEnum::ON_SALE,
+            ProductStatusEnum::PRE_SALE
+        ],true)) {
+
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

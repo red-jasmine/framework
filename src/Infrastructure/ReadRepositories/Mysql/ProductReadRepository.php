@@ -11,4 +11,15 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
 
     public static $modelClass = Product::class;
 
+    /**
+     * @param array $ids
+     *
+     * @return Product[]
+     */
+    public function findList(array $ids)
+    {
+       return $this->query()->whereIn('id', $ids)->get();
+    }
+
+
 }

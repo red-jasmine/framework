@@ -7,4 +7,6 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 interface ProductReadRepositoryInterface extends ReadRepositoryInterface
 {
 
+    public function findList(array $ids);
+
 }
