@@ -21,6 +21,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
+use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -177,18 +178,46 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 是否允许销售
      * @return boolean
+     * @throws ProductException
      */
-    public function isAllowSale():bool
+    public function isAllowSale() : bool
     {
-        if(in_array($this->status, [
+        if (!in_array($this->status, [
             ProductStatusEnum::ON_SALE,
             ProductStatusEnum::PRE_SALE
-        ],true)) {
+        ],            true)) {
 
-            return true;
+
+            throw  ProductException::newFromCodes(ProductException::PRODUCT_FORBID_SALE);
         }
 
-        return false;
+        return true;
+
+    }
+
+
+    /**
+     * @param int $num
+     *
+     * @return bool
+     * @throws ProductException
+     */
+    public function isAllowNumberBuy(int $num) : bool
+    {
+        if ($this->min_limit > 0 && $this->min_limit > $num) {
+            throw  ProductException::newFromCodes(ProductException::PRODUCT_MIN_LIMIT);
+
+        }
+
+        if ($this->max_limit > 0 && $this->max_limit < $num) {
+            throw  ProductException::newFromCodes(ProductException::PRODUCT_MAX_LIMIT);
+        }
+
+        if ($this->step_limit > 1 && ($num % $this->step_limit) !== 0) {
+            throw  ProductException::newFromCodes(ProductException::PRODUCT_STEP_LIMIT);
+        }
+
+        return true;
 
     }
 
