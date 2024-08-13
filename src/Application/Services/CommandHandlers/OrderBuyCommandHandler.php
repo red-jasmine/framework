@@ -37,6 +37,7 @@ class OrderBuyCommandHandler extends CommandHandler
 
 
         $this->orderDomainService->product($command);
+
         dd($command);
 
 

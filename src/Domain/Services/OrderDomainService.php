@@ -50,17 +50,19 @@ class OrderDomainService extends Service
             }
         }
 
-
         $skuList = $orderData->products->pluck('skuId')->unique()->toArray();
 
         // 验证库存
+        $skus = $this->stockQueryService->getRepository()->findList($skuList);
 
-        $skus  = $this->stockQueryService->getRepository()->findList($skuList);
-
-        dd($skus);
+        foreach ($skus as $sku) {
+            // 库存是否充足、
+            dd($sku);
+            // SKU 是否可销售状态
+        }
         // 验证状态
 
-
+        // 订单分组 TODO
     }
 
     protected function calculation()
