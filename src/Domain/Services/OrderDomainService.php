@@ -40,17 +40,17 @@ class OrderDomainService extends Service
         // 验证商品
         $productIdList = $orderData->products->pluck('productId')->unique()->toArray();
         $products      = $this->productQueryService->getRepository()->findList($productIdList);
-        $products      = collect($products)->keyBy('id');
+
         if (count($productIdList) !== count($products)) {
             throw  ShoppingException::newFromCodes(ShoppingException::PRODUCT_ERROR);
         }
-        $skuList = $orderData->products->pluck('skuId')->unique()->toArray();
-        $skus    = $this->stockQueryService->getRepository()->findList($skuList);
-        $skus    = collect($skus)->keyBy('id');
+
+        $skus = $this->stockQueryService->getRepository()->findList($orderData->products->pluck('skuId')->unique()->toArray());
+
         // 验证状态
         foreach ($orderData->products as $productData) {
-            $productData->setProduct($products[$productData->productId]);
-            $productData->setSku($skus[$productData->skuId]);
+            $productData->setProduct(collect($products)->where('id', $productData->productId)->first());
+            $productData->setSku(collect($skus)->where('id', $productData->skuId)->first());
 
             $productData->getProduct()->isAllowSale();
             $productData->getSku()->isAllowSale();
