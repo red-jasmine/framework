@@ -37,8 +37,13 @@ class OrderBuyCommandHandler extends CommandHandler
 
 
         $this->orderDomainService->product($command);
+        $this->orderDomainService->split($command);
+        $this->orderDomainService->validate($command);
 
         dd($command);
+
+
+
 
 
         // 单个订单处理流程

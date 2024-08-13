@@ -31,39 +31,67 @@ class OrderDomainService extends Service
      *
      * @param OrderData $orderData
      *
-     * @return void
+     * @return OrderData
      * @throws ShoppingException
      */
-    public function product(OrderData $orderData)
+    public function product(OrderData $orderData) : OrderData
     {
 
         // 验证商品
         $productIdList = $orderData->products->pluck('productId')->unique()->toArray();
         $products      = $this->productQueryService->getRepository()->findList($productIdList);
-
+        $products      = collect($products)->keyBy('id');
         if (count($productIdList) !== count($products)) {
             throw  ShoppingException::newFromCodes(ShoppingException::PRODUCT_ERROR);
         }
-        foreach ($products as $product) {
-            if (!$product->isAllowSale()) {
-                throw  ShoppingException::newFromCodes(ShoppingException::PRODUCT_OFF_SHELF);
-            }
-        }
-
         $skuList = $orderData->products->pluck('skuId')->unique()->toArray();
-
-        // 验证库存
-        $skus = $this->stockQueryService->getRepository()->findList($skuList);
-
-        foreach ($skus as $sku) {
-            // 库存是否充足、
-            dd($sku);
-            // SKU 是否可销售状态
-        }
+        $skus    = $this->stockQueryService->getRepository()->findList($skuList);
+        $skus    = collect($skus)->keyBy('id');
         // 验证状态
+        foreach ($orderData->products as $productData) {
+            $productData->setProduct($products[$productData->productId]);
+            $productData->setSku($skus[$productData->skuId]);
 
-        // 订单分组 TODO
+            $productData->getProduct()->isAllowSale();
+            $productData->getSku()->isAllowSale();
+            $productData->getProduct()->isAllowNumberBuy($productData->num);
+        }
+
+
+        return $orderData;
     }
+
+
+    /**
+     * 拆分订单
+     *
+     * @param OrderData $orderData
+     *
+     * @return void
+     */
+    public function split(OrderData $orderData)
+    {
+
+
+    }
+
+
+    /**
+     * @param OrderData $orderData
+     *
+     * @return OrderData
+     * @throws ShoppingException
+     */
+    public function validate(OrderData $orderData) : OrderData
+    {
+        foreach ($orderData->products as $productData) {
+
+        }
+
+
+        return $orderData;
+    }
+
 
     protected function calculation()
     {
@@ -75,6 +103,5 @@ class OrderDomainService extends Service
     {
 
     }
-
 
 }

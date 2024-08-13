@@ -12,6 +12,11 @@ class ProductData extends Data
 
     public int $skuId;
     /**
+     * 购物车ID
+     * @var int|null
+     */
+    public ?int $ShoppingCartId;
+    /**
      * 商品件数
      * @var int
      */
@@ -31,6 +36,44 @@ class ProductData extends Data
     public ?string $buyerMessage;
     public ?array  $buyerExpands;
     public ?array  $tools;
+
+
+    protected $product;
+
+    /**
+     * @return mixed
+     */
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param mixed $product
+     */
+    public function setProduct($product) : void
+    {
+        $this->product = $product;
+    }
+
+
+    protected $sku;
+
+    /**
+     * @return mixed
+     */
+    public function getSku()
+    {
+        return $this->sku;
+    }
+
+    /**
+     * @param mixed $sku
+     */
+    public function setSku($sku) : void
+    {
+        $this->sku = $sku;
+    }
 
 
 }
