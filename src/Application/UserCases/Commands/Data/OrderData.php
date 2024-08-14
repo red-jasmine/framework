@@ -52,6 +52,19 @@ class OrderData extends Command
      */
     public Collection $products;
 
+    public function getProducts() : Collection
+    {
+        return $this->products;
+    }
+
+    public function setProducts(Collection $products) : void
+    {
+        $this->products = $products;
+    }
+
+
+
+
 
 
 }

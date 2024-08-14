@@ -8,13 +8,13 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class OrderCommandService extends ApplicationCommandService
 {
 
-    // confirm 确认
-
-    // 下单
+    //
+    // check 确认
+    // buy 下单
 
 
     protected static $macros = [
-        'buy' => OrderBuyCommandHandler::class
+        'buy' => OrderBuyCommandHandler::class,
     ];
 
 

@@ -25,7 +25,7 @@ class OrderBuyCommandHandler extends CommandHandler
         protected StockQueryService     $stockQueryService,
         protected StockCommandService   $stockCommandService,
         protected OrderCommandService   $orderCommandService,
-        protected OrderDomainService   $orderDomainService
+        protected OrderDomainService    $orderDomainService
     )
     {
         parent::__construct();
@@ -36,26 +36,14 @@ class OrderBuyCommandHandler extends CommandHandler
     {
 
 
-        $this->orderDomainService->product($command);
-        $this->orderDomainService->split($command);
-        $this->orderDomainService->validate($command);
 
-        dd($command);
+
+        $commands = $this->orderDomainService->calculation($command);
 
 
 
 
-
-        // 单个订单处理流程
-
-        $products = [];
-
-        foreach ($command->products as $productData) {
-            $product = $this->productQueryService->find($productData->productId);
-            $stock   = $this->stockQueryService->find($productData->skuId);
-        }
-
-
+        dd($commands->toArray());
 
         // 验证库存
 
@@ -67,11 +55,7 @@ class OrderBuyCommandHandler extends CommandHandler
 
         // 生成 订单的 Command
 
-        $orderCreateCommand         = new OrderCreateCommand;
-        $orderCreateCommand->seller = $product->owner;
-        $orderCreateCommand->buyer  = $command->buyer;
 
-        dd($orderCreateCommand);
 
         // 创建订单
 

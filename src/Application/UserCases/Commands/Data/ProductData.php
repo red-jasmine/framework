@@ -2,6 +2,8 @@
 
 namespace RedJasmine\Shopping\Application\UserCases\Commands\Data;
 
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Support\Data\Data;
 
 class ProductData extends Data
@@ -41,7 +43,7 @@ class ProductData extends Data
     protected $product;
 
     /**
-     * @return mixed
+     * @return Product
      */
     public function getProduct()
     {
@@ -60,7 +62,7 @@ class ProductData extends Data
     protected $sku;
 
     /**
-     * @return mixed
+     * @return ProductSku
      */
     public function getSku()
     {
