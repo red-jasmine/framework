@@ -41,9 +41,9 @@ class OrderBuyCommandHandler extends CommandHandler
         $commands = $this->orderDomainService->calculation($command);
 
 
+        return $commands;
 
 
-        dd($commands->toArray());
 
         // 验证库存
 

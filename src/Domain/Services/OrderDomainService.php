@@ -3,7 +3,11 @@
 namespace RedJasmine\Shopping\Domain\Services;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
+use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
@@ -47,40 +51,105 @@ class OrderDomainService extends Service
      *
      * @param OrderData $orderData
      *
-     * @return void
+     * @return Collection|OrderData[]
      */
-    public function calculation(OrderData $orderData)
+    public function calculation(OrderData $orderData) : Collection|array
     {
         $this->validate($orderData);
         // 拆分订单
         $orders = $this->split($orderData);
         // 商品金额
 
-
         foreach ($orders as $order) {
+            // foreach ($order->products as $productData) {
+            //     // TODO 通过一些中间件
+            //     // 获取产品价格
+            //     $price        = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
+            //     $productTotal = bcmul((string)$price, $productData->num, 2);
+            //     $productData->additional([
+            //                                  'price'  => $price->value(),
+            //                                  'amount' => $productTotal
+            //                              ]);
+            //
+            //     // TOD 获取优惠
+            // }
+            // $order->additional([ 'amount' => collect($order->products)->sum(function ($product) {
+            //     return $product->getAdditionalData()['amount'];
+            // }) ]);
 
-            foreach ($order->products as $productData) {
-                // TODO 通过一些中间件
-                // 获取产品价格
-                $price        = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
-                $productTotal = bcmul((string)$price, $productData->num, 2);
-                $productData->additional([
-                                             'price'  => $price->value(),
-                                             'amount' => $productTotal
-                                         ]);
 
-                // TOD 获取优惠
-            }
-
+            $this->toOrderCommand($order);
         }
-        dd($orders->toArray());
 
-        // 商品优惠
 
-        // 是否涵盖邮费
+        return $orders;
+
 
     }
 
+
+    protected function toOrderCommand(OrderData $orderData)
+    {
+
+
+        $order                     = new OrderCreateCommand();
+        $order->buyer              = $orderData->buyer;
+        $order->seller             = $orderData->products->first()->getProduct()->owner;
+        $order->channel            = null;
+        $order->store              = null;
+        $order->address            = null;
+        $order->contact            = null;
+        $order->password           = null;
+        $order->title              = '';
+        $order->outerOrderId       = null;
+        $order->sellerCustomStatus = null;
+        $order->clientIp           = null;
+        $order->clientType         = null;
+        $order->clientVersion      = null;
+        $order->orderType          = OrderTypeEnum::SOP;
+        $order->payType            = PayTypeEnum::ONLINE;
+
+
+        foreach ($orderData->products as $productData) {
+            $product = new OrderProductData();
+
+            $product->num = $productData->num;
+
+
+            $product->shippingType     = $productData->getProduct()->shipping_type;
+            $product->title            = $productData->getProduct()->title;
+            $product->productType      = 'product';
+            $product->productId        = $productData->getProduct()->id;
+            $product->skuId            = $productData->getSku()->id;
+            $product->price            = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
+            $product->costPrice        = new Amount($productData->getSku()->cost_price) ;
+            $product->categoryId       = $productData->getProduct()->category_id;
+            $product->sellerCategoryId = $productData->getProduct()->seller_category_id;
+            $product->image            = $productData->getSku()->image ?? $productData->getProduct()->image ?? null;
+            $product->outerId          = $productData->getProduct()->outer_id;
+            $product->outerSkuId       = $productData->getSku()->outer_id;
+            $product->barcode          = $productData->getSku()->barcode ?? $productData->getProduct()->barcode ?? null;
+            $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
+
+            // 更多信息
+
+            $product->sellerMessage = null;
+            $product->sellerRemarks = null;
+            $product->sellerExpands = null;
+            $product->buyerMessage  = null;
+            $product->buyerRemarks  = null;
+            $product->buyerExpands  = null;
+            $product->otherExpands  = null;
+            $product->tools         = null;
+
+            dd($product);
+        }
+
+
+
+
+
+    }
 
     /**
      * 结算
@@ -174,14 +243,6 @@ class OrderDomainService extends Service
         ];
         // 判断是否存特殊的逻辑
         return implode('|', $implode);
-    }
-
-
-    protected function toOrderCommand(OrderData $orderData)
-    {
-        $order        = new OrderCreateCommand();
-        $order->buyer = $orderData->buyer;
-
     }
 
 
