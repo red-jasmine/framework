@@ -8,6 +8,7 @@ use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
+use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
@@ -21,11 +22,12 @@ class OrderDomainService extends Service
 
 
     public function __construct(
-        protected ProductCommandService $productCommandService,
-        protected ProductQueryService   $productQueryService,
-        protected StockQueryService     $stockQueryService,
-        protected StockCommandService   $stockCommandService,
-        protected OrderCommandService   $orderCommandService,
+        protected ProductCommandService     $productCommandService,
+        protected ProductQueryService       $productQueryService,
+        protected StockQueryService         $stockQueryService,
+        protected StockCommandService       $stockCommandService,
+        protected OrderCommandService       $orderCommandService,
+        protected ProductPriceDomainService $productPriceDomainService
     )
     {
 
@@ -50,14 +52,35 @@ class OrderDomainService extends Service
     public function calculation(OrderData $orderData)
     {
         $this->validate($orderData);
+        // 拆分订单
+        $orders = $this->split($orderData);
         // 商品金额
-        dd($orderData);
+
+
+        foreach ($orders as $order) {
+
+            foreach ($order->products as $productData) {
+                // TODO 通过一些中间件
+                // 获取产品价格
+                $price        = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
+                $productTotal = bcmul((string)$price, $productData->num, 2);
+                $productData->additional([
+                                             'price'  => $price->value(),
+                                             'amount' => $productTotal
+                                         ]);
+
+                // TOD 获取优惠
+            }
+
+        }
+        dd($orders->toArray());
 
         // 商品优惠
 
         // 是否涵盖邮费
 
     }
+
 
     /**
      * 结算
@@ -99,8 +122,14 @@ class OrderDomainService extends Service
         // 验证状态
         foreach ($orderData->products as $productData) {
 
-            $productData->setProduct(collect($products)->where('id', $productData->productId)->first());
-            $productData->setSku(collect($skus)->where('id', $productData->skuId)->first());
+            $product = collect($products)->where('id', $productData->productId)->first();
+            $sku     = collect($skus)->where('id', $productData->skuId)->first();
+
+            if ($sku->product_id !== $productData->productId) {
+                throw  ShoppingException::newFromCodes(ShoppingException::PRODUCT_SKU_NOT_MATCHING);
+            }
+            $productData->setProduct($product);
+            $productData->setSku($sku);
 
             $productData->getProduct()->isAllowSale();
             $productData->getSku()->isAllowSale();
