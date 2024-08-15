@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Tests\Application\Order\CommandHandlers;
 
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Tests\Application\ApplicationTestCase;
 use RedJasmine\Order\Tests\Fixtures\Orders\OrderFake;
 

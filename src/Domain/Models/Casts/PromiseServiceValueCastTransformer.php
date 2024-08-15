@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Domain\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Order\Domain\Models\ValueObjects\PromiseServiceValue;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;

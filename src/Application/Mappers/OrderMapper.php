@@ -33,14 +33,14 @@ class OrderMapper
         $order->channel_type         = $orderData->channel?->type;
         $order->channel_id           = $orderData->channel?->id;
         $order->outer_order_id       = $orderData->outerOrderId;
-        $order->info->seller_remarks = $orderData->info?->sellerRemarks;
-        $order->info->seller_message = $orderData->info?->sellerMessage;
-        $order->info->buyer_remarks  = $orderData->info?->buyerRemarks;
-        $order->info->buyer_message  = $orderData->info?->buyerMessage;
-        $order->info->seller_expands = $orderData->info?->sellerExpands;
-        $order->info->buyer_expands  = $orderData->info?->buyerExpands;
-        $order->info->other_expands  = $orderData->info?->otherExpands;
-        $order->info->tools          = $orderData->info?->tools;
+        $order->info->seller_remarks = $orderData->sellerRemarks;
+        $order->info->seller_message = $orderData->sellerMessage;
+        $order->info->buyer_remarks  = $orderData->buyerRemarks;
+        $order->info->buyer_message  = $orderData->buyerMessage;
+        $order->info->seller_expands = $orderData->sellerExpands;
+        $order->info->buyer_expands  = $orderData->buyerExpands;
+        $order->info->other_expands  = $orderData->otherExpands;
+        $order->info->tools          = $orderData->tools;
 
 
         return $order;

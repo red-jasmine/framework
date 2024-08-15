@@ -12,7 +12,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReshipmentComma
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingLogisticsCommand;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Tests\Fixtures\Orders\OrderFake;
 
 

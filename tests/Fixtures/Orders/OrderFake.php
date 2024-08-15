@@ -11,8 +11,8 @@ use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingVirtua
 use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Domain\Models\ValueObjects\PromiseServices;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Order\Tests\Fixtures\Users\User;
 
 class OrderFake
@@ -23,7 +23,7 @@ class OrderFake
 
     /**
      * 发货类型
-     * @var \RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum
+     * @var \RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum
      */
     public ShippingTypeEnum $shippingType = ShippingTypeEnum::EXPRESS;
     // 商品数量

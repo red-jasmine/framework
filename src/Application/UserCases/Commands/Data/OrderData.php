@@ -3,11 +3,11 @@
 namespace RedJasmine\Order\Application\UserCases\Commands\Data;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Data\UserData;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 
 class OrderData extends Data
 {
@@ -20,7 +20,7 @@ class OrderData extends Data
 
     public static function morphs() : array
     {
-        return [ 'seller', 'buyer', 'channel', 'store', 'guide' ];
+        return ['seller', 'buyer', 'channel', 'store', 'guide'];
     }
 
     /**
@@ -82,10 +82,15 @@ class OrderData extends Data
      * @var OrderAddressData|null
      */
     public ?OrderAddressData $address;
-    /**
-     * 其他信息
-     * @var OrderInfoData|null
-     */
-    public ?OrderInfoData $info;
+
+
+    public ?string $sellerRemarks;
+    public ?string $sellerMessage;
+    public ?string $buyerRemarks;
+    public ?string $buyerMessage;
+    public ?array  $sellerExpands;
+    public ?array  $buyerExpands;
+    public ?array  $otherExpands;
+    public ?array  $tools;
 
 }

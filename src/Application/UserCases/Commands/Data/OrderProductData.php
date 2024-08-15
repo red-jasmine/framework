@@ -3,9 +3,9 @@
 namespace RedJasmine\Order\Application\UserCases\Commands\Data;
 
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 
@@ -25,9 +25,10 @@ class OrderProductData extends Data
      * @var OrderProductTypeEnum
      */
     public OrderProductTypeEnum $orderProductType;
+
     /**
      * 发货类型
-     * @var \RedJasmine\Order\Domain\Models\Enums\ShippingTypeEnum
+     * @var ShippingTypeEnum
      */
     public ShippingTypeEnum $shippingType;
 
@@ -77,5 +78,13 @@ class OrderProductData extends Data
      */
     public ?PromiseServices $promiseServices;
 
-    public ?OrderProductInfoData $info;
+
+    public ?string $sellerRemarks;
+    public ?string $sellerMessage;
+    public ?string $buyerRemarks;
+    public ?string $buyerMessage;
+    public ?array  $buyerExpands;
+    public ?array  $sellerExpands;
+    public ?array  $otherExpands;
+    public ?array  $tools;
 }

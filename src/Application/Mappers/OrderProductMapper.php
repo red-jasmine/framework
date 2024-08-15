@@ -33,14 +33,14 @@ class OrderProductMapper
         $orderProduct->promise_services       = $orderProductData->promiseServices;
         $orderProduct->seller_custom_status   = $orderProductData->sellerCustomStatus;
         $orderProduct->outer_order_product_id = $orderProductData->outerOrderProductId;
-        $orderProduct->info->seller_remarks   = $orderProductData->info?->sellerRemarks;
-        $orderProduct->info->seller_message   = $orderProductData->info?->sellerMessage;
-        $orderProduct->info->buyer_remarks    = $orderProductData->info?->buyerRemarks;
-        $orderProduct->info->buyer_message    = $orderProductData->info?->buyerMessage;
-        $orderProduct->info->seller_expands   = $orderProductData->info?->sellerExpands;
-        $orderProduct->info->buyer_remarks    = $orderProductData->info?->buyerExpands;
-        $orderProduct->info->other_expands    = $orderProductData->info?->otherExpands;
-        $orderProduct->info->tools            = $orderProductData->info?->tools;
+        $orderProduct->info->seller_remarks   = $orderProductData->sellerRemarks;
+        $orderProduct->info->seller_message   = $orderProductData->sellerMessage;
+        $orderProduct->info->buyer_remarks    = $orderProductData->buyerRemarks;
+        $orderProduct->info->buyer_message    = $orderProductData->buyerMessage;
+        $orderProduct->info->seller_expands   = $orderProductData->sellerExpands;
+        $orderProduct->info->buyer_remarks    = $orderProductData->buyerExpands;
+        $orderProduct->info->other_expands    = $orderProductData->otherExpands;
+        $orderProduct->info->tools            = $orderProductData->tools;
         return $orderProduct;
     }
 

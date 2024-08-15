@@ -4,8 +4,7 @@ namespace RedJasmine\Order\Domain\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Order\Domain\Models\ValueObjects\PromiseServices;
-use RedJasmine\Order\Domain\Models\ValueObjects\PromiseServiceValue;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 
 class PromiseServicesCastTransformer implements CastsAttributes
 {
@@ -16,10 +15,10 @@ class PromiseServicesCastTransformer implements CastsAttributes
     }
 
     /**
-     * @param Model           $model
-     * @param string          $key
-     * @param PromiseServices $value
-     * @param array           $attributes
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  PromiseServices  $value
+     * @param  array  $attributes
      *
      * @return string
      */
@@ -32,7 +31,7 @@ class PromiseServicesCastTransformer implements CastsAttributes
     protected function encode(array $map) : string
     {
         return implode(";", array_map(function ($key, $value) {
-            return $key . ":" . $value;
+            return $key.":".$value;
         }, array_keys($map), array_values($map)));
     }
 
