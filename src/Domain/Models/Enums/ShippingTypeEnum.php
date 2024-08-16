@@ -13,7 +13,7 @@ enum ShippingTypeEnum: string
 
     case EXPRESS = 'express'; // 物流快递
 
-    case  VIRTUAL = 'virtual';  // 虚拟发货
+    case  DUMMY = 'dummy';  // 虚拟发货
 
     case CDK = 'cdk'; // 卡密
 
@@ -27,7 +27,7 @@ enum ShippingTypeEnum: string
         return [
             self::EXPRESS->value  => '快递',
             self::CDK->value      => '卡密',
-            self::VIRTUAL->value  => '虚拟',
+            self::DUMMY->value    => '虚拟',
             self::DELIVERY->value => '配送',
             self::NIL->value      => '免发货',
         ];
