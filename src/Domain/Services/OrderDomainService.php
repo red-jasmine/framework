@@ -26,14 +26,13 @@ class OrderDomainService extends Service
 
 
     public function __construct(
-        protected ProductCommandService     $productCommandService,
-        protected ProductQueryService       $productQueryService,
-        protected StockQueryService         $stockQueryService,
-        protected StockCommandService       $stockCommandService,
-        protected OrderCommandService       $orderCommandService,
+        protected ProductCommandService $productCommandService,
+        protected ProductQueryService $productQueryService,
+        protected StockQueryService $stockQueryService,
+        protected StockCommandService $stockCommandService,
+        protected OrderCommandService $orderCommandService,
         protected ProductPriceDomainService $productPriceDomainService
-    )
-    {
+    ) {
 
     }
 
@@ -49,7 +48,7 @@ class OrderDomainService extends Service
     /**
      * 计算商品金额
      *
-     * @param OrderData $orderData
+     * @param  OrderData  $orderData
      *
      * @return Collection|OrderData[]
      */
@@ -59,27 +58,12 @@ class OrderDomainService extends Service
         // 拆分订单
         $orders = $this->split($orderData);
         // 商品金额
-
+        $orderCommands = collect();
         foreach ($orders as $order) {
-            // foreach ($order->products as $productData) {
-            //     // TODO 通过一些中间件
-            //     // 获取产品价格
-            //     $price        = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
-            //     $productTotal = bcmul((string)$price, $productData->num, 2);
-            //     $productData->additional([
-            //                                  'price'  => $price->value(),
-            //                                  'amount' => $productTotal
-            //                              ]);
-            //
-            //     // TOD 获取优惠
-            // }
-            // $order->additional([ 'amount' => collect($order->products)->sum(function ($product) {
-            //     return $product->getAdditionalData()['amount'];
-            // }) ]);
-
-
-            $this->toOrderCommand($order);
+            $orderCommands = $this->toOrderCommand($order);
         }
+
+        dd($orderCommands->toArray());
 
 
         return $orders;
@@ -88,41 +72,43 @@ class OrderDomainService extends Service
     }
 
 
-    protected function toOrderCommand(OrderData $orderData)
-    {
+    protected function toOrderCommand(
+        OrderData $orderData
+    ) : \RedJasmine\Order\Application\UserCases\Commands\Data\OrderData {
 
-
-        $order                     = new OrderCreateCommand();
-        $order->buyer              = $orderData->buyer;
-        $order->seller             = $orderData->products->first()->getProduct()->owner;
-        $order->channel            = null;
-        $order->store              = null;
-        $order->address            = null;
-        $order->contact            = null;
-        $order->password           = null;
-        $order->title              = '';
-        $order->outerOrderId       = null;
-        $order->sellerCustomStatus = null;
-        $order->clientIp           = null;
-        $order->clientType         = null;
-        $order->clientVersion      = null;
-        $order->orderType          = OrderTypeEnum::SOP;
-        $order->payType            = PayTypeEnum::ONLINE;
-
-
+        $order                = new OrderCreateCommand();
+        $order->buyer         = $orderData->buyer;
+        $order->seller        = $orderData->products->first()->getProduct()->owner;
+        $order->contact       = $orderData->contact;
+        $order->password      = $orderData->password;
+        $order->title         = '';
+        $order->outerOrderId  = $orderData->outerOrderId;
+        $order->clientIp      = $orderData->clientIp;
+        $order->clientType    = $orderData->clientType;
+        $order->clientVersion = $orderData->clientVersion;
+        $order->orderType     = OrderTypeEnum::SOP;
+        $order->payType       = PayTypeEnum::ONLINE;
+        $order->channel       = null;
+        $order->store         = null;
+        $order->address       = null;
+        $order->products      = collect();
         foreach ($orderData->products as $productData) {
-            $product = new OrderProductData();
 
-            $product->num = $productData->num;
+            // 获取价格
 
+            $price = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
 
+            $product                   = new OrderProductData();
+            $product->num              = $productData->num;
+            $product->orderProductType = $productData->getProduct()->product_type;
             $product->shippingType     = $productData->getProduct()->shipping_type;
             $product->title            = $productData->getProduct()->title;
+            $product->skuName          = $productData->getSku()->properties_name;
             $product->productType      = 'product';
             $product->productId        = $productData->getProduct()->id;
             $product->skuId            = $productData->getSku()->id;
-            $product->price            = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
-            $product->costPrice        = new Amount($productData->getSku()->cost_price) ;
+            $product->price            = $price;
+            $product->costPrice        = new Amount($productData->getSku()->cost_price);
             $product->categoryId       = $productData->getProduct()->category_id;
             $product->sellerCategoryId = $productData->getProduct()->seller_category_id;
             $product->image            = $productData->getSku()->image ?? $productData->getProduct()->image ?? null;
@@ -130,31 +116,28 @@ class OrderDomainService extends Service
             $product->outerSkuId       = $productData->getSku()->outer_id;
             $product->barcode          = $productData->getSku()->barcode ?? $productData->getProduct()->barcode ?? null;
             $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
+            $product->buyerMessage     = $productData->buyerMessage ?? null;
+            $product->buyerRemarks     = $productData->buyerRemarks ?? null;
+            $product->buyerExpands     = $productData->buyerExpands ?? null;
+            $product->otherExpands     = null;
+            $product->tools            = $productData->tools ?? null;
 
-            // 更多信息
+            $product->additional([
+                'sku'     => $productData->getSku(),
+                'product' => $productData->getProduct(),
 
-            $product->sellerMessage = null;
-            $product->sellerRemarks = null;
-            $product->sellerExpands = null;
-            $product->buyerMessage  = null;
-            $product->buyerRemarks  = null;
-            $product->buyerExpands  = null;
-            $product->otherExpands  = null;
-            $product->tools         = null;
+            ]);
+            $order->products->push($product);
 
-            dd($product);
         }
 
-
-
-
-
+        return $order;
     }
 
     /**
      * 结算
      *
-     * @param OrderData $orderData
+     * @param  OrderData  $orderData
      *
      * @return void
      */
@@ -168,7 +151,7 @@ class OrderDomainService extends Service
     /**
      * 商品校验
      *
-     * @param OrderData $orderData
+     * @param  OrderData  $orderData
      *
      * @return OrderData
      * @throws ShoppingException
@@ -213,7 +196,7 @@ class OrderDomainService extends Service
     /**
      * 拆分订单
      *
-     * @param OrderData $orderData
+     * @param  OrderData  $orderData
      *
      * @return Collection|OrderData[]
      */

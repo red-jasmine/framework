@@ -16,8 +16,7 @@ class OrderController extends Controller
         protected OrderCommandService $commandService,
 
 
-    )
-    {
+    ) {
     }
 
     public function index(Request $request)
@@ -28,7 +27,13 @@ class OrderController extends Controller
 
     public function buy(Request $request)
     {
-        $command = ProductBuyCommand::from(array_merge($request->all(), [ 'buyer' => $this->getOwner() ]));
+        $command = ProductBuyCommand::from(array_merge($request->all(), ['buyer' => $this->getOwner()]));
+
+        $command->clientIp      = $request->getClientIp();
+        $command->clientType    = 'test';
+        $command->clientVersion = '1.0.0';
+
+
         $orders = $this->commandService->buy($command);
 
         return $orders;
