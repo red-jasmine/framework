@@ -3,14 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
-            $table->string('order_product_type', 32)->comment(OrderProductTypeEnum::comments('订单商品类型'));
+            $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('title')->comment('商品标题');
             $table->string('sku_name')->nullable()->comment('SKU名称');

@@ -17,12 +17,6 @@ class OrderData extends Data
         $this->freightAmount  = new Amount(0);
     }
 
-
-    public static function morphs() : array
-    {
-        return ['seller', 'buyer', 'channel', 'store', 'guide'];
-    }
-
     /**
      * 卖家
      * @var UserData
@@ -34,41 +28,59 @@ class OrderData extends Data
      * @var UserData
      */
     public UserData $buyer;
-
-
     /**
      * 订单类型
      * @var OrderTypeEnum
      */
     public OrderTypeEnum $orderType;
-
     /**
      * 支付方式
      * @var PayTypeEnum
      */
     public PayTypeEnum $payType = PayTypeEnum::ONLINE;
-
-
-    public string  $title;
-    public ?string $outerOrderId       = null;
-    public ?string $sellerCustomStatus = null;
-
-    public Amount $freightAmount;
-
-    public Amount $discountAmount;
-
-
-    public ?UserData $channel    = null;
-    public ?UserData $store      = null;
-    public ?UserData $guide      = null;
+    /**
+     * 渠道
+     * @var UserData|null
+     */
+    public ?UserData $channel            = null;
+    /**
+     * 门店
+     * @var UserData|null
+     */
+    public ?UserData $store              = null;
+    /**
+     * 导购
+     * @var UserData|null
+     */
+    public ?UserData $guide              = null;
+    /**
+     * 订单标题
+     * @var string
+     */
+    public string    $title;
+    /**
+     * 客户端类型
+     * @var string|null
+     */
     public ?string   $clientType;
     public ?string   $clientVersion;
     public ?string   $clientIp;
-    public ?string   $sourceType = null;
-    public ?string   $sourceId   = null;
-    // 虚拟商品 通知方
-    public ?string $contact  = null;
-    public ?string $password = null;
+    public ?string   $sourceType         = null;
+    public ?string   $sourceId           = null;
+    public ?string   $outerOrderId       = null;
+    public ?string   $sellerCustomStatus = null;
+    public ?string   $contact            = null;
+    public ?string   $password           = null;
+    public ?string   $sellerRemarks;
+    public ?string   $sellerMessage;
+    public ?string   $buyerRemarks;
+    public ?string   $buyerMessage;
+    public ?array    $sellerExpands;
+    public ?array    $buyerExpands;
+    public ?array    $otherExpands;
+    public ?array    $tools;
+    public Amount    $freightAmount;
+    public Amount    $discountAmount;
 
 
     /**
@@ -83,14 +95,5 @@ class OrderData extends Data
      */
     public ?OrderAddressData $address;
 
-
-    public ?string $sellerRemarks;
-    public ?string $sellerMessage;
-    public ?string $buyerRemarks;
-    public ?string $buyerMessage;
-    public ?array  $sellerExpands;
-    public ?array  $buyerExpands;
-    public ?array  $otherExpands;
-    public ?array  $tools;
 
 }

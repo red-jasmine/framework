@@ -7,19 +7,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServicesCastTransformer;
-use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PromiseServiceTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use Spatie\LaravelData\WithData;
 
 class OrderProduct extends Model
@@ -39,7 +39,7 @@ class OrderProduct extends Model
 
 
     protected $casts = [
-        'order_product_type'      => OrderProductTypeEnum::class,
+        'order_product_type'      => ProductTypeEnum::class,
         'shipping_type'           => ShippingTypeEnum::class,
         'order_status'            => OrderStatusEnum::class,
         'shipping_status'         => ShippingStatusEnum::class,
@@ -150,23 +150,24 @@ class OrderProduct extends Model
         // 退款
         if ($this->isAllowPromiseService(PromiseServiceTypeEnum::REFUND)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::REFUND;
-            if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)) {
+            if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED],
+                true)) {
                 $allowApplyRefundTypes[] = RefundTypeEnum::RETURN_GOODS_REFUND;
             }
         }
         // 换货 只有物流发货才支持换货 TODO
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowPromiseService(PromiseServiceTypeEnum::EXCHANGE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::EXCHANGE;
         }
         // 保修
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowPromiseService(PromiseServiceTypeEnum::SERVICE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::SERVICE;
         }
 
         // TODO 最长时间
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)) {
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::RESHIPMENT;
         }
 
@@ -188,7 +189,8 @@ class OrderProduct extends Model
                 return false;
             }
             if (($promiseService->value() === PromiseServiceValue::BEFORE_SHIPMENT)
-                && in_array($this->shipping_status, [ ShippingStatusEnum::NIL, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND ], true)) {
+                && in_array($this->shipping_status,
+                    [ShippingStatusEnum::NIL, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND], true)) {
                 return true;
             }
             return false;

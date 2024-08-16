@@ -125,7 +125,7 @@ class OrderShippingService
     {
         $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
 
-        if ($orderProduct->shipping_type !== ShippingTypeEnum::VIRTUAL) {
+        if ($orderProduct->shipping_type !== ShippingTypeEnum::DUMMY) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
 

@@ -19,7 +19,7 @@ class OrderProgressCommandHandlerTest extends ApplicationTestCase
         $fake               = $this->fake();
         $fake->productCount = 2;
         $fake->unit         = 10;
-        $fake->shippingType = ShippingTypeEnum::VIRTUAL;
+        $fake->shippingType = ShippingTypeEnum::DUMMY;
 
         $orderCreateCommand = OrderCreateCommand::from($fake->order());
         $order              = $this->orderCommandService()->create($orderCreateCommand);

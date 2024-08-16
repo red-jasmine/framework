@@ -15,7 +15,7 @@ class OrderShippingVirtualCommandHandlerTest extends ApplicationTestCase
     {
         $fake               = parent::fake();
         $fake->productCount = 2;
-        $fake->shippingType = ShippingTypeEnum::VIRTUAL;
+        $fake->shippingType = ShippingTypeEnum::DUMMY;
         return $fake;
     }
 

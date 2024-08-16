@@ -3,11 +3,11 @@
 namespace RedJasmine\Order\Application\UserCases\Commands\Data;
 
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
-use RedJasmine\Order\Domain\Models\Enums\OrderProductTypeEnum;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
+use RedJasmine\Support\Data\Data;
 
 class OrderProductData extends Data
 {
@@ -22,9 +22,9 @@ class OrderProductData extends Data
 
     /**
      * 商品类型
-     * @var OrderProductTypeEnum
+     * @var ProductTypeEnum
      */
-    public OrderProductTypeEnum $orderProductType;
+    public ProductTypeEnum $orderProductType;
 
     /**
      * 发货类型
