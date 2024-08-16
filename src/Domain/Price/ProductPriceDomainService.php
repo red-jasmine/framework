@@ -11,7 +11,7 @@ class ProductPriceDomainService extends Service
     // 影响价格因素
     // 数量、卖家
 
-
+    // TODO 动态化获取
     public function getPrice(Product $product, int $skuID) : Amount
     {
         $sku = $product->skus->where('id', $skuID)->firstOrFail();

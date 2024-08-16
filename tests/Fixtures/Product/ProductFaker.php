@@ -29,7 +29,7 @@ class ProductFaker
             'owner'               => $this->seller(),
             'title'               => fake()->text(),
             'product_type'        => ProductTypeEnum::VIRTUAL->value,
-            'shipping_type'       => ShippingTypeEnum::VIRTUAL->value,
+            'shipping_type'       => ShippingTypeEnum::DUMMY->value,
             'status'              => ProductStatusEnum::ON_SALE->value,
             'freight_payer'       => FreightPayerEnum::SELLER->value,
             'sub_stock'           => SubStockTypeEnum::DEFAULT->value,
