@@ -119,8 +119,9 @@ class OrderDomainService extends Service
             $product->buyerMessage     = $productData->buyerMessage ?? null;
             $product->buyerRemarks     = $productData->buyerRemarks ?? null;
             $product->buyerExpands     = $productData->buyerExpands ?? null;
-            $product->otherExpands     = null;
+            $product->otherExpands     = null; // TODO
             $product->tools            = $productData->tools ?? null;
+
 
             $product->additional([
                 'sku'     => $productData->getSku(),
