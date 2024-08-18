@@ -79,4 +79,23 @@ class OrderData extends Command
     public Collection $products;
 
 
+
+
+    protected UserData $seller;
+
+    public function getSeller() : UserData
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(UserData $seller) : OrderData
+    {
+        $this->seller = $seller;
+        return $this;
+    }
+
+
+
+
+
 }

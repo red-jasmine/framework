@@ -54,18 +54,23 @@ class OrderDomainService extends Service
      */
     public function calculation(OrderData $orderData) : Collection|array
     {
+
         $this->validate($orderData);
         // 拆分订单
         $orders = $this->split($orderData);
         // 商品金额
+
+
         $orderCommands = collect();
+
         foreach ($orders as $order) {
-            $orderCommands = $this->toOrderCommand($order);
+            $orderAmountData         = new \RedJasmine\Shopping\Domain\Data\OrderData();
+            $orderAmountData->seller = $order->getSeller();
+            // 订单计算核心
+            // 计算金额
+            dd($orderAmountData);
         }
-
         dd($orderCommands->toArray());
-
-
         return $orders;
 
 
@@ -212,7 +217,9 @@ class OrderDomainService extends Service
             $productGroup[$splitKey][] = $productData;
         }
         foreach ($productGroup as $splitKey => $products) {
-            $order           = clone $orderData;
+            $order  = clone $orderData;
+            $seller = $products[0]->getProduct()->owner;
+            $order->setSeller($seller);
             $order->products = collect($products);
             $orders->push($order);
         }
