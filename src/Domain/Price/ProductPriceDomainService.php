@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Price;
 
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
 class ProductPriceDomainService extends Service
@@ -12,8 +13,12 @@ class ProductPriceDomainService extends Service
     // 数量、卖家
 
     // TODO 动态化获取
-    public function getPrice(Product $product, int $skuID) : Amount
-    {
+    public function getPrice(
+        Product $product,
+        int $skuID,
+        UserInterface $channel,
+        int $vip = 0,
+    ) : Amount {
         $sku = $product->skus->where('id', $skuID)->firstOrFail();
         // 获取价格
 
