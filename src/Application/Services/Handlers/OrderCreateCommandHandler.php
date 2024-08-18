@@ -26,8 +26,8 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
     {
         $order = app(OrderFactory::class)->createOrder();
 
-        $order->creator = ServiceContext::getOperator();
-        $this->setAggregate($order);
+
+        $this->setModel($order);
 
         // TODO 这里割裂了应该在当前类设置
         app(OrderMapper::class)->fromData($data, $order);
@@ -46,6 +46,8 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
             app(OrderAddressMapper::class)->fromData($data->address, $address);
             $order->setAddress($address);
         }
+
+        $order->creator = ServiceContext::getOperator();
 
         $this->execute(
             execute: fn() => $order->create(),
