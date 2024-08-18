@@ -16,7 +16,7 @@ class Amount extends ValueObject
     private string $value;
 
     /**
-     * @param float|int|string|null $value
+     * @param  float|int|string|null  $value
      *
      * @throws Exception
      */
