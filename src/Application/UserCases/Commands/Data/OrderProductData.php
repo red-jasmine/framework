@@ -11,28 +11,16 @@ use RedJasmine\Support\Data\Data;
 
 class OrderProductData extends Data
 {
-    public function __construct()
-    {
-        $this->taxAmount      = new Amount(0);
-        $this->discountAmount = new Amount(0);
-        $this->costPrice      = new Amount(0);
-
-    }
-
-
     /**
      * 商品类型
      * @var ProductTypeEnum
      */
     public ProductTypeEnum $orderProductType;
-
     /**
      * 发货类型
      * @var ShippingTypeEnum
      */
     public ShippingTypeEnum $shippingType;
-
-
     public string  $title;
     public ?string $skuName;
     /**
@@ -56,34 +44,37 @@ class OrderProductData extends Data
     public Amount $costPrice;
     public Amount $taxAmount;
     public Amount $discountAmount;
-
     public int     $categoryId          = 0;
     public int     $sellerCategoryId    = 0;
-    public ?string $image;
-    public ?string $outerId;
-    public ?string $outerSkuId;
-    public ?string $barcode;
+    public ?string $image               = null;
+    public ?string $outerId             = null;
+    public ?string $outerSkuId          = null;
+    public ?string $barcode             = null;
     public ?string $sellerCustomStatus  = null;
     public ?string $outerOrderProductId = null;
-
     /**
      * 赠送积分
      * @var int
      */
     public int $giftPoint = 0;
-
     /**
      * @var PromiseServices|null
      */
     public ?PromiseServices $promiseServices;
+    public ?string $sellerRemarks = null;
+    public ?string $sellerMessage = null;
+    public ?string $buyerRemarks  = null;
+    public ?string $buyerMessage  = null;
+    public ?array  $buyerExpands  = null;
+    public ?array  $sellerExpands = null;
+    public ?array  $otherExpands  = null;
+    public ?array  $tools         = null;
 
+    public function __construct()
+    {
+        $this->taxAmount      = new Amount(0);
+        $this->discountAmount = new Amount(0);
+        $this->costPrice      = new Amount(0);
 
-    public ?string $sellerRemarks;
-    public ?string $sellerMessage;
-    public ?string $buyerRemarks;
-    public ?string $buyerMessage;
-    public ?array  $buyerExpands;
-    public ?array  $sellerExpands;
-    public ?array  $otherExpands;
-    public ?array  $tools;
+    }
 }

@@ -48,9 +48,9 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
         }
 
         $order->creator = ServiceContext::getOperator();
-
+        $order->create();
         $this->execute(
-            execute: fn() => $order->create(),
+            execute: fn() => '',
             persistence: fn() => $this->orderRepository->store($order)
         );
 
