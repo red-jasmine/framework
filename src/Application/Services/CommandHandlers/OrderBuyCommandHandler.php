@@ -12,6 +12,7 @@ use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Domain\Services\OrderCalculationService;
 use RedJasmine\Shopping\Domain\Services\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
@@ -21,13 +22,13 @@ class OrderBuyCommandHandler extends CommandHandler
 {
     public function __construct(
         protected ProductCommandService $productCommandService,
-        protected ProductQueryService   $productQueryService,
-        protected StockQueryService     $stockQueryService,
-        protected StockCommandService   $stockCommandService,
-        protected OrderCommandService   $orderCommandService,
-        protected OrderDomainService    $orderDomainService
-    )
-    {
+        protected ProductQueryService $productQueryService,
+        protected StockQueryService $stockQueryService,
+        protected StockCommandService $stockCommandService,
+        protected OrderCommandService $orderCommandService,
+        protected OrderDomainService $orderDomainService,
+
+    ) {
         parent::__construct();
     }
 
@@ -36,13 +37,9 @@ class OrderBuyCommandHandler extends CommandHandler
     {
 
 
+        $orders = $this->orderDomainService->calculates($command);
 
-
-        $commands = $this->orderDomainService->calculation($command);
-
-
-        return $commands;
-
+        return $orders;
 
 
         // 验证库存
@@ -54,7 +51,6 @@ class OrderBuyCommandHandler extends CommandHandler
 
 
         // 生成 订单的 Command
-
 
 
         // 创建订单

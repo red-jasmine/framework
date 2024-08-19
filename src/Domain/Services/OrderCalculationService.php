@@ -2,6 +2,8 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
+use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
 use RedJasmine\Shopping\Application\UserCases\Commands\Data\ProductData;
@@ -19,7 +21,14 @@ class OrderCalculationService extends Service
     }
 
 
-    public function calculates(array|OrderData $orders)
+    /**
+     * 订单金额计算
+     *
+     * @param  array|OrderData  $orders
+     *
+     * @return array
+     */
+    public function calculates(array|OrderData $orders) : array
     {
         // 如果是一个订单变成多个计算
         if ($orders instanceof OrderData) {
@@ -27,38 +36,178 @@ class OrderCalculationService extends Service
         }
 
         foreach ($orders as $order) {
-            $this->calculation($order);
+            $this->calculationOrder($order);
+        }
+        // 计算订单优惠金额 （跨店活动） ? TODO
+        return $orders;
+
+    }
+
+    protected function calculationOrder(OrderData $order) : void
+    {
+        // 获取商品价格
+        foreach ($order->products as $product) {
+            // 获取商品价格
+            $this->calculationProductPrice($product, $order);
+            // 计算单品优惠
+            $this->calculationProductDiscount($product, $order);
+        }
+
+        // 获取优惠金额
+        $this->calculationDiscount($order);
+
+        // 获取邮费
+        $this->calculationFreight($order);
+
+
+        // 计算订单金额
+        $this->check($order);
+
+    }
+
+    protected function check(OrderData $order) : void
+    {
+        $productPayableAmount = Amount::make(0);
+        // 计算单品
+        foreach ($order->products as $product) {
+
+            $amounts = $product->getAdditionalData();
+            /**
+             * 商品金额
+             * @var $productAmount Amount
+             */
+            $productAmount = $amounts['product_amount'];
+            /**
+             * 优惠金额
+             * @var $discountAmount Amount
+             */
+            $productDiscountAmount = $amounts['discount_amount'];
+            /**
+             * 税
+             * @var $taxAmount Amount
+             */
+            $taxAmount     = $amounts['tax_amount'];
+
+            // 计算商品
+            $payableAmount = Amount::make(0);
+
+            $payableAmount->add($productAmount)
+                          ->add($taxAmount)
+                          ->sub($productDiscountAmount);
+
+            $product->additional([
+                'payable_amount' => $payableAmount,
+            ]);
+
+            $productPayableAmount->add($payableAmount);
+
         }
 
 
-        // 计算订单优惠金额 （跨店活动）
-        // 计算邮费
 
+        $orderAmounts = $order->getAdditionalData();
+        // 计算订单应付金额
+        $payableAmount = Amount::make(0);
+        /**
+         * @var $freightAmount Amount
+         */
+        $freightAmount = $orderAmounts['freight_amount'];
+        /**
+         * @var $freightAmount Amount
+         */
+        $discountAmount = $orderAmounts['discount_amount'];
+
+        $payableAmount->add($productPayableAmount)->add($freightAmount)->sub($discountAmount);
+
+        $order->additional([
+            'product_payable_amount' => $productPayableAmount,
+            'payable_amount'         => $payableAmount
+        ]);
 
     }
 
-    protected function calculation(OrderData $order)
+
+    /**
+     * 计算单品价格
+     *
+     * @param  ProductData  $productData
+     * @param  OrderData  $orderData
+     *
+     * @return void
+     */
+    protected function calculationProductPrice(ProductData $productData, OrderData $orderData) : void
     {
-        // 获取商品价格
 
-        // 计算税
-        // 计算商品优惠金额
-    }
+        $productPriceDTO            = new  ProductPriceData;
+        $productPriceDTO->productId = $productData->productId;
+        $productPriceDTO->skuId     = $productData->skuId;
+        $productPriceDTO->num       = $productData->num;
+        $productPriceDTO->store     = $orderData->store;
+        $productPriceDTO->channel   = $orderData->channel;
+        $productPriceDTO->guide     = $orderData->guide;
 
 
-    protected function productCalculation(ProductData $productData, OrderData $order)
-    {
         // 商品中决定价格，主要因数规格、数量、渠道、VIP、
-        // 营销中心是决定优惠金额
-        // 物流中心主要是决定运费
+        $price         = $this->productPriceDomainService->getPrice($productPriceDTO);
+        $productAmount = Amount::make(bcmul($price->value(), $productData->num, 2));
 
-        $productModel = $productData->getProduct();
-        $skuId        = $productData->skuId;
-        $price        = $this->productPriceDomainService->getPrice($productModel, $skuId);
-
-
-        // TODO 公共价格计算
+        $productData->additional([
+            'price'          => $price,
+            'product_amount' => $productAmount,
+            'tax_amount'     => Amount::make(0), // TODO
+        ]);
 
     }
 
+    /**
+     * 计算优惠
+     *
+     * @param  OrderData  $order
+     *
+     * @return void
+     */
+    protected function calculationDiscount(OrderData $order) : void
+    {
+
+        // 计算订单优惠
+        $order->additional([
+            'discount_amount' => Amount::make(0),
+        ]);
+
+    }
+
+    /**
+     * 计算单品优惠
+     *
+     * @param  ProductData  $productData
+     * @param  OrderData  $orderData
+     *
+     * @return void
+     */
+    protected function calculationProductDiscount(ProductData $productData, OrderData $orderData) : void
+    {
+        // TODO
+        $productData->additional([
+            'discount_amount' => Amount::make(0),
+
+        ]);
+
+    }
+
+    /**
+     * 计算邮费
+     *
+     * @param  OrderData  $order
+     *
+     * @return void
+     */
+    protected function calculationFreight(OrderData $order) : void
+    {
+        // TODO
+        // 计算订单运费
+        $order->additional([
+            'freight_amount' => Amount::make(0),
+        ]);
+
+    }
 }

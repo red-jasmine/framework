@@ -18,6 +18,7 @@ use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
 use RedJasmine\Shopping\Application\UserCases\Commands\Data\ProductData;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -31,9 +32,15 @@ class OrderDomainService extends Service
         protected StockQueryService $stockQueryService,
         protected StockCommandService $stockCommandService,
         protected OrderCommandService $orderCommandService,
-        protected ProductPriceDomainService $productPriceDomainService
+        protected ProductPriceDomainService $productPriceDomainService,
+        protected OrderCalculationService $orderCalculationService,
     ) {
 
+    }
+
+    protected function init(OrderData $orderData) : void
+    {
+        $this->product($orderData);
     }
 
 
@@ -41,8 +48,23 @@ class OrderDomainService extends Service
     {
         // 商品验证
         $this->product($orderData);
+    }
 
 
+    /**
+     * 订单金额计算
+     *
+     * @param  OrderData  $orderData
+     *
+     * @return OrdersData
+     */
+    public function calculates(OrderData $orderData) : OrdersData
+    {
+        $this->init($orderData);
+        $orders = $this->split($orderData);
+
+        $orders = $this->orderCalculationService->calculates($orders);
+        return new OrdersData(collect($orders));
     }
 
     /**
@@ -204,12 +226,12 @@ class OrderDomainService extends Service
      *
      * @param  OrderData  $orderData
      *
-     * @return Collection|OrderData[]
+     * @return array|OrderData[]
      */
-    public function split(OrderData $orderData) : Collection
+    public function split(OrderData $orderData) : array
     {
         // 拆分订单
-        $orders = collect([]);
+        $orders = [];
         // 按买家拆分
         $productGroup = [];
         foreach ($orderData->products as $productData) {
@@ -221,7 +243,7 @@ class OrderDomainService extends Service
             $seller = $products[0]->getProduct()->owner;
             $order->setSeller($seller);
             $order->products = collect($products);
-            $orders->push($order);
+            $orders[]        = $order;
         }
         return $orders;
     }

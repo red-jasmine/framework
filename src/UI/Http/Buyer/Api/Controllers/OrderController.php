@@ -33,7 +33,6 @@ class OrderController extends Controller
         $command->clientType    = 'test';
         $command->clientVersion = '1.0.0';
 
-
         $orders = $this->commandService->buy($command);
 
         return $orders;
