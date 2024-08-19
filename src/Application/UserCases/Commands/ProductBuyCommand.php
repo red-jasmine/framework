@@ -2,7 +2,8 @@
 
 namespace RedJasmine\Shopping\Application\UserCases\Commands;
 
-use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
+
+use RedJasmine\Shopping\Domain\Data\OrderData;
 
 /**
  * 商品立即购买

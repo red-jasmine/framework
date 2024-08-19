@@ -9,41 +9,36 @@ use RedJasmine\Support\Data\Data;
 class OrdersData extends Data
 {
 
-    public function __construct(Collection $orders)
-    {
-        $this->init();
-
-        $this->setOrders($orders);
-
-    }
-
     /**
      * 应付总金额
      * @var Amount
      */
-    public Amount $totalPayableAmount;
-
-
-    protected function init() : void
-    {
-        $this->totalPayableAmount = Amount::make(0);
-    }
-
+    public Amount $subtotal;
     /**
      * @var Collection<OrderData>
      */
     public Collection $orders;
 
+    public function __construct()
+    {
+        $this->subtotal = Amount::make(0);
+
+    }
+
     public function setOrders(Collection $orders) : void
     {
         $this->orders = $orders;
+        $this->subtotal();
+    }
 
+
+    public function subtotal() : Amount
+    {
+        $this->subtotal = Amount::make(0);
         foreach ($this->orders as $order) {
-
-
-            $this->totalPayableAmount->add($order->getAdditionalData()['payable_amount']);
+            $this->subtotal->add($order->getAdditionalData()['payable_amount'] ?? 0);
         }
-
+        return $this->subtotal;
     }
 
 

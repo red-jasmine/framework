@@ -5,8 +5,9 @@ namespace RedJasmine\Shopping\Domain\Services;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
-use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
-use RedJasmine\Shopping\Application\UserCases\Commands\Data\ProductData;
+use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Data\ProductData;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**
@@ -24,21 +25,17 @@ class OrderCalculationService extends Service
     /**
      * 订单金额计算
      *
-     * @param  array|OrderData  $orders
+     * @param  OrdersData  $orders
      *
-     * @return array
+     * @return OrdersData
      */
-    public function calculates(array|OrderData $orders) : array
+    public function calculates(OrdersData $orders) : OrdersData
     {
-        // 如果是一个订单变成多个计算
-        if ($orders instanceof OrderData) {
-            $orders = [$orders];
-        }
-
-        foreach ($orders as $order) {
+        foreach ($orders->orders as $order) {
             $this->calculationOrder($order);
         }
         // 计算订单优惠金额 （跨店活动） ? TODO
+        $orders->subtotal();
         return $orders;
 
     }
@@ -65,68 +62,6 @@ class OrderCalculationService extends Service
 
     }
 
-    protected function check(OrderData $order) : void
-    {
-        $productPayableAmount = Amount::make(0);
-        // 计算单品
-        foreach ($order->products as $product) {
-
-            $amounts = $product->getAdditionalData();
-            /**
-             * 商品金额
-             * @var $productAmount Amount
-             */
-            $productAmount = $amounts['product_amount'];
-            /**
-             * 优惠金额
-             * @var $discountAmount Amount
-             */
-            $productDiscountAmount = $amounts['discount_amount'];
-            /**
-             * 税
-             * @var $taxAmount Amount
-             */
-            $taxAmount     = $amounts['tax_amount'];
-
-            // 计算商品
-            $payableAmount = Amount::make(0);
-
-            $payableAmount->add($productAmount)
-                          ->add($taxAmount)
-                          ->sub($productDiscountAmount);
-
-            $product->additional([
-                'payable_amount' => $payableAmount,
-            ]);
-
-            $productPayableAmount->add($payableAmount);
-
-        }
-
-
-
-        $orderAmounts = $order->getAdditionalData();
-        // 计算订单应付金额
-        $payableAmount = Amount::make(0);
-        /**
-         * @var $freightAmount Amount
-         */
-        $freightAmount = $orderAmounts['freight_amount'];
-        /**
-         * @var $freightAmount Amount
-         */
-        $discountAmount = $orderAmounts['discount_amount'];
-
-        $payableAmount->add($productPayableAmount)->add($freightAmount)->sub($discountAmount);
-
-        $order->additional([
-            'product_payable_amount' => $productPayableAmount,
-            'payable_amount'         => $payableAmount
-        ]);
-
-    }
-
-
     /**
      * 计算单品价格
      *
@@ -150,28 +85,12 @@ class OrderCalculationService extends Service
         // 商品中决定价格，主要因数规格、数量、渠道、VIP、
         $price         = $this->productPriceDomainService->getPrice($productPriceDTO);
         $productAmount = Amount::make(bcmul($price->value(), $productData->num, 2));
+        $taxAmount     = Amount::make(0); // TODO
 
         $productData->additional([
-            'price'          => $price,
-            'product_amount' => $productAmount,
-            'tax_amount'     => Amount::make(0), // TODO
-        ]);
-
-    }
-
-    /**
-     * 计算优惠
-     *
-     * @param  OrderData  $order
-     *
-     * @return void
-     */
-    protected function calculationDiscount(OrderData $order) : void
-    {
-
-        // 计算订单优惠
-        $order->additional([
-            'discount_amount' => Amount::make(0),
+            'price'          => $price->value(),
+            'product_amount' => $productAmount->value(),
+            'tax_amount'     => $taxAmount->value(),
         ]);
 
     }
@@ -188,8 +107,25 @@ class OrderCalculationService extends Service
     {
         // TODO
         $productData->additional([
-            'discount_amount' => Amount::make(0),
+            'discount_amount' => Amount::make(0)->value(),
 
+        ]);
+
+    }
+
+    /**
+     * 计算优惠
+     *
+     * @param  OrderData  $order
+     *
+     * @return void
+     */
+    protected function calculationDiscount(OrderData $order) : void
+    {
+
+        // 计算订单优惠
+        $order->additional([
+            'discount_amount' => Amount::make(0)->value(),
         ]);
 
     }
@@ -206,7 +142,67 @@ class OrderCalculationService extends Service
         // TODO
         // 计算订单运费
         $order->additional([
-            'freight_amount' => Amount::make(0),
+            'freight_amount' => Amount::make(0)->value(),
+        ]);
+
+    }
+
+    protected function check(OrderData $order) : void
+    {
+        $productPayableAmount = Amount::make(0);
+        // 计算单品
+        foreach ($order->products as $product) {
+
+            $amounts = $product->getAdditionalData();
+            /**
+             * 商品金额
+             * @var $productAmount Amount
+             */
+            $productAmount = $amounts['product_amount'];
+            /**
+             * 优惠金额
+             * @var $discountAmount Amount
+             */
+            $productDiscountAmount = $amounts['discount_amount'];
+            /**
+             * 税
+             * @var $taxAmount Amount
+             */
+            $taxAmount = $amounts['tax_amount'];
+
+            // 计算商品
+            $payableAmount = Amount::make(0);
+
+            $payableAmount->add($productAmount)
+                          ->add($taxAmount)
+                          ->sub($productDiscountAmount);
+
+            $product->additional([
+                'payable_amount' => $payableAmount->value(),
+            ]);
+
+            $productPayableAmount->add($payableAmount);
+
+        }
+
+
+        $orderAmounts = $order->getAdditionalData();
+        // 计算订单应付金额
+        $payableAmount = Amount::make(0);
+        /**
+         * @var $freightAmount Amount
+         */
+        $freightAmount = $orderAmounts['freight_amount'];
+        /**
+         * @var $freightAmount Amount
+         */
+        $discountAmount = $orderAmounts['discount_amount'];
+
+        $payableAmount->add($productPayableAmount)->add($freightAmount)->sub($discountAmount);
+
+        $order->additional([
+            'product_payable_amount' => $productPayableAmount->value(),
+            'payable_amount'         => $payableAmount->value()
         ]);
 
     }

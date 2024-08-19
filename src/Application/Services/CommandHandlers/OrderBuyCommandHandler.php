@@ -37,7 +37,7 @@ class OrderBuyCommandHandler extends CommandHandler
     {
 
 
-        $orders = $this->orderDomainService->calculates($command);
+        $orders = $this->orderDomainService->buy($command);
 
         return $orders;
 

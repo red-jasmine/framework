@@ -2,49 +2,81 @@
 
 namespace RedJasmine\Shopping\Domain\Data;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Support\Data\Data;
 
 class ProductData extends Data
 {
 
-
-    /**
-     * 商品ID
-     * @var int
-     */
     public int $productId;
-    /**
-     * 规格ID
-     * @var int
-     */
     public int $skuId;
+    /**
+     * 购物车ID
+     * @var int|null
+     */
+    public ?int $ShoppingCartId;
     /**
      * 商品件数
      * @var int
      */
     public int $num;
 
+    /**
+     * 外部单号
+     * @var string|null
+     */
+    public ?string $outerOrderProductId = null;
 
-    public Amount $price;
     /**
-     * 产品金额
-     * @var Amount
+     *
+     * @var string|null
      */
-    public Amount $productAmount;
+    public ?string $buyerRemarks;
+    public ?string $buyerMessage;
+    public ?array  $buyerExpands;
+    public ?array  $tools;
+
+
+
+
+
+    protected $product;
+
     /**
-     * 税
-     * @var Amount
+     * @return Product
      */
-    public Amount $taxAmount;
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
     /**
-     * 优惠金额
-     * @var Amount
+     * @param mixed $product
      */
-    public Amount $discountAmount;
+    public function setProduct($product) : void
+    {
+        $this->product = $product;
+    }
+
+
+    protected $sku;
+
     /**
-     * 商品应付金额
-     * @var Amount
+     * @return ProductSku
      */
-    public Amount $payableAmount;
+    public function getSku()
+    {
+        return $this->sku;
+    }
+
+    /**
+     * @param mixed $sku
+     */
+    public function setSku($sku) : void
+    {
+        $this->sku = $sku;
+    }
+
+
 }

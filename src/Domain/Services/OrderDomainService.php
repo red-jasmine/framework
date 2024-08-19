@@ -2,12 +2,6 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
-use Illuminate\Support\Collection;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
@@ -16,9 +10,9 @@ use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
-use RedJasmine\Shopping\Application\UserCases\Commands\Data\OrderData;
-use RedJasmine\Shopping\Application\UserCases\Commands\Data\ProductData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\ProductData;
 use RedJasmine\Shopping\Domain\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -34,7 +28,18 @@ class OrderDomainService extends Service
         protected OrderCommandService $orderCommandService,
         protected ProductPriceDomainService $productPriceDomainService,
         protected OrderCalculationService $orderCalculationService,
+        protected OrderBuyService $orderBuyService,
     ) {
+
+    }
+
+    public function buy(OrderData $orderData) : OrdersData
+    {
+        $this->init($orderData);
+        $orders = $this->split($orderData);
+
+        $orders = $this->orderCalculationService->calculates($orders);
+        return $this->orderBuyService->buy($orders);
 
     }
 
@@ -42,139 +47,6 @@ class OrderDomainService extends Service
     {
         $this->product($orderData);
     }
-
-
-    protected function validate(OrderData $orderData)
-    {
-        // 商品验证
-        $this->product($orderData);
-    }
-
-
-    /**
-     * 订单金额计算
-     *
-     * @param  OrderData  $orderData
-     *
-     * @return OrdersData
-     */
-    public function calculates(OrderData $orderData) : OrdersData
-    {
-        $this->init($orderData);
-        $orders = $this->split($orderData);
-
-        $orders = $this->orderCalculationService->calculates($orders);
-        return new OrdersData(collect($orders));
-    }
-
-    /**
-     * 计算商品金额
-     *
-     * @param  OrderData  $orderData
-     *
-     * @return Collection|OrderData[]
-     */
-    public function calculation(OrderData $orderData) : Collection|array
-    {
-
-        $this->validate($orderData);
-        // 拆分订单
-        $orders = $this->split($orderData);
-        // 商品金额
-
-
-        $orderCommands = collect();
-
-        foreach ($orders as $order) {
-            $orderAmountData         = new \RedJasmine\Shopping\Domain\Data\OrderData();
-            $orderAmountData->seller = $order->getSeller();
-            // 订单计算核心
-            // 计算金额
-            dd($orderAmountData);
-        }
-        dd($orderCommands->toArray());
-        return $orders;
-
-
-    }
-
-
-    protected function toOrderCommand(
-        OrderData $orderData
-    ) : \RedJasmine\Order\Application\UserCases\Commands\Data\OrderData {
-
-        $order                = new OrderCreateCommand();
-        $order->buyer         = $orderData->buyer;
-        $order->seller        = $orderData->products->first()->getProduct()->owner;
-        $order->contact       = $orderData->contact;
-        $order->password      = $orderData->password;
-        $order->title         = '';
-        $order->outerOrderId  = $orderData->outerOrderId;
-        $order->clientIp      = $orderData->clientIp;
-        $order->clientType    = $orderData->clientType;
-        $order->clientVersion = $orderData->clientVersion;
-        $order->orderType     = OrderTypeEnum::SOP;
-        $order->payType       = PayTypeEnum::ONLINE;
-        $order->channel       = null;
-        $order->store         = null;
-        $order->address       = null;
-        $order->products      = collect();
-        foreach ($orderData->products as $productData) {
-
-            // 获取价格
-
-            $price = $this->productPriceDomainService->getPrice($productData->getProduct(), $productData->skuId);
-
-            $product                   = new OrderProductData();
-            $product->num              = $productData->num;
-            $product->orderProductType = $productData->getProduct()->product_type;
-            $product->shippingType     = $productData->getProduct()->shipping_type;
-            $product->title            = $productData->getProduct()->title;
-            $product->skuName          = $productData->getSku()->properties_name;
-            $product->productType      = 'product';
-            $product->productId        = $productData->getProduct()->id;
-            $product->skuId            = $productData->getSku()->id;
-            $product->price            = $price;
-            $product->costPrice        = new Amount($productData->getSku()->cost_price);
-            $product->categoryId       = $productData->getProduct()->category_id;
-            $product->sellerCategoryId = $productData->getProduct()->seller_category_id;
-            $product->image            = $productData->getSku()->image ?? $productData->getProduct()->image ?? null;
-            $product->outerId          = $productData->getProduct()->outer_id;
-            $product->outerSkuId       = $productData->getSku()->outer_id;
-            $product->barcode          = $productData->getSku()->barcode ?? $productData->getProduct()->barcode ?? null;
-            $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
-            $product->buyerMessage     = $productData->buyerMessage ?? null;
-            $product->buyerRemarks     = $productData->buyerRemarks ?? null;
-            $product->buyerExpands     = $productData->buyerExpands ?? null;
-            $product->otherExpands     = null; // TODO
-            $product->tools            = $productData->tools ?? null;
-
-
-            $product->additional([
-                'sku'     => $productData->getSku(),
-                'product' => $productData->getProduct(),
-
-            ]);
-            $order->products->push($product);
-
-        }
-
-        return $order;
-    }
-
-    /**
-     * 结算
-     *
-     * @param  OrderData  $orderData
-     *
-     * @return void
-     */
-    public function check(OrderData $orderData)
-    {
-
-
-    }
-
 
     /**
      * 商品校验
@@ -220,18 +92,18 @@ class OrderDomainService extends Service
         return $orderData;
     }
 
-
     /**
      * 拆分订单
      *
      * @param  OrderData  $orderData
      *
-     * @return array|OrderData[]
+     * @return OrdersData
      */
-    public function split(OrderData $orderData) : array
+    public function split(OrderData $orderData) : OrdersData
     {
         // 拆分订单
-        $orders = [];
+        $orders       = new OrdersData();
+        $orderCollect = collect();
         // 按买家拆分
         $productGroup = [];
         foreach ($orderData->products as $productData) {
@@ -243,8 +115,10 @@ class OrderDomainService extends Service
             $seller = $products[0]->getProduct()->owner;
             $order->setSeller($seller);
             $order->products = collect($products);
-            $orders[]        = $order;
+            $orderCollect->push($order);
         }
+        $orders->setOrders($orderCollect);
+
         return $orders;
     }
 
@@ -256,6 +130,27 @@ class OrderDomainService extends Service
         ];
         // 判断是否存特殊的逻辑
         return implode('|', $implode);
+    }
+
+    /**
+     * 订单金额计算
+     *
+     * @param  OrderData  $orderData
+     *
+     * @return OrdersData
+     */
+    public function calculates(OrderData $orderData) : OrdersData
+    {
+        $this->init($orderData);
+        $orders = $this->split($orderData);
+
+        return $this->orderCalculationService->calculates($orders);
+    }
+
+    protected function validate(OrderData $orderData)
+    {
+        // 商品验证
+        $this->product($orderData);
     }
 
 
