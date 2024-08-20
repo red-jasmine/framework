@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Exceptions;
+namespace RedJasmine\Shopping\Exceptions;
 
 use RedJasmine\Support\Exceptions\AbstractException;
 

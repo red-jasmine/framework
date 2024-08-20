@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Services;
+namespace RedJasmine\Shopping\Domain\Orders;
 
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
@@ -8,6 +8,8 @@ use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Data\ProductData;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductDiscountHook;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductPriceHook;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**
@@ -40,26 +42,64 @@ class OrderCalculationService extends Service
 
     }
 
-    protected function calculationOrder(OrderData $order) : void
+
+    /**
+     * 订单金额计算
+     *
+     * @param  OrderData  $order
+     *
+     * @return OrderData
+     */
+    protected function calculationOrder(OrderData $order) : OrderData
     {
         // 获取商品价格
+        $this->getOrderProductPrices($order);
+        // 获取优惠
+        $this->calculationOrderDiscounts($order);
+        // 计算运费
+        $this->calculationOrderFreight($order);
+        // 计算税费
+        $this->calculationOrderTaxes($order);
+        // 计算订单金额
+        $this->calculateOrderTotal($order);
+
+        return $order;
+
+    }
+
+
+    /**
+     * 获取商品基础价格
+     *
+     * @param  OrderData  $order
+     *
+     * @return void
+     */
+    protected function getOrderProductPrices(OrderData $order) : void
+    {
         foreach ($order->products as $product) {
-            // 获取商品价格
             $this->calculationProductPrice($product, $order);
-            // 计算单品优惠
-            $this->calculationProductDiscount($product, $order);
         }
 
-        // 获取优惠金额
-        $this->calculationDiscount($order);
+    }
 
-        // 获取邮费
-        $this->calculationFreight($order);
+    /**
+     * 计算订单税费
+     *
+     * @param  OrderData  $order
+     *
+     * @return void
+     */
+    protected function calculationOrderTaxes(OrderData $order) : void
+    {
+        foreach ($order->products as $product) {
+            // 计算税费
+            $product->additional([
+                'tax_amount' => Amount::make(0)->value(),
 
+            ]);
 
-        // 计算订单金额
-        $this->check($order);
-
+        }
     }
 
     /**
@@ -81,16 +121,19 @@ class OrderCalculationService extends Service
         $productPriceDTO->channel   = $orderData->channel;
         $productPriceDTO->guide     = $orderData->guide;
 
+        $productPriceDTO->additional([
+            'orders' => $orderData
+        ]);
 
         // 商品中决定价格，主要因数规格、数量、渠道、VIP、
-        $price         = $this->productPriceDomainService->getPrice($productPriceDTO);
-        $productAmount = Amount::make(bcmul($price->value(), $productData->num, 2));
-        $taxAmount     = Amount::make(0); // TODO
+        $price = ShoppingOrderProductPriceHook::hook($productPriceDTO,
+            fn() => $this->productPriceDomainService->getPrice($productPriceDTO));
+
+        $productAmount = (clone $price)->mul($productData->num);
 
         $productData->additional([
             'price'          => $price->value(),
             'product_amount' => $productAmount->value(),
-            'tax_amount'     => $taxAmount->value(),
         ]);
 
     }
@@ -105,10 +148,22 @@ class OrderCalculationService extends Service
      */
     protected function calculationProductDiscount(ProductData $productData, OrderData $orderData) : void
     {
-        // TODO
-        $productData->additional([
-            'discount_amount' => Amount::make(0)->value(),
+        $productPriceDTO            = new  ProductPriceData;
+        $productPriceDTO->productId = $productData->productId;
+        $productPriceDTO->skuId     = $productData->skuId;
+        $productPriceDTO->num       = $productData->num;
+        $productPriceDTO->store     = $orderData->store;
+        $productPriceDTO->channel   = $orderData->channel;
+        $productPriceDTO->guide     = $orderData->guide;
 
+        $productPriceDTO->additional([
+            'orders' => $orderData
+        ]);
+        // TODO   discountBreakdown 这里需要 优惠明细
+        $discountAmount = ShoppingOrderProductDiscountHook::hook($productPriceDTO, static fn() => Amount::make(0));
+
+        $productData->additional([
+            'discount_amount' => $discountAmount->value(),
         ]);
 
     }
@@ -120,8 +175,14 @@ class OrderCalculationService extends Service
      *
      * @return void
      */
-    protected function calculationDiscount(OrderData $order) : void
+    protected function calculationOrderDiscounts(OrderData $order) : void
     {
+
+        // 计算单品优惠
+        foreach ($order->products as $product) {
+            // 计算单品优惠
+            $this->calculationProductDiscount($product, $order);
+        }
 
         // 计算订单优惠
         $order->additional([
@@ -137,7 +198,7 @@ class OrderCalculationService extends Service
      *
      * @return void
      */
-    protected function calculationFreight(OrderData $order) : void
+    protected function calculationOrderFreight(OrderData $order) : void
     {
         // TODO
         // 计算订单运费
@@ -147,7 +208,7 @@ class OrderCalculationService extends Service
 
     }
 
-    protected function check(OrderData $order) : void
+    protected function calculateOrderTotal(OrderData $order) : void
     {
         $productPayableAmount = Amount::make(0);
         // 计算单品

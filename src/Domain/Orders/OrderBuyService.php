@@ -1,22 +1,26 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Services;
+namespace RedJasmine\Shopping\Domain\Orders;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
+use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Facades\Hook;
-use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Foundation\Service\Service;
+use Throwable;
 
 class OrderBuyService extends Service
 {
@@ -29,27 +33,44 @@ class OrderBuyService extends Service
     }
 
 
-    public function buy(OrdersData $ordersData)
+    /**
+     * @param  OrdersData  $ordersData
+     *
+     * @return Collection<Order>
+     * @throws AbstractException
+     * @throws Throwable
+     */
+    public function buy(OrdersData $ordersData) : \Illuminate\Support\Collection
     {
-
-
+        $orders = collect([]);
         try {
             DB::beginTransaction();
 
-            // 扣库存
-
-            $this->toOrderCommands($ordersData);
-            // 核销优惠券
-            // TODO
+            foreach ($ordersData->orders as $orderData) {
+                $orders[] = $this->createOrderCore($orderData);
+            }
             DB::commit();
+
         } catch (AbstractException $exception) {
             DB::rollBack();
+            Log::info('下单失败:'.$exception->getMessage(), $ordersData->toArray());
             throw  $exception;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             DB::rollBack();
             throw  $throwable;
         }
+        return $orders;
 
+    }
+
+    protected function createOrderCore(OrderData $orderData) : Order
+    {
+        $orderDTO = Hook::execute('shopping.order.create.before', $orderData,
+            fn() => $this->toOrderCommand($orderData));
+        // 创建订单
+        return Hook::execute('shopping.order.create', $orderDTO,
+            fn() => $this->orderCommandService->create($orderDTO)
+        );
     }
 
     protected function toOrderCommands(OrdersData $ordersData)
@@ -58,16 +79,10 @@ class OrderBuyService extends Service
         foreach ($ordersData->orders as $orderData) {
 
             $orderDTOList[] = $orderDTO = $this->toOrderCommand($orderData);
-            $order = Hook::execute('shopping.order.create',
-                $orderDTO,
+            $order          = Hook::execute('shopping.order.create', $orderDTO,
                 fn() => $this->orderCommandService->create($orderDTO)
             );
 
-
-            dd($order);
-
-            // 创建订单
-            $order = $this->orderCommandService->create($orderDTO);
             // 扣减库存
             foreach ($orderData->products as $productData) {
                 $stockCommand             = new StockCommand();
