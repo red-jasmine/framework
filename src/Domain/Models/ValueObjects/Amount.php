@@ -83,7 +83,7 @@ class Amount extends ValueObject
         return $this;
     }
 
-    public function bcmul($value) : self
+    public function mul($value) : self
     {
         $this->setValue(bcmul($this->value, (string) $value, $this->scale));
         return $this;
