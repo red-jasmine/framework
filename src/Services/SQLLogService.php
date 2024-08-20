@@ -16,7 +16,7 @@ class SQLLogService
     {
 
 
-        DB::listen(function (QueryExecuted $query) {
+        DB::listen(static function (QueryExecuted $query) {
             try {
                 $sql = str_replace("?", "'%s'", $query->sql);
                 $sql = vsprintf($sql, $query->bindings ?? []);
@@ -25,19 +25,14 @@ class SQLLogService
             }
 
             $data = [
-                'time'           => $query->time,
+                'sql'            => $sql,
                 'connectionName' => $query->connectionName,
                 'host'           => $query->connection->getConfig('host'),
                 'database'       => $query->connection->getConfig('database'),
-                'sql'            => $sql,
+                'time'           => $query->time,
             ];
 
-            Log::build([
-                           'driver' => 'daily',
-                           'path'   => storage_path('logs/sql.log'),
-                           'level'  => env('LOG_LEVEL', 'debug'),
-                           'days'   => 14,
-                       ])->info('SQL', $data);
+            Log::debug('SQL',$data);
         });
 
     }

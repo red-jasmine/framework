@@ -10,9 +10,9 @@ class HookManage
     protected static array $hooks = [];
 
 
-    public function register(string $key, $pipeline) : void
+    public function register(string $hook, $pipeline) : void
     {
-        static::$hooks[$key][] = $pipeline;
+        static::$hooks[$hook][] = $pipeline;
     }
 
     public function execute(string $hook, $passable, Closure $destination)
