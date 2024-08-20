@@ -38,32 +38,33 @@ class OrderData extends Command
      * @var UserData|null
      */
     public ?UserData $guide = null;
+
     /**
      * 订单标题
-     * @var string
+     * @var string|null
      */
-    public string $title;
+    public ?string $title  = null;
     /**
      * 客户端类型
      * @var string|null
      */
-    public ?string $clientType;
-    public ?string $clientVersion;
-    public ?string $clientIp;
+    public ?string $clientType         = null;
+    public ?string $clientVersion      = null;
+    public ?string $clientIp           = null;
     public ?string $sourceType         = null;
     public ?string $sourceId           = null;
     public ?string $outerOrderId       = null;
     public ?string $sellerCustomStatus = null;
     public ?string $contact            = null;
     public ?string $password           = null;
-    public ?string $sellerRemarks;
-    public ?string $sellerMessage;
-    public ?string $buyerRemarks;
-    public ?string $buyerMessage;
-    public ?array  $sellerExpands;
-    public ?array  $buyerExpands;
-    public ?array  $otherExpands;
-    public ?array  $tools;
+    public ?string $sellerRemarks      = null;
+    public ?string $sellerMessage      = null;
+    public ?string $buyerRemarks       = null;
+    public ?string $buyerMessage       = null;
+    public ?array  $sellerExpands      = null;
+    public ?array  $buyerExpands       = null;
+    public ?array  $otherExpands       = null;
+    public ?array  $tools              = null;
 
 
     /**
@@ -79,8 +80,6 @@ class OrderData extends Command
     public Collection $products;
 
 
-
-
     protected UserData $seller;
 
     public function getSeller() : UserData
@@ -93,9 +92,6 @@ class OrderData extends Command
         $this->seller = $seller;
         return $this;
     }
-
-
-
 
 
 }

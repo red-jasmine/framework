@@ -35,7 +35,7 @@ class OrderCalculationService extends Service
             $this->calculationOrder($order);
         }
         // 计算订单优惠金额 （跨店活动） ? TODO
-        $orders->subtotal();
+        $orders->total();
         return $orders;
 
     }

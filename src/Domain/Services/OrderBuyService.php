@@ -10,8 +10,12 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Support\Facades\Hook;
+use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Foundation\Service\Service;
 
 class OrderBuyService extends Service
@@ -28,14 +32,13 @@ class OrderBuyService extends Service
     public function buy(OrdersData $ordersData)
     {
 
-        $this->toOrderCommands($ordersData);
 
         try {
             DB::beginTransaction();
 
             // 扣库存
 
-
+            $this->toOrderCommands($ordersData);
             // 核销优惠券
             // TODO
             DB::commit();
@@ -51,14 +54,34 @@ class OrderBuyService extends Service
 
     protected function toOrderCommands(OrdersData $ordersData)
     {
-
+        $orderDTOList = [];
         foreach ($ordersData->orders as $orderData) {
 
-           $orderDTO  =  $this->toOrderCommand($orderData);
+            $orderDTOList[] = $orderDTO = $this->toOrderCommand($orderData);
+            $order = Hook::execute('shopping.order.create',
+                $orderDTO,
+                fn() => $this->orderCommandService->create($orderDTO)
+            );
 
 
-           $order = $this->orderCommandService->create($orderDTO);
-           dd($order);
+            dd($order);
+
+            // 创建订单
+            $order = $this->orderCommandService->create($orderDTO);
+            // 扣减库存
+            foreach ($orderData->products as $productData) {
+                $stockCommand             = new StockCommand();
+                $stockCommand->productId  = $productData->productId;
+                $stockCommand->skuId      = $productData->skuId;
+                $stockCommand->stock      = $productData->num;
+                $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
+                // 锁定库存
+                $this->stockCommandService->lock($stockCommand);
+            }
+
+            //
+
+
         }
 
     }
@@ -81,10 +104,10 @@ class OrderBuyService extends Service
         $order->orderType     = OrderTypeEnum::SOP;
         $order->payType       = PayTypeEnum::ONLINE;
         // TODO
-        $order->channel       = null;
-        $order->store         = null;
-        $order->address       = null; // TODO
-        $order->products      = collect();
+        $order->channel  = null;
+        $order->store    = null;
+        $order->address  = null; // TODO
+        $order->products = collect();
         foreach ($orderData->products as $productData) {
             // 获取价格
             $additionalData            = $productData->getAdditionalData();

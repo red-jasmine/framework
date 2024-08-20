@@ -38,42 +38,42 @@ class ProductData extends Data
     public ?array  $tools;
 
 
-
-
-
-    protected $product;
+    /**
+     * 产品模型
+     * @var Product
+     */
+    protected Product $product;
+    protected ProductSku $sku;
 
     /**
+     * 产品模型
      * @return Product
      */
-    public function getProduct()
+    public function getProduct() : Product
     {
         return $this->product;
     }
 
     /**
-     * @param mixed $product
+     * @param  Product  $product
      */
-    public function setProduct($product) : void
+    public function setProduct(Product $product) : void
     {
         $this->product = $product;
     }
 
-
-    protected $sku;
-
     /**
      * @return ProductSku
      */
-    public function getSku()
+    public function getSku() : ProductSku
     {
         return $this->sku;
     }
 
     /**
-     * @param mixed $sku
+     * @param  mixed  $sku
      */
-    public function setSku($sku) : void
+    public function setSku(ProductSku $sku) : void
     {
         $this->sku = $sku;
     }
