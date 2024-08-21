@@ -12,7 +12,11 @@ class HookManage
 
     public function register(string $hook, $pipeline) : void
     {
-        static::$hooks[$hook][] = $pipeline;
+        if (is_string($pipeline) && !isset(self::$hooks[$hook][$pipeline])) {
+            static::$hooks[$hook][$pipeline] = $pipeline;
+        } else {
+            static::$hooks[$hook][] = $pipeline;
+        }
     }
 
     public function execute(string $hook, $passable, Closure $destination)
