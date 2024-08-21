@@ -17,6 +17,9 @@ use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderCreateHook;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderToOrderDomainCommandHook;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderToOrderDomainCreateHook;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Facades\Hook;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -30,8 +33,9 @@ class OrderBuyService extends Service
         protected OrderCommandService $orderCommandService,
 
     ) {
-    }
 
+
+    }
 
     /**
      * @param  OrdersData  $ordersData
@@ -42,12 +46,13 @@ class OrderBuyService extends Service
      */
     public function buy(OrdersData $ordersData) : \Illuminate\Support\Collection
     {
+
+
         $orders = collect([]);
         try {
             DB::beginTransaction();
-
             foreach ($ordersData->orders as $orderData) {
-                $orders[] = $this->createOrderCore($orderData);
+                $orders[] = ShoppingOrderCreateHook::hook($orderData, fn() => $this->createOrderCore($orderData));
             }
             DB::commit();
 
@@ -63,44 +68,31 @@ class OrderBuyService extends Service
 
     }
 
+    /**
+     * 订单创建核心流程
+     *
+     * @param  OrderData  $orderData
+     *
+     * @return Order
+     * @throws Throwable
+     */
     protected function createOrderCore(OrderData $orderData) : Order
     {
-        $orderDTO = Hook::execute('shopping.order.create.before', $orderData,
-            fn() => $this->toOrderCommand($orderData));
-        // 创建订单
-        return Hook::execute('shopping.order.create', $orderDTO,
-            fn() => $this->orderCommandService->create($orderDTO)
+        // 1、下订单
+        //  转换 订单领域 OrderCommand
+        $orderCommand = ShoppingOrderToOrderDomainCommandHook::hook(
+            $orderData,
+            fn($orderData) => $this->toOrderCommand($orderData)
         );
+        // 调用 订单领域 创建
+        $order = ShoppingOrderToOrderDomainCreateHook::hook(
+            $orderCommand,
+            fn($orderCommand) => $this->orderCommandService->create($orderCommand)
+        );
+        // 扣减库存
+        $this->handleProductStock($orderData);
+        return $order;
     }
-
-    protected function toOrderCommands(OrdersData $ordersData)
-    {
-        $orderDTOList = [];
-        foreach ($ordersData->orders as $orderData) {
-
-            $orderDTOList[] = $orderDTO = $this->toOrderCommand($orderData);
-            $order          = Hook::execute('shopping.order.create', $orderDTO,
-                fn() => $this->orderCommandService->create($orderDTO)
-            );
-
-            // 扣减库存
-            foreach ($orderData->products as $productData) {
-                $stockCommand             = new StockCommand();
-                $stockCommand->productId  = $productData->productId;
-                $stockCommand->skuId      = $productData->skuId;
-                $stockCommand->stock      = $productData->num;
-                $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
-                // 锁定库存
-                $this->stockCommandService->lock($stockCommand);
-            }
-
-            //
-
-
-        }
-
-    }
-
 
     protected function toOrderCommand(
         OrderData $orderData
@@ -162,6 +154,45 @@ class OrderBuyService extends Service
         }
 
         return $order;
+    }
+
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return void
+     * @throws Throwable
+     */
+    protected function handleProductStock(OrderData $orderData) : void
+    {
+        foreach ($orderData->products as $productData) {
+            $stockCommand             = new StockCommand();
+            $stockCommand->productId  = $productData->productId;
+            $stockCommand->skuId      = $productData->skuId;
+            $stockCommand->stock      = $productData->num;
+            $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
+            // 锁定库存
+            $this->stockCommandService->sub($stockCommand);
+        }
+    }
+
+    protected function toOrderCommands(OrdersData $ordersData)
+    {
+        $orderDTOList = [];
+        foreach ($ordersData->orders as $orderData) {
+
+            $orderDTOList[] = $orderDTO = $this->toOrderCommand($orderData);
+            $order          = Hook::execute('shopping.order.create', $orderDTO,
+                fn() => $this->orderCommandService->create($orderDTO)
+            );
+
+            // 扣减库存
+
+
+            //
+
+
+        }
+
     }
 
 }
