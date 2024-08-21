@@ -46,9 +46,9 @@ return new class extends Migration {
             $table->decimal('cost_price', 10)->default(0)->comment('成本价');
             // 库存
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
-            $table->unsignedBigInteger('stock')->default(0)->comment('库存');
-            $table->unsignedBigInteger('channel_stock')->default(0)->comment('渠道库存');
-            $table->unsignedBigInteger('lock_stock')->default(0)->comment('锁定库存');
+            $table->bigInteger('stock')->default(0)->comment('库存');
+            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
+            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
 
             // 承诺服务
             $table->string('promise_services')->nullable()->comment('承诺服务');
