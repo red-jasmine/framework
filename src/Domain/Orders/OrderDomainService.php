@@ -14,6 +14,7 @@ use RedJasmine\Shopping\Application\Services\OrderCommandService;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\ProductData;
+use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderSplitProductHook;
 use RedJasmine\Shopping\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -104,12 +105,18 @@ class OrderDomainService extends Service
         // 拆分订单
         $orders       = new OrdersData();
         $orderCollect = collect();
-        // 按买家拆分
-        $productGroup = [];
-        foreach ($orderData->products as $productData) {
-            $splitKey                  = $this->getProductSplitKey($productData);
-            $productGroup[$splitKey][] = $productData;
-        }
+
+        $productGroup = $orderData->products
+            ->each(function ($product) {
+                // 订单拆分 默认区分卖家来拆分订单
+                $product->setSplitKey(ShoppingOrderSplitProductHook::hook($product,
+                    fn() => $this->getProductSplitKey($product))
+                );
+            })
+            ->groupBy(function ($product) {
+                return $product->getSplitKey();
+            })->all();
+
         foreach ($productGroup as $splitKey => $products) {
             $order  = clone $orderData;
             $seller = $products[0]->getProduct()->owner;

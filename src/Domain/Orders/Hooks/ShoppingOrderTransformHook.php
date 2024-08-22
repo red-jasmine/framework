@@ -9,10 +9,10 @@ use RedJasmine\Support\Foundation\Hook\Hookable;
 /**
  * @method static OrderCreateCommand hook(OrderData $orderData, \Closure $closure)
  */
-class ShoppingOrderToOrderDomainCommandHook
+class ShoppingOrderTransformHook
 {
 
     use Hookable;
 
-    public static string $hook = 'shopping.order.buy.create.order.domain.command';
+    public static string $hook = 'shopping.domain.order.create.transform';
 }

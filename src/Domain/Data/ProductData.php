@@ -78,5 +78,23 @@ class ProductData extends Data
         $this->sku = $sku;
     }
 
+    protected string $splitKey;
+
+    public function getSplitKey() : string
+    {
+        return $this->splitKey;
+    }
+
+    public function setSplitKey(string $splitKey) : ProductData
+    {
+        $this->splitKey = $splitKey;
+        return $this;
+    }
+
+
+
+
+
+
 
 }

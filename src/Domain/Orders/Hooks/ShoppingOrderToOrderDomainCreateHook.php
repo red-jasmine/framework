@@ -13,5 +13,5 @@ class ShoppingOrderToOrderDomainCreateHook
 
     use Hookable;
 
-    public static string $hook = 'shopping.order.buy.create.order.domain.create';
+    public static string $hook = 'shopping.domain.order.create.order.domain.create';
 }

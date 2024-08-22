@@ -19,7 +19,7 @@ class ShoppingOrderProductPriceHook
 
     use Hookable;
 
-    public static string $hook = 'shopping.order.calculation.product.price';
+    public static string $hook = 'shopping.domain.order.calculation.product.price';
 
 
 }
