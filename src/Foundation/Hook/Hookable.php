@@ -19,7 +19,7 @@ trait Hookable
      */
     public static function hook()
     {
-        return Hook::execute(static::getHookName(), ... func_get_args());
+        return Hook::hook(static::getHookName(), ... func_get_args());
     }
 
     protected static function getHookName() : string
