@@ -7,7 +7,7 @@ use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
 use RedJasmine\Shopping\Domain\Orders\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandler;
 
-class OrderBuyCommandHandler extends CommandHandler
+class OrderCalculateCommandHandler extends CommandHandler
 {
     public function __construct(
         protected OrderDomainService $orderDomainService,
@@ -19,8 +19,7 @@ class OrderBuyCommandHandler extends CommandHandler
 
     public function handle(ProductBuyCommand $command)
     {
-        $orders = $this->orderDomainService->buy($command);
-
+        $orders = $this->orderDomainService->calculates($command);
 
         return $orders;
 

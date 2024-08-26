@@ -6,6 +6,7 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 use Illuminate\Http\Request;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Application\UserCases\Commands\ProductCalculateCommand;
 use RedJasmine\Support\Http\Controllers\Controller;
 
 class OrderController extends Controller
@@ -22,6 +23,19 @@ class OrderController extends Controller
     public function index(Request $request)
     {
 
+    }
+
+
+
+    public function calculate(Request $request)
+    {
+        $command = ProductCalculateCommand::from(
+            array_merge($request->all(),
+                [
+                    'buyer' => $this->getOwner()
+                ]));
+        $orders  = $this->commandService->calculates($command);
+        return $orders;
     }
 
 
