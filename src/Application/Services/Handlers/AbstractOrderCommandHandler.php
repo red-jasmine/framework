@@ -25,7 +25,7 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
     protected function find(int $id) : Order
     {
         $order = $this->orderRepository->find($id);
-        $this->setAggregate($order);
+        $this->setModel($order);
 
         $order->updater = ServiceContext::getOperator();
         return $order;

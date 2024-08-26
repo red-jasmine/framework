@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Handlers;
 
+use Illuminate\Support\Facades\DB;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
 use RedJasmine\Order\Domain\Events\OrderPayingEvent;
 use RedJasmine\Order\Domain\Models\OrderPayment;
@@ -22,11 +23,20 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
         $orderPayment->creator        = $order->updater;
 
 
-        $this->execute(
-            execute: fn() => $order->paying($orderPayment),
-            persistence: fn() => $this->orderRepository->store($order)
-        );
-        OrderPayingEvent::dispatch($order);
+        try {
+            DB::beginTransaction();
+            $order->paying($orderPayment);
+            $this->orderRepository->store($order);
+            DB::commit();
+        } catch (AbstractException $exception) {
+            DB::rollBack();
+            throw  $exception;
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            throw  $throwable;
+        }
+
+
         return $orderPayment;
     }
 

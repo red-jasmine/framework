@@ -415,7 +415,7 @@ class Order extends Model
             $orderProduct->payment_status = PaymentStatusEnum::PAYING;
         });
 
-        $this->fireModelEvent('paying');
+        $this->fireModelEvent('paying',false);
     }
 
 
@@ -449,7 +449,9 @@ class Order extends Model
                 $orderProduct->payment_amount = $orderProduct->payable_amount;
             }
         });
-        $this->fireModelEvent('paid');
+
+
+        $this->fireModelEvent('paid',false);
     }
 
 
