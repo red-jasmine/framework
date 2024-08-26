@@ -13,7 +13,7 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
     public function handle(OrderPaidCommand $command) : bool
     {
 
-        // 加锁处理
+
         $order                            = $this->find($command->id);
         $orderPayment                     = $order->payments->where('id', $command->orderPaymentId)->firstOrFail();
         $orderPayment->payment_amount     = $command->amount;
@@ -24,12 +24,13 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
         $orderPayment->payment_channel_no = $command->paymentChannelNo;
         $orderPayment->payment_method     = $command->paymentMethod;
         $orderPayment->updater            = $order->updater;
-        $this->execute(
-            execute: fn() => $order->paid($orderPayment),
-            persistence: fn() => $this->orderRepository->store($order)
-        );
+
+        $order->paid($orderPayment);
+
+        $this->orderRepository->store($order);
 
         OrderPaidEvent::dispatch($order);
+
         return true;
     }
 
