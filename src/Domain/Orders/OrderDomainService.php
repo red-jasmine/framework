@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Shopping\Domain\Orders;
 
-use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
@@ -11,10 +10,8 @@ use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Shopping\Application\Services\OrderCommandService;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
-use RedJasmine\Shopping\Domain\Data\OrderData;
-use RedJasmine\Shopping\Domain\Data\ProductData;
-use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderSplitProductHook;
+use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
+use RedJasmine\Shopping\Domain\Orders\Data\OrdersData;
 use RedJasmine\Shopping\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
 

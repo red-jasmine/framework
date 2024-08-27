@@ -7,7 +7,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
-use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
 
 class OrderCreateCommandTransformer
 {

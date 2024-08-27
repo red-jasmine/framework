@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Shopping\Domain\Orders\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Order\Application\UserCases\Commands\Data\OrderAddressData;
