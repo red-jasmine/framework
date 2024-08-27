@@ -45,22 +45,11 @@ class OrderBuyService extends Service
     {
 
         $orders = collect();
-        try {
-            DB::beginTransaction();
-            foreach ($ordersData->orders as $orderData) {
-                $orders[] = ShoppingOrderCreateHook::hook($orderData, fn() => $this->createOrderCore($orderData));
-            }
-            DB::commit();
-
-        } catch (AbstractException $exception) {
-            DB::rollBack();
-            Log::info('下单失败:'.$exception->getMessage(), $ordersData->toArray());
-            throw  $exception;
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw  $throwable;
+        foreach ($ordersData->orders as $orderData) {
+            $orders[] = ShoppingOrderCreateHook::hook($orderData, fn() => $this->createOrderCore($orderData));
         }
         return $orders;
+
 
     }
 
