@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Application;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
 use RedJasmine\Support\Foundation\Service\ServiceMacro;
 
 
@@ -16,7 +17,7 @@ use RedJasmine\Support\Foundation\Service\ServiceMacro;
 abstract class CommandHandler extends ServiceMacro
 {
 
-
+    use CanUseDatabaseTransactions;
 
     /**
      * @var mixed
