@@ -21,41 +21,26 @@ class EloquentRepository implements RepositoryInterface
     }
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      *
      * @return mixed
      * @throws Throwable
      */
     public function store(Model $model) : Model
     {
-        try {
-            DB::beginTransaction();
-            $model->push();
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw  $throwable;
-        }
+        $model->push();
         return $model;
     }
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      *
      * @return void
      * @throws Throwable
      */
     public function update(Model $model) : void
     {
-        try {
-            DB::beginTransaction();
-            $model->push();
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw  $throwable;
-        }
-
+        $model->push();
     }
 
     public function delete(Model $model)

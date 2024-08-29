@@ -13,19 +13,23 @@ class ServiceContextManage
 {
 
 
+    protected array $data = [];
+
     public function __construct(protected $app)
     {
 
     }
 
-
-    protected array $data = [];
-
-
     public function setOperator(UserInterface $operator) : static
     {
         $this->put('operator', $operator);
         return $this;
+    }
+
+    public function put($key, $value) : bool
+    {
+        $this->data[$key] = $value;
+        return true;
     }
 
     public function getOperator() : ?UserInterface
@@ -44,7 +48,7 @@ class ServiceContextManage
                 return $operator;
             } else {
                 // 获取模型名称 TODO
-                return UserData::from([ 'id' => $operator->getKey(), 'type' => get_class($operator) ]);
+                return UserData::from(['id' => $operator->getKey(), 'type' => get_class($operator)]);
             }
         }
 
@@ -66,12 +70,6 @@ class ServiceContextManage
             return $item();
         }
         return $item;
-    }
-
-    public function put($key, $value) : bool
-    {
-        $this->data[$key] = $value;
-        return true;
     }
 
     /**

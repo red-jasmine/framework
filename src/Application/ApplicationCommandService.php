@@ -10,6 +10,7 @@ use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
 use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 
@@ -19,7 +20,7 @@ use RedJasmine\Support\Helpers\ID\Snowflake;
  * @method void  delete(Data $command)
  * @property RepositoryInterface $repository
  */
-abstract class ApplicationCommandService extends ApplicationService
+abstract class ApplicationCommandService extends Service
 {
     public function __construct()
     {
