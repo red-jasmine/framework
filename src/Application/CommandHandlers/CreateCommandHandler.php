@@ -7,45 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Facades\ServiceContext;
 use Throwable;
 
 class CreateCommandHandler extends CommandHandler
 {
-    protected static string $modelClass;
-
-    protected Model|null $model = null;
-
-
-    /**
-     * @var mixed
-     */
-    protected Data|null $command;
-
-    public function __construct(
-        protected RepositoryInterface $repository
-    ) {
-    }
-
-    /**
-     * @return \Model|null
-     */
-    public function getModel() : ?\Model
-    {
-        return $this->model;
-    }
-
-    /**
-     * @param  Model  $model
-     *
-     * @return static
-     */
-    public function setModel(Model $model) : static
-    {
-        $this->model = $model;
-        return $this;
-    }
 
 
     /**
@@ -87,13 +53,6 @@ class CreateCommandHandler extends CommandHandler
             throw $throwable;
         }
         return $this->model;
-    }
-
-
-    public function setCommand($command) : static
-    {
-        $this->command = $command;
-        return $this;
     }
 
     protected function createModel(Data $command) : Model

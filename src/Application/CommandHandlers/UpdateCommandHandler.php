@@ -11,45 +11,17 @@ use RedJasmine\Support\Facades\ServiceContext;
 
 class UpdateCommandHandler extends CommandHandler
 {
-    protected static string $modelClass;
-    protected Model|null    $model = null;
-    /**
-     * @var mixed
-     */
-    protected Data|null $command;
 
-    public function __construct(
-        protected RepositoryInterface $repository
-    ) {
-    }
-
-    /**
-     * @return \Model|null
-     */
-    public function getModel() : ?\Model
-    {
-        return $this->model;
-    }
-
-    /**
-     * @param  Model  $model
-     *
-     * @return static
-     */
-    public function setModel(Model $model) : static
-    {
-        $this->model = $model;
-        return $this;
-    }
 
     public function handle(Data $command) : ?Model
     {
-        $this->setModel($this->repository->find($command->id));
 
 
         // 开始数据库事务
         $this->beginDatabaseTransaction();
         try {
+            $this->setModel($this->repository->find($command->id));
+
             // 对数据进行验证
             $this->validate();
             // 对特殊的模型进行处理，如设置 owner 等
@@ -96,12 +68,6 @@ class UpdateCommandHandler extends CommandHandler
         }
 
 
-    }
-
-    public function setCommand($command) : static
-    {
-        $this->command = $command;
-        return $this;
     }
 
 
