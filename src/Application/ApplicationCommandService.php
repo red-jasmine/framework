@@ -22,6 +22,7 @@ use RedJasmine\Support\Helpers\ID\Snowflake;
  */
 abstract class ApplicationCommandService extends Service
 {
+    // TODO 添加 hooks 的 特性
     public function __construct()
     {
     }

@@ -5,10 +5,14 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Foundation\Hook\Hookable;
 use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
 
 class CommandHandler
 {
+
+    // TODO 添加 hooks  的 特性
+
     use CanUseDatabaseTransactions;
 
 
