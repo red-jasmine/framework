@@ -64,7 +64,7 @@ class UpdateCommandHandler extends CommandHandler
     protected function withOperator() : void
     {
         if ($this->model instanceof OperatorInterface) {
-            $this->model->creator = ServiceContext::getOperator();
+            $this->model->updater = ServiceContext::getOperator();
         }
 
 
