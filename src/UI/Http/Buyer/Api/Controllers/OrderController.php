@@ -27,14 +27,28 @@ class OrderController extends Controller
 
 
 
+    /**
+     * 计算产品订单
+     *
+     * 该方法主要用于计算产品订单，包括合并请求数据和当前用户信息来创建命令对象，
+     * 并调用命令服务进行订单计算处理返回计算后的订单信息
+     *
+     * @param Request $request 请求对象，包含产品计算所需的数据
+     * @return mixed 返回计算后的订单信息
+     */
     public function calculate(Request $request)
     {
+        // 从请求数据和当前用户信息中构建产品计算命令
         $command = ProductCalculateCommand::from(
             array_merge($request->all(),
                 [
                     'buyer' => $this->getOwner()
                 ]));
+
+        // 调用命令服务进行产品订单的计算
         $orders  = $this->commandService->calculates($command);
+
+        // 返回计算后的订单信息
         return $orders;
     }
 
