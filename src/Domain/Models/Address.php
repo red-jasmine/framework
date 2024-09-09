@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Address\Models;
+namespace RedJasmine\Address\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Model;

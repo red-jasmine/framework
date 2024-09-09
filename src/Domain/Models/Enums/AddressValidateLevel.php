@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Address\Enums;
+namespace RedJasmine\Address\Domain\Models\Enums;
 
 enum AddressValidateLevel: int
 {

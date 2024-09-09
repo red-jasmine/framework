@@ -3,9 +3,10 @@
 namespace RedJasmine\Address\Exceptions;
 
 
-use RedJasmine\Support\Exceptions\CommonRuntimeException;
+use RedJasmine\Support\Exceptions\AbstractException;
 
-class AddressException extends CommonRuntimeException
+
+class AddressException extends AbstractException
 {
 
 

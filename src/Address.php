@@ -3,7 +3,7 @@
 namespace RedJasmine\Address;
 
 use Illuminate\Support\Facades\Validator;
-use RedJasmine\Address\Enums\AddressValidateLevel;
+use RedJasmine\Address\Domain\Models\Enums\AddressValidateLevel;
 use RedJasmine\Address\Exceptions\AddressException;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Region\Facades\Region;
@@ -18,10 +18,10 @@ class Address extends Service
      * @param array                $data
      * @param AddressValidateLevel $validateLevel
      *
-     * @return Models\Address
+     * @return \RedJasmine\Address\Domain\Models\Address
      * @throws AddressException
      */
-    public function create(array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
+    public function create(array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Domain\Models\Address
     {
 
         $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
@@ -30,7 +30,7 @@ class Address extends Service
         $data = $this->validator($data);
         // 验证省份
         $data    = $this->regionValidate($data, $validateLevel);
-        $address = new Models\Address();
+        $address = new Domain\Models\Address();
 
         $address->owner   = $this->getOwner();
         $address->creator = $this->getOperator();
@@ -161,10 +161,10 @@ class Address extends Service
      * @param array                $data
      * @param AddressValidateLevel $validateLevel
      *
-     * @return Models\Address
+     * @return \RedJasmine\Address\Domain\Models\Address
      * @throws AddressException
      */
-    public function update(int $id, array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Models\Address
+    public function update(int $id, array $data, AddressValidateLevel $validateLevel = AddressValidateLevel::DISTRICT) : Domain\Models\Address
     {
         $data['is_default'] = (int)(boolean)(int)($data['is_default'] ?? 0);
         $data['sort']       = (int)($data['sort'] ?? 0);
@@ -172,7 +172,7 @@ class Address extends Service
         $data = $this->validator($data);
         // 验证省份
         $data    = $this->regionValidate($data, $validateLevel);
-        $address = Models\Address::findOrFail($id);
+        $address = Domain\Models\Address::findOrFail($id);
 
 
         $address->updater = $this->getOperator();

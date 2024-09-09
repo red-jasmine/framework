@@ -9,14 +9,14 @@ return new class extends Migration {
     {
         Schema::create('address', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_type', 20)->comment('所属者类型');
-            $table->string('owner_id', 64)->comment('所属者UID');
+            $table->string('owner_type')->comment('所属者类型');
+            $table->unsignedBigInteger('owner_id')->comment('所属者UID');
 
             $table->string('contacts',300)->nullable()->comment('联系人');
             $table->string('mobile')->nullable()->comment('手机');
 
-            $table->string('country', 20)->nullable()->comment('国家');
-            $table->string('province', 20)->nullable()->comment('省份');
+            $table->string('country')->nullable()->comment('国家');
+            $table->string('province')->nullable()->comment('省份');
             $table->string('city', 30)->nullable()->comment('城市');
             $table->string('district', 40)->nullable()->comment('区县');
             $table->string('street', 50)->nullable()->comment('乡镇街道');
@@ -36,12 +36,13 @@ return new class extends Migration {
             $table->string('type')->nullable()->comment('地址类型');
             $table->unsignedTinyInteger('is_default')->default(0)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
+            $table->string('status',32)->nullable()->comment('状态');
+
 
             $table->string('creator_type', 64)->nullable()->comment('创建者类型');
-            $table->string('creator_id', 64)->nullable()->comment('创建者ID');
-
+            $table->unsignedBigInteger('creator_id')->nullable()->comment('创建者ID');
             $table->string('updater_type', 64)->nullable()->comment('更新者类型');
-            $table->string('updater_id', 64)->nullable()->comment('更新者UID');
+            $table->unsignedBigInteger('updater_id')->nullable()->comment('更新者UID');
 
             $table->timestamps();
             $table->softDeletes();
