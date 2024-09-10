@@ -23,7 +23,7 @@ class OrderCreateCommandTransformer
         $order->clientIp      = $orderData->clientIp;
         $order->clientType    = $orderData->clientType;
         $order->clientVersion = $orderData->clientVersion;
-        $order->orderType     = OrderTypeEnum::SOP;
+        $order->orderType     = OrderTypeEnum::STANDARD;
         $order->payType       = PayTypeEnum::ONLINE;
         // TODO
         $order->channel  = null;
