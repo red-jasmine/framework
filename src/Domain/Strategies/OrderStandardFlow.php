@@ -13,7 +13,7 @@ use RedJasmine\Order\Domain\Models\OrderProduct;
 /**
  * 订单标准流程
  */
-class OrderSopFlow implements OrderFlowInterface
+class OrderStandardFlow implements OrderFlowInterface
 {
     public function creating(Order $order) : void
     {

@@ -11,7 +11,7 @@ use RedJasmine\Order\Domain\Models\OrderProduct;
 /**
  * 订单预售流程
  */
-class OrderPresaleFlow extends OrderSopFlow implements OrderFlowInterface
+class OrderPresaleFlow extends OrderStandardFlow implements OrderFlowInterface
 {
     public function paid(Order $order) : void
     {

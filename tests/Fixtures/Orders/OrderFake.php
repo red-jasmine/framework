@@ -19,7 +19,7 @@ class OrderFake
 {
 
 
-    public OrderTypeEnum $orderType = OrderTypeEnum::SOP;
+    public OrderTypeEnum $orderType = OrderTypeEnum::STANDARD;
 
     /**
      * 发货类型
