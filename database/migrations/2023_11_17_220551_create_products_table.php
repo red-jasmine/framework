@@ -16,29 +16,26 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             // 卖家信息
-            $table->morphs('owner');
+            $table->morphs('owner', 'idx_owner');
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
-
-
-            $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
             $table->string('barcode', 32)->nullable()->comment('条形码');
             $table->string('outer_id')->nullable()->comment('商品编码');
-            // 状态相关
-            $table->unsignedBigInteger('sort')->default(0)->comment('排序');
+            $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
+
             //单位
-            $table->string('unit_name',10)->nullable()->comment('单位名称');
+            $table->string('unit_name', 10)->nullable()->comment('单位名称');
             $table->unsignedBigInteger('unit')->default(1)->comment('单位数量');
             // 类目信息
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
             $table->unsignedBigInteger('seller_category_id')->default(0)->comment('卖家分类ID');
             // 运费
-            $table->string('freight_payer',32)->comment(FreightPayerEnum::comments('运费承担方'));
+            $table->string('freight_payer', 32)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('postage_id')->default(0)->comment('运费模板ID');
             // 价格
             $table->decimal('price', 10)->default(0)->comment('销售价');
@@ -59,15 +56,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('min_limit')->default(0)->comment('起购量');
             $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
             $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
+            // 展示类
             $table->unsignedTinyInteger('is_hot')->default(0)->comment('热销');
             $table->unsignedTinyInteger('is_new')->default(0)->comment('新品');
             $table->unsignedTinyInteger('is_best')->default(0)->comment('精品');
             $table->unsignedTinyInteger('is_benefit')->default(0)->comment('特惠');
+            $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             // 时间
             $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
             $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
             $table->timestamp('off_sale_time')->nullable()->comment('下架时间');
             // 供应商
+
             $table->string('supplier_type')->nullable()->comment('供应商类型');
             $table->unsignedBigInteger('supplier_id')->nullable()->comment('供应商ID');
             $table->unsignedBigInteger('supplier_product_id')->nullable()->comment('供应商 商品ID');
@@ -75,22 +75,20 @@ return new class extends Migration {
             // 审核状态
             // 是否违规
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
-            //统计项
+            // 统计项
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
 
-            // 操作人
+            // 操作
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->timestamp('modified_time')->nullable()->comment('修改时间');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
-
             $table->timestamps();
             $table->softDeletes();
+
             $table->comment('商品表');
 
 
-            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
         });
 
     }
