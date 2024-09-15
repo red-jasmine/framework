@@ -62,7 +62,7 @@ class CardGroupBindProductCommandService extends ApplicationCommandService
         'bind'   => CardGroupBindProductBindCommandHandler::class
     ];
 
-    protected function pipelines() : array
+    protected function hooks() : array
     {
         return [
             'create' => [

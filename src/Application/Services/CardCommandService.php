@@ -16,14 +16,12 @@ class CardCommandService extends ApplicationCommandService
 
     public function __construct(
         protected CardRepositoryInterface $repository,
-    )
-    {
+    ) {
 
-        parent::__construct();
     }
 
 
-    protected function pipelines() : array
+    protected function hooks() : array
     {
         return [
             'create' => [
