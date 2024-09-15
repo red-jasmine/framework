@@ -4,7 +4,6 @@ namespace RedJasmine\Product\Tests\Fixtures\Product;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Product\Application\Product\UserCases\Commands\Product;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;

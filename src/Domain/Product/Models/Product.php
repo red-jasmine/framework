@@ -134,14 +134,14 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'id',
             'id',
             'series_id'
-        )->with([ 'products' ]);
+        )->with(['products']);
     }
 
 
     /**
      * 设置状态
      *
-     * @param ProductStatusEnum $status
+     * @param  ProductStatusEnum  $status
      *
      * @return void
      */
@@ -164,9 +164,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
                 $this->off_sale_time = now();
                 break;
             case ProductStatusEnum::PRE_SALE:
-
                 break;
-            case ProductStatusEnum::FORBID:
+            case ProductStatusEnum::FORBID_SALE:
                 $this->off_sale_time = now();
                 break;
             case ProductStatusEnum::DELETED:
@@ -185,7 +184,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         if (!in_array($this->status, [
             ProductStatusEnum::ON_SALE,
             ProductStatusEnum::PRE_SALE
-        ],            true)) {
+        ], true)) {
 
 
             throw  ProductException::newFromCodes(ProductException::PRODUCT_FORBID_SALE);
@@ -197,7 +196,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
 
     /**
-     * @param int $num
+     * @param  int  $num
      *
      * @return bool
      * @throws ProductException

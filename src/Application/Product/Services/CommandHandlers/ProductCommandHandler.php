@@ -8,10 +8,10 @@ use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryQueryService;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\Sku;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
+use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\ProductSku;
@@ -19,7 +19,6 @@ use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
-
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\CommandHandler;
 use Throwable;
@@ -27,7 +26,7 @@ use Throwable;
 /**
  * @method  ProductCommandService getService()
  */
-class ProductCommand extends CommandHandler
+class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandlers\CommandHandler
 {
 
     public function __construct(
@@ -40,7 +39,7 @@ class ProductCommand extends CommandHandler
     )
     {
 
-        parent::__construct();
+
 
     }
 
@@ -63,7 +62,7 @@ class ProductCommand extends CommandHandler
         return $sku;
     }
 
-    protected function fillProduct(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
+    protected function fillProduct(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void
     {
         $product->owner               = $command->owner;
         $product->supplier            = $command->supplier;
@@ -200,14 +199,16 @@ class ProductCommand extends CommandHandler
 
     /**
      * @param Product                                                            $product
-     * @param \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws ProductPropertyException
      * @throws ProductException|JsonException
      */
-    public function handleCore(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
+    public function handleCore(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void
     {
+
+
         // 基础验证
         // 验证 销售属性和 规格一一对应
         $this->fillProduct($product, $command);
@@ -253,14 +254,13 @@ class ProductCommand extends CommandHandler
 
     /**
      * @param Product                                                            $product
-     * @param \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws StockException
-     
-     * @throws Throwable
+ * @throws Throwable
      */
-    protected function handleStock(Product $product, \RedJasmine\Product\Application\Product\UserCases\Commands\Product $command) : void
+    protected function handleStock(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void
     {
 
 

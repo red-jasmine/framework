@@ -23,7 +23,7 @@ class ProductPropertyGroupCommandService extends ApplicationCommandService
         protected ProductPropertyGroupRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
 

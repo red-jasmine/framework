@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
 
 use Illuminate\Support\Facades\DB;
+use JsonException;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Domain\Product\Models\Product;
@@ -14,28 +15,36 @@ use Throwable;
 /**
  * @method  ProductCommandService getService()
  */
-class ProductUpdateCommandHandler extends ProductCommand
+class ProductUpdateCommandHandler extends ProductCommandHandler
 {
 
 
     /**
-     * @param ProductUpdateCommand $command
+     * @param  ProductUpdateCommand  $command
      *
      * @return Product|null
      * @throws Throwable
-     * @throws \JsonException
+     * @throws JsonException
      * @throws ProductException
      * @throws ProductPropertyException
      * @throws StockException
      */
     public function handle(ProductUpdateCommand $command) : ?Product
     {
+
+
+        $this->setCommand($command);
+
+        /**
+         * @var $product Product
+         */
+        $product = $this->getService()->getRepository()->find($command->id);
+        $this->setModel($product);
+
+
+        $this->beginDatabaseTransaction();
         try {
-            DB::beginTransaction();
-            /**
-             * @var $product Product
-             */
-            $product = $this->getService()->getRepository()->find($command->id);
+
             $product->setRelation('skus', $product->skus()->withTrashed()->get());
 
             $product->skus->each(function ($sku) {
@@ -45,20 +54,15 @@ class ProductUpdateCommandHandler extends ProductCommand
 
             $this->handleCore($product, $command);
 
-
-            $this->execute(
-                execute: null,
-                persistence: fn() => $this->getService()->getRepository()->update($product)
-            );
-
             $this->handleStock($product, $command);
 
 
-            DB::commit();
+            $this->commitDatabaseTransaction();
 
             return $product;
         } catch (Throwable $throwable) {
-            DB::rollBack();
+
+            $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
 

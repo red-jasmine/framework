@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\UserCases\Commands;
+namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Support\Data\Data;

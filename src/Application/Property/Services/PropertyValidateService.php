@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Support\Collection;
 use JsonException;
-use RedJasmine\Product\Application\Product\UserCases\Commands\Sku;
+use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Property;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
@@ -201,7 +201,7 @@ class PropertyValidateService
 
     /**
      * @param Collection<Property> $saleProps
-     * @param Collection<Sku>      $skus
+     * @param Collection<\RedJasmine\Product\Domain\Product\Data\Sku>      $skus
      *
      * @return Collection
      * @throws ProductPropertyException|JsonException
@@ -240,7 +240,7 @@ class PropertyValidateService
      * 生成规格名称
      *
      * @param Collection $saleProps
-     * @param Sku        $sku
+     * @param \RedJasmine\Product\Domain\Product\Data\Sku        $sku
      *
      * @return string
      * @throws ProductPropertyException

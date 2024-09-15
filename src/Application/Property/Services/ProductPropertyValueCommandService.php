@@ -29,7 +29,7 @@ class ProductPropertyValueCommandService extends ApplicationCommandService
         parent::__construct();
     }
 
-    protected function pipelines() : array
+    protected function hooks() : array
     {
         return [
 

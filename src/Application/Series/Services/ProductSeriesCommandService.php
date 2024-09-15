@@ -29,7 +29,7 @@ class ProductSeriesCommandService extends ApplicationCommandService
     }
 
 
-    protected function pipelines() : array
+    protected function hooks() : array
     {
         return [
             'create' => [

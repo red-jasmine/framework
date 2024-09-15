@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\UserCases\Commands;
+namespace RedJasmine\Product\Domain\Product\Data;
 
 use RedJasmine\Support\Data\Data;
-use Spatie\LaravelData\Optional;
 
 class PropValue extends Data
 {

@@ -30,7 +30,7 @@ class ProductPropertyCommandService extends ApplicationCommandService
      */
     protected ?string $pipelinesConfigKeyPrefix = 'pipelines.product.properties';
 
-    protected function pipelines() : array
+    protected function hooks() : array
     {
         return [
             'create' => [
@@ -47,7 +47,7 @@ class ProductPropertyCommandService extends ApplicationCommandService
         protected ProductPropertyRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
     public function newModel($data = null) : Model

@@ -3,11 +3,11 @@
 namespace RedJasmine\Product\Tests\Application\Product\CommandHandlers;
 
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\Property;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyCommandService;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyValueCommandService;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyCreateCommand;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueCreateCommand;
+use RedJasmine\Product\Domain\Product\Data\Property;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
