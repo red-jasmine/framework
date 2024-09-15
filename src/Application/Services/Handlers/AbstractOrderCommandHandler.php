@@ -18,7 +18,7 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
 
     public function __construct(protected OrderRepositoryInterface $orderRepository)
     {
-        parent::__construct();
+
     }
 
 

@@ -15,7 +15,7 @@ abstract class AbstractRefundCommandHandler extends CommandHandler
 
     public function __construct(protected RefundRepositoryInterface $refundRepository)
     {
-        parent::__construct();
+
     }
 
 
