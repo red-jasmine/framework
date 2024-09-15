@@ -5,9 +5,9 @@ namespace RedJasmine\Support\Application;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
-use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
-use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\UpdateCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\DeleteCommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -22,40 +22,21 @@ use RedJasmine\Support\Helpers\ID\Snowflake;
  */
 abstract class ApplicationCommandService extends Service
 {
-    // TODO 添加 hooks 的 特性
-    public function __construct()
-    {
-    }
 
-
+    /**
+     * @var string
+     */
     protected static string $modelClass;
-
-
-    /**
-     * 扩展管道配置
-     * @return array
-     */
-    protected function pipelines() : array
-    {
-        return [
-            'create' => [],
-            'update' => [],
-            'delete' => [],
-        ];
-    }
-
-    /**
-     * 管道配置前缀
-     * @var string|null
-     */
-    protected ?string $pipelinesConfigKeyPrefix = null;
-
     protected static $macros = [
         'create' => CreateCommandHandler::class,
         'update' => UpdateCommandHandler::class,
         'delete' => DeleteCommandHandler::class,
     ];
 
+    public static function getModelClass() : string
+    {
+        return static::$modelClass;
+    }
 
     public function getRepository() : RepositoryInterface
     {
@@ -63,7 +44,7 @@ abstract class ApplicationCommandService extends Service
     }
 
     /**
-     * @param null $command
+     * @param  null  $command
      *
      * @return Model
      * @throws Exception
@@ -90,26 +71,13 @@ abstract class ApplicationCommandService extends Service
     }
 
 
-    /**
-     * 自定义调用
-     *
-     * @param $macro
-     * @param $method
-     * @param $parameters
-     *
-     * @return mixed
-     */
-    public function callMacros($macro, $method, $parameters) : mixed
+    protected function hooks() : array
     {
-
-        if ($macro instanceof CommandHandler) {
-
-            return $macro->handle(...$parameters);
-        }
-
-        return $macro(...$parameters);
-
+        return [
+            'create' => [],
+            'update' => [],
+            'delete' => []
+        ];
     }
-
 
 }

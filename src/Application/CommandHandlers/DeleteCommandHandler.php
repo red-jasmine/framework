@@ -23,11 +23,11 @@ class DeleteCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 根据命令中的ID查找模型
-            $model = $this->repository->find($command->id);
+            $model = $this->getRepository()->find($command->id);
             // 设置当前模型为待删除模型
             $this->setModel($model);
             // 通过仓库删除模型
-            $this->repository->delete($this->model);
+            $this->getRepository()->delete($this->model);
 
             // 提交数据库事务
             $this->commitDatabaseTransaction();

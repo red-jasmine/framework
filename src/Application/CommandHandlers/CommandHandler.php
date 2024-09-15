@@ -5,18 +5,22 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
-use RedJasmine\Support\Foundation\Hook\Hookable;
+use RedJasmine\Support\Foundation\Hook\HasHooks;
+use RedJasmine\Support\Foundation\Service\AwareServiceAble;
 use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
+use RedJasmine\Support\Foundation\Service\MacroAwareService;
 
-class CommandHandler
+abstract class CommandHandler implements MacroAwareService
 {
 
-    // TODO 添加 hooks  的 特性
+    // 插件也拥有钩子能力
+    use HasHooks;
+
 
     use CanUseDatabaseTransactions;
 
+    use AwareServiceAble;
 
-    protected static string $modelClass;
 
     protected Model|null $model = null;
 
@@ -26,10 +30,6 @@ class CommandHandler
      */
     protected Data|null $command;
 
-    public function __construct(
-        protected RepositoryInterface $repository
-    ) {
-    }
 
     /**
      * @return \Model|null
@@ -50,11 +50,34 @@ class CommandHandler
         return $this;
     }
 
+    public function getCommand() : ?Data
+    {
+        return $this->command;
+    }
 
     public function setCommand($command) : static
     {
         $this->command = $command;
         return $this;
+    }
+
+    public function getRepository() : RepositoryInterface
+    {
+        if (property_exists($this,'repository')) {
+            return $this->repository;
+        } else {
+            return $this->getService()->getRepository();
+        }
+    }
+
+
+    public function getModelClass() : ?string
+    {
+        if (property_exists($this, 'modelClass')) {
+            return static::$modelClass;
+        } else {
+            return $this->getService()::getModelClass();
+        }
     }
 
 

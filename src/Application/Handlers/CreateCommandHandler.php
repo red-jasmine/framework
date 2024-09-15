@@ -24,6 +24,8 @@ class CreateCommandHandler extends CommandHandler
     public function handle(Data $command) : mixed
     {
 
+
+
         // TODO 关联模型处理
         // 操作 领域事件 中间件处理
         // 持久化

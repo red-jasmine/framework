@@ -51,5 +51,5 @@ class PaginateQuery extends Data
      * 简单分页模式仅返回当前页的数据，而不获取所有数据进行分页
      * @var bool
      */
-    public bool $simplePaginate = false;
+    //public bool $simplePaginate = false;
 }

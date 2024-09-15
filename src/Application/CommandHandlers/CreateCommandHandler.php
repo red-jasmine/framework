@@ -19,10 +19,10 @@ class CreateCommandHandler extends CommandHandler
      *
      * @param  Data  $command  被处理的命令对象
      *
-     * @return mixed 返回处理后的模型对象或其他相关结果
+     * @return Model|null 返回处理后的模型对象或其他相关结果
      * @throws Throwable
      */
-    public function handle(Data $command) : mixed
+    public function handle(Data $command) : ?Model
     {
 
         // 设置命令对象
@@ -35,49 +35,52 @@ class CreateCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 对数据进行验证
-            $this->validate();
-            // 对特殊的模型进行处理，如设置 owner 等
+            $this->hook('validate', $command, fn() => $this->validate($command));
 
-            // 填充模型属性
-            $this->fill();
+
+            $this->hook('fill', $command, fn() => $this->fill($command));
 
             // 添加操作员信息
             $this->withOperator();
 
             // 存储模型到仓库
-            $this->repository->store($this->model);
+            $this->getRepository()->store($this->model);
 
+            // 提交事务
             $this->commitDatabaseTransaction();
         } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
             throw $throwable;
         }
+        // TODO event
         return $this->model;
     }
 
     protected function createModel(Data $command) : Model
     {
-        if (method_exists(static::$modelClass, 'create')) {
-            return static::$modelClass::create($command);
+        if ($this->getService()){
+            return  $this->getService()->newModel($command);
         }
-        return new (static::$modelClass)();
+
+        if (method_exists($this->getModelClass(), 'create')) {
+            return $this->getModelClass()::create($command);
+        }
+        return new ($this->getModelClass())();
     }
 
 
-    protected function validate() : void
+    protected function validate(Data $command) : void
     {
 
     }
 
 
-    protected function fill() : void
+    protected function fill(Data $command) : void
     {
-        $command = $this->command;
-
 
         $this->model->fill($command->all());
 
-        if ($this->model instanceof OwnerInterface) {
+        if ($this->model instanceof OwnerInterface && property_exists($command, 'owner')) {
             $this->model->owner = $command->owner;
         }
 

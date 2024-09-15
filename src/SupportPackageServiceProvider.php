@@ -85,8 +85,8 @@ class SupportPackageServiceProvider extends ServiceProvider
         });
 
 
-        $this->app->bind('hook', function () {
-            return new HookManage();
+        $this->app->singleton('hook', function ($app) {
+            return  new HookManage();
         });
     }
 

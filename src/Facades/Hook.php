@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static register(string $hook, $pipeline)
- * @method static hook(string $hook, $passable, Closure $destination)
+ * @method static hook(string $hook,mixed $passable, Closure $destination)
  */
 class Hook extends Facade
 {
