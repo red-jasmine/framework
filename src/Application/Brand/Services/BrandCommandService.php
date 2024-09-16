@@ -22,6 +22,12 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class BrandCommandService extends ApplicationCommandService
 {
 
+
+    /**
+     * 命令钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.brand.command';
     /**
      * 定义模型
      * @var string
@@ -35,7 +41,6 @@ class BrandCommandService extends ApplicationCommandService
      */
     public function __construct(protected BrandRepositoryInterface $repository)
     {
-        parent::__construct();
     }
 
     public function newModel($data = null) : Model

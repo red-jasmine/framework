@@ -24,11 +24,23 @@ class ProductPropertyCommandService extends ApplicationCommandService
 {
     protected static string $modelClass = ProductProperty::class;
 
-    /**
-     * 管道配置前缀
-     * @var string|null
-     */
-    protected ?string $pipelinesConfigKeyPrefix = 'pipelines.product.properties';
+
+    public static string $hookNamePrefix = 'product.application.product-property.command';
+
+
+    public function __construct(
+        protected ProductPropertyRepositoryInterface $repository
+    ) {
+
+    }
+
+    public function newModel($data = null) : Model
+    {
+        if ($this->repository->findByName($data->name)) {
+            throw new ProductPropertyException('名称已存在');
+        }
+        return parent::newModel($data);
+    }
 
     protected function hooks() : array
     {
@@ -40,22 +52,6 @@ class ProductPropertyCommandService extends ApplicationCommandService
                 ProductPropertyGroupRulePipeline::class,
             ],
         ];
-    }
-
-
-    public function __construct(
-        protected ProductPropertyRepositoryInterface $repository
-    )
-    {
-
-    }
-
-    public function newModel($data = null) : Model
-    {
-        if ($this->repository->findByName($data->name)) {
-            throw new ProductPropertyException('名称已存在');
-        }
-        return parent::newModel($data);
     }
 
 

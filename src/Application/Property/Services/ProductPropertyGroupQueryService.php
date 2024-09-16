@@ -8,6 +8,9 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class ProductPropertyGroupQueryService extends ApplicationQueryService
 {
+
+    public static string $hookNamePrefix = 'product.application.product-property-group.query';
+
     public function __construct(
         protected ProductPropertyGroupReadRepositoryInterface $repository
 

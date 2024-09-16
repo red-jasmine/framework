@@ -25,7 +25,7 @@ class ProductSeriesCommandService extends ApplicationCommandService
         protected ProductSeriesRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
 

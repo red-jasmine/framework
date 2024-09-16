@@ -25,13 +25,20 @@ use RedJasmine\Support\Data\Data;
 class ProductCommandService extends ApplicationCommandService
 {
 
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.product.command';
+
+
     protected static string $modelClass = Product::class;
 
     public function __construct(
         protected ProductRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
     protected static $macros = [

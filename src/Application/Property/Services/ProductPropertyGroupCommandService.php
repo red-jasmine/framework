@@ -17,6 +17,14 @@ use RedJasmine\Support\Data\Data;
  */
 class ProductPropertyGroupCommandService extends ApplicationCommandService
 {
+
+
+    public static string $hookNamePrefix = 'product.application.product-property-group.command';
+
+
+    /**
+     * @var string
+     */
     protected static string $modelClass = ProductPropertyGroup::class;
 
     public function __construct(

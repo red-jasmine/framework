@@ -21,11 +21,20 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class ProductCategoryCommandService extends ApplicationCommandService
 {
 
+
+    /**
+     * 命令钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.category.command';
+
+
+
     protected static string $modelClass = ProductCategory::class;
 
     public function __construct(protected ProductCategoryRepositoryInterface $repository)
     {
-        parent::__construct();
+
     }
 
 

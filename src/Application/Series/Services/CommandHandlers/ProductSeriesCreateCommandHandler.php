@@ -15,6 +15,7 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
 
     public function handle(ProductSeriesCreateCommand $command) : ProductSeries
     {
+        // TODO
         /**
          * @var $model ProductSeries
          */

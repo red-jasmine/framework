@@ -16,6 +16,7 @@ class ProductSeriesDeleteCommandHandler extends CommandHandler
 
     public function handle(ProductSeriesDeleteCommand $command) : ProductSeries
     {
+        // TODO
         /**
          * @var $model ProductSeries
          */

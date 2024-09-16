@@ -12,7 +12,6 @@ use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationCommandService;
-use RedJasmine\Support\Data\Data;
 
 /**
  * @method ProductPropertyValue create(ProductPropertyValueCreateCommand $command)
@@ -20,13 +19,30 @@ use RedJasmine\Support\Data\Data;
  */
 class ProductPropertyValueCommandService extends ApplicationCommandService
 {
+
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.product-property-value.command';
+
+
     protected static string $modelClass = ProductPropertyValue::class;
 
     public function __construct(
         protected ProductPropertyValueRepositoryInterface $repository
-    )
+    ) {
+
+    }
+
+    public function newModel($data = null) : Model
     {
-        parent::__construct();
+        if ($model = $this->repository->findByNameInProperty($data->pid, $data->name)) {
+            throw new ProductPropertyException('名称已存在');
+            return $model;
+        }
+        return parent::newModel($data);
     }
 
     protected function hooks() : array
@@ -43,15 +59,6 @@ class ProductPropertyValueCommandService extends ApplicationCommandService
                 ProductPropertyGroupRulePipeline::class,
             ],
         ];
-    }
-
-    public function newModel($data = null) : Model
-    {
-        if ($model = $this->repository->findByNameInProperty($data->pid, $data->name)) {
-            throw new ProductPropertyException('名称已存在');
-            return $model;
-        }
-        return parent::newModel($data);
     }
 
 

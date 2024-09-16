@@ -16,6 +16,7 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
 
     public function handle(ProductSeriesUpdateCommand $command) : ProductSeries
     {
+        // TODO
         /**
          * @var $model ProductSeries
          */
