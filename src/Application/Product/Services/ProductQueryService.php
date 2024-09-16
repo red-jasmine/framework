@@ -9,10 +9,16 @@ use Spatie\QueryBuilder\AllowedSort;
 
 class ProductQueryService extends ApplicationQueryService
 {
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.product.query';
+
     public function __construct(
         protected ProductReadRepositoryInterface $repository
-    )
-    {
+    ) {
 
         parent::__construct();
     }
@@ -62,10 +68,6 @@ class ProductQueryService extends ApplicationQueryService
         ];
     }
 
-    public function onlyOwner()
-    {
-
-    }
 
 
 }

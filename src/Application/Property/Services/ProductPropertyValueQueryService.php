@@ -8,6 +8,14 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class ProductPropertyValueQueryService extends ApplicationQueryService
 {
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.product-property-value.query';
+
+
     public function __construct(
         protected ProductPropertyValueReadRepositoryInterface $repository
     )

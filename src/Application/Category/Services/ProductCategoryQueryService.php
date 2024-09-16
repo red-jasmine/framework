@@ -16,6 +16,11 @@ use Spatie\QueryBuilder\AllowedFilter;
 class ProductCategoryQueryService extends ApplicationQueryService
 {
 
+    /**
+     * 命令钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.category.query';
 
     public function __construct(protected ProductCategoryReadRepositoryInterface $repository)
     {

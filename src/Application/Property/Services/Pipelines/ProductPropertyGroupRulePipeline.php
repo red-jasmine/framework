@@ -16,6 +16,7 @@ class ProductPropertyGroupRulePipeline
 
     public function handle(CommandHandler $handler, \Closure $next) : mixed
     {
+        /// TODO
         $command = $handler->getArguments()[0];
         if ($command->groupId) {
             $this->repository->find($command->groupId);

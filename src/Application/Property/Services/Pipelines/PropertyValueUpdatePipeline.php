@@ -26,6 +26,7 @@ class PropertyValueUpdatePipeline
      */
     public function handle(CommandHandler $handler, Closure $next) : mixed
     {
+        /// TODO
         $hasRepeatCount = $this->queryService
             ->getModelQuery()
             ->where('id', '<>', $handler->getArguments()[0]->id)

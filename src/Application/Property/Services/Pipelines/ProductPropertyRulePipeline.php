@@ -17,6 +17,7 @@ class ProductPropertyRulePipeline
 
     public function handle(CommandHandler $handler, \Closure $next) : mixed
     {
+        /// TODO
         $command = $handler->getArguments()[0];
         $this->repository->find($command->pid);
         return $next($handler);

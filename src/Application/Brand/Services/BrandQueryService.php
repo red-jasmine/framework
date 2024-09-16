@@ -15,6 +15,14 @@ use Spatie\QueryBuilder\AllowedFilter;
  */
 class BrandQueryService extends ApplicationQueryService
 {
+
+
+    /**
+     * 命令钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.brand.query';
+
     public function __construct(protected BrandReadRepositoryInterface $repository)
     {
         parent::__construct();
@@ -33,8 +41,8 @@ class BrandQueryService extends ApplicationQueryService
             AllowedFilter::partial('english_name'),
             AllowedFilter::callback('search', static function (Builder $builder, $value) {
                 return $builder->where(function (Builder $builder) use ($value) {
-                    $builder->where('name', 'like', '%' . $value . '%')
-                            ->orWhere('english_name', 'like', '%' . $value . '%');
+                    $builder->where('name', 'like', '%'.$value.'%')
+                            ->orWhere('english_name', 'like', '%'.$value.'%');
                 });
             })
 
@@ -43,7 +51,7 @@ class BrandQueryService extends ApplicationQueryService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->find($id)?->isAllowUse());
+        return (bool) ($this->find($id)?->isAllowUse());
     }
 
 
