@@ -39,7 +39,6 @@ abstract class Service
      * @param   $parameters
      *
      * @return T
-     * @throws BindingResolutionException
      */
     public function makeMacro(mixed $macro, $method, $parameters) : mixed
     {

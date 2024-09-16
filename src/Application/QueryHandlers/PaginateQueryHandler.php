@@ -9,9 +9,12 @@ class PaginateQueryHandler extends QueryHandler
 {
 
 
-    public function handle(PaginateQuery $query)
+    public function handle(PaginateQuery $query) : \Illuminate\Pagination\LengthAwarePaginator
     {
-        $readRepository = $this->getService()->hook('repository',
+        /**
+         * @var $readRepository ReadRepositoryInterface
+         */
+        $readRepository = $this->getService()->hook('paginate.repository',
             $query,
             fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
 

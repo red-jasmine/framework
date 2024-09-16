@@ -37,16 +37,10 @@ trait HasHooks
         // 调用 Hook Facade 的 hook 方法来执行钩子，传入钩子名称、参数和目标闭包
         // 使用之前定义的 getHookName 方法来处理钩子名称，确保一致性
 
-        if ($this->getHookName($hook)) {
-            return Hook::hook(
-                $this->getHookName($hook),
-                $passable,
-                $destination);
-
-        } else {
-            return $destination();
-
-        }
+        return Hook::hook(
+            $this->getHookName($hook),
+            $passable,
+            $destination);
 
 
     }
@@ -85,17 +79,13 @@ trait HasHooks
      */
     public static function getHookName(string $hook) : string
     {
-        $prefix = null;
-
+        $prefix = static::class;
         // 尝试调用实例方法获取前缀
         if (method_exists(static::class, 'hookNamePrefix')) {
             $prefix = (string) static::hookNamePrefix();
         } elseif (isset(static::$hookNamePrefix)) {
             // 如果实例方法不存在，则使用类变量作为前缀
             $prefix = static::$hookNamePrefix;
-        }
-        if ($prefix === null) {
-            return '';
         }
         // 将前缀和钩子名称拼接并返回
         return $prefix.'.'.$hook;

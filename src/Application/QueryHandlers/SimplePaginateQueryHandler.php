@@ -9,12 +9,12 @@ class SimplePaginateQueryHandler extends QueryHandler
 {
 
 
-    public function handle(PaginateQuery $query)
+    public function handle(PaginateQuery $query) : \Illuminate\Contracts\Pagination\Paginator
     {
         /**
          * @var ReadRepositoryInterface $readRepository
          */
-        $readRepository = $this->getService()->hook('repository',
+        $readRepository = $this->getService()->hook('simplePaginate.repository',
             $query,
             fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
 
