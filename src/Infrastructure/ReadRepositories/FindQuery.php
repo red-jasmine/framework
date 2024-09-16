@@ -12,5 +12,4 @@ class FindQuery extends Data
 
     public mixed $append;
 
-
 }

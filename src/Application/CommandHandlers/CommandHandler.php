@@ -12,14 +12,11 @@ use RedJasmine\Support\Foundation\Service\MacroAwareService;
 
 abstract class CommandHandler implements MacroAwareService
 {
-
-    // 插件也拥有钩子能力
     use HasHooks;
 
+    use AwareServiceAble;
 
     use CanUseDatabaseTransactions;
-
-    use AwareServiceAble;
 
 
     protected Model|null $model = null;
@@ -63,7 +60,7 @@ abstract class CommandHandler implements MacroAwareService
 
     public function getRepository() : RepositoryInterface
     {
-        if (property_exists($this,'repository')) {
+        if (property_exists($this, 'repository')) {
             return $this->repository;
         } else {
             return $this->getService()->getRepository();

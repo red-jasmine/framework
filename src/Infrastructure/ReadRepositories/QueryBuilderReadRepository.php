@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Infrastructure\ReadRepositories;
 
+use Closure;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
      * @var array
      */
     protected array $queryCallbacks = [];
-    protected mixed $defaultSort = '-id';
+    protected mixed $defaultSort    = '-id';
 
     public function setAllowedFilters(?array $allowedFilters) : static
     {
@@ -55,6 +56,23 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $this;
     }
 
+    /**
+     * 添加查询回调函数
+     *
+     * 该方法用于向某个实例中添加一个查询回调函数。查询回调函数通常是在数据查询执行后进行一些特定操作的回调函数。
+     * 此方法通过返回当前实例，支持链式调用，以方便在一行代码中添加多个查询回调。
+     *
+     * @param  Closure  $queryCallback  要添加的查询回调函数。该回调函数应接受当前实例作为参数。
+     *
+     * @return static 返回当前实例，支持链式调用。
+     */
+    public function withQuery(Closure $queryCallback) : static
+    {
+        $this->queryCallbacks[] = $queryCallback;
+        return $this;
+    }
+
+
     public function getModelQuery() : \Illuminate\Database\Eloquent\Builder
     {
         return static::$modelClass::query();
@@ -66,13 +84,14 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
      * 此方法用于初始化QueryBuilder对象，该对象用于构造和执行数据库查询此方法允许通过请求查询参数
      * 自定义查询，同时确保仅允许使用预定义的过滤器、字段、排序和包含关系
      *
-     * @param array $requestQuery 请求中的查询参数，默认为空数组如果未提供，则使用空数组
+     * @param  array  $requestQuery  请求中的查询参数，默认为空数组如果未提供，则使用空数组
+     *
      * @return QueryBuilder 返回构建好地查询对象，以便进一步操作或执行查询
      */
     protected function query(array $requestQuery = []) : QueryBuilder
     {
         // 初始化QueryBuilder对象，使用模型类和请求查询参数进行构建
-        $queryBuilder = QueryBuilder::for(static::$modelClass::query(), $this->buildRequest($requestQuery));
+        $queryBuilder = QueryBuilder::for($this->getModelQuery(), $this->buildRequest($requestQuery));
         // 设置默认排序方式
         $queryBuilder->defaultSort($this->defaultSort);
 
@@ -86,7 +105,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         // 调用查询回调函数，进一步自定义查询逻辑
         $this->queryCallbacks($queryBuilder);
 
-        // 返回构建好的查询对象
+        // 返回构建好地查询对象
         return $queryBuilder;
     }
 
@@ -133,15 +152,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $this;
     }
 
-    public function findById($id, array $query = [])
-    {
-        return $this->query($query)->findOrFail($id);
-    }
 
-    public function find($id, ?FindQuery $findQuery = null)
+    public function find($id, ?FindQuery $findQuery = null) : ?Model
     {
         return $this->query($findQuery?->toArray() ?? [])->findOrFail($id);
     }
+
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {

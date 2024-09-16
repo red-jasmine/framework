@@ -35,10 +35,10 @@ class CreateCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 对数据进行验证
-            $this->hook('validate', $command, fn() => $this->validate($command));
+            $this->hook('create.validate', $command, fn() => $this->validate($command));
 
 
-            $this->hook('fill', $command, fn() => $this->fill($command));
+            $this->hook('create.fill', $command, fn() => $this->fill($command));
 
             // 添加操作员信息
             $this->withOperator();

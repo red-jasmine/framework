@@ -21,9 +21,9 @@ class UpdateCommandHandler extends CommandHandler
         try {
 
             // 对数据进行验证
-            $this->hook('validate', $command, fn() => $this->validate($command));
+            $this->hook('update.validate', $command, fn() => $this->validate($command));
             // 填充模型属性
-            $this->hook('fill', $command, fn() => $this->fill($command));
+            $this->hook('update.fill', $command, fn() => $this->fill($command));
 
             // 添加操作员信息
             $this->withOperator();

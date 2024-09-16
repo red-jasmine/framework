@@ -5,8 +5,9 @@ namespace RedJasmine\Support\Application;
 use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
-use RedJasmine\Support\Application\Handlers\FindQueryHandler;
-use RedJasmine\Support\Application\Handlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
+use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
@@ -21,21 +22,20 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 abstract class ApplicationQueryService extends Service
 {
 
+    protected static $macros = [
+        'paginate'       => PaginateQueryHandler::class,
+        'find'           => FindQueryHandler::class,
+        'simplePaginate' => SimplePaginateQueryHandler::class,
+    ];
+    /**
+     * @var array
+     */
+    protected array $queryCallbacks = [];
+
     public function __construct()
     {
         $this->initReadRepository();
 
-    }
-
-
-    protected static $macros = [
-        'paginate' => PaginateQueryHandler::class,
-        'find'     => FindQueryHandler::class,
-    ];
-
-    public function getRepository() : QueryBuilderReadRepository
-    {
-        return $this->repository;
     }
 
     protected function initReadRepository() : void
@@ -51,12 +51,12 @@ abstract class ApplicationQueryService extends Service
         return [];
     }
 
-    public function allowedIncludes() : array
+    public function allowedFields() : array
     {
         return [];
     }
 
-    public function allowedFields() : array
+    public function allowedIncludes() : array
     {
         return [];
     }
@@ -66,10 +66,10 @@ abstract class ApplicationQueryService extends Service
         return [];
     }
 
-    /**
-     * @var array
-     */
-    protected array $queryCallbacks = [];
+    public function getRepository() : QueryBuilderReadRepository
+    {
+        return $this->repository;
+    }
 
     public function getQueryCallbacks() : array
     {
@@ -90,12 +90,5 @@ abstract class ApplicationQueryService extends Service
     {
         return $this->repository->getModelQuery();
     }
-
-
-    public function simplePaginate(?PaginateQuery $query = null) : Paginator
-    {
-        return $this->repository->setQueryCallbacks($this->queryCallbacks)->simplePaginate($query);
-    }
-
 
 }
