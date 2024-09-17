@@ -10,10 +10,14 @@ use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 class ProductCategory extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
+
     use HasDateTimeFormatter;
 
     use HasOperator;

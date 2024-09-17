@@ -27,10 +27,14 @@ use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 class Product extends Model implements OperatorInterface, OwnerInterface
 {
+
+    use HasSnowflakeId;
+
     use HasDateTimeFormatter;
 
     use HasOwner;

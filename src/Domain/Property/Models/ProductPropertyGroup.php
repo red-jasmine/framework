@@ -9,9 +9,14 @@ use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class ProductPropertyGroup extends Model implements OperatorInterface
 {
+
+
+    use HasSnowflakeId;
+
 
     use HasDateTimeFormatter;
 
@@ -19,7 +24,6 @@ class ProductPropertyGroup extends Model implements OperatorInterface
 
     use SoftDeletes;
 
-    public $incrementing = false;
 
     protected $fillable = [
         'id',

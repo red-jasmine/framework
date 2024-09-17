@@ -9,12 +9,15 @@ use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 
 class Brand extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
 
     use HasDateTimeFormatter;
 
@@ -33,8 +36,6 @@ class Brand extends Model implements OperatorInterface
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
 
-
-    public $incrementing = false;
 
     protected $casts = [
         'is_show' => 'boolean',

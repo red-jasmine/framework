@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class ProductSeries extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
+
     use HasDateTimeFormatter;
 
-    use \RedJasmine\Support\Domain\Models\Traits\HasOwner;
+    use HasOwner;
 
     use HasOperator;
 

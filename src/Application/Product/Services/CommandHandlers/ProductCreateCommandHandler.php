@@ -40,6 +40,11 @@ class ProductCreateCommandHandler extends ProductCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
+
+            if ($product->usesUniqueIds()) {
+                $product->setUniqueIds();
+            }
+
             // 设置当前处理的产品模型
             $this->setModel($product);
 

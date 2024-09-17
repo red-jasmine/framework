@@ -235,7 +235,9 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
                 $this->propertyValidateService->validateSkus($saleProps, $command->skus);
                 $command->skus?->each(function ($skuData) use ($product) {
                     $sku     = $product->skus->where('properties', $skuData->properties)->first() ?? new ProductSku();
-                    $sku->id = $sku->id ?? $this->getService()->buildId();
+                    if(!$sku?->id){
+                        $sku->setUniqueIds();
+                    }
                     $this->fillSku($sku, $skuData);
                     $product->addSku($sku);
                 });

@@ -11,10 +11,13 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 class ProductSku extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
 
     use HasDateTimeFormatter;
 

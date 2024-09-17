@@ -9,10 +9,13 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 class Product extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
 
     use HasDateTimeFormatter;
 
@@ -21,8 +24,6 @@ class Product extends Model implements OperatorInterface
     use HasOwner;
 
     use HasOperator;
-
-    public $incrementing = false;
 
 
     public function skus() : HasMany

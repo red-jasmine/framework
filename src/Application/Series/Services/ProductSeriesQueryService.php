@@ -8,6 +8,14 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class ProductSeriesQueryService extends ApplicationQueryService
 {
+
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix  = 'product.application.series.query';
+
     public function __construct(
         protected ProductSeriesReadRepositoryInterface $repository
     )

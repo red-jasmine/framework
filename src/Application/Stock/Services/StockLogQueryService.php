@@ -8,6 +8,13 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class StockLogQueryService extends ApplicationQueryService
 {
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix  = 'product.application.stock-log.query';
+
     public function __construct(
         protected ProductStockLogReadRepositoryInterface $repository
     )

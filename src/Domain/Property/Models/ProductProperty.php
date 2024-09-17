@@ -12,9 +12,12 @@ use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class ProductProperty extends Model implements OperatorInterface
 {
+
+    use HasSnowflakeId;
 
     use HasDateTimeFormatter;
 

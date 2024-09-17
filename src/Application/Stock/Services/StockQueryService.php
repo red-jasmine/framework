@@ -9,6 +9,13 @@ use Spatie\QueryBuilder\AllowedSort;
 
 class StockQueryService extends ApplicationQueryService
 {
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix  = 'product.application.stock.query';
+
     public function __construct(
         protected ProductSkuReadRepositoryInterface $repository
     )
