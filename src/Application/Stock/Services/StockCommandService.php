@@ -15,14 +15,24 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Facades\ServiceContext;
 use Throwable;
 
+/**
+ * TODO 需要改造
+ */
 class StockCommandService extends ApplicationCommandService
 {
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix  = 'product.application.stock.command';
+
     public function __construct(
         protected ProductSkuRepositoryInterface $repository,
         protected StockDomainService            $domainService
     )
     {
-        parent::__construct();
+
     }
 
 

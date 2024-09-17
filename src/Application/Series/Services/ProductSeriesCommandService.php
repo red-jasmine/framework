@@ -13,6 +13,13 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class ProductSeriesCommandService extends ApplicationCommandService
 {
 
+
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix  = 'product.application.series.command';
+
     protected static string $modelClass = ProductSeries::class;
 
     protected static $macros = [
