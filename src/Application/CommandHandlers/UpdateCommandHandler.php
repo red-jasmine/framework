@@ -25,8 +25,6 @@ class UpdateCommandHandler extends CommandHandler
             // 填充模型属性
             $this->hook('update.fill', $command, fn() => $this->fill($command));
 
-            // 添加操作员信息
-            $this->withOperator();
 
             // 存储模型到仓库
             $this->getRepository()->update($this->model);

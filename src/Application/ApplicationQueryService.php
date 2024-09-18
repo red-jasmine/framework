@@ -16,6 +16,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 /**
  *
  * @method LengthAwarePaginator paginate(?PaginateQuery $query = null)
+ * @method Paginator simplePaginate(?PaginateQuery $query = null)
  * @method mixed find(int $id, ?FindQuery $query = null)
  * @property QueryBuilderReadRepository $repository
  */

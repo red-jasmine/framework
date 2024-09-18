@@ -37,11 +37,7 @@ class CreateCommandHandler extends CommandHandler
             // 对数据进行验证
             $this->hook('create.validate', $command, fn() => $this->validate($command));
 
-
             $this->hook('create.fill', $command, fn() => $this->fill($command));
-
-            // 添加操作员信息
-            $this->withOperator();
 
             // 存储模型到仓库
             $this->getRepository()->store($this->model);
@@ -52,7 +48,7 @@ class CreateCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw $throwable;
         }
-        // TODO event
+
         return $this->model;
     }
 

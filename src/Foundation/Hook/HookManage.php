@@ -24,7 +24,7 @@ class HookManage
      */
     public function register(string $hook, mixed $pipeline) : void
     {
-        $pipelines = is_array($pipeline) ?: [$pipeline];
+        $pipelines = is_array($pipeline) ? $pipeline : [$pipeline];
 
         foreach ($pipelines as $item) {
             if (is_string($item) && !isset($this->hooks[$hook][$item])) {

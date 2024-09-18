@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Facades\ServiceContext;
 
 /**
  * @property  string $creator_type
@@ -15,6 +16,25 @@ use RedJasmine\Support\Data\UserData;
  */
 trait HasOperator
 {
+
+
+
+
+    /**
+     * Initialize the trait.
+     *
+     * @return void
+     */
+    public function initializeHasOperator() : void
+    {
+
+        static::creating(callback:function ($model) {
+            $model->creator = ServiceContext::getOperator();
+        });
+        static::updating(callback: function ($model) {
+            $model->updater = ServiceContext::getOperator();
+        });
+    }
 
 
     public function scopeOnlyCreator(Builder $query, UserInterface $owner) : Builder

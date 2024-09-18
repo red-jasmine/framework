@@ -74,6 +74,25 @@ class Snowflake
 
 
     /**
+     * 构建并返回一个新的ID
+     *
+     * 该方法通过创建Snowflake ID生成器的实例，并生成一个新的ID。Snowflake是一种分布式ID生成算法，最初由Twitter开发。
+     * 它生成的ID是一个64位的大整数，通常用作唯一键或唯一标识符。
+     *
+     * @param  int  $workerId  工作机器ID，通常用于区分不同的机器或服务实例，默认为0
+     * @param  int  $datacenterId  数据中心ID，用于区分不同的数据中心，默认为0
+     *
+     * @return int 生成的64位Snowflake ID
+     * @throws Exception
+     */
+    public static function buildId(int $workerId = 0, int $datacenterId = 0)
+    {
+        // 调用getInstance方法获取Snowflake ID生成器的实例，并调用nextId方法生成并返回一个新的ID
+        return static::getInstance($workerId = 0, $datacenterId = 0)->nextId();
+    }
+
+
+    /**
      * @throws Exception
      */
     public function nextId() : int
