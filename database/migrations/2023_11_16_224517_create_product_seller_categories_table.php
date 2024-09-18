@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 
 return new class extends Migration {
     public function up() : void

@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Category\Services\ProductCategoryCommandServi
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
 use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryCreateCommand;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
-use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Product\Tests\Application\ApplicationTestCase;
 

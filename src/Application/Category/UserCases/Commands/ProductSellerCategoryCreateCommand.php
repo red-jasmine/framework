@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Category\UserCases\Commands;
 
-use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Data\UserData;
 use Spatie\LaravelData\Support\Validation\ValidationContext;

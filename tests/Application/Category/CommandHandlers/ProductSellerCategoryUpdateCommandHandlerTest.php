@@ -5,7 +5,7 @@ namespace Category\CommandHandlers;
 use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryCommandService;
 use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryCreateCommand;
 use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryUpdateCommand;
-use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryRepositoryInterface;
 use RedJasmine\Product\Tests\Application\ApplicationTestCase;

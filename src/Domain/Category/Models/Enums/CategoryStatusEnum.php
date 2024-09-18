@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Domain\Category\Enums;
+namespace RedJasmine\Product\Domain\Category\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

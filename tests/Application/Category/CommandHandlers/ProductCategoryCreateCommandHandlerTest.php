@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Tests\Application\Category\CommandHandlers;
 
 use RedJasmine\Product\Application\Category\Services\ProductCategoryCommandService;
 use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryCreateCommand;
-use RedJasmine\Product\Domain\Category\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
 use RedJasmine\Product\Tests\Application\ApplicationTestCase;
