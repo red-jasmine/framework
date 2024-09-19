@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Card\Application\UserCases\Queries;
 
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class CardGroupBindProductPaginateQuery extends PaginateQuery
 {

@@ -13,7 +13,7 @@ use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBind
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductUpdateCommand;
 use RedJasmine\Card\Application\UserCases\Queries\CardGroupBindProductPaginateQuery;
 use RedJasmine\Card\UI\Http\Owner\Api\Resources\CardGroupBindProductResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 
 class CardGroupBindProductController extends Controller
@@ -48,7 +48,7 @@ class CardGroupBindProductController extends Controller
 
     public function show($id, Request $request) : CardGroupBindProductResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
         return CardGroupBindProductResource::make($result);
     }
 

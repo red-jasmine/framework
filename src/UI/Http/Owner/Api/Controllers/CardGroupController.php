@@ -11,7 +11,7 @@ use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupUpdateCommand;
 use RedJasmine\Card\Application\UserCases\Queries\CardGroupPaginateQuery;
 use RedJasmine\Card\UI\Http\Owner\Api\Resources\CardGroupResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CardGroupController extends Controller
 {
@@ -39,7 +39,7 @@ class CardGroupController extends Controller
 
     public function show($id, Request $request) : CardGroupResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return CardGroupResource::make($result);
     }

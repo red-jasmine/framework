@@ -11,8 +11,7 @@ use RedJasmine\Card\Application\UserCases\Command\CardDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\CardUpdateCommand;
 use RedJasmine\Card\Application\UserCases\Queries\CardPaginateQuery;
 use RedJasmine\Card\UI\Http\Owner\Api\Resources\CardResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CardController extends Controller
 {
@@ -40,7 +39,7 @@ class CardController extends Controller
     public function show($id, Request $request) : CardResource
     {
 
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return CardResource::make($result);
 
