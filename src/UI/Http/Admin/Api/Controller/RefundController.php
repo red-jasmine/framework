@@ -17,8 +17,8 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRejectCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReshipmentCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReturnGoodsCommand;
 use RedJasmine\Order\UI\Http\Admin\Api\Resources\OrderRefundResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class RefundController extends Controller
 {
