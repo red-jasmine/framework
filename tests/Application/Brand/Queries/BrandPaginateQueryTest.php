@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use RedJasmine\Product\Application\Brand\UserCases\Commands\BrandCreateCommand;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Product\Tests\Application\Brand\BrandTestCase;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class BrandPaginateQueryTest extends BrandTestCase
 {

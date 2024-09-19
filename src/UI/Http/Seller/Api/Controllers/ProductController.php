@@ -11,8 +11,8 @@ use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateComma
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductDeleteCommand;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\ProductResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class ProductController extends Controller
 {
@@ -39,7 +39,7 @@ class ProductController extends Controller
 
     public function show($id, Request $request) : ProductResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
         return ProductResource::make($result);
     }
 

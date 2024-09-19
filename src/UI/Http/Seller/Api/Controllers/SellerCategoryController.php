@@ -12,7 +12,7 @@ use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCate
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryPaginateQuery;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\SellerCategoryResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class SellerCategoryController extends Controller
 {
@@ -47,7 +47,7 @@ class SellerCategoryController extends Controller
     public function show($id, Request $request) : SellerCategoryResource
     {
 
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return SellerCategoryResource::make($result);
     }
@@ -69,7 +69,7 @@ class SellerCategoryController extends Controller
     public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->queryService->find($id, FindQuery::from($request));
+        $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
@@ -83,7 +83,7 @@ class SellerCategoryController extends Controller
     {
         $request->offsetSet('owner', $this->getOwner());
         $request->offsetSet('id', $id);
-        $this->queryService->find($id, FindQuery::from($request));
+        $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
         $command = ProductSellerCategoryDeleteCommand::from($request);
         $this->commandService->delete($command);
 

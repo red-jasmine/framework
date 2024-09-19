@@ -4,15 +4,11 @@ namespace RedJasmine\Product\Application\Brand\Services;
 
 
 use Illuminate\Database\Eloquent\Builder;
-use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
-/**
- * @method Brand find(int $id, ?FindQuery $query = null)
- */
+
 class BrandQueryService extends ApplicationQueryService
 {
 

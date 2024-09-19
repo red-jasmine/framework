@@ -12,16 +12,14 @@ use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryUp
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryPaginateQuery;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\CategoryResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CategoryController extends Controller
 {
     public function __construct(
-        protected ProductCategoryQueryService   $queryService,
+        protected ProductCategoryQueryService $queryService,
         protected ProductCategoryCommandService $commandService,
-    )
-    {
+    ) {
 
     }
 
@@ -49,10 +47,10 @@ class CategoryController extends Controller
         return CategoryResource::make($result);
     }
 
-    public function show($id, Request $request) : CategoryResource
+    public function show(Request $request, $id) : CategoryResource
     {
 
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request, $id));
 
         return CategoryResource::make($result);
     }

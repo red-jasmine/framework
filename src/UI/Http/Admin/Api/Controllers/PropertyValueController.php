@@ -12,7 +12,7 @@ use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyVa
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueUpdateCommand;
 use RedJasmine\Product\Application\Property\UserCases\Queries\PropertyValuePaginateQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\PropertyValueResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class PropertyValueController extends Controller
 {
@@ -44,7 +44,7 @@ class PropertyValueController extends Controller
 
     public function show($id, Request $request) : PropertyValueResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return PropertyValueResource::make($result);
     }

@@ -12,7 +12,7 @@ use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGr
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupUpdateCommand;
 use RedJasmine\Product\Application\Property\UserCases\Queries\PropertyGroupPaginateQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\PropertyGroupResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class PropertyGroupController extends Controller
 {
@@ -42,7 +42,7 @@ class PropertyGroupController extends Controller
 
     public function show($id, Request $request) : PropertyGroupResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
         return PropertyGroupResource::make($result);
 
     }

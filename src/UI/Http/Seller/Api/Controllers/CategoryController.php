@@ -8,7 +8,7 @@ use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryPaginateQuery;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\CategoryResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CategoryController extends Controller
 {
@@ -37,7 +37,7 @@ class CategoryController extends Controller
 
     public function show(Request $request, $id) : CategoryResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return CategoryResource::make($result);
 

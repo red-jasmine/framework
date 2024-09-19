@@ -3,16 +3,11 @@
 namespace RedJasmine\Product\Application\Category\Services;
 
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
-use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
-/**
- * @method ProductCategory find(int $id, ?FindQuery $query = null)
- */
 class ProductCategoryQueryService extends ApplicationQueryService
 {
 

@@ -12,7 +12,7 @@ use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCate
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryPaginateQuery;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\SellerCategoryResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class SellerCategoryController extends Controller
 {
@@ -53,7 +53,7 @@ class SellerCategoryController extends Controller
     public function show($id, Request $request) : SellerCategoryResource
     {
 
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return SellerCategoryResource::make($result);
     }

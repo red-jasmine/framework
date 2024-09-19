@@ -12,7 +12,7 @@ use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesDelete
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Application\Series\UserCases\Queries\SeriesPaginateQuery;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\SeriesResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class SeriesController extends Controller
 {
@@ -41,7 +41,7 @@ class SeriesController extends Controller
 
     public function show($id, Request $request) : SeriesResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return SeriesResource::make($result);
     }

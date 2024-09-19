@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Brand\UserCases\Queries;
 
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class BrandPaginateQuery extends PaginateQuery
 {

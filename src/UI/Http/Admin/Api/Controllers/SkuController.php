@@ -5,7 +5,6 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\Services\StockLogQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
@@ -15,7 +14,7 @@ use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockLogResource;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockSkuResource;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class SkuController extends Controller
 {
@@ -42,7 +41,7 @@ class SkuController extends Controller
     public function show($id, Request $request) : StockSkuResource
     {
 
-        $result = $this->queryService->find($id, FindQuery::from($request));
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
 
         return StockSkuResource::make($result);
     }
