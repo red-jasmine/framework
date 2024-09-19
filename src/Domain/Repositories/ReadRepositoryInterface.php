@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Domain\Repositories;
 
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
@@ -16,12 +17,11 @@ interface ReadRepositoryInterface
     /**
      * 根据ID查找实体
      *
-     * @param  mixed  $id  实体的ID
-     * @param  FindQuery|null  $findQuery  可选的查找查询对象，用于定制查找条件
+     * @param  FindQuery  $findQuery  可选的查找查询对象，用于定制查找条件
      *
-     * @return mixed 查找到的实体数据
+     * @return Model|null 查找到的实体数据
      */
-    public function find($id, FindQuery $findQuery = null);
+    public function find(FindQuery $findQuery);
 
     /**
      * 分页查询实体列表

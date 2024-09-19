@@ -18,6 +18,7 @@ trait UserOwnerTools
     public function getOwner() : ?UserInterface
     {
 
+        return  UserData::from(['type' => 'seller','id'=>1]);
         if ($this->getUser() instanceof BelongsToOwnerInterface) {
             return $this->getUser()->owner();
         }

@@ -13,13 +13,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
-/**
- *
- * @method LengthAwarePaginator paginate(?PaginateQuery $query = null)
- * @method Paginator simplePaginate(?PaginateQuery $query = null)
- * @method mixed find(int $id, ?FindQuery $query = null)
- * @property QueryBuilderReadRepository $repository
- */
+
 abstract class ApplicationQueryService extends Service
 {
 

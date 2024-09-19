@@ -8,12 +8,12 @@ class FindQueryHandler extends QueryHandler
 {
 
 
-    public function handle(int $id, ?FindQuery $query = null) : mixed
+    public function handle(FindQuery $query) : mixed
     {
         $readRepository = $this->getService()->hook('find.repository',
-            [$id, $query],
+            $query,
             fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
-        return $readRepository->find($id, $query);
+        return $readRepository->find($query);
 
     }
 }

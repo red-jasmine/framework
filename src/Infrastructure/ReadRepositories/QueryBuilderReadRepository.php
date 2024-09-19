@@ -153,9 +153,10 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     }
 
 
-    public function find($id, ?FindQuery $findQuery = null) : ?Model
+    public function find(FindQuery $findQuery) : ?Model
     {
-        return $this->query($findQuery?->toArray() ?? [])->findOrFail($id);
+        $id = $findQuery->id;
+        return $this->query($findQuery->except('id')->toArray() ?? [])->findOrFail($id);
     }
 
 
