@@ -3,14 +3,10 @@
 namespace RedJasmine\Support\Application;
 
 use Closure;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Pagination\Paginator;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Support\Foundation\Service\Service;
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
 

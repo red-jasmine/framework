@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Support\Application\QueryHandlers;
 
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\PaginateQuery;
 
 class PaginateQueryHandler extends QueryHandler
 {

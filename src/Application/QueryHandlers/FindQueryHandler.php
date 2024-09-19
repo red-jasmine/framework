@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Application\QueryHandlers;
 
-use RedJasmine\Support\Infrastructure\ReadRepositories\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class FindQueryHandler extends QueryHandler
 {

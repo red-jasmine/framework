@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -153,10 +155,10 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     }
 
 
-    public function find(FindQuery $findQuery) : ?Model
+    public function find(FindQuery $query) : ?Model
     {
-        $id = $findQuery->id;
-        return $this->query($findQuery->except('id')->toArray() ?? [])->findOrFail($id);
+        $id = $query->id;
+        return $this->query($query->except('id')->toArray() ?? [])->findOrFail($id);
     }
 
 
