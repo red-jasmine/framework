@@ -52,12 +52,6 @@
 
     },
     "repositories": [
-        {
-            "type": "path",
-            "url": "../*",
-            "options": {
-                "symlink": true
-            }
-        }
+
     ]
 }

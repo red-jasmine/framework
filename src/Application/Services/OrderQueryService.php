@@ -11,27 +11,23 @@ use RedJasmine\Support\Application\ApplicationQueryService;
  */
 class OrderQueryService extends ApplicationQueryService
 {
+
     public function __construct(protected OrderReadRepositoryInterface $repository)
     {
-        parent::__construct();
+
     }
 
-
-    protected array $allowedFilters = [];
-
-
-    protected array $allowedIncludes = [
-        'products',
-        'payments',
-        'info',
-        'products.info',
-        'logistics',
-        'address'
-    ];
-    protected array $allowedFields   = [];
-
-
-    protected array $allowedSorts = [];
+    public function allowedIncludes() : array
+    {
+        return [
+            'products',
+            'payments',
+            'info',
+            'products.info',
+            'logistics',
+            'address'
+        ];
+    }
 
 
 }

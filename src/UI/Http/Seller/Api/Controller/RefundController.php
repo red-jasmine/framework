@@ -30,7 +30,7 @@ class RefundController extends Controller
     )
     {
 
-        $this->queryService->withQuery(function ($query) {
+        $this->queryService->getRepository()->withQuery(function ($query) {
             $query->onlySeller($this->getOwner());
         });
 

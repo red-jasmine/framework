@@ -55,7 +55,7 @@ class ApplicationTestCase extends TestCase
 
     protected function orderQueryService() : OrderQueryService
     {
-        return app(OrderQueryService::class)->withQuery(function ($query) {
+        return app(OrderQueryService::class)->getRepository()->withQuery(function ($query) {
             $query->onlyBuyer($this->buyer());
         });
     }
@@ -67,7 +67,7 @@ class ApplicationTestCase extends TestCase
 
     protected function refundQueryService() : RefundQueryService
     {
-        return app(RefundQueryService::class)->withQuery(function ($query) {
+        return app(RefundQueryService::class)->getRepository()->withQuery(function ($query) {
             $query->onlyBuyer($this->buyer());
         });
     }
