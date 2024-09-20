@@ -6,9 +6,7 @@ use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Infrastructure\ReadRepositories\OrderReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 
-/**
- * @method Order find(int $id, array $query = [])
- */
+
 class OrderQueryService extends ApplicationQueryService
 {
 

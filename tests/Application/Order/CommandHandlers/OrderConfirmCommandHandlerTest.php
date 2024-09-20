@@ -4,6 +4,7 @@ namespace RedJasmine\Order\Tests\Application\Order\CommandHandlers;
 
 use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class OrderConfirmCommandHandlerTest extends OrderCommandServiceTestCase
 {
@@ -30,7 +31,7 @@ class OrderConfirmCommandHandlerTest extends OrderCommandServiceTestCase
 
         $this->orderCommandService()->confirm($command);
 
-        $order = $this->orderQueryService()->find($order->id);
+        $order = $this->orderQueryService()->findById(FindQuery::make($command->id));
 
 
         $this->assertEquals(OrderStatusEnum::FINISHED->value, $order->order_status->value);

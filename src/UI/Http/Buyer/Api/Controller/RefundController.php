@@ -42,7 +42,7 @@ class RefundController extends Controller
 
     public function show(Request $request, int $id) : OrderRefundResource
     {
-        $refund = $this->queryService->find($id, FindQuery::from($request->all()));
+        $refund = $this->queryService->findById(FindQuery::make($id,$request));
 
         return OrderRefundResource::make($refund);
     }
@@ -60,7 +60,7 @@ class RefundController extends Controller
     public function cancel(Request $request) : JsonResponse
     {
         $command = RefundCancelCommand::from($request);
-        $this->queryService->find($request->rid);
+        $this->queryService->findById(FindQuery::make($command->rid));
         $this->commandService->cancel($command);
 
         return static::success();
@@ -70,7 +70,7 @@ class RefundController extends Controller
     public function refundGoods(Request $request) : JsonResponse
     {
         $command = RefundReturnGoodsCommand::from($request);
-        $this->queryService->find($command->rid);
+        $this->queryService->findById(FindQuery::make($command->rid));
         $this->commandService->returnGoods($command);
         return static::success();
     }

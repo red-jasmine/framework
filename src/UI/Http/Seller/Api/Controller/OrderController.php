@@ -26,9 +26,8 @@ class OrderController extends Controller
 {
     public function __construct(
         protected readonly OrderQueryService $queryService,
-        protected OrderCommandService        $commandService,
-    )
-    {
+        protected OrderCommandService $commandService,
+    ) {
 
         $this->queryService->getRepository()->withQuery(function ($query) {
             $query->onlySeller($this->getOwner());
@@ -45,7 +44,7 @@ class OrderController extends Controller
 
     public function show(Request $request, int $id) : OrderResource
     {
-        $result = $this->queryService->find($id, FindQuery::from($request->all()));
+        $result = $this->queryService->findById(FindQuery::make($id, $request));
 
         return OrderResource::make($result);
     }
@@ -64,18 +63,20 @@ class OrderController extends Controller
 
         $command = OrderPayingCommand::from($request->all());
 
-        $order = $this->queryService->find($request->id);
+        $order = $this->queryService->findById(FindQuery::make($command->id));
 
         $payment = $this->commandService->paying($command);
 
-        return static::success([ 'id' => $order->id, 'order_payment' => $payment, 'amount' => $order->payable_amount->value() ]);
+        return static::success(['id'     => $order->id, 'order_payment' => $payment,
+                                'amount' => $order->payable_amount->value()
+        ]);
     }
 
     public function paid(Request $request) : JsonResponse
     {
         $command = OrderPaidCommand::from($request->all());
 
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->paid($command);
 
@@ -88,7 +89,7 @@ class OrderController extends Controller
 
         $command = OrderShippingLogisticsCommand::from($request->all());
 
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->shippingLogistics($command);
 
@@ -100,7 +101,7 @@ class OrderController extends Controller
 
         $command = OrderShippingVirtualCommand::from($request->all());
 
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->shippingVirtual($command);
 
@@ -112,7 +113,7 @@ class OrderController extends Controller
 
         $command = OrderShippingCardKeyCommand::from($request->all());
 
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->shippingCardKey($command);
 
@@ -123,8 +124,8 @@ class OrderController extends Controller
     public function destroy($id) : JsonResponse
     {
 
-        $command = OrderHiddenCommand::from([ 'id' => $id ]);
-        $this->queryService->find($command->id);
+        $command = OrderHiddenCommand::from(['id' => $id]);
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->sellerHidden($command);
 
@@ -135,7 +136,7 @@ class OrderController extends Controller
     {
 
         $command = OrderCancelCommand::from($request->all());
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
         $this->commandService->cancel($command);
 
         return static::success();
@@ -144,8 +145,9 @@ class OrderController extends Controller
 
     public function remarks(Request $request) : JsonResponse
     {
-        $this->queryService->find($request->id);
         $command = OrderRemarksCommand::from($request->all());
+
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->sellerRemarks($command);
         return static::success();
@@ -155,7 +157,7 @@ class OrderController extends Controller
     public function progress(Request $request) : JsonResponse
     {
         $command = OrderProgressCommand::from($request->all());
-        $this->queryService->find($command->id);
+        $this->queryService->findById(FindQuery::make($command->id));
         $this->commandService->progress($command);
         return static::success();
 
