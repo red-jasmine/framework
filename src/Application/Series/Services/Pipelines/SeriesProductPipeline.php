@@ -8,6 +8,7 @@ use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 class SeriesProductPipeline
@@ -40,7 +41,7 @@ class SeriesProductPipeline
         //验证商品是否存在
         try {
             foreach ($command->products as $product) {
-                $this->queryService->find($product->productId);
+                $this->queryService->findById(FindQuery::make($product->productId));
             }
         } catch (ModelNotFoundException $modelNotFoundException) {
             throw new ProductException('产品不存在');

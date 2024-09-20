@@ -41,7 +41,7 @@ class SeriesController extends Controller
 
     public function show($id, Request $request) : SeriesResource
     {
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
 
         return SeriesResource::make($result);
     }

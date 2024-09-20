@@ -52,7 +52,7 @@ class SkuController extends Controller
     public function show($id, Request $request) : StockSkuResource
     {
 
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
 
         return StockSkuResource::make($result);
     }
@@ -69,7 +69,7 @@ class SkuController extends Controller
     {
         $type = $request->input('type', 'add');
 
-        $sku = $this->queryService->find($id);
+        $sku = $this->queryService->findById(FindQuery::make($id));
 
         $request->offsetSet('sku_id', $sku->id);
         $request->offsetSet('product_id', $sku->product_id);

@@ -5,9 +5,14 @@ namespace RedJasmine\Product\Application\Category\Services;
 use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
+/**
+ * @method ProductCategoryReadRepositoryInterface getRepository()
+ */
 class ProductCategoryQueryService extends ApplicationQueryService
 {
 
@@ -65,7 +70,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->find($id)?->isAllowUse());
+        return (bool)($this->findById(FindQuery::make($id))?->isAllowUse());
     }
 
 

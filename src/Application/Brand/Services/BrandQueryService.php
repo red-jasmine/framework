@@ -6,6 +6,7 @@ namespace RedJasmine\Product\Application\Brand\Services;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
@@ -37,8 +38,7 @@ class BrandQueryService extends ApplicationQueryService
             AllowedFilter::partial('english_name'),
             AllowedFilter::callback('search', static function (Builder $builder, $value) {
                 return $builder->where(function (Builder $builder) use ($value) {
-                    $builder->where('name', 'like', '%'.$value.'%')
-                            ->orWhere('english_name', 'like', '%'.$value.'%');
+                    $builder->where('name', 'like', '%'.$value.'%')->orWhere('english_name', 'like', '%'.$value.'%');
                 });
             })
 
@@ -47,7 +47,7 @@ class BrandQueryService extends ApplicationQueryService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool) ($this->find($id)?->isAllowUse());
+        return (bool) ($this->findById(FindQuery::make($id))?->isAllowUse());
     }
 
 

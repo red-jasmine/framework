@@ -47,7 +47,7 @@ class SellerCategoryController extends Controller
     public function show($id, Request $request) : SellerCategoryResource
     {
 
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
 
         return SellerCategoryResource::make($result);
     }
@@ -69,7 +69,7 @@ class SellerCategoryController extends Controller
     public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $this->queryService->findById(FindQuery::make($id,$request));;
 
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
@@ -83,7 +83,7 @@ class SellerCategoryController extends Controller
     {
         $request->offsetSet('owner', $this->getOwner());
         $request->offsetSet('id', $id);
-        $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $this->queryService->findById(FindQuery::make($id,$request));;
         $command = ProductSellerCategoryDeleteCommand::from($request);
         $this->commandService->delete($command);
 

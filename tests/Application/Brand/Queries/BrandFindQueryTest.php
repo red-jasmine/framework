@@ -8,6 +8,7 @@ use RedJasmine\Product\Application\Brand\UserCases\Commands\BrandCreateCommand;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Product\Tests\Application\Brand\BrandTestCase;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class BrandFindQueryTest extends BrandTestCase
 {
@@ -44,7 +45,7 @@ class BrandFindQueryTest extends BrandTestCase
         $brand = $this->brandCommandService()->create($command);
         $brandId = $brand->id;
 
-        $brand = $this->brandQueryService()->find($brandId);
+        $brand = $this->brandQueryService()->findById(FindQuery::make($brandId));
 
 
         $this->assertInstanceOf(Brand::class, $brand);

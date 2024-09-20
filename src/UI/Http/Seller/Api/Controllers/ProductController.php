@@ -39,7 +39,7 @@ class ProductController extends Controller
 
     public function show($id, Request $request) : ProductResource
     {
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));
         return ProductResource::make($result);
     }
 
@@ -60,7 +60,7 @@ class ProductController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
 
@@ -76,7 +76,7 @@ class ProductController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
 

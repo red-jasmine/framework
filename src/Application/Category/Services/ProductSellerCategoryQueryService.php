@@ -6,6 +6,7 @@ use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCateg
 use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
@@ -56,6 +57,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
 
     public function tree(ProductSellerCategoryTreeQuery $query) : array
     {
+
         return $this->repository
             ->tree($query);
     }
@@ -73,7 +75,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
 
         return (bool) ($this->getRepository()->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
-        })->find($id)?->isAllowUse());
+        })->findById(FindQuery::fromId($id))?->isAllowUse());
     }
 
 

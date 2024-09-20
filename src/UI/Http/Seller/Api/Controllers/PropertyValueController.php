@@ -44,7 +44,7 @@ class PropertyValueController extends Controller
 
     public function show($id, Request $request) : PropertyValueResource
     {
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
 
         return PropertyValueResource::make($result);
     }

@@ -10,9 +10,9 @@ class ProductCategoryTreeQuery extends Query
     public ?string $status;
 
 
-    public string|array|null $append;
+    public mixed $append;
 
-    public string|array|null $sort;
+    public mixed $sort;
 
 
 }
