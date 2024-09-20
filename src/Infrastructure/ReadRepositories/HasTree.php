@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Support\Infrastructure\ReadRepositories;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
 trait HasTree
 {
 
-    public function tree(?Data $query = null) : array
+    public function tree(?Query $query = null) : array
     {
 
-        $nodes = $this->query($query?->toArray())->get();
+        $nodes = $this->query($query)->get();
         return static::buildNestedArray($nodes);
     }
 
@@ -20,18 +20,17 @@ trait HasTree
         ?string $primaryKeyName = null,
         ?string $parentKeyName = null,
         ?string $childrenKeyName = null
-    ) : array
-    {
+    ) : array {
         $branch          = [];
         $primaryKeyName  = $primaryKeyName ?: 'id';
         $parentKeyName   = $parentKeyName ?: 'parent_id';
         $childrenKeyName = $childrenKeyName ?: 'children';
 
-        $parentId = is_numeric($parentId) ? (int)$parentId : $parentId;
+        $parentId = is_numeric($parentId) ? (int) $parentId : $parentId;
 
         foreach ($nodes as $node) {
             $pk = $node[$parentKeyName];
-            $pk = is_numeric($pk) ? (int)$pk : $pk;
+            $pk = is_numeric($pk) ? (int) $pk : $pk;
 
             if ($pk === $parentId) {
                 $children = static::buildNestedArray(

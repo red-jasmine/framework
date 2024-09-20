@@ -20,6 +20,7 @@ class EloquentRepository implements RepositoryInterface
         return static::$eloquentModelClass::findOrFail($id);
     }
 
+
     /**
      * @param  Model  $model
      *

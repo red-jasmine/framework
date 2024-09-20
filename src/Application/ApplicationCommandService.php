@@ -26,7 +26,9 @@ abstract class ApplicationCommandService extends Service
      * @var string
      */
     protected static string $modelClass;
-    protected static        $macros = [
+
+
+    protected static $macros = [
         'create' => CreateCommandHandler::class,
         'update' => UpdateCommandHandler::class,
         'delete' => DeleteCommandHandler::class,
@@ -58,13 +60,5 @@ abstract class ApplicationCommandService extends Service
         return static::$modelClass;
     }
 
-    protected function hooks() : array
-    {
-        return [
-            'create' => [],
-            'update' => [],
-            'delete' => []
-        ];
-    }
 
 }

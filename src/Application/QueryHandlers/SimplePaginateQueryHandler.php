@@ -16,7 +16,7 @@ class SimplePaginateQueryHandler extends QueryHandler
          */
         $readRepository = $this->getService()->hook('simplePaginate.repository',
             $query,
-            fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
+            fn() => $this->getService()->getRepository());
 
         return $readRepository->simplePaginate($query);
 

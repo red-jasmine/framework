@@ -3,9 +3,8 @@
 namespace RedJasmine\Support\Domain\Data\Queries;
 
 use Illuminate\Http\Request;
-use RedJasmine\Support\Data\Data;
 
-class FindQuery extends Data
+class FindQuery extends Query
 {
     public mixed $include;
 
@@ -15,7 +14,6 @@ class FindQuery extends Data
 
     public mixed $id;
 
-
     /**
      * 根据请求和ID创建实例
      *
@@ -23,8 +21,8 @@ class FindQuery extends Data
      * 根据请求中的数据以及额外提供的ID来初始化业务对象这样，可以在应用程序中根据HTTP请求
      * 路由轻松地创建和管理业务对象实例
      *
-     * @param Request $request The request object representing the HTTP request
-     * @param mixed $id The identifier to be associated with the business object
+     * @param  Request  $request  The request object representing the HTTP request
+     * @param  mixed  $id  The identifier to be associated with the business object
      *
      * @return static An instance of the business object initialized with data from the request and the provided ID
      */
@@ -33,7 +31,6 @@ class FindQuery extends Data
         $request->offsetSet('id', $id);
         return static::from($request);
     }
-
 
 
 }

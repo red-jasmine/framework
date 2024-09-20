@@ -3,52 +3,32 @@
 namespace RedJasmine\Support\Domain\Repositories;
 
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
 /**
+ *
+ * // 提供 模型 查询的能力,同时查询时 可携带一些参数  如 排序，获取的字段 ，分页，包含的数据
+ * - find  通过id 查询
+ * - paginate 分页查询
+ *
  * 读取仓库接口，定义了数据读取的相关规范
  */
 interface ReadRepositoryInterface
 {
-    /**
-     * 设置允许的筛选条件字段
-     *
-     * @param  array|null  $allowedFilters  允许的筛选字段数组
-     *
-     * @return static
-     */
-    public function setAllowedFilters(?array $allowedFilters) : static;
+
 
     /**
-     * 设置允许的关联加载字段
+     * @param  Query|null  $query
      *
-     * @param  array|null  $allowedFilters
-     *
-     * @return static
+     * @return Builder
      */
-    public function setAllowedIncludes(?array $allowedFilters) : static;
-
-    /**
-     * 设置允许的返回字段
-     *
-     * @param  array|null  $allowedFilters
-     *
-     * @return static
-     */
-    public function setAllowedFields(?array $allowedFilters) : static;
-
-    /**
-     * 设置允许的排序字段
-     *
-     * @param  array|null  $allowedFilters
-     *
-     * @return static
-     */
-    public function setAllowedSorts(?array $allowedFilters) : static;
+    public function query(?Query $query = null);
 
     /**
      * 添加查询回调函数
@@ -66,7 +46,7 @@ interface ReadRepositoryInterface
      *
      * @return Model|null 查找到的实体数据，如果未找到则返回null
      */
-    public function find(FindQuery $query);
+    public function find(FindQuery $query) : ?Model;
 
     /**
      * 分页查询实体列表

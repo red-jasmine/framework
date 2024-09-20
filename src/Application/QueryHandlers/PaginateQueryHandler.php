@@ -14,9 +14,10 @@ class PaginateQueryHandler extends QueryHandler
         /**
          * @var $readRepository ReadRepositoryInterface
          */
-        $readRepository = $this->getService()->hook('paginate.repository',
-            $query,
-            fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
+        $readRepository = $this->getService()->hook('paginate.repository', $query,
+            fn() => $this->getService()->getRepository());
+
+
 
         return $readRepository->paginate($query);
 

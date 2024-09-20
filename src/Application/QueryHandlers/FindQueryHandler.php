@@ -12,7 +12,7 @@ class FindQueryHandler extends QueryHandler
     {
         $readRepository = $this->getService()->hook('find.repository',
             $query,
-            fn() => $this->getService()->getRepository()->setQueryCallbacks($this->getService()->getQueryCallbacks()));
+            fn() => $this->getService()->getRepository());
         return $readRepository->find($query);
 
     }

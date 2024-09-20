@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Infrastructure\ReadRepositories;
 
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -74,27 +76,23 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $this;
     }
 
-
-    public function getModelQuery() : \Illuminate\Database\Eloquent\Builder
+    public function find(FindQuery $query) : ?Model
     {
-        return static::$modelClass::query();
+        $id = $query->id;
+        return $this->query($query->except('id'))->findOrFail($id);
     }
 
     /**
-     * 根据请求查询参数构建查询对象
+     * @param  Query|null  $query
      *
-     * 此方法用于初始化QueryBuilder对象，该对象用于构造和执行数据库查询此方法允许通过请求查询参数
-     * 自定义查询，同时确保仅允许使用预定义的过滤器、字段、排序和包含关系
-     *
-     * @param  array  $requestQuery  请求中的查询参数，默认为空数组如果未提供，则使用空数组
-     *
-     * @return QueryBuilder 返回构建好地查询对象，以便进一步操作或执行查询
+     * @return QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
      */
-    protected function query(array $requestQuery = []) : QueryBuilder
+    public function query(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
     {
-        // 初始化QueryBuilder对象，使用模型类和请求查询参数进行构建
-        $queryBuilder = QueryBuilder::for($this->getModelQuery(), $this->buildRequest($requestQuery));
-        // 设置默认排序方式
+
+
+        $queryBuilder = QueryBuilder::for(static::$modelClass::query(), $this->buildRequest($query?->toArray() ?? []));
+
         $queryBuilder->defaultSort($this->defaultSort);
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
@@ -110,7 +108,6 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         // 返回构建好地查询对象
         return $queryBuilder;
     }
-
 
     /**
      * 构建请求对象
@@ -135,7 +132,10 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         // 如果filter参数存在，则移除某些默认参数，以避免冲突或不必要的处理
         if (filled($filterParameterName)) {
             $requestQuery[$filterParameterName] = Arr::except($requestQuery, [
-                'include', 'append', 'fields', 'append', 'sort', 'page', 'per_page'
+                $includeParameterName,
+                $appendParameterName,
+                $fieldsParameterName,
+                $sortParameterName,
             ]);
         }
 
@@ -154,21 +154,13 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $this;
     }
 
-
-    public function find(FindQuery $query) : ?Model
-    {
-        $id = $query->id;
-        return $this->query($query->except('id')->toArray() ?? [])->findOrFail($id);
-    }
-
-
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {
-        return $this->query($query?->toArray())->paginate($query?->perPage);
+        return $this->query($query)->paginate($query?->perPage);
     }
 
     public function simplePaginate(?PaginateQuery $query = null) : Paginator
     {
-        return $this->query($query?->toArray())->simplePaginate($query?->perPage);
+        return $this->query($query)->simplePaginate($query?->perPage);
     }
 }

@@ -19,6 +19,9 @@ interface RepositoryInterface
      */
     public function find($id);
 
+
+
+
     /**
      * 存储一个模型实例到数据库。
      *
