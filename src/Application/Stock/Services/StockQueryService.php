@@ -20,7 +20,7 @@ class StockQueryService extends ApplicationQueryService
         protected ProductSkuReadRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
     public function allowedSorts() : array

@@ -20,7 +20,7 @@ class ProductSeriesQueryService extends ApplicationQueryService
         protected ProductSeriesReadRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
 

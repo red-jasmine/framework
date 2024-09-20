@@ -12,14 +12,13 @@ class PropertyValueUpdatePipeline
 {
     public function __construct(
         protected ProductPropertyValueQueryService $queryService,
-    )
-    {
+    ) {
     }
 
 
     /**
-     * @param CommandHandler $handler
-     * @param Closure        $next
+     * @param  CommandHandler  $handler
+     * @param  Closure  $next
      *
      * @return mixed
      * @throws ProductPropertyException
@@ -28,7 +27,7 @@ class PropertyValueUpdatePipeline
     {
         /// TODO
         $hasRepeatCount = $this->queryService
-            ->getModelQuery()
+            ->getRepository()->query()
             ->where('id', '<>', $handler->getArguments()[0]->id)
             ->where('name', $handler->getArguments()[0]->name)
             // TODO 需要前置处理
@@ -36,12 +35,10 @@ class PropertyValueUpdatePipeline
             ->count();
 
         if ($hasRepeatCount > 0) {
-            throw new ProductPropertyException('Property Value Update Failed:' . $handler->getArguments()[0]->name);
+            throw new ProductPropertyException('Property Value Update Failed:'.$handler->getArguments()[0]->name);
         }
         return $next($handler);
     }
-
-
 
 
 }

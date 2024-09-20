@@ -21,7 +21,7 @@ class BrandQueryService extends ApplicationQueryService
 
     public function __construct(protected BrandReadRepositoryInterface $repository)
     {
-        parent::__construct();
+
     }
 
 
@@ -53,7 +53,7 @@ class BrandQueryService extends ApplicationQueryService
 
     public function onlyShow() : void
     {
-        $this->withQuery(function ($query) {
+        $this->getRepository()->withQuery(function ($query) {
             $query->show();
         });
     }

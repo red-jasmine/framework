@@ -2,16 +2,13 @@
 
 namespace RedJasmine\Product\Application\Category\UserCases\Queries;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
-class ProductCategoryTreeQuery extends Data
+class ProductCategoryTreeQuery extends Query
 {
 
     public ?string $status;
 
-    public string|array|null $include;
-
-    public string|array|null $fields;
 
     public string|array|null $append;
 

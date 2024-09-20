@@ -4,8 +4,9 @@ namespace RedJasmine\Product\Application\Category\UserCases\Queries;
 
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
-class ProductSellerCategoryTreeQuery extends Data
+class ProductSellerCategoryTreeQuery extends Query
 {
 
     public ?string $ownerType = null;
@@ -15,10 +16,6 @@ class ProductSellerCategoryTreeQuery extends Data
     public ?string $status;
     public ?bool   $isShow;
 
-
-    public string|array|null $include;
-
-    public string|array|null $fields;
 
     public string|array|null $append;
 

@@ -19,7 +19,7 @@ class ProductPropertyQueryService extends ApplicationQueryService
     public function __construct(
         protected ProductPropertyReadRepositoryInterface $repository
     ) {
-        parent::__construct();
+
     }
 
     public function allowedIncludes() : array

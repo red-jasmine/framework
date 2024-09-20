@@ -10,6 +10,7 @@ use Spatie\QueryBuilder\AllowedSort;
 class ProductQueryService extends ApplicationQueryService
 {
 
+
     /**
      * 钩子前缀
      * @var string
@@ -20,7 +21,7 @@ class ProductQueryService extends ApplicationQueryService
         protected ProductReadRepositoryInterface $repository
     ) {
 
-        parent::__construct();
+
     }
 
     public function allowedSorts() : array

@@ -20,17 +20,22 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
 
     public function __construct(protected ProductSellerCategoryReadRepositoryInterface $repository)
     {
-        parent::__construct();
+
     }
 
     public function allowedFields() : array
     {
         return [
-            'id', 'parent_id', 'name',
+            'id',
+            'parent_id',
+            'name',
             'image',
-            'group_name', 'sort',
-            'is_leaf', 'is_show',
-            'status', 'expands',
+            'group_name',
+            'sort',
+            'is_leaf',
+            'is_show',
+            'status',
+            'expands',
         ];
 
     }
@@ -38,6 +43,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     public function allowedFilters() : array
     {
         return [
+            AllowedFilter::exact('name'),
             AllowedFilter::exact('status'),
             AllowedFilter::exact('is_show'),
             AllowedFilter::exact('is_leaf'),
@@ -45,20 +51,18 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
             AllowedFilter::exact('parent_id'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
-
         ];
     }
 
     public function tree(ProductSellerCategoryTreeQuery $query) : array
     {
         return $this->repository
-            ->setQueryCallbacks($this->getQueryCallbacks())
             ->tree($query);
     }
 
     public function onlyShow() : void
     {
-        $this->withQuery(function ($query) {
+        $this->getRepository()->withQuery(function ($query) {
             $query->show();
         });
     }
@@ -67,7 +71,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     public function isAllowUse(int $id, UserInterface $owner) : bool
     {
 
-        return (bool)($this->withQuery(function ($query) use ($owner) {
+        return (bool) ($this->getRepository()->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
         })->find($id)?->isAllowUse());
     }

@@ -33,7 +33,7 @@ class SeriesProductPipeline
          * @var $command ProductSeriesCreateCommand
          */
         $command = $handler->getArguments()[0];
-        $this->queryService->withQuery(function ($query) use ($command) {
+        $this->queryService->getRepository()->withQuery(function ($query) use ($command) {
             return $query->onlyOwner($command->owner);
         });
 

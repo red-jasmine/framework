@@ -19,7 +19,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
 
     public function __construct(protected ProductCategoryReadRepositoryInterface $repository)
     {
-        parent::__construct();
+
     }
 
 
@@ -59,9 +59,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
     public function tree(ProductCategoryTreeQuery $query) : array
     {
 
-        return $this->repository
-            ->setQueryCallbacks($this->getQueryCallbacks())
-            ->tree($query);
+        return $this->getRepository()->tree($query);
     }
 
 
@@ -73,7 +71,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
 
     public function onlyShow() : void
     {
-        $this->withQuery(function ($query) {
+        $this->getRepository()->withQuery(function ($query) {
             $query->show();
         });
     }

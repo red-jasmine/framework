@@ -20,7 +20,7 @@ class ProductPropertyValueQueryService extends ApplicationQueryService
         protected ProductPropertyValueReadRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
 

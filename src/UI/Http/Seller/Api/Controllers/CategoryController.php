@@ -37,7 +37,7 @@ class CategoryController extends Controller
 
     public function show(Request $request, $id) : CategoryResource
     {
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));
 
         return CategoryResource::make($result);
 

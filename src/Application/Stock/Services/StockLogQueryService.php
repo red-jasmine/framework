@@ -19,7 +19,7 @@ class StockLogQueryService extends ApplicationQueryService
         protected ProductStockLogReadRepositoryInterface $repository
     )
     {
-        parent::__construct();
+
     }
 
 

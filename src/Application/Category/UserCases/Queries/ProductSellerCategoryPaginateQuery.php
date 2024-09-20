@@ -12,4 +12,7 @@ class ProductSellerCategoryPaginateQuery extends PaginateQuery
     public ?string $ownerType = null;
 
     public ?int $ownerId   = null;
+
+
+    public ?string $name;
 }

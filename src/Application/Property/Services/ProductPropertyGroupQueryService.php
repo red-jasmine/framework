@@ -17,7 +17,7 @@ class ProductPropertyGroupQueryService extends ApplicationQueryService
     )
     {
 
-        parent::__construct();
+
     }
 
     public function allowedFilters() : array
