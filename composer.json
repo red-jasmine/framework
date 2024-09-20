@@ -20,6 +20,5 @@
             "RedJasmine\\Shopping\\": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }
