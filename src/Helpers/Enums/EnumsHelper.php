@@ -16,7 +16,7 @@ trait EnumsHelper
         return self::labels()[$this->value] ?? $this->name;
     }
 
-    public function color()
+    public function color() : string
     {
         return self::colors()[$this->value] ?? $this->value;
     }

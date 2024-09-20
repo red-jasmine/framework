@@ -13,14 +13,14 @@ class AES
      *
      * @var string
      */
-    protected $key;
+    protected string $key;
 
     /**
      * The algorithm used for encryption.
      *
      * @var string
      */
-    protected $cipher = 'AES-256-ECB';
+    protected string $cipher = 'AES-256-ECB';
 
 
     public function __construct($key)
@@ -43,7 +43,7 @@ class AES
         return base64_encode($value);
     }
 
-    public function encryptString($value)
+    public function encryptString($value) : string
     {
         return $this->encrypt($value, false);
     }
@@ -73,7 +73,7 @@ class AES
      *
      * @throws DecryptException
      */
-    public function decryptString($payload)
+    public function decryptString($payload) : string
     {
         return $this->decrypt($payload, false);
     }
