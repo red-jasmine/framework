@@ -40,7 +40,7 @@ class CardController extends Controller
     public function show($id, Request $request) : CardResource
     {
 
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
 
         return CardResource::make($result);
 
@@ -63,7 +63,7 @@ class CardController extends Controller
     public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
 
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
         $request->offsetSet('id', $id);
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
@@ -77,7 +77,7 @@ class CardController extends Controller
 
     public function destroy($id, Request $request) : \Illuminate\Http\JsonResponse
     {
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
         $request->offsetSet('id', $id);
         $command = CardDeleteCommand::from($request);
 

@@ -48,7 +48,7 @@ class CardGroupBindProductController extends Controller
 
     public function show($id, Request $request) : CardGroupBindProductResource
     {
-        $result = $this->queryService->find(FindQuery::fromRequestRoute($request,$id));;
+        $result = $this->queryService->findById(FindQuery::make($id,$request));;
         return CardGroupBindProductResource::make($result);
     }
 
@@ -86,7 +86,7 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('owner_type', $this->getOwner()->getType());
 
 
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
 
         $command = CardGroupBindProductUpdateCommand::from($request);
         $this->commandService->update($command);
@@ -100,7 +100,7 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('id', $id);
         $request->offsetSet('owner_id', $this->getOwner()->getID());
         $request->offsetSet('owner_type', $this->getOwner()->getType());
-        $this->queryService->find($id);
+        $this->queryService->findById(FindQuery::make($id));
         $command = CardGroupBindProductDeleteCommand::from($request);
 
         $this->commandService->delete($command);

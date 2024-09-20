@@ -4,6 +4,7 @@ namespace RedJasmine\Card\Application\Services\Pipelines;
 
 use RedJasmine\Card\Application\Services\CardGroupQueryService;
 use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CardGroupPipeline
 {
@@ -26,7 +27,7 @@ class CardGroupPipeline
                 $query->onlyOwner($command->owner);
             });
 
-            $this->groupQueryService->find($command->groupId);
+            $this->groupQueryService->findById(FindQuery::fromId($command->groupId));
         }
 
 
