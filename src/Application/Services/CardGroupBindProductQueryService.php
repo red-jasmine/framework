@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Card\Application\Services;
 
-use RedJasmine\Card\Infrastructure\ReadRepositories\Mysql\CardGroupBindProductReadRepository;
+use RedJasmine\Card\Domain\Repositories\CardGroupBindProductReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -11,15 +11,14 @@ class CardGroupBindProductQueryService extends ApplicationQueryService
 
 
     public function __construct(
-        protected CardGroupBindProductReadRepository $repository,
-    )
-    {
-        parent::__construct();
+        protected CardGroupBindProductReadRepositoryInterface $repository,
+    ) {
+
     }
 
     public function allowedIncludes() : array
     {
-        return  ['group'];
+        return ['group'];
     }
 
 

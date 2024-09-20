@@ -14,7 +14,7 @@ class CardGroupQueryService extends ApplicationQueryService
         protected CardGroupReadRepositoryInterface $repository,
     )
     {
-        parent::__construct();
+
     }
 
 

@@ -21,7 +21,7 @@ class CardGroupPipeline
 
 
         if ($command->groupId) {
-            $this->groupQueryService->withQuery(function ($query) use ($command) {
+            $this->groupQueryService->getRepository()->withQuery(function ($query) use ($command) {
 
                 $query->onlyOwner($command->owner);
             });
