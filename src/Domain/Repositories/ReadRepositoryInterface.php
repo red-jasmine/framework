@@ -46,7 +46,7 @@ interface ReadRepositoryInterface
      *
      * @return Model|null 查找到的实体数据，如果未找到则返回null
      */
-    public function find(FindQuery $query) : ?Model;
+    public function findById(FindQuery $query) : ?Model;
 
     /**
      * 分页查询实体列表

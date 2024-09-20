@@ -11,13 +11,13 @@ class Query extends Data
      * 关联加载的字段
      * @var mixed
      */
-    public string|array|null $include;
+    public mixed $include;
 
     /**
      * 查询的字段
      * @var mixed
      */
-    public string|array|null $fields;
+    public mixed $fields;
 
 
 }
