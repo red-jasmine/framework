@@ -2,24 +2,24 @@
 
 namespace RedJasmine\Product\Application\Property\Services\Pipelines;
 
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupRepositoryInterface;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
-use RedJasmine\Support\Application\CommandHandler;
+use Closure;
+use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyReadRepositoryInterface;
+use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class ProductPropertyRulePipeline
 {
     public function __construct(
-        protected ProductPropertyRepositoryInterface $repository,
-    )
-    {
+        protected ProductPropertyReadRepositoryInterface $repository,
+    ) {
     }
 
 
-    public function handle(CommandHandler $handler, \Closure $next) : mixed
+    public function handle(Data $command, Closure $next) : mixed
     {
-        /// TODO
-        $command = $handler->getArguments()[0];
-        $this->repository->find($command->pid);
-        return $next($handler);
+
+        $command = $command;
+        $this->repository->findById(FindQuery::make($command->pid));
+        return $next($command);
     }
 }

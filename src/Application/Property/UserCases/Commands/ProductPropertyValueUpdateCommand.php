@@ -22,7 +22,6 @@ class ProductPropertyValueUpdateCommand extends Data
         return [
             'id'       => '属性ID',
             'name'     => '名称',
-
             'expands'  => '扩展参数',
             'sort'     => '排序',
             'group_id' => '分组',
@@ -34,11 +33,11 @@ class ProductPropertyValueUpdateCommand extends Data
     public static function rules(ValidationContext $context) : array
     {
         return [
-            'id' => [ 'required', 'integer' ],
-            'name'     => [ 'required', 'max:64', ],
-            'expands'  => [ 'sometimes', 'nullable', 'array' ],
-            'sort'     => [ 'integer' ],
-            'group_id' => [ 'sometimes', 'nullable', 'integer' ],
+            'id'       => ['required', 'integer'],
+            'name'     => ['required', 'max:64',],
+            'expands'  => ['sometimes', 'nullable', 'array'],
+            'sort'     => ['integer'],
+            'group_id' => ['sometimes', 'nullable', 'integer'],
 
         ];
     }

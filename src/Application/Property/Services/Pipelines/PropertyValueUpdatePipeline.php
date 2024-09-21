@@ -6,7 +6,6 @@ namespace RedJasmine\Product\Application\Property\Services\Pipelines;
 use Closure;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyValueQueryService;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
-use RedJasmine\Support\Application\CommandHandler;
 
 class PropertyValueUpdatePipeline
 {
@@ -17,27 +16,26 @@ class PropertyValueUpdatePipeline
 
 
     /**
-     * @param  CommandHandler  $handler
+     * @param  ProductPropertyValueUpdateCommand  $command
      * @param  Closure  $next
      *
      * @return mixed
      * @throws ProductPropertyException
      */
-    public function handle(CommandHandler $handler, Closure $next) : mixed
+    public function handle(ProductPropertyValueUpdateCommand $command, Closure $next) : mixed
     {
-        /// TODO
+
         $hasRepeatCount = $this->queryService
             ->getRepository()->query()
-            ->where('id', '<>', $handler->getArguments()[0]->id)
-            ->where('name', $handler->getArguments()[0]->name)
-            // TODO 需要前置处理
-            // /->where('pid', $handler->model->pid)
+            ->where('id', '<>', $command->id)
+            ->where('name', $command->name)
+            ->where('pid', $command->pid)
             ->count();
 
         if ($hasRepeatCount > 0) {
-            throw new ProductPropertyException('Property Value Update Failed:'.$handler->getArguments()[0]->name);
+            throw new ProductPropertyException('Property Value Update Failed:'.$command->name);
         }
-        return $next($handler);
+        return $next($command);
     }
 
 
