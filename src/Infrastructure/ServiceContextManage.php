@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Infrastructure;
 
 
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 
@@ -34,25 +35,18 @@ class ServiceContextManage
 
     public function getOperator() : ?UserInterface
     {
-        $operator = $this->get('operator');
-        if ($operator) {
-            $operator;
+        $operator = $this->get('operator') ?: $this->getAuthUser();
+        if (!$operator) {
+            return null;
+        }
+        if ($operator instanceof UserInterface) {
+            return $operator;
         } else {
-            $app      = ($this->app)();
-            $request  = $app->make('request');
-            $operator = $request->user();
-
+            return UserData::from([
+                'id'   => $operator->getKey(),
+                'type' => get_class($operator)
+            ])->additional(['user' => $operator]);
         }
-        if ($operator) {
-            if ($operator instanceof UserInterface) {
-                return $operator;
-            } else {
-                // 获取模型名称 TODO
-                return UserData::from(['id' => $operator->getKey(), 'type' => get_class($operator)]);
-            }
-        }
-
-        return $operator;
     }
 
     /**
@@ -70,6 +64,14 @@ class ServiceContextManage
             return $item();
         }
         return $item;
+    }
+
+    /**
+     * @return \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    protected function getAuthUser()
+    {
+        return Auth::user();
     }
 
     /**
