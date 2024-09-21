@@ -11,6 +11,7 @@ use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Product\Exceptions\StockException;
 use Throwable;
+use function Symfony\Component\String\u;
 
 /**
  * @method  ProductCommandService getService()
@@ -33,13 +34,12 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
     {
 
 
-        $this->setCommand($command);
-
         /**
          * @var $product Product
          */
         $product = $this->getService()->getRepository()->find($command->id);
-        $this->setModel($product);
+
+
 
 
         $this->beginDatabaseTransaction();
@@ -51,8 +51,11 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
                 $sku->setDeleted();
             });
 
+            $this->getService()->hook('update.validate', $command, fn() => $this->validate($command));
 
-            $this->handleCore($product, $command);
+            $product = $this->getService()->hook('update.fill', $command,
+                fn() => $this->productTransformer->transform($product, $command));
+
 
             $this->handleStock($product, $command);
 

@@ -164,13 +164,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             case ProductStatusEnum::SOLD_OUT:
                 $this->sold_out_time = now();
                 break;
+            case ProductStatusEnum::FORBID_SALE:
             case ProductStatusEnum::OFF_SHELF:
                 $this->off_sale_time = now();
                 break;
             case ProductStatusEnum::PRE_SALE:
-                break;
-            case ProductStatusEnum::FORBID_SALE:
-                $this->off_sale_time = now();
                 break;
             case ProductStatusEnum::DELETED:
                 $this->off_sale_time = now();

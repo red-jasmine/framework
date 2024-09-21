@@ -26,8 +26,6 @@ class ProductCreateCommandHandler extends ProductCommandHandler
      */
     public function handle(ProductCreateCommand $command) : Product
     {
-        // 设置当前处理的命令
-        $this->setCommand($command);
 
 
         // 初始化产品模型实例
@@ -46,10 +44,14 @@ class ProductCreateCommandHandler extends ProductCommandHandler
             }
 
             // 设置当前处理的产品模型
-            $this->setModel($product);
+
 
             // 执行核心处理逻辑
-            $this->handleCore($product, $command);
+
+            $this->getService()->hook('create.validate',$command, fn() => $this->validate($command));
+
+            $product =  $this->getService()->hook('create.fill',$command, fn() => $this->productTransformer->transform($product, $command));
+
 
             // 保存产品到数据库
             $this->getService()->getRepository()->store($product);
@@ -67,6 +69,8 @@ class ProductCreateCommandHandler extends ProductCommandHandler
         }
 
     }
+
+
 
 
 }
