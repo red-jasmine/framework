@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 trait CanUseDatabaseTransactions
 {
     // 标记是否启用了数据库事务
-    protected bool|Closure $hasDatabaseTransactions = false;
+    protected bool|Closure $hasDatabaseTransactions = true;
 
 
     /**
