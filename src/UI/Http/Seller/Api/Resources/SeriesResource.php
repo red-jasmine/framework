@@ -28,7 +28,7 @@ class SeriesResource extends JsonResource
             'creator_id'   => $this->creator_id,
             'updater_type' => $this->updater_type,
             'updater_id'   => $this->updater_id,
-            'product'      => SeriesProductResource::collection($this->whenLoaded('products')),
+            'products'     => SeriesProductResource::collection($this->whenLoaded('products')),
 
         ];
     }

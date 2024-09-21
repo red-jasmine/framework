@@ -8,37 +8,50 @@ use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdate
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Facades\ServiceContext;
+use Throwable;
 
 class ProductSeriesUpdateCommandHandler extends CommandHandler
 {
 
 
+    /**
+     * @throws AbstractException
+     * @throws Throwable
+     */
     public function handle(ProductSeriesUpdateCommand $command) : ProductSeries
     {
-        // TODO
-        /**
-         * @var $model ProductSeries
-         */
-        $model          = $this->getService()->getRepository()->find($command->id);
-        $model->remarks = $command->remarks;
-        $model->name    = $command->name;
-        $model->updater = ServiceContext::getOperator();
 
-        $model->products = Collection::make([]);
+        $this->beginDatabaseTransaction();
+        try {
+            /**
+             * @var $model ProductSeries
+             */
+            $model          = $this->getService()->getRepository()->find($command->id);
+            $model->remarks = $command->remarks;
+            $model->name    = $command->name;
 
-        $command->products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
-            $productSeriesProduct             = new ProductSeriesProduct();
-            $productSeriesProduct->product_id = $productSeriesProductData->productId;
-            $productSeriesProduct->name       = $productSeriesProductData->name;
-            $model->products->push($productSeriesProduct);
-        });
+            $model->products = Collection::make([]);
+            $command->products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
+                $productSeriesProduct             = new ProductSeriesProduct();
+                $productSeriesProduct->product_id = $productSeriesProductData->productId;
+                $productSeriesProduct->name       = $productSeriesProductData->name;
+                $model->products->push($productSeriesProduct);
+            });
+            $this->getService()->getRepository()->update($model);
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $abstractException) {
+            $this->rollBackDatabaseTransaction();
+            throw $abstractException;
+
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
 
 
-        $this->execute(
-            execute: null,
-            persistence: fn() => $this->getService()->getRepository()->update($model)
-        );
         return $model;
     }
 

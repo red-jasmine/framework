@@ -15,25 +15,22 @@ class SeriesProductPipeline
 {
     public function __construct(
         protected ProductQueryService $queryService
-    )
-    {
+    ) {
     }
 
 
     /**
-     * @param CommandHandler $handler
-     * @param Closure        $next
+     * @param  ProductSeriesCreateCommand  $command
+     * @param  Closure  $next
      *
      * @return mixed
      * @throws AbstractException
      * @throws ProductException
      */
-    public function handle(CommandHandler $handler, Closure $next) : mixed
+    public function handle(ProductSeriesCreateCommand $command, Closure $next) : mixed
     {
-        /**
-         * @var $command ProductSeriesCreateCommand
-         */
-        $command = $handler->getArguments()[0];
+
+
         $this->queryService->getRepository()->withQuery(function ($query) use ($command) {
             return $query->onlyOwner($command->owner);
         });
@@ -47,6 +44,6 @@ class SeriesProductPipeline
             throw new ProductException('产品不存在');
         }
 
-        return $next($handler);
+        return $next($command);
     }
 }

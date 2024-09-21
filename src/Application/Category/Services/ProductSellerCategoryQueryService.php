@@ -75,7 +75,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
 
         return (bool) ($this->getRepository()->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
-        })->findById(FindQuery::fromId($id))?->isAllowUse());
+        })->findById(FindQuery::make($id))?->isAllowUse());
     }
 
 
