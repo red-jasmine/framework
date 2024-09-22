@@ -9,6 +9,9 @@ return new class extends Migration {
     {
         Schema::create('product_infos', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
+            //
+            $table->string('tips')->nullable()->comment('提示');
+            $table->json('promise_services')->nullable()->comment('承诺服务');
             // 属性
             $table->json('basic_props')->nullable()->comment('基本属性');
             $table->json('sale_props')->nullable()->comment('销售属性');
@@ -20,6 +23,7 @@ return new class extends Migration {
             $table->json('videos')->nullable()->comment('视频集');
             $table->longText('detail')->nullable()->comment('详情');
             // 物品基本信息
+
             $table->string('weight')->nullable()->comment('重:kg');
             $table->string('width')->nullable()->comment('宽:m');
             $table->string('height')->nullable()->comment('高:m');

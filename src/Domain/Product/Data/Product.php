@@ -22,6 +22,7 @@ class Product extends Data
     public ShippingTypeEnum  $shippingType;
     public UserInterface     $owner;
     public string            $title;
+    public ?string           $slogan;
     public Amount            $price;
     public Amount            $marketPrice;
     public Amount            $costPrice;
@@ -33,15 +34,16 @@ class Product extends Data
     public ?string           $barcode        = null;
     public ?string           $outerId        = null;
     public bool              $isMultipleSpec = false;
+    public bool              $isCustomized   = false;
 
 
     public int  $unit             = 1;
     public int  $deliveryTime     = 0;
     public ?int $sort             = 0;
-    public int  $brandId          = 0;
-    public int  $categoryId       = 0;
-    public int  $sellerCategoryId = 0;
-    public int  $postageId        = 0;
+    public ?int $brandId          = null;
+    public ?int $categoryId       = null;
+    public ?int $sellerCategoryId = null;
+    public ?int $postageId        = null;
     public ?int $minLimit         = 0;
     public ?int $maxLimit         = 0;
     public int  $stepLimit        = 1;
@@ -61,7 +63,11 @@ class Product extends Data
     public ?UserInterface $supplier;
     public ?int           $supplierProductId = null;
 
-
+    /**
+     * 提示
+     * @var string|null
+     */
+    public ?string $tips = null;
     /**
      * 关键字
      * @var string|null
@@ -99,8 +105,16 @@ class Product extends Data
     public ?string $length;
     public ?string $size;
     public ?string $remarks;
-    public ?array  $tools;
-    public ?array  $expands;
+    /**
+     * 定制工具
+     * @var array|null
+     */
+    public ?array $tools;
+    /**
+     *
+     * @var array|null
+     */
+    public ?array $expands;
 
     /**
      * 承诺服务

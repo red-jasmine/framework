@@ -22,13 +22,13 @@ class ProductPackageSeeder extends Seeder
     {
         // 添加 品牌
         DB::table('brands')->insert([
-                                        'id'           => 1,
-                                        'name'         => '测试',
-                                        'status'       => 'enable',
-                                        'english_name' => 'test',
-                                        'initial'      => 'T',
-                                        'logo'         => fake()->imageUrl(360, 360)
-                                    ]);
+            'id'           => 1,
+            'name'         => '测试',
+            'status'       => 'enable',
+            'english_name' => 'test',
+            'initial'      => 'T',
+            'logo'         => fake()->imageUrl(360, 360)
+        ]);
 
     }
 
@@ -37,29 +37,32 @@ class ProductPackageSeeder extends Seeder
     {
 
         DB::table('product_categories')->insert([
-                                                    'id'        => 1,
-                                                    'name'      => '服装',
-                                                    'parent_id' => 0,
-                                                    'status'    => 'enable',
-                                                    'image'     => fake()->imageUrl(360, 360)
-                                                ]);
+            'id'        => 1,
+            'name'      => '服装',
+            'is_show'   => 1,
+            'parent_id' => 0,
+            'status'    => 'enable',
+            'image'     => fake()->imageUrl(360, 360)
+        ]);
 
         DB::table('product_categories')->insert([
-                                                    'id'        => 2,
-                                                    'name'      => '男装',
-                                                    'parent_id' => 1,
-                                                    'status'    => 'enable',
-                                                    'image'     => fake()->imageUrl(360, 360)
-                                                ]);
+            'id'        => 2,
+            'name'      => '男装',
+            'parent_id' => 1,
+            'is_show'   => 1,
+            'status'    => 'enable',
+            'image'     => fake()->imageUrl(360, 360)
+        ]);
 
         DB::table('product_categories')->insert([
-                                                    'id'        => 3,
-                                                    'name'      => '短袖',
-                                                    'parent_id' => 2,
-                                                    'status'    => 'enable',
-                                                    'is_leaf'   => 1,
-                                                    'image'     => fake()->imageUrl(360, 360)
-                                                ]);
+            'id'        => 3,
+            'name'      => '短袖',
+            'parent_id' => 2,
+            'is_show'   => 1,
+            'status'    => 'enable',
+            'is_leaf'   => 1,
+            'image'     => fake()->imageUrl(360, 360)
+        ]);
     }
 
 
@@ -312,7 +315,7 @@ class ProductPackageSeeder extends Seeder
         ];
 
 
-        foreach ([ ...$colors, ...$sizes, ...$styles, ...$years ] as $value) {
+        foreach ([...$colors, ...$sizes, ...$styles, ...$years] as $value) {
             $value['status'] = 'enable';
             DB::table('product_property_values')->insert($value);
         }
@@ -324,26 +327,26 @@ class ProductPackageSeeder extends Seeder
     protected function sellerCategory() : void
     {
         DB::table('product_seller_categories')->insert([
-                                                           'id'         => 1,
-                                                           'owner_type' => 'seller',
-                                                           'owner_id'   => 1,
-                                                           'name'       => '男装',
-                                                           'parent_id'  => 0,
-                                                           'status'     => 'enable',
-                                                           'is_leaf'    => 0,
-                                                           'image'  => fake()->imageUrl(360, 360)
-                                                       ]);
+            'id'         => 1,
+            'owner_type' => 'seller',
+            'owner_id'   => 1,
+            'name'       => '男装',
+            'parent_id'  => 0,
+            'status'     => 'enable',
+            'is_leaf'    => 0,
+            'image'      => fake()->imageUrl(360, 360)
+        ]);
 
 
         DB::table('product_seller_categories')->insert([
-                                                           'id'         => 2,
-                                                           'owner_type' => 'seller',
-                                                           'owner_id'   => 1,
-                                                           'name'       => '短袖',
-                                                           'parent_id'  => 1,
-                                                           'status'     => 'enable',
-                                                           'is_leaf'    => 1,
-                                                           'image'  => fake()->imageUrl(360, 360)
-                                                       ]);
+            'id'         => 2,
+            'owner_type' => 'seller',
+            'owner_id'   => 1,
+            'name'       => '短袖',
+            'parent_id'  => 1,
+            'status'     => 'enable',
+            'is_leaf'    => 1,
+            'image'      => fake()->imageUrl(360, 360)
+        ]);
     }
 }

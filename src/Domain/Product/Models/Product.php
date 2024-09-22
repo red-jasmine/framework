@@ -65,7 +65,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'is_new'           => 'boolean',
             'is_best'          => 'boolean',
             'is_benefit'       => 'boolean',
-            'promise_services' => PromiseServicesCastTransformer::class,
             'price'            => AmountCastTransformer::class,
             'market_price'     => AmountCastTransformer::class,
             'cost_price'       => AmountCastTransformer::class,

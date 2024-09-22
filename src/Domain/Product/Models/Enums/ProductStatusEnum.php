@@ -8,6 +8,9 @@ enum ProductStatusEnum: string
 {
     use EnumsHelper;
 
+
+    case DRAFT = 'draft'; // 草稿
+
     case ON_SALE = 'on_sale'; // 在售
 
     case PRE_SALE = 'pre_sale'; // 预售
@@ -28,6 +31,7 @@ enum ProductStatusEnum: string
             self::OFF_SHELF->value   => '下架',
             self::PRE_SALE->value    => '预售',
             self::FORBID_SALE->value => '禁售',
+            self::DRAFT->value       => '草稿',
         ];
 
     }

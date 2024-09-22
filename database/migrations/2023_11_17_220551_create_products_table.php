@@ -25,30 +25,32 @@ return new class extends Migration {
             $table->string('image')->nullable()->comment('主图');
             $table->string('barcode', 32)->nullable()->comment('条形码');
             $table->string('outer_id')->nullable()->comment('商品编码');
+            $table->unsignedTinyInteger('is_customized')->default(0)->comment('是否定制');
             $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
-
-            //单位
-            $table->string('unit_name', 10)->nullable()->comment('单位名称');
-            $table->unsignedBigInteger('unit')->default(1)->comment('单位数量');
+            $table->string('slogan')->nullable()->comment('广告语');
             // 类目信息
-            $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
-            $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
-            $table->unsignedBigInteger('seller_category_id')->default(0)->comment('卖家分类ID');
+            $table->unsignedBigInteger('brand_id')->nullable()->comment('品牌ID');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('类目ID');
+            $table->unsignedBigInteger('seller_category_id')->nullable()->comment('卖家分类ID');
             // 运费
             $table->string('freight_payer', 32)->comment(FreightPayerEnum::comments('运费承担方'));
-            $table->unsignedBigInteger('postage_id')->default(0)->comment('运费模板ID');
+            $table->unsignedBigInteger('postage_id')->nullable()->comment('运费模板ID');
             // 价格
             $table->decimal('price', 10)->default(0)->comment('销售价');
             $table->decimal('market_price', 10)->default(0)->comment('市场价');
             $table->decimal('cost_price', 10)->default(0)->comment('成本价');
+
+            //单位
+            $table->unsignedBigInteger('unit')->default(1)->comment('单位数量');
+            $table->string('unit_name', 32)->nullable()->comment('单位名称');
             // 库存
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
-
+            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             // 承诺服务
-            $table->string('promise_services')->nullable()->comment('承诺服务');
+
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间:小时');
             // 运营类
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');
@@ -67,19 +69,19 @@ return new class extends Migration {
             $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
             $table->timestamp('off_sale_time')->nullable()->comment('下架时间');
             // 供应商
-
             $table->string('supplier_type')->nullable()->comment('供应商类型');
             $table->unsignedBigInteger('supplier_id')->nullable()->comment('供应商ID');
             $table->unsignedBigInteger('supplier_product_id')->nullable()->comment('供应商 商品ID');
             // 税率
             // 审核状态
             // 是否违规
-            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+
             // 统计项
+            $table->unsignedBigInteger('sales')->default(0)->comment('销售量');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
-            $table->unsignedBigInteger('sales')->default(0)->comment('销量');
 
             // 操作
+            $table->timestamp('modified_time')->nullable()->comment('修改时间');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
