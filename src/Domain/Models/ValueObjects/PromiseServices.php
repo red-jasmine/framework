@@ -7,14 +7,30 @@ use RedJasmine\Support\Data\Data;
 class PromiseServices extends Data
 {
 
+    /**
+     * 退款
+     * @var PromiseServiceValue
+     */
     public PromiseServiceValue $refund;
 
+    /**
+     * 换货
+     * @var PromiseServiceValue
+     */
     public PromiseServiceValue $exchange;
 
 
+    /**
+     * 售后服务
+     * @var PromiseServiceValue
+     */
     public PromiseServiceValue $service;
 
 
+    /**
+     * 保修
+     * @var PromiseServiceValue
+     */
     public PromiseServiceValue $guarantee;
 
     public function __construct()

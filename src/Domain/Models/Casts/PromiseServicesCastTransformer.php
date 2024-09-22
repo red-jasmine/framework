@@ -4,6 +4,7 @@ namespace RedJasmine\Ecommerce\Domain\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use JsonException;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
@@ -14,45 +15,33 @@ use Spatie\LaravelData\Transformers\Transformer;
 class PromiseServicesCastTransformer implements CastsAttributes, Cast, Transformer
 {
 
+    /**
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  array  $attributes
+     *
+     * @return PromiseServices
+     * @throws JsonException
+     */
     public function get(Model $model, string $key, mixed $value, array $attributes) : PromiseServices
     {
-        return PromiseServices::from($this->decode($value));
+        return PromiseServices::from(json_decode($value, false, 512, JSON_THROW_ON_ERROR));
     }
 
     /**
-     * @param Model           $model
-     * @param string          $key
-     * @param PromiseServices $value
-     * @param array           $attributes
+     * @param  Model  $model
+     * @param  string  $key
+     * @param  PromiseServices  $value
+     * @param  array  $attributes
      *
      * @return string
+     * @throws JsonException
      */
     public function set(Model $model, string $key, mixed $value, array $attributes) : string
     {
-        return $this->encode($value?->toArray() ?? []);
-    }
 
-
-    protected function encode(array $map) : string
-    {
-        return implode(";", array_map(function ($key, $value) {
-            return $key . ":" . $value;
-        }, array_keys($map), array_values($map)));
-    }
-
-    protected function decode(string $string) : array
-    {
-        if (filled($string)) {
-            $array = [];
-            $parts = explode(';', $string);
-
-            foreach ($parts as $part) {
-                $keyValue            = explode(':', $part);
-                $array[$keyValue[0]] = $keyValue[1];
-            }
-            return $array;
-        }
-        return [];
+        return json_encode($value?->toArray() ?? [], JSON_THROW_ON_ERROR);
     }
 
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : mixed
