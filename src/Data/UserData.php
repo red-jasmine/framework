@@ -10,28 +10,27 @@ class UserData extends Data implements UserInterface
 
 
     /**
-     * @param string      $type
-     * @param int         $id
-     * @param string|null $nickname
-     * @param string|null $avatar
+     * @param  string  $type
+     * @param  int  $id
+     * @param  string|null  $nickname
+     * @param  string|null  $avatar
      */
     public function __construct(
-        public string  $type,
-        public int     $id,
+        public string $type,
+        public int $id,
         public ?string $nickname = null,
         public ?string $avatar = null,
-    )
-    {
+    ) {
     }
 
     public static function fromUserInterface(UserInterface $user) : static
     {
-        return new static(
-            type:     $user->getType(),
-            id:       $user->getID(),
+        return (new static(
+            type: $user->getType(),
+            id: $user->getID(),
             nickname: $user->getNickname(),
-            avatar:   $user->getAvatar()
-        );
+            avatar: $user->getAvatar()
+        ))->additional(['user' => $user]);
     }
 
 
