@@ -31,6 +31,7 @@ class OrderData extends Data
      * @var PayTypeEnum
      */
     public PayTypeEnum $payType = PayTypeEnum::ONLINE;
+
     /**
      * 渠道
      * @var UserData|null
@@ -55,9 +56,8 @@ class OrderData extends Data
      * 客户端类型
      * @var string|null
      */
-    public ?string $clientType         = null;
-    public ?string $clientVersion      = null;
-    public ?string $clientIp           = null;
+
+
     public ?string $sourceType         = null;
     public ?string $sourceId           = null;
     public ?string $outerOrderId       = null;
@@ -74,6 +74,10 @@ class OrderData extends Data
     public ?array  $tools              = null;
     public Amount  $freightAmount;
     public Amount  $discountAmount;
+    public ?string $clientType         = null;
+    public ?string $clientVersion      = null;
+    public ?string $clientIp           = null;
+
     /**
      * 商品集合
      * @var Collection<OrderProductData>
