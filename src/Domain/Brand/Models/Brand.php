@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Brand\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -54,6 +55,11 @@ class Brand extends Model implements OperatorInterface
         'logo',
         'sort',
     ];
+
+    public function parent() : BelongsTo
+    {
+        return $this->belongsTo(static::class, 'parent_id', 'id');
+    }
 
 
     public function scopeShow(Builder $query) : Builder

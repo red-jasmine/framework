@@ -44,4 +44,17 @@ enum ProductStatusEnum: string
         ];
     }
 
+    //danger、gray、info、primary、success 或 warning
+    public static function colors() : array
+    {
+        return [
+            self::ON_SALE->value     => 'success',
+            self::SOLD_OUT->value    => 'warning',
+            self::OFF_SHELF->value   => 'warning',
+            self::PRE_SALE->value    => 'primary',
+            self::FORBID_SALE->value => 'danger',
+            self::DRAFT->value       => 'gray',
+        ];
+    }
+
 }
