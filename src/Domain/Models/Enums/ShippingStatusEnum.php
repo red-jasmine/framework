@@ -22,7 +22,7 @@ enum ShippingStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::NIL->value          => '',
+            self::NIL->value          => '-',
             self::READY_SEND->value   => '发货', // 发货管控中 //TODO
             self::WAIT_SEND->value    => '待发货',
             self::PART_SHIPPED->value => '部分发货',
