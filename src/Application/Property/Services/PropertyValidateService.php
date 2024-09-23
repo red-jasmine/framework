@@ -4,7 +4,6 @@ namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Support\Collection;
 use JsonException;
-use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Property;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
@@ -20,52 +19,17 @@ use RedJasmine\Product\Exceptions\ProductPropertyException;
 class PropertyValidateService
 {
     public function __construct(
-        protected ProductPropertyReadRepositoryInterface      $propertyReadRepository,
+        protected ProductPropertyReadRepositoryInterface $propertyReadRepository,
         protected ProductPropertyValueReadRepositoryInterface $valueReadRepository,
-        protected PropertyFormatter                           $propertyFormatter,
-    )
-    {
+        protected PropertyFormatter $propertyFormatter,
+    ) {
 
     }
-
-
-    /**
-     * 获取属性
-     *
-     * @param array $props
-     *
-     * @return Collection
-     * @throws ProductPropertyException
-     */
-    protected function getProperties(array $props = []) : Collection
-    {
-
-        $pid = collect($props)->pluck('pid')->unique()->toArray();
-        // 验证重复
-        if (count($pid) !== count($props)) {
-            throw new ProductPropertyException('属性重复');
-        }
-        if (blank($pid)) {
-            return collect();
-        }
-
-        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
-
-
-        if (count($pid) !== count($properties)) {
-            throw new ProductPropertyException('属性ID存在错误');
-        }
-
-
-        return $properties;
-
-    }
-
 
     /**
      * 基础属性验证
      *
-     * @param array $props
+     * @param  array  $props
      *
      * @return Collection
      * @throws ProductPropertyException
@@ -95,14 +59,15 @@ class PropertyValidateService
 
                     $salePropValue        = new PropValue();
                     $salePropValue->vid   = 0;
-                    $salePropValue->name  = (string)($values[0]['name'] ?? '');
-                    $salePropValue->alias = (string)($values[0]['alias'] ?? '');
+                    $salePropValue->name  = (string) ($values[0]['name'] ?? '');
+                    $salePropValue->alias = (string) ($values[0]['alias'] ?? '');
                     $basicProp->values->add($salePropValue);
                     break;
                 case PropertyTypeEnum::SELECT:
                 case PropertyTypeEnum::MULTIPLE:
 
-                    $propValues        = $this->valueReadRepository->findByIdsInProperty($basicProp->pid, collect($values)->pluck('vid')->toArray())->keyBy('id');
+                    $propValues        = $this->valueReadRepository->findByIdsInProperty($basicProp->pid,
+                        collect($values)->pluck('vid')->toArray())->keyBy('id');
                     $basicProp->values = collect();
 
                     foreach ($values as $value) {
@@ -135,9 +100,41 @@ class PropertyValidateService
     }
 
     /**
+     * 获取属性
+     *
+     * @param  array  $props
+     *
+     * @return Collection
+     * @throws ProductPropertyException
+     */
+    protected function getProperties(array $props = []) : Collection
+    {
+
+        $pid = collect($props)->pluck('pid')->unique()->toArray();
+        // 验证重复
+        if (count($pid) !== count($props)) {
+            throw new ProductPropertyException('属性重复');
+        }
+        if (blank($pid)) {
+            return collect();
+        }
+
+        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
+
+
+        if (count($pid) !== count($properties)) {
+            throw new ProductPropertyException('属性ID存在错误');
+        }
+
+
+        return $properties;
+
+    }
+
+    /**
      * 是否允许多个值
      *
-     * @param ProductProperty $property
+     * @param  ProductProperty  $property
      *
      * @return bool
      */
@@ -146,11 +143,36 @@ class PropertyValidateService
         return $property->type === PropertyTypeEnum::MULTIPLE;
     }
 
+    /**
+     * @param  array  $props
+     *
+     * @return array|null
+     * @throws JsonException
+     * @throws ProductPropertyException
+     */
+    public function crossJoin(array $props = []) : ?array
+    {
+
+        $saleProps = $this->saleProps($props);
+
+        if (count($props) <= 0) {
+            return [];
+        }
+
+        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512,
+            JSON_THROW_ON_ERROR));
+        $crossJoin       = [];
+        foreach ($crossJoinString as $properties) {
+            $crossJoin[$properties] = $this->buildSkuName($saleProps, $properties);
+        }
+        return $crossJoin;
+
+    }
 
     /**
      * 验证销售属性
      *
-     * @param array $props
+     * @param  array  $props
      *
      * @return Collection<Property>
      * @throws ProductPropertyException
@@ -174,7 +196,8 @@ class PropertyValidateService
             $values         = $prop['values'] ?? [];
 
             // 查询属性的值
-            $propValues = $this->valueReadRepository->findByIdsInProperty($saleProp->pid, collect($values)->pluck('vid')->toArray())->keyBy('id');
+            $propValues = $this->valueReadRepository->findByIdsInProperty($saleProp->pid,
+                collect($values)->pluck('vid')->toArray())->keyBy('id');
 
             $saleProp->values = collect();
             foreach ($values as $value) {
@@ -198,56 +221,18 @@ class PropertyValidateService
         return $saleProps;
     }
 
-
-    /**
-     * @param Collection<Property> $saleProps
-     * @param Collection<\RedJasmine\Product\Domain\Product\Data\Sku>      $skus
-     *
-     * @return Collection
-     * @throws ProductPropertyException|JsonException
-     */
-    public function validateSkus(Collection $saleProps, Collection $skus) : Collection
-    {
-
-        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512, JSON_THROW_ON_ERROR));
-
-        $skuProperties = $skus->pluck('properties')->unique()->toArray();
-
-
-        // 对比数量
-        if (count($crossJoinString) !== count($skus)) {
-            throw new ProductPropertyException('规则数量不一致');
-        }
-
-        // 验证总数量
-        foreach ($skus as $sku) {
-            $sku->properties     = $this->propertyFormatter->formatString($sku->properties);
-            $sku->propertiesName = $this->buildSkuName($saleProps, $sku);
-        }
-
-
-        $diff = collect($crossJoinString)->diff($skuProperties);
-
-
-        if ($diff->count() > 0) {
-            throw new ProductPropertyException('cross join too many properties');
-        }
-
-        return $skus;
-    }
-
     /**
      * 生成规格名称
      *
-     * @param Collection $saleProps
-     * @param \RedJasmine\Product\Domain\Product\Data\Sku        $sku
+     * @param  Collection  $saleProps
+     * @param  string  $properties
      *
      * @return string
      * @throws ProductPropertyException
      */
-    protected function buildSkuName(Collection $saleProps, Sku $sku) : string
+    public function buildSkuName(Collection $saleProps, string $properties) : string
     {
-        $propertiesArray = $this->propertyFormatter->toArray($sku->properties);
+        $propertiesArray = $this->propertyFormatter->toArray($properties);
         $labels          = [];
         foreach ($propertiesArray as $property) {
             $pid = $property['pid'];
@@ -276,5 +261,43 @@ class PropertyValidateService
         }
 
         return $this->propertyFormatter->toNameString($labels);
+    }
+
+    /**
+     * @param  Collection<Property>  $saleProps
+     * @param  Collection<\RedJasmine\Product\Domain\Product\Data\Sku>  $skus
+     *
+     * @return Collection
+     * @throws ProductPropertyException|JsonException
+     */
+    public function validateSkus(Collection $saleProps, Collection $skus) : Collection
+    {
+
+        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512,
+            JSON_THROW_ON_ERROR));
+
+        $skuProperties = $skus->pluck('properties')->unique()->toArray();
+
+
+        // 对比数量
+        if (count($crossJoinString) !== count($skus)) {
+            throw new ProductPropertyException('规则数量不一致');
+        }
+
+        // 验证总数量
+        foreach ($skus as $sku) {
+            $sku->properties     = $this->propertyFormatter->formatString($sku->properties);
+            $sku->propertiesName = $this->buildSkuName($saleProps, $sku->properties);
+        }
+
+
+        $diff = collect($crossJoinString)->diff($skuProperties);
+
+
+        if ($diff->count() > 0) {
+            throw new ProductPropertyException('cross join too many properties');
+        }
+
+        return $skus;
     }
 }

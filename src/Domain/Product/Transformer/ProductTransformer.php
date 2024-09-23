@@ -49,40 +49,35 @@ class ProductTransformer
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
-        $product->owner              = $command->owner;
-        $product->supplier           = $command->supplier;
-        $product->product_type       = $command->productType;
-        $product->shipping_type      = $command->shippingType;
-        $product->title              = $command->title;
-        $product->slogan             = $command->slogan;
-        $product->image              = $command->image;
-        $product->barcode            = $command->barcode;
-        $product->outer_id           = $command->outerId;
-        $product->is_customized      = $command->isCustomized;
-        $product->is_multiple_spec   = $command->isMultipleSpec;
-        $product->sort               = $command->sort;
-        $product->unit               = $command->unit;
-        $product->price              = $command->price;
-        $product->market_price       = $command->marketPrice;
-        $product->cost_price         = $command->costPrice;
-        $product->brand_id           = $command->brandId;
-        $product->category_id        = $command->categoryId;
-        $product->seller_category_id = $command->sellerCategoryId;
-        $product->freight_payer      = $command->freightPayer;
-        $product->postage_id         = $command->postageId;
-        $product->min_limit          = $command->minLimit;
-        $product->max_limit          = $command->maxLimit;
-        $product->step_limit         = $command->stepLimit;
-        $product->sub_stock          = $command->subStock;
-        $product->delivery_time      = $command->deliveryTime;
-        $product->vip                = $command->vip;
-        $product->points             = $command->points;
-        $product->is_hot             = $command->isHot;
-        $product->is_new             = $command->isNew;
-        $product->is_best            = $command->isBest;
-        $product->is_benefit         = $command->isBenefit;
-
-        $product->safety_stock        = $command->safetyStock;
+        $product->owner               = $command->owner;
+        $product->supplier            = $command->supplier;
+        $product->product_type        = $command->productType;
+        $product->shipping_type       = $command->shippingType;
+        $product->title               = $command->title;
+        $product->slogan              = $command->slogan;
+        $product->image               = $command->image;
+        $product->barcode             = $command->barcode;
+        $product->outer_id            = $command->outerId;
+        $product->is_customized       = $command->isCustomized;
+        $product->is_multiple_spec    = $command->isMultipleSpec;
+        $product->sort                = $command->sort;
+        $product->unit                = $command->unit;
+        $product->brand_id            = $command->brandId;
+        $product->category_id         = $command->categoryId;
+        $product->seller_category_id  = $command->sellerCategoryId;
+        $product->freight_payer       = $command->freightPayer;
+        $product->postage_id          = $command->postageId;
+        $product->min_limit           = $command->minLimit;
+        $product->max_limit           = $command->maxLimit;
+        $product->step_limit          = $command->stepLimit;
+        $product->sub_stock           = $command->subStock;
+        $product->delivery_time       = $command->deliveryTime;
+        $product->vip                 = $command->vip;
+        $product->points              = $command->points;
+        $product->is_hot              = $command->isHot;
+        $product->is_new              = $command->isNew;
+        $product->is_best             = $command->isBest;
+        $product->is_benefit          = $command->isBenefit;
         $product->supplier_product_id = $command->supplierProductId;
 
 
@@ -144,10 +139,19 @@ class ProductTransformer
                     $this->fillSku($sku, $skuData);
                     $product->addSku($sku);
                 });
-
+                $product->price        = $product->skus->min('price');
+                $product->market_price = $product->skus->min('market_price');
+                $product->cost_price   = $product->skus->min('cost_price');
+                $product->safety_stock = $command->skus->sum('safety_stock');
 
                 break;
             case false: // 单规格
+
+                $product->price        = $command->price;
+                $product->market_price = $command->marketPrice;
+                $product->cost_price   = $command->costPrice;
+                $product->safety_stock = $command->safetyStock;
+
 
                 $product->info->sale_props = [];
                 $defaultSku                = $product->skus->where('properties',
@@ -164,15 +168,15 @@ class ProductTransformer
         $sku->id              = $product->id;
         $sku->properties      = '';
         $sku->properties_name = '';
-        $sku->price           = $product->price;
-        $sku->cost_price      = $product->cost_price;
-        $sku->market_price    = $product->market_price;
-        $sku->safety_stock    = $product->safety_stock;
         $sku->image           = $product->image;
         $sku->barcode         = $product->barcode;
         $sku->outer_id        = $product->outer_id;
         $sku->status          = ProductStatusEnum::ON_SALE;
         $sku->deleted_at      = null;
+        $sku->price           = $product->price ?? 0;
+        $sku->cost_price      = $product->cost_price ?? 0;
+        $sku->market_price    = $product->market_price ?? 0;
+        $sku->safety_stock    = $product->safety_stock ?? 0;
         return $sku;
     }
 
