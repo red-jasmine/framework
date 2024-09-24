@@ -140,7 +140,7 @@ class PropertyValidateService
      */
     protected function isAllowMultipleValues(ProductProperty $property) : bool
     {
-        return $property->type === PropertyTypeEnum::MULTIPLE;
+        return $property->is_allow_multiple;
     }
 
     /**

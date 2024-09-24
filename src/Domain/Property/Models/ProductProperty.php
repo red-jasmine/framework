@@ -33,6 +33,7 @@ class ProductProperty extends Model implements OperatorInterface
         'name',
         'type',
         'unit',
+        'is_allow_multiple',
         'status',
         'group_id',
         'sort',
@@ -41,8 +42,9 @@ class ProductProperty extends Model implements OperatorInterface
     ];
 
     protected $casts = [
-        'type'    => PropertyTypeEnum::class,
-        'status'  => PropertyStatusEnum::class
+        'is_allow_multiple' => 'boolean',
+        'type'              => PropertyTypeEnum::class,
+        'status'            => PropertyStatusEnum::class
     ];
 
     public function scopeAvailable(Builder $query) : Builder

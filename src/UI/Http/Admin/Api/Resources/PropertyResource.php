@@ -13,11 +13,11 @@ class PropertyResource extends JsonResource
         return [
             'id'           => $this->id,
             'type'         => $this->type,
+            'is_allow_multiple'         => $this->is_allow_multiple,
             'name'         => $this->name,
             'unit'         => $this->unit,
             'sort'         => $this->sort,
             'status'       => $this->status,
-            'expands'      => $this->expands,
             'creator_id'   => $this->creator_id,
             'creator_type' => $this->creator_type,
             'updater_id'   => $this->updater_id,

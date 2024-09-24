@@ -176,7 +176,8 @@ class ProductTestCase extends ApplicationTestCase
             ],
             [
                 'name'   => '流行元素',
-                'type'   => PropertyTypeEnum::MULTIPLE->value,
+                'is_allow_multiple'=>1,
+                'type'   => PropertyTypeEnum::SELECT->value,
                 'values' => [
                     [ 'name' => '流星元素' ],
                     [ 'name' => '亮片' ],
@@ -221,14 +222,6 @@ class ProductTestCase extends ApplicationTestCase
                     $baseProperty['values'][] = [
                         'vid' => $value->id
                     ];
-                    break;
-                case PropertyTypeEnum::MULTIPLE:
-                    foreach ($values as $valueName) {
-                        $value                    = $propertyValueRepository->findByNameInProperty($property->id, $valueName);
-                        $baseProperty['values'][] = [
-                            'vid' => $value->id
-                        ];
-                    }
                     break;
             }
             // 判断类型

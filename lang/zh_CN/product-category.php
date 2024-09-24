@@ -1,8 +1,8 @@
 <?php
 return [
     'labels'  => [
-        'ProductCategory'  => '商品类目',
-        'product-category' => '商品类目',
+        'ProductCategory'  => '类目',
+        'product-category' => '类目',
     ],
     'fields'  => [
         'parent_id'    => '父级类目',

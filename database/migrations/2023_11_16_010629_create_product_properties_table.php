@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('type', 32)->comment(PropertyTypeEnum::comments('类型'));
             $table->string('name')->comment('名称');
             $table->string('unit', 10)->nullable()->comment('单位');
+            $table->unsignedTinyInteger('is_allow_multiple')->default(0)->comment('是否多值');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('status', 32)->comment(PropertyStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');

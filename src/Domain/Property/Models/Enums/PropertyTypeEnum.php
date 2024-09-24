@@ -22,7 +22,6 @@ enum PropertyTypeEnum: string
         return [
             self::TEXT->value     => '输入',
             self::SELECT->value   => '选择',
-            self::MULTIPLE->value => '多选',
             self::DATE->value     => '时间',
         ];
 
