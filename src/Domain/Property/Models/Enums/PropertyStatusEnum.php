@@ -12,6 +12,14 @@ enum PropertyStatusEnum: string
     case  DISABLE = 'disable';  // 禁用
 
 
+    public static function colors() : array
+    {
+        return [
+            self::ENABLE->value  => 'success',
+            self::DISABLE->value => 'danger',
+        ];
+    }
+
     /**
      * @return array
      */

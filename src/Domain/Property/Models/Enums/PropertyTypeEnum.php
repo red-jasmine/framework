@@ -24,4 +24,13 @@ enum PropertyTypeEnum: string
         ];
 
     }
+
+    public static function colors() : array
+    {
+        return [
+            self::TEXT->value   => 'info',
+            self::SELECT->value => 'success',
+            self::DATE->value   => 'warning',
+        ];
+    }
 }
