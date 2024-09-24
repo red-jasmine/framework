@@ -24,6 +24,11 @@ interface ReadRepositoryInterface
 
 
     /**
+     * @return Builder
+     */
+    public function modelQuery() : Builder;
+
+    /**
      * @param  Query|null  $query
      *
      * @return Builder

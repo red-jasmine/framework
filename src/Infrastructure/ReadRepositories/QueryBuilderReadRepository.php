@@ -82,6 +82,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $this->query($query->except('id'))->findOrFail($id);
     }
 
+    public function modelQuery() : Builder
+    {
+        return static::$modelClass::query();
+    }
+
+
     /**
      * @param  Query|null  $query
      *
@@ -90,8 +96,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function query(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
     {
 
-
-        $queryBuilder = QueryBuilder::for(static::$modelClass::query(), $this->buildRequest($query?->toArray() ?? []));
+        $queryBuilder = QueryBuilder::for($this->modelQuery(), $this->buildRequest($query?->toArray() ?? []));
 
         $queryBuilder->defaultSort($this->defaultSort);
 
