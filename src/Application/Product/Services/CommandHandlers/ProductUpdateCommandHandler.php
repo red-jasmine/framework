@@ -40,8 +40,6 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
         $product = $this->getService()->getRepository()->find($command->id);
 
 
-
-
         $this->beginDatabaseTransaction();
         try {
 
@@ -57,8 +55,9 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
                 fn() => $this->productTransformer->transform($product, $command));
 
 
-            $this->handleStock($product, $command);
+            $this->getRepository()->update($product);
 
+            $this->handleStock($product, $command);
 
             $this->commitDatabaseTransaction();
 

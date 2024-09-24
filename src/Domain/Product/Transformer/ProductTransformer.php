@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Transformer;
 
 use JsonException;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
 use RedJasmine\Product\Domain\Product\Data\Sku;
@@ -139,10 +140,12 @@ class ProductTransformer
                     $this->fillSku($sku, $skuData);
                     $product->addSku($sku);
                 });
-                $product->price        = $product->skus->min('price');
-                $product->market_price = $product->skus->min('market_price');
-                $product->cost_price   = $product->skus->min('cost_price');
-                $product->safety_stock = $command->skus->sum('safety_stock');
+
+
+                $product->price        = $product->skus->where('properties', '<>', '')->min('price');
+                $product->market_price = $product->skus->where('properties', '<>', '')->min('market_price');
+                $product->cost_price   = $product->skus->where('properties', '<>', '')->min('cost_price');
+                $product->safety_stock = $product->skus->where('properties', '<>', '')->sum('safety_stock');
 
                 break;
             case false: // 单规格
@@ -154,8 +157,7 @@ class ProductTransformer
 
 
                 $product->info->sale_props = [];
-                $defaultSku                = $product->skus->where('properties',
-                    '')->first() ?? $this->defaultSku($product);
+                $defaultSku                = $product->skus->where('properties', '')->first() ?? $this->defaultSku($product);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;
