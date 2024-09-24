@@ -175,14 +175,15 @@ class ProductTestCase extends ApplicationTestCase
                 ],
             ],
             [
-                'name'   => '流行元素',
-                'is_allow_multiple'=>1,
-                'type'   => PropertyTypeEnum::SELECT->value,
-                'values' => [
-                    [ 'name' => '流星元素' ],
-                    [ 'name' => '亮片' ],
-                    [ 'name' => '露背' ],
-                    [ 'name' => '做旧' ],
+                'name'              => '流行元素',
+                'is_allow_multiple' => 1,
+                'is_allow_alias'    => 1,
+                'type'              => PropertyTypeEnum::SELECT->value,
+                'values'            => [
+                    ['name' => '流星元素'],
+                    ['name' => '亮片'],
+                    ['name' => '露背'],
+                    ['name' => '做旧'],
                 ],
             ],
         ];

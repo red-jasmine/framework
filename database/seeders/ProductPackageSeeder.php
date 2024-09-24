@@ -102,11 +102,13 @@ class ProductPackageSeeder extends Seeder
                 'status' => 'enable',
             ],
             [
-                'id'     => 1200000,
-                'name'   => '风格',
-                'type'   => 'select',
-                'unit'   => '',
-                'status' => 'enable',
+                'id'                => 1200000,
+                'name'              => '风格',
+                'type'              => 'select',
+                'unit'              => '',
+                'status'            => 'enable',
+                'is_allow_multiple' => true,
+                'is_allow_alias'    => true,
             ],
             [
                 'id'     => 1300000,

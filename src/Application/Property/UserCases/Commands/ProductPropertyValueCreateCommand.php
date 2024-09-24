@@ -13,7 +13,7 @@ class ProductPropertyValueCreateCommand extends Data
     public int                $pid;
     public string             $name;
     public int                $sort    = 0;
-    public int                $groupId = 0;
+    public ?int               $groupId = null;
     public PropertyStatusEnum $status  = PropertyStatusEnum::ENABLE;
 
 
@@ -34,11 +34,11 @@ class ProductPropertyValueCreateCommand extends Data
     public static function rules(ValidationContext $context) : array
     {
         return [
-            'pid'      => [ 'required', 'integer' ],
-            'name'     => [ 'required', 'max:64',  new PropertyNameRule()],
-            'expands'  => [ 'sometimes', 'nullable', 'array' ],
-            'sort'     => [ 'integer' ],
-            'group_id' => [ 'sometimes', 'nullable', 'integer' ],
+            'pid'      => ['required', 'integer'],
+            'name'     => ['required', 'max:64', new PropertyNameRule()],
+            'expands'  => ['sometimes', 'nullable', 'array'],
+            'sort'     => ['integer'],
+            'group_id' => ['sometimes', 'nullable', 'integer'],
 
         ];
     }

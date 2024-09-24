@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Application\Property\Services;
 
 use Illuminate\Support\Collection;
 use JsonException;
+use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Property;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
@@ -62,33 +63,40 @@ class PropertyValidateService
                     $salePropValue->name  = (string) ($values[0]['name'] ?? '');
                     $salePropValue->alias = (string) ($values[0]['alias'] ?? '');
                     $basicProp->values->add($salePropValue);
+                    if (!$this->isAllowAlias($property)) {
+                        $salePropValue->alias = null;
+                    }
                     break;
                 case PropertyTypeEnum::SELECT:
-                case PropertyTypeEnum::MULTIPLE:
 
                     $propValues        = $this->valueReadRepository->findByIdsInProperty($basicProp->pid,
                         collect($values)->pluck('vid')->toArray())->keyBy('id');
                     $basicProp->values = collect();
 
                     foreach ($values as $value) {
-                        $vid   = $value['vid'];
-                        $alias = $value['alias'] ?? '';
-
+                        $vid                  = $value['vid'];
+                        $alias                = $value['alias'] ?? '';
                         $salePropValue        = new PropValue();
                         $salePropValue->vid   = $vid;
                         $salePropValue->name  = $propValues[$salePropValue->vid]->name;
                         $salePropValue->alias = $alias;
-
+                        if (!$this->isAllowAlias($property)) {
+                            $salePropValue->alias = null;
+                        }
                         $basicProp->values->add($salePropValue);
                     }
 
-                    if ($basicProp->values->count() > 1 && !$this->isAllowMultipleValues($property)) {
-                        // TODO 优化提示
-                        throw new ProductPropertyException('属性不支持多选!');
-                    }
 
                     break;
             }
+
+
+            //
+            if ($basicProp->values->count() > 1 && !$this->isAllowMultipleValues($property)) {
+                throw new ProductPropertyException('属性不支持多选!');
+            }
+
+
             $basicProps->add($basicProp);
 
         }
@@ -140,7 +148,13 @@ class PropertyValidateService
      */
     protected function isAllowMultipleValues(ProductProperty $property) : bool
     {
-        return $property->is_allow_multiple;
+        return $property->isAllowMultipleValues();
+    }
+
+    protected function isAllowAlias(ProductProperty $property) : bool
+    {
+
+        return $property->isAllowAlias();
     }
 
     /**
@@ -265,7 +279,7 @@ class PropertyValidateService
 
     /**
      * @param  Collection<Property>  $saleProps
-     * @param  Collection<\RedJasmine\Product\Domain\Product\Data\Sku>  $skus
+     * @param  Collection<Sku>  $skus
      *
      * @return Collection
      * @throws ProductPropertyException|JsonException

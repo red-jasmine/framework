@@ -12,17 +12,15 @@ enum PropertyTypeEnum: string
 
     case  SELECT = 'select';
 
-    case  MULTIPLE = 'multiple';
-
     case  DATE = 'date';
 
 
     public static function labels() : array
     {
         return [
-            self::TEXT->value     => '输入',
-            self::SELECT->value   => '选择',
-            self::DATE->value     => '时间',
+            self::TEXT->value   => '输入',
+            self::SELECT->value => '选择',
+            self::DATE->value   => '时间',
         ];
 
     }

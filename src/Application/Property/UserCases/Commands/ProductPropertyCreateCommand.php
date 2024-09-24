@@ -16,8 +16,9 @@ class ProductPropertyCreateCommand extends Data
     public string             $name;
     public ?string            $unit;
     public int                $sort            = 0;
-    public int                $groupId         = 0;
+    public ?int               $groupId         = null;
     public bool               $isAllowMultiple = false;
+    public bool               $isAllowAlias    = false;
     public PropertyTypeEnum   $type            = PropertyTypeEnum::SELECT;
     public PropertyStatusEnum $status          = PropertyStatusEnum::ENABLE;
 
@@ -33,6 +34,7 @@ class ProductPropertyCreateCommand extends Data
             'sort'              => '排序',
             'group_id'          => '分组',
             'is_allow_multiple' => '是否多值',
+            'is_allow_alias'    => '是否允许别名',
             'sort'              => '排序值',
 
         ];

@@ -34,6 +34,7 @@ class ProductProperty extends Model implements OperatorInterface
         'type',
         'unit',
         'is_allow_multiple',
+        'is_allow_alias',
         'status',
         'group_id',
         'sort',
@@ -43,6 +44,7 @@ class ProductProperty extends Model implements OperatorInterface
 
     protected $casts = [
         'is_allow_multiple' => 'boolean',
+        'is_allow_alias'    => 'boolean',
         'type'              => PropertyTypeEnum::class,
         'status'            => PropertyStatusEnum::class
     ];
@@ -60,5 +62,17 @@ class ProductProperty extends Model implements OperatorInterface
     public function values() : HasMany
     {
         return $this->hasMany(ProductPropertyValue::class, 'id', 'pid');
+    }
+
+
+    public function isAllowMultipleValues() : bool
+    {
+        return $this->is_allow_multiple;
+    }
+
+
+    public function isAllowAlias() : bool
+    {
+        return $this->is_allow_alias;
     }
 }
