@@ -38,7 +38,6 @@ class OrderBuyService extends Service
      * @param  OrdersData  $ordersData
      *
      * @return Collection<Order>
-     * @throws AbstractException
      * @throws Throwable
      */
     public function buy(OrdersData $ordersData) : \Illuminate\Support\Collection
