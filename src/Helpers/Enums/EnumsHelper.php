@@ -18,12 +18,19 @@ trait EnumsHelper
     {
         return self::labels()[$this->value] ?? $this->name;
     }
+    public function getLabel() : string
+    {
+       return  $this->label();
+    }
 
     public function color() : string
     {
         return self::colors()[$this->value] ?? $this->value;
     }
-
+    public function getColor() : string
+    {
+        return  $this->color();
+    }
     public static function names() : array
     {
         return self::labels();
