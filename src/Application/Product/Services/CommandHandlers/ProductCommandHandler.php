@@ -17,6 +17,7 @@ use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\ProductSku;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
@@ -31,21 +32,22 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
 {
 
     public function __construct(
-        protected BrandQueryService $brandQueryService,
-        protected StockCommandService $stockCommandService,
-        protected PropertyFormatter $propertyFormatter,
-        protected PropertyValidateService $propertyValidateService,
-        protected ProductCategoryQueryService $categoryQueryService,
+        protected BrandQueryService                 $brandQueryService,
+        protected StockCommandService               $stockCommandService,
+        protected PropertyFormatter                 $propertyFormatter,
+        protected PropertyValidateService           $propertyValidateService,
+        protected ProductCategoryQueryService       $categoryQueryService,
         protected ProductSellerCategoryQueryService $sellerCategoryQueryService,
-        protected ProductTransformer $productTransformer
-    ) {
+        protected ProductTransformer                $productTransformer
+    )
+    {
 
 
     }
 
     /**
-     * @param  Product  $product
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     * @param Product $product
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws StockException
@@ -66,19 +68,20 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
                 $stock = $skuCommand[$sku->properties]?->stock ?? $command->stock;
             }
 
-            $stockCommand             = new StockCommand();
-            $stockCommand->productId  = $sku->product_id;
-            $stockCommand->skuId      = $sku->id;
-            $stockCommand->stock      = $stock;
-            $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
+            $stockCommand              = new StockCommand();
+            $stockCommand->productId   = $sku->product_id;
+            $stockCommand->actionType = ProductStockActionTypeEnum::RESET;
+            $stockCommand->skuId       = $sku->id;
+            $stockCommand->actionStock = $stock;
+            $stockCommand->changeType  = ProductStockChangeTypeEnum::SELLER;
 
             // 设置库存
-            $this->stockCommandService->set($stockCommand);
+            $this->stockCommandService->reset($stockCommand);
         }
     }
 
     /**
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws ProductException
@@ -95,7 +98,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
     }
 
     /**
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws ProductException
@@ -106,13 +109,13 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
             if ($command->brandId && !$this->brandQueryService->isAllowUse($command->brandId)) {
                 throw new ProductException('品牌不可使用');
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ProductException('品牌不可使用');
         }
     }
 
     /**
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws ProductException
@@ -124,13 +127,13 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
             if ($command->categoryId && !$this->categoryQueryService->isAllowUse($command->categoryId)) {
                 throw new ProductException('类目不可使用');
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ProductException('类目不可使用');
         }
     }
 
     /**
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
      *
      * @return void
      * @throws ProductException
@@ -144,7 +147,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
                 && !$this->sellerCategoryQueryService->isAllowUse($command->sellerCategoryId, $command->owner)) {
                 throw new ProductException('卖家分类不可使用');
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new ProductException('卖家分类不可使用');
         }
     }

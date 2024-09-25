@@ -1,7 +1,7 @@
 <?php
 return [
     'labels'  => [
-        'Brand' => '品牌',
+
         'brand' => '品牌',
     ],
     'fields'  => [

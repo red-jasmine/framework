@@ -15,6 +15,7 @@ return new class extends Migration {
             // 属性
             $table->json('basic_props')->nullable()->comment('基本属性');
             $table->json('sale_props')->nullable()->comment('销售属性');
+            $table->json('customize_props')->nullable()->comment('自定义属性');
             // SEO
             $table->string('keywords')->nullable()->comment('关键字');
             $table->string('description')->nullable()->comment('描述');

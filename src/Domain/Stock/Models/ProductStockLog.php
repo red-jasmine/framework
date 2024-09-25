@@ -5,7 +5,7 @@ namespace RedJasmine\Product\Domain\Stock\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockTypeEnum;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -25,7 +25,7 @@ class ProductStockLog extends Model implements OperatorInterface
     use HasOperator;
 
     protected $casts = [
-        'type'        => ProductStockTypeEnum::class,
+        'action_type' => ProductStockActionTypeEnum::class,
         'change_type' => ProductStockChangeTypeEnum::class,
     ];
 

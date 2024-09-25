@@ -1,7 +1,7 @@
 <?php
 return [
     'labels'  => [
-        'ProductProperty'  => '商品属性',
+
         'product-property' => '商品属性',
     ],
     'fields'  => [

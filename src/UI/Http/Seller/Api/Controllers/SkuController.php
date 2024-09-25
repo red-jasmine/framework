@@ -82,8 +82,8 @@ class SkuController extends Controller
             case 'sub':
                 $this->commandService->sub($command);
                 break;
-            case 'set':
-                $this->commandService->set($command);
+            case 'reset':
+                $this->commandService->reset($command);
                 break;
             default:
                 abort(405);

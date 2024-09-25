@@ -1,7 +1,7 @@
 <?php
 return [
     'labels'  => [
-        'ProductCategory'  => '类目',
+
         'product-category' => '类目',
     ],
     'fields'  => [

@@ -18,13 +18,14 @@ class ProductTransformer
     public function __construct(
         protected PropertyValidateService $propertyValidateService,
 
-    ) {
+    )
+    {
     }
 
 
     /**
-     * @param  Product  $product
-     * @param  Command  $command
+     * @param Product $product
+     * @param Command $command
      *
      * @return Product
      * @throws JsonException
@@ -42,8 +43,8 @@ class ProductTransformer
     }
 
     /**
-     * @param  Product  $product
-     * @param  Command  $command
+     * @param Product $product
+     * @param Command $command
      *
      * @return void
      * @throws ProductPropertyException
@@ -63,8 +64,10 @@ class ProductTransformer
         $product->is_multiple_spec    = $command->isMultipleSpec;
         $product->sort                = $command->sort;
         $product->unit                = $command->unit;
-        $product->brand_id            = $command->brandId;
+        $product->spu_id              = $command->spuId;
         $product->category_id         = $command->categoryId;
+        $product->brand_id            = $command->brandId;
+        $product->product_model       = $command->productModel;
         $product->seller_category_id  = $command->sellerCategoryId;
         $product->freight_payer       = $command->freightPayer;
         $product->postage_id          = $command->postageId;
@@ -107,8 +110,8 @@ class ProductTransformer
 
 
     /**
-     * @param  Product  $product
-     * @param  Command  $command
+     * @param Product $product
+     * @param Command $command
      *
      * @return void
      * @throws JsonException

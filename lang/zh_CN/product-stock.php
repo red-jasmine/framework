@@ -1,8 +1,8 @@
 <?php
 return [
     'labels'  => [
-
-        'product-stock-log' => '库存变更记录',
+        'product-stock' => '库存',
+        'edit'          => '编辑库存'
     ],
     'fields'  => [
         'owner_type'    => '所属者类型',
@@ -14,10 +14,10 @@ return [
         'sku_id'        => '规格ID',
         'stock'         => '库存',
         'lock_stock'    => '锁定库存',
-        'channel_type' => '渠道类型',
-        'channel_id'   => '渠道ID',
-        'creator_type' => '创建者类型',
-        'creator_id'   => '创建者UID',
+        'channel_type'  => '渠道类型',
+        'channel_id'    => '渠道ID',
+        'creator_type'  => '创建者类型',
+        'creator_id'    => '创建者UID',
     ],
     'options' => [
     ],

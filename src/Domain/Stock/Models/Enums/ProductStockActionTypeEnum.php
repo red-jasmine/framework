@@ -4,14 +4,15 @@ namespace RedJasmine\Product\Domain\Stock\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum ProductStockTypeEnum: string
+enum ProductStockActionTypeEnum: string
 {
 
     use EnumsHelper;
 
-    case SET = 'set';
+
     case ADD = 'add';
     case SUB = 'sub';
+    case RESET = 'reset';
     case LOCK = 'lock';
     case UNLOCK = 'unlock';
     case CONFIRM = 'confirm';
@@ -20,7 +21,7 @@ enum ProductStockTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::SET->value     => '设置',
+            self::RESET->value   => '设置',
             self::ADD->value     => '增加',
             self::SUB->value     => '扣减',
             self::LOCK->value    => '锁定',
@@ -29,6 +30,16 @@ enum ProductStockTypeEnum: string
 
         ];
 
+    }
+
+
+    public static function allowActionTypes() : array
+    {
+        return [
+            self::RESET->value => '设置',
+            self::ADD->value   => '增加',
+            self::SUB->value   => '扣减',
+        ];
     }
 
 

@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Stock\Services\CommandHandlers;
 
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockTypeEnum;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -25,9 +25,9 @@ class StockLockCommandHandler extends StockCommandHandler
         try {
             $sku   = $this->repository->find($command->skuId);
 
-            $this->repository->lock($sku, $command->stock);
+            $this->repository->lock($sku, $command->actionStock);
 
-            $this->log($sku, ProductStockTypeEnum::LOCK, $command);
+            $this->log($sku,  $command);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

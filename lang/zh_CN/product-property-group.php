@@ -1,7 +1,7 @@
 <?php
 return [
     'labels'  => [
-        'ProductPropertyGroup'   => '属性组',
+
         'product-property-group' => '属性组',
     ],
     'fields'  => [

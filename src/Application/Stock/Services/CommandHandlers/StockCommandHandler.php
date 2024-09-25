@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Stock\Services\CommandHandlers;
 
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockTypeEnum;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
@@ -17,14 +17,15 @@ abstract class StockCommandHandler extends CommandHandler
 
     public function __construct(
         protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService $domainService
-    ) {
+        protected StockDomainService            $domainService
+    )
+    {
 
     }
 
 
     /**
-     * @param  StockCommand  $command
+     * @param StockCommand $command
      *
      * @return void
      * @throws StockException
@@ -32,14 +33,14 @@ abstract class StockCommandHandler extends CommandHandler
     protected function validate(StockCommand $command) : void
     {
 
-        $this->validateQuantity($command->stock);
+        $this->validateQuantity($command->actionStock);
 
     }
 
     /**
      * 验证库存
      *
-     * @param  int  $quantity
+     * @param int $quantity
      *
      * @return int
      * @throws StockException
@@ -56,20 +57,19 @@ abstract class StockCommandHandler extends CommandHandler
     /**
      * 记录
      *
-     * @param  ProductSku  $sku
-     * @param  ProductStockTypeEnum  $stockType
-     * @param  StockCommand  $command
-     * @param  int|null  $restStock
+     * @param ProductSku $sku
+     * @param StockCommand $command
+     * @param int|null $restStock
      *
      * @return void
      * @throws Exception
      */
     protected function log(
-        ProductSku $sku,
-        ProductStockTypeEnum $stockType,
-        StockCommand $command,
-        ?int $restStock = 0
-    ) : void {
+        ProductSku                 $sku,
+        StockCommand               $command,
+        ?int                       $restStock = 0
+    ) : void
+    {
 
         $log                = new ProductStockLog;
         $log->owner         = $sku->owner;
@@ -79,37 +79,37 @@ abstract class StockCommandHandler extends CommandHandler
         $log->change_detail = $command->changeDetail;
         $log->channel_type  = $command->channelType;
         $log->channel_id    = $command->channelId;
-        $log->type          = $stockType;
+        $log->action_type   = $command->actionType;
         $log->creator       = ServiceContext::getOperator();
 
-        switch ($stockType) {
-            case ProductStockTypeEnum::ADD:
-                $log->stock      = $command->stock;
+        switch ($command->actionType) {
+            case ProductStockActionTypeEnum::ADD:
+                $log->action_stock      = $command->actionStock;
                 $log->lock_stock = 0;
                 break;
-            case ProductStockTypeEnum::SET:
-                $log->stock      = $restStock;
+            case ProductStockActionTypeEnum::RESET:
+                $log->action_stock      = $restStock;
                 $log->lock_stock = 0;
                 break;
-            case ProductStockTypeEnum::SUB:
-                $log->stock      = -$command->stock;
+            case ProductStockActionTypeEnum::SUB:
+                $log->action_stock      = -$command->actionStock;
                 $log->lock_stock = 0;
                 break;
-            case ProductStockTypeEnum::LOCK:
-                $log->stock      = -$command->stock;
-                $log->lock_stock = $command->stock;
+            case ProductStockActionTypeEnum::LOCK:
+                $log->action_stock      = -$command->actionStock;
+                $log->lock_stock = $command->actionStock;
                 break;
-            case ProductStockTypeEnum::UNLOCK:
-                $log->stock      = $command->stock;
-                $log->lock_stock = -$command->stock;
+            case ProductStockActionTypeEnum::UNLOCK:
+                $log->action_stock      = $command->actionStock;
+                $log->lock_stock = -$command->actionStock;
                 break;
-            case ProductStockTypeEnum::CONFIRM:
-                $log->stock      = 0;
-                $log->lock_stock = -$command->stock;
+            case ProductStockActionTypeEnum::CONFIRM:
+                $log->action_stock      = 0;
+                $log->lock_stock = -$command->actionStock;
         }
 
         $hasLog = true;
-        if ($stockType === ProductStockTypeEnum::SET && $restStock === 0) {
+        if ($command->actionType === ProductStockActionTypeEnum::RESET && $restStock === 0) {
             $hasLog = false;
         }
         if ($hasLog) {

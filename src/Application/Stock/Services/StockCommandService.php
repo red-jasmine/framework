@@ -2,10 +2,11 @@
 
 namespace RedJasmine\Product\Application\Stock\Services;
 
+use RedJasmine\Product\Application\Stock\Services\CommandHandlers\BulkStockCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockAddCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockConfirmCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockLockCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockSetCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockResetCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockSubCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockUnlockCommandHandler;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
@@ -24,7 +25,8 @@ class StockCommandService extends ApplicationCommandService
 
 
     protected static $macros = [
-        'set'     => StockSetCommandHandler::class,
+        'bulk'    => BulkStockCommandHandler::class,
+        'reset'   => StockResetCommandHandler::class,
         'add'     => StockAddCommandHandler::class,
         'sub'     => StockSubCommandHandler::class,
         'lock'    => StockLockCommandHandler::class,
@@ -34,8 +36,9 @@ class StockCommandService extends ApplicationCommandService
 
     public function __construct(
         protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService $domainService
-    ) {
+        protected StockDomainService            $domainService
+    )
+    {
 
     }
 

@@ -29,7 +29,9 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
             $table->string('slogan')->nullable()->comment('广告语');
             // 类目信息
+            $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
             $table->unsignedBigInteger('brand_id')->nullable()->comment('品牌ID');
+            $table->string('product_model')->nullable()->comment('产品型号');
             $table->unsignedBigInteger('category_id')->nullable()->comment('类目ID');
             $table->unsignedBigInteger('seller_category_id')->nullable()->comment('卖家分类ID');
             // 运费

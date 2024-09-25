@@ -1,7 +1,7 @@
 <?php
 return [
     'labels'  => [
-        'ProductSellerCategory'   => '卖家分类',
+
         'product-seller-category' => '卖家分类',
     ],
     'fields'  => [

@@ -56,7 +56,7 @@ class SkuController extends Controller
      */
     public function action($id, Request $request) : JsonResponse
     {
-        $type = $request->input('type', 'add');
+        $type = $request->input('action_type', 'add');
 
         $sku = $this->queryService->findById(FindQuery::make($id));
 
@@ -71,8 +71,8 @@ class SkuController extends Controller
             case 'sub':
                 $this->commandService->sub($command);
                 break;
-            case 'set':
-                $this->commandService->set($command);
+            case 'reset':
+                $this->commandService->reset($command);
                 break;
             default:
                 abort(405);
