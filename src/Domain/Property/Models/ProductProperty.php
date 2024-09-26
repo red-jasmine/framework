@@ -31,15 +31,14 @@ class ProductProperty extends Model implements OperatorInterface
     protected $fillable = [
         'id',
         'name',
+        'description',
         'type',
         'unit',
         'is_allow_multiple',
         'is_allow_alias',
         'status',
         'group_id',
-        'sort',
-        'creator_type',
-        'creator_id',
+        'sort'
     ];
 
     protected $casts = [

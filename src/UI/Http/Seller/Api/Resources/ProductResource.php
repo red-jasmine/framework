@@ -3,9 +3,10 @@
 namespace RedJasmine\Product\UI\Http\Seller\Api\Resources;
 
 use Illuminate\Http\Request;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Product\Domain\Product\Models\Product */
+/** @mixin Product */
 class ProductResource extends JsonResource
 {
     public function toArray(Request $request) : array
@@ -16,7 +17,7 @@ class ProductResource extends JsonResource
             'owner_id'            => $this->owner_id,
             'owner_type'          => $this->owner_type,
             'title'               => $this->title,
-            'slogan'               => $this->slogan,
+            'slogan'              => $this->slogan,
             'product_type'        => $this->product_type,
             'shipping_type'       => $this->shipping_type,
             'status'              => $this->status,
@@ -32,9 +33,9 @@ class ProductResource extends JsonResource
             'unit'                => $this->unit,
             'freight_payer'       => $this->freight_payer,
             'postage_id'          => $this->postage_id,
-            'price'               => (string) $this->price,
-            'market_price'        => (string) $this->market_price,
-            'cost_price'          => (string) $this->cost_price,
+            'price'               => (string)$this->price,
+            'market_price'        => (string)$this->market_price,
+            'cost_price'          => (string)$this->cost_price,
             'sub_stock'           => $this->sub_stock,
             'stock'               => $this->stock,
             'channel_stock'       => $this->channel_stock,
@@ -64,13 +65,14 @@ class ProductResource extends JsonResource
             'created_at'          => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'          => $this->updated_at?->format('Y-m-d H:i:s'),
             'brand_id'            => $this->brand_id,
+            'product_model'       => $this->product_model,
             'category_id'         => $this->category_id,
             'seller_category_id'  => $this->seller_category_id,
             'brand'               => new BrandResource($this->whenLoaded('brand')),
             'category'            => new CategoryResource($this->whenLoaded('category')),
             'seller_category'     => new SellerCategoryResource($this->whenLoaded('sellerCategory')),
             $this->mergeWhen($this->relationLoaded('info'),
-                $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
+                             $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'skus'                => ProductSkuResource::collection($this->whenLoaded('skus')),
         ];
     }

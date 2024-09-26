@@ -2,7 +2,7 @@
 return [
     'labels'  => [
 
-        'product-property' => '商品属性',
+        'product-property' => '属性',
     ],
     'fields'  => [
         'pid'          => '属性ID',

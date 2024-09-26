@@ -65,6 +65,7 @@ class ProductResource extends JsonResource
             'created_at'          => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'          => $this->updated_at?->format('Y-m-d H:i:s'),
             'brand_id'            => $this->brand_id,
+            'product_model'       => $this->product_model,
             'category_id'         => $this->category_id,
             'seller_category_id'  => $this->seller_category_id,
             $this->mergeWhen($this->relationLoaded('info'),

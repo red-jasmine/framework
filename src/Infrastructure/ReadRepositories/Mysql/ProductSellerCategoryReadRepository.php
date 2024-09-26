@@ -16,4 +16,11 @@ class ProductSellerCategoryReadRepository extends QueryBuilderReadRepository imp
      */
     protected static string $modelClass = ProductSellerCategory::class;
 
+
+    public function findByName($name) : ?ProductSellerCategory
+    {
+        return $this->query()->where('name', $name)->first();
+    }
+
+
 }

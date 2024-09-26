@@ -48,6 +48,7 @@ class Brand extends Model implements OperatorInterface
         'id',
         'parent_id',
         'name',
+        'description',
         'english_name',
         'initial',
         'is_show',

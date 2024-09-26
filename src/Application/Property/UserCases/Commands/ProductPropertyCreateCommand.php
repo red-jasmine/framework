@@ -14,6 +14,7 @@ class ProductPropertyCreateCommand extends Data
 {
 
     public string             $name;
+    public ?string            $description     = null;
     public ?string            $unit;
     public int                $sort            = 0;
     public ?int               $groupId         = null;
@@ -27,15 +28,15 @@ class ProductPropertyCreateCommand extends Data
     {
 
         return [
-            'name'              => '属性名',
-            'type'              => '类型',
-            'unit'              => '单位',
-            'expands'           => '扩展参数',
-            'sort'              => '排序',
-            'group_id'          => '分组',
-            'is_allow_multiple' => '是否多值',
-            'is_allow_alias'    => '是否允许别名',
-            'sort'              => '排序值',
+            'name'              => __('red-jasmine.product::product-property.fields.name'),
+            'type'              => __('red-jasmine.product::product-property.fields.type'),
+            'unit'              => __('red-jasmine.product::product-property.fields.unit'),
+            'description'       => __('red-jasmine.product::product-property.fields.description'),
+            'sort'              => __('red-jasmine.product::product-property.fields.sort'),
+            'group_id'          => __('red-jasmine.product::product-property.fields.group_id'),
+            'is_allow_multiple' => __('red-jasmine.product::product-property.fields.is_allow_multiple'),
+            'is_allow_alias'    => __('red-jasmine.product::product-property.fields.is_allow_alias'),
+            'sort'              => __('red-jasmine.product::product-property.sort.name'),
 
         ];
     }
@@ -44,11 +45,11 @@ class ProductPropertyCreateCommand extends Data
     {
 
         return [
-            'name'     => ['required', 'max:64', new PropertyNameRule()],
-            'unit'     => ['sometimes', 'max:10',],
-            'sort'     => ['integer'],
-            'expands'  => ['sometimes', 'nullable', 'array'],
-            'group_id' => ['sometimes', 'nullable', 'integer'],
+            'name'        => [ 'required', 'max:64', new PropertyNameRule() ],
+            'unit'        => [ 'sometimes', 'nullable', 'string', 'max:10', ],
+            'sort'        => [ 'integer' ],
+            'description' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
+            'group_id'    => [ 'sometimes', 'nullable', 'integer' ],
 
         ];
     }

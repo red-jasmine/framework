@@ -8,6 +8,7 @@ return [
         'pid'          => '属性ID',
         'vid'          => '属性值ID',
         'name'         => '名称',
+        'description'  => '描述',
         'sort'         => '排序',
         'group_id'     => '分组',
         'status'       => '状态',

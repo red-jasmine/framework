@@ -7,6 +7,7 @@ return [
     'fields'  => [
         'parent_id'    => '父级类目',
         'name'         => '类目名称',
+        'description'  => '描述',
         'image'        => '图片',
         'group_name'   => '分组',
         'sort'         => '排序',

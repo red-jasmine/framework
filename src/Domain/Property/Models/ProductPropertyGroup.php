@@ -28,6 +28,7 @@ class ProductPropertyGroup extends Model implements OperatorInterface
     protected $fillable = [
         'id',
         'name',
+        'description',
         'status',
         'sort',
     ];

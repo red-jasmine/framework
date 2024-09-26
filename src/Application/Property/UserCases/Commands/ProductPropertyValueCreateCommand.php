@@ -12,21 +12,21 @@ class ProductPropertyValueCreateCommand extends Data
 {
     public int                $pid;
     public string             $name;
-    public int                $sort    = 0;
-    public ?int               $groupId = null;
-    public PropertyStatusEnum $status  = PropertyStatusEnum::ENABLE;
+    public ?string            $description = null;
+    public int                $sort        = 0;
+    public ?int               $groupId     = null;
+    public PropertyStatusEnum $status      = PropertyStatusEnum::ENABLE;
 
 
     public static function attributes(...$args) : array
     {
 
         return [
-            'pid'      => '属性ID',
-            'name'     => '名称',
-            'expands'  => '扩展参数',
-            'sort'     => '排序',
-            'group_id' => '分组',
-            'sort'     => '排序值',
+            'pid'         => __('red-jasmine.product::product-property-value.fields.pid'),
+            'name'        => __('red-jasmine.product::product-property-value.fields.name'),
+            'description' => __('red-jasmine.product::product-property-value.fields.description'),
+            'sort'        => __('red-jasmine.product::product-property-value.fields.sort'),
+            'group_id'    => __('red-jasmine.product::product-property-value.fields.group_id'),
 
         ];
     }
@@ -34,11 +34,11 @@ class ProductPropertyValueCreateCommand extends Data
     public static function rules(ValidationContext $context) : array
     {
         return [
-            'pid'      => ['required', 'integer'],
-            'name'     => ['required', 'max:64', new PropertyNameRule()],
-            'expands'  => ['sometimes', 'nullable', 'array'],
-            'sort'     => ['integer'],
-            'group_id' => ['sometimes', 'nullable', 'integer'],
+            'pid'         => [ 'required', 'integer' ],
+            'name'        => [ 'required', 'max:64', new PropertyNameRule() ],
+            'sort'        => [ 'integer' ],
+            'group_id'    => [ 'sometimes', 'nullable', 'integer' ],
+            'description' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
 
         ];
     }

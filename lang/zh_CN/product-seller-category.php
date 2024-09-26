@@ -8,6 +8,7 @@ return [
         'owner_type'   => '所属者类型',
         'owner_id'     => '所属者UID',
         'name'         => '类目名称',
+        'description'  => '描述',
         'parent_id'    => '父级类目',
         'group_name'   => '分组',
         'image'        => '图片',

@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('类目ID');
             $table->morphs('owner');
             $table->string('name')->comment('类目名称');
+            $table->string('description')->nullable()->comment('描述');
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级类目');
             $table->string('group_name')->nullable()->comment('分组');
             $table->string('image')->nullable()->comment('图片');

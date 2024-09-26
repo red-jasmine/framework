@@ -3,9 +3,10 @@
 namespace RedJasmine\Product\UI\Http\Buyer\Api\Resources;
 
 use Illuminate\Http\Request;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Product\Domain\Product\Models\Product */
+/** @mixin Product */
 class ProductResource extends JsonResource
 {
     public function toArray(Request $request) : array
@@ -28,8 +29,8 @@ class ProductResource extends JsonResource
             'unit'               => $this->unit,
             'freight_payer'      => $this->freight_payer,
             'postage_id'         => $this->postage_id,
-            'price'              => (string) $this->price,
-            'market_price'       => (string) $this->market_price,
+            'price'              => (string)$this->price,
+            'market_price'       => (string)$this->market_price,
             'sub_stock'          => $this->sub_stock,
             'stock'              => $this->stock,
             'channel_stock'      => $this->channel_stock,
@@ -50,10 +51,11 @@ class ProductResource extends JsonResource
             'sold_out_time'      => $this->sold_out_time?->format('Y-m-d H:i:s'),
             'off_sale_time'      => $this->off_sale_time?->format('Y-m-d H:i:s'),
             'brand_id'           => $this->brand_id,
+            'product_model'      => $this->product_model,
             'category_id'        => $this->category_id,
             'seller_category_id' => $this->seller_category_id,
             $this->mergeWhen($this->relationLoaded('info'),
-                $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
+                             $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'brand'              => new BrandResource($this->whenLoaded('brand')),
             'category'           => new CategoryResource($this->whenLoaded('category')),
             'sellerCategory'     => new SellerCategoryResource($this->whenLoaded('sellerCategory')),

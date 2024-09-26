@@ -11,18 +11,19 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 class ProductPropertyGroupCreateCommand extends Data
 {
     public string             $name;
-    public int                $sort    = 0;
-    public PropertyStatusEnum $status  = PropertyStatusEnum::ENABLE;
+    public ?string            $description = null;
+    public int                $sort        = 0;
+    public PropertyStatusEnum $status      = PropertyStatusEnum::ENABLE;
 
 
     public static function attributes(...$args) : array
     {
 
         return [
-            'name'    => '名称',
-            'expands' => '扩展参数',
-            'sort'    => '排序',
-            'status'  => '状态',
+            'name'        => __('red-jasmine.product::product-property-group.fields.name'),
+            'description' => __('red-jasmine.product::product-property-group.fields.description'),
+            'sort'        => __('red-jasmine.product::product-property-group.fields.sort'),
+            'status'      => __('red-jasmine.product::product-property-group.fields.status'),
         ];
     }
 
@@ -30,8 +31,8 @@ class ProductPropertyGroupCreateCommand extends Data
     {
 
         return [
-            'name'    => [ 'required', 'max:64', new PropertyNameRule()],
-            'expands' => [ 'sometimes', 'array' ],
+            'name'        => [ 'required', 'max:64', new PropertyNameRule() ],
+            'description' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
 
         ];
     }

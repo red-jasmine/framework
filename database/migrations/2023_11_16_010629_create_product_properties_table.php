@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('group_id')->nullable()->comment('属性组ID');
             $table->string('type', 32)->comment(PropertyTypeEnum::comments('类型'));
             $table->string('name')->comment('名称');
+            $table->string('description')->nullable()->comment('描述');
             $table->string('unit', 10)->nullable()->comment('单位');
             $table->unsignedTinyInteger('is_allow_multiple')->default(0)->comment('是否多值');
             $table->unsignedTinyInteger('is_allow_alias')->default(0)->comment('是否允许别名');
