@@ -1,6 +1,6 @@
 <?php
 
-namespace Redjasmine\FilamentProduct;
+namespace RedJasmine\FilamentProduct;
 
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -13,8 +13,8 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Redjasmine\FilamentProduct\Commands\FilamentProductCommand;
-use Redjasmine\FilamentProduct\Testing\TestsFilamentProduct;
+use RedJasmine\FilamentProduct\Commands\FilamentProductCommand;
+use RedJasmine\FilamentProduct\Testing\TestsFilamentProduct;
 
 class FilamentProductServiceProvider extends PackageServiceProvider
 {
@@ -40,6 +40,7 @@ class FilamentProductServiceProvider extends PackageServiceProvider
             });
 
         $configFileName = $package->shortName();
+
 
         if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
             $package->hasConfigFile();
@@ -76,17 +77,17 @@ class FilamentProductServiceProvider extends PackageServiceProvider
         // Icon Registration
         FilamentIcon::register($this->getIcons());
 
-        // Handle Stubs
-        if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
-                $this->publishes([
-                    $file->getRealPath() => base_path("stubs/filament-product/{$file->getFilename()}"),
-                ], 'filament-product-stubs');
-            }
-        }
+//        // Handle Stubs
+//        if (app()->runningInConsole()) {
+//            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
+//                $this->publishes([
+//                    $file->getRealPath() => base_path("stubs/filament-product/{$file->getFilename()}"),
+//                ], 'filament-product-stubs');
+//            }
+//        }
 
         // Testing
-        Testable::mixin(new TestsFilamentProduct);
+
     }
 
     protected function getAssetPackageName(): ?string
@@ -101,8 +102,8 @@ class FilamentProductServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('filament-product', __DIR__ . '/../resources/dist/components/filament-product.js'),
-            Css::make('filament-product-styles', __DIR__ . '/../resources/dist/filament-product.css'),
-            Js::make('filament-product-scripts', __DIR__ . '/../resources/dist/filament-product.js'),
+            //Css::make('filament-product-styles', __DIR__ . '/../resources/dist/filament-product.css'),
+            //Js::make('filament-product-scripts', __DIR__ . '/../resources/dist/filament-product.js'),
         ];
     }
 
@@ -112,7 +113,7 @@ class FilamentProductServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            FilamentProductCommand::class,
+
         ];
     }
 
@@ -146,7 +147,7 @@ class FilamentProductServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_filament-product_table',
+
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Redjasmine\FilamentProduct\Commands;
+namespace RedJasmine\FilamentProduct\Commands;
 
 use Illuminate\Console\Command;
 

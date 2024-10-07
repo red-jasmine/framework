@@ -1,5 +1,5 @@
 <?php
 
-namespace Redjasmine\FilamentProduct;
+namespace RedJasmine\FilamentProduct;
 
 class FilamentProduct {}

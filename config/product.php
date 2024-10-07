@@ -1,6 +1,6 @@
 <?php
 
-// config for Redjasmine/FilamentProduct
+// config for RedJasmine/FilamentProduct
 return [
 
 ];
