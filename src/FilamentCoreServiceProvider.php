@@ -5,6 +5,7 @@ namespace RedJasmine\FilamentCore;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Tables\Columns\TextColumn;
 use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -92,6 +93,11 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
 
         // Icon Registration
         FilamentIcon::register($this->getIcons());
+
+
+        TextColumn::macro('enum', function () {
+            return $this->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color());
+        });
 
 
     }

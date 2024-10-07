@@ -60,7 +60,7 @@
                 "RedJasmine\\FilamentCore\\FilamentCoreServiceProvider"
             ],
             "aliases": {
-                "FilamentCore": "RedJasmine\\FilamentCore\\Facades\\FilamentCore"
+
             }
         },
         "branch-alias": {
