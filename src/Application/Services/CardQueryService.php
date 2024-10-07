@@ -15,7 +15,7 @@ class CardQueryService extends ApplicationQueryService
         protected CardReadRepositoryInterface $repository,
     )
     {
-        parent::__construct();
+
     }
 
 

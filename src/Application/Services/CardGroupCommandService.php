@@ -18,7 +18,7 @@ class CardGroupCommandService extends ApplicationCommandService
     )
     {
 
-        parent::__construct();
+
     }
 
 

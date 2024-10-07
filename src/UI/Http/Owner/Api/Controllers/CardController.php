@@ -25,7 +25,7 @@ class CardController extends Controller
         $this->queryService->getRepository()->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
-        $this->queryService->getRepository()->withQuery();
+
 
     }
 
