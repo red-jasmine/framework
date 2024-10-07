@@ -5,7 +5,9 @@ namespace RedJasmine\Product\Application\Stock\Services\CommandHandlers;
 use Exception;
 use RedJasmine\Product\Application\Stock\UserCases\BulkStockCommand;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
+use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Exceptions\AbstractException;
+use RuntimeException;
 use Throwable;
 
 class BulkStockCommandHandler extends StockCommandHandler
@@ -26,33 +28,34 @@ class BulkStockCommandHandler extends StockCommandHandler
         try {
             foreach ($command->skus as $stockCommand) {
                 $sku = $this->repository->find($stockCommand->skuId);
+                if ($stockCommand->actionStock < 0) {
+                    throw new StockException('操作库存不能小于0');
+                }
                 switch ($stockCommand->actionType) {
 
                     case ProductStockActionTypeEnum::ADD:
-                        if ($stockCommand->actionStock <= 0) {
+                        if ($stockCommand->actionStock === 0) {
                             continue 2;
                         }
-                        $this->repository->add($sku,$stockCommand->actionStock);
+                        $this->repository->add($sku, $stockCommand->actionStock);
                         break;
                     case ProductStockActionTypeEnum::RESET:
-                        $this->repository->reset($sku,$stockCommand->actionStock);
+                        $this->repository->reset($sku, $stockCommand->actionStock);
                         break;
                     case ProductStockActionTypeEnum::SUB:
-                        if ($stockCommand->actionStock <= 0) {
+                        if ($stockCommand->actionStock === 0) {
                             continue 2;
                         }
-                        $this->repository->sub($sku,$stockCommand->actionStock);
+                        $this->repository->sub($sku, $stockCommand->actionStock);
                         break;
                     case ProductStockActionTypeEnum::LOCK:
                     case ProductStockActionTypeEnum::UNLOCK:
                     case ProductStockActionTypeEnum::CONFIRM:
-                        throw new Exception('To be implemented');
+                        throw new RuntimeException('To be implemented');
                 }
 
                 $this->log($sku, $stockCommand);
             }
-
-
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

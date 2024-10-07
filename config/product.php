@@ -1,9 +1,10 @@
 <?php
 
-use Spatie\QueryBuilder\AllowedFilter;
 
 return [
 
+    // Table prefix
+    'table_prefix' => '',
 
 
 ];

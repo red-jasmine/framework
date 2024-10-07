@@ -5,6 +5,7 @@ return [
         'edit'          => '编辑库存'
     ],
     'fields'  => [
+        'id'            => '商品ID',
         'owner_type'    => '所属者类型',
         'owner_id'      => '所属者UID',
         'type'          => '操作类型',

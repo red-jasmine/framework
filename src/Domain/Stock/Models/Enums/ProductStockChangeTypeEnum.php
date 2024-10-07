@@ -9,7 +9,6 @@ enum ProductStockChangeTypeEnum: string
 
     use EnumsHelper;
 
-
     case SELLER = 'seller';// 卖家编辑
 
     case SALE = 'sale'; // 销售

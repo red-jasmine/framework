@@ -15,10 +15,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_id')->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->comment('SKU ID');
             $table->string('action_type', 32)->comment(ProductStockActionTypeEnum::comments('操作类型'));
-            $table->bigInteger('action_stock')->comment('库存');
+            $table->bigInteger('action_stock')->comment('操作库存');
+            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->string('change_type', 32)->comment(ProductStockChangeTypeEnum::comments('变更类型'));
             $table->string('change_detail')->nullable()->comment('变更明细');
-            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->nullableMorphs('channel');
             $table->nullableMorphs('creator');
             $table->timestamps();

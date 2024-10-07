@@ -5,8 +5,8 @@ return [
         'product-property-value' => '属性值',
     ],
     'fields'  => [
+        'id'          => '属性值ID',
         'pid'          => '属性ID',
-        'vid'          => '属性值ID',
         'name'         => '名称',
         'description'  => '描述',
         'sort'         => '排序',
@@ -20,6 +20,10 @@ return [
         'group'        => [
             'name' => '分组'
         ],
+        'property'=>[
+            'name'=>'属性'
+        ],
+
     ],
     'options' => [
     ],

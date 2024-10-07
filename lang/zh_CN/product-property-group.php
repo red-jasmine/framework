@@ -5,6 +5,7 @@ return [
         'product-property-group' => '属性组',
     ],
     'fields'  => [
+        'id'           => '属性组ID',
         'name'         => '名称',
         'description'  => '描述',
         'sort'         => '排序',
