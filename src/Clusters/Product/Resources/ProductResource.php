@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
@@ -86,31 +87,39 @@ class ProductResource extends Resource
     {
         return [
             Forms\Components\TextInput::make('owner_type')
+                                      ->label(__('red-jasmine.product::product.fields.owner_type'))
                                       ->required()
                                       ->maxLength(255),
             Forms\Components\TextInput::make('owner_id')
+                                      ->label(__('red-jasmine.product::product.fields.owner_id'))
                                       ->required()
                                       ->numeric(),
             Forms\Components\TextInput::make('title')
+                                      ->label(__('red-jasmine.product::product.fields.title'))
                                       ->required()
                                       ->maxLength(60),
             Forms\Components\TextInput::make('slogan')
+                                      ->label(__('red-jasmine.product::product.fields.slogan'))
                                       ->maxLength(255),
             Forms\Components\Radio::make('product_type')
+                                  ->label(__('red-jasmine.product::product.fields.product_type'))
                                   ->required()
                                   ->default(ProductTypeEnum::GOODS)->inline()
                                   ->options(ProductTypeEnum::options()),
             Forms\Components\Radio::make('shipping_type')
+                                  ->label(__('red-jasmine.product::product.fields.shipping_type'))
                                   ->required()
                                   ->inline()
                                   ->default(ShippingTypeEnum::EXPRESS)
                                   ->options(ShippingTypeEnum::options()),
             Forms\Components\Radio::make('is_customized')
+                                  ->label(__('red-jasmine.product::product.fields.is_customized'))
                                   ->required()
                                   ->boolean()
                                   ->inline()
                                   ->default(0),
             Forms\Components\Radio::make('status')
+                                  ->label(__('red-jasmine.product::product.fields.status'))
                                   ->required()
                                   ->inline()
                                   ->default(ProductStatusEnum::ON_SALE)
@@ -124,101 +133,113 @@ class ProductResource extends Resource
     {
         return [
             SelectTree::make('category_id')
+                      ->label(__('red-jasmine.product::product.fields.category_id'))
                       ->relationship('category', 'name', 'parent_id')
                       ->enableBranchNode()
                       ->parentNullValue(0)
                       ->default(0), // 设置可选
             SelectTree::make('brand_id')
+                      ->label(__('red-jasmine.product::product.fields.brand_id'))
                       ->relationship('brand', 'name', 'parent_id')
                       ->enableBranchNode()
                       ->parentNullValue(0)
                       ->default(0),
-            Forms\Components\TextInput::make('product_model')->maxLength(60),
+            Forms\Components\TextInput::make('product_model')
+                                      ->label(__('red-jasmine.product::product.fields.product_model'))
+                                      ->maxLength(60),
             SelectTree::make('seller_category_id')
+                      ->label(__('red-jasmine.product::product.fields.seller_category_id'))
                       ->relationship('sellerCategory', 'name', 'parent_id')
                       ->enableBranchNode()
                       ->parentNullValue(0)
-                      ->default(0), // 设置可选
+                      ->default(0),
 
-            static::basicProps()->columnSpan('full'),
+            Forms\Components\Fieldset::make('basicInfoFields')->label('基础属性')->columns(1)->inlineLabel()->schema([ static::basicProps()->hiddenLabel() ]),
         ];
     }
 
     protected static function basicProps() : Repeater
     {
 
-        return Repeater::make('basic_props')->schema([
-
-                                                         Forms\Components\Section::make()
-                                                                                 ->schema([
-
-                                                                                              Forms\Components\Select::make('pid')
-                                                                                                                     ->live()
-                                                                                                                     ->columnSpan(1)
-                                                                                                                     ->required()
-                                                                                                                     ->searchable()
-                                                                                                                     ->getSearchResultsUsing(fn(string $search
-                                                                                                                     ) : array => ProductProperty::where('name',
-                                                                                                                                                         'like', "%{$search}%")->limit(50)->pluck('name',
-                                                                                                                                                                                                  'id')->toArray())
-                                                                                                                     ->getOptionLabelUsing(fn(
-                                                                                                                         $value,
-                                                                                                                         Forms\Get $get
-                                                                                                                     ) : ?string => $get('name')),
-
-                                                                                          ])->columnSpan(1),
+        return Repeater::make('basic_props')
+                       ->label(__('red-jasmine.product::product.fields.basic_props'))
+                       ->schema([
 
 
-                                                         Repeater::make('values')
-                                                                 ->hiddenLabel()
-                                                                 ->schema([
-                                                                              Forms\Components\Select::make('vid')
-                                                                                                     ->searchable()
-                                                                                                     ->hiddenLabel()
-                                                                                                     ->required()
-                                                                                                     ->getSearchResultsUsing(fn(string $search
-                                                                                                     ) : array => ProductPropertyValue::where('name', 'like',
-                                                                                                                                              "%{$search}%")->limit(50)->pluck('name',
-                                                                                                                                                                               'id')->toArray())
-                                                                                                     ->getOptionLabelUsing(fn(
-                                                                                                         $value,
-                                                                                                         Forms\Get $get
-                                                                                                     ) : ?string => $get('name'))
-                                                                                                     ->hidden(fn(Forms\Get $get
-                                                                                                     ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                    Forms\Components\Select::make('pid')
+                                                           ->hiddenLabel()
+                                                           ->inlineLabel()
+                                                           ->label(__('red-jasmine.product::product.props.pid'))
+                                                           ->live()
+                                                           ->columnSpan(2)
+                                                           ->required()
+                                                           ->searchable()
+                                                           ->getSearchResultsUsing(fn(string $search
+                                                           ) : array => ProductProperty::where('name',
+                                                                                               'like', "%{$search}%")->limit(50)->pluck('name',
+                                                                                                                                        'id')->toArray())
+                                                           ->getOptionLabelUsing(fn(
+                                                               $value,
+                                                               Forms\Get $get
+                                                           ) : ?string => $get('name')),
 
 
-                                                                              Forms\Components\TextInput::make('name')
-                                                                                                        ->maxLength(30)
-                                                                                                        ->hiddenLabel()
-                                                                                                        ->required()
-                                                                                                        ->suffix(fn(Forms\Get $get
-                                                                                                        ) => ProductProperty::find($get('../../pid'))?->unit)
-                                                                                                        ->inlineLabel()
-                                                                                                        ->hidden(fn(Forms\Get $get
-                                                                                                        ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
+                                    Repeater::make('values')
+                                            ->label(__('red-jasmine.product::product.props.values'))
+                                            ->hiddenLabel()
+                                            ->inlineLabel()
+                                            ->schema([
+                                                         Forms\Components\Select::make('vid')
+                                                                                ->label(__('red-jasmine.product::product.props.vid'))
+                                                                                ->searchable()
+                                                                                ->hiddenLabel()
+                                                                                ->required()
+                                                                                ->getSearchResultsUsing(fn(string $search
+                                                                                ) : array => ProductPropertyValue::when($search, function ($query) use ($search) {
+                                                                                    $query->where('name', 'like', "%{$search}%");
+                                                                                })->limit(20)->pluck('name', 'id')->toArray())
+                                                                                ->getOptionLabelUsing(fn(
+                                                                                    $value,
+                                                                                    Forms\Get $get
+                                                                                ) : ?string => $get('name'))
+                                                                                ->hidden(fn(Forms\Get $get
+                                                                                ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
 
 
-                                                                              Forms\Components\TextInput::make('alias')->maxLength(30)
-                                                                                                        ->hiddenLabel()
-                                                                                                        ->hidden(fn(Forms\Get $get
-                                                                                                        ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                         Forms\Components\TextInput::make('name')
+                                                                                   ->maxLength(30)
+                                                                                   ->hiddenLabel()
+                                                                                   ->required()
+                                                                                   ->suffix(fn(Forms\Get $get
+                                                                                   ) => ProductProperty::find($get('../../pid'))?->unit)
+                                                                                   ->inlineLabel()
+                                                                                   ->hidden(fn(Forms\Get $get
+                                                                                   ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
 
 
-                                                                          ])
-                                                                 ->columns()
-                                                                 ->columnSpan(3)
-                                                                 ->reorderable(false)
-                                                                 ->deletable(fn($state) => count($state) > 1)
-                                                                 ->minItems(1)
-                                                                 ->maxItems(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('pid'))?->is_allow_multiple ? 30 : 1)
-                                                                 ->hidden(fn(Forms\Get $get) => !$get('pid')),
+                                                         Forms\Components\TextInput::make('alias')
+                                                                                   ->placeholder('请输入别名')
+                                                                                   ->maxLength(30)
+                                                                                   ->hiddenLabel()
+                                                                                   ->hidden(fn(Forms\Get $get
+                                                                                   ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
 
 
                                                      ])
+                                            ->columns()
+                                            ->columnSpan(2)
+                                            ->reorderable(false)
+                                            ->deletable(fn($state) => count($state) > 1)
+                                            ->minItems(1)
+                                            ->maxItems(fn(Forms\Get $get
+                                            ) => ProductProperty::find($get('pid'))?->is_allow_multiple ? 30 : 1)
+                                            ->hidden(fn(Forms\Get $get) => !$get('pid')),
+
+
+                                ])
                        ->default([])
                        ->inlineLabel(false)
+
                        ->columns(4)
                        ->columnSpan('full')
                        ->reorderable(false);
@@ -227,7 +248,9 @@ class ProductResource extends Resource
     public static function saleInfoFields() : array
     {
         return [
-            Forms\Components\Radio::make('is_multiple_spec')->required()->boolean()->live()->inline()->default(0),
+            Forms\Components\Radio::make('is_multiple_spec')
+                                  ->label(__('red-jasmine.product::product.fields.is_multiple_spec'))
+                                  ->required()->boolean()->live()->inline()->default(0),
 
 
             static::saleProps()->visible(fn(Forms\Get $get) => $get('is_multiple_spec'))->live()
@@ -276,12 +299,14 @@ class ProductResource extends Resource
                   ->live()
                   ->visible(fn(Forms\Get $get) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('stock')
+                                      ->label(__('red-jasmine.product::product.fields.stock'))
                                       ->required()
                                       ->numeric()
                                       ->default(0)
                                       ->hidden(fn(Forms\Get $get
                                       ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('price')
+                                      ->label(__('red-jasmine.product::product.fields.price'))
                                       ->required()
                                       ->numeric()
                                       ->default(0.00)
@@ -290,6 +315,7 @@ class ProductResource extends Resource
                                       ->hidden(fn(Forms\Get $get
                                       ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('market_price')
+                                      ->label(__('red-jasmine.product::product.fields.market_price'))
                                       ->required()
                                       ->numeric()
                                       ->formatStateUsing(fn($state
@@ -297,6 +323,7 @@ class ProductResource extends Resource
                                       ->default(0.00)->hidden(fn(Forms\Get $get
                 ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('cost_price')
+                                      ->label(__('red-jasmine.product::product.fields.cost_price'))
                                       ->required()
                                       ->numeric()
                                       ->formatStateUsing(fn($state
@@ -304,31 +331,42 @@ class ProductResource extends Resource
                                       ->default(0.00)->hidden(fn(Forms\Get $get
                 ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('unit')
+                                      ->label(__('red-jasmine.product::product.fields.unit'))
                                       ->required()
                                       ->numeric()
                                       ->default(1),
             Forms\Components\TextInput::make('unit_name')
+                                      ->label(__('red-jasmine.product::product.fields.unit_name'))
                                       ->maxLength(32),
-            Forms\Components\TextInput::make('barcode')->maxLength(32),
-            Forms\Components\TextInput::make('outer_id')->maxLength(255),
+            Forms\Components\TextInput::make('barcode')
+                                      ->label(__('red-jasmine.product::product.fields.barcode'))
+                                      ->maxLength(32),
+            Forms\Components\TextInput::make('outer_id')
+                                      ->label(__('red-jasmine.product::product.fields.outer_id'))
+                                      ->maxLength(255),
 
             Forms\Components\TextInput::make('safety_stock')
+                                      ->label(__('red-jasmine.product::product.fields.safety_stock'))
                                       ->numeric()
                                       ->default(0),
 
             Forms\Components\TextInput::make('min_limit')
+                                      ->label(__('red-jasmine.product::product.fields.min_limit'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
             Forms\Components\TextInput::make('max_limit')
+                                      ->label(__('red-jasmine.product::product.fields.max_limit'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
             Forms\Components\TextInput::make('step_limit')
+                                      ->label(__('red-jasmine.product::product.fields.step_limit'))
                                       ->required()
                                       ->numeric()
                                       ->default(1),
             Forms\Components\TextInput::make('vip')
+                                      ->label(__('red-jasmine.product::product.fields.vip'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
@@ -338,63 +376,69 @@ class ProductResource extends Resource
 
     protected static function saleProps() : Repeater
     {
-        return Repeater::make('sale_props')->schema([
+        return Repeater::make('sale_props')
+                       ->label(__('red-jasmine.product::product.fields.sale_props'))
+                       ->schema([
 
-                                                        Forms\Components\Select::make('pid')
-                                                                               ->live()
-                                                                               ->columns(1)
-                                                                               ->required()
-                                                                               ->columnSpan(1)
-                                                                               ->searchable()
-                                                                               ->getSearchResultsUsing(fn(string $search) : array => ProductProperty::where('name',
-                                                                                                                                                            'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
-                                                                               ->getOptionLabelUsing(fn($value, Forms\Get $get) : ?string => $get('name')),
+                                    Forms\Components\Select::make('pid')
+                                                           ->label(__('red-jasmine.product::product.props.pid'))
+                                                           ->live()
+                                                           ->columns(1)
+                                                           ->required()
+                                                           ->columnSpan(1)
+                                                           ->searchable()
+                                                           ->getSearchResultsUsing(fn(string $search) : array => ProductProperty::where('name',
+                                                                                                                                        'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
+                                                           ->getOptionLabelUsing(fn($value, Forms\Get $get) : ?string => $get('name')),
 
-                                                        Repeater::make('values')
-                                                                ->hiddenLabel()
-                                                                ->schema([
-                                                                             Forms\Components\Select::make('vid')
-                                                                                                    ->searchable()
-                                                                                                    ->required()
-                                                                                                    ->hiddenLabel()
-                                                                                                    ->getSearchResultsUsing(fn(string $search
-                                                                                                    ) : array => ProductPropertyValue::where('name', 'like',
-                                                                                                                                             "%{$search}%")->limit(50)->pluck('name',
-                                                                                                                                                                              'id')->toArray())
-                                                                                                    ->getOptionLabelUsing(fn(
-                                                                                                        $value,
-                                                                                                        Forms\Get $get
-                                                                                                    ) : ?string => $get('name'))
-                                                                                                    ->hidden(fn(Forms\Get $get
-                                                                                                    ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
-
-
-                                                                             Forms\Components\TextInput::make('name')
-                                                                                                       ->hiddenLabel()
-                                                                                                       ->maxLength(30)
-                                                                                                       ->required()
-                                                                                                       ->hidden(fn(Forms\Get $get
-                                                                                                       ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
+                                    Repeater::make('values')
+                                            ->label(__('red-jasmine.product::product.props.values'))
+                                            ->hiddenLabel()
+                                            ->schema([
+                                                         Forms\Components\Select::make('vid')
+                                                                                ->label(__('red-jasmine.product::product.props.vid'))
+                                                                                ->searchable()
+                                                                                ->required()
+                                                                                ->hiddenLabel()
+                                                                                ->getSearchResultsUsing(fn(string $search
+                                                                                ) : array => ProductPropertyValue::where('name', 'like',
+                                                                                                                         "%{$search}%")->limit(50)->pluck('name',
+                                                                                                                                                          'id')->toArray())
+                                                                                ->getOptionLabelUsing(fn(
+                                                                                    $value,
+                                                                                    Forms\Get $get
+                                                                                ) : ?string => $get('name'))
+                                                                                ->hidden(fn(Forms\Get $get
+                                                                                ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
 
 
-                                                                             Forms\Components\TextInput::make('alias')
-                                                                                                       ->hiddenLabel()
-                                                                                                       ->placeholder('请输入别名')
-                                                                                                       ->maxLength(30)
-                                                                                                       ->hidden(fn(Forms\Get $get
-                                                                                                       ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                         Forms\Components\TextInput::make('name')
+                                                                                   ->hiddenLabel()
+                                                                                   ->maxLength(30)
+                                                                                   ->required()
+                                                                                   ->hidden(fn(Forms\Get $get
+                                                                                   ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
 
 
-                                                                         ])
-                                                                ->grid(4)
-                                                                ->columns()
-                                                                ->columnSpanFull()
-                                                                ->minItems(1)
-                                                                ->reorderable(false)
-                                                                ->hidden(fn(Forms\Get $get) => !$get('pid')),
+                                                         Forms\Components\TextInput::make('alias')
+                                                                                   ->label(__('red-jasmine.product::product.props.alias'))
+                                                                                   ->hiddenLabel()
+                                                                                   ->placeholder('请输入别名')
+                                                                                   ->maxLength(30)
+                                                                                   ->hidden(fn(Forms\Get $get
+                                                                                   ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
 
 
-                                                    ])
+                                                     ])
+                                            ->grid(4)
+                                            ->columns()
+                                            ->columnSpanFull()
+                                            ->minItems(1)
+                                            ->reorderable(false)
+                                            ->hidden(fn(Forms\Get $get) => !$get('pid')),
+
+
+                                ])
                        ->default([])
                        ->inlineLabel(false)
                        ->columns(4)
@@ -405,18 +449,19 @@ class ProductResource extends Resource
     protected static function skus() : TableRepeater
     {
         return TableRepeater::make('skus')
+                            ->label(__('red-jasmine.product::product.fields.skus'))
                             ->headers([
-                                          Header::make('properties_name'),
-                                          Header::make('image'),
-                                          Header::make('price'),
-                                          Header::make('market_price'),
-                                          Header::make('cost_price'),
-                                          Header::make('stock'),
-                                          Header::make('safety_stock'),
-                                          Header::make('barcode'),
-                                          Header::make('outer_id'),
-                                          Header::make('supplier_sku_id'),
-                                          Header::make('status'),
+                                          Header::make('properties_name')->label(__('red-jasmine.product::product.fields.properties_name')),
+                                          Header::make('image')->label(__('red-jasmine.product::product.fields.image')),
+                                          Header::make('price')->label(__('red-jasmine.product::product.fields.price')),
+                                          Header::make('market_price')->label(__('red-jasmine.product::product.fields.market_price')),
+                                          Header::make('cost_price')->label(__('red-jasmine.product::product.fields.cost_price')),
+                                          Header::make('stock')->label(__('red-jasmine.product::product.fields.stock')),
+                                          Header::make('safety_stock')->label(__('red-jasmine.product::product.fields.safety_stock')),
+                                          Header::make('barcode')->label(__('red-jasmine.product::product.fields.barcode')),
+                                          Header::make('outer_id')->label(__('red-jasmine.product::product.fields.outer_id')),
+                                          Header::make('supplier_sku_id')->label(__('red-jasmine.product::product.fields.supplier_sku_id')),
+                                          Header::make('status')->label(__('red-jasmine.product::product.fields.status')),
                                       ])
                             ->schema([
                                          Forms\Components\TextInput::make('properties_name')->readOnly(),
@@ -453,10 +498,10 @@ class ProductResource extends Resource
     public static function descriptionFields() : array
     {
         return [
-            Forms\Components\FileUpload::make('image')->image(),
-            Forms\Components\FileUpload::make('images')->image()->multiple(),
-            Forms\Components\FileUpload::make('videos')->image()->multiple(),
-            Forms\Components\RichEditor::make('detail'),
+            Forms\Components\FileUpload::make('image')->label(__('red-jasmine.product::product.fields.image'))->image(),
+            Forms\Components\FileUpload::make('images')->label(__('red-jasmine.product::product.fields.images'))->image()->multiple(),
+            Forms\Components\FileUpload::make('videos')->label(__('red-jasmine.product::product.fields.videos'))->image()->multiple(),
+            Forms\Components\RichEditor::make('detail')->label(__('red-jasmine.product::product.fields.detail')),
         ];
     }
 
@@ -464,16 +509,18 @@ class ProductResource extends Resource
     {
 
         return [
-            Forms\Components\TextInput::make('tips')->maxLength(255),
+            Forms\Components\TextInput::make('tips')->label(__('red-jasmine.product::product.fields.tips'))->maxLength(255),
             Forms\Components\TextInput::make('points')
+                                      ->label(__('red-jasmine.product::product.fields.points'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
-            Forms\Components\Radio::make('is_hot')->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_new')->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_best')->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_benefit')->required()->inline()->boolean()->default(0),
+            Forms\Components\Radio::make('is_hot')->label(__('red-jasmine.product::product.fields.is_hot'))->required()->inline()->boolean()->default(0),
+            Forms\Components\Radio::make('is_new')->label(__('red-jasmine.product::product.fields.is_new'))->required()->inline()->boolean()->default(0),
+            Forms\Components\Radio::make('is_best')->label(__('red-jasmine.product::product.fields.is_best'))->required()->inline()->boolean()->default(0),
+            Forms\Components\Radio::make('is_benefit')->label(__('red-jasmine.product::product.fields.is_benefit'))->required()->inline()->boolean()->default(0),
             Forms\Components\TextInput::make('sort')
+                                      ->label(__('red-jasmine.product::product.fields.sort'))
                                       ->required()
                                       ->numeric()
                                       ->minValue(0)
@@ -484,8 +531,8 @@ class ProductResource extends Resource
     public static function seoFields() : array
     {
         return [
-            Forms\Components\TextInput::make('keywords')->maxLength(255),
-            Forms\Components\TextInput::make('description')->maxLength(255),
+            Forms\Components\TextInput::make('keywords')->label(__('red-jasmine.product::product.fields.keywords'))->maxLength(255),
+            Forms\Components\TextInput::make('description')->label(__('red-jasmine.product::product.fields.description'))->maxLength(255),
         ];
     }
 
@@ -493,11 +540,14 @@ class ProductResource extends Resource
     {
         return [
 
-            Forms\Components\Radio::make('freight_payer')->required()
+            Forms\Components\Radio::make('freight_payer')
+                                  ->label(__('red-jasmine.product::product.fields.freight_payer'))
+                                  ->required()
                                   ->default(FreightPayerEnum::SELLER->value)
                                   ->inline()->options(FreightPayerEnum::options()),
-            Forms\Components\TextInput::make('postage_id')->numeric(),
+            Forms\Components\TextInput::make('postage_id')->label(__('red-jasmine.product::product.fields.postage_id'))->numeric(),
             Forms\Components\TextInput::make('delivery_time')
+                                      ->label(__('red-jasmine.product::product.fields.delivery_time'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
@@ -509,10 +559,13 @@ class ProductResource extends Resource
     {
         return [
             Forms\Components\TextInput::make('supplier_type')
+                                      ->label(__('red-jasmine.product::product.fields.supplier_type'))
                                       ->maxLength(255),
             Forms\Components\TextInput::make('supplier_id')
+                                      ->label(__('red-jasmine.product::product.fields.supplier_id'))
                                       ->numeric(),
             Forms\Components\TextInput::make('supplier_product_id')
+                                      ->label(__('red-jasmine.product::product.fields.supplier_product_id'))
                                       ->numeric(),
         ];
     }
@@ -520,7 +573,9 @@ class ProductResource extends Resource
     public static function otherFields() : array
     {
         return [
-            Forms\Components\TextInput::make('remarks')->maxLength(255),
+            Forms\Components\TextInput::make('remarks')
+                                      ->label(__('red-jasmine.product::product.fields.remarks'))
+                                      ->maxLength(255),
         ];
     }
 
@@ -530,65 +585,95 @@ class ProductResource extends Resource
             ->deferLoading()
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label('ID')
+                                                   ->label(__('red-jasmine.product::product.fields.id'))
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('owner_type')
-                                                   ->searchable(),
+                                                   ->label(__('red-jasmine.product::product.fields.owner_type'))
+                          ,
                           Tables\Columns\TextColumn::make('owner_id')
+                                                   ->label(__('red-jasmine.product::product.fields.owner_id'))
                                                    ->numeric()
-                                                   ->sortable(),
+                          ,
                           Tables\Columns\TextColumn::make('title')
+                                                   ->label(__('red-jasmine.product::product.fields.title'))
                                                    ->searchable(),
-                          Tables\Columns\ImageColumn::make('image'),
+                          Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine.product::product.fields.image')),
 
-                          Tables\Columns\TextColumn::make('product_type')->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
-                          Tables\Columns\TextColumn::make('shipping_type')->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
-                          Tables\Columns\TextColumn::make('status')->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                          Tables\Columns\TextColumn::make('product_type')
+                                                   ->label(__('red-jasmine.product::product.fields.product_type'))
+                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                          Tables\Columns\TextColumn::make('shipping_type')
+                                                   ->label(__('red-jasmine.product::product.fields.shipping_type'))
+                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                          Tables\Columns\TextColumn::make('status')
+                                                   ->label(__('red-jasmine.product::product.fields.status'))
+                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
 
 
-                          Tables\Columns\TextColumn::make('barcode')->searchable(),
-                          Tables\Columns\TextColumn::make('outer_id')->searchable(),
-                          Tables\Columns\TextColumn::make('is_multiple_spec')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('barcode')
+                                                   ->label(__('red-jasmine.product::product.fields.barcode'))
+                                                   ->searchable(),
+                          Tables\Columns\TextColumn::make('outer_id')
+                                                   ->label(__('red-jasmine.product::product.fields.outer_id'))
+                                                   ->searchable(),
+                          Tables\Columns\TextColumn::make('is_multiple_spec')
+                                                   ->label(__('red-jasmine.product::product.fields.is_multiple_spec'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
 
                           Tables\Columns\TextColumn::make('brand.name')
-                                                   ->numeric()
-                              ->toggleable(isToggledHiddenByDefault: true),
+                                                   ->label(__('red-jasmine.product::product.fields.brand_id'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('category.name')
-                                                   ->numeric()
-                              ->toggleable(isToggledHiddenByDefault: true),
+                                                   ->label(__('red-jasmine.product::product.fields.category_id'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('sellerCategory.name')
-                                                   ->numeric()
-                              ->toggleable(isToggledHiddenByDefault: true),
+                                                   ->label(__('red-jasmine.product::product.fields.seller_category_id'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
 
                           Tables\Columns\TextColumn::make('price')
+                                                   ->label(__('red-jasmine.product::product.fields.price'))
                                                    ->money()
                           ,
 
-                          Tables\Columns\TextColumn::make('cost_price')->numeric()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('market_price')->numeric()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('cost_price')
+                                                   ->label(__('red-jasmine.product::product.fields.cost_price'))
+                                                   ->numeric()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('market_price')
+                                                   ->label(__('red-jasmine.product::product.fields.market_price'))
+                                                   ->numeric()->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('stock')
+                                                   ->label(__('red-jasmine.product::product.fields.stock'))
                                                    ->numeric()
-                                                   ->sortable(0),
-
+                                                   ->sortable(),
                           Tables\Columns\TextColumn::make('safety_stock')
+                                                   ->label(__('red-jasmine.product::product.fields.safety_stock'))
                                                    ->numeric()
                                                    ->toggleable(isToggledHiddenByDefault: true),
 
                           Tables\Columns\TextColumn::make('sort')
+                                                   ->label(__('red-jasmine.product::product.fields.sort'))
                                                    ->numeric()
                                                    ->toggleable(isToggledHiddenByDefault: true)
                                                    ->sortable(),
 
                           Tables\Columns\TextColumn::make('sales')
+                                                   ->label(__('red-jasmine.product::product.fields.sales'))
                                                    ->numeric()
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('views')
+                                                   ->label(__('red-jasmine.product::product.fields.views'))
                                                    ->numeric()
                                                    ->sortable(),
 
-                          Tables\Columns\TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('modified_time')->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('version')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('created_at')
+                                                   ->label(__('red-jasmine.product::product.fields.created_at'))
+                                                   ->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('modified_time')
+                                                   ->label(__('red-jasmine.product::product.fields.modified_time'))
+                                                   ->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('version')
+                                                   ->label(__('red-jasmine.product::product.fields.version'))
+                                                   ->dateTime()->toggleable(isToggledHiddenByDefault: true),
 
 
                       ])
