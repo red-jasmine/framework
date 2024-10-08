@@ -43,6 +43,11 @@ class Dashboard extends Page
     public function getWidgets() : array
     {
 
+         // 商品数量
+         // 商品类型分布
+         // 商品状态分布
+         //  库存预警
+
         return [
 
         ];
