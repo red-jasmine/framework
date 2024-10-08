@@ -1,8 +1,16 @@
 <?php
 return [
     'labels' => [
-
-        'product' => '商品',
+        'product'    => '商品',
+        'basic_info' => '基本信息',
+        'product_attributes' => '商品属性',
+        'sale_info' => '销售信息',
+        'description' => '商品描述',
+        'operate' => '运营',
+        'seo' => 'SEO',
+        'shipping' => '发货服务',
+        'supplier' => '供应商',
+        'other' => '其他',
     ],
     'fields' => [
         'id'                  => '商品ID',
@@ -88,6 +96,19 @@ return [
         'vid'    => '属性值',
         'values' => '属性值',
         'alias'  => '别名',
+    ],
+
+
+    'enums'=>[
+        'status'=>[
+            'on_sale'     => '上架',
+            'draft'       => '草稿',
+            'pre_sale'    => '上架',
+            'sold_out'    => '停售',
+            'off_shelf'   => '下架',
+            'forbid_sale' => '禁售',
+            'deleted'     => '上架',
+        ],
     ],
     'options' => [
     ],

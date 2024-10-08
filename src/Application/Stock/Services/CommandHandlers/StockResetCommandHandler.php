@@ -16,7 +16,7 @@ class StockResetCommandHandler extends StockCommandHandler
      */
     public function handle(StockCommand $command) : void
     {
-
+       
         $this->setCommand($command);
 
         $this->validate($command);

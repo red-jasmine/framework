@@ -26,12 +26,12 @@ enum ProductStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::ON_SALE->value     => '在售',
-            self::SOLD_OUT->value    => '停售',
-            self::OFF_SHELF->value   => '下架',
-            self::PRE_SALE->value    => '预售',
-            self::FORBID_SALE->value => '禁售',
-            self::DRAFT->value       => '草稿',
+            self::ON_SALE->value     => __('red-jasmine.product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value    => __('red-jasmine.product::product.enums.status.sold_out'),
+            self::OFF_SHELF->value   => __('red-jasmine.product::product.enums.status.off_shelf'),
+            self::PRE_SALE->value    => __('red-jasmine.product::product.enums.status.pre_sale'),
+            self::FORBID_SALE->value => __('red-jasmine.product::product.enums.status.forbid_sale'),
+            self::DRAFT->value       => __('red-jasmine.product::product.enums.status.draft'),
         ];
 
     }
@@ -39,8 +39,8 @@ enum ProductStatusEnum: string
     public static function skusStatus() : array
     {
         return [
-            self::ON_SALE->value  => '在售',
-            self::SOLD_OUT->value => '售停',
+            self::ON_SALE->value  => __('red-jasmine.product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value => __('red-jasmine.product::product.enums.status.sold_out'),
         ];
     }
 
