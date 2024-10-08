@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'image'              => $this->image,
             'barcode'            => $this->barcode,
             'sort'               => $this->sort,
-            'unit_name'          => $this->unit_name,
+            'unit_quantity'      => $this->unit_quantity,
             'unit'               => $this->unit,
             'freight_payer'      => $this->freight_payer,
             'postage_id'         => $this->postage_id,

@@ -29,7 +29,7 @@ class ProductResource extends JsonResource
             'supplier_id'         => $this->supplier_id,
             'supplier_product_id' => $this->supplier_product_id,
             'sort'                => $this->sort,
-            'unit_name'           => $this->unit_name,
+            'unit_quantity'       => $this->unit_quantity,
             'unit'                => $this->unit,
             'freight_payer'       => $this->freight_payer,
             'postage_id'          => $this->postage_id,

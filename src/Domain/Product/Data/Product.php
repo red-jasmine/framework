@@ -37,7 +37,8 @@ class Product extends Data
     public bool              $isCustomized   = false;
 
 
-    public int     $unit             = 1;
+    public int     $unitQuantity     = 1;
+    public ?string $unit             = null;
     public int     $deliveryTime     = 0;
     public ?int    $sort             = 0;
     public ?int    $spuId            = null;

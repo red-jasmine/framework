@@ -64,6 +64,7 @@ class ProductTransformer
         $product->is_multiple_spec    = $command->isMultipleSpec;
         $product->sort                = $command->sort;
         $product->unit                = $command->unit;
+        $product->unit_quantity       = $command->unitQuantity;
         $product->spu_id              = $command->spuId;
         $product->category_id         = $command->categoryId;
         $product->brand_id            = $command->brandId;

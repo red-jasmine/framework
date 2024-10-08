@@ -43,8 +43,8 @@ return new class extends Migration {
             $table->decimal('cost_price', 10)->default(0)->comment('成本价');
 
             //单位
-            $table->unsignedBigInteger('unit')->default(1)->comment('单位数量');
-            $table->string('unit_name', 32)->nullable()->comment('单位名称');
+            $table->string('unit', 10)->nullable()->comment('单位');
+            $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             // 库存
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             $table->bigInteger('stock')->default(0)->comment('库存');

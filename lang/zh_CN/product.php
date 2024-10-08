@@ -33,7 +33,7 @@ return [
         'freight_payer'       => '运费承担方',
         'postage_id'          => '运费模板ID',
         'unit'                => '单位',
-        'unit_name'           => '单位名称',
+        'unit_quantity'       => '单位数量',
         'min_limit'           => '起购量',
         'max_limit'           => '限购量',
         'step_limit'          => '购买倍数',
