@@ -31,5 +31,14 @@ enum ProductTypeEnum: string
         ];
     }
 
+    public static function icons() : array
+    {
+        return [
+            self::GOODS->value  => 'heroicon-o-briefcase',
+            self::VIRTUAL->value    => 'heroicon-o-chart-bar-square',
+            self::TICKET->value      => 'heroicon-o-ticket',
+            self::SERVICE->value => 'heroicon-o-shield-check',
 
+        ];
+    }
 }

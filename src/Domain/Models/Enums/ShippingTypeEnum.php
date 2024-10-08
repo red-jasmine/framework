@@ -33,4 +33,16 @@ enum ShippingTypeEnum: string
         ];
 
     }
+
+    public static function icons() : array
+    {
+        return [
+            self::EXPRESS->value  => 'heroicon-o-truck',
+            self::DUMMY->value    => 'heroicon-o-bolt',
+            self::CDK->value      => 'heroicon-o-key',
+            self::DELIVERY->value => 'heroicon-o-home-modern',
+            self::NIL->value      => 'heroicon-o-cloud',
+
+        ];
+    }
 }
