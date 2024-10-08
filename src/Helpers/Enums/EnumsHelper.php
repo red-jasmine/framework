@@ -3,34 +3,10 @@
 namespace RedJasmine\Support\Helpers\Enums;
 
 
-use phpDocumentor\Reflection\Types\Static_;
-
 trait EnumsHelper
 {
 
 
-    public function name() : string
-    {
-        return self::label()[$this->value] ?? $this->value;
-    }
-
-    public function label() : string
-    {
-        return self::labels()[$this->value] ?? $this->name;
-    }
-    public function getLabel() : string
-    {
-       return  $this->label();
-    }
-
-    public function color() : string
-    {
-        return self::colors()[$this->value] ?? $this->value;
-    }
-    public function getColor() : string
-    {
-        return  $this->color();
-    }
     public static function names() : array
     {
         return self::labels();
@@ -41,32 +17,41 @@ trait EnumsHelper
         return self::labels();
     }
 
-    public static function values() : array
-    {
-        return array_map(fn($case) => $case->value, static::cases());
-    }
-
     public static function comments(string $title = '') : string
     {
         $enums = array_map(function ($key, $value) {
-            return $key.'('.$value.')';
+            return $key . '(' . $value . ')';
         }, array_keys(static::labels()), static::labels());
-        return $title.': '.implode(',', $enums);
+        return $title . ': ' . implode(',', $enums);
 
     }
 
-    // 定义一个基础颜色数组函数
-
-    public static function baseColors() : array
+    public function name() : string
     {
-        return [
-            'primary',
-            'success',
-            'danger',
-            'warning',
-            'info',
-            'dark',
-        ];
+        return self::label()[$this->value] ?? $this->value;
+    }
+
+    public function label() : string
+    {
+        return self::labels()[$this->value] ?? $this->name;
+    }
+
+    public function getLabel() : ?string
+    {
+        return $this->label();
+    }
+
+    /**
+     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     */
+    public function getColor() : string|array|null
+    {
+        return $this->color();
+    }
+
+    public function color() : string
+    {
+        return self::colors()[$this->value] ?? $this->value;
     }
 
     public static function colors() : array
@@ -83,5 +68,32 @@ trait EnumsHelper
 
     }
 
+    // 定义一个基础颜色数组函数
 
+    public static function baseColors() : array
+    {
+        return [
+            'success',
+            'primary',
+            'danger',
+            'info',
+            'dark',
+            'warning',
+        ];
+    }
+
+    public static function values() : array
+    {
+        return array_map(fn($case) => $case->value, static::cases());
+    }
+
+    public function getIcon() : ?string
+    {
+        return static::icons()[$this->value] ?? null;
+    }
+
+    public static function icons() : array
+    {
+        return [];
+    }
 }
