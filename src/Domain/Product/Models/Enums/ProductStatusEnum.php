@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models\Enums;
 
+use Filament\Support\Colors\Color;
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
 enum ProductStatusEnum: string
@@ -47,14 +48,27 @@ enum ProductStatusEnum: string
     //danger、gray、info、primary、success 或 warning
     public static function colors() : array
     {
+
         return [
             self::ON_SALE->value     => 'success',
             self::SOLD_OUT->value    => 'warning',
-            self::OFF_SHELF->value   => 'warning',
+            self::OFF_SHELF->value   => 'danger',
             self::PRE_SALE->value    => 'primary',
             self::FORBID_SALE->value => 'danger',
-            self::DRAFT->value       => 'gray',
+            self::DRAFT->value       => 'info',
         ];
     }
 
+
+    public static function icons() : array
+    {
+        return [
+            self::ON_SALE->value     => 'heroicon-o-shopping-bag',
+            self::SOLD_OUT->value    => 'heroicon-o-bookmark-slash',
+            self::OFF_SHELF->value   => 'heroicon-o-archive-box-x-mark',
+            self::PRE_SALE->value    => 'heroicon-o-gift-top',
+            self::FORBID_SALE->value => 'heroicon-o-no-symbol',
+            self::DRAFT->value       => 'heroicon-o-document',
+        ];
+    }
 }

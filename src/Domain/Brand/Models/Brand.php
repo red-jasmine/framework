@@ -76,7 +76,7 @@ class Brand extends Model implements OperatorInterface
 
     public function create() : static
     {
-        $this->id = Snowflake::getInstance()->nextId();
+
         return $this;
     }
 

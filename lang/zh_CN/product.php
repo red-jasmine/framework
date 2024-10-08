@@ -103,7 +103,7 @@ return [
         'status'=>[
             'on_sale'     => '上架',
             'draft'       => '草稿',
-            'pre_sale'    => '上架',
+            'pre_sale'    => '预售',
             'sold_out'    => '停售',
             'off_shelf'   => '下架',
             'forbid_sale' => '禁售',
