@@ -64,21 +64,23 @@ class ProductResource extends Resource
 
     public static function form(Form $form) : Form
     {
+
+        $schema = [
+            Forms\Components\Fieldset::make('basic_info')->label(__('red-jasmine.product::product.labels.basic_info'))->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
+            Forms\Components\Fieldset::make('product_attributes')->label(__('red-jasmine.product::product.labels.product_attributes'))->columns(1)->inlineLabel()->schema(static::productInfoFields()),
+            Forms\Components\Fieldset::make('sale_info')->label(__('red-jasmine.product::product.labels.sale_info'))->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
+            Forms\Components\Fieldset::make('description')->label(__('red-jasmine.product::product.labels.description'))->columns(1)->inlineLabel()->schema(static::descriptionFields()),
+            Forms\Components\Fieldset::make('operate')->label(__('red-jasmine.product::product.labels.operate'))->columns(1)->inlineLabel()->schema(static::operateFields()),
+            Forms\Components\Fieldset::make('seo')->label(__('red-jasmine.product::product.labels.seo'))->columns(1)->inlineLabel()->schema(static::seoFields()),
+            Forms\Components\Fieldset::make('shipping')->label(__('red-jasmine.product::product.labels.shipping'))->columns(1)->inlineLabel()->schema(static::shippingFields()),
+            Forms\Components\Fieldset::make('supplier')->label(__('red-jasmine.product::product.labels.supplier'))->columns(1)->inlineLabel()->schema(static::supplierFields()),
+            Forms\Components\Fieldset::make('other')->label(__('red-jasmine.product::product.labels.other'))->columns(1)->inlineLabel()->schema(static::otherFields()),
+
+        ];
+
         return $form
             ->schema([
-                         Forms\Components\Section::make('商品')
-                                                 ->schema([
-                                                              Forms\Components\Fieldset::make('basicInfoFields')->label('基本信息')->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
-                                                              Forms\Components\Fieldset::make('productInfoFields')->label('商品属性')->columns(1)->inlineLabel()->schema(static::productInfoFields()),
-                                                              Forms\Components\Fieldset::make('saleInfoFields')->label('销售信息')->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
-                                                              Forms\Components\Fieldset::make('descriptionFields')->label('商品描述')->columns(1)->inlineLabel()->schema(static::descriptionFields()),
-                                                              Forms\Components\Fieldset::make('operateFields')->label('运营')->columns(1)->inlineLabel()->schema(static::operateFields()),
-                                                              Forms\Components\Fieldset::make('seoFields')->label('SEO')->columns(1)->inlineLabel()->schema(static::seoFields()),
-                                                              Forms\Components\Fieldset::make('shippingFields')->label('发货服务')->columns(1)->inlineLabel()->schema(static::shippingFields()),
-                                                              Forms\Components\Fieldset::make('supplierFields')->label('供应商')->columns(1)->inlineLabel()->schema(static::supplierFields()),
-                                                              Forms\Components\Fieldset::make('otherFields')->label('其他')->columns(1)->inlineLabel()->schema(static::otherFields()),
-
-                                                          ]),
+                         Forms\Components\Section::make(__('red-jasmine.product::product.labels.product'))->label(__('red-jasmine.product::product.labels.product'))->schema($schema),
                      ])
             ->columns(1);
     }
@@ -239,7 +241,6 @@ class ProductResource extends Resource
                                 ])
                        ->default([])
                        ->inlineLabel(false)
-
                        ->columns(4)
                        ->columnSpan('full')
                        ->reorderable(false);
@@ -332,12 +333,12 @@ class ProductResource extends Resource
                 ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('unit')
                                       ->label(__('red-jasmine.product::product.fields.unit'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(1),
-            Forms\Components\TextInput::make('unit_name')
-                                      ->label(__('red-jasmine.product::product.fields.unit_name'))
                                       ->maxLength(32),
+            Forms\Components\TextInput::make('unit_quantity')
+                                      ->label(__('red-jasmine.product::product.fields.unit_quantity'))
+                                      ->numeric()
+                                      ->default(1)
+                                      ->minValue(1),
             Forms\Components\TextInput::make('barcode')
                                       ->label(__('red-jasmine.product::product.fields.barcode'))
                                       ->maxLength(32),
@@ -656,6 +657,13 @@ class ProductResource extends Resource
                                                    ->toggleable(isToggledHiddenByDefault: true)
                                                    ->sortable(),
 
+
+                          Tables\Columns\TextColumn::make('unit')
+                                                   ->label(__('red-jasmine.product::product.fields.unit'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('unit_quantity')
+                                                   ->label(__('red-jasmine.product::product.fields.unit_quantity'))
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('sales')
                                                    ->label(__('red-jasmine.product::product.fields.sales'))
                                                    ->numeric()
@@ -678,8 +686,17 @@ class ProductResource extends Resource
 
                       ])
             ->filters([
-                          Tables\Filters\TrashedFilter::make(),
-                      ])
+
+
+                          Tables\Filters\SelectFilter::make('status')
+                              ->multiple()
+                                                     ->label(__('red-jasmine.product::product.fields.status'))
+                                                     ->options(ProductStatusEnum::options()),
+
+
+                                   Tables\Filters\TrashedFilter::make(),
+                      ],layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
+            ->deferFilters()
             ->recordUrl(null)
             ->actions([
                           Tables\Actions\ViewAction::make(),
