@@ -26,32 +26,19 @@ trait ResourcePageHelper
         return static::$deleteCommand;
     }
 
-    public static function getUpdateCommand() : ?string
+    public static function callResolveRecord(Model $model) : Model
     {
-        return static::$updateCommand;
+        return $model;
     }
-
-    public static function getCreateCommand() : ?string
-    {
-        return static::$createCommand;
-    }
-
-    public static function getQueryService() : ?string
-    {
-        return static::$queryService;
-    }
-
-    public static function getCommandService() : ?string
-    {
-        return static::$commandService;
-    }
-
 
     /**
      * @throws AbstractException
      */
     protected function handleRecordCreation(array $data) : Model
     {
+
+
+
         $resource = static::getResource();
 
         try {
@@ -74,14 +61,34 @@ trait ResourcePageHelper
         }
     }
 
+    public static function getCommandService() : ?string
+    {
+        return static::$commandService;
+    }
+
+    public static function getCreateCommand() : ?string
+    {
+        return static::$createCommand;
+    }
+
     protected function resolveRecord(int|string $key) : Model
     {
         $resource     = static::getResource();
         $queryService = app($resource::getQueryService());
-        return $queryService->findById(FindQuery::make($key));
+        $model        = $queryService->findById($resource::callFindQuery(FindQuery::make($key)));
+        return $resource::callResolveRecord($model);
 
     }
 
+    public static function getQueryService() : ?string
+    {
+        return static::$queryService;
+    }
+
+    public static function callFindQuery(FindQuery $findQuery) : FindQuery
+    {
+        return $findQuery;
+    }
 
     /**
      * @throws AbstractException
@@ -108,5 +115,10 @@ trait ResourcePageHelper
             report($abstractException);
             throw ValidationException::withMessages([]);
         }
+    }
+
+    public static function getUpdateCommand() : ?string
+    {
+        return static::$updateCommand;
     }
 }
