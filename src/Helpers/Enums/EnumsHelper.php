@@ -77,8 +77,8 @@ trait EnumsHelper
             'primary',
             'danger',
             'info',
-            'dark',
             'warning',
+
         ];
     }
 

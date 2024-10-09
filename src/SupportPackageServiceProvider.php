@@ -11,70 +11,54 @@ use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
 use RedJasmine\Support\Services\SQLLogService;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 
-class SupportPackageServiceProvider extends ServiceProvider
+class SupportPackageServiceProvider extends PackageServiceProvider
 {
+    public static string $name = 'red-jasmine-support';
 
-    /**
-     * @return void
-     */
-    public function boot() : void
+    public static string $viewNamespace = 'red-jasmine-support';
+
+
+    public function configurePackage(Package $package) : void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
 
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
+        $package->name(static::$name)
+                ->hasCommands($this->getCommands())
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
+                        ->publishMigrations()
+                        ->askToRunMigrations()
+                        ->askToStarRepoOnGitHub('red-jasmine/support');
+                });
+
+        $configFileName = $package->shortName();
+
+
+        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
+            $package->hasConfigFile();
         }
 
+        if (file_exists($package->basePath('/../database/migrations'))) {
+            $package->hasMigrations($this->getMigrations());
+        }
 
-        $config = $this->app->make('config');
+        if (file_exists($package->basePath('/../resources/lang'))) {
+            $package->hasTranslations();
+        }
 
-
+        if (file_exists($package->basePath('/../resources/views'))) {
+            $package->hasViews(static::$viewNamespace);
+        }
     }
 
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole() : void
+
+    public function packageRegistered() : void
     {
-        // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/support.php' => config_path('red-jasmine/support.php'),
-        ], 'red-jasmine/support.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/red-jasmine'),
-        ], 'support.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/red-jasmine'),
-        ], 'support.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/red-jasmine'),
-        ], 'support.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
-    }
-
-    /**
-     * Register any package services.
-     *
-     * @return void
-     */
-    public function register() : void
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/support.php', 'red-jasmine.support');
-
         $this->registerAes();
 
         SQLLogService::register();
@@ -86,9 +70,22 @@ class SupportPackageServiceProvider extends ServiceProvider
 
 
         $this->app->singleton('hook', function ($app) {
-            return  new HookManage();
+            return new HookManage();
         });
     }
+
+    public function packageBooted() : void
+    {
+
+    }
+
+    protected function getCommands() : array
+    {
+        return [
+
+        ];
+    }
+
 
     protected function registerAES() : void
     {
@@ -101,11 +98,11 @@ class SupportPackageServiceProvider extends ServiceProvider
     /**
      * Parse the encryption key.
      *
-     * @param  array  $config
+     * @param array $config
      *
      * @return string
      */
-    protected function parseKey(array $config)
+    protected function parseKey(array $config) : string
     {
         if (Str::startsWith($key = $this->key($config), $prefix = 'base64:')) {
             $key = base64_decode(Str::after($key, $prefix));
@@ -117,7 +114,7 @@ class SupportPackageServiceProvider extends ServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
-     * @param  array  $config
+     * @param array $config
      *
      * @return string
      *
@@ -132,13 +129,5 @@ class SupportPackageServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [];
-    }
+
 }

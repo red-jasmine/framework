@@ -14,7 +14,8 @@
     "require": {
         "illuminate/contracts": "^10.0|^11.0",
         "spatie/laravel-data": "^4",
-        "spatie/laravel-query-builder": "^5.8"
+        "spatie/laravel-query-builder": "^5.8",
+        "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
