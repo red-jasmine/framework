@@ -13,6 +13,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
@@ -110,7 +111,7 @@ class ProductStockResource extends Resource
                      ->label(__('red-jasmine-product::product-stock.labels.edit'))
                      ->modalWidth('7xl')
                      ->slideOver()
-                     ->modalAutofocus(false)
+                     ->icon(FilamentIcon::resolve('actions::edit-action') ?? 'heroicon-m-pencil-square')
                      ->stickyModalFooter()
                      ->form([
 
