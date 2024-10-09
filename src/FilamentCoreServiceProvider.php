@@ -15,9 +15,9 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class FilamentCoreServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'filament-core';
+    public static string $name = 'red-jasmine-filament-core';
 
-    public static string $viewNamespace = 'filament-core';
+    public static string $viewNamespace = 'red-jasmine-filament-core';
 
     public function configurePackage(Package $package) : void
     {
@@ -71,7 +71,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
     protected function getMigrations() : array
     {
         return [
-            'create_filament-core_table',
+
         ];
     }
 
