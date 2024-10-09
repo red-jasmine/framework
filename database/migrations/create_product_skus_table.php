@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('product_skus', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') .'product_skus', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->morphs('owner');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
@@ -46,6 +46,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('product_skus');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_skus');
     }
 };

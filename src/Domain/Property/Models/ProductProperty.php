@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -27,6 +28,13 @@ class ProductProperty extends Model implements OperatorInterface
 
 
     public $incrementing = false;
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
 
     protected $fillable = [
         'id',

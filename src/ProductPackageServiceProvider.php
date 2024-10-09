@@ -4,81 +4,86 @@ namespace RedJasmine\Product;
 
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Product\Products\ProductService;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
+use RedJasmine\Product\Database\Seeders\ProductPackageSeeder;
 
-class ProductPackageServiceProvider extends ServiceProvider
+class ProductPackageServiceProvider extends PackageServiceProvider
 {
-    /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
-     */
-    public function boot() : void
+    public static string $name = 'red-jasmine-product';
+
+    public static string $viewNamespace = 'red-jasmine-product';
+
+
+    public function configurePackage(Package $package) : void
     {
 
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'red-jasmine.product');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $package->name(static::$name)
+                ->hasCommands($this->getCommands())
+
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
+                        ->publishMigrations()
+                        ->askToRunMigrations()
+                        ->endWith(function (InstallCommand $command){
+
+                            if($command->confirm('Seed demo data')){
+
+                                $command->call('db:seed', ['--class' => ProductPackageSeeder::class ]);
+
+                            }
+
+                        })
+                        ->askToStarRepoOnGitHub('red-jasmine/product');
+                });
+
+        $configFileName = $package->shortName();
 
 
+        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
+            $package->hasConfigFile();
+        }
 
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        if (file_exists($package->basePath('/../database/migrations'))) {
+            $package->hasMigrations($this->getMigrations());
+        }
 
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
+        if (file_exists($package->basePath('/../resources/lang'))) {
+            $package->hasTranslations();
+        }
+
+        if (file_exists($package->basePath('/../resources/views'))) {
+            $package->hasViews(static::$viewNamespace);
         }
     }
 
-    /**
-     * Register any package services.
-     *
-     * @return void
-     */
-    public function register() : void
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../config/product.php', 'red-jasmine.product');
 
+    public function getCommands() : array
+    {
+        return [];
 
     }
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
+    public function getMigrations() : array
     {
-        return [ ];
+        return [
+           'create_brands_table',
+           'create_product_categories_table',
+           'create_product_channel_stocks_table',
+           'create_product_infos_table',
+           'create_product_properties_table',
+           'create_product_property_groups_table',
+           'create_product_property_values_table',
+           'create_product_seller_categories_table',
+           'create_product_series_products_table',
+           'create_product_series_table',
+           'create_product_skus_table',
+           'create_product_stock_logs_table',
+           'create_products_table',
+        ];
+
     }
 
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole() : void
-    {
-        // Publishing the configuration file.
-        $this->publishes([
-                             __DIR__ . '/../config/product.php' => config_path('red-jasmine/product.php'),
-                         ], 'red-jasmine.product.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/red-jasmine'),
-        ], 'product.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/red-jasmine'),
-        ], 'product.views');*/
-
-        // Publishing the translation files.
-        $this->publishes([
-                             __DIR__ . '/../lang' => $this->app->langPath('vendor/red-jasmine/product'),
-                         ], 'red-jasmine.product.lang');
-
-        // Registering package commands.
-        // $this->commands([]);
-    }
 }

@@ -27,12 +27,12 @@ enum ProductStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::ON_SALE->value     => __('red-jasmine.product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value    => __('red-jasmine.product::product.enums.status.sold_out'),
-            self::OFF_SHELF->value   => __('red-jasmine.product::product.enums.status.off_shelf'),
-            self::PRE_SALE->value    => __('red-jasmine.product::product.enums.status.pre_sale'),
-            self::FORBID_SALE->value => __('red-jasmine.product::product.enums.status.forbid_sale'),
-            self::DRAFT->value       => __('red-jasmine.product::product.enums.status.draft'),
+            self::ON_SALE->value     => __('red-jasmine-product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value    => __('red-jasmine-product::product.enums.status.sold_out'),
+            self::OFF_SHELF->value   => __('red-jasmine-product::product.enums.status.off_shelf'),
+            self::PRE_SALE->value    => __('red-jasmine-product::product.enums.status.pre_sale'),
+            self::FORBID_SALE->value => __('red-jasmine-product::product.enums.status.forbid_sale'),
+            self::DRAFT->value       => __('red-jasmine-product::product.enums.status.draft'),
         ];
 
     }
@@ -40,8 +40,8 @@ enum ProductStatusEnum: string
     public static function skusStatus() : array
     {
         return [
-            self::ON_SALE->value  => __('red-jasmine.product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value => __('red-jasmine.product::product.enums.status.sold_out'),
+            self::ON_SALE->value  => __('red-jasmine-product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value => __('red-jasmine-product::product.enums.status.sold_out'),
         ];
     }
 

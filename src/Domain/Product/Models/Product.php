@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Casts\PromiseServicesCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
@@ -46,7 +47,13 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     use HasSupplier;
 
     public $incrementing = false;
-
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
 
     public function casts() : array
     {

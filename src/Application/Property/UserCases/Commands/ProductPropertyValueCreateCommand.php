@@ -22,11 +22,11 @@ class ProductPropertyValueCreateCommand extends Data
     {
 
         return [
-            'pid'         => __('red-jasmine.product::product-property-value.fields.pid'),
-            'name'        => __('red-jasmine.product::product-property-value.fields.name'),
-            'description' => __('red-jasmine.product::product-property-value.fields.description'),
-            'sort'        => __('red-jasmine.product::product-property-value.fields.sort'),
-            'group_id'    => __('red-jasmine.product::product-property-value.fields.group_id'),
+            'pid'         => __('red-jasmine-product::product-property-value.fields.pid'),
+            'name'        => __('red-jasmine-product::product-property-value.fields.name'),
+            'description' => __('red-jasmine-product::product-property-value.fields.description'),
+            'sort'        => __('red-jasmine-product::product-property-value.fields.sort'),
+            'group_id'    => __('red-jasmine-product::product-property-value.fields.group_id'),
 
         ];
     }

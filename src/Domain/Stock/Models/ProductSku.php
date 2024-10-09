@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Domain\Stock\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -26,8 +27,14 @@ class ProductSku extends Model implements OperatorInterface
     use HasOperator;
 
     use HasOwner;
+    /**
+     * @return string
+     */
 
-
+    public function getTable()
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
     protected $casts = [
         'status' => ProductStatusEnum::class,
     ];

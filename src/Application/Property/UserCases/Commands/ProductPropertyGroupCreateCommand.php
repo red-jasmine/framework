@@ -20,10 +20,10 @@ class ProductPropertyGroupCreateCommand extends Data
     {
 
         return [
-            'name'        => __('red-jasmine.product::product-property-group.fields.name'),
-            'description' => __('red-jasmine.product::product-property-group.fields.description'),
-            'sort'        => __('red-jasmine.product::product-property-group.fields.sort'),
-            'status'      => __('red-jasmine.product::product-property-group.fields.status'),
+            'name'        => __('red-jasmine-product::product-property-group.fields.name'),
+            'description' => __('red-jasmine-product::product-property-group.fields.description'),
+            'sort'        => __('red-jasmine-product::product-property-group.fields.sort'),
+            'status'      => __('red-jasmine-product::product-property-group.fields.status'),
         ];
     }
 

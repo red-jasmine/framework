@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Stock\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -23,6 +24,14 @@ class ProductStockLog extends Model implements OperatorInterface
     use HasOwner;
 
     use HasOperator;
+
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
 
     protected $casts = [
         'action_type' => ProductStockActionTypeEnum::class,

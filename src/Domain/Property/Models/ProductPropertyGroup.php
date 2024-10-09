@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Domain\Property\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -24,6 +25,13 @@ class ProductPropertyGroup extends Model implements OperatorInterface
 
     use SoftDeletes;
 
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
 
     protected $fillable = [
         'id',

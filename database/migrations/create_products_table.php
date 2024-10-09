@@ -12,7 +12,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') .'products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             // 卖家信息
@@ -104,6 +104,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'products');
     }
 };
