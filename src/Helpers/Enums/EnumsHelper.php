@@ -61,7 +61,7 @@ trait EnumsHelper
         $count      = count(self::values());
         $colors     = [];
         foreach (self::values() as $index => $value) {
-            $colors[$value] = $baseColors[$index % $count];
+            $colors[$value] = $baseColors[($index % count($baseColors))];
         }
 
         return $colors;
@@ -74,11 +74,11 @@ trait EnumsHelper
     {
         return [
             'success',
-            'primary',
             'danger',
-            'info',
+            'primary',
             'warning',
-
+            'info',
+            'gray',
         ];
     }
 
