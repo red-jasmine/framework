@@ -50,6 +50,7 @@ class BrandResource extends Resource
         return $form
             ->schema([
                          SelectTree::make('parent_id')
+                                    ->label(__('red-jasmine-product::brand.fields.parent.name'))
                                    ->relationship(
                                        relationship:    'parent',
                                        titleAttribute:  'name',
@@ -94,7 +95,7 @@ class BrandResource extends Resource
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('id'),
-                          Tables\Columns\TextColumn::make('parent.name'),
+                          Tables\Columns\TextColumn::make('parent.name')->label(__('red-jasmine-product::brand.fields.parent.name')),
                           Tables\Columns\TextColumn::make('name')
                                                    ->label(__('red-jasmine-product::brand.fields.name'))
                                                    ->searchable(),
