@@ -24,19 +24,19 @@ enum ProductTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::GOODS->value   => '普通',
-            self::VIRTUAL->value => '虚拟',
-            self::TICKET->value  => '票据',
-            self::SERVICE->value => '服务',
+            self::GOODS->value   => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
+            self::VIRTUAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::TICKET->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.ticket'),
+            self::SERVICE->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
         ];
     }
 
     public static function icons() : array
     {
         return [
-            self::GOODS->value  => 'heroicon-o-briefcase',
-            self::VIRTUAL->value    => 'heroicon-o-chart-bar-square',
-            self::TICKET->value      => 'heroicon-o-ticket',
+            self::GOODS->value   => 'heroicon-o-briefcase',
+            self::VIRTUAL->value => 'heroicon-o-chart-bar-square',
+            self::TICKET->value  => 'heroicon-o-ticket',
             self::SERVICE->value => 'heroicon-o-shield-check',
 
         ];

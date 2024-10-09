@@ -19,19 +19,18 @@ enum ShippingTypeEnum: string
 
     case DELIVERY = 'delivery'; // 配送
 
-    case NIL = 'nil'; // 无需发货
+    case NONE = 'none'; // 没有的
 
 
     public static function labels() : array
     {
         return [
-            self::EXPRESS->value  => '快递',
-            self::CDK->value      => '卡密',
-            self::DUMMY->value    => '虚拟',
-            self::DELIVERY->value => '配送',
-            self::NIL->value      => '免发货',
+            self::EXPRESS->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.express'),
+            self::CDK->value      => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cdk'),
+            self::DUMMY->value    => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
+            self::DELIVERY->value => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
+            self::NONE->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
         ];
-
     }
 
     public static function icons() : array
@@ -41,7 +40,7 @@ enum ShippingTypeEnum: string
             self::DUMMY->value    => 'heroicon-o-bolt',
             self::CDK->value      => 'heroicon-o-key',
             self::DELIVERY->value => 'heroicon-o-home-modern',
-            self::NIL->value      => 'heroicon-o-cloud',
+            self::NONE->value     => 'heroicon-o-cloud',
 
         ];
     }
