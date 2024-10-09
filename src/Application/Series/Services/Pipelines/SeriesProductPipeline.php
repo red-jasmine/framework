@@ -15,13 +15,14 @@ class SeriesProductPipeline
 {
     public function __construct(
         protected ProductQueryService $queryService
-    ) {
+    )
+    {
     }
 
 
     /**
-     * @param  ProductSeriesCreateCommand  $command
-     * @param  Closure  $next
+     * @param ProductSeriesCreateCommand $command
+     * @param Closure $next
      *
      * @return mixed
      * @throws AbstractException
@@ -37,8 +38,10 @@ class SeriesProductPipeline
 
         //验证商品是否存在
         try {
-            foreach ($command->products as $product) {
-                $this->queryService->findById(FindQuery::make($product->productId));
+            if ($command->products) {
+                foreach ($command->products as $product) {
+                    $this->queryService->findById(FindQuery::make($product->productId));
+                }
             }
         } catch (ModelNotFoundException $modelNotFoundException) {
             throw new ProductException('产品不存在');

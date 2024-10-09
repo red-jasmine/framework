@@ -32,17 +32,21 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
             $model->remarks = $command->remarks;
             $model->name    = $command->name;
 
-            // 验证重复
-            if ($command->products->count() !== $command->products->pluck('productId')->unique()->count()) {
-                throw new ProductException('商品重复');
+            if ($command->products) {
+                $products = collect($command->products);
+                // 验证重复
+                if ($products->count() !== $products->pluck('productId')->unique()->count()) {
+                    throw new ProductException('商品重复');
+                }
+
+                $products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
+                    $productSeriesProduct             = new ProductSeriesProduct();
+                    $productSeriesProduct->product_id = $productSeriesProductData->productId;
+                    $productSeriesProduct->name       = $productSeriesProductData->name;
+                    $model->products->push($productSeriesProduct);
+                });
             }
 
-            $command->products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
-                $productSeriesProduct             = new ProductSeriesProduct();
-                $productSeriesProduct->product_id = $productSeriesProductData->productId;
-                $productSeriesProduct->name       = $productSeriesProductData->name;
-                $model->products->push($productSeriesProduct);
-            });
 
             $this->getService()->getRepository()->store($model);
 

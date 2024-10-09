@@ -32,13 +32,17 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
             $model->remarks = $command->remarks;
             $model->name    = $command->name;
 
-            $model->products = Collection::make([]);
-            $command->products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
-                $productSeriesProduct             = new ProductSeriesProduct();
-                $productSeriesProduct->product_id = $productSeriesProductData->productId;
-                $productSeriesProduct->name       = $productSeriesProductData->name;
-                $model->products->push($productSeriesProduct);
-            });
+            $model->products = Collection::make();
+            if ($command->products) {
+                $products = Collection::make($command->products);
+                $products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
+                    $productSeriesProduct             = new ProductSeriesProduct();
+                    $productSeriesProduct->product_id = $productSeriesProductData->productId;
+                    $productSeriesProduct->name       = $productSeriesProductData->name;
+                    $model->products->push($productSeriesProduct);
+                });
+            }
+
             $this->getService()->getRepository()->update($model);
 
             $this->commitDatabaseTransaction();
