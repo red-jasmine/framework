@@ -55,13 +55,13 @@ class ProductStockResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine.product::product-stock.labels.product-stock');
+        return __('red-jasmine-product::product-stock.labels.product-stock');
     }
 
 
     public static function getNavigationGroup() : ?string
     {
-        return __('red-jasmine.product::product-stock.labels.product-stock');
+        return __('red-jasmine-product::product-stock.labels.product-stock');
     }
 
     public static function table(Table $table) : Table
@@ -72,22 +72,22 @@ class ProductStockResource extends Resource
             ->striped()
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine.product::product-stock.fields.id'))
+                                                   ->label(__('red-jasmine-product::product-stock.fields.id'))
                                                    ->copyable()
                                                    ->sortable(),
-                          Tables\Columns\TextColumn::make('title')->label(__('red-jasmine.product::product.fields.title')),
-                          Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine.product::product.fields.image'))->size(40),
+                          Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-product::product.fields.title')),
+                          Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine-product::product.fields.image'))->size(40),
                           Tables\Columns\TextColumn::make('owner_type')
-                                                   ->label(__('red-jasmine.product::product-stock.fields.owner_type'))
+                                                   ->label(__('red-jasmine-product::product-stock.fields.owner_type'))
                           ,
-                          Tables\Columns\TextColumn::make('owner_id')->label(__('red-jasmine.product::product-stock.fields.owner_id')),
-                          Tables\Columns\TextColumn::make('title')->label(__('red-jasmine.product::product.fields.title')),
-                          Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine.product::product.fields.image'))->size(40),
-                          Tables\Columns\TextColumn::make('outer_id')->label(__('red-jasmine.product::product.fields.outer_id')),
+                          Tables\Columns\TextColumn::make('owner_id')->label(__('red-jasmine-product::product-stock.fields.owner_id')),
+                          Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-product::product.fields.title')),
+                          Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine-product::product.fields.image'))->size(40),
+                          Tables\Columns\TextColumn::make('outer_id')->label(__('red-jasmine-product::product.fields.outer_id')),
 
-                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine.product::product.fields.status'))->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
-                          Tables\Columns\TextColumn::make('stock')->label(__('red-jasmine.product::product-stock.fields.stock')),
-                          Tables\Columns\TextColumn::make('lock_stock')->label(__('red-jasmine.product::product-stock.fields.lock_stock')),
+                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product.fields.status'))->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                          Tables\Columns\TextColumn::make('stock')->label(__('red-jasmine-product::product-stock.fields.stock')),
+                          Tables\Columns\TextColumn::make('lock_stock')->label(__('red-jasmine-product::product-stock.fields.lock_stock')),
 
                       ])
             ->filters([
@@ -107,7 +107,7 @@ class ProductStockResource extends Resource
     protected static function editStockAction() : Action
     {
         return Action::make('edit')
-                     ->label(__('red-jasmine.product::product-stock.labels.edit'))
+                     ->label(__('red-jasmine-product::product-stock.labels.edit'))
                      ->modalWidth('7xl')
                      ->slideOver()
                      ->modalAutofocus(false)
@@ -115,28 +115,28 @@ class ProductStockResource extends Resource
                      ->form([
 
                                 Forms\Components\TextInput::make('id')
-                                                          ->label(__('red-jasmine.product::product.fields.id'))
+                                                          ->label(__('red-jasmine-product::product.fields.id'))
                                                           ->readOnly(),
                                 Forms\Components\TextInput::make('title')
-                                                          ->label(__('red-jasmine.product::product.fields.title'))
+                                                          ->label(__('red-jasmine-product::product.fields.title'))
                                                           ->readOnly(),
                                 Forms\Components\TextInput::make('outer_id')
-                                                          ->label(__('red-jasmine.product::product.fields.outer_id'))
+                                                          ->label(__('red-jasmine-product::product.fields.outer_id'))
                                                           ->readOnly(),
                                 Forms\Components\FileUpload::make('image')->image()->disabled()
-                                                           ->label(__('red-jasmine.product::product.fields.image'))
+                                                           ->label(__('red-jasmine-product::product.fields.image'))
                                 ,
                                 TableRepeater::make('skus')
                                              ->headers([
-                                                           Header::make('SKU ID')->label(__('red-jasmine.product::product.fields.sku_id')),
-                                                           Header::make('properties_name')->label(__('red-jasmine.product::product.fields.properties_name')),
-                                                           Header::make('barcode')->label(__('red-jasmine.product::product.fields.barcode')),
-                                                           Header::make('outer_id')->label(__('red-jasmine.product::product.fields.outer_id')),
-                                                           Header::make('status')->label(__('red-jasmine.product::product.fields.status')),
-                                                           Header::make('stock')->label(__('red-jasmine.product::product.fields.stock')),
-                                                           Header::make('lock_stock')->label(__('red-jasmine.product::product.fields.lock_stock')),
-                                                           Header::make('action_type')->label(__('red-jasmine.product::product-stock-log.fields.action_type')),
-                                                           Header::make('action_stock')->label(__('red-jasmine.product::product-stock-log.fields.action_stock')),
+                                                           Header::make('SKU ID')->label(__('red-jasmine-product::product.fields.sku_id')),
+                                                           Header::make('properties_name')->label(__('red-jasmine-product::product.fields.properties_name')),
+                                                           Header::make('barcode')->label(__('red-jasmine-product::product.fields.barcode')),
+                                                           Header::make('outer_id')->label(__('red-jasmine-product::product.fields.outer_id')),
+                                                           Header::make('status')->label(__('red-jasmine-product::product.fields.status')),
+                                                           Header::make('stock')->label(__('red-jasmine-product::product.fields.stock')),
+                                                           Header::make('lock_stock')->label(__('red-jasmine-product::product.fields.lock_stock')),
+                                                           Header::make('action_type')->label(__('red-jasmine-product::product-stock-log.fields.action_type')),
+                                                           Header::make('action_stock')->label(__('red-jasmine-product::product-stock-log.fields.action_stock')),
 
                                                        ])
                                              ->schema([

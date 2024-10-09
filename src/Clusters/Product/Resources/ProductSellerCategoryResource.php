@@ -45,7 +45,7 @@ class ProductSellerCategoryResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine.product::product-seller-category.labels.product-seller-category');
+        return __('red-jasmine-product::product-seller-category.labels.product-seller-category');
     }
 
     public static function form(Form $form) : Form
@@ -53,18 +53,18 @@ class ProductSellerCategoryResource extends Resource
         return $form
             ->schema([
                          Forms\Components\TextInput::make('owner_type')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.owner_type'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_type'))
                                                    ->required()
                                                    ->maxLength(255)->live()->readOnlyOn('edit'),
                          Forms\Components\TextInput::make('owner_id')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.owner_id'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_id'))
                                                    ->required()
                                                    ->numeric()
                                                    ->live()
                                                    ->readOnlyOn('edit'),
 
                          SelectTree::make('parent_id')
-                                   ->label(__('red-jasmine.product::product-seller-category.fields.parent_id'))
+                                   ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
                                    ->relationship(relationship: 'parent',
                                        titleAttribute:          'name',
                                        parentAttribute:         'parent_id',
@@ -81,32 +81,32 @@ class ProductSellerCategoryResource extends Resource
                                    ->enableBranchNode()
                                    ->parentNullValue(0),
                          Forms\Components\TextInput::make('name')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.name'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.name'))
                                                    ->required()
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('description')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.description'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.description'))
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('group_name')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.group_name'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.group_name'))
                                                    ->maxLength(255),
                          Forms\Components\FileUpload::make('image')
-                                                    ->label(__('red-jasmine.product::product-seller-category.fields.image'))
+                                                    ->label(__('red-jasmine-product::product-seller-category.fields.image'))
                                                     ->image(),
                          Forms\Components\TextInput::make('sort')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.sort'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.sort'))
                                                    ->required()
                                                    ->numeric()
                                                    ->default(0),
                          Forms\Components\Radio::make('is_leaf')
-                                               ->label(__('red-jasmine.product::product-seller-category.fields.is_leaf'))
+                                               ->label(__('red-jasmine-product::product-seller-category.fields.is_leaf'))
                                                ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
                          Forms\Components\Radio::make('is_show')
-                                               ->label(__('red-jasmine.product::product-seller-category.fields.is_show'))
+                                               ->label(__('red-jasmine-product::product-seller-category.fields.is_show'))
                                                ->default(true)->boolean()->inline()->inlineLabel(false)->required(),
 
                          Forms\Components\Radio::make('status')
-                                               ->label(__('red-jasmine.product::product-seller-category.fields.status'))
+                                               ->label(__('red-jasmine-product::product-seller-category.fields.status'))
                                                ->required()
                                                ->default(CategoryStatusEnum::ENABLE)
                                                ->options(CategoryStatusEnum::options())
@@ -119,40 +119,40 @@ class ProductSellerCategoryResource extends Resource
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.id'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.id'))
                                                    ->label('ID')
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('owner_type')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.owner_type'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_type'))
                                                    ->searchable(),
                           Tables\Columns\TextColumn::make('owner_id')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.owner_id'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_id'))
                                                    ->numeric()
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('parent.name')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.parent_id'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('name')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.name'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.name'))
                                                    ->searchable(),
 
                           Tables\Columns\TextColumn::make('group_name')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.group_name'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.group_name'))
                                                    ->searchable(),
                           Tables\Columns\ImageColumn::make('image')
-                                                    ->label(__('red-jasmine.product::product-seller-category.fields.image'))
+                                                    ->label(__('red-jasmine-product::product-seller-category.fields.image'))
                           ,
                           Tables\Columns\TextColumn::make('sort')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.sort'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.sort'))
                                                    ->sortable(),
                           Tables\Columns\IconColumn::make('is_leaf')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.is_leaf'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.is_leaf'))
                                                    ->boolean(),
                           Tables\Columns\IconColumn::make('is_allow_alias')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.is_allow_alias'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.is_allow_alias'))
                                                    ->boolean(),
                           Tables\Columns\TextColumn::make('status')
-                                                   ->label(__('red-jasmine.product::product-seller-category.fields.status'))
+                                                   ->label(__('red-jasmine-product::product-seller-category.fields.status'))
                                                    ->enum(),
 
                       ])

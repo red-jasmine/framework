@@ -39,12 +39,12 @@ class ProductPropertyValueResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine.product::product-property-value.labels.product-property-value');
+        return __('red-jasmine-product::product-property-value.labels.product-property-value');
     }
 
     public static function getNavigationGroup() : ?string
     {
-        return __('red-jasmine.product::product-property.labels.product-property');
+        return __('red-jasmine-product::product-property.labels.product-property');
     }
 
     public static function form(Form $form) : Form
@@ -52,7 +52,7 @@ class ProductPropertyValueResource extends Resource
         return $form
             ->schema([
                          Forms\Components\Select::make('pid')
-                             ->label(__('red-jasmine.product::product-property-value.fields.pid'))
+                             ->label(__('red-jasmine-product::product-property-value.fields.pid'))
                                                 ->required()
                                                 ->relationship('property', 'name')
                                                 ->searchable([ 'name' ])
@@ -60,30 +60,30 @@ class ProductPropertyValueResource extends Resource
                                                 ->nullable(),
 
                          Forms\Components\Select::make('group_id')
-                             ->label(__('red-jasmine.product::product-property-value.fields.group_id'))
+                             ->label(__('red-jasmine-product::product-property-value.fields.group_id'))
 
                              ->relationship('group', 'name')
                                                 ->searchable([ 'name' ])
                                                 ->preload()
                                                 ->nullable(),
                          Forms\Components\TextInput::make('name')
-                             ->label(__('red-jasmine.product::product-property-value.fields.name'))
+                             ->label(__('red-jasmine-product::product-property-value.fields.name'))
                                                    ->required()
                                                    ->maxLength(64),
                          Forms\Components\TextInput::make('description')
-                             ->label(__('red-jasmine.product::product-property-value.fields.description'))->maxLength(255),
+                             ->label(__('red-jasmine-product::product-property-value.fields.description'))->maxLength(255),
                          Forms\Components\TextInput::make('sort')
-                             ->label(__('red-jasmine.product::product-property-value.fields.sort'))
+                             ->label(__('red-jasmine-product::product-property-value.fields.sort'))
                              ->required()->integer()->default(0),
                          Forms\Components\Radio::make('status')
-                             ->label(__('red-jasmine.product::product-property-value.fields.status'))
+                             ->label(__('red-jasmine-product::product-property-value.fields.status'))
                                                ->required()
                                                ->default(PropertyStatusEnum::ENABLE)->options(PropertyStatusEnum::options())
                                                ->inline()->inlineLabel(false)->required(),
-                         Forms\Components\TextInput::make('creator_type')->label(__('red-jasmine.product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('creator_id')->label(__('red-jasmine.product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_type')->label(__('red-jasmine.product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_id')->label(__('red-jasmine.product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
+                         Forms\Components\TextInput::make('creator_type')->label(__('red-jasmine-product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
+                         Forms\Components\TextInput::make('creator_id')->label(__('red-jasmine-product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
+                         Forms\Components\TextInput::make('updater_type')->label(__('red-jasmine-product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
+                         Forms\Components\TextInput::make('updater_id')->label(__('red-jasmine-product::product-property-value.fields.status'))->readOnly()->visibleOn('view'),
                      ]);
     }
 
@@ -93,25 +93,25 @@ class ProductPropertyValueResource extends Resource
             ->columns([
                           Tables\Columns\TextColumn::make('id')
                                                    ->label('ID')
-                              ->label(__('red-jasmine.product::product-property-value.fields.id'))
+                              ->label(__('red-jasmine-product::product-property-value.fields.id'))
                                                    ->copyable()
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('property.name')
-                              ->label(__('red-jasmine.product::product-property-value.fields.property.name')),
+                              ->label(__('red-jasmine-product::product-property-value.fields.property.name')),
 
                           Tables\Columns\TextColumn::make('name')
-                              ->label(__('red-jasmine.product::product-property-value.fields.name'))
+                              ->label(__('red-jasmine-product::product-property-value.fields.name'))
                                                    ->copyable(),
-                          Tables\Columns\TextColumn::make('group.name')->label(__('red-jasmine.product::product-property-value.fields.group.name')),
-                          Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine.product::product-property-value.fields.sort'))->sortable(),
-                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine.product::product-property-value.fields.status'))->enum(),
-                          Tables\Columns\TextColumn::make('creator_type')->label(__('red-jasmine.product::product-property-value.fields.creator_type'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('creator_id')->label(__('red-jasmine.product::product-property-value.fields.creator_id'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_type')->label(__('red-jasmine.product::product-property-value.fields.updater_type'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_id')->label(__('red-jasmine.product::product-property-value.fields.updater_id'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('created_at')->label(__('red-jasmine.product::product-property-value.fields.created_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updated_at')->label(__('red-jasmine.product::product-property-value.fields.updated_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('deleted_at')->label(__('red-jasmine.product::product-property-value.fields.deleted_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('group.name')->label(__('red-jasmine-product::product-property-value.fields.group.name')),
+                          Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property-value.fields.sort'))->sortable(),
+                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-value.fields.status'))->enum(),
+                          Tables\Columns\TextColumn::make('creator_type')->label(__('red-jasmine-product::product-property-value.fields.creator_type'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('creator_id')->label(__('red-jasmine-product::product-property-value.fields.creator_id'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('updater_type')->label(__('red-jasmine-product::product-property-value.fields.updater_type'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('updater_id')->label(__('red-jasmine-product::product-property-value.fields.updater_id'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('created_at')->label(__('red-jasmine-product::product-property-value.fields.created_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('updated_at')->label(__('red-jasmine-product::product-property-value.fields.updated_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('deleted_at')->label(__('red-jasmine-product::product-property-value.fields.deleted_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                       ])
             ->filters([
                           Tables\Filters\TrashedFilter::make(),

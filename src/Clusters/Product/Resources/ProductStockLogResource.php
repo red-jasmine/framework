@@ -27,12 +27,12 @@ class ProductStockLogResource extends Resource
 
     public static function getNavigationGroup() : ?string
     {
-        return __('red-jasmine.product::product-stock.labels.product-stock');
+        return __('red-jasmine-product::product-stock.labels.product-stock');
     }
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine.product::product-stock-log.labels.product-stock-log');
+        return __('red-jasmine-product::product-stock-log.labels.product-stock-log');
     }
 
 
@@ -44,54 +44,54 @@ class ProductStockLogResource extends Resource
             ->paginated([10, 25, 50, 100])
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.id'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.id'))
                                                      ->sortable(),
                 Tables\Columns\TextColumn::make('owner_type')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.owner_type')),
+                    ->label(__('red-jasmine-product::product-stock-log.fields.owner_type')),
                 Tables\Columns\TextColumn::make('owner_id')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.owner_id'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.owner_id'))
                 ,
                 Tables\Columns\TextColumn::make('product.title')
-                    ->label(__('red-jasmine.product::product.fields.title')),
+                    ->label(__('red-jasmine-product::product.fields.title')),
                 Tables\Columns\TextColumn::make('sku.properties_name')
-                ->label(__('red-jasmine.product::product.fields.properties_name')),
-                Tables\Columns\TextColumn::make('action_type')->label(__('red-jasmine.product::product-stock-log.fields.action_type'))->enum(),
+                ->label(__('red-jasmine-product::product.fields.properties_name')),
+                Tables\Columns\TextColumn::make('action_type')->label(__('red-jasmine-product::product-stock-log.fields.action_type'))->enum(),
                 Tables\Columns\TextColumn::make('action_stock')
-                                         ->label(__('red-jasmine.product::product-stock-log.fields.action_stock'))
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.action_stock'))
                                          ->numeric()
                 ,
 
                 Tables\Columns\TextColumn::make('change_type')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.change_type'))->enum()
+                    ->label(__('red-jasmine-product::product-stock-log.fields.change_type'))->enum()
                    ,
                 Tables\Columns\TextColumn::make('change_detail')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.change_detail'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.change_detail'))
                     ,
 
                 Tables\Columns\TextColumn::make('lock_stock')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.lock_stock'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.lock_stock'))
                     ->numeric()
                    ,
                 Tables\Columns\TextColumn::make('channel_type')->badge()
 
-                    ->label(__('red-jasmine.product::product-stock-log.fields.channel_type'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.channel_type'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('channel_id')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.channel_id'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.channel_id'))
                     ->numeric()
                     ,
                 Tables\Columns\TextColumn::make('creator_type')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.creator_type'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.creator_type'))
                    ,
                 Tables\Columns\TextColumn::make('creator_id')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.creator_id'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.creator_id'))
                     ->numeric(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.created_at'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.created_at'))
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('red-jasmine.product::product-stock-log.fields.updated_at'))
+                    ->label(__('red-jasmine-product::product-stock-log.fields.updated_at'))
                     ->dateTime()
 
                     ->toggleable(isToggledHiddenByDefault: true),

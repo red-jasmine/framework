@@ -13,13 +13,13 @@ class Product extends Cluster
     public static function getNavigationLabel() : string
     {
 
-        return __('filament-product::product.label');
+        return __('red-jasmine-filament-product::product.label');
     }
 
 
     public static function getClusterBreadcrumb() : ?string
     {
-        return __('filament-product::product.label');
+        return __('red-jasmine-filament-product::product.label');
     }
 
 }

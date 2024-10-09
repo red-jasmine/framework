@@ -18,9 +18,9 @@ use RedJasmine\FilamentProduct\Testing\TestsFilamentProduct;
 
 class FilamentProductServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'filament-product';
+    public static string $name = 'red-jasmine-filament-product';
 
-    public static string $viewNamespace = 'filament-product';
+    public static string $viewNamespace = 'red-jasmine-filament-product';
 
     public function configurePackage(Package $package): void
     {
