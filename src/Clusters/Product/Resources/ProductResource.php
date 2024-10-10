@@ -714,6 +714,15 @@ class ProductResource extends Resource
                                                      ->label(__('red-jasmine-product::product.fields.status'))
                                                      ->options(ProductStatusEnum::options()),
 
+                          Tables\Filters\SelectFilter::make('product_type')
+                                                     ->multiple()
+                                                     ->label(__('red-jasmine-product::product.fields.product_type'))
+                                                     ->options(ProductTypeEnum::options()),
+
+                          Tables\Filters\SelectFilter::make('shipping_type')
+                                                     ->multiple()
+                                                     ->label(__('red-jasmine-product::product.fields.shipping_type'))
+                                                     ->options(ShippingTypeEnum::options()),
 
                           Tables\Filters\TrashedFilter::make(),
                       ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
@@ -722,6 +731,7 @@ class ProductResource extends Resource
             ->actions([
                           Tables\Actions\ViewAction::make(),
                           Tables\Actions\EditAction::make(),
+                          Tables\Actions\DeleteAction::make(),
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
