@@ -175,6 +175,23 @@ class ProductResource extends Resource
                       ->parentNullValue(0)
                       ->default(0),
 
+            SelectTree::make('seller_extend_categories')
+
+                      ->label(__('red-jasmine-product::product.fields.seller_category_id'))
+                      ->relationship(relationship: 'sellerExtendCategories',
+                          titleAttribute:          'name',
+                          parentAttribute:         'parent_id',
+                          modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
+                                                                                                ->where('owner_id', $get('owner_id')),
+                          modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
+                                                                                                     ->where('owner_id', $get('owner_id'))
+                          ,
+                      )
+
+//                      ->enableBranchNode()
+                      ->parentNullValue(0)
+                      ->default([]),
+
             Forms\Components\Fieldset::make('basicProps')
                                      ->label(__('red-jasmine-product::product.fields.basic_props'))
                                      ->columns(1)->inlineLabel()->schema([ static::basicProps()->hiddenLabel() ]),
@@ -732,6 +749,8 @@ class ProductResource extends Resource
                           Tables\Actions\ViewAction::make(),
                           Tables\Actions\EditAction::make(),
                           Tables\Actions\DeleteAction::make(),
+                          Tables\Actions\RestoreAction::make(),
+                          Tables\Actions\ForceDeleteAction::make(),
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
