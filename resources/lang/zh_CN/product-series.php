@@ -13,6 +13,12 @@ return [
         'creator_id'   => '创建者UID',
         'updater_type' => '更新者类型',
         'updater_id'   => '更新者UID',
+        'products'     => '商品集',
+        'product'      => [
+            'product_id' => '商品',
+            'name'       => '名称',
+        ],
+
     ],
     'options' => [
     ],
