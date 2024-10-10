@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyGroupCommandService;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyGroupQueryService;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupCreateCommand;
@@ -64,15 +64,9 @@ class ProductPropertyGroupResource extends Resource
                                                ->required()
                                                ->default(PropertyStatusEnum::ENABLE)->options(PropertyStatusEnum::options())
                                                ->inline()->inlineLabel(false)->required(),
-                         Forms\Components\TextInput::make('creator_type')->label(__('red-jasmine-product::product-property-group.fields.creator_type'))
-                                                   ->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('creator_id')->label(__('red-jasmine-product::product-property-group.fields.creator_id'))
-                                                   ->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_type')->label(__('red-jasmine-product::product-property-group.fields.updater_type'))
-                                                   ->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_id')->label(__('red-jasmine-product::product-property-group.fields.updater_id'))
-                                                   ->readOnly()->visibleOn('view'),
-                     ])->columns(1);
+
+                         ...static::operateFormSchemas()
+                                              ])->columns(1);
     }
 
     public static function table(Table $table) : Table
@@ -90,21 +84,9 @@ class ProductPropertyGroupResource extends Resource
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
                                                    ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
-                          Tables\Columns\TextColumn::make('creator_type')->label(__('red-jasmine-product::product-property-group.fields.creator_type'))
-                                                   ->searchable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('creator_id')->label(__('red-jasmine-product::product-property-group.fields.creator_id'))
-                                                   ->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_type')->label(__('red-jasmine-product::product-property-group.fields.updater_type'))
-                                                   ->searchable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_id')->label(__('red-jasmine-product::product-property-group.fields.updater_id'))
-                                                   ->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('created_at')->label(__('red-jasmine-product::product-property-group.fields.created_at'))
-                                                   ->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updated_at')->label(__('red-jasmine-product::product-property-group.fields.updated_at'))
-                                                   ->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('deleted_at')->label(__('red-jasmine-product::product-property-group.fields.deleted_at'))
-                                                   ->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                      ])
+
+                          ...static::operateTableColumns()
+                                               ])
             ->filters([
                           Tables\Filters\TrashedFilter::make(),
                       ])

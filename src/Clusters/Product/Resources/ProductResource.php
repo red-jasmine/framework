@@ -15,9 +15,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ListProducts;
@@ -34,6 +35,7 @@ use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Product\Domain\Property\Models\ProductProperty;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Throwable;
 
 class ProductResource extends Resource
@@ -57,6 +59,25 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    protected static bool $onlyOwner = true;
+
+
+    public static function callFindQuery(FindQuery $findQuery) : FindQuery
+    {
+        $findQuery->include = [ 'skus', 'info' ];
+        return $findQuery;
+    }
+
+
+    public static function callResolveRecord(Model $model) : Model
+    {
+
+        foreach ($model->info->getAttributes() as $key => $value) {
+            $model->setAttribute($key, $model->info->{$key});
+        }
+        $model->setAttribute('skus', $model->skus->toArray());
+        return $model;
+    }
 
     public static function getModelLabel() : string
     {
@@ -89,16 +110,7 @@ class ProductResource extends Resource
     public static function basicInfoFields() : array
     {
         return [
-            Forms\Components\TextInput::make('owner_type')
-                                      ->label(__('red-jasmine-product::product.fields.owner_type'))
-                                      ->required()
-                                      ->live()
-                                      ->maxLength(255),
-            Forms\Components\TextInput::make('owner_id')
-                                      ->label(__('red-jasmine-product::product.fields.owner_id'))
-                                      ->required()
-                                      ->live()
-                                      ->numeric(),
+            ...static::ownerFormSchemas(),
             Forms\Components\TextInput::make('title')
                                       ->label(__('red-jasmine-product::product.fields.title'))
                                       ->required()
@@ -125,8 +137,6 @@ class ProductResource extends Resource
                                           ->inline()
                                           ->default(ProductStatusEnum::ON_SALE)
                                           ->useEnum(ProductStatusEnum::class),
-
-
 
 
         ];
@@ -589,6 +599,8 @@ class ProductResource extends Resource
             Forms\Components\TextInput::make('remarks')
                                       ->label(__('red-jasmine-product::product.fields.remarks'))
                                       ->maxLength(255),
+
+            ...static::operateFormSchemas()
         ];
     }
 
@@ -600,13 +612,7 @@ class ProductResource extends Resource
                           Tables\Columns\TextColumn::make('id')
                                                    ->label(__('red-jasmine-product::product.fields.id'))
                                                    ->sortable(),
-                          Tables\Columns\TextColumn::make('owner_type')
-                                                   ->label(__('red-jasmine-product::product.fields.owner_type'))
-                          ,
-                          Tables\Columns\TextColumn::make('owner_id')
-                                                   ->label(__('red-jasmine-product::product.fields.owner_id'))
-                                                   ->numeric()
-                          ,
+                          ...static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('title')
                                                    ->label(__('red-jasmine-product::product.fields.title'))
                                                    ->searchable(),
@@ -625,10 +631,12 @@ class ProductResource extends Resource
 
                           Tables\Columns\TextColumn::make('barcode')
                                                    ->label(__('red-jasmine-product::product.fields.barcode'))
-                                                   ->searchable(),
+                                                   ->searchable()
+                                                   ->toggleable(true, true),
                           Tables\Columns\TextColumn::make('outer_id')
                                                    ->label(__('red-jasmine-product::product.fields.outer_id'))
-                                                   ->searchable(),
+                                                   ->searchable()
+                                                   ->toggleable(true, true),
                           Tables\Columns\TextColumn::make('is_multiple_spec')
                                                    ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
                                                    ->toggleable(isToggledHiddenByDefault: true),
@@ -650,10 +658,12 @@ class ProductResource extends Resource
 
                           Tables\Columns\TextColumn::make('cost_price')
                                                    ->label(__('red-jasmine-product::product.fields.cost_price'))
-                                                   ->numeric()->toggleable(isToggledHiddenByDefault: true),
+                                                   ->numeric()
+                                                   ->toggleable(true, true),
                           Tables\Columns\TextColumn::make('market_price')
                                                    ->label(__('red-jasmine-product::product.fields.market_price'))
-                                                   ->numeric()->toggleable(isToggledHiddenByDefault: true),
+                                                   ->numeric()
+                                                   ->toggleable(true, true),
                           Tables\Columns\TextColumn::make('stock')
                                                    ->label(__('red-jasmine-product::product.fields.stock'))
                                                    ->numeric()
@@ -685,9 +695,6 @@ class ProductResource extends Resource
                                                    ->numeric()
                                                    ->sortable(),
 
-                          Tables\Columns\TextColumn::make('created_at')
-                                                   ->label(__('red-jasmine-product::product.fields.created_at'))
-                                                   ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('modified_time')
                                                    ->label(__('red-jasmine-product::product.fields.modified_time'))
                                                    ->dateTime()->toggleable(isToggledHiddenByDefault: true),
@@ -695,6 +702,8 @@ class ProductResource extends Resource
                                                    ->label(__('red-jasmine-product::product.fields.version'))
                                                    ->dateTime()->toggleable(isToggledHiddenByDefault: true),
 
+
+                          ...static::operateTableColumns()
 
                       ])
             ->filters([

@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyValueCommandService;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyValueQueryService;
 use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueCreateCommand;
@@ -81,10 +81,7 @@ class ProductPropertyValueResource extends Resource
                                                        ->default(PropertyStatusEnum::ENABLE)
                                                        ->useEnum(PropertyStatusEnum::class),
 
-                         Forms\Components\TextInput::make('creator_type')->label(__('red-jasmine-product::product-property-value.fields.creator_type'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('creator_id')->label(__('red-jasmine-product::product-property-value.fields.creator_id'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_type')->label(__('red-jasmine-product::product-property-value.fields.updater_type'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_id')->label(__('red-jasmine-product::product-property-value.fields.updater_id'))->readOnly()->visibleOn('view'),
+                         ...static::operateFormSchemas()
                      ]);
     }
 
@@ -106,13 +103,8 @@ class ProductPropertyValueResource extends Resource
                           Tables\Columns\TextColumn::make('group.name')->label(__('red-jasmine-product::product-property-value.fields.group.name')),
                           Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property-value.fields.sort'))->sortable(),
                           Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-value.fields.status'))->enum(),
-                          Tables\Columns\TextColumn::make('creator_type')->label(__('red-jasmine-product::product-property-value.fields.creator_type'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('creator_id')->label(__('red-jasmine-product::product-property-value.fields.creator_id'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_type')->label(__('red-jasmine-product::product-property-value.fields.updater_type'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updater_id')->label(__('red-jasmine-product::product-property-value.fields.updater_id'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('created_at')->label(__('red-jasmine-product::product-property-value.fields.created_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updated_at')->label(__('red-jasmine-product::product-property-value.fields.updated_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('deleted_at')->label(__('red-jasmine-product::product-property-value.fields.deleted_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+
+                          ...static::operateTableColumns()
                       ])
             ->filters([
                           Tables\Filters\TrashedFilter::make(),

@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyR
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyResource;
 
 class EditProductProperty extends EditRecord

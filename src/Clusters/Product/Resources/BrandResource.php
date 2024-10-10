@@ -10,7 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\BrandResource\Pages\CreateBrand;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\BrandResource\Pages\EditBrand;
@@ -86,6 +86,8 @@ class BrandResource extends Resource
                          Forms\Components\Radio::make('status')->label(__('red-jasmine-product::brand.fields.status'))
                                                ->options(BrandStatusEnum::options())
                                                ->inline()->default(BrandStatusEnum::ENABLE->value),
+
+                         ...static::operateFormSchemas()
                      ])->columns(1);
     }
 
@@ -111,6 +113,7 @@ class BrandResource extends Resource
                                                    ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
 
 
+                          ...static::operateTableColumns()
                       ])
             ->filters([
                           //

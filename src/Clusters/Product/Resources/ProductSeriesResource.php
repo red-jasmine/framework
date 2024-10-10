@@ -3,16 +3,17 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
 use Filament\Forms;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourceOwnerHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\RelationManagers;
+use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Series\Services\ProductSeriesCommandService;
 use RedJasmine\Product\Application\Series\Services\ProductSeriesQueryService;
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
@@ -23,19 +24,33 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class ProductSeriesResource extends Resource
 {
+
+
+    use ResourcePageHelper;
+
     protected static ?string $model = ProductSeries::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $cluster = Product::class;
+    protected static ?string $cluster        = Product::class;
 
-    use ResourcePageHelper;
+    protected static ?int    $navigationSort = 5;
+
+    public static function getModelLabel() : string
+    {
+        return __('red-jasmine-product::product-series.labels.product-series');
+    }
+
+    protected static bool $onlyOwner = true;
+
 
     protected static ?string $commandService = ProductSeriesCommandService::class;
-    protected static ?string $queryService   = ProductSeriesQueryService::class;
-    protected static ?string $createCommand  = ProductSeriesCreateCommand::class;
-    protected static ?string $updateCommand  = ProductSeriesUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductSeriesDeleteCommand::class;
+
+    protected static ?string $queryService        = ProductSeriesQueryService::class;
+    protected static ?string $productQueryService = ProductQueryService::class;
+    protected static ?string $createCommand       = ProductSeriesCreateCommand::class;
+    protected static ?string $updateCommand       = ProductSeriesUpdateCommand::class;
+    protected static ?string $deleteCommand       = ProductSeriesDeleteCommand::class;
 
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
@@ -43,6 +58,7 @@ class ProductSeriesResource extends Resource
         $findQuery->include = [ 'products' ];
         return $findQuery;
     }
+
 
     public static function callResolveRecord(Model $model) : Model
     {
@@ -54,39 +70,52 @@ class ProductSeriesResource extends Resource
     {
         return $form
             ->schema([
-                         Forms\Components\TextInput::make('owner_type')
-                                                   ->required()
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('owner_id')
-                                                   ->required()
-                                                   ->numeric(),
+                         ...static::ownerFormSchemas(),
                          Forms\Components\TextInput::make('name')
+                                                   ->label(__('red-jasmine-product::product-series.fields.name'))
                                                    ->required()
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('remarks')
+                                                   ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                                    ->maxLength(255),
 
 
                          Forms\Components\Repeater::make('products')
-                                                  ->relationship()
-                                                  ->dehydrated(true)
-                                                // TODO
-                                                  ->saveRelationshipsUsing(function (){})
+                                                  ->label(__('red-jasmine-product::product-series.fields.products'))
                                                   ->schema(
                                                       [
-                                                          Forms\Components\Select::make('product_id')->relationship('product', 'title')->required(),
-                                                          Forms\Components\TextInput::make('name')->required()->maxLength(10)
+                                                          Forms\Components\Select::make('product_id')
+                                                                                 ->label(__('red-jasmine-product::product-series.fields.product.product_id'))
+                                                                                 ->searchable()
+                                                                                 ->inlineLabel()
+                                                                                 ->options(fn(Forms\Get $get) => app(static::$productQueryService)->getRepository()->modelQuery()->where('owner_type', $get('../../owner_type'))
+                                                                                                                                                  ->where('owner_id', (int)$get('../../owner_id'))->select([ 'id', 'title' ])->limit(10)->pluck('title', 'id')->toArray())
+                                                                                 ->getSearchResultsUsing(
+                                                                                     fn(Forms\Get $get) => app(static::$productQueryService)->getRepository()->modelQuery()->where('owner_type', $get('../../owner_type'))
+                                                                                                                                            ->where('owner_id', (int)$get('../../owner_id'))->select([ 'id', 'title' ])->limit(10)->pluck('title', 'id')->toArray())
+                                                                                 ->getOptionLabelUsing(
+                                                                                     fn(Forms\Get $get, $value) => app(static::$productQueryService)->getRepository()->modelQuery()->where('owner_type', $get('../../owner_type'))
+                                                                                                                                                    ->where('owner_id', (int)$get('../../owner_id'))
+                                                                                                                                                    ->where('id', $value)->first()?->title
+
+                                                                                 )
+                                                                                 ->required(),
+                                                          Forms\Components\TextInput::make('name')
+                                                                                    ->label(__('red-jasmine-product::product-series.fields.product.name'))
+                                                                                    ->required()
+                                                                                    ->inlineLabel()
+                                                                                    ->maxLength(10)
                                                       ]
 
-                                                  ),
+                                                  )
+                                                  ->reorderable(false)
+                                                  ->columns(2)
+                                                  ->grid(2)
+                                                  ->columnSpanFull()
+                         ,
 
-                         Forms\Components\TextInput::make('creator_type')->label(__('red-jasmine-product::product-property-value.fields.creator_type'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('creator_id')->label(__('red-jasmine-product::product-property-value.fields.creator_id'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_type')->label(__('red-jasmine-product::product-property-value.fields.updater_type'))->readOnly()->visibleOn('view'),
-                         Forms\Components\TextInput::make('updater_id')->label(__('red-jasmine-product::product-property-value.fields.updater_id'))->readOnly()->visibleOn('view'),
-                     ])
-
-            ;
+                         ... static::operateFormSchemas()
+                     ]);
     }
 
     public static function table(Table $table) : Table
@@ -96,33 +125,17 @@ class ProductSeriesResource extends Resource
                           Tables\Columns\TextColumn::make('id')
                                                    ->label('ID')
                                                    ->sortable(),
-                          Tables\Columns\TextColumn::make('owner_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('owner_id')
-                                                   ->numeric()
-                                                   ->sortable(),
+                          ... static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('name')
+                                                   ->label(__('red-jasmine-product::product-series.fields.name'))
                                                    ->searchable(),
+
                           Tables\Columns\TextColumn::make('remarks')
+                                                   ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                                    ->searchable(),
-                          Tables\Columns\TextColumn::make('creator_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('creator_id')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('updater_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('updater_id')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('created_at')
-                                                   ->dateTime()
-                                                   ->sortable()
-                                                   ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updated_at')
-                                                   ->dateTime()
-                                                   ->sortable()
-                                                   ->toggleable(isToggledHiddenByDefault: true),
+
+                          ... static::operateTableColumns()
+
                       ])
             ->filters([
                           //

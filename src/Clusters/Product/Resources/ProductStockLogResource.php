@@ -25,6 +25,7 @@ class ProductStockLogResource extends Resource
 
 
 
+
     public static function getNavigationGroup() : ?string
     {
         return __('red-jasmine-product::product-stock.labels.product-stock');
@@ -80,21 +81,7 @@ class ProductStockLogResource extends Resource
                     ->label(__('red-jasmine-product::product-stock-log.fields.channel_id'))
                     ->numeric()
                     ,
-                Tables\Columns\TextColumn::make('creator_type')
-                    ->label(__('red-jasmine-product::product-stock-log.fields.creator_type'))
-                   ,
-                Tables\Columns\TextColumn::make('creator_id')
-                    ->label(__('red-jasmine-product::product-stock-log.fields.creator_id'))
-                    ->numeric(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('red-jasmine-product::product-stock-log.fields.created_at'))
-                    ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: false),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('red-jasmine-product::product-stock-log.fields.updated_at'))
-                    ->dateTime()
 
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

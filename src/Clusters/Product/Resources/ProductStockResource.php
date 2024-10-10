@@ -35,24 +35,7 @@ class ProductStockResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function infolist(Infolist $infolist): Infolist
-    {
 
-        return   $infolist->schema([
-
-            Section::make('product-stock')->schema([
-
-                                              TextEntry::make('title'),
-                                              TextEntry::make('slug'),
-                                              TextEntry::make('content'),
-
-                                          ]),
-
-
-                          ]);
-
-
-    }
 
     public static function getModelLabel() : string
     {

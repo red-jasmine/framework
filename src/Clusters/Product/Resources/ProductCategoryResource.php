@@ -11,7 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\CreateProductCategory;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\EditProductCategory;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\ListProductCategories;

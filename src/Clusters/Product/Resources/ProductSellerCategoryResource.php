@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentCore\FilamentResource\ResourcePageHelper;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\CreateProductSellerCategory;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\EditProductSellerCategory;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\ListProductSellerCategories;
@@ -26,18 +26,21 @@ use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
 
 class ProductSellerCategoryResource extends Resource
 {
+
+    use ResourcePageHelper;
     protected static ?int    $navigationSort = 4;
     protected static ?string $cluster        = Product::class;
     protected static ?string $model          = ProductSellerCategory::class;
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
     protected static ?string $commandService = ProductSellerCategoryCommandService::class;
 
-    use ResourcePageHelper;
+
 
     protected static ?string $queryService  = ProductSellerCategoryQueryService::class;
     protected static ?string $createCommand = ProductSellerCategoryCreateCommand::class;
     protected static ?string $updateCommand = ProductSellerCategoryUpdateCommand::class;
     protected static ?string $deleteCommand = ProductSellerCategoryDeleteCommand::class;
+    protected static bool    $onlyOwner     = true;
 
     public function __construct()
     {
@@ -52,16 +55,7 @@ class ProductSellerCategoryResource extends Resource
     {
         return $form
             ->schema([
-                         Forms\Components\TextInput::make('owner_type')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_type'))
-                                                   ->required()
-                                                   ->maxLength(255)->live()->readOnlyOn('edit'),
-                         Forms\Components\TextInput::make('owner_id')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_id'))
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->live()
-                                                   ->readOnlyOn('edit'),
+                        ...static::ownerFormSchemas(),
 
                          SelectTree::make('parent_id')
                                    ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
@@ -111,6 +105,9 @@ class ProductSellerCategoryResource extends Resource
                                                ->default(CategoryStatusEnum::ENABLE)
                                                ->options(CategoryStatusEnum::options())
                                                ->inline()->inlineLabel(false)->required(),
+
+
+                        ... static::operateFormSchemas()
                      ]);
     }
 
@@ -122,13 +119,7 @@ class ProductSellerCategoryResource extends Resource
                                                    ->label(__('red-jasmine-product::product-seller-category.fields.id'))
                                                    ->label('ID')
                                                    ->sortable(),
-                          Tables\Columns\TextColumn::make('owner_type')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_type'))
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('owner_id')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.owner_id'))
-                                                   ->numeric()
-                                                   ->sortable(),
+                        ...static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('parent.name')
                                                    ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
                                                    ->sortable(),
@@ -154,6 +145,7 @@ class ProductSellerCategoryResource extends Resource
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product-seller-category.fields.status'))
                                                    ->enum(),
+                          ...static::operateTableColumns()
 
                       ])
             ->filters([
