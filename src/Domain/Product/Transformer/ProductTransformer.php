@@ -105,6 +105,8 @@ class ProductTransformer
 
         $product->info->basic_props = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
 
+        $product->setRelation('sellerExtendCategories', $product->sellerExtendCategories);
+
 
         $product->setStatus($command->status);
     }

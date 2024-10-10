@@ -81,6 +81,8 @@ return new class extends Migration {
             // 统计项
             $table->unsignedBigInteger('sales')->default(0)->comment('销售量');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+            $table->unsignedBigInteger('likes')->default(0)->comment('喜欢量');
+            $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
 
             // 操作
             $table->timestamp('modified_time')->nullable()->comment('修改时间');

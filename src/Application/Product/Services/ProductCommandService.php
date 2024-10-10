@@ -13,7 +13,6 @@ use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\ProductInfo;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
-use RedJasmine\Support\Data\Data;
 
 
 /**
@@ -33,6 +32,11 @@ class ProductCommandService extends ApplicationCommandService
 
 
     protected static string $modelClass = Product::class;
+    protected static $macros = [
+        'create' => ProductCreateCommandHandler::class,
+        'update' => ProductUpdateCommandHandler::class,
+        'delete' => ProductDeleteCommandHandler::class,
+    ];
 
     public function __construct(
         protected ProductRepositoryInterface $repository
@@ -41,18 +45,12 @@ class ProductCommandService extends ApplicationCommandService
 
     }
 
-    protected static $macros = [
-        'create' => ProductCreateCommandHandler::class,
-        'update' => ProductUpdateCommandHandler::class,
-        'delete' => ProductDeleteCommandHandler::class,
-    ];
-
-
     public function newModel($data = null) : Model
     {
         $model = parent::newModel();
         $model->setRelation('info', new ProductInfo());
-        $model->setRelation('skus', Collection::make([]));
+        $model->setRelation('skus', Collection::make());
+        $model->setRelation('sellerExtendCategories', Collection::make());
         return $model;
     }
 

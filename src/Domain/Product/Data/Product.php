@@ -37,26 +37,27 @@ class Product extends Data
     public bool              $isCustomized   = false;
 
 
-    public int     $unitQuantity     = 1;
-    public ?string $unit             = null;
-    public int     $deliveryTime     = 0;
-    public ?int    $sort             = 0;
-    public ?int    $spuId            = null;
-    public ?int    $categoryId       = null;
-    public ?int    $brandId          = null;
-    public ?string $productModel     = null;
-    public ?int    $sellerCategoryId = null;
-    public ?int    $postageId        = null;
-    public ?int    $minLimit         = 0;
-    public ?int    $maxLimit         = 0;
-    public int     $stepLimit        = 1;
-    public int     $vip              = 0;
-    public int     $points           = 0;
-    public bool    $isHot            = false;
-    public bool    $isNew            = false;
-    public bool    $isBest           = false;
-    public bool    $isBenefit        = false;
-    public int     $safetyStock      = 0;
+    public int     $unitQuantity           = 1;
+    public ?string $unit                   = null;
+    public int     $deliveryTime           = 0;
+    public ?int    $sort                   = 0;
+    public ?int    $spuId                  = null;
+    public ?int    $categoryId             = null;
+    public ?int    $brandId                = null;
+    public ?string $productModel           = null;
+    public ?int    $sellerCategoryId       = null;
+    public array   $sellerExtendCategories = [];
+    public ?int    $postageId              = null;
+    public ?int    $minLimit               = 0;
+    public ?int    $maxLimit               = 0;
+    public int     $stepLimit              = 1;
+    public int     $vip                    = 0;
+    public int     $points                 = 0;
+    public bool    $isHot                  = false;
+    public bool    $isNew                  = false;
+    public bool    $isBest                 = false;
+    public bool    $isBenefit              = false;
+    public int     $safetyStock            = 0;
 
 
     /**
