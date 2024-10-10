@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Helpers\ResourceOwnerHelper;
@@ -121,6 +122,7 @@ class ProductSeriesResource extends Resource
     public static function table(Table $table) : Table
     {
         return $table
+            ->modifyQueryUsing(fn(Builder $query)=>$query->withCount('products'))
             ->columns([
                           Tables\Columns\TextColumn::make('id')
                                                    ->label('ID')
@@ -129,7 +131,9 @@ class ProductSeriesResource extends Resource
                           Tables\Columns\TextColumn::make('name')
                                                    ->label(__('red-jasmine-product::product-series.fields.name'))
                                                    ->searchable(),
-
+                          Tables\Columns\TextColumn::make('products_count')
+                                                   ->label('数量')
+                                                   ,
                           Tables\Columns\TextColumn::make('remarks')
                                                    ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                                    ->searchable(),
