@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -47,6 +48,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     use HasSupplier;
 
     public $incrementing = false;
+
     /**
      * @return string
      */
@@ -144,14 +146,36 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'id',
             'id',
             'series_id'
-        )->with(['products']);
+        )->with([ 'products' ]);
     }
 
+
+    public function scopeSale(Builder $query)
+    {
+        return $query->whereIn('status', [
+            ProductStatusEnum::ON_SALE,
+            ProductStatusEnum::PRE_SALE,
+            ProductStatusEnum::SOLD_OUT,
+        ]);
+    }
+
+    public function scopeOffShelf(Builder $query)
+    {
+        return $query->whereIn('status', [
+            ProductStatusEnum::OFF_SHELF,
+            ProductStatusEnum::FORBID_SALE,
+        ]);
+    }
+
+    public function scopeDraft(Builder $query)
+    {
+        return $query->where('status', ProductStatusEnum::DRAFT);
+    }
 
     /**
      * 设置状态
      *
-     * @param  ProductStatusEnum  $status
+     * @param ProductStatusEnum $status
      *
      * @return void
      */
@@ -192,7 +216,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         if (!in_array($this->status, [
             ProductStatusEnum::ON_SALE,
             ProductStatusEnum::PRE_SALE
-        ], true)) {
+        ],            true)) {
 
 
             throw  ProductException::newFromCodes(ProductException::PRODUCT_FORBID_SALE);
@@ -204,7 +228,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
 
     /**
-     * @param  int  $num
+     * @param int $num
      *
      * @return bool
      * @throws ProductException
