@@ -14,6 +14,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Arr;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -148,13 +150,13 @@ class ProductResource extends Resource
             SelectTree::make('category_id')
                       ->label(__('red-jasmine-product::product.fields.category_id'))
                       ->relationship('category', 'name', 'parent_id')
-                      ->enableBranchNode()
+//                      ->enableBranchNode()
                       ->parentNullValue(0)
                       ->default(0), // 设置可选
             SelectTree::make('brand_id')
                       ->label(__('red-jasmine-product::product.fields.brand_id'))
                       ->relationship('brand', 'name', 'parent_id')
-                      ->enableBranchNode()
+//                      ->enableBranchNode()
                       ->parentNullValue(0)
                       ->default(0),
             Forms\Components\TextInput::make('product_model')
@@ -171,10 +173,13 @@ class ProductResource extends Resource
                                                                                                      ->where('owner_id', $get('owner_id'))
                           ,
                       )
-                      ->enableBranchNode()
+//                      ->enableBranchNode()
                       ->parentNullValue(0)
+                      ->independent(false)
+                      ->storeResults()
                       ->default(0),
 
+            // TODO
             SelectTree::make('extend_product_groups')
                       ->label(__('red-jasmine-product::product.fields.extend_groups'))
                       ->relationship(relationship: 'extendProductGroups',
@@ -186,8 +191,9 @@ class ProductResource extends Resource
                                                                                                      ->where('owner_id', $get('owner_id'))
                           ,
                       )
+                      //->saveRelationshipsUsing(null)
+                      //->loadStateFromRelationshipsUsing(null)
 
-//                      ->enableBranchNode()
                       ->parentNullValue(0)
                       ->default([]),
 
@@ -210,6 +216,8 @@ class ProductResource extends Resource
                                                            ->live()
                                                            ->columnSpan(2)
                                                            ->required()
+                                                           ->disabled(fn($state) => $state)
+                                                           ->dehydrated()
                                                            ->options(ProductProperty::limit(50)->pluck('name', 'id')->toArray())
                                                            ->searchable()
                                                            ->getSearchResultsUsing(fn(string $search
@@ -373,67 +381,6 @@ class ProductResource extends Resource
                  ) => $get('is_multiple_spec')), ];
     }
 
-
-    public static function saleInfoFields() : array
-    {
-        return [
-
-
-            Forms\Components\TextInput::make('unit')
-                                      ->label(__('red-jasmine-product::product.fields.unit'))
-                                      ->maxLength(32),
-            Forms\Components\TextInput::make('unit_quantity')
-                                      ->label(__('red-jasmine-product::product.fields.unit_quantity'))
-                                      ->numeric()
-                                      ->default(1)
-                                      ->minValue(1),
-
-            Forms\Components\TextInput::make('outer_id')
-                                      ->label(__('red-jasmine-product::product.fields.outer_id'))
-                                      ->maxLength(255),
-            Forms\Components\TextInput::make('barcode')
-                                      ->label(__('red-jasmine-product::product.fields.barcode'))
-                                      ->maxLength(32),
-
-            Forms\Components\TextInput::make('min_limit')
-                                      ->label(__('red-jasmine-product::product.fields.min_limit'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0),
-            Forms\Components\TextInput::make('max_limit')
-                                      ->label(__('red-jasmine-product::product.fields.max_limit'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0),
-            Forms\Components\TextInput::make('step_limit')
-                                      ->label(__('red-jasmine-product::product.fields.step_limit'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(1),
-            Forms\Components\TextInput::make('vip')
-                                      ->label(__('red-jasmine-product::product.fields.vip'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0),
-
-            Forms\Components\ToggleButtons::make('order_quantity_limit_type')
-                                          ->label(__('red-jasmine-product::product.fields.order_quantity_limit_type'))
-                                          ->required()
-                                          ->live()
-                                          ->grouped()
-                                          ->useEnum(OrderQuantityLimitTypeEnum::class)
-                                          ->default(OrderQuantityLimitTypeEnum::UNLIMITED),
-
-            Forms\Components\TextInput::make('order_quantity_limit_num')
-                                      ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0)
-                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
-            ,
-        ];
-    }
-
     protected static function saleProps() : Repeater
     {
         return Repeater::make('sale_props')
@@ -446,6 +393,8 @@ class ProductResource extends Resource
                                                            ->columns(1)
                                                            ->required()
                                                            ->columnSpan(1)
+                                                           ->disabled(fn($state) => $state)
+                                                           ->dehydrated()
                                                            ->options(ProductProperty::limit(50)->pluck('name', 'id')->toArray())
                                                            ->searchable()
                                                            ->getSearchResultsUsing(fn(string $search) : array => ProductProperty::where('name',
@@ -556,6 +505,67 @@ class ProductResource extends Resource
                             ->streamlined()
                             ->reorderable(false)
                             ->addable(false);
+    }
+
+    public static function saleInfoFields() : array
+    {
+        return [
+
+
+            Forms\Components\TextInput::make('unit')
+                                      ->label(__('red-jasmine-product::product.fields.unit'))
+                                      ->maxLength(32),
+            Forms\Components\TextInput::make('unit_quantity')
+                                      ->label(__('red-jasmine-product::product.fields.unit_quantity'))
+                                      ->numeric()
+                                      ->default(1)
+                                      ->minValue(1),
+
+            Forms\Components\TextInput::make('outer_id')
+                                      ->label(__('red-jasmine-product::product.fields.outer_id'))
+                                      ->maxLength(255),
+            Forms\Components\TextInput::make('barcode')
+                                      ->label(__('red-jasmine-product::product.fields.barcode'))
+                                      ->maxLength(32),
+
+            Forms\Components\TextInput::make('min_limit')
+                                      ->label(__('red-jasmine-product::product.fields.min_limit'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0),
+            Forms\Components\TextInput::make('max_limit')
+                                      ->label(__('red-jasmine-product::product.fields.max_limit'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0),
+            Forms\Components\TextInput::make('step_limit')
+                                      ->label(__('red-jasmine-product::product.fields.step_limit'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(1),
+            Forms\Components\TextInput::make('vip')
+                                      ->label(__('red-jasmine-product::product.fields.vip'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0),
+
+            Forms\Components\ToggleButtons::make('order_quantity_limit_type')
+                                          ->label(__('red-jasmine-product::product.fields.order_quantity_limit_type'))
+                                          ->required()
+                                          ->live()
+                                          ->grouped()
+                                          ->useEnum(OrderQuantityLimitTypeEnum::class)
+                                          ->default(OrderQuantityLimitTypeEnum::UNLIMITED),
+
+            Forms\Components\TextInput::make('order_quantity_limit_num')
+                                      ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0)
+                                      ->suffix('件')
+                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
+            ,
+        ];
     }
 
     public static function descriptionFields() : array
