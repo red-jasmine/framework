@@ -141,6 +141,7 @@ trait ResourcePageHelper
     protected function handleRecordUpdate(Model $record, array $data) : Model
     {
 
+
         try {
             $resource       = static::getResource();
             $commandService = app($resource::getCommandService());
