@@ -20,8 +20,11 @@ class AmountCastTransformer implements CastsAttributes, Cast, Transformer
     // |-------------------------------------------------------------------
 
 
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : Amount
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Amount
     {
+        if ($value === null) {
+            return null;
+        }
         if ($value instanceof Amount) {
             return $value;
         }
@@ -30,14 +33,17 @@ class AmountCastTransformer implements CastsAttributes, Cast, Transformer
 
 
     /**
-     * @param DataProperty          $property
-     * @param Amount                $value
+     * @param DataProperty $property
+     * @param Amount $value
      * @param TransformationContext $context
      *
-     * @return mixed
+     * @return string|null
      */
-    public function transform(DataProperty $property, mixed $value, TransformationContext $context) : string
+    public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?string
     {
+        if (blank($value)) {
+            return null;
+        }
         return (string)$value;
     }
 
@@ -47,26 +53,34 @@ class AmountCastTransformer implements CastsAttributes, Cast, Transformer
     // |-------------------------------------------------------------------
 
 
-
-    public function get(Model $model, string $key, mixed $value, array $attributes) : Amount
+    public function get(Model $model, string $key, mixed $value, array $attributes) : ?Amount
     {
+
+        if ($value === null) {
+            return null;
+        }
         return new Amount($value);
     }
 
     /**
      *
-     * @param Model  $model
+     * @param Model $model
      * @param string $key
      * @param Amount $value
-     * @param array  $attributes
+     * @param array $attributes
      *
-     * @return string
+     * @return string|null
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes) : string
+    public function set(Model $model, string $key, mixed $value, array $attributes) : ?string
     {
+
+        if (blank($value)) {
+            return null;
+        }
         if ($value instanceof Amount) {
             return $value->value();
         }
+
         return (string)$value;
     }
 
