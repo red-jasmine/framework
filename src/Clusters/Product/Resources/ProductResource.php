@@ -13,9 +13,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
@@ -90,6 +89,7 @@ class ProductResource extends Resource
         $schema = [
             Forms\Components\Fieldset::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
             Forms\Components\Fieldset::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->inlineLabel()->schema(static::productAttributesFields()),
+            Forms\Components\Fieldset::make('specifications')->label(__('red-jasmine-product::product.labels.specifications'))->columns(1)->inlineLabel()->schema(static::specifications()),
             Forms\Components\Fieldset::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
             Forms\Components\Fieldset::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->inlineLabel()->schema(static::descriptionFields()),
             Forms\Components\Fieldset::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->inlineLabel()->schema(static::operateFields()),
@@ -160,9 +160,9 @@ class ProductResource extends Resource
             Forms\Components\TextInput::make('product_model')
                                       ->label(__('red-jasmine-product::product.fields.product_model'))
                                       ->maxLength(60),
-            SelectTree::make('seller_category_id')
-                      ->label(__('red-jasmine-product::product.fields.seller_category_id'))
-                      ->relationship(relationship: 'sellerCategory',
+            SelectTree::make('product_group_id')
+                      ->label(__('red-jasmine-product::product.fields.product_group_id'))
+                      ->relationship(relationship: 'productGroup',
                           titleAttribute:          'name',
                           parentAttribute:         'parent_id',
                           modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
@@ -175,10 +175,9 @@ class ProductResource extends Resource
                       ->parentNullValue(0)
                       ->default(0),
 
-            SelectTree::make('seller_extend_categories')
-
-                      ->label(__('red-jasmine-product::product.fields.seller_category_id'))
-                      ->relationship(relationship: 'sellerExtendCategories',
+            SelectTree::make('extend_product_groups')
+                      ->label(__('red-jasmine-product::product.fields.extend_groups'))
+                      ->relationship(relationship: 'extendProductGroups',
                           titleAttribute:          'name',
                           parentAttribute:         'parent_id',
                           modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
@@ -277,91 +276,109 @@ class ProductResource extends Resource
                        ->reorderable(false);
     }
 
+
+    protected static function specifications() : array
+    {
+        return [ Forms\Components\ToggleButtons::make('is_multiple_spec')
+                                               ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
+                                               ->required()
+                                               ->boolean()
+                                               ->live()
+                                               ->inline()
+                                               ->default(0),
+
+
+                 static::saleProps()->visible(fn(Forms\Get $get) => $get('is_multiple_spec'))
+                       ->live()
+                       ->afterStateUpdated(function ($state, $old, Forms\Get $get, Forms\Set $set) {
+
+                           try {
+                               $saleProps = array_values($get('sale_props') ?? []);
+
+                               $saleProps = array_map(function ($item) {
+                                   $item['values'] = array_values($item['values'] ?? []);
+                                   return $item;
+                               }, $saleProps);
+                               $service   = app(PropertyValidateService::class);
+                               $crossJoin = $service->crossJoin($saleProps);
+
+                               $oldSku = $get('skus') ?? [];
+                               $oldSku = collect($oldSku)->keyBy('properties_sequence');
+
+                               $skus = [];
+                               foreach ($crossJoin as $properties => $propertyName) {
+
+                                   $sku                    = $oldSku[$properties] ?? [
+                                       'properties_sequence' => $properties,
+                                       'properties_name'     => $propertyName,
+                                       'price'               => null,
+                                       'market_price'        => null,
+                                       'cost_price'          => null,
+                                       'stock'               => null,
+                                       'safety_stock'        => 0,
+                                       'status'              => ProductStatusEnum::ON_SALE->value,
+
+                                   ];
+                                   $sku['properties_name'] = $propertyName;
+                                   $skus[]                 = $sku;
+                               }
+
+                               $set('skus', $skus);
+                           } catch (Throwable $throwable) {
+                               $set('skus', []);
+                           }
+                       }),
+
+                 static::skus()
+                       ->deletable(false)
+                       ->live()
+                       ->visible(fn(Forms\Get $get) => $get('is_multiple_spec')),
+
+                 Forms\Components\Section::make('')->schema([
+
+
+                                                                Forms\Components\TextInput::make('price')
+                                                                                          ->label(__('red-jasmine-product::product.fields.price'))
+                                                                                          ->required()
+                                                                                          ->numeric()
+                                                                                          ->formatStateUsing(fn($state
+                                                                                          ) => is_object($state) ? $state->value() : $state)
+                                                                ,
+                                                                Forms\Components\TextInput::make('stock')
+                                                                                          ->label(__('red-jasmine-product::product.fields.stock'))
+                                                                                          ->required()
+                                                                                          ->numeric()
+                                                                ,
+
+                                                                Forms\Components\TextInput::make('market_price')
+                                                                                          ->label(__('red-jasmine-product::product.fields.market_price'))
+                                                                                          ->numeric()
+                                                                                          ->formatStateUsing(fn($state
+                                                                                          ) => is_object($state) ? $state->value() : $state)
+
+                                                                ,
+                                                                Forms\Components\TextInput::make('cost_price')
+                                                                                          ->label(__('red-jasmine-product::product.fields.cost_price'))
+                                                                                          ->numeric()
+                                                                                          ->formatStateUsing(fn($state
+                                                                                          ) => is_object($state) ? $state->value() : $state)
+                                                                ,
+                                                                Forms\Components\TextInput::make('safety_stock')
+                                                                                          ->label(__('red-jasmine-product::product.fields.safety_stock'))
+                                                                                          ->numeric()
+                                                                                          ->default(0),
+
+
+                                                            ])->hidden(fn(Forms\Get $get
+                 ) => $get('is_multiple_spec')), ];
+    }
+
+
     public static function saleInfoFields() : array
     {
         return [
-            Forms\Components\Radio::make('is_multiple_spec')
-                                  ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
-                                  ->required()->boolean()->live()->inline()->default(0),
 
 
-            static::saleProps()->visible(fn(Forms\Get $get) => $get('is_multiple_spec'))->live()
-                  ->afterStateUpdated(function ($state, $old, Forms\Get $get, Forms\Set $set) {
-
-                      try {
-                          $saleProps = array_values($get('sale_props') ?? []);
-
-                          $saleProps = array_map(function ($item) {
-                              $item['values'] = array_values($item['values'] ?? []);
-                              return $item;
-                          }, $saleProps);
-                          $service   = app(PropertyValidateService::class);
-                          $crossJoin = $service->crossJoin($saleProps);
-
-                          $oldSku = $get('skus') ?? [];
-                          $oldSku = collect($oldSku)->keyBy('properties');
-
-                          $skus = [];
-                          foreach ($crossJoin as $properties => $propertyName) {
-
-
-                              $sku                    = $oldSku[$properties] ?? [
-                                  'properties'      => $properties,
-                                  'properties_name' => $propertyName,
-                                  'price'           => null,
-                                  'market_price'    => 0,
-                                  'cost_price'      => 0,
-                                  'stock'           => 0,
-                                  'safety_stock'    => 0,
-                                  'status'          => ProductStatusEnum::ON_SALE->value,
-
-                              ];
-                              $sku['properties_name'] = $propertyName;
-                              $skus[]                 = $sku;
-                          }
-
-                          $set('skus', $skus);
-                      } catch (Throwable $throwable) {
-                          $set('skus', []);
-                      }
-                  }),
-
-            static::skus()
-                  ->deletable(false)
-                  ->live()
-                  ->visible(fn(Forms\Get $get) => $get('is_multiple_spec')),
-            Forms\Components\TextInput::make('stock')
-                                      ->label(__('red-jasmine-product::product.fields.stock'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0)
-                                      ->hidden(fn(Forms\Get $get
-                                      ) => $get('is_multiple_spec')),
-            Forms\Components\TextInput::make('price')
-                                      ->label(__('red-jasmine-product::product.fields.price'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0.00)
-                                      ->formatStateUsing(fn($state
-                                      ) => is_object($state) ? $state->value() : $state)
-                                      ->hidden(fn(Forms\Get $get
-                                      ) => $get('is_multiple_spec')),
-            Forms\Components\TextInput::make('market_price')
-                                      ->label(__('red-jasmine-product::product.fields.market_price'))
-                                      ->required()
-                                      ->numeric()
-                                      ->formatStateUsing(fn($state
-                                      ) => is_object($state) ? $state->value() : $state)
-                                      ->default(0.00)->hidden(fn(Forms\Get $get
-                ) => $get('is_multiple_spec')),
-            Forms\Components\TextInput::make('cost_price')
-                                      ->label(__('red-jasmine-product::product.fields.cost_price'))
-                                      ->required()
-                                      ->numeric()
-                                      ->formatStateUsing(fn($state
-                                      ) => is_object($state) ? $state->value() : $state)
-                                      ->default(0.00)->hidden(fn(Forms\Get $get
-                ) => $get('is_multiple_spec')),
             Forms\Components\TextInput::make('unit')
                                       ->label(__('red-jasmine-product::product.fields.unit'))
                                       ->maxLength(32),
@@ -370,17 +387,13 @@ class ProductResource extends Resource
                                       ->numeric()
                                       ->default(1)
                                       ->minValue(1),
-            Forms\Components\TextInput::make('barcode')
-                                      ->label(__('red-jasmine-product::product.fields.barcode'))
-                                      ->maxLength(32),
+
             Forms\Components\TextInput::make('outer_id')
                                       ->label(__('red-jasmine-product::product.fields.outer_id'))
                                       ->maxLength(255),
-
-            Forms\Components\TextInput::make('safety_stock')
-                                      ->label(__('red-jasmine-product::product.fields.safety_stock'))
-                                      ->numeric()
-                                      ->default(0),
+            Forms\Components\TextInput::make('barcode')
+                                      ->label(__('red-jasmine-product::product.fields.barcode'))
+                                      ->maxLength(32),
 
             Forms\Components\TextInput::make('min_limit')
                                       ->label(__('red-jasmine-product::product.fields.min_limit'))
@@ -403,6 +416,21 @@ class ProductResource extends Resource
                                       ->numeric()
                                       ->default(0),
 
+            Forms\Components\ToggleButtons::make('order_quantity_limit_type')
+                                          ->label(__('red-jasmine-product::product.fields.order_quantity_limit_type'))
+                                          ->required()
+                                          ->live()
+                                          ->grouped()
+                                          ->useEnum(OrderQuantityLimitTypeEnum::class)
+                                          ->default(OrderQuantityLimitTypeEnum::UNLIMITED),
+
+            Forms\Components\TextInput::make('order_quantity_limit_num')
+                                      ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0)
+                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
+            ,
         ];
     }
 
@@ -487,10 +515,10 @@ class ProductResource extends Resource
                             ->headers([
                                           Header::make('properties_name')->label(__('red-jasmine-product::product.fields.properties_name')),
                                           Header::make('image')->label(__('red-jasmine-product::product.fields.image')),
-                                          Header::make('price')->label(__('red-jasmine-product::product.fields.price')),
+                                          Header::make('price')->label(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
+                                          Header::make('stock')->label(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
                                           Header::make('market_price')->label(__('red-jasmine-product::product.fields.market_price')),
                                           Header::make('cost_price')->label(__('red-jasmine-product::product.fields.cost_price')),
-                                          Header::make('stock')->label(__('red-jasmine-product::product.fields.stock')),
                                           Header::make('safety_stock')->label(__('red-jasmine-product::product.fields.safety_stock')),
                                           Header::make('barcode')->label(__('red-jasmine-product::product.fields.barcode')),
                                           Header::make('outer_id')->label(__('red-jasmine-product::product.fields.outer_id')),
@@ -498,19 +526,20 @@ class ProductResource extends Resource
                                           Header::make('status')->label(__('red-jasmine-product::product.fields.status')),
                                       ])
                             ->schema([
+                                         Forms\Components\Hidden::make('properties_sequence'),
                                          Forms\Components\TextInput::make('properties_name')->readOnly(),
-                                         Forms\Components\Hidden::make('properties'),
                                          Forms\Components\FileUpload::make('image')->image(),
-                                         Forms\Components\TextInput::make('price')->required()->numeric()->default(0.00)->formatStateUsing(fn(
+                                         Forms\Components\TextInput::make('price')->required()->numeric()->formatStateUsing(fn(
                                              $state
                                          ) => is_object($state) ? $state->value() : $state),
-                                         Forms\Components\TextInput::make('market_price')->required()->numeric()->default(0.00)->formatStateUsing(fn(
+                                         Forms\Components\TextInput::make('stock')->required()->maxLength(32),
+                                         Forms\Components\TextInput::make('market_price')->numeric()->formatStateUsing(fn(
                                              $state
                                          ) => is_object($state) ? $state->value() : $state),
-                                         Forms\Components\TextInput::make('cost_price')->required()->numeric()->default(0.00)->formatStateUsing(fn(
+                                         Forms\Components\TextInput::make('cost_price')->numeric()->formatStateUsing(fn(
                                              $state
                                          ) => is_object($state) ? $state->value() : $state),
-                                         Forms\Components\TextInput::make('stock')->maxLength(32),
+
                                          Forms\Components\TextInput::make('safety_stock')
                                                                    ->numeric()
                                                                    ->default(0),

@@ -124,7 +124,7 @@ class ProductStockResource extends Resource
 
                                                        ])
                                              ->schema([
-                                                          Forms\Components\Hidden::make('properties'),
+                                                          Forms\Components\Hidden::make('properties_sequence'),
                                                           Forms\Components\TextInput::make('id')->readOnly(),
                                                           Forms\Components\TextInput::make('properties_name')->readOnly(),
                                                           Forms\Components\TextInput::make('barcode')->readOnly(),

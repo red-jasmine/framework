@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
@@ -37,6 +38,7 @@ class ProductCategoryResource extends Resource
     protected static ?string $updateCommand  = ProductCategoryUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductCategoryDeleteCommand::class;
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+
 
     public static function getModelLabel() : string
     {
@@ -123,7 +125,7 @@ class ProductCategoryResource extends Resource
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product-category.fields.status'))
-                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                                                   ->enum(),
 
                       ])
             ->filters([
@@ -134,23 +136,18 @@ class ProductCategoryResource extends Resource
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
-                                                                       Tables\Actions\DeleteBulkAction::make(),
+                                                                      // Tables\Actions\DeleteBulkAction::make(),
                                                                    ]),
                           ]);
     }
 
-    public static function getRelations() : array
-    {
-        return [
-            //
-        ];
-    }
+
 
     public static function getPages() : array
     {
         return [
             'index'  => ListProductCategories::route('/'),
-            'create' => CreateProductCategory::route('/create'),
+//            'create' => CreateProductCategory::route('/create'),
             'edit'   => EditProductCategory::route('/{record}/edit'),
         ];
     }

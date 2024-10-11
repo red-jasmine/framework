@@ -2,8 +2,8 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use App\Filament\Clusters\Product\Resources\ProductSellerCategoryResource\Pages;
-use App\Filament\Clusters\Product\Resources\ProductSellerCategoryResource\RelationManagers;
+use App\Filament\Clusters\Product\Resources\ProductGroupResource\Pages;
+use App\Filament\Clusters\Product\Resources\ProductGroupResource\RelationManagers;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,36 +11,36 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\CreateProductSellerCategory;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\EditProductSellerCategory;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSellerCategoryResource\Pages\ListProductSellerCategories;
-use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryCommandService;
-use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryQueryService;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryCreateCommand;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryDeleteCommand;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryUpdateCommand;
-use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
-use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
+use RedJasmine\FilamentProduct\Clusters\Product;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\CreateProductGroup;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\EditProductGroup;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\ListProductGroups;
+use RedJasmine\Product\Application\Group\Services\ProductGroupCommandService;
+use RedJasmine\Product\Application\Group\Services\ProductGroupQueryService;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupCreateCommand;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupDeleteCommand;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupUpdateCommand;
+use RedJasmine\Product\Domain\Group\Models\Enums\GroupStatusEnum;
+use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 
-class ProductSellerCategoryResource extends Resource
+class ProductGroupResource extends Resource
 {
 
     use ResourcePageHelper;
+
     protected static ?int    $navigationSort = 4;
     protected static ?string $cluster        = Product::class;
-    protected static ?string $model          = ProductSellerCategory::class;
+    protected static ?string $model          = ProductGroup::class;
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
-    protected static ?string $commandService = ProductSellerCategoryCommandService::class;
 
 
-
-    protected static ?string $queryService  = ProductSellerCategoryQueryService::class;
-    protected static ?string $createCommand = ProductSellerCategoryCreateCommand::class;
-    protected static ?string $updateCommand = ProductSellerCategoryUpdateCommand::class;
-    protected static ?string $deleteCommand = ProductSellerCategoryDeleteCommand::class;
-    protected static bool    $onlyOwner     = true;
+    protected static ?string $commandService = ProductGroupCommandService::class;
+    protected static ?string $queryService   = ProductGroupQueryService::class;
+    protected static ?string $createCommand  = ProductGroupCreateCommand::class;
+    protected static ?string $updateCommand  = ProductGroupUpdateCommand::class;
+    protected static ?string $deleteCommand  = ProductGroupDeleteCommand::class;
+    protected static bool    $onlyOwner      = true;
 
     public function __construct()
     {
@@ -48,17 +48,17 @@ class ProductSellerCategoryResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-product::product-seller-category.labels.product-seller-category');
+        return __('red-jasmine-product::product-group.labels.group');
     }
 
     public static function form(Form $form) : Form
     {
         return $form
             ->schema([
-                        ...static::ownerFormSchemas(),
+                         ...static::ownerFormSchemas(),
 
                          SelectTree::make('parent_id')
-                                   ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
+                                   ->label(__('red-jasmine-product::product-group.fields.parent_id'))
                                    ->relationship(relationship: 'parent',
                                        titleAttribute:          'name',
                                        parentAttribute:         'parent_id',
@@ -75,39 +75,39 @@ class ProductSellerCategoryResource extends Resource
                                    ->enableBranchNode()
                                    ->parentNullValue(0),
                          Forms\Components\TextInput::make('name')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.name'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.name'))
                                                    ->required()
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('description')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.description'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.description'))
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('group_name')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.group_name'))
+                         Forms\Components\TextInput::make('cluster')
+                                                   ->label(__('red-jasmine-product::product-group.fields.cluster'))
                                                    ->maxLength(255),
                          Forms\Components\FileUpload::make('image')
-                                                    ->label(__('red-jasmine-product::product-seller-category.fields.image'))
+                                                    ->label(__('red-jasmine-product::product-group.fields.image'))
                                                     ->image(),
                          Forms\Components\TextInput::make('sort')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.sort'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.sort'))
                                                    ->required()
                                                    ->numeric()
                                                    ->default(0),
                          Forms\Components\Radio::make('is_leaf')
-                                               ->label(__('red-jasmine-product::product-seller-category.fields.is_leaf'))
+                                               ->label(__('red-jasmine-product::product-group.fields.is_leaf'))
                                                ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
                          Forms\Components\Radio::make('is_show')
-                                               ->label(__('red-jasmine-product::product-seller-category.fields.is_show'))
+                                               ->label(__('red-jasmine-product::product-group.fields.is_show'))
                                                ->default(true)->boolean()->inline()->inlineLabel(false)->required(),
 
                          Forms\Components\Radio::make('status')
-                                               ->label(__('red-jasmine-product::product-seller-category.fields.status'))
+                                               ->label(__('red-jasmine-product::product-group.fields.status'))
                                                ->required()
-                                               ->default(CategoryStatusEnum::ENABLE)
-                                               ->options(CategoryStatusEnum::options())
+                                               ->default(GroupStatusEnum::ENABLE)
+                                               ->options(GroupStatusEnum::options())
                                                ->inline()->inlineLabel(false)->required(),
 
 
-                        ... static::operateFormSchemas()
+                         ... static::operateFormSchemas()
                      ]);
     }
 
@@ -116,34 +116,32 @@ class ProductSellerCategoryResource extends Resource
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.id'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.id'))
                                                    ->label('ID')
                                                    ->sortable(),
-                        ...static::ownerTableColumns(),
+                          ...static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('parent.name')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.parent_id'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.parent_id'))
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('name')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.name'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.name'))
                                                    ->searchable(),
 
-                          Tables\Columns\TextColumn::make('group_name')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.group_name'))
+                          Tables\Columns\TextColumn::make('cluster')
+                                                   ->label(__('red-jasmine-product::product-group.fields.cluster'))
                                                    ->searchable(),
                           Tables\Columns\ImageColumn::make('image')
-                                                    ->label(__('red-jasmine-product::product-seller-category.fields.image'))
+                                                    ->label(__('red-jasmine-product::product-group.fields.image'))
                           ,
                           Tables\Columns\TextColumn::make('sort')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.sort'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.sort'))
                                                    ->sortable(),
                           Tables\Columns\IconColumn::make('is_leaf')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.is_leaf'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.is_leaf'))
                                                    ->boolean(),
-                          Tables\Columns\IconColumn::make('is_allow_alias')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.is_allow_alias'))
-                                                   ->boolean(),
+
                           Tables\Columns\TextColumn::make('status')
-                                                   ->label(__('red-jasmine-product::product-seller-category.fields.status'))
+                                                   ->label(__('red-jasmine-product::product-group.fields.status'))
                                                    ->enum(),
                           ...static::operateTableColumns()
 
@@ -171,9 +169,9 @@ class ProductSellerCategoryResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => ListProductSellerCategories::route('/'),
-            'create' => CreateProductSellerCategory::route('/create'),
-            'edit'   => EditProductSellerCategory::route('/{record}/edit'),
+            'index'  => ListProductGroups::route('/'),
+            'create' => CreateProductGroup::route('/create'),
+            'edit'   => EditProductGroup::route('/{record}/edit'),
         ];
     }
 }
