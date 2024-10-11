@@ -99,8 +99,8 @@ class ProductTransformer
 
         $product->info->basic_props = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
 
-        //dd($command->extendProductGroups);
-        $product->setRelation('extendProductGroups', $command->extendProductGroups);
+
+        $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
 
 
         $product->setStatus($command->status);
@@ -125,13 +125,11 @@ class ProductTransformer
                 $product->info->sale_props = $saleProps->toArray();
                 // 验证规格
 
-                // 加入默认规格
-                $defaultSku = $product->skus->where('properties_sequence', '')->first() ?? $this->defaultSku($product, $command);
-                $defaultSku->setDeleted();
-                $product->addSku($defaultSku);
+
+
+
 
                 $this->propertyValidateService->validateSkus($saleProps, $command->skus);
-
                 $command->skus?->each(function (Sku $skuData) use ($product) {
                     $sku = $product->skus
                                ->where('properties_sequence', $skuData->propertiesSequence)
@@ -151,14 +149,20 @@ class ProductTransformer
                 $product->cost_price   = $product->skus->where('properties_sequence', '<>', '')->min('cost_price');
                 $product->safety_stock = $product->skus->where('properties_sequence', '<>', '')->sum('safety_stock');
 
+
+                // 加入默认规格
+                $defaultSku = $product->skus->where('properties_sequence', '')->first() ?? $this->defaultSku($product, $command);
+                $defaultSku->setDeleted();
+                $product->addSku($defaultSku);
+
                 break;
             case false: // 单规格
-                $product->price        = $command->price;
-                $product->cost_price   = $command->costPrice;
-                $product->market_price = $command->marketPrice;
-                $product->safety_stock = $command->safetyStock;
+                $product->price            = $command->price;
+                $product->cost_price       = $command->costPrice;
+                $product->market_price     = $command->marketPrice;
+                $product->safety_stock     = $command->safetyStock;
                 $product->info->sale_props = [];
-                $defaultSku                = $product->skus->where('properties', '')->first() ?? $this->defaultSku($product, $command);
+                $defaultSku                = $product->skus->where('properties_sequence', '')->first() ?? $this->defaultSku($product, $command);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;
@@ -167,6 +171,7 @@ class ProductTransformer
 
     protected function defaultSku(Product $product, Command $command) : ProductSku
     {
+
         $sku                      = new ProductSku();
         $sku->id                  = $product->id;
         $sku->properties_sequence = '';
@@ -181,10 +186,6 @@ class ProductTransformer
         $sku->image               = $product->image;
         $sku->barcode             = $product->barcode;
         $sku->outer_id            = $product->outer_id;
-        $sku->price               = $product->price;
-        $sku->safety_stock        = $product->safety_stock;
-        $sku->market_price        = $product->market_price ?? null;
-        $sku->cost_price          = $product->cost_price ?? null;
         $sku->supplier_sku_id     = null;
         $sku->weight              = $command->weight;
         $sku->width               = $command->width;

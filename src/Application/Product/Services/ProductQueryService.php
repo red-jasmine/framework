@@ -19,7 +19,8 @@ class ProductQueryService extends ApplicationQueryService
 
     public function __construct(
         protected ProductReadRepositoryInterface $repository
-    ) {
+    )
+    {
 
 
     }
@@ -64,11 +65,11 @@ class ProductQueryService extends ApplicationQueryService
             'skus',
             'brand',
             'category',
-            'sellerCategory',
+            'productGroups',
+            'extendProductGroups',
             'series'
         ];
     }
-
 
 
 }

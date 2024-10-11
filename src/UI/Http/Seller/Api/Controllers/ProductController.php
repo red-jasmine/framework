@@ -39,7 +39,7 @@ class ProductController extends Controller
 
     public function show($id, Request $request) : ProductResource
     {
-        $result = $this->queryService->findById(FindQuery::make($id,$request));
+        $result = $this->queryService->findById(FindQuery::make($id, $request));
         return ProductResource::make($result);
     }
 
@@ -52,6 +52,7 @@ class ProductController extends Controller
         $command = ProductCreateCommand::from($request);
 
         $result = $this->commandService->create($command);
+
         return ProductResource::make($result);
     }
 
