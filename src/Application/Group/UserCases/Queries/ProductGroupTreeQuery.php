@@ -1,12 +1,10 @@
 <?php
 
-namespace RedJasmine\Product\Application\Category\UserCases\Queries;
+namespace RedJasmine\Product\Application\Group\UserCases\Queries;
 
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
-class ProductSellerCategoryTreeQuery extends Query
+class ProductGroupTreeQuery extends Query
 {
 
     public ?string $ownerType = null;

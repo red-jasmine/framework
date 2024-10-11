@@ -1,16 +1,16 @@
 <?php
 
-namespace RedJasmine\Product\Application\Category\Services;
+namespace RedJasmine\Product\Application\Group\Services;
 
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductSellerCategoryTreeQuery;
-use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryReadRepositoryInterface;
+use RedJasmine\Product\Application\Group\UserCases\Queries\ProductGroupTreeQuery;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
 
-class ProductSellerCategoryQueryService extends ApplicationQueryService
+class ProductGroupQueryService extends ApplicationQueryService
 {
     /**
      * 命令钩子前缀
@@ -19,7 +19,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
     public static string $hookNamePrefix = 'product.application.seller-category.query';
 
 
-    public function __construct(protected ProductSellerCategoryReadRepositoryInterface $repository)
+    public function __construct(protected ProductGroupReadRepositoryInterface $repository)
     {
 
     }
@@ -55,7 +55,7 @@ class ProductSellerCategoryQueryService extends ApplicationQueryService
         ];
     }
 
-    public function tree(ProductSellerCategoryTreeQuery $query) : array
+    public function tree(ProductGroupTreeQuery $query) : array
     {
 
         return $this->repository

@@ -3,32 +3,32 @@
 namespace Category\CommandHandlers;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryCommandService;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryCreateCommand;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryDeleteCommand;
+use RedJasmine\Product\Application\Group\Services\ProductGroupCommandService;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupCreateCommand;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupDeleteCommand;
 use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
-use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Tests\Application\ApplicationTestCase;
 
 class ProductSellerCategoryDeleteCommandHandlerTest extends ApplicationTestCase
 {
 
 
-    protected function repository() : ProductSellerCategoryRepositoryInterface
+    protected function repository() : ProductGroupRepositoryInterface
     {
-        return app(ProductSellerCategoryRepositoryInterface::class);
+        return app(ProductGroupRepositoryInterface::class);
     }
 
-    protected function commandService() : ProductSellerCategoryCommandService
+    protected function commandService() : ProductGroupCommandService
     {
-        return app(ProductSellerCategoryCommandService::class);
+        return app(ProductGroupCommandService::class);
     }
 
 
     public function test_can_create_seller_product_category() : void
     {
 
-        $command = ProductSellerCategoryCreateCommand::from([
+        $command = ProductGroupCreateCommand::from([
                                                                 'owner'      => $this->user(),
                                                                 'name'       => fake()->name,
                                                                 'parent_id'  => 0,
@@ -45,7 +45,7 @@ class ProductSellerCategoryDeleteCommandHandlerTest extends ApplicationTestCase
         $model = $this->commandService()->create($command);
         $id =  $model->id;
 
-        $command = ProductSellerCategoryDeleteCommand::from([ 'id' => $id ]);
+        $command = ProductGroupDeleteCommand::from([ 'id' => $id ]);
         $this->commandService()->delete($command);
         $this->expectException(ModelNotFoundException::class);
         $category = $this->repository()->find($id);

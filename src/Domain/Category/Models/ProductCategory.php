@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -29,7 +28,7 @@ class ProductCategory extends Model implements OperatorInterface
 
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+        return config('red-jasmine-product.tables.prefix') . 'product_categories';
     }
 
 
@@ -48,7 +47,7 @@ class ProductCategory extends Model implements OperatorInterface
     protected $fillable = [
         'parent_id',
         'name',
-        'group_name',
+        'cluster',
         'image',
         'sort',
         'is_leaf',

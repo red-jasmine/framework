@@ -70,7 +70,7 @@ class ProductResource extends JsonResource
             'seller_category_id'  => $this->seller_category_id,
             'brand'               => new BrandResource($this->whenLoaded('brand')),
             'category'            => new CategoryResource($this->whenLoaded('category')),
-            'seller_category'     => new SellerCategoryResource($this->whenLoaded('sellerCategory')),
+            'seller_category'     => new GroupResource($this->whenLoaded('sellerCategory')),
             $this->mergeWhen($this->relationLoaded('info'),
                              $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'skus'                => ProductSkuResource::collection($this->whenLoaded('skus')),

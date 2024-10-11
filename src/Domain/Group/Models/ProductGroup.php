@@ -1,13 +1,13 @@
 <?php
 
-namespace RedJasmine\Product\Domain\Category\Models;
+namespace RedJasmine\Product\Domain\Group\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Group\Models\Enums\GroupStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -16,7 +16,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
-class ProductSellerCategory extends Model implements OperatorInterface, OwnerInterface
+class ProductGroup extends Model implements OperatorInterface, OwnerInterface
 {
 
     use HasSnowflakeId;
@@ -33,9 +33,8 @@ class ProductSellerCategory extends Model implements OperatorInterface, OwnerInt
 
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+        return config('red-jasmine-product.tables.prefix') .'product_groups';
     }
-
 
 
     public $incrementing = false;
@@ -53,17 +52,16 @@ class ProductSellerCategory extends Model implements OperatorInterface, OwnerInt
     protected $fillable = [
         'parent_id',
         'name',
-        'group_name',
+        'cluster',
         'image',
         'sort',
         'status',
         'is_leaf',
         'is_show',
-
     ];
 
     protected $casts = [
-        'status'  => CategoryStatusEnum::class,
+        'status'  => GroupStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',
     ];
@@ -76,13 +74,14 @@ class ProductSellerCategory extends Model implements OperatorInterface, OwnerInt
 
     public function scopeShow(Builder $query) : Builder
     {
+
         return $query->enable()->where('is_show', true);
     }
 
 
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', CategoryStatusEnum::ENABLE->value);
+        return $query->where('status', GroupStatusEnum::ENABLE->value);
     }
 
     /**
@@ -107,7 +106,7 @@ class ProductSellerCategory extends Model implements OperatorInterface, OwnerInt
             return false;
         }
 
-        if ($this->status !== CategoryStatusEnum::ENABLE) {
+        if ($this->status !== GroupStatusEnum::ENABLE) {
             return false;
         }
         // TODO 所有上级是否支持使用

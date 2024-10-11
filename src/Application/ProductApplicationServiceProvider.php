@@ -7,8 +7,8 @@ use RedJasmine\Product\Domain\Brand\Repositories\BrandReadRepositoryInterface;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
-use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryReadRepositoryInterface;
-use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupReadRepositoryInterface;
@@ -28,7 +28,7 @@ use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyGrou
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyValueReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductReadRepository;
-use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSellerCategoryReadRepository;
+use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductGroupReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSeriesReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSkuReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductStockLogReadRepository;
@@ -38,7 +38,7 @@ use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyGroup
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyValueRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductRepository;
-use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSellerCategoryRepository;
+use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSeriesRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSkuRepository;
 
@@ -53,8 +53,8 @@ class ProductApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductCategoryReadRepositoryInterface::class, ProductCategoryReadRepository::class);
 
 
-        $this->app->bind(ProductSellerCategoryRepositoryInterface::class, ProductSellerCategoryRepository::class);
-        $this->app->bind(ProductSellerCategoryReadRepositoryInterface::class, ProductSellerCategoryReadRepository::class);
+        $this->app->bind(ProductGroupRepositoryInterface::class, ProductGroupRepository::class);
+        $this->app->bind(ProductGroupReadRepositoryInterface::class, ProductGroupReadRepository::class);
 
         $this->app->bind(ProductPropertyGroupRepositoryInterface::class, ProductPropertyGroupRepository::class);
         $this->app->bind(ProductPropertyGroupReadRepositoryInterface::class, ProductPropertyGroupReadRepository::class);

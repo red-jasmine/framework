@@ -6,10 +6,10 @@ namespace RedJasmine\Product\Domain\Product\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Str;
-use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
+use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 
-class ProductSellerExtendCategoryPivot extends Pivot
+class ProductExtendGroupPivot extends Pivot
 {
 
     public $incrementing = true;
@@ -21,12 +21,12 @@ class ProductSellerExtendCategoryPivot extends Pivot
      */
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));
+        return config('red-jasmine-product.tables.prefix') . 'product_extend_group_pivots';
     }
 
 
-    public function sellerCategory() : BelongsTo
+    public function productGroup() : BelongsTo
     {
-        return $this->belongsTo(ProductSellerCategory::class, 'seller_category_id', 'id');
+        return $this->belongsTo(ProductGroup::class, 'product_group_id', 'id');
     }
 }

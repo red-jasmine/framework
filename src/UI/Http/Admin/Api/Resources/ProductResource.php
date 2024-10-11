@@ -72,7 +72,7 @@ class ProductResource extends JsonResource
                              $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'brand'              => new BrandResource($this->whenLoaded('brand')),
             'category'           => new CategoryResource($this->whenLoaded('category')),
-            'sellerCategory'     => new SellerCategoryResource($this->whenLoaded('sellerCategory')),
+            'sellerCategory'     => new GroupResource($this->whenLoaded('sellerCategory')),
             'skus'               => ProductSkuResource::collection($this->whenLoaded('skus')),
         ];
     }

@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品-品牌');
+            $table->index('parent_id','idx_parent');
         });
     }
 

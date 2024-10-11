@@ -9,7 +9,7 @@ use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') .'product_stock_logs', function (Blueprint $table) {
+        Schema::create( 'product_stock_logs', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->morphs('owner');
             $table->unsignedBigInteger('product_id')->comment('商品ID');
@@ -24,12 +24,12 @@ return new class extends Migration {
             $table->timestamps();
             $table->comment('商品-库存-记录');
             $table->index([ 'product_id', ], 'idx_product');
-            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
+            $table->index([ 'sku_id', ], 'idx_sku');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_stock_logs');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') . 'product_stock_logs');
     }
 };

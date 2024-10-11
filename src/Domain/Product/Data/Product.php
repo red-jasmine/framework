@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
@@ -14,58 +15,93 @@ use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
-
+/**
+ * 产品数据类
+ * 该类用于表示产品的各种属性和信息
+ */
 class Product extends Data
 {
+    // 产品类型
+    public ProductTypeEnum $productType;
+    // 运输类型
+    public ShippingTypeEnum $shippingType;
+    // 产品所属用户
+    public UserInterface $owner;
+    // 产品标题
+    public string $title;
+    // 产品副标题（可选）
+    public ?string $slogan;
 
-    public ProductTypeEnum   $productType;
-    public ShippingTypeEnum  $shippingType;
-    public UserInterface     $owner;
-    public string            $title;
-    public ?string           $slogan;
-    public Amount            $price;
-    public Amount            $marketPrice;
-    public Amount            $costPrice;
-    public ProductStatusEnum $status         = ProductStatusEnum::ON_SALE;
-    public FreightPayerEnum  $freightPayer   = FreightPayerEnum::SELLER;
-    public SubStockTypeEnum  $subStock       = SubStockTypeEnum::DEFAULT;
-    public int               $stock          = 0;
-    public ?string           $image          = null;
-    public ?string           $barcode        = null;
-    public ?string           $outerId        = null;
-    public bool              $isMultipleSpec = false;
-    public bool              $isCustomized   = false;
+    // 产品状态，默认为“在售”
+    public ProductStatusEnum $status = ProductStatusEnum::ON_SALE;
+    // 运费支付者，默认为“卖家”
+    public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
+    // 库存子类型，默认为“默认”
+    public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
+
+    // 产品图片（可选）
+    public ?string $image = null;
+    // 条形码（可选）
+    public ?string $barcode = null;
+    // 外部ID（可选）
+    public ?string $outerId = null;
+    // 是否多规格
+    public bool $isMultipleSpec = false;
+    // 是否定制化
+    public bool $isCustomized = false;
+    // 单位数量
+    public int $unitQuantity = 1;
+    // 单位（可选）
+    public ?string $unit = null;
+    // 发货时间
+    public int $deliveryTime = 0;
+    // 排序（可选）
+    public ?int $sort = 0;
+    // SPU ID（可选）
+    public ?int $spuId = null;
+    // 类别ID（可选）
+    public ?int $categoryId = null;
+    // 品牌ID（可选）
+    public ?int $brandId = null;
+    // 产品型号（可选）
+    public ?string $productModel = null;
+
+    public ?int $productGroupId = null;
+
+    public array $extendProductGroups = [];
+    // 邮费模板ID（可选）
+    public ?int $postageId = null;
+    // 最小购买限制（可选）
+    public ?int $minLimit = 0;
+    // 最大购买限制（可选）
+    public ?int $maxLimit = 0;
+    // 步进限制
+    public int $stepLimit = 1;
+    // VIP等级
+    public int                        $vip                    = 0;
+    public OrderQuantityLimitTypeEnum $orderQuantityLimitType = OrderQuantityLimitTypeEnum::UNLIMITED;
+
+    public int $orderQuantityLimitNum = 0;
+    // 积分
+    public int $points = 0;
+    // 是否热门
+    public bool $isHot = false;
+    // 是否新品
+    public bool $isNew = false;
+    // 是否最佳
+    public bool $isBest = false;
+    // 是否优惠
+    public bool $isBenefit = false;
 
 
-    public int     $unitQuantity           = 1;
-    public ?string $unit                   = null;
-    public int     $deliveryTime           = 0;
-    public ?int    $sort                   = 0;
-    public ?int    $spuId                  = null;
-    public ?int    $categoryId             = null;
-    public ?int    $brandId                = null;
-    public ?string $productModel           = null;
-    public ?int    $sellerCategoryId       = null;
-    public array   $sellerExtendCategories = [];
-    public ?int    $postageId              = null;
-    public ?int    $minLimit               = 0;
-    public ?int    $maxLimit               = 0;
-    public int     $stepLimit              = 1;
-    public int     $vip                    = 0;
-    public int     $points                 = 0;
-    public bool    $isHot                  = false;
-    public bool    $isNew                  = false;
-    public bool    $isBest                 = false;
-    public bool    $isBenefit              = false;
-    public int     $safetyStock            = 0;
-
-
+    public bool $isFromSupplier = false;
     /**
      * 供应商
      * @var UserInterface|null
      */
     public ?UserInterface $supplier;
-    public ?int           $supplierProductId = null;
+    // 供应商产品ID（可选）
+    public ?int $supplierProductId = null;
 
     /**
      * 提示
@@ -89,7 +125,6 @@ class Product extends Data
      */
     public ?string $detail = null;
 
-
     /**
      * 基础属性
      * @var Medium[]|null
@@ -103,11 +138,7 @@ class Product extends Data
     public ?array $videos = null;
 
 
-    public ?string $weight;
-    public ?string $width;
-    public ?string $height;
-    public ?string $length;
-    public ?string $size;
+    // 备注（可选）
     public ?string $remarks;
     /**
      * 定制工具
@@ -115,7 +146,7 @@ class Product extends Data
      */
     public ?array $tools;
     /**
-     *
+     * 扩展属性
      * @var array|null
      */
     public ?array $expands;
@@ -125,7 +156,6 @@ class Product extends Data
      * @var PromiseServices|null
      */
     public ?PromiseServices $promiseServices;
-
 
     /**
      * 基础属性
@@ -140,7 +170,6 @@ class Product extends Data
     public ?Collection $saleProps = null;
 
     /**
-     * // TODO
      * 自定义属性
      * @var Collection|null
      */
@@ -151,6 +180,28 @@ class Product extends Data
      * @var Collection<Sku>|null
      */
     public ?Collection $skus = null;
+
+
+    // 如果 启用了多规格那么就使用规格中的数据
+    public int $stock = 0;
+
+    public int $safetyStock = 0;
+    // 重量（可选）
+    public ?string $weight;
+    // 宽度（可选）
+    public ?string $width;
+    // 高度（可选）
+    public ?string $height;
+    // 长度（可选）
+    public ?string $length;
+    // 尺寸（可选）
+    public ?string $size;
+    // 产品价格
+    public Amount $price;
+    // 市场价格
+    public ?Amount $marketPrice;
+    // 成本价格
+    public ?Amount $costPrice;
 
 
 }

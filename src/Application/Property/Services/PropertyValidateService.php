@@ -290,7 +290,7 @@ class PropertyValidateService
         $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512,
             JSON_THROW_ON_ERROR));
 
-        $skuProperties = $skus->pluck('properties')->unique()->toArray();
+        $skuProperties = $skus->pluck('propertiesSequence')->unique()->toArray();
 
 
         // 对比数量
@@ -300,8 +300,8 @@ class PropertyValidateService
 
         // 验证总数量
         foreach ($skus as $sku) {
-            $sku->properties     = $this->propertyFormatter->formatString($sku->properties);
-            $sku->propertiesName = $this->buildSkuName($saleProps, $sku->properties);
+            $sku->propertiesSequence = $this->propertyFormatter->formatString($sku->propertiesSequence);
+            $sku->propertiesName     = $this->buildSkuName($saleProps, $sku->propertiesSequence);
         }
 
 

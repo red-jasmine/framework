@@ -32,7 +32,7 @@ class Brand extends Model implements OperatorInterface
 
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+        return config('red-jasmine-product.tables.prefix') . 'brands';
     }
 
 

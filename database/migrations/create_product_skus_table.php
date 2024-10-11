@@ -7,17 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') .'product_skus', function (Blueprint $table) {
+        Schema::create('product_skus', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->morphs('owner');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
-            $table->string('properties_name')->nullable()->comment('规格属性名称');
-            $table->string('properties')->nullable()->comment('规格属性值字符串');
+            $table->string('properties_name')->nullable()->comment('规格名称');
+            $table->string('properties_sequence')->nullable()->comment('规格属性序列');
             // SKU 信息
             $table->decimal('price', 10)->default(0)->comment('销售价');
-            $table->decimal('market_price', 10)->default(0)->comment('市场价');
-            $table->decimal('cost_price', 10)->default(0)->comment('成本价');
-            $table->unsignedBigInteger('sales')->default(0)->comment('销量');
+            $table->decimal('market_price', 10)->nullable()->comment('市场价');
+            $table->decimal('cost_price', 10)->nullable()->comment('成本价');
+
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
@@ -25,10 +25,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             // 信息
             $table->string('image')->nullable()->comment('主图');
-            $table->string('barcode', 32)->nullable()->comment('条形码');
-            $table->string('outer_id')->nullable()->comment('商家编码');
+
+            $table->string('outer_id')->nullable()->comment('规格编码');
+            $table->string('barcode', 32)->nullable()->comment('规格条码');
+            $table->string('weight')->nullable()->comment('重量:kg');
+            $table->string('width')->nullable()->comment('宽度:m');
+            $table->string('height')->nullable()->comment('高度:m');
+            $table->string('length')->nullable()->comment('长度:m');
+            $table->string('size')->nullable()->comment('体积:m³');
             // 状态
             $table->string('status',32)->comment('状态');
+            // 销量
+            $table->unsignedBigInteger('sales')->default(0)->comment('销量');
             // 供应商
             $table->unsignedBigInteger('supplier_sku_id')->nullable()->comment('供应商 SKU ID');
             // 操作
@@ -40,7 +48,6 @@ return new class extends Migration {
             $table->softDeletes();
             $table->comment('商品-SKU表');
             $table->index([ 'product_id', ], 'idx_product');
-            $table->index([ 'owner_id', 'owner_type', ], 'idx_owner');
         });
     }
 

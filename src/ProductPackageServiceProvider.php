@@ -21,18 +21,15 @@ class ProductPackageServiceProvider extends PackageServiceProvider
 
         $package->name(static::$name)
                 ->hasCommands($this->getCommands())
-
+                ->runsMigrations()
                 ->hasInstallCommand(function (InstallCommand $command) {
                     $command
                         ->publishConfigFile()
-                        ->publishMigrations()
+//                        ->publishMigrations()
                         ->askToRunMigrations()
-                        ->endWith(function (InstallCommand $command){
-
-                            if($command->confirm('Seed demo data')){
-
-                                $command->call('db:seed', ['--class' => ProductPackageSeeder::class ]);
-
+                        ->endWith(function (InstallCommand $command) {
+                            if ($command->confirm('Seed demo data')) {
+                                $command->call('db:seed', [ '--class' => ProductPackageSeeder::class ]);
                             }
 
                         })
@@ -69,19 +66,20 @@ class ProductPackageServiceProvider extends PackageServiceProvider
     public function getMigrations() : array
     {
         return [
-           'create_brands_table',
-           'create_product_categories_table',
-           'create_product_channel_stocks_table',
-           'create_product_infos_table',
-           'create_product_properties_table',
-           'create_product_property_groups_table',
-           'create_product_property_values_table',
-           'create_product_seller_categories_table',
-           'create_product_series_products_table',
-           'create_product_series_table',
-           'create_product_skus_table',
-           'create_product_stock_logs_table',
-           'create_products_table',
+            'create_brands_table',
+            'create_product_categories_table',
+            'create_product_channel_stocks_table',
+            'create_product_infos_table',
+            'create_product_properties_table',
+            'create_product_property_groups_table',
+            'create_product_property_values_table',
+            'create_product_groups_table',
+            'create_product_series_products_table',
+            'create_product_series_table',
+            'create_product_skus_table',
+            'create_product_stock_logs_table',
+            'create_products_table',
+            'create_product_extend_group_pivots_table'
         ];
 
     }

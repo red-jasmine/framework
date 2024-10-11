@@ -13,7 +13,7 @@ class ProductPackageSeeder extends Seeder
         $this->brand();
         $this->category();
         $this->property();
-        $this->sellerCategory();
+        $this->groups();
 
 
     }
@@ -326,9 +326,9 @@ class ProductPackageSeeder extends Seeder
     }
 
 
-    protected function sellerCategory() : void
+    protected function groups() : void
     {
-        DB::table(config('red-jasmine-product.tables.prefix') .'product_seller_categories')->insert([
+        DB::table(config('red-jasmine-product.tables.prefix') .'product_groups')->insert([
             'id'         => 1,
             'owner_type' => 'seller',
             'owner_id'   => 1,
@@ -340,7 +340,7 @@ class ProductPackageSeeder extends Seeder
         ]);
 
 
-        DB::table(config('red-jasmine-product.tables.prefix') .'product_seller_categories')->insert([
+        DB::table(config('red-jasmine-product.tables.prefix') .'product_groups')->insert([
             'id'         => 2,
             'owner_type' => 'seller',
             'owner_id'   => 1,

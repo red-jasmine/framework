@@ -8,7 +8,7 @@ use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') .'product_property_values', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') . 'product_property_values', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('属性值ID');
             $table->unsignedBigInteger('pid')->comment('属性ID');
             $table->unsignedBigInteger('group_id')->nullable()->comment('属性组ID');
@@ -21,11 +21,13 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品-属性值表');
+            $table->index('pid', 'idx_property');
+            $table->index('group_id', 'idx_group');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_property_values');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') . 'product_property_values');
     }
 };

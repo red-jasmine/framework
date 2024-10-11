@@ -2,32 +2,32 @@
 
 namespace Category\CommandHandlers;
 
-use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryCommandService;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductSellerCategoryCreateCommand;
+use RedJasmine\Product\Application\Group\Services\ProductGroupCommandService;
+use RedJasmine\Product\Application\Group\UserCases\Commands\ProductGroupCreateCommand;
 use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
-use RedJasmine\Product\Domain\Category\Models\ProductSellerCategory;
-use RedJasmine\Product\Domain\Category\Repositories\ProductSellerCategoryRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Models\ProductGroup;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Tests\Application\ApplicationTestCase;
 
 class ProductSellerCategoryCreateCommandHandlerTest extends ApplicationTestCase
 {
 
 
-    protected function repository() : ProductSellerCategoryRepositoryInterface
+    protected function repository() : ProductGroupRepositoryInterface
     {
-        return app(ProductSellerCategoryRepositoryInterface::class);
+        return app(ProductGroupRepositoryInterface::class);
     }
 
-    protected function commandService() : ProductSellerCategoryCommandService
+    protected function commandService() : ProductGroupCommandService
     {
-        return app(ProductSellerCategoryCommandService::class);
+        return app(ProductGroupCommandService::class);
     }
 
 
     public function test_can_create_seller_product_category() : void
     {
 
-        $command = ProductSellerCategoryCreateCommand::from([
+        $command = ProductGroupCreateCommand::from([
                                                                 'owner'      => $this->user(),
                                                                 'name'       => fake()->name,
                                                                 'parent_id'  => 0,
@@ -47,7 +47,7 @@ class ProductSellerCategoryCreateCommandHandlerTest extends ApplicationTestCase
         $category = $this->repository()->find($id);
 
 
-        $this->assertInstanceOf(ProductSellerCategory::class, $category);
+        $this->assertInstanceOf(ProductGroup::class, $category);
         $this->assertEquals($command->name, $category->name);
         $this->assertEquals($command->owner->getType(), $category->owner->getType());
         $this->assertEquals($command->owner->getID(), $category->owner->getID());

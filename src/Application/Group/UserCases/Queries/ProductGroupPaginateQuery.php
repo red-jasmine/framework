@@ -1,10 +1,10 @@
 <?php
 
-namespace RedJasmine\Product\Application\Category\UserCases\Queries;
+namespace RedJasmine\Product\Application\Group\UserCases\Queries;
 
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
-class ProductSellerCategoryPaginateQuery extends PaginateQuery
+class ProductGroupPaginateQuery extends PaginateQuery
 {
 
     public ?int $parentId = null;

@@ -3,26 +3,20 @@
 namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
 
 
-use JsonException;
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
-use RedJasmine\Product\Application\Category\Services\ProductSellerCategoryQueryService;
+use RedJasmine\Product\Application\Group\Services\ProductGroupQueryService;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
-use RedJasmine\Product\Domain\Product\Data\Sku;
-use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Product\Models\ProductSku;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Product\Exceptions\StockException;
-use RedJasmine\Support\Application\CommandHandler;
 use Throwable;
 
 /**
@@ -32,13 +26,13 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
 {
 
     public function __construct(
-        protected BrandQueryService                 $brandQueryService,
-        protected StockCommandService               $stockCommandService,
-        protected PropertyFormatter                 $propertyFormatter,
-        protected PropertyValidateService           $propertyValidateService,
-        protected ProductCategoryQueryService       $categoryQueryService,
-        protected ProductSellerCategoryQueryService $sellerCategoryQueryService,
-        protected ProductTransformer                $productTransformer
+        protected BrandQueryService           $brandQueryService,
+        protected StockCommandService         $stockCommandService,
+        protected PropertyFormatter           $propertyFormatter,
+        protected PropertyValidateService     $propertyValidateService,
+        protected ProductCategoryQueryService $categoryQueryService,
+        protected ProductGroupQueryService    $sellerCategoryQueryService,
+        protected ProductTransformer          $productTransformer
     )
     {
 
@@ -143,12 +137,13 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
 
 
         try {
-            if ($command->sellerCategoryId
-                && !$this->sellerCategoryQueryService->isAllowUse($command->sellerCategoryId, $command->owner)) {
-                throw new ProductException('卖家分类不可使用');
+
+            if ($command->productGroupId
+                && !$this->sellerCategoryQueryService->isAllowUse($command->productGroupId, $command->owner)) {
+                throw new ProductException('商品分组不可使用');
             }
         } catch (Throwable $exception) {
-            throw new ProductException('卖家分类不可使用');
+            throw new ProductException('商品分组不可使用');
         }
     }
 }

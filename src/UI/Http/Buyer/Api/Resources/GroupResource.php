@@ -5,8 +5,8 @@ namespace RedJasmine\Product\UI\Http\Buyer\Api\Resources;
 use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Product\Domain\Category\Models\ProductSellerCategory */
-class SellerCategoryResource extends JsonResource
+/** @mixin \RedJasmine\Product\Domain\Group\Models\ProductGroup */
+class GroupResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {

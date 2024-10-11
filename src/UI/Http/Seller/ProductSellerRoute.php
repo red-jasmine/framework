@@ -11,7 +11,7 @@ use RedJasmine\Product\UI\Http\Seller\Api\Controllers\PropertyGroupController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\PropertyValueController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\BrandController;
 use RedJasmine\Product\UI\Http\Seller\Api\Controllers\CategoryController;
-use RedJasmine\Product\UI\Http\Seller\Api\Controllers\SellerCategoryController;
+use RedJasmine\Product\UI\Http\Seller\Api\Controllers\GroupController;
 
 class ProductSellerRoute
 {
@@ -32,8 +32,8 @@ class ProductSellerRoute
             Route::apiResource('categories', CategoryController::class)->only([ 'show', 'index' ])->names('seller.product.categories');
 
 
-            Route::get('seller-categories/tree', [ SellerCategoryController::class, 'tree' ])->name('seller.product.seller-categories.tree');
-            Route::apiResource('seller-categories', SellerCategoryController::class)->names('seller.product.seller-categories');
+            Route::get('groups/tree', [ GroupController::class, 'tree' ])->name('seller.product.groups.tree');
+            Route::apiResource('groups', GroupController::class)->names('seller.product.groups');
 
             Route::apiResource('products', ProductController::class)->names('seller.product.products');
 

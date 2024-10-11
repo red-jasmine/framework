@@ -1,26 +1,26 @@
 <?php
 
-namespace RedJasmine\Product\Application\Category\UserCases\Commands;
+namespace RedJasmine\Product\Application\Group\UserCases\Commands;
 
-use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
+use RedJasmine\Product\Domain\Group\Models\Enums\GroupStatusEnum;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Data\UserData;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
-class ProductSellerCategoryCreateCommand extends Data
+class ProductGroupCreateCommand extends Data
 {
 
 
-    public UserData           $owner;
-    public string             $name;
-    public ?string            $description = null;
-    public int                $parentId    = 0;
-    public CategoryStatusEnum $status      = CategoryStatusEnum::ENABLE;
-    public int                $sort        = 0;
-    public bool               $isLeaf      = false;
-    public bool               $isShow      = false;
-    public string|null        $groupName   = null;
-    public string|null        $image       = null;
+    public UserData        $owner;
+    public string          $name;
+    public ?string         $description = null;
+    public int             $parentId    = 0;
+    public GroupStatusEnum $status      = GroupStatusEnum::ENABLE;
+    public int             $sort        = 0;
+    public bool            $isLeaf      = false;
+    public bool            $isShow      = false;
+    public string|null     $groupName   = null;
+    public string|null     $image       = null;
 
 
     public static function attributes() : array
