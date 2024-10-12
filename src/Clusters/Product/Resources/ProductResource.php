@@ -64,7 +64,7 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = [ 'skus', 'info', 'extendProductGroups' ];
+        $findQuery->include = [ 'skus', 'info', 'extendProductGroups', 'tags' ];
         return $findQuery;
     }
 
@@ -77,6 +77,7 @@ class ProductResource extends Resource
         }
         $model->setAttribute('skus', $model->skus->toArray());
         $model->setAttribute('extendProductGroups', $model->extendProductGroups->toArray());
+        $model->setAttribute('tags', $model->tags->toArray());
         return $model;
     }
 
@@ -193,7 +194,7 @@ class ProductResource extends Resource
                       ->storeResults()
                       ->default(0),
 
-            // TODO
+
             SelectTree::make('extend_product_groups')
                       ->label(__('red-jasmine-product::product.fields.extend_groups'))
                       ->relationship(relationship: 'extendProductGroups',
@@ -207,9 +208,20 @@ class ProductResource extends Resource
                       )
                 //->saveRelationshipsUsing(null)
                 //->loadStateFromRelationshipsUsing(null)
-
+                      ->saveRelationshipsUsing(null)
                       ->parentNullValue(0)
                       ->default([]),
+
+            Forms\Components\Select::make('tags')
+                                   ->multiple()
+                                   ->label(__('red-jasmine-product::product.fields.tags'))
+
+                                   ->relationship(
+                                       titleAttribute: 'name',
+                                       modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
+                                                                                                             ->where('owner_id', $get('owner_id')),
+                                   )
+                                   ->default([]),
 
             Forms\Components\Fieldset::make('basicProps')
                                      ->label(__('red-jasmine-product::product.fields.basic_props'))
