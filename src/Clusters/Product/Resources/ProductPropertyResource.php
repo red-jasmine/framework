@@ -77,6 +77,9 @@ class ProductPropertyResource extends Resource
                                                 ->searchable([ 'name' ])
                                                 ->preload()
                                                 ->nullable(),
+                         Forms\Components\Radio::make('is_required')
+                                               ->label(__('red-jasmine-product::product-property.fields.is_required'))
+                                               ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
                          Forms\Components\Radio::make('is_allow_multiple')
                                                ->label(__('red-jasmine-product::product-property.fields.is_allow_multiple'))
                                                ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
@@ -105,6 +108,7 @@ class ProductPropertyResource extends Resource
                           Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property.fields.name'))->searchable(),
                           Tables\Columns\TextColumn::make('unit')->label(__('red-jasmine-product::product-property.fields.unit'))
                           ,
+                          Tables\Columns\IconColumn::make('is_required')->label(__('red-jasmine-product::product-property.fields.is_required'))->boolean(),
                           Tables\Columns\IconColumn::make('is_allow_multiple')->label(__('red-jasmine-product::product-property.fields.is_allow_multiple'))->boolean(),
                           Tables\Columns\IconColumn::make('is_allow_alias')->label(__('red-jasmine-product::product-property.fields.is_allow_alias'))->boolean(),
                           Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property.fields.sort'))->sortable(),

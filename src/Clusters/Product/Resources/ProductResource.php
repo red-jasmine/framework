@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
@@ -65,7 +66,7 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = [ 'skus', 'info' ];
+        $findQuery->include = [ 'skus', 'info', 'extendProductGroups' ];
         return $findQuery;
     }
 
@@ -77,6 +78,7 @@ class ProductResource extends Resource
             $model->setAttribute($key, $model->info->{$key});
         }
         $model->setAttribute('skus', $model->skus->toArray());
+        $model->setAttribute('extendProductGroups', $model->extendProductGroups->toArray());
         return $model;
     }
 
@@ -191,15 +193,21 @@ class ProductResource extends Resource
                                                                                                      ->where('owner_id', $get('owner_id'))
                           ,
                       )
-                      //->saveRelationshipsUsing(null)
-                      //->loadStateFromRelationshipsUsing(null)
+                //->saveRelationshipsUsing(null)
+                //->loadStateFromRelationshipsUsing(null)
 
                       ->parentNullValue(0)
                       ->default([]),
 
             Forms\Components\Fieldset::make('basicProps')
                                      ->label(__('red-jasmine-product::product.fields.basic_props'))
-                                     ->columns(1)->inlineLabel()->schema([ static::basicProps()->hiddenLabel() ]),
+                                     ->columns(1)->inlineLabel()
+                                     ->schema([ static::basicProps()->hiddenLabel() ]),
+
+            Forms\Components\Fieldset::make('customizeProps')
+                                     ->label(__('red-jasmine-product::product.fields.customize_props'))
+                                     ->columns(1)->inlineLabel()
+                                     ->schema([ static::customizeProps()->hiddenLabel() ]),
         ];
     }
 
@@ -210,11 +218,11 @@ class ProductResource extends Resource
                        ->label(__('red-jasmine-product::product.fields.basic_props'))
                        ->schema([
                                     Forms\Components\Select::make('pid')
-                                                           ->hiddenLabel()
-                                                           ->inlineLabel()
+//                                                           ->hiddenLabel()
+                                                           ->inlineLabel(false)
                                                            ->label(__('red-jasmine-product::product.props.pid'))
                                                            ->live()
-                                                           ->columnSpan(2)
+                                                           ->columnSpan(1)
                                                            ->required()
                                                            ->disabled(fn($state) => $state)
                                                            ->dehydrated()
@@ -230,8 +238,8 @@ class ProductResource extends Resource
 
                                     Repeater::make('values')
                                             ->label(__('red-jasmine-product::product.props.values'))
-                                            ->hiddenLabel()
-                                            ->inlineLabel()
+//                                            ->hiddenLabel()
+                                            ->inlineLabel(false)
                                             ->schema([
                                                          Forms\Components\Select::make('vid')
                                                                                 ->label(__('red-jasmine-product::product.props.vid'))
@@ -266,7 +274,8 @@ class ProductResource extends Resource
 
 
                                                      ])
-                                            ->columns()
+                                            ->grid(1)
+                                            ->columns(2)
                                             ->columnSpan(2)
                                             ->reorderable(false)
                                             ->deletable(fn($state) => count($state) > 1)
@@ -279,22 +288,76 @@ class ProductResource extends Resource
                                 ])
                        ->default([])
                        ->inlineLabel(false)
-                       ->columns(4)
+                       ->grid(2)
+                       ->columns(3)
                        ->columnSpan('full')
                        ->reorderable(false);
     }
 
 
+    protected static function customizeProps() : Repeater
+    {
+        return Repeater::make('customize_props')
+                       ->label(__('red-jasmine-product::product.fields.customize_props'))
+                       ->schema([
+                                    Forms\Components\Hidden::make('pid')->default(0),
+                                    Forms\Components\Section::make()
+                                                            ->hiddenLabel()
+                                                            ->inlineLabel(false)
+                                                            ->schema(
+                                                                [
+                                                                    Forms\Components\TextInput::make('name')
+                                                                                              ->label(__('red-jasmine-product::product.props.pid'))
+                                                                                              ->placeholder(__('red-jasmine-product::product.props.pid'))
+                                                                                              ->hiddenLabel()
+                                                                                              ->inlineLabel(false)
+                                                                                              ->required()
+                                                                                              ->maxLength(32),
+
+                                                                ]
+                                                            )
+                                                            ->columnSpan(2),
+
+                                    Repeater::make('values')
+                                            ->label(__('red-jasmine-product::product.props.values'))
+                                            ->hiddenLabel()
+                                            ->inlineLabel(false)
+                                            ->schema([
+                                                         Forms\Components\Hidden::make('vid')->default(0),
+                                                         Forms\Components\TextInput::make('name')
+                                                                                   ->label(__('red-jasmine-product::product.props.vid'))
+                                                                                   ->placeholder(__('red-jasmine-product::product.props.vid'))
+                                                                                   ->inlineLabel(false)
+                                                                                   ->hiddenLabel()
+                                                                                   ->columnSpan(2)
+                                                                                   ->required()->maxLength(32),
+                                                     ])
+                                            ->columns(2)
+                                            ->columnSpan(2)
+                                            ->reorderable(false)
+                                            ->deletable(fn($state) => count($state) > 1)
+                                            ->minItems(1)
+                                            ->maxItems(1)
+                                    ,
+
+
+                                ])
+                       ->default([])
+                       ->inlineLabel(false)
+                       ->grid(4)
+                       ->columns(4)
+                       ->columnSpan('full')
+                       ->reorderable(false);
+    }
+
     protected static function specifications() : array
     {
-        return [ Forms\Components\ToggleButtons::make('is_multiple_spec')
+        return [ Forms\Components\Toggle::make('is_multiple_spec')
                                                ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
                                                ->required()
-                                               ->boolean()
                                                ->live()
                                                ->inline()
                                                ->default(0),
-
 
                  static::saleProps()->visible(fn(Forms\Get $get) => $get('is_multiple_spec'))
                        ->live()
@@ -461,6 +524,7 @@ class ProductResource extends Resource
     {
         return TableRepeater::make('skus')
                             ->label(__('red-jasmine-product::product.fields.skus'))
+                            ->streamlined()
                             ->headers([
                                           Header::make('properties_name')->label(__('red-jasmine-product::product.fields.properties_name')),
                                           Header::make('image')->label(__('red-jasmine-product::product.fields.image')),
@@ -472,39 +536,42 @@ class ProductResource extends Resource
                                           Header::make('barcode')->label(__('red-jasmine-product::product.fields.barcode')),
                                           Header::make('outer_id')->label(__('red-jasmine-product::product.fields.outer_id')),
                                           Header::make('supplier_sku_id')->label(__('red-jasmine-product::product.fields.supplier_sku_id')),
+                                          Header::make('weight')->label(__('red-jasmine-product::product.fields.weight')),
+                                          Header::make('size')->label(__('red-jasmine-product::product.fields.size')),
+                                          Header::make('length')->label(__('red-jasmine-product::product.fields.length')),
+                                          Header::make('height')->label(__('red-jasmine-product::product.fields.height')),
+                                          Header::make('width')->label(__('red-jasmine-product::product.fields.width')),
                                           Header::make('status')->label(__('red-jasmine-product::product.fields.status')),
                                       ])
                             ->schema([
                                          Forms\Components\Hidden::make('properties_sequence'),
                                          Forms\Components\TextInput::make('properties_name')->readOnly(),
-                                         Forms\Components\FileUpload::make('image')->image(),
-                                         Forms\Components\TextInput::make('price')->required()->numeric()->formatStateUsing(fn(
-                                             $state
-                                         ) => is_object($state) ? $state->value() : $state),
-                                         Forms\Components\TextInput::make('stock')->required()->maxLength(32),
-                                         Forms\Components\TextInput::make('market_price')->numeric()->formatStateUsing(fn(
-                                             $state
-                                         ) => is_object($state) ? $state->value() : $state),
-                                         Forms\Components\TextInput::make('cost_price')->numeric()->formatStateUsing(fn(
-                                             $state
-                                         ) => is_object($state) ? $state->value() : $state),
-
-                                         Forms\Components\TextInput::make('safety_stock')
-                                                                   ->numeric()
-                                                                   ->default(0),
+                                         Forms\Components\FileUpload::make('image')->image()
+                                         ,
+                                         Forms\Components\TextInput::make('price')->minValue(0)->required()->numeric()->formatStateUsing(fn($state) => is_object($state) ? $state->value() : $state),
+                                         Forms\Components\TextInput::make('stock')->minValue(0)->numeric()->required(),
+                                         Forms\Components\TextInput::make('market_price')->minValue(0)->numeric()->formatStateUsing(fn($state) => is_object($state) ? $state->value() : $state),
+                                         Forms\Components\TextInput::make('cost_price')->minValue(0)->numeric()->formatStateUsing(fn($state) => is_object($state) ? $state->value() : $state),
+                                         Forms\Components\TextInput::make('safety_stock')->numeric()->default(0),
                                          Forms\Components\TextInput::make('barcode')->maxLength(32),
                                          Forms\Components\TextInput::make('outer_id')->maxLength(32),
                                          Forms\Components\TextInput::make('supplier_sku_id')->maxLength(32),
-                                         Forms\Components\Select::make('status')->required()
-                                                                ->default(ProductStatusEnum::ON_SALE->value)
-                                                                ->options(ProductStatusEnum::skusStatus()),
+                                         Forms\Components\TextInput::make('weight')->nullable()->numeric()->maxLength(32),
+                                         Forms\Components\TextInput::make('size')->nullable()->numeric()->maxLength(32),
+                                         Forms\Components\TextInput::make('length')->nullable()->numeric()->maxLength(32),
+                                         Forms\Components\TextInput::make('width')->nullable()->numeric()->maxLength(32),
+                                         Forms\Components\TextInput::make('height')->nullable()->numeric()->maxLength(32),
+
+                                         Forms\Components\Select::make('status')->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
 
 
-                                     ])->inlineLabel(false)
+                                     ])
+                            ->inlineLabel(false)
                             ->columnSpan('full')
                             ->streamlined()
                             ->reorderable(false)
-                            ->addable(false);
+                            ->addable(false)
+                            ->default(null);
     }
 
     public static function saleInfoFields() : array
@@ -532,16 +599,19 @@ class ProductResource extends Resource
                                       ->label(__('red-jasmine-product::product.fields.min_limit'))
                                       ->required()
                                       ->numeric()
-                                      ->default(0),
+                                      ->minValue(1)
+                                      ->default(1),
             Forms\Components\TextInput::make('max_limit')
                                       ->label(__('red-jasmine-product::product.fields.max_limit'))
                                       ->required()
                                       ->numeric()
+                                      ->minValue(0)
                                       ->default(0),
             Forms\Components\TextInput::make('step_limit')
                                       ->label(__('red-jasmine-product::product.fields.step_limit'))
                                       ->required()
                                       ->numeric()
+                                      ->minValue(1)
                                       ->default(1),
             Forms\Components\TextInput::make('vip')
                                       ->label(__('red-jasmine-product::product.fields.vip'))
@@ -563,8 +633,17 @@ class ProductResource extends Resource
                                       ->numeric()
                                       ->default(0)
                                       ->suffix('件')
-                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
+                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value),
+
+
+            Forms\Components\Toggle::make('is_alone_order')
+                                          ->label(__('red-jasmine-product::product.fields.is_alone_order'))
+                                          ->required()
+
+                                          ->default(false)
+
             ,
+
         ];
     }
 
@@ -582,16 +661,17 @@ class ProductResource extends Resource
     {
 
         return [
+
             Forms\Components\TextInput::make('tips')->label(__('red-jasmine-product::product.fields.tips'))->maxLength(255),
             Forms\Components\TextInput::make('points')
                                       ->label(__('red-jasmine-product::product.fields.points'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
-            Forms\Components\Radio::make('is_hot')->label(__('red-jasmine-product::product.fields.is_hot'))->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_new')->label(__('red-jasmine-product::product.fields.is_new'))->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_best')->label(__('red-jasmine-product::product.fields.is_best'))->required()->inline()->boolean()->default(0),
-            Forms\Components\Radio::make('is_benefit')->label(__('red-jasmine-product::product.fields.is_benefit'))->required()->inline()->boolean()->default(0),
+            Forms\Components\Toggle::make('is_hot')->label(__('red-jasmine-product::product.fields.is_hot'))->required()->inline()->default(0),
+            Forms\Components\Toggle::make('is_new')->label(__('red-jasmine-product::product.fields.is_new'))->required()->inline()->default(0),
+            Forms\Components\Toggle::make('is_best')->label(__('red-jasmine-product::product.fields.is_best'))->required()->inline()->default(0),
+            Forms\Components\Toggle::make('is_benefit')->label(__('red-jasmine-product::product.fields.is_benefit'))->required()->inline()->default(0),
             Forms\Components\TextInput::make('sort')
                                       ->label(__('red-jasmine-product::product.fields.sort'))
                                       ->required()
@@ -651,6 +731,57 @@ class ProductResource extends Resource
                                   ->boolean()
                                   ->inline()
                                   ->default(0),
+
+
+            Forms\Components\Fieldset::make('表单')
+                                     ->columns(1)
+                                     ->inlineLabel()
+                                     ->schema(
+
+                                         [
+                                             Repeater::make('form.schemas')
+
+//                                                     ->inlineLabel()
+                                                     ->label(__('red-jasmine-product::product.fields.form'))
+                                                     ->default(null)
+                                                     ->schema([
+
+                                                                  Forms\Components\TextInput::make('label')->inlineLabel()->required()->maxLength(32),
+                                                                  Forms\Components\TextInput::make('name')->inlineLabel()->required()->maxLength(32),
+                                                                  Forms\Components\Select::make('type')->inlineLabel()->required()
+                                                                                         ->default(FieldTypeEnum::TEXT)
+                                                                                         ->useEnum(FieldTypeEnum::class),
+                                                                  Forms\Components\Checkbox::make('is_required')->inlineLabel(),
+                                                                  Forms\Components\TextInput::make('default')->inlineLabel(),
+                                                                  Forms\Components\TextInput::make('placeholder')->inlineLabel(),
+                                                                  Forms\Components\TextInput::make('hint')->inlineLabel(),
+
+                                                                  Repeater::make('options')->default(null)->schema([
+                                                                                                                       Forms\Components\TextInput::make('label')
+                                                                                                                                                 ->hiddenLabel()
+//                                                                                                                                                 ->inlineLabel()
+                                                                                                                                                 ->required()->maxLength(32),
+                                                                                                                       Forms\Components\TextInput::make('value')
+                                                                                                                                                 ->hiddenLabel()
+//                                                                                                                                                 ->inlineLabel()
+                                                                                                                                                 ->required()->maxLength(128),
+                                                                                                                   ])
+                                                                          ->columns(2)
+                                                                          ->grid(5)
+                                                                          ->columnSpan('full'),
+
+                                                              ])
+                                                     ->inlineLabel(false)
+                                                     ->hiddenLabel()
+                                                     ->columns(7)
+                                                     ->columnSpan('full')
+
+
+                                         ]
+
+
+                                     ),
+
 
             Forms\Components\TextInput::make('remarks')
                                       ->label(__('red-jasmine-product::product.fields.remarks'))

@@ -31,7 +31,7 @@ class ProductSeriesResource extends Resource
 
     protected static ?string $model = ProductSeries::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-view-columns';
 
     protected static ?string $cluster        = Product::class;
 

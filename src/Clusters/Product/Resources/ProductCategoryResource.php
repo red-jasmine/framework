@@ -71,8 +71,8 @@ class ProductCategoryResource extends Resource
                          Forms\Components\FileUpload::make('image')
                                                     ->label(__('red-jasmine-product::product-category.fields.image'))
                                                     ->image(),
-                         Forms\Components\TextInput::make('group_name')
-                                                   ->label(__('red-jasmine-product::product-category.fields.group_name'))
+                         Forms\Components\TextInput::make('cluster')
+                                                   ->label(__('red-jasmine-product::product-category.fields.cluster'))
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('sort')
                                                    ->label(__('red-jasmine-product::product-category.fields.sort'))
@@ -110,8 +110,8 @@ class ProductCategoryResource extends Resource
                           Tables\Columns\ImageColumn::make('image')
                                                     ->label(__('red-jasmine-product::product-category.fields.image'))
                           ,
-                          Tables\Columns\TextColumn::make('group_name')
-                                                   ->label(__('red-jasmine-product::product-category.fields.group_name'))
+                          Tables\Columns\TextColumn::make('cluster')
+                                                   ->label(__('red-jasmine-product::product-category.fields.cluster'))
                                                    ->searchable(),
 
                           Tables\Columns\IconColumn::make('is_leaf')

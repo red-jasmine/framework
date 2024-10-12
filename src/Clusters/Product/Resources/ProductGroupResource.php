@@ -32,7 +32,7 @@ class ProductGroupResource extends Resource
     protected static ?int    $navigationSort = 4;
     protected static ?string $cluster        = Product::class;
     protected static ?string $model          = ProductGroup::class;
-    protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
 
     protected static ?string $commandService = ProductGroupCommandService::class;
