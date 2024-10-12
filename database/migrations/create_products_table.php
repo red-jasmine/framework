@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
             $table->unsignedTinyInteger('is_alone_order')->default(0)->comment('是否单独下单');
+            $table->unsignedTinyInteger('is_pre_sale')->default(0)->comment('是否预售');
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
             $table->string('outer_id')->nullable()->comment('商品编码');
@@ -80,6 +81,9 @@ return new class extends Migration {
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+
+            $table->timestamp('start_sale_time')->nullable()->comment('定时上架时间');
+            $table->timestamp('end_sale_time')->nullable()->comment('定时下架时间');
             // 统计项
             $table->unsignedBigInteger('sales')->default(0)->comment('销售量');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
@@ -100,8 +104,7 @@ return new class extends Migration {
             $table->comment('商品表');
 
 
-        })
-        ;
+        });
 
     }
 

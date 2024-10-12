@@ -86,6 +86,8 @@ class ProductTransformer
         $product->is_best                   = $command->isBest;
         $product->is_benefit                = $command->isBenefit;
         $product->supplier_product_id       = $command->supplierProductId;
+        $product->start_sale_time           = $command->startSaleTime;
+        $product->end_sale_time             = $command->endSaleTime;
         $product->info->id                  = $product->id;
         $product->info->promise_services    = $command->promiseServices;
         $product->info->videos              = $command->videos;

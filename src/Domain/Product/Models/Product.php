@@ -142,6 +142,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'on_sale_time'              => 'datetime',
             'sold_out_time'             => 'datetime',
             'modified_time'             => 'datetime',
+            'start_sale_time'           => 'datetime',
+            'end_sale_time'             => 'datetime',
             'is_hot'                    => 'boolean',
             'is_new'                    => 'boolean',
             'is_best'                   => 'boolean',
@@ -204,7 +206,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
         return $query->whereIn('status', [
             ProductStatusEnum::ON_SALE,
-            ProductStatusEnum::PRE_SALE,
             ProductStatusEnum::SOLD_OUT,
         ]);
     }
@@ -248,8 +249,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             case ProductStatusEnum::OFF_SHELF:
                 $this->off_sale_time = now();
                 break;
-            case ProductStatusEnum::PRE_SALE:
-                break;
             case ProductStatusEnum::DELETED:
                 $this->off_sale_time = now();
         }
@@ -264,7 +263,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
         if (!in_array($this->status, [
             ProductStatusEnum::ON_SALE,
-            ProductStatusEnum::PRE_SALE
         ],            true)) {
 
 

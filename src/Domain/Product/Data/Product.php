@@ -2,6 +2,9 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
+use Carbon\CarbonImmutable;
+use DateTime;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
@@ -16,6 +19,8 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
  * 产品数据类
@@ -39,10 +44,13 @@ class Product extends Data
     // 运费支付者，默认为“卖家”
     public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
     // 库存子类型，默认为“默认”
-    public SubStockTypeEnum $subStock     = SubStockTypeEnum::DEFAULT;
+    public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
 
     // 是否单独下单
-    public bool $isAloneOrder =  false;
+    public bool $isAloneOrder = false;
+    // 是否预售
+    public bool $isPreSale = false;
+
 
     // 产品图片（可选）
     public ?string $image = null;
@@ -213,6 +221,11 @@ class Product extends Data
     public ?Amount $marketPrice;
     // 成本价格
     public ?Amount $costPrice;
+
+    #[WithCast(DateTimeInterfaceCast::class)]
+    public ?Carbon $startSaleTime = null;
+    #[WithCast(DateTimeInterfaceCast::class)]
+    public ?Carbon $endSaleTime = null;
 
 
 }

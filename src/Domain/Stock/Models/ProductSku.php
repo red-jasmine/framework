@@ -54,7 +54,7 @@ class ProductSku extends Model implements OperatorInterface
      */
     public function isAllowSale() : bool
     {
-        if (!in_array($this->status, [ ProductStatusEnum::ON_SALE, ProductStatusEnum::PRE_SALE ], true)) {
+        if (!in_array($this->status, [ ProductStatusEnum::ON_SALE,  ], true)) {
             throw  StockException::newFromCodes(StockException::SKU_FORBID_SALE);
         }
         return true;
