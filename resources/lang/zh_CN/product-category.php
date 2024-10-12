@@ -9,7 +9,7 @@ return [
         'name'         => '类目名称',
         'description'  => '描述',
         'image'        => '图片',
-        'group_name'   => '分组',
+        'cluster'      => '群簇',
         'sort'         => '排序',
         'is_leaf'      => '是否叶子类目',
         'is_show'      => '是否显示',

@@ -3,6 +3,8 @@
 namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Data\Field;
+use RedJasmine\Ecommerce\Domain\Form\Data\Form;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -37,7 +39,10 @@ class Product extends Data
     // 运费支付者，默认为“卖家”
     public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
     // 库存子类型，默认为“默认”
-    public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
+    public SubStockTypeEnum $subStock     = SubStockTypeEnum::DEFAULT;
+
+    // 是否单独下单
+    public bool $isAloneOrder =  false;
 
     // 产品图片（可选）
     public ?string $image = null;
@@ -171,7 +176,7 @@ class Product extends Data
 
     /**
      * 自定义属性
-     * @var Collection|null
+     * @var Collection<Property>|null
      */
     public ?Collection $customizeProps = null;
 
@@ -180,6 +185,12 @@ class Product extends Data
      * @var Collection<Sku>|null
      */
     public ?Collection $skus = null;
+
+
+    /**
+     * @var Form|null
+     */
+    public ?Form $form = null;
 
 
     // 如果 启用了多规格那么就使用规格中的数据

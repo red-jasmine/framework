@@ -27,10 +27,12 @@ class ProductInfo extends Model
         'promise_services' => PromiseServicesCastTransformer::class,
         'basic_props'      => 'array',
         'sale_props'       => 'array',
+        'customize_props'  => 'array',
         'images'           => 'array',
         'videos'           => 'array',
         'tools'            => 'array',
         'expands'          => 'array',
+        'form'             => 'array',
     ];
 
 }

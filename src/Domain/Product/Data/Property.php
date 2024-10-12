@@ -15,6 +15,10 @@ class Property extends Data
     public int $pid;
 
 
+    public ?string $name;
+
+    public ?string $unit;
+
     /**
      * @var Collection<PropValue>|null
      */

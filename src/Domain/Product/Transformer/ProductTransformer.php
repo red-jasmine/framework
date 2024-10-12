@@ -54,6 +54,7 @@ class ProductTransformer
         $product->supplier                  = $command->supplier;
         $product->product_type              = $command->productType;
         $product->shipping_type             = $command->shippingType;
+        $product->is_alone_order            = $command->isAloneOrder;
         $product->title                     = $command->title;
         $product->slogan                    = $command->slogan;
         $product->image                     = $command->image;
@@ -96,13 +97,12 @@ class ProductTransformer
         $product->info->remarks             = $command->remarks;
         $product->info->tools               = $command->tools;
         $product->info->expands             = $command->expands;
-
-        $product->info->basic_props = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
+        $product->info->form                = $command->form;
+        $product->info->basic_props         = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
+        $product->info->customize_props     = $command->customizeProps?->toArray() ?? [];
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
-
-
         $product->setStatus($command->status);
     }
 
@@ -124,9 +124,6 @@ class ProductTransformer
                 $saleProps                 = $this->propertyValidateService->saleProps($command->saleProps->toArray());
                 $product->info->sale_props = $saleProps->toArray();
                 // 验证规格
-
-
-
 
 
                 $this->propertyValidateService->validateSkus($saleProps, $command->skus);

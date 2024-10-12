@@ -2,7 +2,7 @@
 return [
     'labels'  => [
 
-        'product-property' => '属性',
+        'product-property' => '属性项',
     ],
     'fields'  => [
         'id'                => '属性ID',
@@ -18,6 +18,7 @@ return [
         'creator_id'        => '创建者UID',
         'updater_type'      => '更新者类型',
         'updater_id'        => '更新者UID',
+        'is_required'       => '是否必须',
         'is_allow_multiple' => '是否允许多值',
         'is_allow_alias'    => '是否允许别名',
         'group'             => [

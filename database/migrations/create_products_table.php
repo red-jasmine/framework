@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+            $table->unsignedTinyInteger('is_alone_order')->default(0)->comment('是否单独下单');
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
             $table->string('outer_id')->nullable()->comment('商品编码');
@@ -47,12 +48,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
 
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
-            $table->unsignedTinyInteger('is_alone_order')->default(0)->comment('是否单独下单');
+
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间:小时');
             // 运营类
             $table->unsignedInteger('points')->default(0)->comment('积分');
             // 数量范围
-            $table->unsignedBigInteger('min_limit')->default(0)->comment('起售量');
+            $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
             $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
             $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
             // 限购设置

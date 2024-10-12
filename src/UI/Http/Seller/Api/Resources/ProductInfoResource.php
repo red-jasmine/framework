@@ -25,6 +25,8 @@ class ProductInfoResource extends JsonResource
             'expands'          => $this->expands,
             'basic_props'      => $this->basic_props,
             'sale_props'       => $this->sale_props,
+            'customize_props'  => $this->customize_props,
+            'form'             => $this->form,
         ];
     }
 }
