@@ -14,12 +14,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Arr;
+use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
@@ -135,14 +133,28 @@ class ProductResource extends Resource
                                           ->default(ShippingTypeEnum::EXPRESS)
                                           ->useEnum(ShippingTypeEnum::class),
 
+
+            Forms\Components\Toggle::make('is_pre_sale')
+                                   ->label(__('red-jasmine-product::product.fields.is_pre_sale'))
+                                   ->required()
+                                   ->inline()
+                                   ->default(false)
+            ,
+
             Forms\Components\ToggleButtons::make('status')
                                           ->label(__('red-jasmine-product::product.fields.status'))
                                           ->required()
                                           ->inline()
                                           ->default(ProductStatusEnum::ON_SALE)
                                           ->useEnum(ProductStatusEnum::class),
-
-
+            Forms\Components\DateTimePicker::make('start_sale_time')
+                                           ->nullable()
+                                           ->label(__('red-jasmine-product::product.fields.start_sale_time'))
+                                           ->format('Y-m-d\TH:i:sP'),
+            Forms\Components\DateTimePicker::make('end_sale_time')
+                                           ->nullable()
+                                           ->label(__('red-jasmine-product::product.fields.end_sale_time'))
+                                           ->format('Y-m-d\TH:i:sP'),
         ];
     }
 
@@ -353,11 +365,11 @@ class ProductResource extends Resource
     protected static function specifications() : array
     {
         return [ Forms\Components\Toggle::make('is_multiple_spec')
-                                               ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
-                                               ->required()
-                                               ->live()
-                                               ->inline()
-                                               ->default(0),
+                                        ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
+                                        ->required()
+                                        ->live()
+                                        ->inline()
+                                        ->default(0),
 
                  static::saleProps()->visible(fn(Forms\Get $get) => $get('is_multiple_spec'))
                        ->live()
@@ -637,10 +649,9 @@ class ProductResource extends Resource
 
 
             Forms\Components\Toggle::make('is_alone_order')
-                                          ->label(__('red-jasmine-product::product.fields.is_alone_order'))
-                                          ->required()
-
-                                          ->default(false)
+                                   ->label(__('red-jasmine-product::product.fields.is_alone_order'))
+                                   ->required()
+                                   ->default(false)
 
             ,
 
@@ -807,10 +818,10 @@ class ProductResource extends Resource
 
                           Tables\Columns\TextColumn::make('product_type')
                                                    ->label(__('red-jasmine-product::product.fields.product_type'))
-                                                   ->enum(),
+                                                   ->enum()->toggleable(true, true),
                           Tables\Columns\TextColumn::make('shipping_type')
                                                    ->label(__('red-jasmine-product::product.fields.shipping_type'))
-                                                   ->enum(),
+                                                   ->enum()->toggleable(true, true),
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product.fields.status'))
                                                    ->enum(),
@@ -834,8 +845,8 @@ class ProductResource extends Resource
                           Tables\Columns\TextColumn::make('category.name')
                                                    ->label(__('red-jasmine-product::product.fields.category_id'))
                                                    ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('sellerCategory.name')
-                                                   ->label(__('red-jasmine-product::product.fields.seller_category_id'))
+                          Tables\Columns\TextColumn::make('productGroup.name')
+                                                   ->label(__('red-jasmine-product::product.fields.product_group_id'))
                                                    ->toggleable(isToggledHiddenByDefault: true),
 
                           Tables\Columns\TextColumn::make('price')
