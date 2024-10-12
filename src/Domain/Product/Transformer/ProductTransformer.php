@@ -105,6 +105,8 @@ class ProductTransformer
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
+        $product->setRelation('tags', collect($command->tags));
+
         $product->setStatus($command->status);
     }
 

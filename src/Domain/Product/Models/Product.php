@@ -24,6 +24,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
+use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -78,13 +79,25 @@ class Product extends Model implements OperatorInterface, OwnerInterface
                 }
             }
 
+            if ($product->relationLoaded('tags')) {
+
+                if ($product->tags()?->count() > 0) {
+                    if (is_int($product->tags->first())) {
+                        $product->tags()->sync($product->tags);
+                    } else {
+                        $product->tags()->sync($product->tags->pluck('id')->toArray());
+                    }
+                    $product->load('tags');
+                } else {
+                    $product->tags()->sync([]);
+                }
+            }
 
         });
         static::deleting(callback: static function (Product $product) {
             $product->info()->delete();
             $product->skus()->delete();
-            // 只有在 物理删除时才进行删除
-            //$product->sellerExtendCategories()->detach();
+
         });
 
         static::restoring(callback: static function (Product $product) {
@@ -96,6 +109,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             $product->skus()->forceDelete();
             $product->info()->forceDelete();
             $product->extendProductGroups()->detach();
+            $product->tags()->detach();
         });
     }
 
@@ -106,6 +120,17 @@ class Product extends Model implements OperatorInterface, OwnerInterface
                                     'product_id',
                                     'product_group_id')
                     ->using(ProductExtendGroupPivot::class)
+                    ->withTimestamps();
+
+    }
+
+    public function tags() : BelongsToMany
+    {
+        return $this->belongsToMany(ProductTag::class,
+                                    config('red-jasmine-product.tables.prefix') . 'product_product_tag_pivots',
+                                    'product_id',
+                                    'product_tag_id')
+                    ->using(ProductTagPivot::class)
                     ->withTimestamps();
 
     }

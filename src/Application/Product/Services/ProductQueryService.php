@@ -67,7 +67,8 @@ class ProductQueryService extends ApplicationQueryService
             'category',
             'productGroups',
             'extendProductGroups',
-            'series'
+            'series',
+            'tags',
         ];
     }
 

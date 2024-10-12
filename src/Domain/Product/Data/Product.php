@@ -82,6 +82,7 @@ class Product extends Data
     public ?int $productGroupId = null;
 
     public array $extendProductGroups = [];
+    public array $tags                = [];
     // 邮费模板ID（可选）
     public ?int $postageId = null;
     // 最小购买限制（可选）
@@ -225,7 +226,7 @@ class Product extends Data
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $startSaleTime = null;
     #[WithCast(DateTimeInterfaceCast::class)]
-    public ?Carbon $endSaleTime = null;
+    public ?Carbon $endSaleTime   = null;
 
 
 }
