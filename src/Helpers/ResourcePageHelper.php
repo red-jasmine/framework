@@ -77,11 +77,7 @@ trait ResourcePageHelper
      */
     protected function handleRecordCreation(array $data) : Model
     {
-
-
-
         $resource = static::getResource();
-
         try {
             $commandService = app($resource::getCommandService());
             return $commandService->create(($resource::getCreateCommand())::from($data));
