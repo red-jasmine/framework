@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCore;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
@@ -101,6 +102,12 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
                         ->formatStateUsing(fn($state) => $state->getLabel())
                         ->color(fn($state) => $state->getColor())
                         ->icon(fn($state) => $state->getIcon());
+        });
+
+        Select::macro('useEnum', function (string $enumClassName) {
+            return $this->enum($enumClassName)
+                        ->options($enumClassName::options())
+                        ;
         });
 
         ToggleButtons::macro('useEnum', function (string $enumClassName) {

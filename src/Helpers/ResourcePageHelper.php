@@ -79,6 +79,7 @@ trait ResourcePageHelper
     {
 
 
+
         $resource = static::getResource();
 
         try {
