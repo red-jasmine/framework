@@ -79,6 +79,7 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_skus_table',
             'create_product_stock_logs_table',
             'create_products_table',
+            'create_product_tags_table',
             'create_product_extend_group_pivots_table'
         ];
 

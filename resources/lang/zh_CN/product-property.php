@@ -3,6 +3,7 @@ return [
     'labels'  => [
 
         'product-property' => '属性项',
+        'property'         => '属性库',
     ],
     'fields'  => [
         'id'                => '属性ID',

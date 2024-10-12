@@ -22,6 +22,8 @@ use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterfa
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuReadRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogReadRepositoryInterface;
+use RedJasmine\Product\Domain\Tag\Repositories\ProductTagReadRepositoryInterface;
+use RedJasmine\Product\Domain\Tag\Repositories\ProductTagRepositoryInterface;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\BrandReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductCategoryReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyGroupReadRepository;
@@ -32,6 +34,7 @@ use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductGroupReadRep
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSeriesReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSkuReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductStockLogReadRepository;
+use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductTagReadRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\BrandRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductCategoryRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyGroupRepository;
@@ -41,6 +44,7 @@ use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSeriesRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSkuRepository;
+use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductTagRepository;
 
 class ProductApplicationServiceProvider extends ServiceProvider
 {
@@ -68,6 +72,9 @@ class ProductApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind(ProductSeriesRepositoryInterface::class, ProductSeriesRepository::class);
         $this->app->bind(ProductSeriesReadRepositoryInterface::class, ProductSeriesReadRepository::class);
+
+        $this->app->bind(ProductTagRepositoryInterface::class, ProductTagRepository::class);
+        $this->app->bind(ProductTagReadRepositoryInterface::class, ProductTagReadRepository::class);
 
 
         $this->app->bind(ProductReadRepositoryInterface::class, ProductReadRepository::class);
