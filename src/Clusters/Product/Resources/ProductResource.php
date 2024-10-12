@@ -69,15 +69,15 @@ class ProductResource extends Resource
     }
 
 
-    public static function callResolveRecord(Model $model) : Model
+    public static function callResolveRecord(Product $model) : Model
     {
 
         foreach ($model->info->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->info->{$key});
         }
         $model->setAttribute('skus', $model->skus->toArray());
-        $model->setAttribute('extendProductGroups', $model->extendProductGroups->toArray());
-        $model->setAttribute('tags', $model->tags->toArray());
+        $model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
+        $model->setAttribute('tags', $model->tags?->pluck('id')->toArray());
         return $model;
     }
 
@@ -206,21 +206,26 @@ class ProductResource extends Resource
                                                                                                      ->where('owner_id', $get('owner_id'))
                           ,
                       )
-                //->saveRelationshipsUsing(null)
-                //->loadStateFromRelationshipsUsing(null)
-                      ->saveRelationshipsUsing(null)
+                      ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                      ->dehydrated()
+                      ->saveRelationshipsUsing(null) // 不进行自动保存
                       ->parentNullValue(0)
                       ->default([]),
 
             Forms\Components\Select::make('tags')
                                    ->multiple()
                                    ->label(__('red-jasmine-product::product.fields.tags'))
-
                                    ->relationship(
+                                       name:           'tags',
                                        titleAttribute: 'name',
                                        modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
                                                                                                              ->where('owner_id', $get('owner_id')),
                                    )
+                                   ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                                   ->dehydrated()
+                                   ->saveRelationshipsUsing(null) // 不进行自动保存
+                                   ->dehydrated()
+                                   ->preload()
                                    ->default([]),
 
             Forms\Components\Fieldset::make('basicProps')
