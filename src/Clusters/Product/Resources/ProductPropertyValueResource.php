@@ -44,7 +44,7 @@ class ProductPropertyValueResource extends Resource
 
     public static function getNavigationGroup() : ?string
     {
-        return __('red-jasmine-product::product-property.labels.product-property');
+        return __('red-jasmine-product::product-property.labels.property');
     }
 
     public static function form(Form $form) : Form

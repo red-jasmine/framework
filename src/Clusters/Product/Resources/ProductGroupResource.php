@@ -27,14 +27,14 @@ use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 class ProductGroupResource extends Resource
 {
 
-    use ResourcePageHelper;
+
 
     protected static ?int    $navigationSort = 4;
     protected static ?string $cluster        = Product::class;
     protected static ?string $model          = ProductGroup::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
-
+    use ResourcePageHelper;
     protected static ?string $commandService = ProductGroupCommandService::class;
     protected static ?string $queryService   = ProductGroupQueryService::class;
     protected static ?string $createCommand  = ProductGroupCreateCommand::class;
@@ -42,9 +42,6 @@ class ProductGroupResource extends Resource
     protected static ?string $deleteCommand  = ProductGroupDeleteCommand::class;
     protected static bool    $onlyOwner      = true;
 
-    public function __construct()
-    {
-    }
 
     public static function getModelLabel() : string
     {
