@@ -99,6 +99,7 @@ return [
         'skus'                      => '规格',
         'created_at'                => '创建时间',
         'version'                   => '版本',
+        'tags'                      => '标签',
     ],
 
     'props' => [

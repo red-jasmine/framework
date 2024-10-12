@@ -55,6 +55,7 @@ class ProductTransformer
         $product->product_type              = $command->productType;
         $product->shipping_type             = $command->shippingType;
         $product->is_alone_order            = $command->isAloneOrder;
+        $product->is_pre_sale               = $command->isPreSale;
         $product->title                     = $command->title;
         $product->slogan                    = $command->slogan;
         $product->image                     = $command->image;
@@ -105,6 +106,7 @@ class ProductTransformer
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
+
         $product->setRelation('tags', collect($command->tags));
 
         $product->setStatus($command->status);
@@ -170,6 +172,27 @@ class ProductTransformer
         }
     }
 
+    protected function fillSku(ProductSku $sku, Sku $skuData) : void
+    {
+        $sku->properties_sequence = $skuData->propertiesSequence;
+        $sku->properties_name     = $skuData->propertiesName;
+        $sku->image               = $skuData->image;
+        $sku->barcode             = $skuData->barcode;
+        $sku->outer_id            = $skuData->outerId;
+        $sku->price               = $skuData->price;
+        $sku->safety_stock        = $skuData->safetyStock;
+        $sku->market_price        = $skuData->marketPrice;
+        $sku->cost_price          = $skuData->costPrice;
+        $sku->supplier_sku_id     = $skuData->supplierSkuId;
+        $sku->weight              = $skuData->weight;
+        $sku->width               = $skuData->width;
+        $sku->height              = $skuData->height;
+        $sku->length              = $skuData->length;
+        $sku->size                = $skuData->size;
+        $sku->status              = $skuData->status;
+        $sku->deleted_at          = null;
+    }
+
     protected function defaultSku(Product $product, Command $command) : ProductSku
     {
 
@@ -198,26 +221,5 @@ class ProductTransformer
         $sku->status     = ProductStatusEnum::ON_SALE;
         $sku->deleted_at = null;
         return $sku;
-    }
-
-    protected function fillSku(ProductSku $sku, Sku $skuData) : void
-    {
-        $sku->properties_sequence = $skuData->propertiesSequence;
-        $sku->properties_name     = $skuData->propertiesName;
-        $sku->image               = $skuData->image;
-        $sku->barcode             = $skuData->barcode;
-        $sku->outer_id            = $skuData->outerId;
-        $sku->price               = $skuData->price;
-        $sku->safety_stock        = $skuData->safetyStock;
-        $sku->market_price        = $skuData->marketPrice;
-        $sku->cost_price          = $skuData->costPrice;
-        $sku->supplier_sku_id     = $skuData->supplierSkuId;
-        $sku->weight              = $skuData->weight;
-        $sku->width               = $skuData->width;
-        $sku->height              = $skuData->height;
-        $sku->length              = $skuData->length;
-        $sku->size                = $skuData->size;
-        $sku->status              = $skuData->status;
-        $sku->deleted_at          = null;
     }
 }

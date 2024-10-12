@@ -12,7 +12,6 @@ class ProductResource extends JsonResource
     public function toArray(Request $request) : array
     {
 
-
         return [
             'id'                    => $this->id,
             'owner_id'              => $this->owner_id,
@@ -73,6 +72,7 @@ class ProductResource extends JsonResource
             'category'              => new CategoryResource($this->whenLoaded('category')),
             'product_group'         => new GroupResource($this->whenLoaded('productGroup')),
             'extend_product_groups' => GroupResource::collection($this->whenLoaded('extendProductGroups')),
+            'tags'                  => ProductTagResource::collection($this->whenLoaded('tags')),
             $this->mergeWhen($this->relationLoaded('info'),
                              $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'skus'                  => ProductSkuResource::collection($this->whenLoaded('skus')),

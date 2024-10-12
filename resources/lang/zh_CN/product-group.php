@@ -6,7 +6,7 @@ return [
     'fields'  => [
         'owner_type'     => '所属者类型',
         'owner_id'       => '所属者UID',
-        'name'           => '类目名称',
+        'name'           => '分组',
         'description'    => '描述',
         'parent_id'      => '父级',
         'cluster'        => '群簇',

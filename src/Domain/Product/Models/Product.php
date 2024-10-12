@@ -67,8 +67,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
 
             if ($product->relationLoaded('extendProductGroups')) {
+
                 if ($product->extendProductGroups?->count() > 0) {
-                    if (is_int($product->extendProductGroups->first())) {
+                    if (!is_array($product->extendProductGroups->first())) {
                         $product->extendProductGroups()->sync($product->extendProductGroups);
                     } else {
                         $product->extendProductGroups()->sync($product->extendProductGroups->pluck('id')->toArray());
@@ -81,16 +82,17 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
             if ($product->relationLoaded('tags')) {
 
-                if ($product->tags()?->count() > 0) {
-                    if (is_int($product->tags->first())) {
+                if ($product->tags?->count() > 0) {
+                    if (!is_array($product->tags->first())) {
                         $product->tags()->sync($product->tags);
                     } else {
                         $product->tags()->sync($product->tags->pluck('id')->toArray());
                     }
-                    $product->load('tags');
+
                 } else {
                     $product->tags()->sync([]);
                 }
+                $product->load('tags');
             }
 
         });
@@ -115,6 +117,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function extendProductGroups() : BelongsToMany
     {
+
+
         return $this->belongsToMany(ProductGroup::class,
                                     config('red-jasmine-product.tables.prefix') . 'product_extend_group_pivots',
                                     'product_id',
@@ -174,6 +178,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'is_best'                   => 'boolean',
             'is_benefit'                => 'boolean',
             'is_customized'             => 'boolean',
+            'is_alone_order'            => 'boolean',
+            'is_pre_sale'               => 'boolean',
             'price'                     => AmountCastTransformer::class,
             'market_price'              => AmountCastTransformer::class,
             'cost_price'                => AmountCastTransformer::class,
