@@ -16,7 +16,7 @@ class TreeParent extends Filter
         parent::setUp();
 
         $this->form([
-                        SelectTree::make('parents')
+                        SelectTree::make($this->getName())
                                   ->label(fn() => $this->getLabel())
                                   ->relationship('parent', 'name', 'parent_id')
                                   ->independent(false)
@@ -26,16 +26,16 @@ class TreeParent extends Filter
 
         $this->query(function (Builder $query, array $data) {
 
-            return $query->when($data['parents'], function ($query, $categories) {
+            return $query->when($data[$this->getName()], function ($query, $categories) {
                 $categories = Arr::wrap($categories);
                 return $query->whereHas('parent', fn($query) => $query->whereIn('id', $categories));
             });
         });
         $this->indicateUsing(function (array $data) : ?string {
-            if (!$data['parents']) {
+            if (!$data[$this->getName()]) {
                 return null;
             }
-            $parents = Arr::wrap($data['parents']);
+            $parents = Arr::wrap($data[$this->getName()]);
             return $this->getLabel() . ':' . implode(', ', $this->getTable()->getModel()::where('id', $parents)->get()
                                                                 ->pluck('name')->toArray());
         });
