@@ -23,8 +23,7 @@
         "php": "^8.1",
         "filament/filament": "^3.2",
         "awcodes/filament-table-repeater": "^3.0",
-        "codewithdennis/filament-select-tree": "*",
-        "spatie/laravel-package-tools": "^1.15.0"
+        "codewithdennis/filament-select-tree": "*"
     },
     "require-dev": {
         "nunomaduro/collision": "^7.9",
