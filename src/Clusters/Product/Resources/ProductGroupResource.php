@@ -147,7 +147,7 @@ class ProductGroupResource extends Resource
 
                       ])
             ->filters([
-                          TreeParent::make('tree')->label(__('red-jasmine-product::product-group.fields.parent_id')),
+                          TreeParent::make('parents')->label(__('red-jasmine-product::product-group.fields.parent_id')),
                           Tables\Filters\SelectFilter::make('status')
                                                      ->label(__('red-jasmine-product::product-group.fields.status'))
                                                      ->options(GroupStatusEnum::options()),

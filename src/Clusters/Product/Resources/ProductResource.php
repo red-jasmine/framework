@@ -10,7 +10,9 @@ use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +29,7 @@ use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductDeleteCommand;
+use RedJasmine\Product\Application\Product\UserCases\Commands\ProductSetStatusCommand;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
@@ -44,6 +47,9 @@ class ProductResource extends Resource
 
     use ResourcePageHelper;
 
+    /**
+     * @var class-string<ProductCommandService::class>
+     */
     protected static ?string $commandService = ProductCommandService::class;
     protected static ?string $queryService   = ProductQueryService::class;
     protected static ?string $createCommand  = ProductCreateCommand::class;
@@ -109,41 +115,6 @@ class ProductResource extends Resource
                          Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
                      ])
             ->columns(1);
-    }
-
-    public static function publishFields() : array
-    {
-
-        return [
-            Forms\Components\ToggleButtons::make('status')
-                                          ->label(__('red-jasmine-product::product.fields.status'))
-                                          ->required()
-                                          ->inline()
-                                          ->default(ProductStatusEnum::ON_SALE)
-                                          ->useEnum(ProductStatusEnum::class)
-                                          ->options(function ($operation, ?Model $record) {
-                                              if ($operation == 'edit') {
-                                                  return $record->status->updatingAllowed();
-                                              }
-                                              if ($operation == 'create') {
-                                                  return ProductStatusEnum::creatingAllowed();
-                                              }
-                                              return ProductStatusEnum::options();
-
-                                          })->live()
-            ,
-            Forms\Components\DateTimePicker::make('start_sale_time')
-                                           ->nullable()
-                                           ->label(__('red-jasmine-product::product.fields.start_sale_time'))
-                                           ->format('Y-m-d\TH:i:sP')
-            ,
-
-            Forms\Components\DateTimePicker::make('end_sale_time')
-                                           ->nullable()
-                                           ->label(__('red-jasmine-product::product.fields.end_sale_time'))
-                                           ->format('Y-m-d\TH:i:sP'),
-        ];
-
     }
 
     public static function basicInfoFields() : array
@@ -353,7 +324,6 @@ class ProductResource extends Resource
                        ->reorderable(false);
     }
 
-
     protected static function customizeProps() : Repeater
     {
         return Repeater::make('customize_props')
@@ -432,7 +402,7 @@ class ProductResource extends Resource
 
 
                                $oldSku = $get('skus') ?? [];
-                               if($oldSku === null){
+                               if ($oldSku === null) {
                                    $oldSku = [];
                                }
                                $service   = app(PropertyValidateService::class);
@@ -856,6 +826,41 @@ class ProductResource extends Resource
         ];
     }
 
+    public static function publishFields() : array
+    {
+
+        return [
+            Forms\Components\ToggleButtons::make('status')
+                                          ->label(__('red-jasmine-product::product.fields.status'))
+                                          ->required()
+                                          ->inline()
+                                          ->default(ProductStatusEnum::ON_SALE)
+                                          ->useEnum(ProductStatusEnum::class)
+                                          ->options(function ($operation, ?Model $record) {
+                                              if ($operation == 'edit') {
+                                                  return $record->status->updatingAllowed();
+                                              }
+                                              if ($operation == 'create') {
+                                                  return ProductStatusEnum::creatingAllowed();
+                                              }
+                                              return ProductStatusEnum::options();
+
+                                          })->live()
+            ,
+            Forms\Components\DateTimePicker::make('start_sale_time')
+                                           ->nullable()
+                                           ->label(__('red-jasmine-product::product.fields.start_sale_time'))
+                                           ->format('Y-m-d\TH:i:sP')
+            ,
+
+            Forms\Components\DateTimePicker::make('end_sale_time')
+                                           ->nullable()
+                                           ->label(__('red-jasmine-product::product.fields.end_sale_time'))
+                                           ->format('Y-m-d\TH:i:sP'),
+        ];
+
+    }
+
     public static function table(Table $table) : Table
     {
         return $table
@@ -981,9 +986,47 @@ class ProductResource extends Resource
             ->deferFilters()
             ->recordUrl(null)
             ->actions([
-                          Tables\Actions\ViewAction::make(),
-                          Tables\Actions\EditAction::make(),
-                          Tables\Actions\DeleteAction::make(),
+                          Tables\Actions\ActionGroup::make(
+                              [
+                                  Tables\Actions\ViewAction::make(),
+                                  Tables\Actions\EditAction::make(),
+                                  Tables\Actions\DeleteAction::make(),
+                                  Tables\Actions\Action::make('listing-removal')
+                                                       ->label(function (Model $record) {
+                                                           return $record->status !== ProductStatusEnum::ON_SALE ?
+
+                                                               __('red-jasmine-product::product.actions.listing')
+                                                               :
+                                                               __('red-jasmine-product::product.actions.removal');
+                                                       })
+                                                       ->successNotificationTitle('ok')
+                                                       ->icon(function (Model $record) {
+                                                           return $record->status === ProductStatusEnum::ON_SALE ?
+
+                                                               FilamentIcon::resolve('product.actions.listing') ?? 'heroicon-o-arrow-up-circle'
+                                                               :
+                                                               FilamentIcon::resolve('product.actions.removal') ?? 'heroicon-o-arrow-down-circle';
+
+                                                       })
+                                                       ->action(function (Model $record, Tables\Actions\Action $action) {
+
+                                                           $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::OFF_SHELF : ProductStatusEnum::ON_SALE;
+                                                           $command = ProductSetStatusCommand::from([ 'id' => $record->id, 'status' => $status ]);
+                                                           $service = app(static::$commandService);
+                                                           $service->setStatus($command);
+                                                           $action->success();
+
+                                                       }),
+
+                              ]
+                          )->visible(static function (Model $record) : bool {
+                              if (method_exists($record, 'trashed')) {
+                                  return !$record->trashed();
+                              }
+                              return true;
+
+                          }),
+
                           Tables\Actions\RestoreAction::make(),
                           Tables\Actions\ForceDeleteAction::make(),
                       ])
