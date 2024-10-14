@@ -133,7 +133,16 @@ class ProductTagResource extends Resource
                           ...static::operateTableColumns()
                       ])
             ->filters([
-                          Tables\Filters\TrashedFilter::make(),
+                          Tables\Filters\SelectFilter::make('status')
+                                                     ->label(__('red-jasmine-product::product-tag.fields.status'))
+                                                     ->options(TagStatusEnum::options()),
+                          Tables\Filters\TernaryFilter::make('is_show')
+                                                      ->label(__('red-jasmine-product::product-tag.fields.is_show'))
+                                                      ->boolean(true),
+                          Tables\Filters\TernaryFilter::make('is_public')
+                                                      ->label(__('red-jasmine-product::product-tag.fields.is_public'))
+                                                      ->boolean(true),
+
                       ])
             ->actions([
                           Tables\Actions\EditAction::make(),

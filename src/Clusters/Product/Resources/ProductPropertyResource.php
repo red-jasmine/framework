@@ -141,6 +141,16 @@ class ProductPropertyResource extends Resource
                           Tables\Filters\SelectFilter::make('status')
                                                      ->label(__('red-jasmine-product::product-property-value.fields.status'))
                                                      ->options(PropertyStatusEnum::options()),
+
+                          Tables\Filters\TernaryFilter::make('is_required')
+                              ->label(__('red-jasmine-product::product-property.fields.is_required'))
+                                                      ->boolean(true),
+                          Tables\Filters\TernaryFilter::make('is_allow_multiple')
+                                                      ->label(__('red-jasmine-product::product-property.fields.is_allow_multiple'))
+                                                      ->boolean(true),
+                          Tables\Filters\TernaryFilter::make('is_allow_alias')
+                                                      ->label(__('red-jasmine-product::product-property.fields.is_allow_alias'))
+                                                      ->boolean(true),
                           Tables\Filters\TrashedFilter::make(),
                       ])
             ->recordUrl(null)
