@@ -64,7 +64,7 @@ trait ModelTree
     }
 
 
-    public function toTree(array $nodes = null)
+    public function toTree(array $nodes = null) : array
     {
         if ($nodes === null) {
             $nodes = $this->allNodes();
@@ -139,16 +139,17 @@ trait ModelTree
      * Get options for Select field in form.
      *
      * @param Closure|null $closure
-     * @param string       $rootText
+     * @param bool $needRoot
+     * @param null $rootText
      *
      * @return array
      */
-    public static function selectOptions(Closure $closure = null,$needRoot= true, $rootText = null)
+    public static function selectOptions(Closure $closure = null, bool $needRoot = true, $rootText = null) : array
     {
         $rootText = $rootText ?: '顶级';
 
         $options = (new static())->withQuery($closure)->buildSelectOptions();
-        if($needRoot){
+        if ($needRoot) {
             return collect($options)->prepend($rootText, 0)->all();
         }
         return collect($options)->all();
@@ -157,16 +158,19 @@ trait ModelTree
     /**
      * Build options of select field in form.
      *
-     * @param  array  $nodes
-     * @param  int  $parentId
-     * @param  string  $prefix
-     * @param  string  $space
+     * @param array $nodes
+     * @param int $parentId
+     * @param string $prefix
+     * @param string $space
      * @return array
      */
-    protected function buildSelectOptions(array $nodes = [], $parentId = 0, $prefix = '', $space = '&nbsp;')
+    protected function buildSelectOptions(array $nodes = [], $parentId = null, string $prefix = '', string $space = '&nbsp;') : array
     {
-        $d = '├─';
-        $prefix = $prefix ?: $d.$space;
+        $d      = '├─';
+        $prefix = $prefix ?: $d . $space;
+        if(is_null($parentId)){
+            $parentId = $this->getDefaultParentId();
+        }
 
         $options = [];
 
@@ -178,9 +182,9 @@ trait ModelTree
             if ($node[$this->getParentColumn()] == $parentId) {
                 $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()], $index) ? $prefix : str_replace($d, '└─', $prefix);
 
-                $node[$this->getTitleColumn()] = $currentPrefix.$space.$node[$this->getTitleColumn()];
+                $node[$this->getTitleColumn()] = $currentPrefix . $space . $node[$this->getTitleColumn()];
 
-                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix).$d.str_replace([$d, $space], '', $prefix);
+                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix) . $d . str_replace([ $d, $space ], '', $prefix);
 
                 $children = $this->buildSelectOptions($nodes, $node[$this->getKeyName()], $childrenPrefix);
 
