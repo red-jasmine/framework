@@ -21,7 +21,7 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
 
 
     /**
-     * @param  ProductUpdateCommand  $command
+     * @param ProductUpdateCommand $command
      *
      * @return Product|null
      * @throws Throwable
@@ -54,6 +54,7 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
             $product = $this->getService()->hook('update.fill', $command,
                 fn() => $this->productTransformer->transform($product, $command));
 
+            $product->modified_time = now();
 
             $this->getRepository()->update($product);
 

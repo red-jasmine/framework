@@ -110,11 +110,16 @@ return [
         'alias'  => '别名',
     ],
 
+    'actions' => [
+        'listing' => '上架',
+        'removal' => '下架'
+    ],
+
 
     'enums'   => [
         'status' => [
             'on_sale'     => '在售',
-            'sold_out'    => '售停',
+            'sold_out'    => '售罄',
             'off_shelf'   => '下架',
             'forbid_sale' => '禁售',
             'deleted'     => '删除',
@@ -124,9 +129,9 @@ return [
     'options' => [
     ],
     'scopes'  => [
-        'all'       => '所有',
-        'sale'      => '销售中',
-        'off_shelf' => '已下架',
-        'draft'     => '未上架',
+        'all'      => '所有',
+        'sale'     => '销售中',
+        'sold-out' => '已售罄',
+        'draft'    => '仓库中',
     ],
 ];

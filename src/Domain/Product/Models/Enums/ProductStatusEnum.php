@@ -13,9 +13,11 @@ enum ProductStatusEnum: string
 
     case ON_SALE = 'on_sale'; // 在售
 
-    case SOLD_OUT = 'sold_out'; // 售停
+    case SOLD_OUT = 'sold_out'; // 售罄
 
-    case OFF_SHELF = 'off_shelf'; // 下架
+    case OFF_SHELF = 'off_shelf'; // 停售
+
+    case Discontinued = 'discontinued'; // 停售  // TODO
 
     case FORBID_SALE = 'forbid_sale'; // 禁售
 
