@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Application\Property\Services\Pipelines;
 
 use Closure;
 use RedJasmine\Product\Application\Property\Services\ProductPropertyValueQueryService;
+use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueUpdateCommand;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 
 class PropertyValueUpdatePipeline

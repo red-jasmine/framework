@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('english_name')->nullable()->comment('英文名称');
             $table->string('initial', 10)->nullable()->comment('首字母');
             $table->string('logo')->nullable()->comment('标志');
-            $table->unsignedBigInteger('sort')->default(0)->comment('排序');
+            $table->bigInteger('sort')->default(0)->comment('排序');
             $table->unsignedTinyInteger('is_show')->default(1)->comment('是否展示');
             $table->string('status', 32)->comment(BrandStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');

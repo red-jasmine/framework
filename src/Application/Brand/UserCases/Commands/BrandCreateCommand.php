@@ -12,8 +12,8 @@ class BrandCreateCommand extends Data
     public int             $parentId    = 0;
     public int             $sort        = 0;
     public string          $name;
-    public ?string         $description = null;
     public ?string         $englishName = null;
+    public ?string         $description = null;
     public ?string         $logo        = null;
     public ?string         $initial     = null;
     public BrandStatusEnum $status      = BrandStatusEnum::ENABLE;

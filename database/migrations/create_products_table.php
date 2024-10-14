@@ -13,7 +13,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') .'products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             // 卖家信息
@@ -66,7 +66,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('is_new')->default(0)->comment('新品');
             $table->unsignedTinyInteger('is_best')->default(0)->comment('精品');
             $table->unsignedTinyInteger('is_benefit')->default(0)->comment('特惠');
-            $table->unsignedBigInteger('sort')->default(0)->comment('排序');
+            $table->bigInteger('sort')->default(0)->comment('排序');
             // 时间
             $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
             $table->timestamp('sold_out_time')->nullable()->comment('售停时间');

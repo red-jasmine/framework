@@ -299,7 +299,7 @@ class ProductPackageSeeder extends Seeder
             [
                 'id'     => 130000001,
                 'pid'    => 1300000,
-                'name'   => '2024',
+                'name'   => '2022',
                 'status' => 'enable',
             ],
             [
@@ -312,6 +312,12 @@ class ProductPackageSeeder extends Seeder
                 'id'     => 130000003,
                 'pid'    => 1300000,
                 'name'   => '2024',
+                'status' => 'enable',
+            ],
+            [
+                'id'     => 130000004,
+                'pid'    => 1300000,
+                'name'   => '2025',
                 'status' => 'enable',
             ],
         ];

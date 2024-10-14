@@ -54,7 +54,7 @@ class ProductPropertyValueCommandService extends ApplicationCommandService
                 ProductPropertyGroupRulePipeline::class,
             ],
             'update' => [
-                ProductPropertyRulePipeline::class,
+                //ProductPropertyRulePipeline::class,
                 PropertyValueUpdatePipeline::class,
                 ProductPropertyGroupRulePipeline::class,
             ],

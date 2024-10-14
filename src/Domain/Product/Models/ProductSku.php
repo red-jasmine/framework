@@ -32,10 +32,11 @@ class ProductSku extends Model implements OperatorInterface
     /**
      * @return string
      */
-//    public function getTable()
-//    {
-//        return config('red-jasmine-product.tables.prefix') . 'product_skus';
-//    }
+    public function getTable() : string
+    {
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+    }
+
 
 
     protected $casts = [

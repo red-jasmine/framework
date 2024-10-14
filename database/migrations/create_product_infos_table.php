@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('product_infos', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') .'product_infos', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             //
             $table->string('tips')->nullable()->comment('提示');

@@ -6,7 +6,6 @@ use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Product\Domain\Property\Rules\PropertyNameRule;
 use RedJasmine\Support\Data\Data;
-use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 
@@ -17,7 +16,8 @@ class ProductPropertyCreateCommand extends Data
     public ?string            $description     = null;
     public ?string            $unit;
     public int                $sort            = 0;
-    public ?int               $groupId         = null;
+    public int                $groupId         = 0;
+    public bool               $isRequired      = false;
     public bool               $isAllowMultiple = false;
     public bool               $isAllowAlias    = false;
     public PropertyTypeEnum   $type            = PropertyTypeEnum::SELECT;
@@ -34,7 +34,8 @@ class ProductPropertyCreateCommand extends Data
             'description'       => __('red-jasmine-product::product-property.fields.description'),
             'sort'              => __('red-jasmine-product::product-property.fields.sort'),
             'group_id'          => __('red-jasmine-product::product-property.fields.group_id'),
-            'is_allow_multiple' => __('red-jasmine-product::product-property.fields.is_allow_multiple'),
+            'is_required'       => __('red-jasmine-product::product-property.fields.is_allow_multiple'),
+            'is_allow_multiple' => __('red-jasmine-product::product-property.fields.is_required'),
             'is_allow_alias'    => __('red-jasmine-product::product-property.fields.is_allow_alias'),
             'sort'              => __('red-jasmine-product::product-property.sort.name'),
 

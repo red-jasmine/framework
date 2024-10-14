@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('属性组ID');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
-            $table->unsignedBigInteger('sort')->default(0)->comment('排序');
+            $table->bigInteger('sort')->default(0)->comment('排序');
             $table->string('status', 32)->comment(PropertyStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');

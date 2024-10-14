@@ -20,6 +20,17 @@ enum PropertyStatusEnum: string
         ];
     }
 
+
+
+
+    public static function icons() : array
+    {
+        return  [
+            self::ENABLE->value  => 'heroicon-o-check-circle',
+            self::DISABLE->value => 'heroicon-o-no-symbol',
+        ];
+    }
+
     /**
      * @return array
      */

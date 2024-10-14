@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
-use RedJasmine\Support\Helpers\ID\Snowflake;
 
 
 class Brand extends Model implements OperatorInterface
@@ -30,7 +28,7 @@ class Brand extends Model implements OperatorInterface
 
     use ModelTree;
 
-    public function getTable()
+    public function getTable() : string
     {
         return config('red-jasmine-product.tables.prefix') . 'brands';
     }
@@ -40,10 +38,8 @@ class Brand extends Model implements OperatorInterface
     protected string $parentColumn = 'parent_id';
     // 排序字段名称，默认值为 order
     protected string $orderColumn = 'sort';
-
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
-
 
     protected $casts = [
         'is_show' => 'boolean',

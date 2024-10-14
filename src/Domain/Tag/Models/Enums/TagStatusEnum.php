@@ -31,8 +31,15 @@ enum TagStatusEnum: string
     {
         return [
             self::ENABLE->value  => 'success',
-            self::DISABLE->value => 'gray',
+            self::DISABLE->value => 'danger',
         ];
 
+    }
+    public static function icons() : array
+    {
+        return  [
+            self::ENABLE->value  => 'heroicon-o-check-circle',
+            self::DISABLE->value => 'heroicon-o-no-symbol',
+        ];
     }
 }
