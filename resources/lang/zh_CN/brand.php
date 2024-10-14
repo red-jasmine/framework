@@ -10,7 +10,7 @@ return [
         'english_name' => '英文名',
         'initial'      => '首字母',
         'parent_id'    => '父级',
-        'logo'         => 'Logo',
+        'logo'         => '标志',
         'is_show'      => '是否展示',
         'sort'         => '排序',
         'status'       => '状态',
