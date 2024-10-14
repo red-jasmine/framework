@@ -33,7 +33,8 @@ class ProductPackageServiceProvider extends PackageServiceProvider
                             }
 
                         })
-                        ->askToStarRepoOnGitHub('red-jasmine/product');
+//                        ->askToStarRepoOnGitHub('red-jasmine/product')
+                    ;
                 });
 
         $configFileName = $package->shortName();

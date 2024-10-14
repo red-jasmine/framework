@@ -33,10 +33,10 @@ return new class extends Migration {
             $table->string('slogan')->nullable()->comment('广告语');
             // 类目信息
             $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
-            $table->unsignedBigInteger('brand_id')->nullable()->comment('品牌ID');
+            $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->string('product_model')->nullable()->comment('产品型号');
-            $table->unsignedBigInteger('category_id')->nullable()->comment('类目ID');
-            $table->unsignedBigInteger('product_group_id')->nullable()->comment('商品分组');
+            $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
+            $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
             $table->string('freight_payer', 32)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('postage_id')->nullable()->comment('运费模板ID');
@@ -60,7 +60,7 @@ return new class extends Migration {
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');
             $table->string('order_quantity_limit_type')->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
-            $table->unsignedBigInteger('order_quantity_limit_num')->default(0)->comment('下单数量限制数量');
+            $table->unsignedBigInteger('order_quantity_limit_num')->nullable()->comment('下单数量限制数量');
 
             $table->unsignedTinyInteger('is_hot')->default(0)->comment('热销');
             $table->unsignedTinyInteger('is_new')->default(0)->comment('新品');

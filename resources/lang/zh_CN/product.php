@@ -12,6 +12,7 @@ return [
         'supplier'           => '供应商',
         'other'              => '其他',
         'specifications'     => '商品规格',
+        'publish'            => '发布',
     ],
     'fields' => [
         'id'                        => '商品ID',
@@ -112,15 +113,20 @@ return [
 
     'enums'   => [
         'status' => [
-            'on_sale'     => '上架',
-            'draft'       => '草稿',
-            'pre_sale'    => '预售',
-            'sold_out'    => '停售',
+            'on_sale'     => '在售',
+            'sold_out'    => '售停',
             'off_shelf'   => '下架',
             'forbid_sale' => '禁售',
-            'deleted'     => '上架',
+            'deleted'     => '删除',
+            'draft'       => '待售',
         ],
     ],
     'options' => [
+    ],
+    'scopes'  => [
+        'all'       => '所有',
+        'sale'      => '销售中',
+        'off_shelf' => '已下架',
+        'draft'     => '未上架',
     ],
 ];

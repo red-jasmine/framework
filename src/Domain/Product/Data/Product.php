@@ -73,13 +73,16 @@ class Product extends Data
     // SPU ID（可选）
     public ?int $spuId = null;
     // 类别ID（可选）
-    public ?int $categoryId = null;
+    public int $categoryId = 0;
     // 品牌ID（可选）
-    public ?int $brandId = null;
+    public int $brandId = 0;
     // 产品型号（可选）
     public ?string $productModel = null;
-
-    public ?int $productGroupId = null;
+    /**
+     * 产品分组ID
+     * @var int
+     */
+    public int $productGroupId = 0;
 
     public array $extendProductGroups = [];
     public array $tags                = [];
@@ -92,10 +95,13 @@ class Product extends Data
     // 步进限制
     public int $stepLimit = 1;
     // VIP等级
-    public int                        $vip                    = 0;
+    public int $vip = 0;
+
+    // 订单数量限制类型
     public OrderQuantityLimitTypeEnum $orderQuantityLimitType = OrderQuantityLimitTypeEnum::UNLIMITED;
 
-    public int $orderQuantityLimitNum = 0;
+    // 订单数量限制数量（可选）
+    public ?int $orderQuantityLimitNum = null;
     // 积分
     public int $points = 0;
     // 是否热门
