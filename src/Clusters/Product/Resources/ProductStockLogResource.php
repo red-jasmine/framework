@@ -56,14 +56,16 @@ class ProductStockLogResource extends Resource
                     ->label(__('red-jasmine-product::product.fields.title')),
                 Tables\Columns\TextColumn::make('sku.properties_name')
                 ->label(__('red-jasmine-product::product.fields.properties_name')),
-                Tables\Columns\TextColumn::make('action_type')->label(__('red-jasmine-product::product-stock-log.fields.action_type'))->enum(),
+                Tables\Columns\TextColumn::make('action_type')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.action_type'))
+                                         ->useEnum(),
                 Tables\Columns\TextColumn::make('action_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.action_stock'))
                                          ->numeric()
                 ,
 
                 Tables\Columns\TextColumn::make('change_type')
-                    ->label(__('red-jasmine-product::product-stock-log.fields.change_type'))->enum()
+                    ->label(__('red-jasmine-product::product-stock-log.fields.change_type'))->useEnum()
                    ,
                 Tables\Columns\TextColumn::make('change_detail')
                     ->label(__('red-jasmine-product::product-stock-log.fields.change_detail'))

@@ -26,8 +26,8 @@ use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 class BrandResource extends Resource
 {
     protected static ?int    $navigationSort = 2;
-    protected static ?string $cluster = Product::class;
-    protected static ?string $model   = Brand::class;
+    protected static ?string $cluster        = Product::class;
+    protected static ?string $model          = Brand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
 
@@ -50,7 +50,7 @@ class BrandResource extends Resource
         return $form
             ->schema([
                          SelectTree::make('parent_id')
-                                    ->label(__('red-jasmine-product::brand.fields.parent.name'))
+                                   ->label(__('red-jasmine-product::brand.fields.parent.name'))
                                    ->relationship(
                                        relationship:    'parent',
                                        titleAttribute:  'name',
@@ -60,32 +60,40 @@ class BrandResource extends Resource
                                    )
                              // ->required()
                                    ->searchable()
-                                   ->default(0)
+                                   ->defaultZero()
                                    ->enableBranchNode()
                                    ->parentNullValue(0)
                          ,
                          Forms\Components\TextInput::make('name')
                                                    ->label(__('red-jasmine-product::brand.fields.name'))
                                                    ->required(),
-                         Forms\Components\TextInput::make('description')
-                             ->label(__('red-jasmine-product::brand.fields.description'))
-
-                             ->maxLength(255),
                          Forms\Components\TextInput::make('english_name')
                                                    ->label(__('red-jasmine-product::brand.fields.english_name'))
-                                                   ->required(),
+                                                   ,
                          Forms\Components\TextInput::make('initial')
                                                    ->maxLength(1)
-                                                   ->label(__('red-jasmine-product::brand.fields.initial'))->required(),
+                                                   ->label(__('red-jasmine-product::brand.fields.initial'))
+                                                   ,
+                         Forms\Components\TextInput::make('description')
+                                                   ->label(__('red-jasmine-product::brand.fields.description'))
+                                                   ->maxLength(255),
+                         Forms\Components\FileUpload::make('logo')
+                                                   ->label(__('red-jasmine-product::brand.fields.logo'))
+                                                   ->image(),
+                         Forms\Components\Radio::make('is_show')
+                                               ->label(__('red-jasmine-product::brand.fields.is_show'))
+                                               ->boolean()
+                                               ->inline()
+                                               ->default(true),
                          Forms\Components\TextInput::make('sort')
                                                    ->label(__('red-jasmine-product::brand.fields.sort'))
                                                    ->default(0)->required()->numeric()->minValue(0),
-                         Forms\Components\Radio::make('is_show')
-                                               ->label(__('red-jasmine-product::brand.fields.is_show'))
-                                               ->boolean()->inline()->default(true),
-                         Forms\Components\Radio::make('status')->label(__('red-jasmine-product::brand.fields.status'))
-                                               ->options(BrandStatusEnum::options())
-                                               ->inline()->default(BrandStatusEnum::ENABLE->value),
+
+                         Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::brand.fields.status'))
+                                                       ->inline()
+                                                       ->grouped()
+                                                       ->useEnum(BrandStatusEnum::class)
+                         ,
 
                          ...static::operateFormSchemas()
                      ])->columns(1);
@@ -110,7 +118,7 @@ class BrandResource extends Resource
                           Tables\Columns\IconColumn::make('is_show')->label(__('red-jasmine-product::brand.fields.is_show'))->boolean(),
                           Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::brand.fields.sort'))->sortable(),
                           Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::brand.fields.status'))
-                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                                                   ->useEnum(),
 
 
                           ...static::operateTableColumns()

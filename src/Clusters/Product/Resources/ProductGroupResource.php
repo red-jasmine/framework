@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\CreateProductGroup;
@@ -51,6 +52,7 @@ class ProductGroupResource extends Resource
     public static function form(Form $form) : Form
     {
         return $form
+            ->columns(1)
             ->schema([
                          ...static::ownerFormSchemas(),
 
@@ -91,17 +93,18 @@ class ProductGroupResource extends Resource
                                                    ->default(0),
                          Forms\Components\Radio::make('is_leaf')
                                                ->label(__('red-jasmine-product::product-group.fields.is_leaf'))
-                                               ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
+                                               ->default(false)->boolean()->inline()->required(),
                          Forms\Components\Radio::make('is_show')
                                                ->label(__('red-jasmine-product::product-group.fields.is_show'))
-                                               ->default(true)->boolean()->inline()->inlineLabel(false)->required(),
+                                               ->default(true)->boolean()->inline()->required(),
 
-                         Forms\Components\Radio::make('status')
+                         Forms\Components\ToggleButtons::make('status')
                                                ->label(__('red-jasmine-product::product-group.fields.status'))
                                                ->required()
+                                                ->grouped()
                                                ->default(GroupStatusEnum::ENABLE)
-                                               ->options(GroupStatusEnum::options())
-                                               ->inline()->inlineLabel(false)->required(),
+                                               ->useEnum(GroupStatusEnum::class)
+                                               ,
 
 
                          ... static::operateFormSchemas()
@@ -139,12 +142,15 @@ class ProductGroupResource extends Resource
 
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product-group.fields.status'))
-                                                   ->enum(),
+                                                   ->useEnum(),
                           ...static::operateTableColumns()
 
                       ])
             ->filters([
-                          //
+                          TreeParent::make('tree')->label(__('red-jasmine-product::product-group.fields.parent_id')),
+                          Tables\Filters\SelectFilter::make('status')
+                                                     ->label(__('red-jasmine-product::product-group.fields.status'))
+                                                     ->options(GroupStatusEnum::options()),
                       ])
             ->actions([
                           Tables\Actions\EditAction::make(),

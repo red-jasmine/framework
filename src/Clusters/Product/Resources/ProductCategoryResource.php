@@ -11,6 +11,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\CreateProductCategory;
@@ -27,8 +29,8 @@ use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 class ProductCategoryResource extends Resource
 {
     protected static ?int    $navigationSort = 3;
-    protected static ?string $cluster = Product::class;
-    protected static ?string $model   = ProductCategory::class;
+    protected static ?string $cluster        = Product::class;
+    protected static ?string $model          = ProductCategory::class;
 
     use ResourcePageHelper;
 
@@ -48,15 +50,15 @@ class ProductCategoryResource extends Resource
     public static function form(Form $form) : Form
     {
         return $form
+            ->columns(1)
             ->schema([
 
                          SelectTree::make('parent_id')
-                             ->label(__('red-jasmine-product::product-category.fields.parent_id'))
+                                   ->label(__('red-jasmine-product::product-category.fields.parent_id'))
                                    ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
                                        modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
                                        modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
                                    )
-                             // ->required()
                                    ->searchable()
                                    ->default(0)
                                    ->enableBranchNode()
@@ -78,19 +80,24 @@ class ProductCategoryResource extends Resource
                                                    ->label(__('red-jasmine-product::product-category.fields.sort'))
                                                    ->required()
                                                    ->default(0),
-                         Forms\Components\Toggle::make('is_leaf')
-                                                ->label(__('red-jasmine-product::product-category.fields.is_leaf'))
-                                                ->required()
-                                                ->default(0),
-                         Forms\Components\Toggle::make('is_show')
-                                                ->label(__('red-jasmine-product::product-category.fields.is_show'))
-                                                ->required()
-                                                ->default(1),
-                         Forms\Components\Radio::make('status')
-                                               ->label(__('red-jasmine-product::product-category.fields.status'))
+                         Forms\Components\Radio::make('is_leaf')
+                                               ->label(__('red-jasmine-product::product-category.fields.is_leaf'))
                                                ->required()
-                                               ->default(CategoryStatusEnum::ENABLE)
-                                               ->options(CategoryStatusEnum::options()),
+                                               ->boolean()
+                                               ->inline()
+                                               ->default(0),
+                         Forms\Components\Radio::make('is_show')
+                                               ->label(__('red-jasmine-product::product-category.fields.is_show'))
+                                               ->required()
+                                               ->boolean()
+                                               ->inline()
+                                               ->default(1),
+                         Forms\Components\ToggleButtons::make('status')
+                                                       ->label(__('red-jasmine-product::product-category.fields.status'))
+                                                       ->required()
+                                                       ->grouped()
+                                                       ->default(CategoryStatusEnum::ENABLE)
+                                                       ->useEnum(CategoryStatusEnum::class),
                      ]);
     }
 
@@ -125,30 +132,36 @@ class ProductCategoryResource extends Resource
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product-category.fields.status'))
-                                                   ->enum(),
+                                                   ->useEnum(),
+
+                          ... static::operateTableColumns(),
 
                       ])
             ->filters([
-                          //
+
+                          TreeParent::make('tree')->label(__('red-jasmine-product::product-category.fields.parent_id')),
+                          Tables\Filters\SelectFilter::make('status')
+                                                     ->label(__('red-jasmine-product::product-category.fields.status'))
+                                                     ->options(CategoryStatusEnum::options()),
+
                       ])
             ->actions([
                           Tables\Actions\EditAction::make(),
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
-                                                                      // Tables\Actions\DeleteBulkAction::make(),
+                                                                       // Tables\Actions\DeleteBulkAction::make(),
                                                                    ]),
                           ]);
     }
 
 
-
     public static function getPages() : array
     {
         return [
-            'index'  => ListProductCategories::route('/'),
-//            'create' => CreateProductCategory::route('/create'),
-            'edit'   => EditProductCategory::route('/{record}/edit'),
+            'index' => ListProductCategories::route('/'),
+            //            'create' => CreateProductCategory::route('/create'),
+            'edit'  => EditProductCategory::route('/{record}/edit'),
         ];
     }
 }

@@ -55,13 +55,13 @@ class ProductPropertyResource extends Resource
         return $form
             ->schema([
 
-                         Forms\Components\Radio::make('type')
-                                               ->label(__('red-jasmine-product::product-property.fields.type'))
-                                               ->required()
-                                               ->inline()
-                                               ->inlineLabel(false)
-                                               ->default(PropertyTypeEnum::SELECT)
-                                               ->options(PropertyTypeEnum::options()),
+
+                         Forms\Components\ToggleButtons::make('type')
+                                                       ->label(__('red-jasmine-product::product-property.fields.type'))
+                                                       ->required()
+                                                       ->inline()
+                                                       ->default(PropertyTypeEnum::SELECT)
+                                                       ->options(PropertyTypeEnum::options()),
                          Forms\Components\TextInput::make('name')->label(__('red-jasmine-product::product-property.fields.name'))
                                                    ->required()
                                                    ->maxLength(255),
@@ -76,24 +76,40 @@ class ProductPropertyResource extends Resource
                                                 ->relationship('group', 'name')
                                                 ->searchable([ 'name' ])
                                                 ->preload()
-                                                ->nullable(),
+                                                ->nullable()
+                                                ->saveRelationshipsUsing(null)
+                                                ->defaultZero()
+                         ,
+
+                         Forms\Components\TextInput::make('sort')
+                                                   ->label(__('red-jasmine-product::product-property.fields.sort'))
+                                                   ->required()->integer()->default(0),
                          Forms\Components\Radio::make('is_required')
                                                ->label(__('red-jasmine-product::product-property.fields.is_required'))
-                                               ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
+                                               ->default(false)->boolean()
+                                               ->inline()->required(),
                          Forms\Components\Radio::make('is_allow_multiple')
                                                ->label(__('red-jasmine-product::product-property.fields.is_allow_multiple'))
-                                               ->default(false)->boolean()->inline()->inlineLabel(false)->required(),
+                                               ->default(false)->boolean()->inline()->required(),
                          Forms\Components\Radio::make('is_allow_alias')
-                                               ->label(__('red-jasmine-product::product-property.fields.is_allow_alias'))->default(false)->boolean()->inline()->inlineLabel(false)->required(),
+                                               ->label(__('red-jasmine-product::product-property.fields.is_allow_alias'))
+                                               ->default(false)->boolean()->inline()
+                                               ->required(),
 
-                         Forms\Components\TextInput::make('sort')->label(__('red-jasmine-product::product-property.fields.sort'))->required()->integer()->default(0),
-                         Forms\Components\Radio::make('status')->label(__('red-jasmine-product::product-property.fields.status'))
-                                               ->required()
-                                               ->default(PropertyStatusEnum::ENABLE)->options(PropertyStatusEnum::options())
-                                               ->inline()->inlineLabel(false)->required(),
+                         Forms\Components\ToggleButtons::make('status')
+                                                       ->label(__('red-jasmine-product::product-property.fields.status'))
+                                                       ->inline()
+                                                       ->required()
+                                                       ->grouped()
+                                                       ->default(PropertyStatusEnum::ENABLE)
+                                                       ->useEnum(PropertyStatusEnum::class)
+                         ,
 
-                      ...static::operateFormSchemas()
-                                           ]);
+                         ...static::operateFormSchemas()
+
+
+                     ])
+            ->columns(1);
     }
 
     public static function table(Table $table) : Table
@@ -102,9 +118,8 @@ class ProductPropertyResource extends Resource
             ->columns([
                           Tables\Columns\TextColumn::make('id')->label(__('red-jasmine-product::product-property.fields.id'))->copyable()->sortable(),
                           Tables\Columns\TextColumn::make('group.name')->label(__('red-jasmine-product::product-property.fields.group.name'))->numeric(),
-                          Tables\Columns\TextColumn::make('type')->label(__('red-jasmine-product::product-property.fields.type'))->badge()->formatStateUsing(fn($state
-                          ) => PropertyTypeEnum::options()[$state->value])->color(fn($state
-                          ) => PropertyTypeEnum::colors()[$state->value]),
+                          Tables\Columns\TextColumn::make('type')->label(__('red-jasmine-product::product-property.fields.type'))
+                                                   ->useEnum(),
                           Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property.fields.name'))->searchable(),
                           Tables\Columns\TextColumn::make('unit')->label(__('red-jasmine-product::product-property.fields.unit'))
                           ,
@@ -112,11 +127,20 @@ class ProductPropertyResource extends Resource
                           Tables\Columns\IconColumn::make('is_allow_multiple')->label(__('red-jasmine-product::product-property.fields.is_allow_multiple'))->boolean(),
                           Tables\Columns\IconColumn::make('is_allow_alias')->label(__('red-jasmine-product::product-property.fields.is_allow_alias'))->boolean(),
                           Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property.fields.sort'))->sortable(),
-                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property.fields.status'))->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
-
-                         ...static::operateTableColumns()
-                                      ])
+                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property.fields.status'))
+                                                   ->useEnum(),
+                          ...static::operateTableColumns()
+                      ])
             ->filters([
+                          Tables\Filters\SelectFilter::make('group_id')
+                                                     ->label(__('red-jasmine-product::product-property-value.fields.group.name'))
+                                                     ->relationship('group', 'name')
+                                                     ->searchable()
+                                                     ->optionsLimit(50)
+                                                     ->preload(),
+                          Tables\Filters\SelectFilter::make('status')
+                                                     ->label(__('red-jasmine-product::product-property-value.fields.status'))
+                                                     ->options(PropertyStatusEnum::options()),
                           Tables\Filters\TrashedFilter::make(),
                       ])
             ->recordUrl(null)

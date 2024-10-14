@@ -835,13 +835,13 @@ class ProductResource extends Resource
 
                           Tables\Columns\TextColumn::make('product_type')
                                                    ->label(__('red-jasmine-product::product.fields.product_type'))
-                                                   ->enum()->toggleable(true, true),
+                                                   ->useEnum()->toggleable(true, true),
                           Tables\Columns\TextColumn::make('shipping_type')
                                                    ->label(__('red-jasmine-product::product.fields.shipping_type'))
-                                                   ->enum()->toggleable(true, true),
+                                                   ->useEnum()->toggleable(true, true),
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product.fields.status'))
-                                                   ->enum(),
+                                                   ->useEnum(),
 
 
                           Tables\Columns\TextColumn::make('barcode')

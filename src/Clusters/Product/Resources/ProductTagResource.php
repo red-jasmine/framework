@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages;
@@ -47,6 +48,7 @@ class ProductTagResource extends Resource
     public static function form(Form $form) : Form
     {
         return $form
+            ->columns(1)
             ->schema([
                          ...static::ownerFormSchemas(),
                          Forms\Components\TextInput::make('name')
@@ -60,8 +62,8 @@ class ProductTagResource extends Resource
                                                    ->label(__('red-jasmine-product::product-tag.fields.icon'))
                                                    ->maxLength(255),
                          Forms\Components\ColorPicker::make('color')
-                                                   ->label(__('red-jasmine-product::product-tag.fields.color'))
-                                                   ,
+                                                     ->label(__('red-jasmine-product::product-tag.fields.color'))
+                         ,
                          Forms\Components\TextInput::make('cluster')
                                                    ->label(__('red-jasmine-product::product-tag.fields.cluster'))
                                                    ->maxLength(255),
@@ -70,21 +72,23 @@ class ProductTagResource extends Resource
                                                    ->required()
                                                    ->numeric()
                                                    ->default(0),
-                         Forms\Components\Toggle::make('is_show')
-                                                ->label(__('red-jasmine-product::product-tag.fields.is_show'))
-                                                ->required()
-                                                ->default(1),
-                         Forms\Components\Toggle::make('is_public')
-                                                ->label(__('red-jasmine-product::product-tag.fields.is_public'))
-                                                ->required()
-                                                ->default(0),
-                         Forms\Components\Radio::make('status')
-                                               ->label(__('red-jasmine-product::product-tag.fields.status'))
+                         Forms\Components\Radio::make('is_show')
+                                               ->label(__('red-jasmine-product::product-tag.fields.is_show'))
                                                ->required()
-                                               ->inlineLabel()
+                                               ->boolean()->inline()
+                                               ->default(1),
+                         Forms\Components\Radio::make('is_public')
+                                               ->label(__('red-jasmine-product::product-tag.fields.is_public'))
+                                               ->required()
+                                               ->boolean()
                                                ->inline()
-                                               ->default(TagStatusEnum::ENABLE)
-                                               ->options(TagStatusEnum::options()),
+                                               ->default(0),
+                         Forms\Components\ToggleButtons::make('status')
+                                                       ->label(__('red-jasmine-product::product-tag.fields.status'))
+                                                       ->required()
+                                                       ->grouped()
+                                                       ->default(TagStatusEnum::ENABLE)
+                                                       ->useEnum(TagStatusEnum::class),
                          ...static::operateFormSchemas(),
                      ]);
     }
@@ -104,26 +108,27 @@ class ProductTagResource extends Resource
                                                    ->label(__('red-jasmine-product::product-tag.fields.icon'))
                           ,
                           Tables\Columns\ColorColumn::make('color')
-                                                   ->label(__('red-jasmine-product::product-tag.fields.color'))
+                                                    ->label(__('red-jasmine-product::product-tag.fields.color'))
                           ,
                           Tables\Columns\TextColumn::make('cluster')
                                                    ->label(__('red-jasmine-product::product-tag.fields.cluster'))
                                                    ->searchable(),
+
+                          Tables\Columns\IconColumn::make('is_show')
+                                                   ->label(__('red-jasmine-product::product-tag.fields.is_show'))
+                                                   ->boolean()
+                          ,
+                          Tables\Columns\IconColumn::make('is_public')
+                                                   ->label(__('red-jasmine-product::product-tag.fields.is_public'))
+                                                   ->boolean()
+                          ,
                           Tables\Columns\TextColumn::make('sort')
                                                    ->label(__('red-jasmine-product::product-tag.fields.sort'))
                                                    ->numeric()
                                                    ->sortable(),
-                          Tables\Columns\IconColumn::make('is_show')
-                                                   ->label(__('red-jasmine-product::product-tag.fields.is_show'))
-                                                   ->boolean()
-                                                   ->sortable(),
-                          Tables\Columns\IconColumn::make('is_public')
-                                                   ->label(__('red-jasmine-product::product-tag.fields.is_public'))
-                                                   ->boolean()
-                                                   ->sortable(),
                           Tables\Columns\TextColumn::make('status')
                                                    ->label(__('red-jasmine-product::product-tag.fields.status'))
-                                                   ->enum(),
+                                                   ->useEnum(),
 
                           ...static::operateTableColumns()
                       ])

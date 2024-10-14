@@ -36,7 +36,7 @@ class ProductPropertyGroupResource extends Resource
     protected static ?string $createCommand  = ProductPropertyGroupCreateCommand::class;
     protected static ?string $updateCommand  = ProductPropertyGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductPropertyGroupDeleteCommand::class;
-
+    protected static ?int    $navigationSort = 6;
 
     public static function getModelLabel() : string
     {
@@ -59,14 +59,18 @@ class ProductPropertyGroupResource extends Resource
                                                    ->label(__('red-jasmine-product::product-property-group.fields.description'))
                                                    ->maxLength(255),
                          Forms\Components\TextInput::make('sort')->label(__('red-jasmine-product::product-property-group.fields.sort'))
-                                                   ->required()->integer()->default(0),
-                         Forms\Components\Radio::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
-                                               ->required()
-                                               ->default(PropertyStatusEnum::ENABLE)->options(PropertyStatusEnum::options())
-                                               ->inline()->inlineLabel(false)->required(),
+                                                   ->required()
+                                                   ->integer()
+                                                   ->default(0),
+                         Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
+                                                       ->inline()
+                                                       ->required()
+                                                       ->default(PropertyStatusEnum::ENABLE)
+                                                       ->useEnum(PropertyStatusEnum::class)
+                         ,
 
                          ...static::operateFormSchemas()
-                                              ])->columns(1);
+                     ])->columns(1);
     }
 
     public static function table(Table $table) : Table
@@ -74,7 +78,7 @@ class ProductPropertyGroupResource extends Resource
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                          ->label(__('red-jasmine-product::product-property-group.fields.id'))
+                                                   ->label(__('red-jasmine-product::product-property-group.fields.id'))
                                                    ->numeric()
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property-group.fields.name'))
@@ -83,11 +87,15 @@ class ProductPropertyGroupResource extends Resource
                                                    ->numeric()
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
-                                                   ->badge()->formatStateUsing(fn($state) => $state->label())->color(fn($state) => $state->color()),
+                              ->useEnum(),
+
 
                           ...static::operateTableColumns()
-                                               ])
+                      ])
             ->filters([
+                          Tables\Filters\SelectFilter::make('status')
+                                                     ->label(__('red-jasmine-product::product-property-value.fields.status'))
+                                                     ->options(PropertyStatusEnum::options()),
                           Tables\Filters\TrashedFilter::make(),
                       ])
             ->deferFilters()
