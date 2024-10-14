@@ -2,11 +2,13 @@
 
 namespace RedJasmine\FilamentCore;
 
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\TextColumn;
 use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
@@ -97,27 +99,45 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
         FilamentIcon::register($this->getIcons());
 
 
-        TextColumn::macro('enum', function () {
-            return $this->badge()
-                        ->formatStateUsing(fn($state) => $state->getLabel())
-                        ->color(fn($state) => $state->getColor())
-                        ->icon(fn($state) => $state->getIcon());
+        Column::macro('useEnum', function () {
+
+            if (method_exists($this, 'badge')) {
+                $this->badge();
+            }
+            if (method_exists($this, 'formatStateUsing')) {
+                $this->formatStateUsing(fn($state) => $state->getLabel());
+            }
+            if (method_exists($this, 'color')) {
+                $this->color(fn($state) => $state->getColor());
+            }
+            if (method_exists($this, 'icon')) {
+                $this->icon(fn($state) => $state->getIcon());
+            }
+            return $this;
+
         });
 
-        Select::macro('useEnum', function (string $enumClassName) {
-            return $this->enum($enumClassName)
-                        ->options($enumClassName::options())
-                        ;
+
+
+        Field::macro('defaultZero', function () {
+            $this->default(0)
+                 ->formatStateUsing(fn($state) => $state === 0 ? null : $state)
+                 ->mutateDehydratedStateUsing(fn($state) => $state ?? 0);
+            return $this;
         });
 
-        ToggleButtons::macro('useEnum', function (string $enumClassName) {
-
-            return $this->enum($enumClassName)
-                        ->options($enumClassName::options())
-                        ->colors($enumClassName::colors())
-                        ->icons($enumClassName::icons());
-
-
+        Field::macro('useEnum', function (string $enumClassName) {
+            $this->enum($enumClassName);
+            if (method_exists($this, 'options')) {
+                $this->options($enumClassName::options());
+            }
+            if (method_exists($this, 'colors')) {
+                $this->colors($enumClassName::colors());
+            }
+            if (method_exists($this, 'icons')) {
+                $this->icons($enumClassName::icons());
+            }
+            return $this;
         });
 
 
