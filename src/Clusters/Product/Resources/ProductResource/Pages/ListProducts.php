@@ -18,10 +18,10 @@ class ListProducts extends ListRecords
     public function getTabs() : array
     {
         return [
-            'all'       => Tab::make()->label('ALL'),
-            'sale'      => Tab::make()->label('在售')->modifyQueryUsing(fn(Builder $query) => $query->sale()),
-            'off_shelf' => Tab::make()->label('下架')->modifyQueryUsing(fn(Builder $query) => $query->offShelf()),
-            'draft'     => Tab::make()->label('未上架')->modifyQueryUsing(fn(Builder $query) => $query->draft()),
+            'all'       => Tab::make()->label(__('red-jasmine-product::product.scopes.all')),
+            'sale'      => Tab::make()->label(__('red-jasmine-product::product.scopes.sale'))->modifyQueryUsing(fn(Builder $query) => $query->sale()),
+            'off_shelf' => Tab::make()->label(__('red-jasmine-product::product.scopes.off_shelf'))->modifyQueryUsing(fn(Builder $query) => $query->offShelf()),
+            'draft'     => Tab::make()->label(__('red-jasmine-product::product.scopes.draft'))->modifyQueryUsing(fn(Builder $query) => $query->draft()),
 
         ];
     }
