@@ -69,17 +69,17 @@ class BrandResource extends Resource
                                                    ->required(),
                          Forms\Components\TextInput::make('english_name')
                                                    ->label(__('red-jasmine-product::brand.fields.english_name'))
-                                                   ,
+                         ,
                          Forms\Components\TextInput::make('initial')
                                                    ->maxLength(1)
                                                    ->label(__('red-jasmine-product::brand.fields.initial'))
-                                                   ,
+                         ,
                          Forms\Components\TextInput::make('description')
                                                    ->label(__('red-jasmine-product::brand.fields.description'))
                                                    ->maxLength(255),
                          Forms\Components\FileUpload::make('logo')
-                                                   ->label(__('red-jasmine-product::brand.fields.logo'))
-                                                   ->image(),
+                                                    ->label(__('red-jasmine-product::brand.fields.logo'))
+                                                    ->image(),
                          Forms\Components\Radio::make('is_show')
                                                ->label(__('red-jasmine-product::brand.fields.is_show'))
                                                ->boolean()
@@ -92,6 +92,8 @@ class BrandResource extends Resource
                          Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::brand.fields.status'))
                                                        ->inline()
                                                        ->grouped()
+                                                       ->required()
+                                                       ->default(BrandStatusEnum::ENABLE)
                                                        ->useEnum(BrandStatusEnum::class)
                          ,
 
@@ -104,11 +106,11 @@ class BrandResource extends Resource
 
         return $table
             ->columns([
-                          Tables\Columns\TextColumn::make('id'),
+                          Tables\Columns\TextColumn::make('id')->copyable(),
                           Tables\Columns\TextColumn::make('parent.name')->label(__('red-jasmine-product::brand.fields.parent.name')),
                           Tables\Columns\TextColumn::make('name')
                                                    ->label(__('red-jasmine-product::brand.fields.name'))
-                                                   ->searchable(),
+                                                   ->searchable()->copyable(),
 
                           Tables\Columns\TextColumn::make('initial')
                                                    ->label(__('red-jasmine-product::brand.fields.initial')),

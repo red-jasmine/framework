@@ -107,13 +107,13 @@ class ProductCategoryResource extends Resource
             ->columns([
                           Tables\Columns\TextColumn::make('id')
                                                    ->label('ID')
-                                                   ->sortable(),
+                                                   ->sortable()->copyable(),
                           Tables\Columns\TextColumn::make('parent.name')
                                                    ->label(__('red-jasmine-product::product-category.fields.parent_id'))
                                                    ->sortable(),
                           Tables\Columns\TextColumn::make('name')
                                                    ->label(__('red-jasmine-product::product-category.fields.name'))
-                                                   ->searchable(),
+                                                   ->searchable()->copyable(),
                           Tables\Columns\ImageColumn::make('image')
                                                     ->label(__('red-jasmine-product::product-category.fields.image'))
                           ,
@@ -152,16 +152,16 @@ class ProductCategoryResource extends Resource
                               Tables\Actions\BulkActionGroup::make([
                                                                        // Tables\Actions\DeleteBulkAction::make(),
                                                                    ]),
-                          ]);
+                          ])->recordUrl(null);
     }
 
 
     public static function getPages() : array
     {
         return [
-            'index' => ListProductCategories::route('/'),
-            //            'create' => CreateProductCategory::route('/create'),
-            'edit'  => EditProductCategory::route('/{record}/edit'),
+            'index'  => ListProductCategories::route('/'),
+            'create' => CreateProductCategory::route('/create'),
+            'edit'   => EditProductCategory::route('/{record}/edit'),
         ];
     }
 }

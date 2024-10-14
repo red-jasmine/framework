@@ -429,10 +429,16 @@ class ProductResource extends Resource
                                    $item['values'] = array_values($item['values'] ?? []);
                                    return $item;
                                }, $saleProps);
+
+
+                               $oldSku = $get('skus') ?? [];
+                               if($oldSku === null){
+                                   $oldSku = [];
+                               }
                                $service   = app(PropertyValidateService::class);
                                $crossJoin = $service->crossJoin($saleProps);
 
-                               $oldSku = $get('skus') ?? [];
+
                                $oldSku = collect($oldSku)->keyBy('properties_sequence');
 
                                $skus = [];
@@ -621,7 +627,7 @@ class ProductResource extends Resource
                                          Forms\Components\TextInput::make('width')->nullable()->numeric()->maxLength(32),
                                          Forms\Components\TextInput::make('height')->nullable()->numeric()->maxLength(32),
 
-                                         Forms\Components\Select::make('status')->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
+                                         Forms\Components\Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
 
 
                                      ])
@@ -721,15 +727,14 @@ class ProductResource extends Resource
                                           ->live()
                                           ->grouped()
                                           ->useEnum(OrderQuantityLimitTypeEnum::class)
-                                          ->default(OrderQuantityLimitTypeEnum::UNLIMITED),
+                                          ->default(OrderQuantityLimitTypeEnum::UNLIMITED->value),
             Forms\Components\TextInput::make('order_quantity_limit_num')
                                       ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
-                                      ->required()
                                       ->numeric()
                                       ->default(null)
                                       ->minValue(1)
                                       ->suffix('件')
-                                      ->visible(fn(Forms\Get $get) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value),
+                                      ->hidden(fn(Forms\Get $get) => $get('order_quantity_limit_type') === OrderQuantityLimitTypeEnum::UNLIMITED->value),
 
 
         ];
