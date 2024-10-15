@@ -1,0 +1,51 @@
+{
+    "name": "red-jasmine/payment",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun66"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/payment",
+    "keywords": ["Laravel", "Payment"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "league/omnipay": "^3.2",
+        "liushoukun/omnipay-alipay": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Payment\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Payment\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Payment\\PaymentServiceProvider"
+            ],
+            "aliases": {
+                "Payment": "RedJasmine\\Payment\\Facades\\Payment"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
