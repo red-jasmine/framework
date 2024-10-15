@@ -1,0 +1,74 @@
+{
+    "name": "red-jasmine/filament-card",
+    "description": "This is my package filament-card",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament-card"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-card",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-card/issues",
+        "source": "https://github.com/red-jasmine/filament-card"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "filament/filament": "^3.0",
+        "spatie/laravel-package-tools": "^1.15.0"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^7.9",
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^2.1",
+        "pestphp/pest-plugin-arch": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentCard\\": "src/",
+            "RedJasmine\\FilamentCard\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentCard\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentCard\\FilamentCardServiceProvider"
+            ],
+            "aliases": {
+                "FilamentCard": "RedJasmine\\FilamentCard\\Facades\\FilamentCard"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
