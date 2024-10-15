@@ -18,10 +18,21 @@ class ListProducts extends ListRecords
     public function getTabs() : array
     {
         return [
-            'all'       => Tab::make()->label(__('red-jasmine-product::product.scopes.all')),
-            'sale'      => Tab::make()->label(__('red-jasmine-product::product.scopes.sale'))->modifyQueryUsing(fn(Builder $query) => $query->sale()),
-            'off_shelf' => Tab::make()->label(__('red-jasmine-product::product.scopes.off_shelf'))->modifyQueryUsing(fn(Builder $query) => $query->offShelf()),
-            'draft'     => Tab::make()->label(__('red-jasmine-product::product.scopes.draft'))->modifyQueryUsing(fn(Builder $query) => $query->draft()),
+            'all'            => Tab::make()
+                                   ->label(__('red-jasmine-product::product.scopes.all')),
+            'on-sale'        => Tab::make()
+                                   ->badge(static::getResource()::getEloquentQuery()->onSale()->count())
+                                   ->label(__('red-jasmine-product::product.scopes.on-sale'))
+                                   ->modifyQueryUsing(fn(Builder $query) => $query->onSale()),
+            'sold-out'       => Tab::make()->label(__('red-jasmine-product::product.scopes.sold-out'))
+                                   ->badge(static::getResource()::getEloquentQuery()->soldOut()->count())
+                                   ->modifyQueryUsing(fn(Builder $query) => $query->soldOut()),
+            'warehoused'     => Tab::make()->label(__('red-jasmine-product::product.scopes.warehoused'))
+                                   ->badge(static::getResource()::getEloquentQuery()->warehoused()->count())
+                                   ->modifyQueryUsing(fn(Builder $query) => $query->warehoused()),
+//            'stock-alarming' => Tab::make()->label(__('red-jasmine-product::product.scopes.stock-alarming'))
+//                                   ->badge(static::getResource()::getEloquentQuery()->stockAlarming()->count())
+//                                   ->modifyQueryUsing(fn(Builder $query) => $query->stockAlarming()),
 
         ];
     }

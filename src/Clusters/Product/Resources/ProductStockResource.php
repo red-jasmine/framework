@@ -36,7 +36,6 @@ class ProductStockResource extends Resource
     protected static ?int $navigationSort = 1;
 
 
-
     public static function getModelLabel() : string
     {
         return __('red-jasmine-product::product-stock.labels.product-stock');
@@ -52,7 +51,6 @@ class ProductStockResource extends Resource
     {
 
         return $table
-
             ->striped()
             ->columns([
                           Tables\Columns\TextColumn::make('id')

@@ -147,7 +147,14 @@ class ProductResource extends Resource
                                   ->required()
                                   ->inline()
                                   ->boolean()
-                                  ->default(false)
+                                  ->default(false),
+
+             Forms\Components\Radio::make('is_brand_new')
+                                   ->label(__('red-jasmine-product::product.fields.is_brand_new'))
+                                   ->required()
+                                   ->inline()
+                                   ->boolean()
+                                   ->default(false)
             ,
 
 
@@ -863,16 +870,20 @@ class ProductResource extends Resource
 
     public static function table(Table $table) : Table
     {
+
         return $table
             ->deferLoading()
             ->columns([
+                          ...static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('id')
                                                    ->label(__('red-jasmine-product::product.fields.id'))
                                                    ->sortable(),
-                          ...static::ownerTableColumns(),
                           Tables\Columns\TextColumn::make('title')
                                                    ->label(__('red-jasmine-product::product.fields.title'))
+                                                   ->copyable()
                                                    ->searchable(),
+
+
                           Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine-product::product.fields.image')),
 
                           Tables\Columns\TextColumn::make('product_type')
@@ -1010,7 +1021,7 @@ class ProductResource extends Resource
                                                        })
                                                        ->action(function (Model $record, Tables\Actions\Action $action) {
 
-                                                           $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::OFF_SHELF : ProductStatusEnum::ON_SALE;
+                                                           $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::DISCONTINUED : ProductStatusEnum::ON_SALE;
                                                            $command = ProductSetStatusCommand::from([ 'id' => $record->id, 'status' => $status ]);
                                                            $service = app(static::$commandService);
                                                            $service->setStatus($command);
