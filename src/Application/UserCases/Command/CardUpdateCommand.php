@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Card\Application\UserCases\Command;
 
-class CardUpdateCommand extends CardCreateCommand
+use RedJasmine\Card\Domain\Data\CardData;
+
+class CardUpdateCommand extends CardData
 {
 
     public int $id;

@@ -3,22 +3,10 @@
 namespace RedJasmine\Card\Application\UserCases\Command;
 
 
-use RedJasmine\Card\Domain\Enums\CardStatus;
-use RedJasmine\Support\Application\Command;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Card\Domain\Data\CardData;
 
-class CardCreateCommand extends Command
+class CardCreateCommand extends CardData
 {
-
-    public UserInterface $owner;
-
-    public int $groupId = 0;
-
-    public string $content;
-
-    public ?string $remarks;
-
-    public CardStatus $status = CardStatus::UNSOLD;
 
 
 }

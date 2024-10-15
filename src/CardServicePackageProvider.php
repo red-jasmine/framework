@@ -2,59 +2,63 @@
 
 namespace RedJasmine\Card;
 
-use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class CardServicePackageProvider extends ServiceProvider
+class CardServicePackageProvider extends PackageServiceProvider
 {
-    public function register() : void
+    public static string $name = 'red-jasmine-card';
+
+    public static string $viewNamespace = 'red-jasmine-card';
+
+
+    public function configurePackage(Package $package) : void
     {
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/card.php', 'red-jasmine');
+        $package->name(static::$name)
+                ->hasCommands($this->getCommands())
+                ->runsMigrations()
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
+                        ->askToRunMigrations();
+                });
+
+        $configFileName = $package->shortName();
 
 
-    }
+        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
+            $package->hasConfigFile();
+        }
 
-    public function boot() : void
-    {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        if (file_exists($package->basePath('/../database/migrations'))) {
+            $package->hasMigrations($this->getMigrations());
+        }
 
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
+        if (file_exists($package->basePath('/../resources/lang'))) {
+            $package->hasTranslations();
+        }
+
+        if (file_exists($package->basePath('/../resources/views'))) {
+            $package->hasViews(static::$viewNamespace);
         }
     }
 
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole() : void
+
+    public function getCommands() : array
     {
-        // Publishing the configuration file.
-        $this->publishes([
-                             __DIR__ . '/../config/card.php' => config_path('red-jasmine.card.php'),
-                         ], 'red-jasmine.card.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/red-jasmine'),
-        ], 'captcha.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/red-jasmine'),
-        ], 'captcha.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/red-jasmine'),
-        ], 'captcha.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
+        return [];
     }
+
+    public function getMigrations() : array
+    {
+        return [
+            'create_card_group_bind_products_table',
+            'create_card_groups_table',
+            'create_cards_table',
+        ];
+    }
+
+
 }

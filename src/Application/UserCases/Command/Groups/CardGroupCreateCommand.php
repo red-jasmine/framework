@@ -3,23 +3,10 @@
 namespace RedJasmine\Card\Application\UserCases\Command\Groups;
 
 
-use RedJasmine\Support\Application\Command;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Card\Domain\Data\CardGroupData;
 
-class CardGroupCreateCommand extends Command
+class CardGroupCreateCommand extends CardGroupData
 {
-
-    public UserInterface $owner;
-
-    public string $name;
-
-    public ?string $remarks;
-
-    /**
-     * 内容模板
-     * @var string|null
-     */
-    public ?string $contentTemplate;
 
 
 }

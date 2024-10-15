@@ -8,9 +8,12 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class CardGroup extends Model implements OwnerInterface, OperatorInterface
 {
+
+    use HasSnowflakeId;
 
     use HasOwner;
 
@@ -26,6 +29,10 @@ class CardGroup extends Model implements OwnerInterface, OperatorInterface
         'content_template'
     ];
 
+    public function getTable() : string
+    {
+        return config('red-jasmine-card.tables.prefix') . 'card_groups';
+    }
 
     public function cards() : HasMany
     {

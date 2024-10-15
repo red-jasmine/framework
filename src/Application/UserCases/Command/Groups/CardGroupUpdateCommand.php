@@ -3,7 +3,9 @@
 namespace RedJasmine\Card\Application\UserCases\Command\Groups;
 
 
-class CardGroupUpdateCommand extends CardGroupCreateCommand
+use RedJasmine\Card\Domain\Data\CardGroupData;
+
+class CardGroupUpdateCommand extends CardGroupData
 {
 
     public int $id;

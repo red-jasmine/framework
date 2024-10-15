@@ -11,20 +11,17 @@ enum CardStatus: string
 {
     use EnumsHelper;
 
-    case UNSOLD = 'unsold'; // 未售
 
-    case SOLD = 'sold'; // 已售
-
-
+    case ENABLE = 'enable'; // 启用
     case DISABLE = 'disable'; // 禁用
-
+    case SOLD = 'sold'; // 已售
 
     public static function labels() : array
     {
         return [
-            self::UNSOLD->value  => '未售',
-            self::SOLD->value    => '已售',
-            self::DISABLE->value => '禁用',
+            self::ENABLE->value  => __('red-jasmine-card::card.enums.status.enable'),
+            self::DISABLE->value => __('red-jasmine-card::card.enums.status.disable'),
+            self::SOLD->value    => __('red-jasmine-card::card.enums.status.sold'),
         ];
     }
 }

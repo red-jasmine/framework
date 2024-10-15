@@ -3,21 +3,10 @@
 namespace RedJasmine\Card\Application\UserCases\Command\GroupBindProduct;
 
 
-use RedJasmine\Support\Application\Command;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Card\Domain\Data\CardGroupBindProductData;
 
-class CardGroupBindProductCreateCommand extends Command
+class CardGroupBindProductCreateCommand extends CardGroupBindProductData
 {
-
-    public UserInterface $owner;
-
-    public int $groupId = 0;
-
-    public string $productType;
-
-    public int $productId;
-
-    public int $skuId = 0;
 
 
 }
