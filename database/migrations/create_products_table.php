@@ -13,7 +13,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') .'products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             // 卖家信息
@@ -22,19 +22,20 @@ return new class extends Migration {
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
-            $table->unsignedTinyInteger('is_alone_order')->default(0)->comment('是否单独下单');
-            $table->unsignedTinyInteger('is_pre_sale')->default(0)->comment('是否预售');
+            $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
+            $table->boolean('is_pre_sale')->default(false)->comment('是否预售');
+            $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
             $table->string('outer_id')->nullable()->comment('商品编码');
             $table->string('barcode', 32)->nullable()->comment('商品条码');
-            $table->unsignedTinyInteger('is_customized')->default(0)->comment('是否定制');
-            $table->unsignedTinyInteger('is_multiple_spec')->default(0)->comment('是否为多规格');
+            $table->boolean('is_customized')->default(false)->comment('是否定制');
+            $table->boolean('is_multiple_spec')->default(false)->comment('是否为多规格');
             $table->string('slogan')->nullable()->comment('广告语');
             // 类目信息
+            $table->string('product_model')->nullable()->comment('产品型号');
             $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
-            $table->string('product_model')->nullable()->comment('产品型号');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
@@ -50,8 +51,8 @@ return new class extends Migration {
 
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
 
-            $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间:小时');
             // 运营类
+            $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间:小时');
             $table->unsignedInteger('points')->default(0)->comment('积分');
             // 数量范围
             $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
@@ -62,10 +63,10 @@ return new class extends Migration {
             $table->string('order_quantity_limit_type')->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
             $table->unsignedBigInteger('order_quantity_limit_num')->nullable()->comment('下单数量限制数量');
 
-            $table->unsignedTinyInteger('is_hot')->default(0)->comment('热销');
-            $table->unsignedTinyInteger('is_new')->default(0)->comment('新品');
-            $table->unsignedTinyInteger('is_best')->default(0)->comment('精品');
-            $table->unsignedTinyInteger('is_benefit')->default(0)->comment('特惠');
+            $table->boolean('is_hot')->default(false)->comment('热销');
+            $table->boolean('is_new')->default(false)->comment('新品');
+            $table->boolean('is_best')->default(false)->comment('精品');
+            $table->boolean('is_benefit')->default(false)->comment('特惠');
             $table->bigInteger('sort')->default(0)->comment('排序');
             // 时间
             $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
@@ -115,6 +116,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') . 'products');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') . 'products');
     }
 };

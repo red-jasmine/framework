@@ -51,6 +51,9 @@ class Product extends Data
     // 是否预售
     public bool $isPreSale = false;
 
+    // 是否全新
+    public bool $isBrandNew = false;
+
 
     // 产品图片（可选）
     public ?string $image = null;

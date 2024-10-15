@@ -32,6 +32,7 @@ return [
         'is_multiple_spec'          => '多规格',
         'is_customized'             => '是的定制',
         'is_alone_order'            => '是否单独下单',
+        'is_brand_new'              => '是否全新',
         'sort'                      => '排序',
         'status'                    => '状态',
         'price'                     => '销售价',
@@ -118,20 +119,21 @@ return [
 
     'enums'   => [
         'status' => [
-            'on_sale'     => '在售',
-            'sold_out'    => '售罄',
-            'off_shelf'   => '下架',
-            'forbid_sale' => '禁售',
-            'deleted'     => '删除',
-            'draft'       => '待售',
+            'on_sale'      => '在售',
+            'sold_out'     => '售罄',
+            'discontinued' => '停售',
+            'forbid_sale'  => '禁售',
+            'deleted'      => '删除',
+            'draft'        => '待售',
         ],
     ],
     'options' => [
     ],
     'scopes'  => [
-        'all'      => '所有',
-        'sale'     => '销售中',
-        'sold-out' => '已售罄',
-        'draft'    => '仓库中',
+        'all'            => '全部',
+        'on-sale'        => '销售中',
+        'sold-out'       => '已售罄',
+        'warehoused'     => '仓库中',
+        'stock-alarming' => '库存预警',
     ],
 ];

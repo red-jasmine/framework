@@ -39,7 +39,7 @@ class ProductPackageSeeder extends Seeder
         DB::table(config('red-jasmine-product.tables.prefix') .'product_categories')->insert([
             'id'        => 1,
             'name'      => '服装',
-            'is_show'   => 1,
+            'is_show'   => true,
             'parent_id' => 0,
             'status'    => 'enable',
             'image'     => fake()->imageUrl(360, 360)
@@ -49,7 +49,7 @@ class ProductPackageSeeder extends Seeder
             'id'        => 2,
             'name'      => '男装',
             'parent_id' => 1,
-            'is_show'   => 1,
+            'is_show'   => true,
             'status'    => 'enable',
             'image'     => fake()->imageUrl(360, 360)
         ]);
@@ -58,9 +58,9 @@ class ProductPackageSeeder extends Seeder
             'id'        => 3,
             'name'      => '短袖',
             'parent_id' => 2,
-            'is_show'   => 1,
+            'is_show'   => true,
             'status'    => 'enable',
-            'is_leaf'   => 1,
+            'is_leaf'   => true,
             'image'     => fake()->imageUrl(360, 360)
         ]);
     }
@@ -341,7 +341,7 @@ class ProductPackageSeeder extends Seeder
             'name'       => '男装',
             'parent_id'  => 0,
             'status'     => 'enable',
-            'is_leaf'    => 0,
+            'is_leaf'    => false,
             'image'      => fake()->imageUrl(360, 360)
         ]);
 
@@ -353,7 +353,7 @@ class ProductPackageSeeder extends Seeder
             'name'       => '短袖',
             'parent_id'  => 1,
             'status'     => 'enable',
-            'is_leaf'    => 1,
+            'is_leaf'    => false,
             'image'      => fake()->imageUrl(360, 360)
         ]);
     }

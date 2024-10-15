@@ -49,17 +49,6 @@ class ProductCommandService extends ApplicationCommandService
 
     }
 
-    public function newModel($data = null) : Model
-    {
-        // TODO 需要移动到模型中
-
-        $model = parent::newModel();
-        $model->setRelation('info', new ProductInfo());
-        $model->setRelation('skus', Collection::make());
-        $model->setRelation('sellerExtendCategories', Collection::make());
-        $model->setRelation('tags', Collection::make());
-        return $model;
-    }
 
 
 }

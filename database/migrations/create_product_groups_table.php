@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级分组');
             $table->string('image')->nullable()->comment('图片');
             $table->bigInteger('sort')->default(0)->comment('排序');
-            $table->unsignedTinyInteger('is_leaf')->default(0)->comment('是否叶子');
-            $table->unsignedTinyInteger('is_show')->default(0)->comment('是否展示');
+            $table->boolean('is_leaf')->default(false)->comment('是否叶子');
+            $table->boolean('is_show')->default(false)->comment('是否展示');
             $table->string('status', 32)->comment(CategoryStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');

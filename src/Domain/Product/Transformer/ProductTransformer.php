@@ -63,6 +63,7 @@ class ProductTransformer
         $product->outer_id                  = $command->outerId;
         $product->is_customized             = $command->isCustomized;
         $product->is_multiple_spec          = $command->isMultipleSpec;
+        $product->is_brand_new              = $command->isBrandNew;
         $product->sort                      = $command->sort;
         $product->unit                      = $command->unit;
         $product->unit_quantity             = $command->unitQuantity;

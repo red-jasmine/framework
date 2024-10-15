@@ -15,15 +15,13 @@ enum ProductStatusEnum: string
 
     case SOLD_OUT = 'sold_out'; // 售罄
 
-    case OFF_SHELF = 'off_shelf'; // 停售
-
-    case Discontinued = 'discontinued'; // 停售  // TODO
+    case DISCONTINUED = 'discontinued'; // 停售
 
     case FORBID_SALE = 'forbid_sale'; // 禁售
 
     case DELETED = 'deleted'; // 删除 仅在 sku 中使用
 
-    case DRAFT = 'draft'; // 草稿
+    case DRAFT = 'draft'; // 未发布
 
 
     public static function creatingAllowed() : array
@@ -41,20 +39,20 @@ enum ProductStatusEnum: string
             self::ON_SALE => Arr::only(self::labels(), [
                 self::ON_SALE->value,
                 self::SOLD_OUT->value,
-                self::OFF_SHELF->value,
+                self::DISCONTINUED->value,
                 //                self::FORBID_SALE->value,
                 //                self::DRAFT->value,
             ]),
             self::SOLD_OUT => Arr::only(self::labels(), [
                 self::ON_SALE->value,
                 self::SOLD_OUT->value,
-                self::OFF_SHELF->value,
+                self::DISCONTINUED->value,
                 //                self::DRAFT->value,
             ]),
-            self::OFF_SHELF => Arr::only(self::labels(), [
+            self::DISCONTINUED => Arr::only(self::labels(), [
                 self::ON_SALE->value,
                 self::SOLD_OUT->value,
-                self::OFF_SHELF->value,
+                self::DISCONTINUED->value,
 
             ]),
             self::FORBID_SALE => Arr::only(self::labels(), [
@@ -84,7 +82,7 @@ enum ProductStatusEnum: string
         // 返回允许参加定时上架活动的订单状态数组
         return [
             self::DRAFT->value, // 草稿状态
-            self::OFF_SHELF->value, // 下架状态
+            self::DISCONTINUED->value, // 下架状态
             self::SOLD_OUT->value, // 售罄状态
         ];
     }
@@ -98,11 +96,11 @@ enum ProductStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::ON_SALE->value     => __('red-jasmine-product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value    => __('red-jasmine-product::product.enums.status.sold_out'),
-            self::OFF_SHELF->value   => __('red-jasmine-product::product.enums.status.off_shelf'),
-            self::FORBID_SALE->value => __('red-jasmine-product::product.enums.status.forbid_sale'),
-            self::DRAFT->value       => __('red-jasmine-product::product.enums.status.draft'),
+            self::ON_SALE->value      => __('red-jasmine-product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value     => __('red-jasmine-product::product.enums.status.sold_out'),
+            self::DISCONTINUED->value => __('red-jasmine-product::product.enums.status.discontinued'),
+            self::FORBID_SALE->value  => __('red-jasmine-product::product.enums.status.forbid_sale'),
+            self::DRAFT->value        => __('red-jasmine-product::product.enums.status.draft'),
         ];
 
     }
@@ -120,11 +118,11 @@ enum ProductStatusEnum: string
     {
 
         return [
-            self::ON_SALE->value     => 'success',
-            self::SOLD_OUT->value    => 'warning',
-            self::OFF_SHELF->value   => 'danger',
-            self::FORBID_SALE->value => 'danger',
-            self::DRAFT->value       => 'primary',
+            self::ON_SALE->value      => 'success',
+            self::SOLD_OUT->value     => 'warning',
+            self::DISCONTINUED->value => 'danger',
+            self::FORBID_SALE->value  => 'danger',
+            self::DRAFT->value        => 'primary',
         ];
     }
 
@@ -132,12 +130,11 @@ enum ProductStatusEnum: string
     public static function icons() : array
     {
         return [
-            self::ON_SALE->value   => 'heroicon-o-shopping-bag',
-            self::SOLD_OUT->value  => 'heroicon-o-bookmark-slash',
-            self::OFF_SHELF->value => 'heroicon-o-archive-box-x-mark',
-
-            self::FORBID_SALE->value => 'heroicon-o-no-symbol',
-            self::DRAFT->value       => 'heroicon-o-document',
+            self::ON_SALE->value      => 'heroicon-o-shopping-bag',
+            self::SOLD_OUT->value     => 'heroicon-o-bookmark-slash',
+            self::DISCONTINUED->value => 'heroicon-o-archive-box-x-mark',
+            self::FORBID_SALE->value  => 'heroicon-o-no-symbol',
+            self::DRAFT->value        => 'heroicon-o-document',
         ];
     }
 }

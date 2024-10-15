@@ -12,9 +12,6 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-/**
- * 商品标签
- */
 class ProductTag extends Model implements OperatorInterface, OwnerInterface
 {
     use SoftDeletes;

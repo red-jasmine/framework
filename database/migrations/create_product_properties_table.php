@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
             $table->string('unit', 10)->nullable()->comment('单位');
-            $table->unsignedTinyInteger('is_required')->default(0)->comment('是否必选');
-            $table->unsignedTinyInteger('is_allow_multiple')->default(0)->comment('是否多值');
-            $table->unsignedTinyInteger('is_allow_alias')->default(0)->comment('是否允许别名');
+            $table->boolean('is_required')->default(false)->comment('是否必选');
+            $table->boolean('is_allow_multiple')->default(false)->comment('是否多值');
+            $table->boolean('is_allow_alias')->default(false)->comment('是否允许别名');
             $table->bigInteger('sort')->default(0)->comment('排序');
             $table->string('status', 32)->comment(PropertyStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');
