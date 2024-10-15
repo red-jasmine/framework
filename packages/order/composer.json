@@ -1,0 +1,57 @@
+{
+    "name": "red-jasmine/order",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/order",
+    "keywords": [
+        "Laravel",
+        "Order"
+    ],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/ecommerce": "1.0.x-dev",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Order\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Order\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Order\\OrderPackageServiceProvider",
+                "RedJasmine\\Order\\Domain\\OrderDomainServiceProvider",
+                "RedJasmine\\Order\\Application\\OrderApplicationServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+
+    },
+    "repositories": [
+
+    ]
+}

@@ -1,0 +1,10 @@
+vendor
+.idea
+.env
+*.iml
+out
+gen
+composer.lock
+.phpunit.cache
+
+
