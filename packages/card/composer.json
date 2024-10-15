@@ -1,0 +1,46 @@
+{
+    "name": "red-jasmine/card",
+    "description": "卡密",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun66"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/captcha",
+    "keywords": ["Laravel", "Card"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Card\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Card\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Card\\CardServicePackageProvider",
+                "RedJasmine\\Card\\Application\\CardServiceApplicationProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
