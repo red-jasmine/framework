@@ -1,0 +1,45 @@
+{
+    "name": "red-jasmine/address",
+    "description": "address service",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun66"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/address",
+    "keywords": ["Laravel", "Address"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/region": "1.0.x-dev"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Address\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Address\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Address\\AddressServiceProvider"
+            ],
+            "aliases": {
+                "Address": "RedJasmine\\Address\\Facades\\Address"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    }
+}
