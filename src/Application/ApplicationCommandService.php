@@ -47,6 +47,9 @@ abstract class ApplicationCommandService extends Service
      */
     public function newModel($command = null) : Model
     {
+        if (method_exists(static::getModelClass(),'newModel')){
+           return static::getModelClass()::newModel();
+        }
         /**
          * @var $model Model
          */
