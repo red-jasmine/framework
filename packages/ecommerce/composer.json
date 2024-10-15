@@ -1,0 +1,41 @@
+{
+  "name": "red-jasmine/ecommerce",
+  "description": "red-jasmine ecommerce",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "liushoukun",
+      "email": "liushoukun66@gmail.com",
+      "homepage": "https://github.com/liushoukun"
+    }
+  ],
+  "homepage": "https://github.com/red-jasmine/ecommerce",
+  "keywords": ["Laravel", "Ecommerce"],
+  "require": {
+    "red-jasmine/support": "1.0.x-dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "RedJasmine\\Ecommerce\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RedJasmine\\Ecommerce\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RedJasmine\\Ecommerce\\EcommercePackageServiceProvider"
+      ]
+    },
+    "branch-alias": {
+      "dev-develop": "1.0.x-dev",
+      "dev-master": "1.0.x-dev",
+      "dev-main": "1.0.x-dev"
+    }
+  }
+}
