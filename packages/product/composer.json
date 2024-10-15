@@ -1,0 +1,54 @@
+{
+    "name": "red-jasmine/product",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/product",
+    "keywords": ["Laravel", "Product"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/ecommerce": "1.0.x-dev",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Product\\": "src/",
+            "RedJasmine\\Product\\Database\\Seeders\\": "./database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Product\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\RedJasmine\\Product\\Application\\ProductApplicationServiceProvider",
+                "\\RedJasmine\\Product\\ProductPackageServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
