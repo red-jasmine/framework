@@ -1,0 +1,45 @@
+{
+    "name": "red-jasmine/support",
+    "description": "red-jasmine support",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/support",
+    "keywords": ["Laravel", "Support"],
+    "require": {
+        "illuminate/contracts": "^10.0|^11.0",
+        "spatie/laravel-data": "^4",
+        "spatie/laravel-query-builder": "^5.8",
+        "spatie/laravel-package-tools": "^1.15.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Support\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Support\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Support\\SupportPackageServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-develop": "1.0.x-dev",
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    }
+}
