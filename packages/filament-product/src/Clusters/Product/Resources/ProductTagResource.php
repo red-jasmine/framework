@@ -172,11 +172,5 @@ class ProductTagResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
-    {
-        return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                                               SoftDeletingScope::class,
-                                           ]);
-    }
+
 }

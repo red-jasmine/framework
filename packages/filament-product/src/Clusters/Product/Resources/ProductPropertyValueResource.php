@@ -142,6 +142,8 @@ class ProductPropertyValueResource extends Resource
             ->actions([
                           Tables\Actions\ViewAction::make(),
                           Tables\Actions\EditAction::make(),
+                          Tables\Actions\RestoreAction::make(),
+                          Tables\Actions\ForceDeleteAction::make(),
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
@@ -169,11 +171,5 @@ class ProductPropertyValueResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
-    {
-        return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                                               SoftDeletingScope::class,
-                                           ]);
-    }
+
 }
