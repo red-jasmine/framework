@@ -3,7 +3,7 @@
 return [
 
     'labels' => [
-        'card' => '电子卡密'
+        'card' => '卡密'
     ],
     'fields' => [
         'group_id'  => '分组',

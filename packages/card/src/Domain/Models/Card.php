@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Card\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,6 +51,12 @@ class Card extends Model implements OwnerInterface, OperatorInterface
             'is_loop'   => 'boolean',
             'sold_time' => 'datetime'
         ];
+    }
+
+
+    public function scopeEnable(Builder $query) : Builder
+    {
+        return $query->where('status', CardStatus::ENABLE);
     }
 
 }

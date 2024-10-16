@@ -38,4 +38,9 @@ class CardGroup extends Model implements OwnerInterface, OperatorInterface
     {
         return $this->hasMany(Card::class, 'group_id', 'id');
     }
+
+    public function products() : HasMany
+    {
+        return $this->hasMany(CardGroupBindProduct::class, 'group_id', 'id');
+    }
 }
