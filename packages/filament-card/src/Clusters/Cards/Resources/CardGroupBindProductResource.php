@@ -20,6 +20,7 @@ use RedJasmine\FilamentCard\Clusters\Cards;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\Support\Data\UserData;
 
 class CardGroupBindProductResource extends Resource
 {
@@ -35,6 +36,9 @@ class CardGroupBindProductResource extends Resource
     protected static ?string $updateCommand  = CardGroupBindProductUpdateCommand::class;
     protected static ?string $deleteCommand  = CardGroupBindProductDeleteCommand::class;
     protected static ?string $model          = CardGroupBindProduct::class;
+
+
+    protected static bool $onlyOwner = true;
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
 
@@ -59,7 +63,12 @@ class CardGroupBindProductResource extends Resource
                          ...static::ownerFormSchemas(),
                          Forms\Components\Select::make('group_id')
                                                 ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
-                                                ->relationship('group', 'name')
+                                                ->relationship('group', 'name',
+                                                    modifyQueryUsing: fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ]))
+                                                )
+                                                ->searchable()
+                                                ->preload()
+                                                ->optionsLimit(30)
                                                 ->required(),
                          Forms\Components\MorphToSelect::make('product')
                                                        ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
@@ -67,6 +76,7 @@ class CardGroupBindProductResource extends Resource
                                                                    ...collect(static::$model::$morphLabels)
                                                                        ->map(fn($label, $item) => Forms\Components\MorphToSelect\Type::make($item)
                                                                                                                                      ->titleAttribute('title')
+                                                                                                                                     ->modifyOptionsQueryUsing(fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ])))
                                                                                                                                      ->label($label)),
 
                                                                ])
@@ -93,10 +103,10 @@ class CardGroupBindProductResource extends Resource
                                                    ->searchable(),
                           Tables\Columns\TextColumn::make('product_id')
                                                    ->label(__('red-jasmine-card::card-group-bind-product.fields.product_id'))
-                                                   ->sortable(),
+                                                   ,
                           Tables\Columns\TextColumn::make('sku_id')
                                                    ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
-                                                   ->sortable(),
+                                                   ->copyable(),
                           Tables\Columns\TextColumn::make('group.name')
                                                    ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
                                                    ->numeric()
@@ -134,11 +144,4 @@ class CardGroupBindProductResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
-    {
-        return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                                               SoftDeletingScope::class,
-                                           ]);
-    }
 }

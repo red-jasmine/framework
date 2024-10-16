@@ -32,8 +32,8 @@ class CardGroupResource extends Resource
     protected static ?string $deleteCommand  = CardGroupDeleteCommand::class;
 
 
-    protected static ?string $model = CardGroup::class;
-
+    protected static ?string $model          = CardGroup::class;
+    protected static bool    $onlyOwner      = true;
     protected static ?int    $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
@@ -72,6 +72,17 @@ class CardGroupResource extends Resource
                           Tables\Columns\TextColumn::make('name')
                                                    ->label(__('red-jasmine-card::card-group.fields.name'))
                                                    ->searchable(),
+
+                          Tables\Columns\TextColumn::make('cards_count')
+                                                   ->badge()
+                                                   ->label(__('red-jasmine-card::card.enums.status.enable').__('red-jasmine-card::card-group.labels.cards_count'))
+                                                   ->counts([ 'cards' => fn(Builder $query) => $query->enable() ])
+                          ,
+                          Tables\Columns\TextColumn::make('products_count')
+                                                   ->label(__('red-jasmine-card::card-group.labels.products_counts'))
+                                                   ->badge()
+                                                   ->counts('products')
+                          ,
                           Tables\Columns\TextColumn::make('remarks')
                                                    ->label(__('red-jasmine-card::card-group.fields.remarks'))
                                                    ->searchable(),
@@ -108,11 +119,4 @@ class CardGroupResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
-    {
-        return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                                               SoftDeletingScope::class,
-                                           ]);
-    }
 }

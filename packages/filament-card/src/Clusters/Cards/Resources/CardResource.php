@@ -31,9 +31,10 @@ class CardResource extends Resource
     protected static ?string $updateCommand  = CardUpdateCommand::class;
     protected static ?string $deleteCommand  = CardDeleteCommand::class;
     protected static ?string $model          = Card::class;
-
+    protected static bool    $onlyOwner      = true;
     protected static ?int    $navigationSort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
+
     public static function getModelLabel() : string
     {
         return __('red-jasmine-card::card.labels.card');
@@ -50,7 +51,9 @@ class CardResource extends Resource
                          ...static::ownerFormSchemas(),
                          Forms\Components\Select::make('group_id')
                                                 ->label(__('red-jasmine-card::card.fields.group_id'))
-                                                ->relationship('group', 'name')
+                                                ->relationship('group', 'name',
+                                                    modifyQueryUsing: static::ownerQueryUsing()
+                                                )
                                                 ->required()
                                                 ->default(0),
                          Forms\Components\Toggle::make('is_loop')
@@ -63,9 +66,8 @@ class CardResource extends Resource
                                                        ->default(CardStatus::ENABLE)
                                                        ->useEnum(CardStatus::class),
                          Forms\Components\DateTimePicker::make('sold_time')
-
                                                         ->label(__('red-jasmine-card::card.fields.sold_time'))
-                         ->disabled(),
+                                                        ->disabled(),
                          Forms\Components\Textarea::make('content')
                                                   ->label(__('red-jasmine-card::card.fields.content'))
                                                   ->required()
@@ -135,11 +137,4 @@ class CardResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
-    {
-        return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                                               SoftDeletingScope::class,
-                                           ]);
-    }
 }
