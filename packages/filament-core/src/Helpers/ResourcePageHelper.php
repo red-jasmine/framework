@@ -179,9 +179,8 @@ trait ResourcePageHelper
                                                       // TODO 更具当前 model 动态
                                                       Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
                                                   ])
-
                                           ->columns(2)
-                                          ->default([  'creator_type' => auth()->user()->getType(),'creator_id' => auth()->user()->getID() ])
+                                          ->default([ 'creator_type' => auth()->user()->getType(), 'creator_id' => auth()->user()->getID() ])
                                           ->visibleOn('view'),
 
             Forms\Components\MorphToSelect::make('updater')
@@ -190,12 +189,9 @@ trait ResourcePageHelper
                                                       // TODO 更具当前 model 动态
                                                       Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
                                                   ])
-
                                           ->columns(2)
-                                          ->default([  'updater_type' => auth()->user()->getType(),'updater_id' => auth()->user()->getID() ])
+                                          ->default([ 'updater_type' => auth()->user()->getType(), 'updater_id' => auth()->user()->getID() ])
                                           ->visibleOn('view'),
-
-
 
 
         ];
@@ -204,12 +200,21 @@ trait ResourcePageHelper
     public static function operateTableColumns() : array
     {
         return [
+            Tables\Columns\TextColumn::make('creator')
+                                     ->formatStateUsing(fn($state) => $state?->getNickname())
+                                     ->label(__('red-jasmine-support::support.creator'))
+                                     ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('creator_type')
                                      ->label(__('red-jasmine-support::support.creator_type'))
                                      ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('creator_id')
                                      ->label(__('red-jasmine-support::support.creator_id'))
                                      ->numeric()
+                                     ->toggleable(isToggledHiddenByDefault: true),
+
+            Tables\Columns\TextColumn::make('updater')
+                                     ->formatStateUsing(fn($state) => $state?->getNickname())
+                                     ->label(__('red-jasmine-support::support.updater'))
                                      ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updater_type')
                                      ->label(__('red-jasmine-support::support.updater_type'))
@@ -239,7 +244,7 @@ trait ResourcePageHelper
             Forms\Components\MorphToSelect::make($name)
                                           ->label(__('red-jasmine-support::support.owner'))
                                           ->types([
-                                                     // TODO 更具当前 model 动态
+                                                      // TODO 更具当前 model 动态
                                                       Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
                                                   ])
                                           ->live()
@@ -271,9 +276,15 @@ trait ResourcePageHelper
 
     public static function ownerTableColumns(string $name = 'owner') : array
     {
+        // 定义 组件
         return [
-            Tables\Columns\TextColumn::make($name . '_type')->label(__('red-jasmine-support::support.owner_type')),
-            Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable(),
+            Tables\Columns\TextColumn::make($name)
+                                     ->formatStateUsing(fn($state) => $state?->getNickname())
+                                     ->label(__('red-jasmine-support::support.owner'))
+                                     ->toggleable(isToggledHiddenByDefault: true),
+
+            Tables\Columns\TextColumn::make($name . '_type')->label(__('red-jasmine-support::support.owner_type'))   ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()   ->toggleable(isToggledHiddenByDefault: true),
         ];
     }
 }
