@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Domain\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property $creator
@@ -14,16 +14,16 @@ interface OperatorInterface
 
     /**
      * 创建者
-     * @return Attribute
+     * @return MorphTo
      */
-    public function creator() : Attribute;
+    public function creator() : MorphTo;
 
 
     /**
      * 更新者
-     * @return Attribute
+     * @return MorphTo
      */
-    public function updater() : Attribute;
+    public function updater() : MorphTo;
 
 
 }

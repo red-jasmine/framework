@@ -18,7 +18,7 @@ class CardGroupBindProductQueryService extends ApplicationQueryService
 
     public function allowedIncludes() : array
     {
-        return ['group'];
+        return ['group','product'];
     }
 
 

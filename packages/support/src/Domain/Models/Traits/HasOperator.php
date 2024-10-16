@@ -4,20 +4,19 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Facades\ServiceContext;
 
 /**
  * @property  string $creator_type
- * @property  int    $creator_id
+ * @property  int $creator_id
  * @property  string $updater_type
- * @property  int    $updater_id
+ * @property  int $updater_id
  */
 trait HasOperator
 {
-
-
 
 
     /**
@@ -28,7 +27,7 @@ trait HasOperator
     public function initializeHasOperator() : void
     {
 
-        static::creating(callback:function ($model) {
+        static::creating(callback: function ($model) {
             $model->creator = ServiceContext::getOperator();
         });
         static::updating(callback: function ($model) {
@@ -51,38 +50,30 @@ trait HasOperator
     }
 
 
-    public function creator() : Attribute
+    public function setCreatorAttribute(UserInterface $owner) : static
     {
-        return Attribute::make(
-            get: static function (mixed $value, array $attributes) {
-                if (blank($attributes['creator_type'] ?? null)) {
-                    return null;
-                }
-                return UserData::from([ 'type' => $attributes['creator_type'], 'id' => $attributes['creator_id'], ]);
-            },
-            set: static fn(?UserInterface $user) => [
-                'creator_type' => $user?->getType(),
-                'creator_id'   => $user?->getID()
-            ]
+        $this->setAttribute('creator_type', $owner->getType());
+        $this->setAttribute('creator_id', $owner->getID());
 
-        );
+        return $this;
     }
 
-
-    public function updater() : Attribute
+    public function setUpdaterAttribute(UserInterface $owner) : static
     {
-        return Attribute::make(
-            get: static function (mixed $value, array $attributes) {
-                if (blank($attributes['updater_type'] ?? null)) {
-                    return null;
-                }
-                return UserData::from([ 'type' => $attributes['updater_type'], 'id' => $attributes['updater_id'], ]);
-            }, set: static fn(?UserInterface $user) => [
-            'updater_type' => $user?->getType(),
-            'updater_id'   => $user?->getID()
-        ]
-
-        );
+        $this->setAttribute('updater_type', $owner->getType());
+        $this->setAttribute('updater_id', $owner->getID());
+        return $this;
     }
+
+    public function creator() : MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, __FUNCTION__ . '_type', __FUNCTION__ . '_id');
+    }
+
+    public function updater() : MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, __FUNCTION__ . '_type', __FUNCTION__ . '_id');
+    }
+
 
 }

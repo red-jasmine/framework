@@ -4,12 +4,13 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 
 /**
  * @property string $owner_type
- * @property int    $owner_id
+ * @property int $owner_id
  */
 trait HasOwner
 {
@@ -17,22 +18,19 @@ trait HasOwner
 
     protected string $ownerColumn = 'owner';
 
-    public function owner() : Attribute
+    public function owner() : MorphTo
     {
-        return Attribute::make(
-            get: function (mixed $value, array $attributes) {
-                return UserData::from([
-                                          'type' => $attributes[$this->ownerColumn . '_type'],
-                                          'id'   => $attributes[$this->ownerColumn . '_id']
-                                      ]);
-            },
-            set: fn(?UserInterface $user) => [
-                $this->ownerColumn . '_type' => $user?->getType(),
-                $this->ownerColumn . '_id'   => $user?->getID()
-            ]
-
-        );
+        return $this->morphTo($this->ownerColumn, $this->ownerColumn . '_type', $this->ownerColumn . '_id');
     }
+
+
+    public function setOwnerAttribute(UserInterface $owner) : static
+    {
+        $this->setAttribute($this->ownerColumn . '_type', $owner->getType());
+        $this->setAttribute($this->ownerColumn . '_id', $owner->getID());
+        return $this;
+    }
+
 
     public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
     {

@@ -336,7 +336,7 @@ class ProductPackageSeeder extends Seeder
     {
         DB::table(config('red-jasmine-product.tables.prefix') .'product_groups')->insert([
             'id'         => 1,
-            'owner_type' => 'seller',
+            'owner_type' => 'user',
             'owner_id'   => 1,
             'name'       => '男装',
             'parent_id'  => 0,
@@ -348,7 +348,7 @@ class ProductPackageSeeder extends Seeder
 
         DB::table(config('red-jasmine-product.tables.prefix') .'product_groups')->insert([
             'id'         => 2,
-            'owner_type' => 'seller',
+            'owner_type' => 'user',
             'owner_id'   => 1,
             'name'       => '短袖',
             'parent_id'  => 1,

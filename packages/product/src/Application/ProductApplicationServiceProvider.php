@@ -2,13 +2,16 @@
 
 namespace RedJasmine\Product\Application;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandReadRepositoryInterface;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupReadRepositoryInterface;
@@ -86,6 +89,11 @@ class ProductApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductSkuReadRepositoryInterface::class, ProductSkuReadRepository::class);
         $this->app->bind(ProductStockLogReadRepositoryInterface::class, ProductStockLogReadRepository::class);
 
+
+        Relation::enforceMorphMap([
+                                      'product' => Product::class,
+                                      'brand'   => Brand::class,
+                                  ]);
 
     }
 

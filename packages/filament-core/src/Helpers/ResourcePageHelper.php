@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCore\Helpers;
 
+use App\Models\User;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Tables;
@@ -171,10 +172,30 @@ trait ResourcePageHelper
     public static function operateFormSchemas() : array
     {
         return [
-            Forms\Components\TextInput::make('creator_type')->readOnly()->visibleOn('view'),
-            Forms\Components\TextInput::make('creator_id')->readOnly()->visibleOn('view'),
-            Forms\Components\TextInput::make('updater_type')->readOnly()->visibleOn('view'),
-            Forms\Components\TextInput::make('updater_id')->readOnly()->visibleOn('view'),
+
+            Forms\Components\MorphToSelect::make('creator')
+                                          ->label(__('red-jasmine-support::support.creator'))
+                                          ->types([
+                                                      // TODO 更具当前 model 动态
+                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
+                                                  ])
+
+                                          ->columns(2)
+                                          ->default([  'creator_type' => auth()->user()->getType(),'creator_id' => auth()->user()->getID() ])
+                                          ->visibleOn('view'),
+
+            Forms\Components\MorphToSelect::make('updater')
+                                          ->label(__('red-jasmine-support::support.updater'))
+                                          ->types([
+                                                      // TODO 更具当前 model 动态
+                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
+                                                  ])
+
+                                          ->columns(2)
+                                          ->default([  'updater_type' => auth()->user()->getType(),'updater_id' => auth()->user()->getID() ])
+                                          ->visibleOn('view'),
+
+
 
 
         ];
@@ -214,20 +235,33 @@ trait ResourcePageHelper
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
         return [
-            Forms\Components\TextInput::make($name . '_type')
-                                      ->label(__('red-jasmine-support::support.owner_type'))
-                                      ->hidden(!auth()->user()->isAdmin())
-                                      ->default(auth()->user()->getType())
-                                      ->required()
-                                      ->maxLength(64)
-                                      ->live(),
-            Forms\Components\TextInput::make($name . '_id')
-                                      ->label(__('red-jasmine-support::support.owner_id'))
-                                      ->required()
-                                      ->numeric()
-                                      ->hidden(!auth()->user()->isAdmin())
-                                      ->default(auth()->user()->getID())
-                                      ->live(),
+
+            Forms\Components\MorphToSelect::make($name)
+                                          ->label(__('red-jasmine-support::support.owner'))
+                                          ->types([
+                                                     // TODO 更具当前 model 动态
+                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
+                                                  ])
+                                          ->live()
+                                          ->columns(2)
+                                          ->default([ $name . '_type' => auth()->user()->getType(), $name . '_id' => auth()->user()->getID() ])
+                                          ->hidden(!auth()->user()->isAdmin())
+            ,
+
+            //            Forms\Components\TextInput::make($name . '_type')
+            //                                      ->label(__('red-jasmine-support::support.owner_type'))
+            //                                      ->hidden(!auth()->user()->isAdmin())
+            //                                      ->default(auth()->user()->getType())
+            //                                      ->required()
+            //                                      ->maxLength(64)
+            //                                      ->live(),
+            //            Forms\Components\TextInput::make($name . '_id')
+            //                                      ->label(__('red-jasmine-support::support.owner_id'))
+            //                                      ->required()
+            //                                      ->numeric()
+            //                                      ->hidden(!auth()->user()->isAdmin())
+            //                                      ->default(auth()->user()->getID())
+            //                                      ->live(),
 
         ];
 

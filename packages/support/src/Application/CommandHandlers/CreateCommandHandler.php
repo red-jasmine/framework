@@ -17,7 +17,7 @@ class CreateCommandHandler extends CommandHandler
     /**
      * 处理命令对象
      *
-     * @param  Data  $command  被处理的命令对象
+     * @param Data $command 被处理的命令对象
      *
      * @return Model|null 返回处理后的模型对象或其他相关结果
      * @throws Throwable
@@ -54,8 +54,8 @@ class CreateCommandHandler extends CommandHandler
 
     protected function createModel(Data $command) : Model
     {
-        if ($this->getService()){
-            return  $this->getService()->newModel($command);
+        if ($this->getService()) {
+            return $this->getService()->newModel($command);
         }
 
         if (method_exists($this->getModelClass(), 'create')) {
