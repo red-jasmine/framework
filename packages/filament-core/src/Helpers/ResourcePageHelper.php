@@ -9,6 +9,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
+use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
 
@@ -237,6 +238,11 @@ trait ResourcePageHelper
         ];
     }
 
+
+    public static function ownerQueryUsing(string $name = 'owner') : callable
+    {
+        return static fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ]));
+    }
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
         return [
