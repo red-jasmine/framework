@@ -8,6 +8,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -23,6 +24,10 @@ trait ResourcePageHelper
     {
 
         $query = app(static::$queryService)->getRepository()->modelQuery();
+
+        $query->withoutGlobalScopes([
+                                  SoftDeletingScope::class,
+                              ]);
         if (static::onlyOwner()) {
             $query->onlyOwner(auth()->user());
         }
