@@ -25,9 +25,9 @@ trait ResourcePageHelper
 
         $query = app(static::$queryService)->getRepository()->modelQuery();
 
-        $query->withoutGlobalScopes([
-                                  SoftDeletingScope::class,
-                              ]);
+//        $query->withoutGlobalScopes([
+//                                  SoftDeletingScope::class,
+//                              ]);
         if (static::onlyOwner()) {
             $query->onlyOwner(auth()->user());
         }
