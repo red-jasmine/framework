@@ -27,7 +27,6 @@ class ProductTagResource extends Resource
     protected static ?string $model = ProductTag::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-
     protected static ?string $cluster        = Product::class;
     protected static ?int    $navigationSort = 5;
 
