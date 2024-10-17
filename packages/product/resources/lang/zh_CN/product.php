@@ -1,18 +1,19 @@
 <?php
 return [
     'labels' => [
-        'product'            => '商品',
-        'basic_info'         => '基本信息',
-        'product_attributes' => '商品属性',
-        'sale_info'          => '销售信息',
-        'description'        => '商品描述',
-        'operate'            => '运营',
-        'seo'                => 'SEO',
-        'shipping'           => '发货服务',
-        'supplier'           => '供应商',
-        'other'              => '其他',
-        'specifications'     => '商品规格',
-        'publish'            => '发布',
+        'product'              => '商品',
+        'basic_info'           => '基本信息',
+        'product_attributes'   => '商品属性',
+        'after_sales_services' => '售后服务',
+        'sale_info'            => '销售信息',
+        'description'          => '商品描述',
+        'operate'              => '运营',
+        'seo'                  => 'SEO',
+        'shipping'             => '发货服务',
+        'supplier'             => '供应商',
+        'other'                => '其他',
+        'specifications'       => '商品规格',
+        'publish'              => '发布',
     ],
     'fields' => [
         'id'                        => '商品ID',
@@ -92,6 +93,7 @@ return [
         'length'                    => '长',
         'size'                      => '体积',
         'remarks'                   => '备注',
+        'after_sales_services'      => '售后服务',
         'basic_props'               => '基础属性',
         'customize_props'           => '自定义属性',
         'sale_props'                => '销售属性',
@@ -102,6 +104,7 @@ return [
         'created_at'                => '创建时间',
         'version'                   => '版本',
         'tags'                      => '标签',
+        'services'                  => '服务保障',
     ],
 
     'props' => [

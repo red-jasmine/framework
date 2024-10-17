@@ -14,14 +14,12 @@ class ProductPackageSeeder extends Seeder
         $this->category();
         $this->property();
         $this->groups();
-
-
     }
 
     protected function brand() : void
     {
         // 添加 品牌
-        DB::table(config('red-jasmine-product.tables.prefix') .'brands')->insert([
+        DB::table(config('red-jasmine-product.tables.prefix') .'product_brands')->insert([
             'id'           => 1,
             'name'         => '测试',
             'status'       => 'enable',

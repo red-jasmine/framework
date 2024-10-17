@@ -9,7 +9,7 @@ use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') . 'brands', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') . 'product_brands', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级ID');
             $table->string('name')->comment('名称');
@@ -31,6 +31,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'brands');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_brands');
     }
 };

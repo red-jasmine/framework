@@ -12,6 +12,9 @@ return new class extends Migration {
             //
             $table->string('tips')->nullable()->comment('提示');
 
+            // 售后服务
+            $table->json('after_sales_services')->nullable()->comment('售后服务');
+
             $table->json('promise_services')->nullable()->comment('承诺服务');
             // 属性
             $table->json('basic_props')->nullable()->comment('基本属性');

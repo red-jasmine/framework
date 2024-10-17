@@ -1,40 +1,37 @@
 <?php
 
-namespace RedJasmine\Product\Domain\Tag\Models;
+namespace RedJasmine\Product\Domain\Service\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Service\Models\Enums\ServiceStatusEnum;
-use RedJasmine\Product\Domain\Tag\Models\Enums\TagStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
-use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class ProductTag extends Model implements OperatorInterface, OwnerInterface
+class ProductService extends Model implements OperatorInterface
 {
-    use SoftDeletes;
-
-    use HasOwner;
-
-    //use HasSnowflakeId;
+    use HasOperator;
 
     use HasDateTimeFormatter;
 
-    use HasOperator;
+    use SoftDeletes;
 
+    /**
+     * @return string
+     */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_tags';
+        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));
     }
 
+
     protected $casts = [
-        'is_public' => 'boolean',
-        'is_show'   => 'boolean',
-        'status'    => TagStatusEnum::class,
+        'is_show' => 'boolean',
+        'status'  => ServiceStatusEnum::class,
     ];
 
     protected $fillable = [
@@ -44,19 +41,17 @@ class ProductTag extends Model implements OperatorInterface, OwnerInterface
         'icon',
         'color',
         'sort',
-        'status',
         'is_show',
-        'is_public',
+        'status',
+
     ];
-
-
     public function scopeEnable(Builder $query) : Builder
     {
         return $query->where('status', ServiceStatusEnum::ENABLE);
     }
+
     public function scopeShow(Builder $query) : Builder
     {
         return $query->where('is_show', true)->enable();
     }
-
 }

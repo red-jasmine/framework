@@ -10,7 +10,10 @@ use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
@@ -89,6 +92,7 @@ class Product extends Data
 
     public array $extendProductGroups = [];
     public array $tags                = [];
+    public array $services                = [];
     // 邮费模板ID（可选）
     public ?int $postageId = null;
     // 最小购买限制（可选）
@@ -174,11 +178,18 @@ class Product extends Data
      */
     public ?array $expands;
 
+
     /**
-     * 承诺服务
-     * @var PromiseServices|null
+     * 售后服务
+     * @var AfterSalesService[]
      */
-    public ?PromiseServices $promiseServices;
+    public array $afterSalesServices = [];
+
+//    /**
+//     * 承诺服务
+//     * @var PromiseServices|null
+//     */
+//    public ?PromiseServices $promiseServices;
 
     /**
      * 基础属性
@@ -237,5 +248,21 @@ class Product extends Data
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $endSaleTime   = null;
 
+
+    public function __construct()
+    {
+
+        $this->afterSalesServices = static::defaultAfterSalesServices();
+    }
+
+
+    public static function defaultAfterSalesServices() : array
+    {
+        $services = [];
+        foreach (RefundTypeEnum::baseTypes() as $type) {
+            $services[] = AfterSalesService::from([ 'refundType' => $type ]);
+        }
+        return $services;
+    }
 
 }

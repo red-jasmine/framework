@@ -67,7 +67,7 @@ class ProductPackageServiceProvider extends PackageServiceProvider
     public function getMigrations() : array
     {
         return [
-            'create_brands_table',
+            'create_product_brands_table',
             'create_product_categories_table',
             'create_product_channel_stocks_table',
             'create_product_infos_table',
@@ -80,9 +80,11 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_skus_table',
             'create_product_stock_logs_table',
             'create_products_table',
-            'create_product_tags_table',
             'create_product_extend_group_pivots_table',
-            'create_product_product_tag_pivots_table',
+            'create_product_tags_table',
+            'create_product_tag_pivots_table',
+            'create_product_services_table',
+            'create_product_service_pivots_table',
         ];
 
     }

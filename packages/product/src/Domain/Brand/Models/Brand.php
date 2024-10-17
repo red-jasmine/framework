@@ -30,7 +30,7 @@ class Brand extends Model implements OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . 'brands';
+        return config('red-jasmine-product.tables.prefix') . 'product_brands';
     }
 
 

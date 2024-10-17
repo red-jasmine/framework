@@ -26,7 +26,8 @@ class ProductInfo extends Model
 
 
     protected $casts = [
-        'promise_services' => PromiseServicesCastTransformer::class,
+        //'promise_services' => PromiseServicesCastTransformer::class,
+        'after_sales_services'      => 'array',
         'basic_props'      => 'array',
         'sale_props'       => 'array',
         'customize_props'  => 'array',

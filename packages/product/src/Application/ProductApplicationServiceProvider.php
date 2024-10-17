@@ -22,6 +22,8 @@ use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueReadRepo
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
+use RedJasmine\Product\Domain\Service\Repositories\ProductServiceReadRepositoryInterface;
+use RedJasmine\Product\Domain\Service\Repositories\ProductServiceRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuReadRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogReadRepositoryInterface;
@@ -35,6 +37,7 @@ use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductPropertyValu
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductGroupReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSeriesReadRepository;
+use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductServiceReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductSkuReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductStockLogReadRepository;
 use RedJasmine\Product\Infrastructure\ReadRepositories\Mysql\ProductTagReadRepository;
@@ -46,6 +49,7 @@ use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductPropertyValue
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSeriesRepository;
+use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductServiceRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductSkuRepository;
 use RedJasmine\Product\Infrastructure\Repositories\Eloquent\ProductTagRepository;
 
@@ -78,6 +82,10 @@ class ProductApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind(ProductTagRepositoryInterface::class, ProductTagRepository::class);
         $this->app->bind(ProductTagReadRepositoryInterface::class, ProductTagReadRepository::class);
+
+
+        $this->app->bind(ProductServiceRepositoryInterface::class, ProductServiceRepository::class);
+        $this->app->bind(ProductServiceReadRepositoryInterface::class, ProductServiceReadRepository::class);
 
 
         $this->app->bind(ProductReadRepositoryInterface::class, ProductReadRepository::class);

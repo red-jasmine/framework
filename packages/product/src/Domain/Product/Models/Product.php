@@ -25,6 +25,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
+use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -110,6 +111,22 @@ class Product extends Model implements OperatorInterface, OwnerInterface
                 $product->load('tags');
             }
 
+
+            if ($product->relationLoaded('services')) {
+
+                if ($product->services?->count() > 0) {
+                    if (!is_array($product->services->first())) {
+                        $product->services()->sync($product->services);
+                    } else {
+                        $product->services()->sync($product->services->pluck('id')->toArray());
+                    }
+
+                } else {
+                    $product->services()->sync([]);
+                }
+                $product->load('services');
+            }
+
         });
         static::deleting(callback: static function (Product $product) {
             $product->info()->delete();
@@ -131,8 +148,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-
-
     public function extendProductGroups() : BelongsToMany
     {
 
@@ -150,10 +165,22 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
 
         return $this->belongsToMany(ProductTag::class,
-                                    config('red-jasmine-product.tables.prefix') . 'product_product_tag_pivots',
+                                    (new ProductTagPivot)->getTable(),
                                     'product_id',
                                     'product_tag_id')
                     ->using(ProductTagPivot::class)
+                    ->withTimestamps();
+
+    }
+
+    public function services() : BelongsToMany
+    {
+
+        return $this->belongsToMany(ProductService::class,
+                                    (new ProductServicePivot)->getTable(),
+                                    'product_id',
+                                    'product_service_id')
+                    ->using(ProductServicePivot::class)
                     ->withTimestamps();
 
     }
