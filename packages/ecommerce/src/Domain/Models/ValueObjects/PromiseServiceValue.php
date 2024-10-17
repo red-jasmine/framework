@@ -13,19 +13,18 @@ class PromiseServiceValue extends ValueObject
     public const  string BEFORE_SHIPMENT = 'before_shipping';
 
 
-    /**
-     * 固定值
-     * @var array|string[]
-     */
-    protected array $enums = [
-        self::UNSUPPORTED     => '不支持',
-        self::BEFORE_SHIPMENT => '发货前',
+    public function enums() : array
+    {
+        return [
+            self::UNSUPPORTED     => '不支持',
+            self::BEFORE_SHIPMENT => '发货前',
+        ];
+    }
 
-    ];
 
     public function getEnums() : array
     {
-        return $this->enums;
+        return $this->enums();
     }
 
     protected bool $isEnum = false;

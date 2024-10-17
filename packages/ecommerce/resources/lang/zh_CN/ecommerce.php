@@ -5,6 +5,22 @@ return [
 
     'labels' => [],
 
+    'fields' => [
+
+        'product_type'              => '商品类型',
+        'shipping_type'             => '发货方式',
+        'order_quantity_limit_type' => '下单限制',
+        'refund_type'               => '售后类型',
+
+        'after_sales_service' => [
+            'refund_type'     => '售后类型',
+            'allow_stage'     => '允许阶段',
+            'time'            => '时间限制',
+            'time_limit'      => '时长',
+            'time_limit_unit' => '时间单位',
+        ],
+    ],
+
     'enums' => [
 
         'product_type' => [
@@ -32,6 +48,13 @@ return [
             'year'      => '按年',
         ],
 
+        'refund_type' => [
+            'refund'              => '退款',
+            'return_goods_refund' => '退货退款',
+            'exchange'            => '换货',
+            'warranty'            => '保修',
+            'reshipment'          => '补发',
+        ],
 
     ],
 
