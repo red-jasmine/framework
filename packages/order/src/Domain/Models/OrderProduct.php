@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServicesCastTransformer;
@@ -16,7 +17,6 @@ use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PromiseServiceTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -163,7 +163,7 @@ class OrderProduct extends Model
         // 保修
         if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowPromiseService(PromiseServiceTypeEnum::SERVICE)) {
-            $allowApplyRefundTypes[] = RefundTypeEnum::SERVICE;
+            $allowApplyRefundTypes[] = RefundTypeEnum::WARRANTY;
         }
 
         // TODO 最长时间

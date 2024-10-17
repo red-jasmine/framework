@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
             $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
-            $table->string('settlement_status',32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
 
             // 订单锁
@@ -79,9 +79,9 @@ return new class extends Migration {
 
             $table->string('contact')->nullable()->comment('联系方式');
             $table->string('password')->nullable()->comment('查询密码');
-
-            $table->unsignedTinyInteger('is_seller_delete')->default(0)->comment('卖家删除');
-            $table->unsignedTinyInteger('is_buyer_delete')->default(0)->comment('买家删除');
+            $table->unsignedTinyInteger('star')->nullable()->comment('加星');
+            $table->boolean('is_seller_delete')->default(false)->comment('卖家删除');
+            $table->boolean('is_buyer_delete')->default(false)->comment('买家删除');
             $table->string('outer_order_id', 64)->nullable()->comment('外部订单号');
             $table->string('cancel_reason')->nullable()->comment('取消原因');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
@@ -90,6 +90,9 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单表');
+
+            $table->index([ 'buyer_type', 'buyer_id', 'order_status' ], 'idx_buyer');
+            $table->index([ 'seller_type', 'seller_type', 'order_status' ], 'idx_seller');
         });
     }
 

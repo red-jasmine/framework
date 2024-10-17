@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Mappers;
 
 
-use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
+use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 
 class OrderProductMapper

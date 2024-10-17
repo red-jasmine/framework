@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Order\Domain\Services;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Models\OrderRefund;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 
 class OrderRefundService
 {
@@ -85,7 +85,7 @@ class OrderRefundService
                 $orderRefund->refund_status   = RefundStatusEnum::WAIT_SELLER_AGREE;
                 break;
             case RefundTypeEnum::EXCHANGE:
-            case RefundTypeEnum::SERVICE:
+            case RefundTypeEnum::WARRANTY:
             case RefundTypeEnum::RETURN_GOODS_REFUND:
                 $orderRefund->has_good_return = true;
                 $orderRefund->refund_status   = RefundStatusEnum::WAIT_SELLER_AGREE_RETURN;

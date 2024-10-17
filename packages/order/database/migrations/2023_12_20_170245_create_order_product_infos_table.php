@@ -13,10 +13,11 @@ return new class extends Migration {
             $table->text('buyer_remarks')->nullable()->comment('买家备注');
             $table->string('seller_message')->nullable()->comment('卖家留言');
             $table->string('buyer_message')->nullable()->comment('买家留言');
+            $table->json('form')->nullable()->comment('表单');
+            $table->json('tools')->nullable()->comment('商品工具');
             $table->json('seller_expands')->nullable()->comment('卖家扩展信息');
             $table->json('buyer_expands')->nullable()->comment('买家扩展信息');
             $table->json('other_expands')->nullable()->comment('其他扩展信息');
-            $table->json('tools')->nullable()->comment('商品工具');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单商品-附加信息表');

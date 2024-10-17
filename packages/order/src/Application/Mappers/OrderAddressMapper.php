@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Mappers;
 
 
 
-use RedJasmine\Order\Application\UserCases\Commands\Data\OrderAddressData;
+use RedJasmine\Order\Domain\Data\OrderAddressData;
 use RedJasmine\Order\Domain\Models\OrderAddress;
 
 class OrderAddressMapper

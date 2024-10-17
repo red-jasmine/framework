@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\Application\UserCases\Commands\Data;
+namespace RedJasmine\Order\Domain\Data;
 
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;

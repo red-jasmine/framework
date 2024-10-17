@@ -10,8 +10,8 @@ return [
     |
     */
     'flows'          => [
-        'standard'     => \RedJasmine\Order\Domain\Strategies\OrderStandardFlow::class,
-        'presale' => \RedJasmine\Order\Domain\Strategies\OrderPresaleFlow::class,
+        'standard' => \RedJasmine\Order\Domain\Strategies\OrderStandardFlow::class,
+        'presale'  => \RedJasmine\Order\Domain\Strategies\OrderPresaleFlow::class,
     ],
 
     /*

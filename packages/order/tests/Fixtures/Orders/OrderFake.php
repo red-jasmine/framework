@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Tests\Fixtures\Orders;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
@@ -12,7 +13,6 @@ use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingCardKe
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingLogisticsCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingVirtualCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Tests\Fixtures\Users\User;
 
 class OrderFake

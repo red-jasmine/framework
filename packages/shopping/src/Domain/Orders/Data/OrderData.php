@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Orders\Data;
 
 use Illuminate\Support\Collection;
-use RedJasmine\Order\Application\UserCases\Commands\Data\OrderAddressData;
+use RedJasmine\Order\Domain\Data\OrderAddressData;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Support\Application\Command;
 use RedJasmine\Support\Data\UserData;
@@ -71,7 +71,7 @@ class OrderData extends Command
      * 地址
      * @var OrderAddressData|null
      */
-    public ?OrderAddressData $address;
+    public ?\RedJasmine\Order\Domain\Data\OrderAddressData $address;
 
 
     /**

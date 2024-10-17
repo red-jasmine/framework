@@ -3,8 +3,8 @@
 namespace RedJasmine\Shopping\Domain\Orders\Transformers;
 
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Order\Application\UserCases\Commands\Data\OrderProductData;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;

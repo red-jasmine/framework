@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Events\RefundAgreedEvent;
@@ -26,7 +27,6 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Domain\OrderFactory;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -218,7 +218,7 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
-            RefundTypeEnum::SERVICE,
+            RefundTypeEnum::WARRANTY,
         ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
@@ -264,7 +264,7 @@ class OrderRefund extends Model
     public function confirm() : void
     {
         if (!in_array($this->refund_type, [
-            RefundTypeEnum::SERVICE,
+            RefundTypeEnum::WARRANTY,
             RefundTypeEnum::EXCHANGE,
         ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
@@ -287,7 +287,7 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
-            RefundTypeEnum::SERVICE,
+            RefundTypeEnum::WARRANTY,
         ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }

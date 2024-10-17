@@ -1,26 +1,26 @@
 <?php
 
-namespace RedJasmine\Order\Application\UserCases\Commands\Data;
+namespace RedJasmine\Order\Domain\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Data\UserData;
 
 class OrderData extends Data
 {
     /**
      * 卖家
-     * @var UserData
+     * @var UserInterface
      */
-    public UserData $seller;
+    public UserInterface $seller;
     /**
      * 买家
-     * @var UserData
+     * @var UserInterface
      */
-    public UserData $buyer;
+    public UserInterface $buyer;
     /**
      * 订单类型
      * @var OrderTypeEnum
@@ -34,19 +34,19 @@ class OrderData extends Data
 
     /**
      * 渠道
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $channel = null;
+    public ?UserInterface $channel = null;
     /**
      * 门店
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $store = null;
+    public ?UserInterface $store = null;
     /**
      * 导购
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $guide = null;
+    public ?UserInterface $guide = null;
     /**
      * 订单标题
      * @var string

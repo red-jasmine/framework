@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Order\Tests\Application\Refund\CommandHandlers;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundTypeEnum;
 
 class RefundCreateCommandHandlerTest extends RefundCommandServiceTestCase
 {
