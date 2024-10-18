@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace RedJasmine\Tests;
 
 use Orchestra\Testbench\Concerns\WithWorkbench;
 

@@ -11,7 +11,7 @@
 |
 */
 
- uses(Tests\TestCase::class)->in('Feature');
+ uses(RedJasmine\Tests\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
