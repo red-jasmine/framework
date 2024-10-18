@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Support\Application\Command;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 
 class OrderData extends Command
@@ -14,10 +15,11 @@ class OrderData extends Command
 
     /**
      * 买家
-     * @var UserData
+     * @var UserInterface
      */
-    public UserData $buyer;
+    public UserInterface $buyer;
 
+    protected UserInterface $seller;
     /**
      * 支付方式
      * @var PayTypeEnum
@@ -25,25 +27,25 @@ class OrderData extends Command
     public PayTypeEnum $payType = PayTypeEnum::ONLINE;
     /**
      * 渠道
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $channel = null;
+    public ?UserInterface $channel = null;
     /**
      * 门店
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $store = null;
+    public ?UserInterface $store = null;
     /**
      * 导购
-     * @var UserData|null
+     * @var UserInterface|null
      */
-    public ?UserData $guide = null;
+    public ?UserInterface $guide = null;
 
     /**
      * 订单标题
      * @var string|null
      */
-    public ?string $title  = null;
+    public ?string $title = null;
     /**
      * 客户端类型
      * @var string|null
@@ -71,7 +73,7 @@ class OrderData extends Command
      * 地址
      * @var OrderAddressData|null
      */
-    public ?\RedJasmine\Order\Domain\Data\OrderAddressData $address;
+    public ?OrderAddressData $address;
 
 
     /**
@@ -80,14 +82,12 @@ class OrderData extends Command
     public Collection $products;
 
 
-    protected UserData $seller;
-
-    public function getSeller() : UserData
+    public function getSeller() : UserInterface
     {
         return $this->seller;
     }
 
-    public function setSeller(UserData $seller) : OrderData
+    public function setSeller(UserInterface $seller) : OrderData
     {
         $this->seller = $seller;
         return $this;
