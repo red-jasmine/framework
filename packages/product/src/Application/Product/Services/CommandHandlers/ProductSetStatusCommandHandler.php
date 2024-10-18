@@ -33,7 +33,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
         protected PropertyFormatter           $propertyFormatter,
         protected PropertyValidateService     $propertyValidateService,
         protected ProductCategoryQueryService $categoryQueryService,
-        protected ProductGroupQueryService    $sellerCategoryQueryService,
+        protected ProductGroupQueryService    $groupQueryService,
         protected ProductTransformer          $productTransformer
     )
     {

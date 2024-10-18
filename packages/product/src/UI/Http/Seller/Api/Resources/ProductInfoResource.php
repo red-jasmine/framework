@@ -13,7 +13,7 @@ class ProductInfoResource extends JsonResource
         return [
 
             'id'               => $this->id,
-            'promise_services' => $this->promise_services,
+
             'tips'             => $this->tips,
             'keywords'         => $this->keywords,
             'description'      => $this->description,

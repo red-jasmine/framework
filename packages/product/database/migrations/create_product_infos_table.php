@@ -11,11 +11,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             //
             $table->string('tips')->nullable()->comment('提示');
-
             // 售后服务
             $table->json('after_sales_services')->nullable()->comment('售后服务');
-
-            $table->json('promise_services')->nullable()->comment('承诺服务');
             // 属性
             $table->json('basic_props')->nullable()->comment('基本属性');
             $table->json('sale_props')->nullable()->comment('销售属性');
@@ -27,6 +24,7 @@ return new class extends Migration {
             $table->json('images')->nullable()->comment('图片集');
             $table->json('videos')->nullable()->comment('视频集');
             $table->longText('detail')->nullable()->comment('详情');
+
             $table->json('form')->nullable()->comment('表单');
             $table->json('tools')->nullable()->comment('工具');
             $table->json('expands')->nullable()->comment('扩展');

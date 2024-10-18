@@ -26,7 +26,7 @@ class ProductInfoResource extends JsonResource
             'size'             => $this->size,
             'tools'            => $this->tools,
             'expands'          => $this->expands,
-            'promise_services' => $this->promise_services,
+
         ];
     }
 }

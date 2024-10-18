@@ -251,7 +251,7 @@ class ProductResource extends Resource
                                   ->required()
                                   ->inline()
                                   ->boolean()
-                                  ->default(false)
+                                  ->default(true)
             ,
 
 

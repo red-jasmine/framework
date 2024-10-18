@@ -14,7 +14,6 @@ class ProductInfoResource extends JsonResource
             'id'               => $this->id,
             'basic_props'      => $this->basic_props,
             'sale_props'       => $this->sale_props,
-            'promise_services' => $this->promise_services,
             'keywords'         => $this->keywords,
             'description'      => $this->description,
             'images'           => $this->images,

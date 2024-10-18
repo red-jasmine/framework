@@ -60,7 +60,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
         $model->setRelation('info', new ProductInfo());
         $model->setRelation('skus', Collection::make());
-        $model->setRelation('sellerExtendCategories', Collection::make());
+        $model->setRelation('extendProductGroups', Collection::make());
         $model->setRelation('tags', Collection::make());
         return $model;
     }
@@ -250,7 +250,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function productGroup() : BelongsTo
     {
-        return $this->belongsTo(ProductGroup::class, 'seller_category_id', 'id');
+        return $this->belongsTo(ProductGroup::class, 'product_group_id', 'id');
     }
 
     public function addSku(ProductSku $sku) : static

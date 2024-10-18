@@ -31,7 +31,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
         protected PropertyFormatter           $propertyFormatter,
         protected PropertyValidateService     $propertyValidateService,
         protected ProductCategoryQueryService $categoryQueryService,
-        protected ProductGroupQueryService    $sellerCategoryQueryService,
+        protected ProductGroupQueryService    $groupQueryService,
         protected ProductTransformer          $productTransformer
     )
     {
@@ -139,7 +139,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
         try {
 
             if ($command->productGroupId
-                && !$this->sellerCategoryQueryService->isAllowUse($command->productGroupId, $command->owner)) {
+                && !$this->groupQueryService->isAllowUse($command->productGroupId, $command->owner)) {
                 throw new ProductException('商品分组不可使用');
             }
         } catch (Throwable $exception) {

@@ -46,7 +46,7 @@ class ProductFaker
             'im_multiple_spec'    => false,
             'brand_id'            => 0,
             'category_id'         => 0,
-            'seller_category_id'  => 0,
+            'product_group_id'  => 0,
             'postage_id'          => 0,
             'min_limit'           => 0,
             'max_limit'           => 0,
@@ -71,10 +71,7 @@ class ProductFaker
             'supplier'            => [ 'type' => 'supplier', 'id' => fake()->numberBetween(100, 1000) ],
             'supplier_product_id' => fake()->numerify('#########'),
             'tools'               => [],
-            'expands'             => [],
-            'promise_services'    => [
-                'refund' => '9day'
-            ],
+            'expands'             => []
         ];
     }
 

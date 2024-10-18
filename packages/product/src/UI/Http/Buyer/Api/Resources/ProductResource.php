@@ -53,12 +53,12 @@ class ProductResource extends JsonResource
             'brand_id'           => $this->brand_id,
             'product_model'      => $this->product_model,
             'category_id'        => $this->category_id,
-            'seller_category_id' => $this->seller_category_id,
+            'product_group_id' => $this->product_group_id,
             $this->mergeWhen($this->relationLoaded('info'),
                              $this->relationLoaded('info') ? new ProductInfoResource($this->whenLoaded('info')) : null),
             'brand'              => new BrandResource($this->whenLoaded('brand')),
             'category'           => new CategoryResource($this->whenLoaded('category')),
-            'sellerCategory'     => new GroupResource($this->whenLoaded('sellerCategory')),
+            'productGroup'     => new GroupResource($this->whenLoaded('productGroup')),
             'skus'               => ProductSkuResource::collection($this->whenLoaded('skus')),
         ];
     }

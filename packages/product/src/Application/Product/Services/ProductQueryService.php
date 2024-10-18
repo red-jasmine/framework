@@ -54,7 +54,7 @@ class ProductQueryService extends ApplicationQueryService
             AllowedFilter::exact('status'),
             AllowedFilter::exact('brand_id'),
             AllowedFilter::exact('category_id'),
-            AllowedFilter::exact('seller_category_id'),
+            AllowedFilter::exact('product_group_id'),
         ];
     }
 

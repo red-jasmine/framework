@@ -93,19 +93,18 @@ class ProductTransformer
         $product->end_sale_time              = $command->endSaleTime;
         $product->info->id                   = $product->id;
         $product->info->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
-        //$product->info->promise_services    = $command->promiseServices;
-        $product->info->videos          = $command->videos;
-        $product->info->images          = $command->images;
-        $product->info->keywords        = $command->keywords;
-        $product->info->description     = $command->description;
-        $product->info->tips            = $command->tips;
-        $product->info->detail          = $command->detail;
-        $product->info->remarks         = $command->remarks;
-        $product->info->tools           = $command->tools;
-        $product->info->expands         = $command->expands;
-        $product->info->form            = $command->form;
-        $product->info->basic_props     = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
-        $product->info->customize_props = $command->customizeProps?->toArray() ?? [];
+        $product->info->videos               = $command->videos;
+        $product->info->images               = $command->images;
+        $product->info->keywords             = $command->keywords;
+        $product->info->description          = $command->description;
+        $product->info->tips                 = $command->tips;
+        $product->info->detail               = $command->detail;
+        $product->info->remarks              = $command->remarks;
+        $product->info->tools                = $command->tools;
+        $product->info->expands              = $command->expands;
+        $product->info->form                 = $command->form;
+        $product->info->basic_props          = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
+        $product->info->customize_props      = $command->customizeProps?->toArray() ?? [];
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
@@ -152,14 +151,14 @@ class ProductTransformer
 
                 // 统计项
 
-                $product->price        = $product->skus->where('properties_sequence', '<>', '')->min('price');
-                $product->market_price = $product->skus->where('properties_sequence', '<>', '')->min('market_price');
-                $product->cost_price   = $product->skus->where('properties_sequence', '<>', '')->min('cost_price');
-                $product->safety_stock = $product->skus->where('properties_sequence', '<>', '')->sum('safety_stock');
+                $product->price        = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('price');
+                $product->market_price = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('market_price');
+                $product->cost_price   = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('cost_price');
+                $product->safety_stock = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->sum('safety_stock');
 
 
                 // 加入默认规格
-                $defaultSku = $product->skus->where('properties_sequence', '')->first() ?? $this->defaultSku($product, $command);
+                $defaultSku = $product->skus->where('properties_sequence', $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
                 $defaultSku->setDeleted();
                 $product->addSku($defaultSku);
 
@@ -170,7 +169,7 @@ class ProductTransformer
                 $product->market_price     = $command->marketPrice;
                 $product->safety_stock     = $command->safetyStock;
                 $product->info->sale_props = [];
-                $defaultSku                = $product->skus->where('properties_sequence', '')->first() ?? $this->defaultSku($product, $command);
+                $defaultSku                = $product->skus->where('properties_sequence', $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;
@@ -203,8 +202,8 @@ class ProductTransformer
 
         $sku                      = new ProductSku();
         $sku->id                  = $product->id;
-        $sku->properties_sequence = '';
-        $sku->properties_name     = '';
+        $sku->properties_sequence = $product::$defaultPropertiesSequence;
+        $sku->properties_name     = $product::$defaultPropertiesName;
         $sku->image               = $product->image;
         $sku->barcode             = $product->barcode;
         $sku->outer_id            = $product->outer_id;
