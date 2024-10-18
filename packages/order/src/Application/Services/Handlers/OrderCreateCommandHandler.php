@@ -3,59 +3,67 @@
 namespace RedJasmine\Order\Application\Services\Handlers;
 
 
-use Exception;
 use RedJasmine\Order\Application\Mappers\OrderAddressMapper;
 use RedJasmine\Order\Application\Mappers\OrderMapper;
 use RedJasmine\Order\Application\Mappers\OrderProductMapper;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Domain\OrderFactory;
-use RedJasmine\Support\Facades\ServiceContext;
+use RedJasmine\Order\Domain\Transformer\OrderTransformer;
+use RedJasmine\Support\Exceptions\AbstractException;
+use Throwable;
 
 class OrderCreateCommandHandler extends AbstractOrderCommandHandler
 {
 
-    /**
-     * @param OrderCreateCommand $data
-     *
-     * @return Order
-     * @throws Exception
-     */
-    public function handle(OrderCreateCommand $data) : Order
-    {
-        $order = app(OrderFactory::class)->createOrder();
 
+    /**
+     * @param OrderCreateCommand $command
+     * @return Order
+     * @throws AbstractException
+     * @throws Throwable
+     */
+    public function handle(OrderCreateCommand $command) : Order
+    {
+        $order = app(OrderTransformer::class)->transform($command);
 
         $this->setModel($order);
 
-        // TODO 这里割裂了应该在当前类设置
-        app(OrderMapper::class)->fromData($data, $order);
+        $this->beginDatabaseTransaction();
 
-        foreach ($data->products as $productData) {
-            $product = app(OrderFactory::class)->createOrderProduct();
-            // 这里也是
-            app(OrderProductMapper::class)->fromData($productData, $product);
-            // TODO creator 没有存储进来
-            $order->addProduct($product);
+        try {
+
+
+            $this->getService()->hook('create.validate', $command, fn() => $this->validate($command));
+
+            $this->getService()->hook('create.fill', $command, fn() => app(OrderTransformer::class)->transform($command));
+
+
+            $order->create();
+
+            $this->orderRepository->store($order);
+
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw  $exception;
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw  $throwable;
         }
 
-        // TODO 判断是否需要 地址
-        if ($data->address) {
-            $address = app(OrderFactory::class)->createOrderAddress();
-            app(OrderAddressMapper::class)->fromData($data->address, $address);
-            $order->setAddress($address);
-        }
-
-        $order->creator = ServiceContext::getOperator();
-        $order->create();
-        $this->execute(
-            execute: fn() => '',
-            persistence: fn() => $this->orderRepository->store($order)
-        );
 
         OrderCreatedEvent::dispatch($order);
+
+
         return $order;
+
+    }
+
+
+    protected function validate(OrderCreateCommand $command) : void
+    {
 
     }
 

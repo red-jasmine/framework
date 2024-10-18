@@ -51,6 +51,15 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class OrderCommandService extends ApplicationCommandService
 {
 
+    /**
+     * 钩子前缀
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.order.command';
+
+    protected static string $modelClass = Order::class;
+
+
     protected static $macros = [
         'create'             => OrderCreateCommandHandler::class,
         'paying'             => OrderPayingCommandHandler::class,

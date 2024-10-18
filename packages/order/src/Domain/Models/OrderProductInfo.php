@@ -15,12 +15,18 @@ class OrderProductInfo extends Model
 
     public $incrementing = false;
 
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_infos';
+    }
 
     protected $casts = [
-        'buyer_expands'  => 'array',
-        'seller_expands' => 'array',
-        'other_expands'  => 'array',
-        'tools'          => 'array',
+        'after_sale_services' => 'array',
+        'form'                => 'array',
+        'buyer_expands'       => 'array',
+        'seller_expands'      => 'array',
+        'other_expands'       => 'array',
+        'tools'               => 'array',
     ];
 
 

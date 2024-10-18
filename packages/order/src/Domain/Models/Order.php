@@ -3,11 +3,12 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
@@ -29,14 +30,16 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use Spatie\LaravelData\WithData;
 
 
-class Order extends Model
+class Order extends Model implements OperatorInterface
 {
+    use HasSnowflakeId;
 
     use WithData;
 
@@ -51,6 +54,11 @@ class Order extends Model
     public bool $withTradePartiesNickname = true;
 
     public $incrementing = false;
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders';
+    }
 
 
     protected $dispatchesEvents = [
@@ -107,6 +115,20 @@ class Order extends Model
     ];
 
 
+    public static function newModel() : static
+    {
+        $order     = new static();
+        $order->id = $order->newUniqueId();
+
+        $orderInfo     = new OrderInfo();
+        $orderInfo->id = $order->id;
+        $order->setRelation('info', $orderInfo);
+        $order->setRelation('products', Collection::make());
+        $order->setRelation('payments', Collection::make());
+        $order->setRelation('address', null);
+        return $order;
+    }
+
     public function info() : HasOne
     {
         return $this->hasOne(OrderInfo::class, 'id', 'id');
@@ -132,26 +154,47 @@ class Order extends Model
         return $this->hasMany(OrderPayment::class, 'order_id', 'id');
     }
 
-    public function guide() : Attribute
+
+    public function guide() : MorphTo
     {
-        return Attribute::make(
-            get: static fn(mixed $value, array $attributes) => UserData::from([
-                'type' => $attributes['guide_type'], 'id' => $attributes['guide_id'],
-            ]),
-            set: static fn(?UserInterface $user) => ['guide_type' => $user?->getType(), 'guide_id' => $user?->getID(),]
-        );
+        return $this->morphTo('guide', 'guide_type', 'guide_id');
     }
 
-    public function store() : Attribute
+
+    public function setGuideAttribute(?UserInterface $user) : static
     {
-        return Attribute::make(
-            get: static fn(mixed $value, array $attributes) => UserData::from([
-                'type' => $attributes['store_type'], 'id' => $attributes['store_id'],
-            ]),
-            set: static fn(?UserInterface $user) => ['store_type' => $user?->getType(), 'store_id' => $user?->getID(),]
-        );
+        $this->setAttribute('guide_type', $user?->getType());
+        $this->setAttribute('guide_id', $user?->getID());
+        $this->setAttribute('guide_name', $user?->getNickname());
+
+        return $this;
     }
 
+    public function store() : MorphTo
+    {
+        return $this->morphTo('store', 'store_type', 'store_id');
+    }
+
+    public function setStoreAttribute(?UserInterface $user) : static
+    {
+        $this->setAttribute('store_type', $user?->getType());
+        $this->setAttribute('store_id', $user?->getID());
+        $this->setAttribute('store_name', $user?->getNickname());
+        return $this;
+    }
+
+    public function channel() : MorphTo
+    {
+        return $this->morphTo('channel', 'channel_type', 'channel_id');
+    }
+
+    public function setChannelAttribute(?UserInterface $user) : static
+    {
+        $this->setAttribute('channel_type', $user?->getType());
+        $this->setAttribute('channel_id', $user?->getID());
+        $this->setAttribute('channel_name', $user?->getNickname());
+        return $this;
+    }
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
@@ -159,7 +202,7 @@ class Order extends Model
         $orderProduct->order_id       = $this->id;
         $orderProduct->seller         = $this->seller;
         $orderProduct->buyer          = $this->buyer;
-        $orderProduct->progress_total = (int) bcmul($orderProduct->num, $orderProduct->unit, 0);
+        $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit, 0);
         $orderProduct->created_time   = now();
         $this->products->add($orderProduct);
         return $this;
@@ -207,7 +250,7 @@ class Order extends Model
             $product->discount_amount;
             // 应付金额  = 商品金额 - 单品优惠 + 税费
             $product->payable_amount = bcsub(bcadd($product->product_amount, $product->tax_amount, 2),
-                $product->discount_amount, 2);
+                                             $product->discount_amount, 2);
 
             // 实付金额 完成支付时
             $product->payment_amount = $product->payment_amount ?? 0;
@@ -255,7 +298,7 @@ class Order extends Model
 
         // 订单应付金额 = 商品总应付金额 - 优惠 + 邮费
         $this->payable_amount = bcsub(bcadd($this->product_payable_amount, $this->freight_amount, 2),
-            $this->discount_amount, 2);
+                                      $this->discount_amount, 2);
 
     }
 
@@ -285,7 +328,7 @@ class Order extends Model
             } else {
                 if (bccomp($product->payable_amount, 0, 2) !== 0) {
                     $product->divided_discount_amount = bcmul($this->discount_amount,
-                        bcdiv($product->payable_amount, $this->product_payable_amount, 4), 2);
+                                                              bcdiv($product->payable_amount, $this->product_payable_amount, 4), 2);
                 } else {
                     $product->divided_discount_amount = 0;
                 }
@@ -301,11 +344,12 @@ class Order extends Model
 
     public function create() : static
     {
-
         // 计算金额
         $this->calculateAmount();
         $this->created_time = now();
-        $this->fireModelEvent('created');
+
+
+        //$this->fireModelEvent('created');
 
         return $this;
     }
@@ -347,7 +391,7 @@ class Order extends Model
         // 统计有效单 但是还没有完成发货的订单
         $this->products->each(function (OrderProduct $orderProduct) use (&$effectiveAndNotShippingCount) {
             if ($orderProduct->isEffective() && in_array($orderProduct->shipping_status,
-                    [ShippingStatusEnum::NIL, ShippingStatusEnum::WAIT_SEND, ShippingStatusEnum::PART_SHIPPED], true)) {
+                                                         [ ShippingStatusEnum::NIL, ShippingStatusEnum::WAIT_SEND, ShippingStatusEnum::PART_SHIPPED ], true)) {
                 $effectiveAndNotShippingCount++;
             }
         });
@@ -360,7 +404,7 @@ class Order extends Model
 
 
     /**
-     * @param  string|null  $reason
+     * @param string|null $reason
      *
      * @return void
      * @throws OrderException
@@ -373,7 +417,7 @@ class Order extends Model
         }
         // 未发货、未支付、情况下可以取消
         if (in_array($this->payment_status,
-            [PaymentStatusEnum::PAID, PaymentStatusEnum::PART_PAY, PaymentStatusEnum::NO_PAYMENT,], true)) {
+                     [ PaymentStatusEnum::PAID, PaymentStatusEnum::PART_PAY, PaymentStatusEnum::NO_PAYMENT, ], true)) {
             throw OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         $this->order_status  = OrderStatusEnum::CANCEL;
@@ -390,14 +434,14 @@ class Order extends Model
     /**
      * 发起支付
      *
-     * @param  OrderPayment  $orderPayment
+     * @param OrderPayment $orderPayment
      *
      * @return void
      * @throws OrderException
      */
     public function paying(OrderPayment $orderPayment) : void
     {
-        if (!in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL], true)) {
+        if (!in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL ], true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
@@ -408,19 +452,19 @@ class Order extends Model
 
         $this->addPayment($orderPayment);
         // 设置为支付中
-        if (in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL], true)) {
+        if (in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL ], true)) {
             $this->payment_status = PaymentStatusEnum::PAYING;
         }
         $this->products->each(function (OrderProduct $orderProduct) {
             $orderProduct->payment_status = PaymentStatusEnum::PAYING;
         });
 
-        $this->fireModelEvent('paying',false);
+        $this->fireModelEvent('paying', false);
     }
 
 
     /**
-     * @param  OrderPayment  $orderPayment
+     * @param OrderPayment $orderPayment
      *
      * @return void
      * @throws OrderException
@@ -429,7 +473,7 @@ class Order extends Model
     {
         if (!in_array($this->payment_status, [
             PaymentStatusEnum::NIL, PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::PAYING, PaymentStatusEnum::PART_PAY
-        ], true)) {
+        ],            true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
 
@@ -451,14 +495,14 @@ class Order extends Model
         });
 
 
-        $this->fireModelEvent('paid',false);
+        $this->fireModelEvent('paid', false);
     }
 
 
     /**
      * 订单确认
      *
-     * @param  int|null  $orderProductId
+     * @param int|null $orderProductId
      *
      * @return void
      * @throws OrderException
@@ -466,8 +510,8 @@ class Order extends Model
     public function confirm(?int $orderProductId = null) : void
     {
 
-        if (in_array($this->order_status, [OrderStatusEnum::CANCEL, OrderStatusEnum::FINISHED, OrderStatusEnum::CLOSED],
-            true)) {
+        if (in_array($this->order_status, [ OrderStatusEnum::CANCEL, OrderStatusEnum::FINISHED, OrderStatusEnum::CLOSED ],
+                     true)) {
             throw new OrderException('订单完成');
         }
         // 只有在 部分发货情况下  才允许 传入子单号 单独确认搜获
@@ -509,23 +553,24 @@ class Order extends Model
 
 
     /**
-     * @param  int  $orderProductId
-     * @param  int  $progress
-     * @param  bool  $isAbsolute
-     * @param  bool  $isAllowLess
+     * @param int $orderProductId
+     * @param int $progress
+     * @param bool $isAbsolute
+     * @param bool $isAllowLess
      *
      * @return int 最新的进度
      * @throws OrderException
      */
     public function setProductProgress(
-        int $orderProductId,
-        int $progress,
+        int  $orderProductId,
+        int  $progress,
         bool $isAbsolute = true,
         bool $isAllowLess = false
-    ) : int {
+    ) : int
+    {
         $orderProduct = $this->products->where('id', $orderProductId)->firstOrFail();
-        $oldProgress  = (int) $orderProduct->progress;
-        $newProgress  = $isAbsolute ? $progress : ((int) bcadd($oldProgress, $progress, 0));
+        $oldProgress  = (int)$orderProduct->progress;
+        $newProgress  = $isAbsolute ? $progress : ((int)bcadd($oldProgress, $progress, 0));
         if ($oldProgress === $newProgress) {
             return $newProgress;
         }
@@ -537,7 +582,7 @@ class Order extends Model
         $orderProduct->progress = $newProgress;
 
         $this->fireModelEvent('progress');
-        return (int) $orderProduct->progress;
+        return (int)$orderProduct->progress;
     }
 
 
@@ -547,7 +592,7 @@ class Order extends Model
     }
 
     /**
-     * @param  OrderRefund  $orderRefund
+     * @param OrderRefund $orderRefund
      *
      * @return void
      * @throws RefundException
@@ -560,7 +605,7 @@ class Order extends Model
 
     public function remarks(TradePartyEnums $tradeParty, string $remarks = null, ?int $orderProductId = null) : void
     {
-        $field = $tradeParty->value.'_remarks';
+        $field = $tradeParty->value . '_remarks';
         if ($orderProductId) {
             $model = $this->products->where('id', $orderProductId)->firstOrFail();
         } else {
@@ -585,8 +630,8 @@ class Order extends Model
 
 
     /**
-     * @param  TradePartyEnums  $tradeParty
-     * @param  bool  $isHidden
+     * @param TradePartyEnums $tradeParty
+     * @param bool $isHidden
      *
      * @return void
      * @throws OrderException

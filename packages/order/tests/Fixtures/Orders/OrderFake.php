@@ -23,7 +23,7 @@ class OrderFake
 
     /**
      * 发货类型
-     * @var \RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum
+     * @var ShippingTypeEnum
      */
     public ShippingTypeEnum $shippingType = ShippingTypeEnum::EXPRESS;
     // 商品数量
@@ -75,21 +75,21 @@ class OrderFake
             ],
             'title'          => fake()->text(),
             'order_type'     => $this->orderType->value,
-            'source_type'    => fake()->randomElement(['product', 'activity']),
+            'source_type'    => fake()->randomElement([ 'product', 'activity' ]),
             'source_id'      => fake()->numerify('out-order-id-########'),
             'outer_order_id' => fake()->numerify('out-order-id-########'),
 
             'channel' => [
-                'type' => fake()->randomElement(['channel', 'promoter']),
+                'type' => fake()->randomElement([ 'channel', 'promoter' ]),
                 'id'   => fake()->randomNumber(5, true),
             ],
 
             'store' => [
-                'type' => fake()->randomElement(['self', 'franchise']),
+                'type' => fake()->randomElement([ 'self', 'franchise' ]),
                 'id'   => fake()->randomNumber(5, true),
             ],
             'guide' => [
-                'type' => fake()->randomElement(['user', 'promoter', 'seller']),
+                'type' => fake()->randomElement([ 'user', 'promoter', 'seller' ]),
                 'id'   => fake()->randomNumber(5, true),
             ],
 
@@ -97,7 +97,7 @@ class OrderFake
             'discount_amount' => fake()->randomFloat(0, 5, 10),
             'contact'         => fake()->phoneNumber(),
             'password'        => fake()->password(6),
-            'client_type'     => fake()->randomElement(['h5', 'ios-app', 'applets']),
+            'client_type'     => fake()->randomElement([ 'h5', 'ios-app', 'applets' ]),
             'client_version'  => fake()->randomNumber(),
             'client_ip'       => fake()->ipv4(),
             'info'            => [
@@ -127,7 +127,7 @@ class OrderFake
             'product_id'             => fake()->numberBetween(1000000, 999999999),
             'sku_id'                 => fake()->numberBetween(1000000, 999999999),
             'category_id'            => 0,
-            'seller_category_id'     => 0,
+            'product_group_id'       => 0,
             'outer_id'               => fake()->numerify('out-id-########'),
             'outer_sku_id'           => fake()->numerify('out-sku-id-########'),
             'barcode'                => fake()->ean13(),
@@ -139,11 +139,11 @@ class OrderFake
             'discount_amount'        => fake()->randomFloat(2, 5, 20),
             'outer_order_product_id' => fake()->numerify('CODE-########'),
             'promise_services'       => PromiseServices::from([
-                'refund'   => '7day',// 退款
-                // 'refund'    => 'unsupported',// 退款
-                'exchange' => '15day', // 换货
-                'service'  => '3month', // 保修
-            ])->toArray(),
+                                                                  'refund'   => '7day',// 退款
+                                                                  // 'refund'    => 'unsupported',// 退款
+                                                                  'exchange' => '15day', // 换货
+                                                                  'service'  => '3month', // 保修
+                                                              ])->toArray(),
             'info'                   => [
                 'seller_remarks' => fake()->sentence(10),
                 'seller_message' => fake()->sentence(10),
@@ -179,9 +179,9 @@ class OrderFake
             'payment_time'        => date('Y-m-d H:i:s'),
             'payment_type'        => 'payment',
             'payment_id'          => fake()->numberBetween(1000000, 999999999),
-            'payment_channel'     => fake()->randomNumber(['alipay', 'wechat']),
+            'payment_channel'     => fake()->randomNumber([ 'alipay', 'wechat' ]),
             'payment_channel_no'  => fake()->numerify('out-sku-id-########'),
-            'payment_method_type' => fake()->randomElement(['h5', 'applets', 'ios-app', 'android']),
+            'payment_method_type' => fake()->randomElement([ 'h5', 'applets', 'ios-app', 'android' ]),
         ];
 
         $data = array_merge($data, $merge);
@@ -195,7 +195,7 @@ class OrderFake
             'id'                   => 1,
             'is_split'             => false,
             'order_products'       => null,
-            'express_company_code' => fake()->randomElement(['shunfeng', 'yuantong',]),
+            'express_company_code' => fake()->randomElement([ 'shunfeng', 'yuantong', ]),
             'express_no'           => fake()->numerify('##########'),
         ];
 
@@ -251,9 +251,9 @@ class OrderFake
         $data = [
             'id'               => 0,
             'order_product_id' => 0,
-            'images'           => [fake()->imageUrl, fake()->imageUrl],
+            'images'           => [ fake()->imageUrl, fake()->imageUrl ],
             'refund_type'      => RefundTypeEnum::REFUND->value,
-            'reason'           => fake()->randomElement(['不想要了', '拍错了']),
+            'reason'           => fake()->randomElement([ '不想要了', '拍错了' ]),
             'refund_amount'    => null,
             'description'      => fake()->text,
             'outer_refund_id'  => fake()->numerify('##########'),

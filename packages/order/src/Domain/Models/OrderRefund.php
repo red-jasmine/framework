@@ -27,14 +27,16 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\OrderFactory;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 class OrderRefund extends Model
 {
 
+
+    use HasSnowflakeId;
 
     use HasDateTimeFormatter;
 
@@ -45,6 +47,19 @@ class OrderRefund extends Model
     use HasTradeParties;
 
     public $incrementing = false;
+
+    public static function newModel() : static
+    {
+        $model     = new static();
+        $model->id = $model->newUniqueId();
+
+        return $model;
+    }
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_refunds';
+    }
 
     protected $casts = [
         'order_product_type'     => ProductTypeEnum::class,
@@ -102,7 +117,7 @@ class OrderRefund extends Model
     /**
      * 拒绝
      *
-     * @param  string  $reason
+     * @param string $reason
      *
      * @return void
      * @throws RefundException
@@ -114,7 +129,7 @@ class OrderRefund extends Model
             RefundStatusEnum::WAIT_SELLER_AGREE,
             RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
             RefundStatusEnum::WAIT_SELLER_CONFIRM,
-        ], true)) {
+        ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
         $this->reject_reason = $reason;
@@ -150,7 +165,7 @@ class OrderRefund extends Model
     /**
      * 同意退款
      *
-     * @param  Amount|null  $amount
+     * @param Amount|null $amount
      *
      * @return void
      * @throws RefundException
@@ -160,12 +175,12 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND
-        ], true)) {
+        ],            true)) {
             throw new RefundException();
         }
         // 验证状态
         if (!in_array($this->refund_status,
-            [RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM,], true)) {
+                      [ RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM, ], true)) {
             throw new RefundException();
         }
 
@@ -195,7 +210,7 @@ class OrderRefund extends Model
         $this->order->refund_time = $this->order->refund_time ?? now();
 
 
-        $payment                 = app(OrderFactory::class)->createOrderPayment();
+        $payment                 = OrderPayment::newModel();
         $payment->order_id       = $this->order_id;
         $payment->refund_id      = $this->id;
         $payment->seller         = $this->seller;
@@ -219,7 +234,7 @@ class OrderRefund extends Model
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
             RefundTypeEnum::WARRANTY,
-        ], true)) {
+        ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE_RETURN) {
@@ -240,7 +255,7 @@ class OrderRefund extends Model
     {
         if (!in_array($this->refund_type, [
             RefundTypeEnum::RESHIPMENT,
-        ], true)) {
+        ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
@@ -266,7 +281,7 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::WARRANTY,
             RefundTypeEnum::EXCHANGE,
-        ], true)) {
+        ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_CONFIRM) {
@@ -288,7 +303,7 @@ class OrderRefund extends Model
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
             RefundTypeEnum::WARRANTY,
-        ], true)) {
+        ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
@@ -310,7 +325,7 @@ class OrderRefund extends Model
      * 再次发货
      * // 换货、维修、补发
      *
-     * @param  OrderLogistics  $orderLogistics
+     * @param OrderLogistics $orderLogistics
      *
      * @return void
      * @throws RefundException

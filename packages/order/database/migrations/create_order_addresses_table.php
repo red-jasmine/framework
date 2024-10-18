@@ -7,18 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-
-
-        Schema::create('order_addresses', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('订单ID');
-            $table->string('contacts',300)->nullable()->comment('联系人');
+            $table->string('contacts', 300)->nullable()->comment('联系人');
             $table->string('mobile')->nullable()->comment('手机');
-            $table->string('country' )->nullable()->comment('国家');
+            $table->string('country')->nullable()->comment('国家');
             $table->string('province')->nullable()->comment('省份');
             $table->string('city')->nullable()->comment('城市');
             $table->string('district')->nullable()->comment('区县');
             $table->string('street')->nullable()->comment('乡镇街道');
-            $table->string('address',500)->nullable()->comment('详细地址');
+            $table->string('address', 500)->nullable()->comment('详细地址');
             $table->string('zip_code', 10)->nullable()->comment('邮政编码');
             $table->string('lon')->nullable()->comment('经度');
             $table->string('lat')->nullable()->comment('纬度');
@@ -39,6 +37,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('order_addresses');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses');
     }
 };

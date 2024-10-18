@@ -25,7 +25,7 @@ class OrderRefundResource extends JsonResource
             'product_id'             => $this->product_id,
             'sku_id'                 => $this->sku_id,
             'category_id'            => $this->category_id,
-            'seller_category_id'     => $this->seller_category_id,
+            'product_group_id'     => $this->product_group_id,
             'outer_id'               => $this->outer_id,
             'outer_sku_id'           => $this->outer_sku_id,
             'barcode'                => $this->barcode,

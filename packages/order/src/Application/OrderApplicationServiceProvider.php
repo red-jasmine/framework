@@ -42,9 +42,6 @@ class OrderApplicationServiceProvider extends ServiceProvider
         $config->set('data.transformers.' . Amount::class, AmountCastTransformer::class);
 
 
-        $config->set('data.casts.' . PromiseServiceValue::class, PromiseServiceValueCastTransformer::class);
-        $config->set('data.transformers.' . PromiseServiceValue::class, PromiseServiceValueCastTransformer::class);
-
 
     }
 

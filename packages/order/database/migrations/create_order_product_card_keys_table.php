@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('order_product_card_keys', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_product_card_keys', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
@@ -28,6 +28,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('order_product_card_keys');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_product_card_keys');
     }
 };

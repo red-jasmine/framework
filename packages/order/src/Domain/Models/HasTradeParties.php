@@ -3,9 +3,8 @@
 namespace RedJasmine\Order\Domain\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
 
 trait HasTradeParties
 {
@@ -14,62 +13,42 @@ trait HasTradeParties
     public function scopeOnlySeller(Builder $query, UserInterface $seller) : Builder
     {
         return $query->where('seller_type', $seller->getType())->where('seller_id', $seller->getID());
-
     }
 
-    public function seller() : Attribute
+    public function setSellerAttribute(UserInterface $user) : static
     {
-        return Attribute::make(
-            get: function (mixed $value, array $attributes) {
-                return UserData::from([
-                                         'type'     => $attributes['seller_type'],
-                                         'id'       => $attributes['seller_id'],
-                                         'nickname' => $attributes['seller_nickname'] ?? null
-                                     ]);
-            },
-            set: function (?UserInterface $user) {
+        $this->setAttribute('seller_type', $user->getType());
+        $this->setAttribute('seller_ud', $user->getID());
+        if ($this->withTradePartiesNickname) {
+            $this->setAttribute('seller_nickname', $user->getNickname());
+        }
+        return $this;
+    }
 
-                $attributes = [
-                    'seller_type' => $user?->getType(),
-                    'seller_id'   => $user?->getID(),
-                ];
-                if ($this->withTradePartiesNickname) {
-                    $attributes['seller_nickname'] = $user?->getNickname();
-                }
+    public function seller() : MorphTo
+    {
+        return $this->morphTo('seller', 'seller_type', 'seller_id');
+    }
 
-                return $attributes;
-            }
+    public function setBuyerAttribute(UserInterface $user) : static
+    {
+        $this->setAttribute('buyer_type', $user->getType());
+        $this->setAttribute('buyer_ud', $user->getID());
+        if ($this->withTradePartiesNickname) {
+            $this->setAttribute('buyer_nickname', $user->getNickname());
+        }
+        return $this;
+    }
 
-        );
+    public function buyer() : MorphTo
+    {
+        return $this->morphTo('buyer', 'buyer_type', 'buyer_id');
     }
 
     public function scopeOnlyBuyer(Builder $query, UserInterface $buyer) : Builder
     {
         return $query->where('buyer_type', $buyer->getType())->where('buyer_id', $buyer->getID());
 
-    }
-
-    public function buyer() : Attribute
-    {
-        return Attribute::make(
-            get: function (mixed $value, array $attributes) {
-                return UserData::from([
-                                         'type'     => $attributes['buyer_type'],
-                                         'id'       => $attributes['buyer_id'],
-                                         'nickname' => $attributes['buyer_nickname'] ?? null
-                                     ]);
-            },
-            set: function (?UserInterface $user) {
-                $attributes = [
-                    'buyer_type' => $user?->getType(),
-                    'buyer_id'   => $user?->getID(),
-                ];
-                if ($this->withTradePartiesNickname) {
-                    $attributes['buyer_nickname'] = $user?->getNickname();
-                }
-                return $attributes;
-            }
-        );
     }
 
 

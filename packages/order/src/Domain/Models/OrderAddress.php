@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class OrderAddress extends Model
 {
+
+    use HasSnowflakeId;
 
     use SoftDeletes;
     use HasDateTimeFormatter;
@@ -20,7 +23,20 @@ class OrderAddress extends Model
 
     use HasOperator;
 
+
+    public static function newModel() : static
+    {
+        $model = new static();
+
+        return $model;
+    }
+
     public $incrementing = false;
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_address';
+    }
 
 
     protected $fillable = [

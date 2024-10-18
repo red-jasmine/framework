@@ -20,10 +20,15 @@ use RedJasmine\Order\Domain\Models\Enums\PromiseServiceTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use Spatie\LaravelData\WithData;
 
 class OrderProduct extends Model
 {
+
+    use HasSnowflakeId;
+
+
     use WithData;
 
     use HasDateTimeFormatter;
@@ -37,6 +42,10 @@ class OrderProduct extends Model
 
     public $incrementing = false;
 
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_products';
+    }
 
     protected $casts = [
         'order_product_type'      => ProductTypeEnum::class,
@@ -66,7 +75,6 @@ class OrderProduct extends Model
         'commission_amount'       => AmountCastTransformer::class,
         'divided_discount_amount' => AmountCastTransformer::class,
         'divided_payment_amount'  => AmountCastTransformer::class,
-        'promise_services'        => PromiseServicesCastTransformer::class,
     ];
 
     protected $fillable = [
@@ -77,6 +85,18 @@ class OrderProduct extends Model
         'num',
         'price',
     ];
+
+
+    public static function newModel() : static
+    {
+        $model     = new static();
+        $model->id = $model->newUniqueId();
+
+        $info     = new OrderProductInfo();
+        $info->id = $model->id;
+        $model->setRelation('info', $info);
+        return $model;
+    }
 
 
     public function order() : BelongsTo
@@ -150,24 +170,24 @@ class OrderProduct extends Model
         // 退款
         if ($this->isAllowPromiseService(PromiseServiceTypeEnum::REFUND)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::REFUND;
-            if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED],
-                true)) {
+            if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ],
+                         true)) {
                 $allowApplyRefundTypes[] = RefundTypeEnum::RETURN_GOODS_REFUND;
             }
         }
         // 换货 只有物流发货才支持换货 TODO
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
+        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
             && $this->isAllowPromiseService(PromiseServiceTypeEnum::EXCHANGE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::EXCHANGE;
         }
         // 保修
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
+        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
             && $this->isAllowPromiseService(PromiseServiceTypeEnum::SERVICE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::WARRANTY;
         }
 
         // TODO 最长时间
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)) {
+        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::RESHIPMENT;
         }
 
@@ -190,7 +210,7 @@ class OrderProduct extends Model
             }
             if (($promiseService->value() === PromiseServiceValue::BEFORE_SHIPMENT)
                 && in_array($this->shipping_status,
-                    [ShippingStatusEnum::NIL, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND], true)) {
+                            [ ShippingStatusEnum::NIL, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND ], true)) {
                 return true;
             }
             return false;

@@ -10,10 +10,13 @@ use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class OrderLogistics extends Model
 {
 
+
+    use HasSnowflakeId;
     public $incrementing = false;
 
 
@@ -25,6 +28,18 @@ class OrderLogistics extends Model
 
     use SoftDeletes;
 
+    public static function newModel() : static
+    {
+        $model     = new static();
+        $model->id = $model->newUniqueId();
+
+        return $model;
+    }
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_logistics';
+    }
 
     protected $casts = [
         'order_product_id' => 'array',

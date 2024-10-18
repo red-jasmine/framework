@@ -4,10 +4,8 @@ namespace RedJasmine\Order\Application\Services\Handlers;
 
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Domain\Events\OrderPayingEvent;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use RedJasmine\Order\Domain\OrderFactory;
-use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use Throwable;
 
 class OrderPayingCommandHandler extends AbstractOrderCommandHandler
 {
@@ -16,7 +14,7 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
     public function handle(OrderPayingCommand $command) : OrderPayment
     {
         $order        = $this->find($command->id);
-        $orderPayment = app(OrderFactory::class)->createOrderPayment();
+        $orderPayment = OrderPayment::newModel();
 
         $orderPayment->payment_amount = $command->amount;
         $orderPayment->amount_type    = $command->amountType;
@@ -31,7 +29,7 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
         } catch (AbstractException $exception) {
             DB::rollBack();
             throw  $exception;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             DB::rollBack();
             throw  $throwable;
         }

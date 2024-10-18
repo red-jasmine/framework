@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Order\Domain\Models\Enums\OrderCardKeyStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class OrderProductCardKey extends Model
 {
 
+    use HasSnowflakeId;
 
     public $incrementing = false;
 
@@ -18,9 +21,21 @@ class OrderProductCardKey extends Model
 
     use HasTradeParties;
 
-    use \RedJasmine\Support\Domain\Models\Traits\HasOperator;
+    use HasOperator;
 
     use SoftDeletes;
+
+    public static function newModel() : static
+    {
+        $model     = new static();
+        $model->id = $model->newUniqueId();
+
+        return $model;
+    }
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys';
+    }
 
     protected $casts = [
         'expands' => 'array',

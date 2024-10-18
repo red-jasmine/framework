@@ -5,8 +5,8 @@ namespace RedJasmine\Order\Domain\Data;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Support\Data\Data;
 
 class OrderProductData extends Data
@@ -21,7 +21,9 @@ class OrderProductData extends Data
      * @var ShippingTypeEnum
      */
     public ShippingTypeEnum $shippingType;
-    public string  $title;
+
+    public string $title;
+
     public ?string $skuName;
     /**
      * 商品多态类型
@@ -30,22 +32,24 @@ class OrderProductData extends Data
     public string $productType;
     public int    $productId;
     public int    $skuId = 0;
-    /**
-     * 一个单位量
-     * @var int
-     */
-    public int $unit = 1;
+
     /**
      * 商品件数
      * @var int
      */
-    public int    $num;
-    public Amount $price;
-    public Amount $costPrice;
-    public Amount $taxAmount;
-    public Amount $discountAmount;
+    public int $num;
+
+    // 单位数量
+    public int $unitQuantity = 1;
+    // 单位（可选）
+    public ?string $unit = null;
+
+    public Amount  $price;
+    public Amount  $costPrice;
+    public Amount  $taxAmount;
+    public Amount  $discountAmount;
     public int     $categoryId          = 0;
-    public int     $sellerCategoryId    = 0;
+    public int     $productGroupId      = 0;
     public ?string $image               = null;
     public ?string $outerId             = null;
     public ?string $outerSkuId          = null;
@@ -56,11 +60,13 @@ class OrderProductData extends Data
      * 赠送积分
      * @var int
      */
-    public int $giftPoint = 0;
+    public int $points = 0;
     /**
-     * @var PromiseServices|null
+     * 售后服务
+     * @var AfterSalesService[]
      */
-    public ?PromiseServices $promiseServices;
+    public array $afterSalesServices = [];
+
     public ?string $sellerRemarks = null;
     public ?string $sellerMessage = null;
     public ?string $buyerRemarks  = null;
@@ -69,6 +75,7 @@ class OrderProductData extends Data
     public ?array  $sellerExpands = null;
     public ?array  $otherExpands  = null;
     public ?array  $tools         = null;
+    public ?array  $form          = null;
 
     public function __construct()
     {

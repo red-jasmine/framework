@@ -71,9 +71,10 @@ class OrderData extends Data
     public ?array  $sellerExpands      = null;
     public ?array  $buyerExpands       = null;
     public ?array  $otherExpands       = null;
+    public ?array  $form               = null;
     public ?array  $tools              = null;
-    public Amount  $freightAmount;
-    public Amount  $discountAmount;
+    public ?Amount $freightAmount      = null;
+    public ?Amount $discountAmount     = null;
     public ?string $clientType         = null;
     public ?string $clientVersion      = null;
     public ?string $clientIp           = null;

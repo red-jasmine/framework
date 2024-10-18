@@ -14,11 +14,15 @@ class OrderInfo extends Model
     use SoftDeletes;
 
     public $incrementing = false;
-
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_infos';
+    }
     protected $casts = [
-        'buyer_expands'  => 'array',
-        'seller_expands' => 'array',
-        'other_expands'  => 'array',
-        'tools'          => 'array',
+        'buyer_expands'       => 'array',
+        'seller_expands'      => 'array',
+        'other_expands'       => 'array',
+        'form'                => 'array',
+        'tools'               => 'array',
     ];
 }

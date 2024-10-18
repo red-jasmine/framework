@@ -46,7 +46,7 @@ class OrderRefundService
         $orderRefund->sku_name               = $orderProduct->sku_name;
         $orderRefund->image                  = $orderProduct->image;
         $orderRefund->category_id            = $orderProduct->category_id;
-        $orderRefund->seller_category_id     = $orderProduct->seller_category_id;
+        $orderRefund->product_group_id     = $orderProduct->product_group_id;
         $orderRefund->outer_id               = $orderProduct->outer_id;
         $orderRefund->outer_sku_id           = $orderProduct->outer_sku_id;
         $orderRefund->barcode                = $orderProduct->barcode;

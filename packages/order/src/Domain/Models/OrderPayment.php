@@ -8,9 +8,12 @@ use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class OrderPayment extends Model
 {
+
+    use HasSnowflakeId;
 
     public $incrementing = false;
 
@@ -19,6 +22,20 @@ class OrderPayment extends Model
     use HasOperator;
 
     use HasTradeParties;
+
+    public static function newModel() : static
+    {
+        $model     = new static();
+        $model->id = $model->newUniqueId();
+
+        return $model;
+    }
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_payments';
+    }
+
 
     public function order() : BelongsTo
     {

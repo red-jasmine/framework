@@ -10,7 +10,7 @@ use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('order_logistics', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_logistics', function (Blueprint $table) {
             $table->id();
             $table->string('seller_type')->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
@@ -40,6 +40,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('order_logistics');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_logistics');
     }
 };

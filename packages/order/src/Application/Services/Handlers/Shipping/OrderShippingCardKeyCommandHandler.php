@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Handlers\Shipping;
 
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingCardKeyCommand;
-use RedJasmine\Order\Domain\OrderFactory;
+use RedJasmine\Order\Domain\Models\OrderProductCardKey;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
 
@@ -26,7 +26,7 @@ class OrderShippingCardKeyCommandHandler extends AbstractOrderCommandHandler
 
         $order = $this->find($command->id);
 
-        $orderProductCardKey = app(OrderFactory::class)->createOrderProductCardKey();
+        $orderProductCardKey = OrderProductCardKey::newModel();
 
         $orderProductCardKey->order_product_id = $command->orderProductId;
         $orderProductCardKey->content          = $command->content;

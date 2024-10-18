@@ -9,7 +9,7 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('order_payments', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_payments', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('商品单号');
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->unsignedBigInteger('refund_id')->default(0)->comment('退款单ID');
@@ -39,6 +39,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('order_payments');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_payments');
     }
 };

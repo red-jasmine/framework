@@ -6,7 +6,7 @@ use Exception;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReshipmentCommand;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
-use RedJasmine\Order\Domain\OrderFactory;
+use RedJasmine\Order\Domain\Models\OrderLogistics;
 
 class RefundReshipmentCommandHandler extends AbstractRefundCommandHandler
 {
@@ -22,7 +22,7 @@ class RefundReshipmentCommandHandler extends AbstractRefundCommandHandler
     {
 
         $refund                               = $this->find($command->rid);
-        $orderLogistics                       = app(OrderFactory::class)->createOrderLogistics();
+        $orderLogistics                       = OrderLogistics::newModel();
         $orderLogistics->shippable_type       = LogisticsShippableTypeEnum::REFUND;
         $orderLogistics->shippable_id         = $refund->id;
         $orderLogistics->seller               = $refund->seller;
