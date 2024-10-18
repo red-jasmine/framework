@@ -2,7 +2,8 @@
     "name": "red-jasmine/framework",
     "autoload": {
         "psr-4": {
-            "RedJasmine\\Order\\": "packages/order/src/"
+            "RedJasmine\\Order\\": "packages/order/src/",
+            "RedJasmine\\Ecommerce\\": "packages/ecommerce/src/"
         }
     },
     "authors": [

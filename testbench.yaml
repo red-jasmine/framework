@@ -1,5 +1,6 @@
 providers:
-  # - Workbench\App\Providers\WorkbenchServiceProvider
+   - Workbench\App\Providers\WorkbenchServiceProvider
+   - RedJasmine\Order\OrderPackageServiceProvider
 
 migrations:
   - workbench/database/migrations
