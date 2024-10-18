@@ -186,7 +186,6 @@ trait ResourcePageHelper
                                                       Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
                                                   ])
                                           ->columns(2)
-                                          ->default([ 'creator_type' => auth()->user()->getType(), 'creator_id' => auth()->user()->getID() ])
                                           ->visibleOn('view'),
 
             Forms\Components\MorphToSelect::make('updater')
@@ -196,7 +195,6 @@ trait ResourcePageHelper
                                                       Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
                                                   ])
                                           ->columns(2)
-                                          ->default([ 'updater_type' => auth()->user()->getType(), 'updater_id' => auth()->user()->getID() ])
                                           ->visibleOn('view'),
 
 
@@ -248,6 +246,7 @@ trait ResourcePageHelper
     {
         return static fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ]));
     }
+
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
         return [
@@ -294,8 +293,8 @@ trait ResourcePageHelper
                                      ->label(__('red-jasmine-support::support.owner'))
                                      ->toggleable(isToggledHiddenByDefault: true),
 
-            Tables\Columns\TextColumn::make($name . '_type')->label(__('red-jasmine-support::support.owner_type'))   ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()   ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name . '_type')->label(__('red-jasmine-support::support.owner_type'))->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()->toggleable(isToggledHiddenByDefault: true),
         ];
     }
 }
