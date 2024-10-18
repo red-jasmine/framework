@@ -1118,7 +1118,7 @@ class ProductResource extends Resource
                                                        })
                                                        ->action(function (Model $record, Tables\Actions\Action $action) {
 
-                                                           $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::DISCONTINUED : ProductStatusEnum::ON_SALE;
+                                                           $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::ON_SALE;
                                                            $command = ProductSetStatusCommand::from([ 'id' => $record->id, 'status' => $status ]);
                                                            $service = app(static::$commandService);
                                                            $service->setStatus($command);
