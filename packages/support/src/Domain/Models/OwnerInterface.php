@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 interface OwnerInterface
 {
-    // 改为 Model 的多态关系
+
 
     public function owner() : MorphTo;
 

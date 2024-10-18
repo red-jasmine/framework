@@ -3,10 +3,8 @@
 namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
 
 /**
  * @property string $owner_type

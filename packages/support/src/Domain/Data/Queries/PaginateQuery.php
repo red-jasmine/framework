@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Support\Domain\Data\Queries;
 
-use RedJasmine\Support\Data\Data;
-
 /**
  * 分页查询类，用于处理数据的分页逻辑
  * 继承自 Data 类，提供分页、字段、排序等查询参数的管理
