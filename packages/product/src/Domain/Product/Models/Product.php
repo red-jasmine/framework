@@ -214,7 +214,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方
             'is_multiple_spec'          => 'boolean',
             'is_brand_new'              => 'boolean',
-            'off_sale_time'             => 'datetime',
+            'stop_sale_time'             => 'datetime',
             'on_sale_time'              => 'datetime',
             'sold_out_time'             => 'datetime',
             'modified_time'             => 'datetime',
@@ -303,7 +303,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     public function scopeWarehoused(Builder $query)
     {
         return $query->whereIn('status', [
-            ProductStatusEnum::DISCONTINUED,
+            ProductStatusEnum::STOP_SALE,
             ProductStatusEnum::FORBID_SALE,
             ProductStatusEnum::DRAFT,
         ]);
@@ -342,11 +342,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
                 $this->sold_out_time = now();
                 break;
             case ProductStatusEnum::FORBID_SALE:
-            case ProductStatusEnum::DISCONTINUED:
-                $this->off_sale_time = now();
+            case ProductStatusEnum::STOP_SALE:
+                $this->stop_sale_time = now();
                 break;
             case ProductStatusEnum::DELETED:
-                $this->off_sale_time = now();
+                $this->stop_sale_time = now();
         }
     }
 

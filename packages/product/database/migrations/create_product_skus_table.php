@@ -13,18 +13,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
             $table->string('properties_name')->nullable()->comment('规格名称');
             $table->string('properties_sequence')->nullable()->comment('规格属性序列');
+
             // SKU 信息
+            $table->string('image')->nullable()->comment('主图');
             $table->decimal('price', 10)->default(0)->comment('销售价');
             $table->decimal('market_price', 10)->nullable()->comment('市场价');
             $table->decimal('cost_price', 10)->nullable()->comment('成本价');
-
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             // 信息
-            $table->string('image')->nullable()->comment('主图');
 
             $table->string('outer_id')->nullable()->comment('规格编码');
             $table->string('barcode', 32)->nullable()->comment('规格条码');

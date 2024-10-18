@@ -75,7 +75,7 @@ return [
         'supplier_sku_id'           => '供应商规格ID',
         'on_sale_time'              => '上架时间',
         'sold_out_time'             => '售停时间',
-        'off_sale_time'             => '下架时间',
+        'stop_sale_time'             => '下架时间',
         'modified_time'             => '修改时间',
         'start_sale_time'           => '定时上架时间',
         'end_sale_time'             => '定时下架时间',
@@ -122,12 +122,12 @@ return [
 
     'enums'   => [
         'status' => [
-            'on_sale'      => '在售',
-            'sold_out'     => '售罄',
-            'discontinued' => '停售',
-            'forbid_sale'  => '禁售',
-            'deleted'      => '删除',
-            'draft'        => '待售',
+            'on_sale'     => '在售',
+            'sold_out'    => '缺货',
+            'stop_sale'   => '停售',
+            'forbid_sale' => '禁售',
+            'deleted'     => '删除',
+            'draft'       => '待售',
         ],
     ],
     'options' => [

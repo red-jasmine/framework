@@ -57,7 +57,7 @@ class ProductResource extends JsonResource
             'version'          => $this->version,
             'on_sale_time'     => $this->on_sale_time?->format('Y-m-d H:i:s'),
             'sold_out_time'    => $this->sold_out_time?->format('Y-m-d H:i:s'),
-            'off_sale_time'    => $this->off_sale_time?->format('Y-m-d H:i:s'),
+            'stop_sale_time'    => $this->stop_sale_time?->format('Y-m-d H:i:s'),
             'modified_time'    => $this->modified_time,
             'creator_id'       => $this->creator_id,
             'creator_type'     => $this->creator_type,

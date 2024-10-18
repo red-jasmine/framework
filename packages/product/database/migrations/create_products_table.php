@@ -13,7 +13,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix', 'jasmine_') . 'products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             // 卖家信息
@@ -27,8 +27,6 @@ return new class extends Migration {
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
-            $table->string('outer_id')->nullable()->comment('商品编码');
-            $table->string('barcode', 32)->nullable()->comment('商品条码');
             $table->boolean('is_customized')->default(false)->comment('是否定制');
             $table->boolean('is_multiple_spec')->default(false)->comment('是否为多规格');
             $table->string('slogan')->nullable()->comment('广告语');
@@ -41,47 +39,45 @@ return new class extends Migration {
             // 运费
             $table->string('freight_payer', 32)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('postage_id')->nullable()->comment('运费模板ID');
-            // 价格
-            $table->decimal('price', 10)->default(0)->comment('销售价');
-            $table->decimal('market_price', 10)->nullable()->comment('市场价');
-            $table->decimal('cost_price', 10)->nullable()->comment('成本价');
-            //单位
-            $table->string('unit', 10)->nullable()->comment('单位');
-            $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
-
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
-
-            // 运营类
-            $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间:小时');
-            $table->unsignedInteger('points')->default(0)->comment('积分');
-            // 数量范围
-            $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
-            $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
-            $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');
             $table->string('order_quantity_limit_type')->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
             $table->unsignedBigInteger('order_quantity_limit_num')->nullable()->comment('下单数量限制数量');
 
-            $table->boolean('is_hot')->default(false)->comment('热销');
-            $table->boolean('is_new')->default(false)->comment('新品');
-            $table->boolean('is_best')->default(false)->comment('精品');
-            $table->boolean('is_benefit')->default(false)->comment('特惠');
-            $table->bigInteger('sort')->default(0)->comment('排序');
-            // 时间
-            $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
-            $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
-            $table->timestamp('off_sale_time')->nullable()->comment('下架时间');
+            // 价格
+            $table->decimal('price', 10)->default(0)->comment('销售价');
+            $table->decimal('market_price', 10)->nullable()->comment('市场价');
+            $table->decimal('cost_price', 10)->nullable()->comment('成本价');
+            $table->bigInteger('stock')->default(0)->comment('库存');
+            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
+            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
+            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+            $table->string('outer_id')->nullable()->comment('商品编码');
+            $table->string('barcode', 32)->nullable()->comment('商品条码');
+            // 运营类
+            $table->unsignedInteger('points')->default(0)->comment('积分');
+            $table->string('unit')->nullable()->comment('单位');
+            $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
+            $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');
+            // 数量范围
+            $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
+            $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
+            $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
+
             // 供应商
             $table->unsignedTinyInteger('is_from_supplier')->default(0)->comment('是否来自供应商');
             $table->string('supplier_type')->nullable()->comment('供应商类型');
             $table->unsignedBigInteger('supplier_id')->nullable()->comment('供应商ID');
             $table->unsignedBigInteger('supplier_product_id')->nullable()->comment('供应商 商品ID');
-            // 库存
-            $table->bigInteger('stock')->default(0)->comment('库存');
-            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
-            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
-            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+
+            // 运营类
+            $table->boolean('is_hot')->default(false)->comment('热销');
+            $table->boolean('is_new')->default(false)->comment('新品');
+            $table->boolean('is_best')->default(false)->comment('精品');
+            $table->boolean('is_benefit')->default(false)->comment('特惠');
+            $table->bigInteger('sort')->default(0)->comment('排序');
+
 
             $table->timestamp('start_sale_time')->nullable()->comment('定时上架时间');
             $table->timestamp('end_sale_time')->nullable()->comment('定时下架时间');
@@ -90,6 +86,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
             $table->unsignedBigInteger('likes')->default(0)->comment('喜欢量');
             $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
+
+            // 时间
+            $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
+            $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
+            $table->timestamp('stop_sale_time')->nullable()->comment('下架时间');
             // 操作
             $table->timestamp('modified_time')->nullable()->comment('修改时间');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
@@ -116,6 +117,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') . 'products');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix', 'jasmine_') . 'products');
     }
 };
