@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use Carbon\CarbonImmutable;
-use DateTime;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use RedJasmine\Ecommerce\Domain\Data\Field;
@@ -15,7 +13,6 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServices;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
@@ -92,7 +89,7 @@ class Product extends Data
 
     public array $extendProductGroups = [];
     public array $tags                = [];
-    public array $services                = [];
+    public array $services            = [];
     // 邮费模板ID（可选）
     public ?int $postageId = null;
     // 最小购买限制（可选）
