@@ -55,7 +55,7 @@ class OrderCommandService extends ApplicationCommandService
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix = 'product.application.order.command';
+    public static string $hookNamePrefix = 'order.application.order.command';
 
     protected static string $modelClass = Order::class;
 
