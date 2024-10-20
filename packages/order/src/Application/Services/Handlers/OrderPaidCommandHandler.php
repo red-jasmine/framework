@@ -13,21 +13,35 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
     public function handle(OrderPaidCommand $command) : bool
     {
 
+        $this->beginDatabaseTransaction();
 
-        $order                            = $this->find($command->id);
-        $orderPayment                     = $order->payments->where('id', $command->orderPaymentId)->firstOrFail();
-        $orderPayment->payment_amount     = $command->amount;
-        $orderPayment->payment_time       = $command->paymentTime;
-        $orderPayment->payment_type       = $command->paymentType;
-        $orderPayment->payment_id         = $command->paymentId;
-        $orderPayment->payment_channel    = $command->paymentChannel;
-        $orderPayment->payment_channel_no = $command->paymentChannelNo;
-        $orderPayment->payment_method     = $command->paymentMethod;
-        $orderPayment->updater            = $order->updater;
+        try {
+            $order = $this->find($command->id);
 
-        $order->paid($orderPayment);
+            // TODO 换成 通过 仓库查询
+            $orderPayment                     = $order->payments->where('id', $command->orderPaymentId)->firstOrFail();
+            $orderPayment->payment_amount     = $command->amount;
+            $orderPayment->payment_time       = $command->paymentTime;
+            $orderPayment->payment_type       = $command->paymentType;
+            $orderPayment->payment_id         = $command->paymentId;
+            $orderPayment->payment_channel    = $command->paymentChannel;
+            $orderPayment->payment_channel_no = $command->paymentChannelNo;
+            $orderPayment->payment_method     = $command->paymentMethod;
+            $orderPayment->updater            = $order->updater;
 
-        $this->orderRepository->store($order);
+            $order->paid($orderPayment);
+
+            $this->orderRepository->store($order);
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw  $exception;
+        } catch (\Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw  $throwable;
+        }
+
 
         OrderPaidEvent::dispatch($order);
 
