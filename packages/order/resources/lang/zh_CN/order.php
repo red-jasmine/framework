@@ -3,7 +3,9 @@
 
 return [
 
-
+    'label'  => [
+        'order' => '订单'
+    ],
     'fields' => [
         'id'                     => '订单ID',
         'seller'                 => '卖家',

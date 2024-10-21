@@ -30,4 +30,18 @@ enum OrderStatusEnum: string
             self::CLOSED->value                   => '已关闭',
         ];
     }
+
+    public static function colors() : array
+    {
+        return [
+
+            self::WAIT_BUYER_PAY->value           => 'danger',
+            self::WAIT_SELLER_SEND_GOODS->value   => 'primary',
+            self::WAIT_BUYER_CONFIRM_GOODS->value => 'success',
+            self::FINISHED->value                 => 'primary',
+            self::CANCEL->value                   => 'info',
+            self::CLOSED->value                   => 'info',
+
+        ];
+    }
 }

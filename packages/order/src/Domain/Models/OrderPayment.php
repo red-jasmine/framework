@@ -23,6 +23,11 @@ class OrderPayment extends Model
 
     use HasTradeParties;
 
+    protected $casts = [
+        'amount_type' => AmountTypeEnum::class,
+        'status'      => PaymentStatusEnum::class,
+    ];
+
     public static function newModel() : static
     {
         $model     = new static();
@@ -42,8 +47,11 @@ class OrderPayment extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    protected $casts = [
-        'amount_type' => AmountTypeEnum::class,
-        'status'      => PaymentStatusEnum::class,
-    ];
+    protected function casts() : array
+    {
+        return [
+            'amount_type' => AmountTypeEnum::class,
+            'status'      => PaymentStatusEnum::class
+        ];
+    }
 }

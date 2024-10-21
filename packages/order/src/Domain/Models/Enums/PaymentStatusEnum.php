@@ -28,7 +28,7 @@ enum PaymentStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::NIL->value         => '',
+            self::NIL->value        => '',
             self::WAIT_PAY->value   => '待支付',
             self::PAYING->value     => '支付中',
             self::PART_PAY->value   => '部分支付',
@@ -36,5 +36,18 @@ enum PaymentStatusEnum: string
             self::NO_PAYMENT->value => '无需支付',
         ];
 
+    }
+
+    public static function colors() : array
+    {
+        return [
+            self::NIL->value        => '',
+            self::WAIT_PAY->value   => 'warning',
+            self::PAYING->value     => 'warning',
+            self::PART_PAY->value   => 'primary',
+            self::PAID->value       => 'success',
+            self::NO_PAYMENT->value => 'info',
+
+        ];
     }
 }
