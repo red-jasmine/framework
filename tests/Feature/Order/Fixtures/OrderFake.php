@@ -30,7 +30,8 @@ class OrderFake
     public int $productCount = 3;
 
 
-    public int $unit = 1;
+    public string $unit         = '件';
+    public int    $unitQuantity = 1;
 
     public function order(array $order = []) : array
     {
@@ -44,6 +45,10 @@ class OrderFake
     public function fakeOrderArray(array $order = []) : array
     {
         $user = User::find(1);
+
+
+
+
 
         $fake = [
             'buyer'          => [
@@ -139,6 +144,7 @@ class OrderFake
             'barcode'                => fake()->ean13(),
             'num'                    => fake()->numberBetween(1, 10),
             'unit'                   => $this->unit,
+            'unit_quantity'          => $this->unitQuantity,
             'price'                  => fake()->randomFloat(2, 90, 100),
             'cost_price'             => fake()->randomFloat(2, 70, 80),
             'tax_amount'             => fake()->randomFloat(2, 10, 20),
@@ -152,6 +158,7 @@ class OrderFake
             'buyer_extends'          => [],
             'other_extends'          => [],
             'tools'                  => [],
+            'form'                  => [],
         ];
         return array_merge($fake, $product);
     }

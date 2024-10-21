@@ -55,6 +55,9 @@
         ],
         "lint": [
             "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ],
+        "test": [
+            "@php vendor/bin/pest"
         ]
     },
     "config": {
