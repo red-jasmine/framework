@@ -43,6 +43,12 @@ class OrderResource extends Resource
 
     protected static ?string $cluster = Orders::class;
 
+    public static function getModelLabel() : string
+    {
+        return __('red-jasmine-order::order.label.order');
+    }
+
+
     public static function form(Form $form) : Form
     {
         return $form
