@@ -50,18 +50,18 @@ trait HasOperator
     }
 
 
-    public function setCreatorAttribute(UserInterface $owner) : static
+    public function setCreatorAttribute(?UserInterface $owner) : static
     {
-        $this->setAttribute('creator_type', $owner->getType());
-        $this->setAttribute('creator_id', $owner->getID());
+        $this->setAttribute('creator_type', $owner?->getType());
+        $this->setAttribute('creator_id', $owner?->getID());
 
         return $this;
     }
 
-    public function setUpdaterAttribute(UserInterface $owner) : static
+    public function setUpdaterAttribute(?UserInterface $owner) : static
     {
-        $this->setAttribute('updater_type', $owner->getType());
-        $this->setAttribute('updater_id', $owner->getID());
+        $this->setAttribute('updater_type', $owner?->getType());
+        $this->setAttribute('updater_id', $owner?->getID());
         return $this;
     }
 
