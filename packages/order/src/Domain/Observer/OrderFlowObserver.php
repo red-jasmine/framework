@@ -3,13 +3,13 @@
 namespace RedJasmine\Order\Domain\Observer;
 
 use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Order\Domain\Flows\OrderFlowInterface;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Domain\Strategies\OrderFlowInterface;
 
 /**
  * 标准电商流程
  */
-class OrderObserver
+class OrderFlowObserver
 {
     // 根据不同的 订单类型 走不同的策略
 
@@ -22,7 +22,8 @@ class OrderObserver
      */
     protected function orderFlow(Order $order) : OrderFlowInterface
     {
-        $flows     = config('red-jasmine.order.flows', []);
+        $flows = config('red-jasmine-order.flows', []);
+
         $flowClass = $flows[$order->order_type->value] ?? null;
         if (blank($flowClass)) {
             throw new OrderException('流程不支持');
@@ -32,9 +33,7 @@ class OrderObserver
 
     public function creating(Order $order) : void
     {
-
         $this->orderFlow($order)->creating($order);
-
     }
 
     public function paid(Order $order) : void

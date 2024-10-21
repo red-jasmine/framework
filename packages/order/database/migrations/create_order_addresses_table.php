@@ -25,7 +25,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('city_id')->nullable()->comment('城市ID');
             $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
             $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
-
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人
             $table->nullableMorphs('updater'); // 更新人

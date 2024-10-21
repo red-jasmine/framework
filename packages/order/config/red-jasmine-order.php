@@ -16,9 +16,9 @@ return [
     | 订单流程 如 标准、预售、团购、
     |
     */
-    'flows'          => [
-        'standard' => \RedJasmine\Order\Domain\Strategies\OrderStandardFlow::class,
-        'presale'  => \RedJasmine\Order\Domain\Strategies\OrderPresaleFlow::class,
+    'flows' => [
+        'standard' => "\\RedJasmine\\Order\\Domain\\Flows\\OrderStandardFlow",
+        'presale'  => "\\RedJasmine\\Order\\Domain\\Flows\\OrderPresaleFlow",
     ],
 
     /*

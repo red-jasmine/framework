@@ -18,7 +18,7 @@ trait HasTradeParties
     public function setSellerAttribute(UserInterface $user) : static
     {
         $this->setAttribute('seller_type', $user->getType());
-        $this->setAttribute('seller_ud', $user->getID());
+        $this->setAttribute('seller_id', $user->getID());
         if ($this->withTradePartiesNickname) {
             $this->setAttribute('seller_nickname', $user->getNickname());
         }
@@ -32,11 +32,13 @@ trait HasTradeParties
 
     public function setBuyerAttribute(UserInterface $user) : static
     {
+
         $this->setAttribute('buyer_type', $user->getType());
-        $this->setAttribute('buyer_ud', $user->getID());
+        $this->setAttribute('buyer_id', $user->getID());
         if ($this->withTradePartiesNickname) {
             $this->setAttribute('buyer_nickname', $user->getNickname());
         }
+
         return $this;
     }
 

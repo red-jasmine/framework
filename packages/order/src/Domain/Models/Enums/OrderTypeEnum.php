@@ -11,21 +11,21 @@ enum OrderTypeEnum: string
 {
     use EnumsHelper;
 
-    case  SOP = 'sop';
     case  STANDARD = 'standard';
-    case  PRESALE = 'presale';
-    case  GROUP_PURCHASE = 'group_purchase';
 
-    // 拍卖
+    case  PRESALE = 'presale';
+
+    //case  GROUP_PURCHASE = 'group_purchase';
+
+    // TODO 拍卖
 
 
     public static function labels() : array
     {
         return [
-            self::SOP->value            => '标准',
-            self::STANDARD->value       => '标准',
-            self::PRESALE->value        => '预售',
-            self::GROUP_PURCHASE->value => '团购',
+            self::STANDARD->value => __('red-jasmine-order::order.enums.order_type.standard'),
+            self::PRESALE->value  => __('red-jasmine-order::order.enums.order_type.presale'),
+            //self::GROUP_PURCHASE->value => __('red-jasmine-order::order.enums.order_type.group_purchase'),
         ];
     }
 

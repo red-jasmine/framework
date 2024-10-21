@@ -98,7 +98,7 @@ class Order extends Model implements OperatorInterface
         'confirm_time'           => 'datetime',
         'refund_time'            => 'datetime',
         'rate_time'              => 'datetime',
-        'contact'                => AesEncrypted::class,
+        //'contact'                => AesEncrypted::class,
         'is_seller_delete'       => 'boolean',
         'is_buyer_delete'        => 'boolean',
         'freight_amount'         => AmountCastTransformer::class,
@@ -198,11 +198,12 @@ class Order extends Model implements OperatorInterface
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
-
         $orderProduct->order_id       = $this->id;
-        $orderProduct->seller         = $this->seller;
-        $orderProduct->buyer          = $this->buyer;
-        $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit, 0);
+        $orderProduct->buyer_type     = $this->buyer_type;
+        $orderProduct->buyer_id       = $this->buyer_id;
+        $orderProduct->seller_type    = $this->seller_type;
+        $orderProduct->seller_id      = $this->seller_id;
+        $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit_quantity, 0);
         $orderProduct->created_time   = now();
         $this->products->add($orderProduct);
         return $this;
@@ -347,10 +348,6 @@ class Order extends Model implements OperatorInterface
         // 计算金额
         $this->calculateAmount();
         $this->created_time = now();
-
-
-        //$this->fireModelEvent('created');
-
         return $this;
     }
 
@@ -445,10 +442,12 @@ class Order extends Model implements OperatorInterface
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
-        $orderPayment->order_id = $this->id;
-        $orderPayment->seller   = $this->seller;
-        $orderPayment->buyer    = $this->buyer;
-        $orderPayment->status   = PaymentStatusEnum::PAYING;
+        $orderPayment->order_id    = $this->id;
+        $orderPayment->buyer_type  = $this->buyer_type;
+        $orderPayment->buyer_id    = $this->buyer_id;
+        $orderPayment->seller_type = $this->seller_type;
+        $orderPayment->seller_id   = $this->seller_id;
+        $orderPayment->status      = PaymentStatusEnum::PAYING;
 
         $this->addPayment($orderPayment);
         // 设置为支付中

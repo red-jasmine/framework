@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Domain;
 
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Domain\Observer\OrderObserver;
+use RedJasmine\Order\Domain\Observer\OrderFlowObserver;
 
 
 /**
@@ -23,6 +23,6 @@ class OrderDomainServiceProvider extends ServiceProvider
     public function boot() : void
     {
 
-        Order::observe(OrderObserver::class);
+        Order::observe(OrderFlowObserver::class);
     }
 }

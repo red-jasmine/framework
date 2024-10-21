@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\Domain\Strategies;
+namespace RedJasmine\Order\Domain\Flows;
 
 use RedJasmine\Order\Domain\Models\Order;
 
