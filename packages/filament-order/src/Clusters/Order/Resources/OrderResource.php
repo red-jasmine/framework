@@ -183,7 +183,7 @@ class OrderResource extends Resource
                                                    ->maxLength(32),
                          Forms\Components\TextInput::make('source_id')
                                                    ->maxLength(32),
-                                         Forms\Components\TextInput::make('contact')->maxLength(255),
+                         Forms\Components\TextInput::make('contact')->maxLength(255),
                          Forms\Components\TextInput::make('password')->maxLength(255),
                          Forms\Components\TextInput::make('star')
                                                    ->numeric(),
@@ -215,128 +215,134 @@ class OrderResource extends Resource
         return $table
             ->columns([
                           Tables\Columns\TextColumn::make('id')
+                                                   ->label(__('red-jasmine-order::order.fields.id'))
                                                    ->label('ID')
                                                    ->sortable()->copyable(),
                           Tables\Columns\TextColumn::make('seller_type')
+                              ->label(__('red-jasmine-order::order.fields.seller_type'))
                           ,
-                          Tables\Columns\TextColumn::make('seller_id'),
+                          Tables\Columns\TextColumn::make('seller_id')
+                              ->label(__('red-jasmine-order::order.fields.seller_id')),
                           Tables\Columns\TextColumn::make('seller_nickname')
+                              ->label(__('red-jasmine-order::order.fields.seller_nickname'))
                                                    ->searchable(),
                           Tables\Columns\TextColumn::make('buyer_type')
+                              ->label(__('red-jasmine-order::order.fields.buyer_type'))
                           ,
                           Tables\Columns\TextColumn::make('buyer_id')
+                              ->label(__('red-jasmine-order::order.fields.buyer_id'))
                           ,
                           Tables\Columns\TextColumn::make('buyer_nickname')
-                                                   ->searchable(),
+                                                   ->searchable() ->label(__('red-jasmine-order::order.fields.buyer_nickname')),
                           Tables\Columns\TextColumn::make('title')
-                                                   ->searchable(),
+                                                   ->searchable() ->label(__('red-jasmine-order::order.fields.title')),
                           Tables\Columns\TextColumn::make('order_type')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.order_type')),
                           Tables\Columns\TextColumn::make('pay_type')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.pay_type')),
                           Tables\Columns\TextColumn::make('order_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.order_status')),
                           Tables\Columns\TextColumn::make('payment_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.payment_status')),
                           Tables\Columns\TextColumn::make('shipping_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.shipping_status')),
                           Tables\Columns\TextColumn::make('refund_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.refund_status')),
                           Tables\Columns\TextColumn::make('rate_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.rate_status')),
                           Tables\Columns\TextColumn::make('settlement_status')
-                                                   ->useEnum(),
+                                                   ->useEnum() ->label(__('red-jasmine-order::order.fields.settlement_status')),
                           Tables\Columns\TextColumn::make('seller_custom_status')
-                                                   ->searchable(),
+                                                   ->searchable() ->label(__('red-jasmine-order::order.fields.seller_custom_status')),
                           Tables\Columns\TextColumn::make('product_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.product_amount')),
                           Tables\Columns\TextColumn::make('cost_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.cost_amount')),
                           Tables\Columns\TextColumn::make('tax_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.tax_amount')),
                           Tables\Columns\TextColumn::make('commission_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.commission_amount')),
                           Tables\Columns\TextColumn::make('product_payable_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.product_payable_amount')),
                           Tables\Columns\TextColumn::make('freight_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.freight_amount')),
                           Tables\Columns\TextColumn::make('discount_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.discount_amount')),
                           Tables\Columns\TextColumn::make('payable_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.payable_amount')),
                           Tables\Columns\TextColumn::make('payment_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.payment_amount')),
                           Tables\Columns\TextColumn::make('refund_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.refund_amount')),
                           Tables\Columns\TextColumn::make('service_amount')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.service_amount')),
                           Tables\Columns\TextColumn::make('created_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.created_time')),
                           Tables\Columns\TextColumn::make('payment_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.payment_time')),
                           Tables\Columns\TextColumn::make('close_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.close_time')),
                           Tables\Columns\TextColumn::make('shipping_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.id')),
                           Tables\Columns\TextColumn::make('collect_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.collect_time')),
                           Tables\Columns\TextColumn::make('dispatch_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.dispatch_time')),
                           Tables\Columns\TextColumn::make('signed_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.signed_time')),
                           Tables\Columns\TextColumn::make('confirm_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.confirm_time')),
                           Tables\Columns\TextColumn::make('refund_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.refund_time')),
                           Tables\Columns\TextColumn::make('rate_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.rate_time')),
                           Tables\Columns\TextColumn::make('settlement_time')
                                                    ->dateTime()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('channel_type'),
-                          Tables\Columns\TextColumn::make('channel_id'),
-                          Tables\Columns\TextColumn::make('channel_name'),
-                          Tables\Columns\TextColumn::make('guide_type'),
-                          Tables\Columns\TextColumn::make('guide_id'),
-                          Tables\Columns\TextColumn::make('guide_name'),
-                          Tables\Columns\TextColumn::make('store_type'),
-                          Tables\Columns\TextColumn::make('store_id'),
-                          Tables\Columns\TextColumn::make('store_name'),
-                          Tables\Columns\TextColumn::make('client_type'),
-                          Tables\Columns\TextColumn::make('client_version'),
-                          Tables\Columns\TextColumn::make('client_ip'),
-                          Tables\Columns\TextColumn::make('source_type'),
-                          Tables\Columns\TextColumn::make('source_id'),
-                          Tables\Columns\TextColumn::make('contact'),
-                          Tables\Columns\TextColumn::make('star'),
-                          Tables\Columns\IconColumn::make('is_seller_delete')->boolean(),
-                          Tables\Columns\IconColumn::make('is_buyer_delete')->boolean(),
-                          Tables\Columns\TextColumn::make('outer_order_id')->searchable(),
-                          Tables\Columns\TextColumn::make('cancel_reason')->searchable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.settlement_time')),
+                          Tables\Columns\TextColumn::make('channel_type') ->label(__('red-jasmine-order::order.fields.channel_type')),
+                          Tables\Columns\TextColumn::make('channel_id') ->label(__('red-jasmine-order::order.fields.channel_id')),
+                          Tables\Columns\TextColumn::make('channel_name') ->label(__('red-jasmine-order::order.fields.channel_name')),
+                          Tables\Columns\TextColumn::make('guide_type') ->label(__('red-jasmine-order::order.fields.guide_type')),
+                          Tables\Columns\TextColumn::make('guide_id') ->label(__('red-jasmine-order::order.fields.guide_id')),
+                          Tables\Columns\TextColumn::make('guide_name') ->label(__('red-jasmine-order::order.fields.guide_name')),
+                          Tables\Columns\TextColumn::make('store_type') ->label(__('red-jasmine-order::order.fields.store_type')),
+                          Tables\Columns\TextColumn::make('store_id') ->label(__('red-jasmine-order::order.fields.store_id')),
+                          Tables\Columns\TextColumn::make('store_name') ->label(__('red-jasmine-order::order.fields.store_name')),
+                          Tables\Columns\TextColumn::make('client_type') ->label(__('red-jasmine-order::order.fields.client_type')),
+                          Tables\Columns\TextColumn::make('client_version') ->label(__('red-jasmine-order::order.fields.client_version')),
+                          Tables\Columns\TextColumn::make('client_ip') ->label(__('red-jasmine-order::order.fields.client_ip')),
+                          Tables\Columns\TextColumn::make('source_type') ->label(__('red-jasmine-order::order.fields.source_type')),
+                          Tables\Columns\TextColumn::make('source_id') ->label(__('red-jasmine-order::order.fields.source_id')),
+                          Tables\Columns\TextColumn::make('contact') ->label(__('red-jasmine-order::order.fields.contact')),
+                          Tables\Columns\TextColumn::make('star') ->label(__('red-jasmine-order::order.fields.star')),
+                          Tables\Columns\IconColumn::make('is_seller_delete')->boolean() ->label(__('red-jasmine-order::order.fields.is_seller_delete')),
+                          Tables\Columns\IconColumn::make('is_buyer_delete')->boolean() ->label(__('red-jasmine-order::order.fields.is_buyer_delete')),
+                          Tables\Columns\TextColumn::make('outer_order_id')->searchable() ->label(__('red-jasmine-order::order.fields.outer_order_id')),
+                          Tables\Columns\TextColumn::make('cancel_reason')->searchable() ->label(__('red-jasmine-order::order.fields.cancel_reason')),
                           Tables\Columns\TextColumn::make('version')
                                                    ->numeric()
-                                                   ->sortable(),
+                                                   ->sortable() ->label(__('red-jasmine-order::order.fields.version')),
                           ...static::operateTableColumns()
                       ])
             ->filters([

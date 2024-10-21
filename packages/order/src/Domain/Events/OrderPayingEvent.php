@@ -9,10 +9,4 @@ use RedJasmine\Order\Domain\Models\Order;
 class OrderPayingEvent extends AbstractOrderEvent implements ShouldDispatchAfterCommit
 {
 
-    public function __construct(
-        public readonly Order $order
-    ) {
-        Log::info('OrderPayingEvent---');
-    }
-
 }
