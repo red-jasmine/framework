@@ -25,6 +25,7 @@ use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
@@ -84,6 +85,7 @@ class Order extends Model implements OperatorInterface
 
     protected $casts = [
         'order_type'             => OrderTypeEnum::class,
+        'pay_type'               => PayTypeEnum::class,
         'order_status'           => OrderStatusEnum::class,
         'payment_status'         => PaymentStatusEnum::class,
         'shipping_status'        => ShippingStatusEnum::class,
@@ -98,7 +100,7 @@ class Order extends Model implements OperatorInterface
         'confirm_time'           => 'datetime',
         'refund_time'            => 'datetime',
         'rate_time'              => 'datetime',
-        //'contact'                => AesEncrypted::class,
+        'contact'                => AesEncrypted::class,
         'is_seller_delete'       => 'boolean',
         'is_buyer_delete'        => 'boolean',
         'freight_amount'         => AmountCastTransformer::class,
