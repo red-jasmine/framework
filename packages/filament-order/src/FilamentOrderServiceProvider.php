@@ -10,6 +10,8 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
+use RedJasmine\FilamentOrder\Livewire\OrderProducts;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -22,7 +24,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
 
     public static string $viewNamespace = 'red-jasmine-filament-order';
 
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         /*
          * This class is a Package Service Provider
@@ -30,14 +32,14 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package->name(static::$name)
-            ->hasCommands($this->getCommands())
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('red-jasmine/filament-order');
-            });
+                ->hasCommands($this->getCommands())
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
+                        ->publishMigrations()
+                        ->askToRunMigrations()
+                        ->askToStarRepoOnGitHub('red-jasmine/filament-order');
+                });
 
         $configFileName = $package->shortName();
 
@@ -58,9 +60,11 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered() : void
+    {
+    }
 
-    public function packageBooted(): void
+    public function packageBooted() : void
     {
         // Asset Registration
         FilamentAsset::register(
@@ -80,16 +84,19 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
-                    $file->getRealPath() => base_path("stubs/filament-order/{$file->getFilename()}"),
-                ], 'filament-order-stubs');
+                                     $file->getRealPath() => base_path("stubs/filament-order/{$file->getFilename()}"),
+                                 ], 'filament-order-stubs');
             }
         }
 
         // Testing
         Testable::mixin(new TestsFilamentOrder);
+
+
+        Livewire::component('order-products', OrderProducts::class);
     }
 
-    protected function getAssetPackageName(): ?string
+    protected function getAssetPackageName() : ?string
     {
         return 'red-jasmine/filament-order';
     }
@@ -97,7 +104,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<Asset>
      */
-    protected function getAssets(): array
+    protected function getAssets() : array
     {
         return [
             // AlpineComponent::make('filament-order', __DIR__ . '/../resources/dist/components/filament-order.js'),
@@ -109,7 +116,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<class-string>
      */
-    protected function getCommands(): array
+    protected function getCommands() : array
     {
         return [
             FilamentOrderCommand::class,
@@ -119,7 +126,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<string>
      */
-    protected function getIcons(): array
+    protected function getIcons() : array
     {
         return [];
     }
@@ -127,7 +134,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<string>
      */
-    protected function getRoutes(): array
+    protected function getRoutes() : array
     {
         return [];
     }
@@ -135,7 +142,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<string, mixed>
      */
-    protected function getScriptData(): array
+    protected function getScriptData() : array
     {
         return [];
     }
@@ -143,7 +150,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
     /**
      * @return array<string>
      */
-    protected function getMigrations(): array
+    protected function getMigrations() : array
     {
         return [
             //'create_filament-order_table',

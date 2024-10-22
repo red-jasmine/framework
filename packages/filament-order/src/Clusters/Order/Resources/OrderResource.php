@@ -4,9 +4,17 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\View;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
@@ -44,6 +52,95 @@ class OrderResource extends Resource
     public static function getModelLabel() : string
     {
         return __('red-jasmine-order::order.label.order');
+    }
+
+    public static function infolist(Infolist $infoList) : Infolist
+    {
+        $infoList->schema([
+                              Section::make(fn(Model $record) => $record->id)
+                                     ->schema([
+                                                  TextEntry::make('order_status')
+                                                           ->badge()
+                                                           ->formatStateUsing(fn($state) => $state->getLabel()),
+                                                  TextEntry::make('star'),
+                                                  TextEntry::make('info.buyer_message'),
+                                                  TextEntry::make('info.seller_message'),
+                                                  TextEntry::make('info.seller_remarks'),
+                                              ])->inlineLabel(),
+
+                              Section::make('订单信息')
+                                     ->schema([
+
+                                                  Fieldset::make('seller')
+                                                          ->schema([
+                                                                       TextEntry::make('id'),
+                                                                       TextEntry::make('created_time'),
+                                                                       TextEntry::make('payment_time'),
+                                                                       TextEntry::make('shipping_time'),
+                                                                       TextEntry::make('signed_time'),
+                                                                       TextEntry::make('confirm_time'),
+
+                                                                   ])
+                                                          ->inlineLabel()
+                                                          ->columns(1)
+                                                          ->columnSpan(1),
+
+
+                                                  Fieldset::make('seller')
+                                                          ->schema([
+                                                                       TextEntry::make('seller_type'),
+                                                                       TextEntry::make('seller_id'),
+                                                                       TextEntry::make('seller_nickname'),
+                                                                   ])
+                                                          ->inlineLabel()
+                                                          ->columns(1)
+                                                          ->columnSpan(1),
+                                                  Fieldset::make('buyer')
+                                                          ->schema([
+                                                                       TextEntry::make('buyer_type'),
+                                                                       TextEntry::make('buyer_id'),
+                                                                       TextEntry::make('buyer_nickname'),
+                                                                   ])
+                                                          ->inlineLabel()
+                                                          ->columns(1)
+                                                          ->columnSpan(1),
+                                                  Fieldset::make('address')
+                                                          ->schema([
+                                                                       TextEntry::make('address.full_address'),
+                                                                       TextEntry::make('address.contacts'),
+                                                                       TextEntry::make('address.mobile'),
+                                                                   ])
+                                                          ->inlineLabel()
+                                                          ->columns(1)
+                                                          ->columnSpan(1),
+
+                                              ])->columns(5),
+
+
+                              View::make('products')
+                                  ->view('red-jasmine-filament-order::orders.order-products')
+                                  ->columnSpanFull(),
+
+                              Fieldset::make('amount')
+                                      ->schema([
+
+                                                   TextEntry::make('product_payable_amount')->prefix('￥')->money('CNY'),
+                                                   TextEntry::make('service_amount')->prefix('￥')->money('CNY'),
+                                                   TextEntry::make('freight_amount')->prefix('￥')->money('CNY'),
+                                                   TextEntry::make('discount_amount')->prefix('￥')->money('CNY'),
+                                                   TextEntry::make('payable_amount')->prefix('￥')->money('CNY'),
+                                                   TextEntry::make('payment_amount')->prefix('￥')->weight(FontWeight::Bold)->color('danger')->money('CNY'),
+                                                   TextEntry::make('refund_amount')->prefix('￥')->money('CNY'),
+                                               ])
+                                      ->inlineLabel()
+                                      ->columns(1)
+                                      ->columnSpanFull(),
+
+
+                          ]);
+
+        return $infoList;
+
     }
 
 
@@ -217,7 +314,7 @@ class OrderResource extends Resource
     public static function table(Table $table) : Table
     {
         return $table
-            ->defaultSort('id','DESC')
+            ->defaultSort('id', 'DESC')
             ->columns([
                           Tables\Columns\TextColumn::make('id')
                                                    ->label(__('red-jasmine-order::order.fields.id'))
@@ -247,8 +344,6 @@ class OrderResource extends Resource
                                                                                                            ->label(__('red-jasmine-order::order.fields.seller_nickname'))
                                                                                                            ->searchable(),
                                                                               ]),
-
-
 
 
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),

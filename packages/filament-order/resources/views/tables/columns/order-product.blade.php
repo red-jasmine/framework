@@ -2,7 +2,7 @@
 
 
 
-        @endphp
+@endphp
 
 
 <table class="w-full text-left">
