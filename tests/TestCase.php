@@ -22,6 +22,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     }
 
 
+
     /**
      * Automatically enables package discoveries.
      *

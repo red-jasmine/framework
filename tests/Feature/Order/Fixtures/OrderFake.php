@@ -8,9 +8,9 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingCardKeyCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingLogisticsCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingVirtualCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use Workbench\App\Models\User;
 
@@ -183,7 +183,7 @@ class OrderFake
     }
 
 
-    public function shippingLogistics(array $merge = []) : OrderShippingLogisticsCommand
+    public function shippingLogistics(array $merge = []) : OrderLogisticsShippingCommand
     {
         $data = [
             'id'                   => 1,
@@ -195,11 +195,11 @@ class OrderFake
 
         $data = array_merge($data, $merge);
 
-        return OrderShippingLogisticsCommand::from($data);
+        return OrderLogisticsShippingCommand::from($data);
     }
 
 
-    public function shippingCardKey(array $merge) : OrderShippingCardKeyCommand
+    public function shippingCardKey(array $merge) : OrderCardKeyShippingCommand
     {
         $data = [
             'id'               => 1,
@@ -209,10 +209,10 @@ class OrderFake
         ];
 
         $data = array_merge($data, $merge);
-        return OrderShippingCardKeyCommand::from($data);
+        return OrderCardKeyShippingCommand::from($data);
     }
 
-    public function shippingVirtual(array $merge) : OrderShippingVirtualCommand
+    public function shippingDummy(array $merge) : OrderDummyShippingCommand
     {
         $data = [
             'id'               => 0,
@@ -221,7 +221,7 @@ class OrderFake
         ];
 
         $data = array_merge($data, $merge);
-        return OrderShippingVirtualCommand::from($data);
+        return OrderDummyShippingCommand::from($data);
     }
 
 
