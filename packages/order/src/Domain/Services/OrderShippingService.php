@@ -18,14 +18,14 @@ class OrderShippingService
     /**
      * 物流发货
      *
-     * @param Order          $order
-     * @param bool           $isSplit
+     * @param Order $order
+     * @param bool $isSplit
      * @param OrderLogistics $logistics
      *
      * @return void
      * @throws OrderException
      */
-    public function logistics(Order $order, bool $isSplit = false, OrderLogistics $logistics) : void
+    public function logistics(Order $order, bool $isSplit, OrderLogistics $logistics) : void
     {
         $types = $order->products->pluck('shipping_type')->unique()->map(fn($item) => $item->value)->flip();
 
@@ -76,7 +76,7 @@ class OrderShippingService
     /**
      * 卡密发货
      *
-     * @param Order               $order
+     * @param Order $order
      * @param OrderProductCardKey $orderProductCardKey
      *
      * @return void
@@ -115,13 +115,13 @@ class OrderShippingService
      * 虚拟发货
      *
      * @param Order $order
-     * @param int   $orderProductId
-     * @param bool  $isFinished 是否完成发货
+     * @param int $orderProductId
+     * @param bool $isFinished 是否完成发货
      *
      * @return void
      * @throws OrderException
      */
-    public function virtual(Order $order, int $orderProductId, bool $isFinished = true) : void
+    public function dummy(Order $order, int $orderProductId, bool $isFinished = true) : void
     {
         $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
 
@@ -137,6 +137,7 @@ class OrderShippingService
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             $orderProduct->collect_time = now(); // 虚拟商品作为最后一次发货时间
         }
+
         $order->shipping();
     }
 

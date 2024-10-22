@@ -15,9 +15,9 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingCardKeyCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingLogisticsCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingVirtualCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
 use RedJasmine\Order\UI\Http\Seller\Api\Resources\OrderResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
@@ -84,38 +84,38 @@ class OrderController extends Controller
     }
 
 
-    public function shippingLogistics(Request $request) : JsonResponse
+    public function logisticsShipping(Request $request) : JsonResponse
     {
 
-        $command = OrderShippingLogisticsCommand::from($request->all());
+        $command = OrderLogisticsShippingCommand::from($request->all());
 
         $this->queryService->findById(FindQuery::make($command->id));
 
-        $this->commandService->shippingLogistics($command);
+        $this->commandService->logisticsShipping($command);
 
         return static::success();
     }
 
-    public function shippingVirtual(Request $request) : JsonResponse
+    public function dummyShipping(Request $request) : JsonResponse
     {
 
-        $command = OrderShippingVirtualCommand::from($request->all());
+        $command = OrderDummyShippingCommand::from($request->all());
 
         $this->queryService->findById(FindQuery::make($command->id));
 
-        $this->commandService->shippingVirtual($command);
+        $this->commandService->dummyShipping($command);
 
         return static::success();
     }
 
-    public function shippingCardKey(Request $request) : JsonResponse
+    public function cardKeyShipping(Request $request) : JsonResponse
     {
 
-        $command = OrderShippingCardKeyCommand::from($request->all());
+        $command = OrderCardKeyShippingCommand::from($request->all());
 
         $this->queryService->findById(FindQuery::make($command->id));
 
-        $this->commandService->shippingCardKey($command);
+        $this->commandService->cardKeyShipping($command);
 
         return static::success();
     }

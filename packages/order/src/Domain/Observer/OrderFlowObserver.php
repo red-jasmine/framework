@@ -38,12 +38,20 @@ class OrderFlowObserver
 
     public function paid(Order $order) : void
     {
+
         $this->orderFlow($order)->paid($order);
 
     }
 
+    public function shipping(Order $order) : void
+    {
+
+        $this->orderFlow($order)->shipping($order);
+    }
+
     public function shipped(Order $order) : void
     {
+
         $this->orderFlow($order)->shipped($order);
     }
 

@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\UserCases\Commands\Shipping;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Support\Data\Data;
 
-class OrderShippingLogisticsCommand extends Data
+class OrderLogisticsShippingCommand extends Data
 {
 
     public int $id;

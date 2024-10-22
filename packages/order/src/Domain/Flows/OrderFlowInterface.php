@@ -23,6 +23,9 @@ interface OrderFlowInterface
      */
     public function paid(Order $order) : void;
 
+
+    public function shipping(Order $order) : void;
+
     /**
      * 订单发货
      * - 可能是部分发货 需要判断订单状态是 部分发货还是全部发货
@@ -41,7 +44,6 @@ interface OrderFlowInterface
      * @return void
      */
     public function confirmed(Order $order) : void;
-
 
 
     // 结算

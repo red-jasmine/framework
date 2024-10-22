@@ -13,9 +13,9 @@ use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerRemarksComma
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerCustomStatusCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerHiddenCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerRemarksCommandHandler;
-use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderShippingCardKeyCommandHandler;
-use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderShippingLogisticsCommandHandler;
-use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderShippingVirtualCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderCardKeyShippingCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderLogisticsShippingCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderDummyShippingCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCancelCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
@@ -24,9 +24,9 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingCardKeyCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingLogisticsCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderShippingVirtualCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Support\Application\ApplicationCommandService;
@@ -37,9 +37,9 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method void cancel(OrderCancelCommand $command)
  * @method OrderPayment paying(OrderPayingCommand $command)
  * @method bool paid(OrderPaidCommand $command)
- * @method void shippingLogistics(OrderShippingLogisticsCommand $command)
- * @method void shippingCardKey(OrderShippingCardKeyCommand $command)
- * @method void shippingVirtual(OrderShippingVirtualCommand $command)
+ * @method void logisticsShipping(OrderLogisticsShippingCommand $command)
+ * @method void cardKeyShipping(OrderCardKeyShippingCommand $command)
+ * @method void dummyShipping(OrderDummyShippingCommand $command)
  * @method int progress(OrderProgressCommand $command)
  * @method void sellerRemarks(OrderRemarksCommand $command)
  * @method void buyerRemarks(OrderRemarksCommand $command)
@@ -65,9 +65,9 @@ class OrderCommandService extends ApplicationCommandService
         'paying'             => OrderPayingCommandHandler::class,
         'paid'               => OrderPaidCommandHandler::class,
         'cancel'             => OrderCancelCommandHandler::class,
-        'shippingLogistics'  => OrderShippingLogisticsCommandHandler::class,
-        'shippingCardKey'    => OrderShippingCardKeyCommandHandler::class,
-        'shippingVirtual'    => OrderShippingVirtualCommandHandler::class,
+        'logisticsShipping'  => OrderLogisticsShippingCommandHandler::class,
+        'cardKeyShipping'    => OrderCardKeyShippingCommandHandler::class,
+        'dummyShipping'      => OrderDummyShippingCommandHandler::class,
         'confirm'            => OrderConfirmCommandHandler::class,
         'progress'           => OrderProgressCommandHandler::class,
         'sellerRemarks'      => OrderSellerRemarksCommandHandler::class,

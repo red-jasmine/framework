@@ -22,9 +22,9 @@ class OrderAdminApiRoute
             Route::post('orders/paid', [ OrderController::class, 'paid' ])->name('order.admin.orders.paid');
             Route::post('orders/remarks', [ OrderController::class, 'remarks' ])->name('order.admin.orders.remarks');
             // 发货
-            Route::post('orders/shipping-virtual', [ OrderController::class, 'shippingVirtual' ])->name('order.admin.orders.shipping-virtual');
-            Route::post('orders/shipping-card-key', [ OrderController::class, 'shippingCardKey' ])->name('order.admin.orders.shipping-card-key');
-            Route::post('orders/shipping-logistics', [ OrderController::class, 'shippingLogistics' ])->name('order.admin.orders.shipping-logistics');
+            Route::post('orders/dummy-shipping', [ OrderController::class, 'dummyShipping' ])->name('order.admin.orders.dummy-shipping');
+            Route::post('orders/card-key-shipping', [ OrderController::class, 'cardKeyShipping' ])->name('order.admin.orders.card-key-shipping');
+            Route::post('orders/logistics-shipping', [ OrderController::class, 'logisticsShipping' ])->name('order.admin.orders.logistics-shipping');
             // 退款售后
             Route::apiResource('refunds', RefundController::class)->names('order.admin.refunds');
             Route::post('refunds/agree-refund', [ RefundController::class, 'refundGoods' ])->name('order.admin.refunds.return-goods');

@@ -24,5 +24,6 @@ class OrderDomainServiceProvider extends ServiceProvider
     {
 
         Order::observe(OrderFlowObserver::class);
+
     }
 }

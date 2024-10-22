@@ -23,9 +23,9 @@ class OrderSellerApiRoute
             Route::post('orders/paid', [ OrderController::class, 'paid' ])->name('order.seller.orders.paid');
             Route::post('orders/remarks', [ OrderController::class, 'remarks' ])->name('order.seller.orders.remarks');
             // 发货
-            Route::post('orders/shipping-virtual', [ OrderController::class, 'shippingVirtual' ])->name('order.seller.orders.shipping-virtual');
-            Route::post('orders/shipping-card-key', [ OrderController::class, 'shippingCardKey' ])->name('order.seller.orders.shipping-card-key');
-            Route::post('orders/shipping-logistics', [ OrderController::class, 'shippingLogistics' ])->name('order.seller.orders.shipping-logistics');
+            Route::post('orders/dummy-shipping', [ OrderController::class, 'dummyShipping' ])->name('order.seller.orders.dummy-shipping');
+            Route::post('orders/card-key-shipping', [ OrderController::class, 'cardKeyShipping' ])->name('order.seller.orders.card-key-shipping');
+            Route::post('orders/logistics-shipping', [ OrderController::class, 'logisticsShipping' ])->name('order.seller.orders.logistics-shipping');
             // 退款售后
             Route::apiResource('refunds', RefundController::class)->names('order.seller.refunds');
             Route::post('refunds/cancel', [ RefundController::class, 'cancel' ])->name('order.seller.refunds.cancel');

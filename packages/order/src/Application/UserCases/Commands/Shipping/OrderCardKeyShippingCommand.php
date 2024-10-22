@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\UserCases\Commands\Shipping;
 use RedJasmine\Order\Domain\Models\Enums\OrderCardKeyStatusEnum;
 use RedJasmine\Support\Data\Data;
 
-class OrderShippingCardKeyCommand extends Data
+class OrderCardKeyShippingCommand extends Data
 {
     public int $id;
 

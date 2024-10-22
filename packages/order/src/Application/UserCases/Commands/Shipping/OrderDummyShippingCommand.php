@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\UserCases\Commands\Shipping;
 
 use RedJasmine\Support\Data\Data;
 
-class OrderShippingVirtualCommand extends Data
+class OrderDummyShippingCommand extends Data
 {
     public int $id;
 

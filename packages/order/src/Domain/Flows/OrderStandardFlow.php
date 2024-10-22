@@ -17,6 +17,7 @@ class OrderStandardFlow implements OrderFlowInterface
 {
     public function creating(Order $order) : void
     {
+
         // 初始化
         $order->order_status   = OrderStatusEnum::WAIT_BUYER_PAY;
         $order->payment_status = PaymentStatusEnum::WAIT_PAY;
@@ -41,8 +42,14 @@ class OrderStandardFlow implements OrderFlowInterface
 
     }
 
+    public function shipping(Order $order) : void
+    {
+
+    }
+
     public function shipped(Order $order) : void
     {
+
         $order->products->each(function (OrderProduct $product) {
             if ($product->shipping_status === ShippingStatusEnum::SHIPPED && $product->isEffective()) {
                 $product->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
@@ -51,6 +58,7 @@ class OrderStandardFlow implements OrderFlowInterface
         if ($order->shipping_status === ShippingStatusEnum::SHIPPED) {
             $order->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
         }
+
     }
 
     /**
