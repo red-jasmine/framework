@@ -44,10 +44,11 @@ return new class extends Migration {
             $table->decimal('product_payable_amount', 12)->default(0)->comment('商品应付金额');
             $table->decimal('freight_amount', 12)->default(0)->comment('运费');
             $table->decimal('discount_amount', 12)->default(0)->comment('订单优惠');
+            $table->decimal('service_amount', 12)->default(0)->comment('服务费');
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
-            $table->decimal('service_amount', 12)->default(0)->comment('服务费');
+
 
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');

@@ -42,7 +42,7 @@ return new class extends Migration {
             $table->decimal('cost_price', 12)->default(0)->comment('成本价格');
             $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
             // 金额类
-            $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
+            $table->decimal('product_amount', 12)->default(0)->comment('商品金额'); // =  price * num
             $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');
             $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');

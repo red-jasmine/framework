@@ -72,6 +72,12 @@ return [
         'version'                => '版本',
 
 
+        'product' => [
+
+            'product_id' => '商品ID',
+            'sku_id'     => '规格ID',
+        ],
+
     ],
     'enums'  => [
 

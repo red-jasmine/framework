@@ -242,24 +242,26 @@ class Order extends Model implements OperatorInterface
     protected function calculateProductsAmount() : void
     {
         foreach ($this->products as $product) {
-            // 商品总金额   < 0 TODO 验证金额
-
-            $product->product_amount = bcmul($product->num, $product->price->value(), 2);
             // 成本金额
             $product->cost_amount = bcmul($product->num, $product->cost_price->value(), 2);
+
+            // 商品总金额   < 0 TODO 验证金额
+            $product->product_amount = bcmul($product->num, $product->price->value(), 2);
             // 计算税费
             $product->tax_amount;
             // 单品优惠
             $product->discount_amount;
-            // 应付金额  = 商品金额 - 单品优惠 + 税费
-            $product->payable_amount = bcsub(bcadd($product->product_amount, $product->tax_amount, 2),
-                                             $product->discount_amount, 2);
+
 
             // 实付金额 完成支付时
             $product->payment_amount = $product->payment_amount ?? 0;
             // 佣金
             $product->commission_amount = $product->commission_amount ?? 0;
 
+            // 单商品应付金额  = 商品金额 - 单品优惠 + 税费
+            $product->payable_amount = bcsub(
+                bcadd($product->product_amount, $product->tax_amount, 2), $product->discount_amount, 2
+            );
         }
     }
 
@@ -268,6 +270,7 @@ class Order extends Model implements OperatorInterface
     {
 
         // 商品统计
+
         // 商品金额
         $this->product_amount = $this->products->reduce(function ($sum, $product) {
             return bcadd($sum, $product->product_amount, 2);
@@ -277,11 +280,11 @@ class Order extends Model implements OperatorInterface
         $this->cost_amount = $this->products->reduce(function ($sum, $product) {
             return bcadd($sum, $product->cost_amount, 2);
         }, 0);
-        // 税费
+        // 商品总税费
         $this->tax_amount = $this->products->reduce(function ($sum, $product) {
             return bcadd($sum, $product->tax_amount, 2);
         }, 0);
-        // 总佣金
+        // 商品总佣金
         $this->commission_amount = $this->products->reduce(function ($sum, $product) {
             return bcadd($sum, $product->commission_amount, 2);
         }, 0);
@@ -289,19 +292,23 @@ class Order extends Model implements OperatorInterface
 
         // | ------------------------------------------------
 
-        // 邮费
-        $this->freight_amount;
-        // 订单优惠
-        $this->discount_amount;
-
         // 商品应付汇总
         $this->product_payable_amount = $this->products->reduce(function ($sum, $product) {
             return bcadd($sum, $product->payable_amount, 2);
         }, 0);
+        // 邮费
+        $this->freight_amount;
+        // 订单优惠
+        $this->discount_amount;
+        // 订单服务费
+        $this->service_amount;
 
-        // 订单应付金额 = 商品总应付金额 - 优惠 + 邮费
-        $this->payable_amount = bcsub(bcadd($this->product_payable_amount, $this->freight_amount, 2),
-                                      $this->discount_amount, 2);
+        // 订单应付金额 = 商品总应付金额 + 邮费 + 订单服务费 - 优惠
+        $this->payable_amount = bcsub(
+            bcadd(bcadd($this->product_payable_amount, $this->freight_amount, 2), $this->service_amount, 2),
+            $this->discount_amount,
+            2
+        );
 
     }
 
