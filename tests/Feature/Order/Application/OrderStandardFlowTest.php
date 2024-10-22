@@ -129,6 +129,21 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
 
+    return $order;
 })->depends('can crate a new order', 'cna paying a order', 'can paid a order');
+
+
+test('can confirm a order', function (Order $order) {
+
+    $command = \RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand::from([ 'id' => $order->id ]);
+
+    $this->orderCommandService->confirm($command);
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->order_status, OrderStatusEnum::FINISHED, '订单状态');
+
+
+})->depends('can shipped a order');
 
 

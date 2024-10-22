@@ -253,7 +253,7 @@ class Order extends Model implements OperatorInterface
 
             if ($orderProduct->isEffective() &&
                 in_array($orderProduct->shipping_status,
-                    [null, ShippingStatusEnum::NIL,
+                    [ null, ShippingStatusEnum::NIL,
                       ShippingStatusEnum::WAIT_SEND,
                       ShippingStatusEnum::PART_SHIPPED
                     ], true)) {
@@ -384,9 +384,14 @@ class Order extends Model implements OperatorInterface
     public function confirm(?int $orderProductId = null) : void
     {
 
-        if (in_array($this->order_status, [ OrderStatusEnum::CANCEL, OrderStatusEnum::FINISHED, OrderStatusEnum::CLOSED ],
+        if (in_array($this->order_status,
+                     [
+                         OrderStatusEnum::CANCEL,
+                         OrderStatusEnum::FINISHED,
+                         OrderStatusEnum::CLOSED
+                     ],
                      true)) {
-            throw new OrderException('订单完成');
+            throw new OrderException('订单已完成');
         }
         // 只有在 部分发货情况下  才允许 传入子单号 单独确认搜获
         if (filled($orderProductId)) {
