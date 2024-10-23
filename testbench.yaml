@@ -1,9 +1,5 @@
 providers:
    - Workbench\App\Providers\WorkbenchServiceProvider
-   - RedJasmine\Order\OrderPackageServiceProvider
-   - RedJasmine\Order\Application\OrderApplicationServiceProvider
-   - RedJasmine\Ecommerce\EcommercePackageServiceProvider
-   - RedJasmine\Order\Domain\OrderDomainServiceProvider
 
 migrations:
   - workbench/database/migrations

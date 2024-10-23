@@ -2,8 +2,7 @@
     "name": "red-jasmine/framework",
     "autoload": {
         "psr-4": {
-            "RedJasmine\\Order\\": "packages/order/src/",
-            "RedJasmine\\Ecommerce\\": "packages/ecommerce/src/"
+
         }
     },
     "authors": [
@@ -15,6 +14,8 @@
     "minimum-stability": "dev",
     "require-dev": {
         "red-jasmine/support": "*",
+        "red-jasmine/filament-core": "*",
+        "red-jasmine/order": "*",
         "nunomaduro/collision": "^7.9",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.30",
