@@ -44,4 +44,13 @@ enum ShippingTypeEnum: string
 
         ];
     }
+
+
+    public static function allowLogistics():array
+    {
+        return  [
+            self::EXPRESS,
+            self::DELIVERY,
+        ];
+    }
 }
