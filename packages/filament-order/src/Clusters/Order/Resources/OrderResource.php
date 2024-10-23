@@ -5,7 +5,6 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\View;
@@ -15,10 +14,10 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
-use RedJasmine\FilamentOrder\Clusters\Orders;
 use RedJasmine\FilamentOrder\Filament\Tables\Columns\OrderProduct;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
@@ -31,6 +30,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\FilamentOrder\Clusters\Order as OrderCluster;
 
 class OrderResource extends Resource
 {
@@ -47,7 +47,7 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $cluster = Orders::class;
+    protected static ?string $cluster = OrderCluster::class;
 
     public static function getModelLabel() : string
     {
@@ -63,7 +63,8 @@ class OrderResource extends Resource
                                                            ->badge()
                                                            ->formatStateUsing(fn($state) => $state->getLabel()),
                                                   TextEntry::make('star'),
-                                                  TextEntry::make('info.buyer_message'),
+                                                  RatingEntry::make('star'),
+                                                  TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message')),
                                                   TextEntry::make('info.seller_message'),
                                                   TextEntry::make('info.seller_remarks'),
                                               ])->inlineLabel(),
@@ -459,7 +460,10 @@ Tables\Columns\TextColumn::make('cost_amount')
                       ])
             ->actions([
                           Tables\Actions\ViewAction::make(),
-                          // Tables\Actions\EditAction::make(),
+                          Tables\Actions\Action::make('shipping')
+                          ->url( fn($record)=>static::getUrl('shipping',['record'=>$record->id]))
+                          ,
+
                       ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
@@ -481,12 +485,14 @@ Tables\Columns\TextColumn::make('cost_amount')
     public static function getPages() : array
     {
         return [
-            'index' => Pages\ListOrders::route('/'),
+            'index'    => Pages\ListOrders::route('/'),
             //'create' => Pages\CreateOrder::route('/create'),
-            'view'  => Pages\ViewOrder::route('/{record}'),
-            //'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'view'     => Pages\ViewOrder::route('/{record}'),
+            //            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'shipping' => Pages\Shipping::route('/{record}/shipping'),
         ];
     }
+
 
 
 }

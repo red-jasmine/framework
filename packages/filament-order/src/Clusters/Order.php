@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters;
 
 use Filament\Clusters\Cluster;
 
-class Orders extends Cluster
+class Order extends Cluster
 {
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
