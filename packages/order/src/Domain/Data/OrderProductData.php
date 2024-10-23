@@ -8,6 +8,8 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class OrderProductData extends Data
 {
@@ -15,11 +17,13 @@ class OrderProductData extends Data
      * 商品类型
      * @var ProductTypeEnum
      */
+    #[WithCast(EnumCast::class, type: ProductTypeEnum::class)]
     public ProductTypeEnum $orderProductType;
     /**
      * 发货类型
      * @var ShippingTypeEnum
      */
+    #[WithCast(EnumCast::class, type: ShippingTypeEnum::class)]
     public ShippingTypeEnum $shippingType;
 
     public string $title;

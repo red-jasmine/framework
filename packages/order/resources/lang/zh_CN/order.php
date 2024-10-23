@@ -73,10 +73,18 @@ return [
 
 
         'product' => [
-
             'product_id' => '商品ID',
             'sku_id'     => '规格ID',
         ],
+
+        'seller_remarks' => '卖家备注',
+        'buyer_remarks'  => '买家备注',
+        'buyer_message'  => '买家留言',
+        'seller_message' => '卖家留言',
+        'seller_expands' => '卖家扩展信息',
+        'buyer_expands'  => '买家扩展信息',
+        'other_expands'  => '其他扩展信息',
+        'tools'          => '工具',
 
     ],
     'enums'  => [

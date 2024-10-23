@@ -5,6 +5,7 @@ namespace RedJasmine\Order\Application\Services\Handlers;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Domain\Events\OrderPaidEvent;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use Throwable;
 
 class OrderPaidCommandHandler extends AbstractOrderCommandHandler
 {
@@ -27,8 +28,6 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
             $orderPayment->payment_channel    = $command->paymentChannel;
             $orderPayment->payment_channel_no = $command->paymentChannelNo;
             $orderPayment->payment_method     = $command->paymentMethod;
-            $orderPayment->updater            = $order->updater;
-
             $order->paid($orderPayment);
 
             $this->orderRepository->store($order);
@@ -37,7 +36,7 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }

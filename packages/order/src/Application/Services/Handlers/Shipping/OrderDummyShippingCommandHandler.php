@@ -30,8 +30,12 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
 
         try {
             $order = $this->find($command->id);
-            $this->orderShippingService->dummy($order, $command->orderProductId, $command->isFinished);
-
+            if (count($command->orderProducts) <= 0) {
+                $command->orderProducts = $order->products->pluck('id')->toArray();
+            }
+            foreach ($command->orderProducts as $orderProductId) {
+                $this->orderShippingService->dummy($order, $orderProductId, $command->isFinished);
+            }
             $this->orderRepository->update($order);
 
             $this->commitDatabaseTransaction();

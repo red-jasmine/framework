@@ -3,11 +3,14 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class OrderData extends Data
 {
@@ -25,11 +28,13 @@ class OrderData extends Data
      * 订单类型
      * @var OrderTypeEnum
      */
+    #[WithCast(EnumCast::class, type: OrderTypeEnum::class)]
     public OrderTypeEnum $orderType;
     /**
      * 支付方式
      * @var PayTypeEnum
      */
+    #[WithCast(EnumCast::class, type: PayTypeEnum::class)]
     public PayTypeEnum $payType = PayTypeEnum::ONLINE;
 
     /**
