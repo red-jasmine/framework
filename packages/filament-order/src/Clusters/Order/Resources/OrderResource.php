@@ -57,7 +57,7 @@ class OrderResource extends Resource
     public static function infolist(Infolist $infoList) : Infolist
     {
         $infoList->schema([
-                              Section::make(fn(Model $record) => $record->id)
+                              Section::make(static fn(Model $record) => $record->id)
                                      ->schema([
                                                   TextEntry::make('order_status')
                                                            ->badge()
@@ -462,7 +462,11 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Actions\ViewAction::make(),
                           Tables\Actions\Action::make('shipping')
                           ->url( fn($record)=>static::getUrl('shipping',['record'=>$record->id]))
+                          ->visible(fn($record)=>$record->shipping_status !== ShippingStatusEnum::SHIPPED)
                           ,
+
+                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_remarks'),
+                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_message'),
 
                       ])
             ->bulkActions([

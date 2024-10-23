@@ -32,8 +32,10 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
             $order                                = $this->find($command->id);
             $orderLogistics                       = OrderLogistics::newModel();
             $orderLogistics->shippable_id         = $order->id;
-            $orderLogistics->seller               = $order->seller;
-            $orderLogistics->buyer                = $order->buyer;
+            $orderLogistics->seller_type          = $order->seller_type;
+            $orderLogistics->seller_id            = $order->seller_id;
+            $orderLogistics->buyer_type           = $order->buyer_type;
+            $orderLogistics->buyer_id             = $order->buyer_id;
             $orderLogistics->shipper              = LogisticsShipperEnum::SELLER;
             $orderLogistics->order_product_id     = $command->orderProducts;
             $orderLogistics->express_company_code = $command->expressCompanyCode;

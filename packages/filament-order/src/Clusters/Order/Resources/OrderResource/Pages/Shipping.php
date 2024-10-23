@@ -5,6 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
@@ -13,25 +14,50 @@ use Illuminate\Contracts\Support\Htmlable;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 /**
- * @property Form $form
+ * @property Form $dummy
+ * @property Form $logistics
  */
 class Shipping extends Page
 {
 
-
     protected static string $resource = OrderResource::class;
+
+
     use InteractsWithRecord, ResourcePageHelper {
         InteractsWithRecord::resolveRecord insteadof ResourcePageHelper;
     }
 
     public ?array $data = [];
-
+    protected function getViewData(): array
+    {
+        return [
+            'forms'=>$this->getForms()
+        ];
+    }
 
     use InteractsWithFormActions;
+    public function infolist(Infolist $infolist): Infolist
+    {
+        return static::getResource()::infolist($infolist);
+    }
+
+    protected function makeInfolist(): Infolist
+    {
+        return parent::makeInfolist()
+                     ->record($this->getRecord())
+                     ->columns($this->hasInlineLabels() ? 1 : 2)
+                     ->inlineLabel($this->hasInlineLabels());
+    }
+    protected function hasInfolist(): bool
+    {
+        return (bool) count($this->getInfolist('infolist')->getComponents());
+    }
+
 
     public function mount(int|string $record) : void
     {
@@ -39,12 +65,16 @@ class Shipping extends Page
         $this->record = $this->resolveRecord($record);
 
 
-        $this->form->fill([
+        $this->dummy->fill([
                               'order_products' => $this->record->products->pluck('id')->toArray(),
                               'is_finished'    => true,
                           ]);
 
 
+        $this->logistics->fill([
+            'is_split'=>false,
+
+                          ]);
     }
 
     protected function getFormActions() : array
@@ -56,43 +86,14 @@ class Shipping extends Page
     }
 
 
-    public function save()
-    {
-        //$data = $this->form->getState();
-        dd($this->form->getState());
 
 
-    }
-
-
-    public function dummy()
-    {
-        $data       = $this->form->getState();
-        $data['id'] = $this->record->id;
-        $command    = OrderDummyShippingCommand::from($data);
-
-
-        try {
-            app(static::getResource()::getCommandService())->dummyShipping($command);
-        }catch (AbstractException $abstractException){
-            Notification::make()->danger()
-                                ->title($abstractException->getMessage())
-                                ->send();
-            return;
-        }
-        Notification::make()->success()
-                            ->title('OK')
-                            ->send();
-
-        $this->redirect(static::getResource()::getUrl('index'));
-
-    }
 
     protected function getSaveFormAction() : Action
     {
-        return Action::make('dummy')
+        return Action::make('save')
                      ->label('发货')
-                     ->submit('dummy');
+                     ->submit('save');
     }
 
 
@@ -100,21 +101,26 @@ class Shipping extends Page
 
     public function getHeading() : string
     {
-        return 'getHeading';
+        return $this->getRecord()->id;
     }
 
-    public static function getNavigationLabel() : string
-    {
-        return '大号';
-    }
+
 
     public function getTitle() : string|Htmlable
     {
-        return '这个啥z';
+        return $this->getRecord()->id;
     }
 
 
-    public function form(Form $form) : Form
+    protected function getForms() : array
+    {
+        return [
+            'dummy',
+            'logistics',
+        ];
+    }
+
+    public function dummy(Form $form) : Form
     {
         $record = $this->record;
         return $form->schema([
@@ -128,17 +134,78 @@ class Shipping extends Page
                                                                ->boolean()
 
                              ])
-                    ->statePath('data')
+                    ->statePath('data.dummy')
                     ->columns(1);
+    }
+
+    public function dummySubmit()
+    {
+        $data       = $this->dummy->getState();
+        $data['id'] = $this->record->id;
+        $command    = OrderDummyShippingCommand::from($data);
+
+
+        try {
+            app(static::getResource()::getCommandService())->dummyShipping($command);
+        } catch (AbstractException $abstractException) {
+            Notification::make()->danger()
+                        ->title($abstractException->getMessage())
+                        ->send();
+            return;
+        }
+        Notification::make()->success()
+                    ->title('OK')
+                    ->send();
+
+        $this->redirect(static::getResource()::getUrl('index'));
+
+    }
+
+    public function logistics(Form $form) : Form
+    {
+
+        $record = $this->record;
+        return $form->schema([
+
+                                 Forms\Components\ToggleButtons::make('is_split')
+                                                               ->default(false)
+                                                               ->grouped()
+                                                               ->boolean(),
+                                 Forms\Components\CheckboxList::make('order_products')
+                                                              ->options($record->products->pluck('title', 'id')->toArray()),
+
+                                 Forms\Components\TextInput::make('express_company_code')->required(),
+                                 Forms\Components\TextInput::make('express_no')->required(),
+
+                             ])
+                    ->statePath('data.logistics');
+    }
+    public function logisticsSubmit()
+    {
+        $data       = $this->logistics->getState();
+
+        $data['id'] = $this->record->id;
+        $command    = OrderLogisticsShippingCommand::from($data);
+        try {
+            app(static::getResource()::getCommandService())->logisticsShipping($command);
+        } catch (AbstractException $abstractException) {
+            Notification::make()->danger()
+                        ->title($abstractException->getMessage())
+                        ->send();
+            return;
+        }
+        Notification::make()->success()
+                    ->title('OK')
+                    ->send();
+
+        $this->redirect(static::getResource()::getUrl('index'));
+
     }
 
     protected function getHeaderActions() : array
     {
         return [
-            Action::make('test')->button(),
-            Action::make('test')->button(),
-            Action::make('test')->button(),
-            Action::make('test')->button(),
+
 
         ];
 
