@@ -3,6 +3,7 @@
 namespace RedJasmine\FilamentCore;
 
 use Filament\Forms\Components\Field;
+use Filament\Infolists\Components\Entry;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
@@ -115,6 +116,22 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
         });
 
 
+        Entry::macro('useEnum', function () {
+            if (method_exists($this, 'badge')) {
+                $this->badge();
+            }
+            if (method_exists($this, 'formatStateUsing')) {
+                $this->formatStateUsing(fn($state) => $state->getLabel());
+            }
+            if (method_exists($this, 'color')) {
+                $this->color(fn($state) => $state->getColor());
+            }
+            if (method_exists($this, 'icon')) {
+                $this->icon(fn($state) => $state->getIcon());
+            }
+            return $this;
+
+        });
         Field::macro('defaultZero', function () {
             $this->default(0)
                  ->formatStateUsing(fn($state) => $state === 0 ? null : $state)
