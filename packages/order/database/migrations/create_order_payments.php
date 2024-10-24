@@ -9,7 +9,7 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_payments', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_payments', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('商品单号');
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->unsignedBigInteger('refund_id')->default(0)->comment('退款单ID');
@@ -23,10 +23,14 @@ return new class extends Migration {
             $table->string('status', 32)->comment(PaymentStatusEnum::comments('状态'));
             $table->timestamp('payment_time')->nullable()->comment('支付时间');
 
+            // 管理第三方支付单 类型 如 对接 支付宝、微信、支付中心
             $table->string('payment_type', 32)->nullable()->comment('支付单类型');
-            $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单 ID');
+            $table->string('payment_id')->nullable()->comment('支付单 ID');
+            // 如 手机支付、扫码支付、被扫
             $table->string('payment_method')->nullable()->comment('支付方式');
+            // 支付渠道 如 支付宝、微信、银联等
             $table->string('payment_channel')->nullable()->comment('支付渠道');
+            // 对接的第二房单号
             $table->string('payment_channel_no')->nullable()->comment('支付渠道单号');
 
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
@@ -34,11 +38,14 @@ return new class extends Migration {
             $table->nullableMorphs('updater'); // 更新人
             $table->timestamps();
             $table->comment('订单-支付单');
+            $table->index([ 'order_id' ], 'idx_order');
+            $table->index([ 'seller_id', 'seller_type', 'order_id' ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'order_id' ], 'idx_buyer');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_payments');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_payments');
     }
 };

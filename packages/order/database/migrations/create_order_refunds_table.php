@@ -14,7 +14,7 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_refunds', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_refunds', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('售后单号');
             $table->unsignedBigInteger('order_id')->comment('订单号');
             $table->unsignedBigInteger('order_product_id')->comment('订单商品单号');
@@ -70,11 +70,16 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单-退款表');
+
+            $table->index([ 'order_id', 'order_product_id' ], 'idx_order_product');
+            $table->index([ 'seller_id', 'seller_type', 'refund_status' ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'refund_status' ], 'idx_buyer');
+            $table->comment('订单-商品表');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_refunds');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_refunds');
     }
 };

@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -67,6 +68,10 @@ class OrderResource extends Resource
                                                   TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message')),
                                                   TextEntry::make('info.seller_message'),
                                                   TextEntry::make('info.seller_remarks'),
+                                                  Actions::make([
+                                                      OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message'),
+                                                      OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks'),
+                                                                ])
                                               ])->inlineLabel(),
 
                               Section::make('订单信息')
@@ -169,10 +174,6 @@ class OrderResource extends Resource
                                                    ->maxLength(255),
                          Forms\Components\Select::make('order_type')
                                                 ->useEnum(OrderTypeEnum::class)
-                                                ->required()
-                         ,
-                         Forms\Components\Select::make('pay_type')
-                                                ->useEnum(PayTypeEnum::class)
                                                 ->required()
                          ,
                          Forms\Components\Select::make('order_status')
@@ -349,7 +350,6 @@ class OrderResource extends Resource
 
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
                           Tables\Columns\TextColumn::make('order_type')->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
-                          Tables\Columns\TextColumn::make('pay_type')->useEnum()->label(__('red-jasmine-order::order.fields.pay_type')),
                           Tables\Columns\ColumnGroup::make('status')->columns([
 
                                                                                   Tables\Columns\TextColumn::make('order_status')->useEnum()->label(__('red-jasmine-order::order.fields.order_status')),

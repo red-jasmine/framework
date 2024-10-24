@@ -25,7 +25,6 @@ return new class extends Migration {
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
             $table->string('title')->nullable()->comment('标题');
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
-            $table->string('pay_type', 32)->comment(PayTypeEnum::comments('支付类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));

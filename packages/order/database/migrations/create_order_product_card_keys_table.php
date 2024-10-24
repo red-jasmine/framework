@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_product_card_keys', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('seller_type', 32)->comment('卖家类型');
+            $table->string('seller_type')->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
-            $table->string('buyer_type', 32)->comment('买家类型');
+            $table->string('buyer_type')->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->unsignedBigInteger('order_product_id')->comment('商品ID');
@@ -23,11 +23,13 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单-卡密表');
+            $table->index([ 'seller_id', 'seller_type', 'order_id', 'order_product_id' ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'order_id', 'order_product_id' ], 'idx_buyer');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'order_product_card_keys');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys');
     }
 };

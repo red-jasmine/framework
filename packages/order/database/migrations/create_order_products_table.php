@@ -15,7 +15,7 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_products', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('商品单号');
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->string('seller_type', 32)->comment('卖家类型');
@@ -82,7 +82,6 @@ return new class extends Migration {
             $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
 
             // 供应商
-
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator');
@@ -90,12 +89,14 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->index('order_id', 'idx_order_id');
+            $table->index([ 'seller_id', 'seller_type', 'order_id' ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'order_id' ], 'idx_buyer');
             $table->comment('订单-商品表');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_products');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_products');
     }
 };

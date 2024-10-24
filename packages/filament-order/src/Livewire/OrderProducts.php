@@ -43,6 +43,8 @@ class OrderProducts extends Component implements HasTable, HasForms
                           TextColumn::make('tax_amount'),
                           TextColumn::make('discount_amount'),
                           TextColumn::make('payable_amount'),
+                          TextColumn::make('progress'),
+                          TextColumn::make('progress_total'),
                           TextColumn::make('order_status')->useEnum(),
                           TextColumn::make('shipping_status')->useEnum()->toggleable(isToggledHiddenByDefault:true),
                           TextColumn::make('refund_status')->useEnum()->toggleable(isToggledHiddenByDefault:true),
