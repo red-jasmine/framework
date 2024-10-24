@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services;
 
-use RedJasmine\Order\Infrastructure\ReadRepositories\RefundReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 
 class RefundQueryService extends ApplicationQueryService

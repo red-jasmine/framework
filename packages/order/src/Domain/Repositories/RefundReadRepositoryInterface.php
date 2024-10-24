@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\Infrastructure\ReadRepositories;
+namespace RedJasmine\Order\Domain\Repositories;
 
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 

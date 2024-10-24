@@ -12,11 +12,12 @@ class OrderProgressCommand extends Data
 
     public int $progress;
 
+
     /**
-     * 是否为绝对值
+     * 是否追加模式
      * @var bool
      */
-    public bool $isAbsolute = true;
+    public bool $isAppend = false;
 
     /**
      * 是否允许小于之前的值

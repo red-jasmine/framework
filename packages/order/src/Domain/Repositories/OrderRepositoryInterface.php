@@ -3,8 +3,12 @@
 namespace RedJasmine\Order\Domain\Repositories;
 
 
+use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
+/**
+ * @method Order find($id)
+ */
 interface OrderRepositoryInterface extends RepositoryInterface
 {
 

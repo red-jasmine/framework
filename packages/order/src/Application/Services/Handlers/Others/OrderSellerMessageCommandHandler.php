@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Handlers\Others;
 
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 
-class OrderSellerRemarksCommandHandler extends AbstractOrderRemarksCommandHandler
+class OrderSellerMessageCommandHandler extends AbstractOrderMessageCommandHandler
 {
     protected TradePartyEnums $tradeParty = TradePartyEnums::SELLER;
 }

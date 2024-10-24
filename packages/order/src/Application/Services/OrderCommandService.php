@@ -9,9 +9,11 @@ use RedJasmine\Order\Application\Services\Handlers\OrderPaidCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderPayingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderProgressCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerHiddenCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerMessageCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerRemarksCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerCustomStatusCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerHiddenCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerMessageCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerRemarksCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderCardKeyShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderLogisticsShippingCommandHandler;
@@ -23,6 +25,7 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
@@ -43,6 +46,8 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method int progress(OrderProgressCommand $command)
  * @method void sellerRemarks(OrderRemarksCommand $command)
  * @method void buyerRemarks(OrderRemarksCommand $command)
+ * @method void buyerMessage(OrderMessageCommand $command)
+ * @method void sellerMessage(OrderMessageCommand $command)
  * @method void sellerHidden(OrderHiddenCommand $command)
  * @method void buyerHidden(OrderHiddenCommand $command)
  * @see OrderConfirmCommandHandler::handle()
@@ -72,6 +77,8 @@ class OrderCommandService extends ApplicationCommandService
         'progress'           => OrderProgressCommandHandler::class,
         'sellerRemarks'      => OrderSellerRemarksCommandHandler::class,
         'buyerRemarks'       => OrderBuyerRemarksCommandHandler::class,
+        'buyerMessage'       => OrderBuyerMessageCommandHandler::class,
+        'sellerMessage'      => OrderSellerMessageCommandHandler::class,
         'sellerCustomStatus' => OrderSellerCustomStatusCommandHandler::class,
         'sellerHidden'       => OrderSellerHiddenCommandHandler::class,
         'buyerHidden'        => OrderBuyerHiddenCommandHandler::class,

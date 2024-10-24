@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Infrastructure\ReadRepositories\Mysql;
 
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Infrastructure\ReadRepositories\OrderReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
 

@@ -6,17 +6,14 @@ use Illuminate\Support\ServiceProvider;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServiceValueCastTransformer;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
+use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
-use RedJasmine\Order\Infrastructure\ReadRepositories\OrderReadRepositoryInterface;
-use RedJasmine\Order\Infrastructure\ReadRepositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Infrastructure\Repositories\Eloquent\OrderRepository;
 use RedJasmine\Order\Infrastructure\Repositories\Eloquent\RefundRepository;
-
-
 
 
 /**

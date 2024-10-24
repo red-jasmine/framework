@@ -2,8 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services;
 
-use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Infrastructure\ReadRepositories\OrderReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 
 

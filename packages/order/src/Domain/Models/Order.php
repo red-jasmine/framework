@@ -433,7 +433,7 @@ class Order extends Model implements OperatorInterface
     /**
      * @param int $orderProductId
      * @param int $progress
-     * @param bool $isAbsolute
+     * @param bool $isAppend
      * @param bool $isAllowLess
      *
      * @return int 最新的进度
@@ -442,13 +442,13 @@ class Order extends Model implements OperatorInterface
     public function setProductProgress(
         int  $orderProductId,
         int  $progress,
-        bool $isAbsolute = true,
+        bool $isAppend = false,
         bool $isAllowLess = false
     ) : int
     {
         $orderProduct = $this->products->where('id', $orderProductId)->firstOrFail();
         $oldProgress  = (int)$orderProduct->progress;
-        $newProgress  = $isAbsolute ? $progress : ((int)bcadd($oldProgress, $progress, 0));
+        $newProgress  = $isAppend ? ((int)bcadd($oldProgress, $progress, 0)) : $progress;
         if ($oldProgress === $newProgress) {
             return $newProgress;
         }
@@ -617,16 +617,70 @@ class Order extends Model implements OperatorInterface
 
     }
 
-    public function remarks(TradePartyEnums $tradeParty, string $remarks = null, ?int $orderProductId = null) : void
+
+    /**
+     * 添加或更新交易双方的备注信息
+     *
+     * 此函数用于在订单或订单产品中添加或更新特定交易双方的备注信息
+     * 它根据提供的交易双方类型动态确定存储备注信息的字段
+     * 如果提供了订单产品ID，则备注信息将被添加到该特定订单产品；
+     * 否则，将备注信息添加到订单本身此函数演示了如何动态处理数据字段基于枚举值，
+     * 以及如何根据条件逻辑确定操作的对象（订单或订单产品）
+     *
+     * @param TradePartyEnums $tradeParty 交易双方类型，用于确定备注信息字段
+     * @param string|null $remarks 备注信息文本，要添加或更新的内容
+     * @param int|null $orderProductId 订单产品ID，指定特定的订单产品添加备注信息
+     * @param bool $isAppend 是否追加备注信息，如果为true，则在现有备注信息后追加新内容
+     * @return void
+     */
+    public function remarks(TradePartyEnums $tradeParty, string $remarks = null, ?int $orderProductId = null, bool $isAppend = false) : void
     {
+        // 根据交易双方类型动态确定备注信息字段名
         $field = $tradeParty->value . '_remarks';
+
+        // 根据是否提供订单产品ID，确定操作的对象
         if ($orderProductId) {
+            // 如果提供了订单产品ID，获取对应的订单产品实例
             $model = $this->products->where('id', $orderProductId)->firstOrFail();
         } else {
+            // 如果未提供订单产品ID，操作订单本身
             $model = $this;
         }
-        $model->info->{$field} = $remarks;
+        // 在确定的对象上添加或更新备注信息
+        if ($isAppend && blank($model->info->{$field})) {
+            $isAppend = false;
+        }
+        if ($isAppend) {
+            $model->info->{$field} .= "\n\r" . $remarks;
+        } else {
+            $model->info->{$field} = $remarks;
+        }
 
+    }
+
+
+    public function message(TradePartyEnums $tradeParty, string $message = null, ?int $orderProductId = null, bool $isAppend = false) : void
+    {
+
+        $field = $tradeParty->value . '_message';
+
+
+        if ($orderProductId) {
+
+            $model = $this->products->where('id', $orderProductId)->firstOrFail();
+        } else {
+
+            $model = $this;
+        }
+
+        if ($isAppend && blank($model->info->{$field})) {
+            $isAppend = false;
+        }
+        if ($isAppend) {
+            $model->info->{$field} .= "\n\r" . $message;
+        } else {
+            $model->info->{$field} = $message;
+        }
 
     }
 
