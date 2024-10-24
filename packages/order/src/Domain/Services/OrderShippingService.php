@@ -85,6 +85,9 @@ class OrderShippingService
     public function cardKey(Order $order, OrderProductCardKey $orderProductCardKey) : void
     {
 
+        /**
+         * @var $orderProduct OrderProduct
+         */
         $orderProduct = $order->products->where('id', $orderProductCardKey->order_product_id)->firstOrFail();
 
         if ($orderProduct->shipping_type !== ShippingTypeEnum::CDK) {

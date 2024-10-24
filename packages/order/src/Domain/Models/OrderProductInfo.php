@@ -21,12 +21,12 @@ class OrderProductInfo extends Model
     }
 
     protected $casts = [
-        'after_sale_services' => 'array',
-        'form'                => 'array',
-        'buyer_expands'       => 'array',
-        'seller_expands'      => 'array',
-        'other_expands'       => 'array',
-        'tools'               => 'array',
+        'after_sales_services' => 'array',
+        'form'                 => 'array',
+        'buyer_expands'        => 'array',
+        'seller_expands'       => 'array',
+        'other_expands'        => 'array',
+        'tools'                => 'array',
     ];
 
 

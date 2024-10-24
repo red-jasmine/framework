@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_product_infos', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->json('after_sale_services')->nullable()->comment('售后服务');
+            $table->json('after_sales_services')->nullable()->comment('售后服务');
             $table->text('seller_remarks')->nullable()->comment('卖家备注');
             $table->text('buyer_remarks')->nullable()->comment('买家备注');
             $table->string('seller_message')->nullable()->comment('卖家留言');

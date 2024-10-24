@@ -6,6 +6,8 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class AfterSalesService extends Data
 {
@@ -14,6 +16,7 @@ class AfterSalesService extends Data
      * 服务类型
      * @var RefundTypeEnum
      */
+    #[WithCast(EnumCast::class,type: RefundTypeEnum::class)]
     public RefundTypeEnum $refundType;
 
 
@@ -21,6 +24,7 @@ class AfterSalesService extends Data
      * 允许阶段
      * @var OrderAfterSaleServiceAllowStageEnum
      */
+    #[WithCast(EnumCast::class,type: OrderAfterSaleServiceAllowStageEnum::class)]
     public OrderAfterSaleServiceAllowStageEnum $allowStage = OrderAfterSaleServiceAllowStageEnum::NEVER;
 
 
@@ -35,6 +39,7 @@ class AfterSalesService extends Data
      * 限制时长
      * @var OrderAfterSaleServiceTimeUnit
      */
+    #[WithCast(EnumCast::class,type: OrderAfterSaleServiceTimeUnit::class)]
     public OrderAfterSaleServiceTimeUnit $timeLimitUnit = OrderAfterSaleServiceTimeUnit::HOUR;
 
 

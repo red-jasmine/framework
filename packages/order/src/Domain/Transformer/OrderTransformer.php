@@ -95,7 +95,7 @@ class OrderTransformer
         $orderProduct->info->seller_expands      = $orderProductData->sellerExpands;
         $orderProduct->info->buyer_remarks       = $orderProductData->buyerExpands;
         $orderProduct->info->other_expands       = $orderProductData->otherExpands;
-        $orderProduct->info->after_sale_services = $orderProductData->afterSalesServices;
+        $orderProduct->info->after_sales_services = $orderProductData->afterSalesServices;
         $orderProduct->info->tools               = $orderProductData->tools;
         $orderProduct->info->form                = $orderProductData->form;
         return $orderProduct;

@@ -2,9 +2,12 @@
 
 namespace RedJasmine\Tests\Feature\Order\Fixtures;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
@@ -45,9 +48,6 @@ class OrderFake
     public function fakeOrderArray(array $order = []) : array
     {
         $user = User::find(1);
-
-
-
 
 
         $fake = [
@@ -158,7 +158,28 @@ class OrderFake
             'buyer_extends'          => [],
             'other_extends'          => [],
             'tools'                  => [],
-            'form'                  => [],
+            'form'                   => [],
+            'after_sales_services'   => [
+                AfterSalesService::from([
+                                            'refundType'    => RefundTypeEnum::REFUND->value,
+                                            'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
+                                            'timeLimit'     => 7,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                        ])->toArray(),
+                AfterSalesService::from([
+                                            'refundType'    => RefundTypeEnum::EXCHANGE->value,
+                                            'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
+                                            'timeLimit'     => 7,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                        ])->toArray(),
+                AfterSalesService::from([
+                                            'refundType'    => RefundTypeEnum::WARRANTY->value,
+                                            'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
+                                            'timeLimit'     => 180,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                        ])->toArray(),
+
+            ],
         ];
         return array_merge($fake, $product);
     }

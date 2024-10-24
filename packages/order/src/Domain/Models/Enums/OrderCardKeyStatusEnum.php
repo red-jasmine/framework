@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Domain\Models\Enums;
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
 /**
- * 卡密状态
+ * 卡密状态 TODO
  */
 enum OrderCardKeyStatusEnum: string
 {

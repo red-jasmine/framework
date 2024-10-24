@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
 use RedJasmine\Order\Domain\Events\OrderConfirmedEvent;
 use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
@@ -452,9 +453,16 @@ class Order extends Model implements OperatorInterface
         bool $isAllowLess = false
     ) : int
     {
+
         $orderProduct = $this->products->where('id', $orderProductId)->firstOrFail();
-        $oldProgress  = (int)$orderProduct->progress;
-        $newProgress  = $isAppend ? ((int)bcadd($oldProgress, $progress, 0)) : $progress;
+
+        // 判断发货方式是否不支持设置进度
+        if ($orderProduct->shipping_type === ShippingTypeEnum::CDK) {
+            throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW_SET_PROGRESS, '进度不允许小于之前的值');
+        }
+
+        $oldProgress = (int)$orderProduct->progress;
+        $newProgress = $isAppend ? ((int)bcadd($oldProgress, $progress, 0)) : $progress;
         if ($oldProgress === $newProgress) {
             return $newProgress;
         }
