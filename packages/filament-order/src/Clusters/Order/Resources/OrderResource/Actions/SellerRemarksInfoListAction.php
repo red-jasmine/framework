@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use Filament\Forms;
 use Filament\Infolists\Components\Actions\Action;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
 
 
 class SellerRemarksInfoListAction extends Action
@@ -17,8 +18,8 @@ class SellerRemarksInfoListAction extends Action
 
         parent::setUp();
 
-        $this->label(__('red-jasmine-order::order.fields.'.$name));
-
+        $this->label(__('red-jasmine-order::order.fields.' . $name));
+        $this->icon('heroicon-o-chat-bubble-bottom-center-text');
 //        $this->modalWidth('lg');
 //        $this->modalHeading('卖家备注');
         $this->fillForm(fn($record) : array => [
@@ -26,12 +27,17 @@ class SellerRemarksInfoListAction extends Action
         ]);
         $this->form([
                         Forms\Components\Textarea::make('remarks')
+                                                 ->rows(10)
+                                                 ->label(__('red-jasmine-order::order.fields.' . $name))
                     ]);
 
         $this->action(function ($data, $record) {
 
+            $data['id'] = $record->id;
 
-            dd($this->name, $data, $record);
+            $command = OrderRemarksCommand::from($data);
+
+            dd($this->name, $command);
         });
     }
 

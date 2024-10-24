@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\Livewire;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\View;
@@ -20,6 +21,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
 use RedJasmine\FilamentOrder\Filament\Tables\Columns\OrderProduct;
+use RedJasmine\FilamentOrder\Livewire\OrderProducts;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
@@ -46,7 +48,7 @@ class OrderResource extends Resource
 
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $cluster = OrderCluster::class;
 
@@ -60,26 +62,27 @@ class OrderResource extends Resource
         $infoList->schema([
                               Section::make(static fn(Model $record) => $record->id)
                                      ->schema([
-                                                  TextEntry::make('order_status')
-                                                           ->badge()
-                                                           ->formatStateUsing(fn($state) => $state->getLabel()),
-                                                  TextEntry::make('star'),
-                                                  RatingEntry::make('star'),
-                                                  TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message')),
-                                                  TextEntry::make('info.seller_message'),
-                                                  TextEntry::make('info.seller_remarks'),
-                                                  Actions::make([
-                                                      OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message'),
-                                                      OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks'),
-                                                                ])
-                                              ])->inlineLabel(),
+                                                  TextEntry::make('order_status')->label(__('red-jasmine-order::order.fields.order_status'))
+                                                           ->useEnum(),
+                                                  RatingEntry::make('star')->label(__('red-jasmine-order::order.fields.star')),
+                                                  TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
+                                                  ,
+                                                  TextEntry::make('info.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
+                                                      ->prefixAction(
+                                                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message')
+                                                      ),
+                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::order.fields.seller_remarks'))
+                                                      ->prefixAction(
+                                                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks')
+                                                      ),
+                                              ]),
 
                               Section::make('订单信息')
                                      ->schema([
 
                                                   Fieldset::make('seller')
                                                           ->schema([
-                                                                       TextEntry::make('id'),
+                                                                       TextEntry::make('id')->copyable(),
                                                                        TextEntry::make('created_time'),
                                                                        TextEntry::make('payment_time'),
                                                                        TextEntry::make('shipping_time'),
@@ -95,8 +98,8 @@ class OrderResource extends Resource
                                                   Fieldset::make('seller')
                                                           ->schema([
                                                                        TextEntry::make('seller_type'),
-                                                                       TextEntry::make('seller_id'),
-                                                                       TextEntry::make('seller_nickname'),
+                                                                       TextEntry::make('seller_id')->copyable(),
+                                                                       TextEntry::make('seller_nickname')->copyable(),
                                                                    ])
                                                           ->inlineLabel()
                                                           ->columns(1)
@@ -104,8 +107,8 @@ class OrderResource extends Resource
                                                   Fieldset::make('buyer')
                                                           ->schema([
                                                                        TextEntry::make('buyer_type'),
-                                                                       TextEntry::make('buyer_id'),
-                                                                       TextEntry::make('buyer_nickname'),
+                                                                       TextEntry::make('buyer_id')->copyable(),
+                                                                       TextEntry::make('buyer_nickname')->copyable(),
                                                                    ])
                                                           ->inlineLabel()
                                                           ->columns(1)
@@ -123,9 +126,8 @@ class OrderResource extends Resource
                                               ])->columns(5),
 
 
-                              View::make('products')
-                                  ->view('red-jasmine-filament-order::orders.order-products')
-                                  ->columnSpanFull(),
+
+                              Livewire::make(OrderProducts::class,fn(Model $record):array=>['id'=>$record->id])->columnSpanFull(),
 
                               Fieldset::make('amount')
                                       ->schema([
@@ -461,12 +463,12 @@ Tables\Columns\TextColumn::make('cost_amount')
             ->actions([
                           Tables\Actions\ViewAction::make(),
                           Tables\Actions\Action::make('shipping')
-                          ->url( fn($record)=>static::getUrl('shipping',['record'=>$record->id]))
-                          ->visible(fn($record)=>$record->shipping_status !== ShippingStatusEnum::SHIPPED)
+                                               ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
+                                               ->visible(fn($record) => $record->shipping_status !== ShippingStatusEnum::SHIPPED)
                           ,
 
-                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_remarks'),
-                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_message'),
+                          //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_remarks'),
+                          //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_message'),
 
                       ])
             ->bulkActions([
@@ -496,7 +498,6 @@ Tables\Columns\TextColumn::make('cost_amount')
             'shipping' => Pages\Shipping::route('/{record}/shipping'),
         ];
     }
-
 
 
 }

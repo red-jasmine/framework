@@ -29,26 +29,26 @@ class OrderProducts extends Component implements HasTable, HasForms
             ->query(OrderProduct::query()->where('order_id', $this->id))
             ->paginated(false)
             ->columns([
-                          TextColumn::make('id'),
-                          ImageColumn::make('image'),
-                          TextColumn::make('title'),
-                          TextColumn::make('sku_name'),
-                          TextColumn::make('product_id')->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('sku_id')->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('price')->money('CNY'),
-                          TextColumn::make('num'),
-                          TextColumn::make('unit')->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('unit_quantity')->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('product_amount'),
-                          TextColumn::make('tax_amount'),
-                          TextColumn::make('discount_amount'),
-                          TextColumn::make('payable_amount'),
-                          TextColumn::make('progress'),
-                          TextColumn::make('progress_total'),
-                          TextColumn::make('order_status')->useEnum(),
-                          TextColumn::make('shipping_status')->useEnum()->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('refund_status')->useEnum()->toggleable(isToggledHiddenByDefault:true),
-                          TextColumn::make('refund_amount')->toggleable(isToggledHiddenByDefault:true),
+                          TextColumn::make('id')->label(__('red-jasmine-order::order.fields.product.id')),
+                          ImageColumn::make('image')->label(__('red-jasmine-order::order.fields.product.image')),
+                          TextColumn::make('title')->label(__('red-jasmine-order::order.fields.product.title')),
+                          TextColumn::make('sku_name')->label(__('red-jasmine-order::order.fields.product.sku_name')),
+                          TextColumn::make('product_id')->label(__('red-jasmine-order::order.fields.product.product_id'))->toggleable(isToggledHiddenByDefault: true),
+                          TextColumn::make('sku_id')->label(__('red-jasmine-order::order.fields.product.sku_id'))->toggleable(isToggledHiddenByDefault: true),
+                          TextColumn::make('price')->label(__('red-jasmine-order::order.fields.product.price'))->money('CNY'),
+                          TextColumn::make('num')->label(__('red-jasmine-order::order.fields.product.num')),
+                          TextColumn::make('unit')->label(__('red-jasmine-order::order.fields.product.unit'))->toggleable(isToggledHiddenByDefault: true),
+                          TextColumn::make('unit_quantity')->label(__('red-jasmine-order::order.fields.product.unit_quantity'))->toggleable(isToggledHiddenByDefault: true),
+                          TextColumn::make('product_amount')->label(__('red-jasmine-order::order.fields.product.product_amount')),
+                          TextColumn::make('tax_amount')->label(__('red-jasmine-order::order.fields.product.tax_amount')),
+                          TextColumn::make('discount_amount')->label(__('red-jasmine-order::order.fields.discount_amount')),
+                          TextColumn::make('payable_amount')->label(__('red-jasmine-order::order.fields.product.payable_amount')),
+                          TextColumn::make('progress')->label(__('red-jasmine-order::order.fields.product.progress')),
+                          TextColumn::make('progress_total')->label(__('red-jasmine-order::order.fields.product.progress_total')),
+                          TextColumn::make('order_status')->useEnum()->label(__('red-jasmine-order::order.fields.order_status')),
+                          TextColumn::make('shipping_status')->useEnum()->toggleable(isToggledHiddenByDefault: true)->label(__('red-jasmine-order::order.fields.shipping_status')),
+                          TextColumn::make('refund_status')->useEnum()->toggleable(isToggledHiddenByDefault: true)->label(__('red-jasmine-order::order.fields.refund_status')),
+                          TextColumn::make('refund_amount')->toggleable(isToggledHiddenByDefault: true)->label(__('red-jasmine-order::order.fields.refund_amount')),
                       ])
             ->filters([
                           // ...
@@ -61,9 +61,12 @@ class OrderProducts extends Component implements HasTable, HasForms
                           ]);
     }
 
-
     public function render()
     {
-        return view('red-jasmine-filament-order::livewire.order-products');
+        return <<<'HTML'
+        <div>
+            {{ $this->table}}
+        </div>
+        HTML;
     }
 }

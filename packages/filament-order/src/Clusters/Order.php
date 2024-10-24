@@ -7,7 +7,7 @@ use Filament\Clusters\Cluster;
 class Order extends Cluster
 {
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
 
     public static function getNavigationLabel() : string
