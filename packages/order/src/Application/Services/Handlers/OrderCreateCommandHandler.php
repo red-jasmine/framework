@@ -36,7 +36,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
 
             $this->getService()->hook('create.validate', $command, fn() => $this->validate($command));
 
-            $this->getService()->hook('create.fill', $command, fn() => app(OrderTransformer::class)->transform($command));
+            $this->getService()->hook('create.fill', $command, fn() => null);
 
 
             $order->create();
@@ -52,10 +52,6 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
-
-
-        OrderCreatedEvent::dispatch($order);
-
 
         return $order;
 

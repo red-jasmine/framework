@@ -15,6 +15,7 @@ use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerCustomStatu
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerHiddenCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerMessageCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerRemarksCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Others\OrderStarCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderCardKeyShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderLogisticsShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderDummyShippingCommandHandler;
@@ -27,6 +28,8 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
@@ -36,22 +39,40 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 
 /**
+ * @see OrderCreateCommandHandler::handle()
  * @method Order create(OrderCreateCommand $command)
+ * @see OrderCancelCommandHandler::handle()
  * @method void cancel(OrderCancelCommand $command)
+ * @see OrderPayingCommandHandler::handle()
  * @method OrderPayment paying(OrderPayingCommand $command)
+ * @see OrderPaidCommandHandler::handle()
  * @method bool paid(OrderPaidCommand $command)
+ * @see OrderLogisticsShippingCommandHandler::handle()
  * @method void logisticsShipping(OrderLogisticsShippingCommand $command)
+ * @see OrderCardKeyShippingCommandHandler::handle()
  * @method void cardKeyShipping(OrderCardKeyShippingCommand $command)
+ * @see OrderDummyShippingCommandHandler::handle()
  * @method void dummyShipping(OrderDummyShippingCommand $command)
+ * @see OrderProgressCommandHandler::handle()
  * @method int progress(OrderProgressCommand $command)
+ * @see OrderSellerRemarksCommandHandler::handle()
  * @method void sellerRemarks(OrderRemarksCommand $command)
+ * @see OrderBuyerRemarksCommandHandler::handle()
  * @method void buyerRemarks(OrderRemarksCommand $command)
+ * @see OrderBuyerMessageCommandHandler::handle()
  * @method void buyerMessage(OrderMessageCommand $command)
+ * @see OrderSellerMessageCommandHandler::handle()
  * @method void sellerMessage(OrderMessageCommand $command)
+ * @see OrderSellerHiddenCommandHandler::handle()
  * @method void sellerHidden(OrderHiddenCommand $command)
+ * @see OrderBuyerHiddenCommandHandler::handle()
  * @method void buyerHidden(OrderHiddenCommand $command)
+ * @see OrderSellerCustomStatusCommandHandler::handle()
+ * @method void sellerCustomStatus(OrderSellerCustomStatusCommand $command)
  * @see OrderConfirmCommandHandler::handle()
  * @method void confirm(OrderConfirmCommand $command)
+ * @see OrderStarCommandHandler::handle()
+ * @method void star(OrderStarCommand $command)
  */
 class OrderCommandService extends ApplicationCommandService
 {
@@ -82,6 +103,7 @@ class OrderCommandService extends ApplicationCommandService
         'sellerCustomStatus' => OrderSellerCustomStatusCommandHandler::class,
         'sellerHidden'       => OrderSellerHiddenCommandHandler::class,
         'buyerHidden'        => OrderBuyerHiddenCommandHandler::class,
+        'star'               => OrderStarCommandHandler::class,
     ];
     // TODO
     // 1、补发

@@ -11,6 +11,8 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
@@ -105,7 +107,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 })->depends('can create a new order', 'cna paying a order');
 
 // 设置进度
-test('can progress a order',function (Order $order) {
+test('can progress a order', function (Order $order) {
 
     $commands = [];
     // 订单备注
@@ -160,7 +162,6 @@ test('can progress a order',function (Order $order) {
     $this->orderCommandService->progress($command);
 
 
-
     $command = OrderProgressCommand::from([
                                               'id'             => $orderId,
                                               'orderProductId' => $orderProductId,
@@ -178,7 +179,7 @@ test('can progress a order',function (Order $order) {
     $order        = $this->orderRepository->find($orderId);
     $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
 
-    $this->assertEquals($orderProduct->progress, $progress , '进度设置失败');
+    $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
 
 })->depends('can create a new order');
@@ -205,6 +206,73 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
     return $order;
 })->depends('can create a new order', 'cna paying a order', 'can paid a order');
+
+test('can custom status a order', function (Order $order) {
+
+    $sellerCustomStatus = 'TEST';
+    $commands[]         = OrderSellerCustomStatusCommand::from([
+                                                                   'id'                 => $order->id,
+                                                                   'sellerCustomStatus' => $sellerCustomStatus
+
+                                                               ]);
+
+
+    foreach ($order->products as $product) {
+        $commands[] = OrderSellerCustomStatusCommand::from([
+                                                               'id'                 => $order->id,
+                                                               'orderProductId'     => $product->id,
+                                                               'sellerCustomStatus' => $sellerCustomStatus
+
+                                                           ]);
+    }
+
+    foreach ($commands as $command) {
+        $this->orderCommandService->sellerCustomStatus($command);
+    }
+
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->seller_custom_status, $sellerCustomStatus, '自定义状态设置失败');
+
+    foreach ($order->products as $product) {
+
+        $this->assertEquals($product->seller_custom_status, $sellerCustomStatus, '自定义状态设置失败');
+    }
+
+
+})->depends('can shipped a order');
+
+
+test('can star a order', function (Order $order) {
+
+    $star    = 1;
+    $command = OrderStarCommand::from([
+                                          'id'   => $order->id,
+                                          'star' => $star
+                                      ]);
+
+    $this->orderCommandService->star($command);
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->star, $star, ' 加星设置失败');
+
+
+    $star    = null;
+    $command = OrderStarCommand::from([
+                                          'id'   => $order->id,
+                                          'star' => $star
+                                      ]);
+
+    $this->orderCommandService->star($command);
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->star, $star, '加星设置失败');
+
+
+})->depends('can shipped a order');
 
 
 test('can confirm a order', function (Order $order) {

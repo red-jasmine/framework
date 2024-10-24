@@ -15,12 +15,14 @@ use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
 use RedJasmine\Order\Domain\Events\OrderConfirmedEvent;
 use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
+use RedJasmine\Order\Domain\Events\OrderCustomStatusChangedEvent;
 use RedJasmine\Order\Domain\Events\OrderFinishedEvent;
 use RedJasmine\Order\Domain\Events\OrderPaidEvent;
 use RedJasmine\Order\Domain\Events\OrderPayingEvent;
 use RedJasmine\Order\Domain\Events\OrderProgressEvent;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
+use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
@@ -58,15 +60,17 @@ class Order extends Model implements OperatorInterface
 
     public    $incrementing     = false;
     protected $dispatchesEvents = [
-        'created'   => OrderCreatedEvent::class,
-        'canceled'  => OrderCanceledEvent::class,
-        'paying'    => OrderPayingEvent::class,
-        'paid'      => OrderPaidEvent::class,
-        'shipping'  => OrderShippingEvent::class,
-        'shipped'   => OrderShippedEvent::class,
-        'progress'  => OrderProgressEvent::class,
-        'finished'  => OrderFinishedEvent::class,
-        'confirmed' => OrderConfirmedEvent::class,
+        'created'             => OrderCreatedEvent::class,
+        'canceled'            => OrderCanceledEvent::class,
+        'paying'              => OrderPayingEvent::class,
+        'paid'                => OrderPaidEvent::class,
+        'shipping'            => OrderShippingEvent::class,
+        'shipped'             => OrderShippedEvent::class,
+        'progress'            => OrderProgressEvent::class,
+        'finished'            => OrderFinishedEvent::class,
+        'confirmed'           => OrderConfirmedEvent::class,
+        'customStatusChanged' => OrderCustomStatusChangedEvent::class,
+        'starChanged'         => OrderStarChangedEvent::class,
     ];
     protected $observables      = [
         'shipping',
@@ -76,6 +80,8 @@ class Order extends Model implements OperatorInterface
         'progress',
         'canceled',
         'confirmed',
+        'customStatusChanged',
+        'starChanged',
     ];
     protected $casts            = [
         'order_type'             => OrderTypeEnum::class,
@@ -484,6 +490,7 @@ class Order extends Model implements OperatorInterface
         // 计算金额
         $this->calculateAmount();
         $this->created_time = now();
+
         return $this;
     }
 
@@ -693,7 +700,15 @@ class Order extends Model implements OperatorInterface
         }
         $model->seller_custom_status = $sellerCustomStatus;
 
+        $this->fireModelEvent('customStatusChanged', false);
 
+    }
+
+    public function setStar(?int $star = null) : void
+    {
+        $this->star = $star;
+
+        $this->fireModelEvent('starChanged', false);
     }
 
 

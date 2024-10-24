@@ -3,21 +3,18 @@
 namespace RedJasmine\Order\Application\Services\Handlers\Others;
 
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
 use RedJasmine\Support\Exceptions\AbstractException;
-use Throwable;
 
-class OrderSellerCustomStatusCommandHandler extends AbstractOrderCommandHandler
+class OrderStarCommandHandler extends AbstractOrderCommandHandler
 {
 
-
     /**
-     * @param OrderSellerCustomStatusCommand $command
+     * @param OrderStarCommand $command
      * @return void
      * @throws AbstractException
-     * @throws Throwable
      */
-    public function handle(OrderSellerCustomStatusCommand $command) : void
+    public function handle(OrderStarCommand $command) : void
     {
         $this->beginDatabaseTransaction();
 
@@ -25,7 +22,7 @@ class OrderSellerCustomStatusCommandHandler extends AbstractOrderCommandHandler
             $order = $this->find($command->id);
 
 
-            $order->setSellerCustomStatus($command->sellerCustomStatus, $command->orderProductId);
+            $order->setStar($command->star);
 
             $this->orderRepository->update($order);
 
