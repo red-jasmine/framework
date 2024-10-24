@@ -73,8 +73,23 @@ return [
 
 
         'product' => [
-            'product_id' => '商品ID',
-            'sku_id'     => '规格ID',
+            'id'              => '订单商品项ID',
+            'image'           => '商品图片',
+            'product_id'      => '商品ID',
+            'sku_id'          => '规格ID',
+            'title'           => '商品名称',
+            'sku_name'        => '规格名称',
+            'price'           => '销售价',
+            'num'             => '数量',
+            'unit'            => '单位',
+            'unit_quantity'   => '单位数量',
+            'product_amount'  => '商品金额',
+            'tax_amount'      => '税额',
+            'discount_amount' => '优惠金额',
+            'payable_amount'  => '应付金额',
+            'progress'        => '进度',
+            'progress_total'  => '进度总数',
+
         ],
 
         'seller_remarks' => '卖家备注',

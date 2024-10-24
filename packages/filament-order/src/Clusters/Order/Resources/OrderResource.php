@@ -68,14 +68,19 @@ class OrderResource extends Resource
                                                   TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
                                                   ,
                                                   TextEntry::make('info.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
-                                                      ->prefixAction(
-                                                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message')
-                                                      ),
-                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::order.fields.seller_remarks'))
-                                                      ->prefixAction(
-                                                          OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks')
-                                                      ),
-                                              ]),
+                                                           ->prefixAction(
+                                                               OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message')
+                                                           ),
+                                                  TextEntry::make('info.seller_remarks')
+                                                           ->hintColor('primary')
+                                                           ->hintIcon('heroicon-m-exclamation-circle')
+                                                           ->hint(__('red-jasmine-order::tips.seller_remarks'))
+                                                           ->label(__('red-jasmine-order::order.fields.seller_remarks'))
+                                                           ->prefixAction(
+                                                               OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks')
+                                                           ),
+                                              ])
+                              ,
 
                               Section::make('订单信息')
                                      ->schema([
@@ -126,8 +131,7 @@ class OrderResource extends Resource
                                               ])->columns(5),
 
 
-
-                              Livewire::make(OrderProducts::class,fn(Model $record):array=>['id'=>$record->id])->columnSpanFull(),
+                              Livewire::make(OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
 
                               Fieldset::make('amount')
                                       ->schema([
