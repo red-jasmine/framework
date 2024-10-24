@@ -24,7 +24,6 @@ class OrderCreateCommandTransformer
         $order->clientType    = $orderData->clientType;
         $order->clientVersion = $orderData->clientVersion;
         $order->orderType     = OrderTypeEnum::STANDARD;
-        $order->payType       = PayTypeEnum::ONLINE;
         // TODO
         $order->channel  = null;
         $order->store    = null;

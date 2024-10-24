@@ -20,11 +20,7 @@ class OrderData extends Command
     public UserInterface $buyer;
 
     protected UserInterface $seller;
-    /**
-     * 支付方式
-     * @var PayTypeEnum
-     */
-    public PayTypeEnum $payType = PayTypeEnum::ONLINE;
+
     /**
      * 渠道
      * @var UserInterface|null
