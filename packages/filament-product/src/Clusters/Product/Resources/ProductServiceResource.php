@@ -43,7 +43,10 @@ class ProductServiceResource extends Resource
     {
         return __('red-jasmine-product::product-service.labels.service');
     }
-
+    public static function getNavigationGroup() : ?string
+    {
+        return __('red-jasmine-product::product.labels.brand-category-service');
+    }
 
     public static function form(Form $form) : Form
     {
