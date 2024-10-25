@@ -214,7 +214,7 @@ class OrderProduct extends Model
             }
             if (($promiseService->value() === PromiseServiceValue::BEFORE_SHIPMENT)
                 && in_array($this->shipping_status,
-                            [ ShippingStatusEnum::NIL, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND ], true)) {
+                            [ null, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND ], true)) {
                 return true;
             }
             return false;

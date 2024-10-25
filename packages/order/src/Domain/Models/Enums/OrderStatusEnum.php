@@ -12,6 +12,7 @@ enum OrderStatusEnum: string
     use EnumsHelper;
 
     case  WAIT_BUYER_PAY = 'wait_buyer_pay'; // 待付款
+    case  WAIT_SELLER_ACCEPT = 'wait_seller_accept'; // 待接单
     case  WAIT_SELLER_SEND_GOODS = 'wait_seller_send_goods'; // 待发货
     case  WAIT_BUYER_CONFIRM_GOODS = 'wait_buyer_confirm_goods'; // 待收货
     case  FINISHED = 'finished'; // 交易成功
@@ -22,12 +23,13 @@ enum OrderStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::WAIT_BUYER_PAY->value           => '待付款',
-            self::WAIT_SELLER_SEND_GOODS->value   => '待发货',
-            self::WAIT_BUYER_CONFIRM_GOODS->value => '待收货',
-            self::FINISHED->value                 => '已完成',
-            self::CANCEL->value                   => '已取消',
-            self::CLOSED->value                   => '已关闭',
+            self::WAIT_BUYER_PAY->value           => __('red-jasmine-order::order.enums.order_status.wait_buyer_pay'),
+            self::WAIT_SELLER_ACCEPT->value       => __('red-jasmine-order::order.enums.order_status.wait_seller_accept'),
+            self::WAIT_SELLER_SEND_GOODS->value   => __('red-jasmine-order::order.enums.order_status.wait_seller_send_goods'),
+            self::WAIT_BUYER_CONFIRM_GOODS->value => __('red-jasmine-order::order.enums.order_status.wait_buyer_confirm_goods'),
+            self::FINISHED->value                 => __('red-jasmine-order::order.enums.order_status.finished'),
+            self::CANCEL->value                   => __('red-jasmine-order::order.enums.order_status.cancel'),
+            self::CLOSED->value                   => __('red-jasmine-order::order.enums.order_status.closed'),
         ];
     }
 
@@ -36,10 +38,11 @@ enum OrderStatusEnum: string
         return [
 
             self::WAIT_BUYER_PAY->value           => 'danger',
+            self::WAIT_SELLER_ACCEPT->value       => 'warning',
             self::WAIT_SELLER_SEND_GOODS->value   => 'primary',
             self::WAIT_BUYER_CONFIRM_GOODS->value => 'success',
-            self::FINISHED->value                 => 'primary',
-            self::CANCEL->value                   => 'info',
+            self::FINISHED->value                 => 'success',
+            self::CANCEL->value                   => 'gray',
             self::CLOSED->value                   => 'info',
 
         ];

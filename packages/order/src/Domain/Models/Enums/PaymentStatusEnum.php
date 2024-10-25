@@ -13,8 +13,6 @@ enum PaymentStatusEnum: string
     use EnumsHelper;
 
 
-    case NIL = 'nil';
-
     case WAIT_PAY = 'wait_pay';
     // 支付中
     case PAYING = 'paying';
@@ -28,12 +26,11 @@ enum PaymentStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::NIL->value        => '',
-            self::WAIT_PAY->value   => '待支付',
-            self::PAYING->value     => '支付中',
-            self::PART_PAY->value   => '部分支付',
-            self::PAID->value       => '支付成功',
-            self::NO_PAYMENT->value => '无需支付',
+            self::WAIT_PAY->value   => __('red-jasmine-order::order.enums.payment_status.wait_pay'),
+            self::PAYING->value     => __('red-jasmine-order::order.enums.payment_status.paying'),
+            self::PART_PAY->value   => __('red-jasmine-order::order.enums.payment_status.part_pay'),
+            self::PAID->value       => __('red-jasmine-order::order.enums.payment_status.paid'),
+            self::NO_PAYMENT->value => __('red-jasmine-order::order.enums.payment_status.no_payment'),
         ];
 
     }
@@ -41,7 +38,7 @@ enum PaymentStatusEnum: string
     public static function colors() : array
     {
         return [
-            self::NIL->value        => '',
+
             self::WAIT_PAY->value   => 'warning',
             self::PAYING->value     => 'warning',
             self::PART_PAY->value   => 'primary',

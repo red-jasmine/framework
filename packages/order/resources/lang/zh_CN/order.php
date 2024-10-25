@@ -70,6 +70,7 @@ return [
         'outer_order_id'         => '外部订单号',
         'cancel_reason'          => '取消原因',
         'version'                => '版本',
+        'products'               => '商品',
 
 
         'product' => [
@@ -104,11 +105,41 @@ return [
     ],
     'enums'  => [
 
-        'order_type' => [
+        'order_type'     => [
             'standard'       => '标准',
             'presale'        => '预售',
             'group_purchase' => '团购',
-        ]
+        ],
+        'order_status'   => [
+            'wait_buyer_pay'           => '待付款',
+            'wait_seller_accept'       => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
+            'wait_seller_send_goods'   => '待发货',
+            'wait_buyer_confirm_goods' => '待收货',
+            'finished'                 => '已完成',
+            'cancel'                   => '已取消',
+            'closed'                   => '已关闭',
+        ],
+        'payment_status' => [
+            'wait_pay'   => '待支付',
+            'paying'     => '支付中',
+            'part_pay'   => '部分支付',
+            'paid'       => '已支付',
+            'no_payment' => '无需支付',
+        ],
+
+    ],
+
+    'scopes' => [
+        'all'                      => '全部',
+        'wait_buyer_pay'           => '待付款',
+        'wait_seller_accept'       => '待接单',
+        'wait_seller_send_goods'   => '待发货',
+        'wait_buyer_confirm_goods' => '待收货',
+        'finished'                 => '已完成',
+        'cancel'                   => '已取消',
+        'closed'                   => '已关闭',
+        'cancel-closed'            => '已取消/关闭',
+
 
     ],
 ];

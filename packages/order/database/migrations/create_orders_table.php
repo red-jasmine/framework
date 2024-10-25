@@ -15,7 +15,7 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') .'orders', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('订单号');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
@@ -34,7 +34,7 @@ return new class extends Migration {
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
 
             // 订单锁
-            // 发票信息
+            // 发票信息 TODO
             $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
             $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
             $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');
@@ -47,10 +47,11 @@ return new class extends Migration {
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
-
-
+            // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等
+            $table->unsignedInteger('wait_accept_max_time')->default(0)->comment('等待接单最大时长');
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');
+            $table->timestamp('accept_time')->nullable()->comment('接单时间');
             $table->timestamp('close_time')->nullable()->comment('关闭时间');
             $table->timestamp('shipping_time')->nullable()->comment('发货时间');
             $table->timestamp('collect_time')->nullable()->comment('揽收时间');
@@ -101,6 +102,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') .'orders');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders');
     }
 };

@@ -17,23 +17,20 @@ class OrderPresaleFlow extends OrderStandardFlow implements OrderFlowInterface
     {
         // 部分支付
         if ($order->payment_status === PaymentStatusEnum::PART_PAY) {
-            $order->order_status = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
+            // 系统卡点
+            $order->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
             $order->products->each(function (OrderProduct $product) {
-                // 准备发货
-                $product->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
-                $product->shipping_status = ShippingStatusEnum::READY_SEND;
+                // 系统卡点
+                $product->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+
             });
             return;
         }
 
         // 全部支付
+
         if ($order->payment_status === PaymentStatusEnum::PAID) {
-            $order->order_status = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
-            $order->products->each(function (OrderProduct $product) {
-                // 等待发货
-                $product->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
-                $product->shipping_status = ShippingStatusEnum::WAIT_SEND;
-            });
+            $order->accept();
         }
 
 

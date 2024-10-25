@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services;
 
+use RedJasmine\Order\Application\Services\Handlers\OrderAcceptCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderCancelCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderConfirmCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderCreateCommandHandler;
@@ -19,6 +20,7 @@ use RedJasmine\Order\Application\Services\Handlers\Others\OrderStarCommandHandle
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderCardKeyShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderLogisticsShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderDummyShippingCommandHandler;
+use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCancelCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
@@ -48,6 +50,8 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see OrderPaidCommandHandler::handle()
  * @method bool paid(OrderPaidCommand $command)
  * @see OrderLogisticsShippingCommandHandler::handle()
+ * @see OrderAcceptCommandHandler::handle()
+ * @method void accept(OrderAcceptCommand $command)
  * @method void logisticsShipping(OrderLogisticsShippingCommand $command)
  * @see OrderCardKeyShippingCommandHandler::handle()
  * @method void cardKeyShipping(OrderCardKeyShippingCommand $command)
@@ -91,6 +95,7 @@ class OrderCommandService extends ApplicationCommandService
         'paying'             => OrderPayingCommandHandler::class,
         'paid'               => OrderPaidCommandHandler::class,
         'cancel'             => OrderCancelCommandHandler::class,
+        'accept'             => OrderAcceptCommandHandler::class,
         'logisticsShipping'  => OrderLogisticsShippingCommandHandler::class,
         'cardKeyShipping'    => OrderCardKeyShippingCommandHandler::class,
         'dummyShipping'      => OrderDummyShippingCommandHandler::class,
@@ -105,8 +110,6 @@ class OrderCommandService extends ApplicationCommandService
         'buyerHidden'        => OrderBuyerHiddenCommandHandler::class,
         'star'               => OrderStarCommandHandler::class,
     ];
-    // TODO
-    // 1、补发
 
 
 }

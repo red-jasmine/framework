@@ -17,7 +17,6 @@ class OrderStandardFlow implements OrderFlowInterface
 {
     public function creating(Order $order) : void
     {
-
         // 初始化
         $order->order_status   = OrderStatusEnum::WAIT_BUYER_PAY;
         $order->payment_status = PaymentStatusEnum::WAIT_PAY;
@@ -33,13 +32,34 @@ class OrderStandardFlow implements OrderFlowInterface
         if ($order->payment_status !== PaymentStatusEnum::PAID) {
             return;
         }
+
+        // 设置订单为 等待卖家确认中
+        $order->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+        $order->products->each(function (OrderProduct $product) {
+            $product->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+        });
+
+        // 为自定接受
+        if ($order->wait_accept_max_time === 0) {
+            $order->accept();
+        }
+
+
+    }
+
+    /**
+     * 接单操作
+     * @param Order $order
+     * @return void
+     */
+    public function accept(Order $order) : void
+    {
         $order->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
         $order->shipping_status = ShippingStatusEnum::WAIT_SEND;
         $order->products->each(function (OrderProduct $product) {
             $product->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
             $product->shipping_status = ShippingStatusEnum::WAIT_SEND;
         });
-
     }
 
     public function shipping(Order $order) : void

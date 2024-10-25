@@ -4,6 +4,7 @@
 namespace RedJasmine\Order\Domain\Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Order\Domain\Events\OrderAcceptEvent;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
 use RedJasmine\Order\Domain\Events\OrderConfirmedEvent;
 use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
@@ -59,12 +61,14 @@ class Order extends Model implements OperatorInterface
 
     public bool $withTradePartiesNickname = true;
 
-    public    $incrementing     = false;
+    public $incrementing = false;
+
     protected $dispatchesEvents = [
         'created'             => OrderCreatedEvent::class,
         'canceled'            => OrderCanceledEvent::class,
         'paying'              => OrderPayingEvent::class,
         'paid'                => OrderPaidEvent::class,
+        'accept'              => OrderAcceptEvent::class,
         'shipping'            => OrderShippingEvent::class,
         'shipped'             => OrderShippedEvent::class,
         'progress'            => OrderProgressEvent::class,
@@ -74,15 +78,18 @@ class Order extends Model implements OperatorInterface
         'starChanged'         => OrderStarChangedEvent::class,
     ];
     protected $observables      = [
-        'shipping',
-        'shipped',
+
         'paying',
         'paid',
+        'accept',
+        'shipping',
+        'shipped',
         'progress',
-        'canceled',
         'confirmed',
+        'canceled',
         'customStatusChanged',
         'starChanged',
+
     ];
     protected $casts            = [
         'order_type'             => OrderTypeEnum::class,
@@ -93,6 +100,7 @@ class Order extends Model implements OperatorInterface
         'refund_status'          => OrderRefundStatusEnum::class,
         'created_time'           => 'datetime',
         'payment_time'           => 'datetime',
+        'accept_time'            => 'datetime',
         'close_time'             => 'datetime',
         'shipping_time'          => 'datetime',
         'collect_time'           => 'datetime',
@@ -260,7 +268,7 @@ class Order extends Model implements OperatorInterface
 
             if ($orderProduct->isEffective() &&
                 in_array($orderProduct->shipping_status,
-                    [ null, ShippingStatusEnum::NIL,
+                    [ null,
                       ShippingStatusEnum::WAIT_SEND,
                       ShippingStatusEnum::PART_SHIPPED
                     ], true)) {
@@ -306,6 +314,21 @@ class Order extends Model implements OperatorInterface
         $this->fireModelEvent('canceled', false);
     }
 
+
+    public function accept() : void
+    {
+        // 什么情况下可以接受
+
+        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+            throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
+        }
+
+        $this->accept_time = now();
+
+
+        $this->fireModelEvent('accept', false);
+    }
+
     /**
      * 发起支付
      *
@@ -316,7 +339,7 @@ class Order extends Model implements OperatorInterface
      */
     public function paying(OrderPayment $orderPayment) : void
     {
-        if (!in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL ], true)) {
+        if (!in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, null ], true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
@@ -329,7 +352,7 @@ class Order extends Model implements OperatorInterface
 
         $this->addPayment($orderPayment);
         // 设置为支付中
-        if (in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::NIL ], true)) {
+        if (in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, null ], true)) {
             $this->payment_status = PaymentStatusEnum::PAYING;
         }
         $this->products->each(function (OrderProduct $orderProduct) {
@@ -354,7 +377,7 @@ class Order extends Model implements OperatorInterface
     public function paid(OrderPayment $orderPayment) : void
     {
         if (!in_array($this->payment_status, [
-            PaymentStatusEnum::NIL, PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::PAYING, PaymentStatusEnum::PART_PAY
+            null, PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::PAYING, PaymentStatusEnum::PART_PAY
         ],            true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
@@ -742,6 +765,49 @@ class Order extends Model implements OperatorInterface
                 break;
         }
 
+    }
+
+
+    // |-------------------------------------------
+
+    public function scopeOnWaitBuyerPay(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::WAIT_BUYER_PAY);
+    }
+
+    public function scopeOnWaitSellerAccept(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_ACCEPT);
+    }
+
+    public function scopeOnWaitSellerSendGoods(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_SEND_GOODS);
+    }
+
+    public function scopeOnWaitBuyerConfirmGoods(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS);
+    }
+
+    public function scopeOnFinished(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::FINISHED);
+    }
+
+    public function scopeOnCancel(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::CANCEL);
+    }
+
+    public function scopeOnClosed(Builder $builder) : Builder
+    {
+        return $builder->where('order_status', OrderStatusEnum::CLOSED);
+    }
+
+    public function scopeOnCancelClosed(Builder $builder) : Builder
+    {
+        return $builder->whereIn('order_status', [ OrderStatusEnum::CLOSED, OrderStatusEnum::CANCEL ]);
     }
 
 }

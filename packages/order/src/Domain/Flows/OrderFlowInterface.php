@@ -24,6 +24,14 @@ interface OrderFlowInterface
     public function paid(Order $order) : void;
 
 
+    /**
+     * 订单接单
+     * @param Order $order
+     * @return void
+     */
+    public function accept(Order $order):void;
+
+
     public function shipping(Order $order) : void;
 
     /**

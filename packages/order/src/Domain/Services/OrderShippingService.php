@@ -47,7 +47,7 @@ class OrderShippingService
         $isEffectiveShipping = false;
         // 设置 订单商品未发货状态
         $order->products
-            ->whereIn('shipping_status', [ ShippingStatusEnum::NIL, ShippingStatusEnum::WAIT_SEND ])
+            ->whereIn('shipping_status', [ null, ShippingStatusEnum::WAIT_SEND ])
             ->each(function (OrderProduct $orderProduct) use ($isSplit, $logistics, &$isEffectiveShipping) {
                 if ($orderProduct->isEffective() === false) {
                     return;

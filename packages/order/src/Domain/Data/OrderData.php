@@ -5,7 +5,6 @@ namespace RedJasmine\Order\Domain\Data;
 use Illuminate\Support\Collection;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -51,12 +50,14 @@ class OrderData extends Data
      * @var string
      */
     public string $title;
+
     /**
-     * 客户端类型
-     * @var string|null
+     * 等待接单自动确认时间
+     * 单位： 分钟
+     * 当为 0 时 是付款成功后 立即确认
+     * @var int
      */
-
-
+    public int     $waitAcceptMaxTime  = 0;
     public ?string $sourceType         = null;
     public ?string $sourceId           = null;
     public ?string $outerOrderId       = null;
