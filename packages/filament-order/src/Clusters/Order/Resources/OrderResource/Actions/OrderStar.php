@@ -1,0 +1,44 @@
+<?php
+
+namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
+
+use Mokhosh\FilamentRating\Components\Rating;
+use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
+
+trait OrderStar
+{
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $name = $this->name;
+
+        $this->label(__('red-jasmine-order::order.fields.' . $name));
+
+
+        $this->fillForm(fn($record) : array => [
+            'star' => $record->star
+        ]);
+        $this->form([
+
+                        Rating::make('star')
+                              ->allowZero()
+                              ->stars(10)
+                              ->label(__('red-jasmine-order::order.fields.' . $name)),
+
+                    ]);
+
+        $this->action(function ($data, $record) {
+
+            $data['id']          = $record->id;
+            $orderCommandService = app(OrderCommandService::class);
+            $command             = OrderStarCommand::from($data);
+            $orderCommandService->star($command);
+            $this->successNotificationTitle('ok');
+            $this->success();
+        });
+    }
+}

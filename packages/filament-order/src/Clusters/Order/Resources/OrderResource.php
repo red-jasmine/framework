@@ -64,12 +64,19 @@ class OrderResource extends Resource
                                      ->schema([
                                                   TextEntry::make('order_status')->label(__('red-jasmine-order::order.fields.order_status'))
                                                            ->useEnum(),
-                                                  RatingEntry::make('star')->label(__('red-jasmine-order::order.fields.star')),
+                                                  RatingEntry::make('star')
+                                                             ->stars(10)
+                                                             ->allowZero()
+                                                             ->label(__('red-jasmine-order::order.fields.star'))
+                                                             ->hintAction(
+                                                                 OrderCluster\Resources\OrderResource\Actions\InfoList\OrderStarInfoListAction::make('star')
+                                                             )
+                                                  ,
                                                   TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
                                                   ,
                                                   TextEntry::make('info.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
                                                            ->prefixAction(
-                                                               OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_message')
+                                                               OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_message')
                                                            ),
                                                   TextEntry::make('info.seller_remarks')
                                                            ->hintColor('primary')
@@ -77,9 +84,10 @@ class OrderResource extends Resource
                                                            ->hint(__('red-jasmine-order::tips.seller_remarks'))
                                                            ->label(__('red-jasmine-order::order.fields.seller_remarks'))
                                                            ->prefixAction(
-                                                               OrderCluster\Resources\OrderResource\Actions\SellerRemarksInfoListAction::make('seller_remarks')
+                                                               OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_remarks')
                                                            ),
                                               ])
+                              ->columns(2)
                               ,
 
                               Section::make('订单信息')
@@ -343,17 +351,17 @@ class OrderResource extends Resource
                                                               ]),
 
                           Tables\Columns\ColumnGroup::make('seller')
-                              ->label(__('red-jasmine-order::order.fields.seller'))
+                                                    ->label(__('red-jasmine-order::order.fields.seller'))
                                                     ->columns([
-                                                                                  Tables\Columns\TextColumn::make('seller_type')
-                                                                                                           ->label(__('red-jasmine-order::order.fields.seller_type'))
-                                                                                  ,
-                                                                                  Tables\Columns\TextColumn::make('seller_id')
-                                                                                                           ->label(__('red-jasmine-order::order.fields.seller_id')),
-                                                                                  Tables\Columns\TextColumn::make('seller_nickname')
-                                                                                                           ->label(__('red-jasmine-order::order.fields.seller_nickname'))
-                                                                                                           ->searchable(),
-                                                                              ]),
+                                                                  Tables\Columns\TextColumn::make('seller_type')
+                                                                                           ->label(__('red-jasmine-order::order.fields.seller_type'))
+                                                                  ,
+                                                                  Tables\Columns\TextColumn::make('seller_id')
+                                                                                           ->label(__('red-jasmine-order::order.fields.seller_id')),
+                                                                  Tables\Columns\TextColumn::make('seller_nickname')
+                                                                                           ->label(__('red-jasmine-order::order.fields.seller_nickname'))
+                                                                                           ->searchable(),
+                                                              ]),
 
 
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
@@ -472,6 +480,17 @@ Tables\Columns\TextColumn::make('cost_amount')
                                                ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
                                                ->visible(fn($record) => $record->shipping_status !== ShippingStatusEnum::SHIPPED)
                           ,
+                          // 其他操作
+
+                          Tables\Actions\ActionGroup::make([
+
+                                                               OrderCluster\Resources\OrderResource\Actions\Table\SellerRemarksTableAction::make('seller_remarks'),
+                                                               OrderCluster\Resources\OrderResource\Actions\Table\SellerRemarksTableAction::make('seller_message'),
+                                                               OrderCluster\Resources\OrderResource\Actions\Table\OrderStarTableAction::make('star'),
+
+
+                                                           ])->label('more'),
+
 
                           //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_remarks'),
                           //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_message'),
