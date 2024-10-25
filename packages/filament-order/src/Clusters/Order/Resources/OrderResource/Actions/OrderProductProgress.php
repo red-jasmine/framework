@@ -3,10 +3,9 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
 use Filament\Forms\Components\TextInput;
-use Mokhosh\FilamentRating\Components\Rating;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
+use RedJasmine\Support\Exceptions\AbstractException;
 
 trait OrderProductProgress
 {
@@ -37,7 +36,14 @@ trait OrderProductProgress
 
             $data['id']             = $record->order_id;
             $data['orderProductId'] = $record->id;
-            app(OrderCommandService::class)->progress(OrderProgressCommand::from($data));
+            try {
+                app(OrderCommandService::class)->progress(OrderProgressCommand::from($data));
+            }catch (AbstractException $abstractException){
+                $this->failureNotificationTitle($abstractException->getMessage());
+                $this->sendFailureNotification();
+                return $this->halt();
+            }
+
             $this->successNotificationTitle('ok');
             $this->success();
         });
