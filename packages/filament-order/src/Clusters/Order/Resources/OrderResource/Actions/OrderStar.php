@@ -18,7 +18,7 @@ trait OrderStar
 
         $this->label(__('red-jasmine-order::order.fields.' . $name));
 
-
+        $this->icon('heroicon-o-star');
         $this->fillForm(fn($record) : array => [
             'star' => $record->star
         ]);

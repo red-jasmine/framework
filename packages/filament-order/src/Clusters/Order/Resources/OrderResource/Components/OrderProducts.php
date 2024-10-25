@@ -10,6 +10,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Livewire\Component;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions\Table\OrderProductProgressTableAction;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 
 class OrderProducts extends Component implements HasTable, HasForms
@@ -54,7 +55,8 @@ class OrderProducts extends Component implements HasTable, HasForms
                           // ...
                       ])
             ->actions([
-                          // ...
+
+                OrderProductProgressTableAction::make('progress'),
                       ])
             ->bulkActions([
                               // ...
