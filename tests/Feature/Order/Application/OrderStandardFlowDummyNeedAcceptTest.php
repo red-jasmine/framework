@@ -3,6 +3,7 @@
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
@@ -31,10 +32,11 @@ beforeEach(function () {
     $this->orderRepository     = app(OrderRepositoryInterface::class);
     $this->orderCommandService = app(OrderCommandService::class);
 
-    $orderFake               = new OrderFake();
-    $orderFake->orderType    = OrderTypeEnum::STANDARD;
-    $orderFake->shippingType = ShippingTypeEnum::DUMMY;
-    $this->orderFake         = $orderFake;
+    $orderFake                       = new OrderFake();
+    $orderFake->orderType            = OrderTypeEnum::STANDARD;
+    $orderFake->shippingType         = ShippingTypeEnum::DUMMY;
+    $orderFake->wait_accept_max_time = 30;
+    $this->orderFake                 = $orderFake;
     //
 });
 
@@ -99,12 +101,32 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $this->assertTrue($result);
 
     $order = $this->orderRepository->find($order->id);
-
+    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_ACCEPT->value, $order->order_status->value);
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
     $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
+
+
+test('can accept a order', function (Order $order, OrderPayment $orderPayment) {
+
+
+    $command = new  OrderAcceptCommand();
+
+    $command->id = $order->id;
+
+    $result = $this->orderCommandService->accept($command);
+
+    $this->assertTrue($result);
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_SEND_GOODS->value, $order->order_status->value);
+
+    return $result;
+
+})->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 // 设置进度
 test('can progress a order', function (Order $order) {
@@ -224,6 +246,7 @@ test('can confirm a order', function (Order $order) {
 
 
 
+
 test('can custom status a order', function (Order $order) {
 
     $sellerCustomStatus = 'TEST';
@@ -290,8 +313,6 @@ test('can star a order', function (Order $order) {
 
 
 })->depends('can shipped a order');
-
-
 test('can remarks a order', function (Order $order) {
 
     $commands = [];

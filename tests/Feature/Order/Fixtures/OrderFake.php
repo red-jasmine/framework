@@ -36,6 +36,9 @@ class OrderFake
     public string $unit         = '件';
     public int    $unitQuantity = 1;
 
+
+    public int $wait_accept_max_time = 0;
+
     public function order(array $order = []) : array
     {
         $orderDataArray = $this->fakeOrderArray($order);
@@ -51,22 +54,22 @@ class OrderFake
 
 
         $fake = [
-            'buyer'          => [
+            'buyer'                => [
                 'type'     => $user->getType(),
                 'id'       => $user->getId(),
                 'nickname' => fake()->name(),
             ],
-            'seller'         => [
+            'seller'               => [
                 'type'     => 'seller',
                 'id'       => fake()->numberBetween(1000000, 999999999),
                 'nickname' => fake()->name()
             ],
-            'title'          => fake()->text(),
-            'order_type'     => $this->orderType->value,
-            'source_type'    => fake()->randomElement([ 'product', 'activity' ]),
-            'source_id'      => fake()->numerify('out-order-id-########'),
-            'outer_order_id' => fake()->numerify('out-order-id-########'),
-
+            'title'                => fake()->text(),
+            'order_type'           => $this->orderType->value,
+            'source_type'          => fake()->randomElement([ 'product', 'activity' ]),
+            'source_id'            => fake()->numerify('out-order-id-########'),
+            'outer_order_id'       => fake()->numerify('out-order-id-########'),
+            'wait_accept_max_time' => $this->wait_accept_max_time,
             'channel' => [
                 'type' => fake()->randomElement([ 'channel', 'promoter' ]),
                 'id'   => fake()->randomNumber(5, true),
