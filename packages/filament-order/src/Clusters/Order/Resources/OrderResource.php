@@ -21,7 +21,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
 use RedJasmine\FilamentOrder\Filament\Tables\Columns\OrderProduct;
-use RedJasmine\FilamentOrder\Livewire\OrderProducts;
+
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
@@ -131,7 +131,7 @@ class OrderResource extends Resource
                                               ])->columns(5),
 
 
-                              Livewire::make(OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
+                              Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
 
                               Fieldset::make('amount')
                                       ->schema([
@@ -328,10 +328,10 @@ class OrderResource extends Resource
                                                    ->label(__('red-jasmine-order::order.fields.id'))
                                                    ->label('ID')
                                                    ->sortable()->copyable(),
-                          Tables\Columns\ColumnGroup::make('product')
+                          Tables\Columns\ColumnGroup::make('products')->label(__('red-jasmine-order::order.fields.products'))
                                                     ->columns([ OrderProduct::make('products'), ]),
 
-                          Tables\Columns\ColumnGroup::make('buyer')
+                          Tables\Columns\ColumnGroup::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
                                                     ->columns([
                                                                   Tables\Columns\TextColumn::make('buyer_type')
                                                                                            ->label(__('red-jasmine-order::order.fields.buyer_type')),
@@ -342,7 +342,9 @@ class OrderResource extends Resource
 
                                                               ]),
 
-                          Tables\Columns\ColumnGroup::make('seller')->columns([
+                          Tables\Columns\ColumnGroup::make('seller')
+                              ->label(__('red-jasmine-order::order.fields.seller'))
+                                                    ->columns([
                                                                                   Tables\Columns\TextColumn::make('seller_type')
                                                                                                            ->label(__('red-jasmine-order::order.fields.seller_type'))
                                                                                   ,

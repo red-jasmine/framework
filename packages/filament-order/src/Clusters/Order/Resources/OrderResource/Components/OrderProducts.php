@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\FilamentOrder\Livewire;
+namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Components;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;

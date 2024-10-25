@@ -93,7 +93,7 @@ class FilamentOrderServiceProvider extends PackageServiceProvider
         Testable::mixin(new TestsFilamentOrder);
 
 
-        Livewire::component('order-products', OrderProducts::class);
+
     }
 
     protected function getAssetPackageName() : ?string
