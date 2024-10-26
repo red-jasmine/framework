@@ -54,7 +54,7 @@ class OrderResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-order::order.label.order');
+        return __('red-jasmine-order::order.labels.order');
     }
 
     public static function infolist(Infolist $infoList) : Infolist
@@ -366,18 +366,23 @@ class OrderResource extends Resource
 
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
                           Tables\Columns\TextColumn::make('order_type')->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
-                          Tables\Columns\ColumnGroup::make('status')->columns([
+                          Tables\Columns\ColumnGroup::make('status')->label(__('red-jasmine-order::order.labels.status'))
+
+                                                    ->columns([
 
                                                                                   Tables\Columns\TextColumn::make('order_status')->useEnum()->label(__('red-jasmine-order::order.fields.order_status')),
-                                                                                  //Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
-                                                                                  //Tables\Columns\TextColumn::make('shipping_status')->useEnum()->label(__('red-jasmine-order::order.fields.shipping_status')),
-                                                                                  //Tables\Columns\TextColumn::make('refund_status')->useEnum()->label(__('red-jasmine-order::order.fields.refund_status')),
-                                                                                  //Tables\Columns\TextColumn::make('rate_status')->useEnum()->label(__('red-jasmine-order::order.fields.rate_status'))->toggleable(isToggledHiddenByDefault: true),
-                                                                                  //Tables\Columns\TextColumn::make('settlement_status')->useEnum()->label(__('red-jasmine-order::order.fields.settlement_status'))->toggleable(isToggledHiddenByDefault: true),
-                                                                                  //Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')),
+                                                                                  Tables\Columns\TextColumn::make('accept_status')->useEnum()->label(__('red-jasmine-order::order.fields.accept_status')),
+                                                                                  Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
+                                                                                  Tables\Columns\TextColumn::make('shipping_status')->useEnum()->label(__('red-jasmine-order::order.fields.shipping_status')),
+                                                                                  Tables\Columns\TextColumn::make('refund_status')->useEnum()->label(__('red-jasmine-order::order.fields.refund_status')),
+//                                                                                  Tables\Columns\TextColumn::make('rate_status')->useEnum()->label(__('red-jasmine-order::order.fields.rate_status')),
+                                                                                  Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status')),
+                                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')),
                                                                               ]),
 
-                          Tables\Columns\ColumnGroup::make('amount')->columns([
+                          Tables\Columns\ColumnGroup::make('amount')
+                              ->label(__('red-jasmine-order::order.labels.amount'))
+                                                    ->columns([
 //                                                                                  Tables\Columns\TextColumn::make('product_payable_amount')
 //                                                                                                           ->numeric()
 //                                                                                                           ->label(__('red-jasmine-order::order.fields.product_payable_amount')),
