@@ -29,6 +29,8 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
+            // 订单状态必须在发货中 或者
+            // TODO 判断订单状态
             $order = $this->find($command->id);
             if (count($command->orderProducts) <= 0) {
                 $command->orderProducts = $order->products->pluck('id')->toArray();

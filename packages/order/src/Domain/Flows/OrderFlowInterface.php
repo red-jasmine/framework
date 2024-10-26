@@ -29,9 +29,21 @@ interface OrderFlowInterface
      * @param Order $order
      * @return void
      */
-    public function accept(Order $order):void;
+    public function accept(Order $order) : void;
 
 
+    /**
+     * 订单拒绝
+     * @param Order $order
+     * @return void
+     */
+    public function reject(Order $order) : void;
+
+    /**
+     * 订单发货
+     * @param Order $order
+     * @return void
+     */
     public function shipping(Order $order) : void;
 
     /**

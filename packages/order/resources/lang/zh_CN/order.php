@@ -3,8 +3,10 @@
 
 return [
 
-    'label'  => [
-        'order' => '订单'
+    'labels'  => [
+        'order'  => '订单',
+        'status' => '状态',
+        'amount' => '金额',
     ],
     'fields' => [
         'id'                     => '订单ID',
@@ -20,6 +22,7 @@ return [
         'order_type'             => '订单类型',
         'pay_type'               => '支付类型',
         'order_status'           => '订单状态',
+        'accept_status'          => '接单状态',
         'payment_status'         => '付款状态',
         'shipping_status'        => '发货状态',
         'refund_status'          => '退款状态',
@@ -125,6 +128,11 @@ return [
             'part_pay'   => '部分支付',
             'paid'       => '已支付',
             'no_payment' => '无需支付',
+        ],
+        'accept_status'  => [
+            'wait_accept' => '等待商家接单',
+            'accepted'    => '接受',
+            'rejected'    => '拒绝',
         ],
 
     ],

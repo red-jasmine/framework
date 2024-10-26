@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Flows;
 
+use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
@@ -34,7 +35,8 @@ class OrderStandardFlow implements OrderFlowInterface
         }
 
         // 设置订单为 等待卖家确认中
-        $order->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+        $order->order_status  = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+        $order->accept_status = AcceptStatusEnum::WAIT_ACCEPT;
         $order->products->each(function (OrderProduct $product) {
             $product->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
         });
@@ -61,6 +63,12 @@ class OrderStandardFlow implements OrderFlowInterface
             $product->shipping_status = ShippingStatusEnum::WAIT_SEND;
         });
     }
+
+    public function reject(Order $order) : void
+    {
+
+    }
+
 
     public function shipping(Order $order) : void
     {

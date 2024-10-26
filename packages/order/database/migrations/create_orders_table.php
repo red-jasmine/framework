@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('title')->nullable()->comment('标题');
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
+            $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));

@@ -23,11 +23,13 @@ use RedJasmine\Order\Domain\Events\OrderFinishedEvent;
 use RedJasmine\Order\Domain\Events\OrderPaidEvent;
 use RedJasmine\Order\Domain\Events\OrderPayingEvent;
 use RedJasmine\Order\Domain\Events\OrderProgressEvent;
+use RedJasmine\Order\Domain\Events\OrderRejectEvent;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
 use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
+use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
@@ -69,6 +71,7 @@ class Order extends Model implements OperatorInterface
         'paying'              => OrderPayingEvent::class,
         'paid'                => OrderPaidEvent::class,
         'accept'              => OrderAcceptEvent::class,
+        'reject'              => OrderRejectEvent::class,
         'shipping'            => OrderShippingEvent::class,
         'shipped'             => OrderShippedEvent::class,
         'progress'            => OrderProgressEvent::class,
@@ -78,10 +81,10 @@ class Order extends Model implements OperatorInterface
         'starChanged'         => OrderStarChangedEvent::class,
     ];
     protected $observables      = [
-
         'paying',
         'paid',
         'accept',
+        'reject',
         'shipping',
         'shipped',
         'progress',
@@ -95,6 +98,7 @@ class Order extends Model implements OperatorInterface
         'order_type'             => OrderTypeEnum::class,
         'pay_type'               => PayTypeEnum::class,
         'order_status'           => OrderStatusEnum::class,
+        'accept_status'          => AcceptStatusEnum::class,
         'payment_status'         => PaymentStatusEnum::class,
         'shipping_status'        => ShippingStatusEnum::class,
         'refund_status'          => OrderRefundStatusEnum::class,
@@ -315,6 +319,10 @@ class Order extends Model implements OperatorInterface
     }
 
 
+    /**
+     * @return void
+     * @throws OrderException
+     */
     public function accept() : void
     {
         // 什么情况下可以接受
@@ -322,11 +330,30 @@ class Order extends Model implements OperatorInterface
         if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
-
-        $this->accept_time = now();
-
+        $this->accept_status = AcceptStatusEnum::ACCEPTED;
+        $this->accept_time   = now();
 
         $this->fireModelEvent('accept', false);
+    }
+
+    /**
+     * @param string|null $reason
+     * @return void
+     * @throws OrderException
+     */
+    public function reject(?string $reason = null) : void
+    {
+        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+            throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
+        }
+        $this->accept_status = AcceptStatusEnum::REJECTED;
+        $this->close_time    = now();
+        $this->cancel_reason = $reason;
+
+        $this->fireModelEvent('reject', false);
+
+        // 如果已支付 主动退款
+
     }
 
     /**
@@ -656,6 +683,15 @@ class Order extends Model implements OperatorInterface
     }
 
 
+    public function isAllowShipping() : bool
+    {
+        if ($this->order_status === OrderStatusEnum::WAIT_SELLER_SEND_GOODS) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 添加或更新交易双方的备注信息
      *
@@ -777,7 +813,8 @@ class Order extends Model implements OperatorInterface
 
     public function scopeOnWaitSellerAccept(Builder $builder) : Builder
     {
-        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_ACCEPT);
+        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_ACCEPT)
+                       ->where('accept_status', AcceptStatusEnum::WAIT_ACCEPT);
     }
 
     public function scopeOnWaitSellerSendGoods(Builder $builder) : Builder

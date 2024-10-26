@@ -16,6 +16,19 @@ class OrderShippingService
 
 
     /**
+     * @param Order $order
+     * @return void
+     * @throws OrderException
+     */
+    protected function validate(Order $order) : void
+    {
+        if ($order->isAllowShipping() === false) {
+            throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
+        }
+
+    }
+
+    /**
      * 物流发货
      *
      * @param Order $order
@@ -27,6 +40,10 @@ class OrderShippingService
      */
     public function logistics(Order $order, bool $isSplit, OrderLogistics $logistics) : void
     {
+
+
+        $this->validate($order);
+
         $types = $order->products->pluck('shipping_type')->unique()->map(fn($item) => $item->value)->flip();
 
 
@@ -84,7 +101,7 @@ class OrderShippingService
      */
     public function cardKey(Order $order, OrderProductCardKey $orderProductCardKey) : void
     {
-
+        $this->validate($order);
         /**
          * @var $orderProduct OrderProduct
          */
@@ -126,6 +143,7 @@ class OrderShippingService
      */
     public function dummy(Order $order, int $orderProductId, bool $isFinished = true) : void
     {
+        $this->validate($order);
         $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
 
         if ($orderProduct->shipping_type !== ShippingTypeEnum::DUMMY) {

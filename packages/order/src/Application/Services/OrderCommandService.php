@@ -9,6 +9,7 @@ use RedJasmine\Order\Application\Services\Handlers\OrderCreateCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderPaidCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderPayingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\OrderProgressCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\OrderRejectCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerHiddenCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerMessageCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderBuyerRemarksCommandHandler;
@@ -41,41 +42,43 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 
 /**
- * @see OrderCreateCommandHandler::handle()
+ * @see  OrderCreateCommandHandler::handle()
  * @method Order create(OrderCreateCommand $command)
- * @see OrderCancelCommandHandler::handle()
+ * @see  OrderCancelCommandHandler::handle()
  * @method void cancel(OrderCancelCommand $command)
- * @see OrderPayingCommandHandler::handle()
+ * @see  OrderPayingCommandHandler::handle()
  * @method OrderPayment paying(OrderPayingCommand $command)
- * @see OrderPaidCommandHandler::handle()
+ * @see  OrderPaidCommandHandler::handle()
  * @method bool paid(OrderPaidCommand $command)
- * @see OrderLogisticsShippingCommandHandler::handle()
- * @see OrderAcceptCommandHandler::handle()
+ * @see  OrderAcceptCommandHandler::handle()
  * @method void accept(OrderAcceptCommand $command)
+ * @see  OrderRejectCommandHandler::handle()
+ * @method void reject(OrderAcceptCommand $command)
+ * @see  OrderLogisticsShippingCommandHandler::handle()
  * @method void logisticsShipping(OrderLogisticsShippingCommand $command)
- * @see OrderCardKeyShippingCommandHandler::handle()
+ * @see  OrderCardKeyShippingCommandHandler::handle()
  * @method void cardKeyShipping(OrderCardKeyShippingCommand $command)
- * @see OrderDummyShippingCommandHandler::handle()
+ * @see  OrderDummyShippingCommandHandler::handle()
  * @method void dummyShipping(OrderDummyShippingCommand $command)
- * @see OrderProgressCommandHandler::handle()
+ * @see  OrderProgressCommandHandler::handle()
  * @method int progress(OrderProgressCommand $command)
- * @see OrderSellerRemarksCommandHandler::handle()
+ * @see  OrderSellerRemarksCommandHandler::handle()
  * @method void sellerRemarks(OrderRemarksCommand $command)
- * @see OrderBuyerRemarksCommandHandler::handle()
+ * @see  OrderBuyerRemarksCommandHandler::handle()
  * @method void buyerRemarks(OrderRemarksCommand $command)
- * @see OrderBuyerMessageCommandHandler::handle()
+ * @see  OrderBuyerMessageCommandHandler::handle()
  * @method void buyerMessage(OrderMessageCommand $command)
- * @see OrderSellerMessageCommandHandler::handle()
+ * @see  OrderSellerMessageCommandHandler::handle()
  * @method void sellerMessage(OrderMessageCommand $command)
- * @see OrderSellerHiddenCommandHandler::handle()
+ * @see  OrderSellerHiddenCommandHandler::handle()
  * @method void sellerHidden(OrderHiddenCommand $command)
- * @see OrderBuyerHiddenCommandHandler::handle()
+ * @see  OrderBuyerHiddenCommandHandler::handle()
  * @method void buyerHidden(OrderHiddenCommand $command)
- * @see OrderSellerCustomStatusCommandHandler::handle()
+ * @see  OrderSellerCustomStatusCommandHandler::handle()
  * @method void sellerCustomStatus(OrderSellerCustomStatusCommand $command)
- * @see OrderConfirmCommandHandler::handle()
+ * @see  OrderConfirmCommandHandler::handle()
  * @method void confirm(OrderConfirmCommand $command)
- * @see OrderStarCommandHandler::handle()
+ * @see  OrderStarCommandHandler::handle()
  * @method void star(OrderStarCommand $command)
  */
 class OrderCommandService extends ApplicationCommandService
@@ -96,6 +99,7 @@ class OrderCommandService extends ApplicationCommandService
         'paid'               => OrderPaidCommandHandler::class,
         'cancel'             => OrderCancelCommandHandler::class,
         'accept'             => OrderAcceptCommandHandler::class,
+        'reject'             => OrderRejectCommandHandler::class,
         'logisticsShipping'  => OrderLogisticsShippingCommandHandler::class,
         'cardKeyShipping'    => OrderCardKeyShippingCommandHandler::class,
         'dummyShipping'      => OrderDummyShippingCommandHandler::class,

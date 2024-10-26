@@ -31,20 +31,45 @@ class OrderFlowObserver
         return app($flowClass);
     }
 
+    /**
+     * @param Order $order
+     * @return void
+     * @throws OrderException
+     */
     public function creating(Order $order) : void
     {
         $this->orderFlow($order)->creating($order);
     }
 
+    /**
+     * @param Order $order
+     * @return void
+     * @throws OrderException
+     */
     public function paid(Order $order) : void
     {
 
         $this->orderFlow($order)->paid($order);
     }
 
+    /**
+     * @param Order $order
+     * @return void
+     * @throws OrderException
+     */
     public function accept(Order $order) : void
     {
         $this->orderFlow($order)->accept($order);
+    }
+
+    /**
+     * @param Order $order
+     * @return void
+     * @throws OrderException
+     */
+    public function reject(Order $order):void
+    {
+        $this->orderFlow($order)->reject($order);
     }
 
     public function shipping(Order $order) : void
