@@ -3,22 +3,40 @@
 namespace RedJasmine\Order\Application\Services\Handlers;
 
 use RedJasmine\Order\Application\UserCases\Commands\OrderCancelCommand;
-use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
+use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Support\Exceptions\AbstractException;
+use Throwable;
 
 class OrderCancelCommandHandler extends AbstractOrderCommandHandler
 {
 
+    /**
+     * @param OrderCancelCommand $command
+     * @return void
+     * @throws AbstractException
+     * @throws Throwable
+     * @throws OrderException
+     */
     public function handle(OrderCancelCommand $command) : void
     {
 
-        $order = $this->find($command->id);
+        $this->beginDatabaseTransaction();
 
-        $this->execute(
-            execute: fn() => $order->cancel($command->cancelReason),
-            persistence: fn() => $this->orderRepository->update($order)
-        );
+        try {
 
-        OrderCanceledEvent::dispatch($order);
+            $order = $this->find($command->id);
+            $order->cancel($command->cancelReason);
+            $this->orderRepository->update($order);
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw  $exception;
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw  $throwable;
+        }
+
 
     }
 
