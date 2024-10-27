@@ -535,12 +535,12 @@ class Order extends Model implements OperatorInterface
     /**
      * @param OrderRefund $orderRefund
      *
-     * @return void
+     * @return OrderRefund
      * @throws RefundException
      */
-    public function createRefund(OrderRefund $orderRefund) : void
+    public function createRefund(OrderRefund $orderRefund) : OrderRefund
     {
-        app(OrderRefundService::class)->create($this, $orderRefund);
+        return app(OrderRefundService::class)->create($this, $orderRefund);
     }
 
     public function create() : static

@@ -15,7 +15,7 @@ class RefundCreateCommand extends Data
 
     /**
      * 申请类型
-     * @var \RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum
+     * @var RefundTypeEnum
      */
     public RefundTypeEnum $refundType;
 

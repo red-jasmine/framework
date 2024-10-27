@@ -16,13 +16,13 @@ class OrderRefundService
 {
 
     /**
-     * @param Order       $order
+     * @param Order $order
      * @param OrderRefund $orderRefund
      *
-     * @return void
+     * @return OrderRefund
      * @throws RefundException
      */
-    public function create(Order $order, OrderRefund $orderRefund) : void
+    public function create(Order $order, OrderRefund $orderRefund) : OrderRefund
     {
         /**
          * @var $orderProduct OrderProduct
@@ -96,6 +96,8 @@ class OrderRefundService
         $orderRefund->created_time = now();
 
         $order->refunds->add($orderRefund);
+
+        return $orderRefund;
     }
 
 

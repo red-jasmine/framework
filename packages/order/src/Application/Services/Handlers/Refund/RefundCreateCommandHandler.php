@@ -6,6 +6,7 @@ use Exception;
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\OrderRefund;
+use Throwable;
 
 class RefundCreateCommandHandler extends AbstractOrderCommandHandler
 {
@@ -14,25 +15,39 @@ class RefundCreateCommandHandler extends AbstractOrderCommandHandler
      * @param RefundCreateCommand $command
      *
      * @return int
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function handle(RefundCreateCommand $command) : int
     {
-        $order = $this->find($command->id);
+        $this->beginDatabaseTransaction();
 
-        $orderRefund                   = OrderRefund::newModel();
-        $orderRefund->order_id         = $order->id;
-        $orderRefund->order_product_id = $command->orderProductId;
-        $orderRefund->refund_type      = $command->refundType;
-        $orderRefund->refund_amount    = $command->refundAmount;
-        $orderRefund->description      = $command->description;
-        $orderRefund->images           = $command->images;
-        $orderRefund->reason           = $command->reason;
-        $orderRefund->creator          = $order->updater;
-        $this->execute(
-            execute: fn() => $order->createRefund($orderRefund),
-            persistence: fn() => $this->orderRepository->update($order),
-        );
+        try {
+            $order = $this->find($command->id);
+
+            $orderRefund                   = OrderRefund::newModel();
+            $orderRefund->order_id         = $order->id;
+            $orderRefund->order_product_id = $command->orderProductId;
+            $orderRefund->refund_type      = $command->refundType;
+            $orderRefund->refund_amount    = $command->refundAmount;
+            $orderRefund->description      = $command->description;
+            $orderRefund->images           = $command->images;
+            $orderRefund->reason           = $command->reason;
+
+
+            $order->createRefund($orderRefund);
+
+            $this->orderRepository->update($order);
+
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw  $exception;
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw  $throwable;
+        }
+
         return $orderRefund->id;
     }
 
