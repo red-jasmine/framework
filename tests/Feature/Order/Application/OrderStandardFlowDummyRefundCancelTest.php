@@ -8,7 +8,7 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCancelCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
@@ -149,32 +149,35 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
     ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 
-test('can agree refund a order', function (Order $order, $refunds = []) {
+test('can cancel refund a order', function (Order $order, $refunds = []) {
 
 
     foreach ($refunds as $refundId) {
 
-        $refund          = $this->refundRepository->find($refundId);
-        $command         = new RefundAgreeRefundCommand();
-        $command->rid    = $refund->id;
-        $command->amount = $refund->refund_amount;
+        $refund       = $this->refundRepository->find($refundId);
+        $command      = new RefundCancelCommand();
+        $command->rid = $refund->id;
 
-        $this->refundCommandService->agreeRefund($command);
+
+        $this->refundCommandService->cancel($command);
     }
 
 
     $order = $this->orderRepository->find($order->id);
 
 
-    // 订单为无效单  已关闭
-    // TODO 检查退款金额
-
-    $this->assertEquals(OrderStatusEnum::CLOSED, $order->order_status, ' 订单状态不正确');
+    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_SEND_GOODS, $order->order_status, '订单状态不正确');
 
 
     foreach ($order->products as $product) {
-        $this->assertEquals(RefundStatusEnum::REFUND_SUCCESS->value, $product->refund_status->value, '退款状态不正确');
-        $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
+        $this->assertEquals(null, $product->refund_status, '退款状态不正确');
+    }
+
+    foreach ($refunds as $refundId) {
+
+        $refund = $this->refundRepository->find($refundId);
+
+        $this->assertEquals(RefundStatusEnum::REFUND_CANCEL, $refund->refund_status, '退款状态不正确');
     }
 
     return $order;

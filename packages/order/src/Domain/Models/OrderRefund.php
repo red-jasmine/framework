@@ -188,10 +188,7 @@ class OrderRefund extends Model
 
         $this->refund_status = RefundStatusEnum::REFUND_CANCEL;
         $this->end_time      = now();
-
-
-        $this->product->refund_status = RefundStatusEnum::REFUND_CANCEL;
-
+        $this->product->refund_status = null;
 
         $this->fireModelEvent('canceled', false);
     }
