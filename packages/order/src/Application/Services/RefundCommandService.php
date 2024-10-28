@@ -24,6 +24,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method int create(RefundCreateCommand $command)
  * @method void reject(RefundRejectCommand $command)
  * @method void cancel(RefundCancelCommand $command)
+ * @see RefundAgreeRefundCommandHandler::handle()
  * @method void agreeRefund(RefundAgreeRefundCommand $command)
  * @method void agreeReturnGoods(RefundAgreeReturnGoodsCommand $command)
  * @method void returnGoods(RefundReturnGoodsCommand $command)

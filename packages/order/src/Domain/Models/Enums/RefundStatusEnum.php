@@ -12,7 +12,7 @@ enum RefundStatusEnum: string
 
     use EnumsHelper;
 
-    case NIL = 'nil';
+
     case  WAIT_SELLER_AGREE = 'wait_seller_agree';
     case  WAIT_SELLER_AGREE_RETURN = 'wait_seller_agree_return';
     case  WAIT_BUYER_RETURN_GOODS = 'wait_buyer_return_goods';
@@ -26,7 +26,7 @@ enum RefundStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::NIL->value                       => '',
+
             self::WAIT_SELLER_AGREE->value         => '等待卖家同意退款',
             self::WAIT_SELLER_AGREE_RETURN->value  => '等待卖家同意退货',
             self::WAIT_BUYER_RETURN_GOODS->value   => '等待买家退货',

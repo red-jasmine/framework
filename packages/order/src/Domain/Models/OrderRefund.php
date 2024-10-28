@@ -5,6 +5,7 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
@@ -21,7 +22,6 @@ use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
@@ -52,8 +52,17 @@ class OrderRefund extends Model
     {
         $model     = new static();
         $model->id = $model->newUniqueId();
+        $info      = new OrderRefundInfo();
+        $info->id  = $model->id;
+        $model->setRelation('info', $info);
 
         return $model;
+    }
+
+
+    public function info() : HasOne
+    {
+        return $this->hasOne(OrderRefundInfo::class, 'id', 'id');
     }
 
     public function getTable() : string
@@ -79,6 +88,9 @@ class OrderRefund extends Model
         'payment_amount'         => AmountCastTransformer::class,
         'divided_payment_amount' => AmountCastTransformer::class,
         'refund_amount'          => AmountCastTransformer::class,
+        'freight_amount'         => AmountCastTransformer::class,
+        'total_refund_amount'    => AmountCastTransformer::class,
+
     ];
 
     protected $dispatchesEvents = [
@@ -193,33 +205,48 @@ class OrderRefund extends Model
         $this->end_time      = now();
         $this->refund_amount = $amount;
         $this->refund_status = RefundStatusEnum::REFUND_SUCCESS;
+        // 如果是售中阶段同步状态
+        if ($this->phase === RefundPhaseEnum::ON_SALE) {
+            // 设置订单商品项信息
+            $this->product->refund_amount = bcadd($this->product->refund_amount, $amount, 2);
+            $this->product->refund_status = $this->refund_status;
+            $this->product->refund_time   = $this->product->refund_time ?? now();
+
+            // 设置订单项
+            $this->order->refund_amount = bcadd($this->order->refund_amount, $amount, 2);
+            $this->order->refund_time   = $this->order->refund_time ?? now();
+
+            // 如果订单退款金额
+            if ($this->order->isRefundFreightAmount()) {
+                $this->freight_amount = $this->order->freight_amount;
+            }
+            // 订单退款金额需要加上退邮费
+            $this->order->refund_amount = bcadd($this->order->refund_amount, $this->freight_amount, 2);
+
+            if ($this->order->isEffective() === false) {
+                $this->order->close();
+            }
 
 
-        // 设置订单信息
-        $this->product->refund_amount = bcadd($this->product->refund_amount, $amount, 2);
-        $this->product->refund_status = OrderRefundStatusEnum::PART_REFUND;
-        $this->product->refund_time   = $this->product->refund_time ?? now();
-        if (bccomp($this->product->refund_amount, $this->product->divided_payment_amount, 2) >= 0) {
-            $this->product->refund_status = OrderRefundStatusEnum::ALL_REFUND;
         }
-        $this->order->refund_amount = bcadd($this->order->refund_amount, $amount, 2);
-        $this->order->refund_status = OrderRefundStatusEnum::PART_REFUND;
-        if (bccomp($this->order->refund_amount, $this->order->payment_amount, 2) >= 0) {
-            $this->order->refund_status = OrderRefundStatusEnum::ALL_REFUND;
-        }
-        $this->order->refund_time = $this->order->refund_time ?? now();
 
 
+        // 设置退款单
         $payment                 = OrderPayment::newModel();
         $payment->order_id       = $this->order_id;
         $payment->refund_id      = $this->id;
-        $payment->seller         = $this->seller;
-        $payment->buyer          = $this->buyer;
+        $payment->seller_type    = $this->seller_type;
+        $payment->seller_id      = $this->seller_id;
+        $payment->buyer_type     = $this->buyer_type;
+        $payment->buyer_id       = $this->buyer_id;
         $payment->amount_type    = AmountTypeEnum::REFUND;
         $payment->payment_amount = bcadd($this->refund_amount, $this->freight_amount, 2);
         $payment->status         = PaymentStatusEnum::WAIT_PAY;
         $this->payments->add($payment);
-        $this->fireModelEvent('agreed');
+
+
+        // 如果是售后状态 则不同步
+        $this->fireModelEvent('agreed', false);
     }
 
 

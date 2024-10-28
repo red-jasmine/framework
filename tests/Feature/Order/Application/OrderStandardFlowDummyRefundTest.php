@@ -8,13 +8,18 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderFake;
 
 
@@ -24,6 +29,8 @@ beforeEach(function () {
     $this->orderRepository      = app(OrderRepositoryInterface::class);
     $this->orderCommandService  = app(OrderCommandService::class);
     $this->refundCommandService = app(RefundCommandService::class);
+    $this->refundRepository     = app(RefundRepositoryInterface::class);
+    $this->refundReadRepository = app(RefundReadRepositoryInterface::class);
 
     $orderFake               = new OrderFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;
@@ -127,13 +134,51 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 
         $refunds[] = $this->refundCommandService->create($command);
     }
-    dd($refunds);
 
 
-})->depends('can create a new order', 'cna paying a order', 'can paid a order');
+    $order = $this->orderRepository->find($order->id);
+
+    foreach ($order->products as $product) {
+
+        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $product->refund_status->value, '退款状态不正确');
+    }
+
+    return $refunds;
+
+})
+    ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 
+test('can agree refund a order', function (Order $order, $refunds = []) {
 
+
+    foreach ($refunds as $refundId) {
+
+        $refund          = $this->refundRepository->find($refundId);
+        $command         = new RefundAgreeRefundCommand();
+        $command->rid    = $refund->id;
+        $command->amount = $refund->refund_amount;
+
+        $this->refundCommandService->agreeRefund($command);
+    }
+
+
+    $order = $this->orderRepository->find($order->id);
+
+
+    // 订单为无效单  已关闭
+
+    $this->assertEquals(OrderStatusEnum::CLOSED, $order->order_status, ' 订单状态不正确');
+
+
+    foreach ($order->products as $product) {
+        $this->assertEquals(RefundStatusEnum::REFUND_SUCCESS->value, $product->refund_status->value, '退款状态不正确');
+        $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
+    }
+
+    return $order;
+
+})->depends('can create a new order', 'can refund a order');
 
 
 

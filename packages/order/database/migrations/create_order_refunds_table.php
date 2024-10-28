@@ -54,13 +54,15 @@ return new class extends Migration {
             $table->string('refund_type', 32)->comment(RefundTypeEnum::comments('售后类型'));
             $table->string('phase', 32)->comment(RefundPhaseEnum::comments('阶段'));
             $table->unsignedTinyInteger('has_good_return')->default(0)->comment('是否需要退货');
-            $table->decimal('freight_amount', 12)->default(0)->comment('运费');
-            $table->string('good_status', 32)->default('nil')->comment(RefundGoodsStatusEnum::comments('货物状态'));
+
+            $table->string('good_status', 32)->nullable()->comment(RefundGoodsStatusEnum::comments('货物状态'));
             $table->string('reason')->nullable()->comment('原因');
             $table->string('outer_refund_id', 64)->nullable()->comment('外部退款单号');
 
             $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
+            $table->decimal('freight_amount', 12)->default(0)->comment('运费');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
+            $table->decimal('total_refund_amount', 12)->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('end_time')->nullable()->comment('完结时间');
             $table->string('seller_custom_status', 30)->nullable()->comment('卖家自定义状态');

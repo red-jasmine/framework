@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
+use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\PromiseServiceValue;
-use RedJasmine\Order\Domain\Models\Casts\PromiseServicesCastTransformer;
-use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\PromiseServiceTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -55,7 +54,7 @@ class OrderProduct extends Model
         'order_status'            => OrderStatusEnum::class,
         'shipping_status'         => ShippingStatusEnum::class,
         'payment_status'          => PaymentStatusEnum::class,
-        'refund_status'           => OrderRefundStatusEnum::class,
+        'refund_status'           => RefundStatusEnum::class,
         'created_time'            => 'datetime',
         'payment_time'            => 'datetime',
         'close_time'              => 'datetime',
@@ -142,7 +141,7 @@ class OrderProduct extends Model
     public function isEffective() : bool
     {
         // 没有全款退
-        if ($this->refund_status === OrderRefundStatusEnum::ALL_REFUND) {
+        if (bcsub($this->divided_payment_amount, $this->refund_amount, 2) <= 0) {
             return false;
         }
         return true;
@@ -171,8 +170,9 @@ class OrderProduct extends Model
         }
         $allowApplyRefundTypes = [];
 
+
         // 退款
-        if ($this->isAllowPromiseService(PromiseServiceTypeEnum::REFUND)) {
+        if ($this->isAllowAfterSaleService(RefundTypeEnum::REFUND)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::REFUND;
             if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ],
                          true)) {
@@ -181,12 +181,12 @@ class OrderProduct extends Model
         }
         // 换货 只有物流发货才支持换货 TODO
         if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
-            && $this->isAllowPromiseService(PromiseServiceTypeEnum::EXCHANGE)) {
+            && $this->isAllowAfterSaleService(RefundTypeEnum::EXCHANGE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::EXCHANGE;
         }
         // 保修
         if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
-            && $this->isAllowPromiseService(PromiseServiceTypeEnum::SERVICE)) {
+            && $this->isAllowAfterSaleService(RefundTypeEnum::WARRANTY)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::WARRANTY;
         }
 
@@ -200,37 +200,52 @@ class OrderProduct extends Model
     }
 
 
-    public function isAllowPromiseService(PromiseServiceTypeEnum $type) : bool
+    public function isAllowAfterSaleService(RefundTypeEnum $refundType) : bool
     {
+        // 获取售后服务
+        $afterSalesServices = AfterSalesService::collect($this->info->after_sales_services);
         /**
-         * @var $promiseService PromiseServiceValue
+         * @var AfterSalesService $afterSalesService
          */
-        $promiseService = $this->promise_services->{$type->value};
 
-        // 判断固定类型的
-        if ($promiseService->isEnum()) {
-            if ($promiseService->value() === PromiseServiceValue::UNSUPPORTED) {
-                return false;
-            }
-            if (($promiseService->value() === PromiseServiceValue::BEFORE_SHIPMENT)
-                && in_array($this->shipping_status,
-                            [ null, ShippingStatusEnum::READY_SEND, ShippingStatusEnum::WAIT_SEND ], true)) {
-                return true;
-            }
+        $afterSalesService = collect($afterSalesServices)->filter(function ($item) use ($refundType) {
+            return $item->refundType === $refundType;
+        })->first();
+
+        if (!$afterSalesService) {
             return false;
         }
+        if ($afterSalesService->allowStage === OrderAfterSaleServiceAllowStageEnum::NEVER) {
+            return false;
+        }
+        // 判断状态 TODO
+        $lastTime = now();
+        // 计算剩余时间
+        switch ($afterSalesService->allowStage) {
+            case OrderAfterSaleServiceAllowStageEnum::PAYED:
 
-        // 时间类判断
-        $lastTime = $this->confirm_time ?? now();
-        // 添加时长
-        $lastTime->add($promiseService->value());
-        // 判断是否超过了时间
+                $lastTime = $this->payment_time->add($afterSalesService->getAddValue());
+
+                break;
+            case OrderAfterSaleServiceAllowStageEnum::SHIPPED:
+            case OrderAfterSaleServiceAllowStageEnum::SHIPPING:
+
+                $lastTime = ($this->shipping_time ?? now())->add($afterSalesService->getAddValue());
+
+                break;
+            case OrderAfterSaleServiceAllowStageEnum::SIGNED:
+                $lastTime = ($this->signed_time ?? now())->add($afterSalesService->getAddValue());
+                break;
+            case OrderAfterSaleServiceAllowStageEnum::COMPLETED:
+                $lastTime = ($this->confirm_time ?? now())->add($afterSalesService->getAddValue());
+
+        }
+
         if (now()->diffInRealSeconds($lastTime, false) > 0) {
             return true;
         } else {
             return false;
         }
-
     }
 
 

@@ -5,10 +5,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 
@@ -47,15 +47,15 @@ return new class extends Migration {
             $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
-            $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
             $table->decimal('divided_discount_amount')->default(0)->comment('分摊优惠金额');
-            $table->decimal('divided_payment_amount', 12)->default(0)->comment('分摊后付款金额');
+            $table->decimal('divided_payment_amount', 12)->default(0)->comment('分摊后实付金额');
+            $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
             $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
             // 状态
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
+            $table->string('refund_status', 32)->nullable()->comment(RefundStatusEnum::comments('退款状态'));
             $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
@@ -81,6 +81,7 @@ return new class extends Migration {
             $table->timestamp('settlement_time')->nullable()->comment('结算时间');
             $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
 
+            $table->unsignedBigInteger('refund_id')->nullable()->comment('最后退款单ID');
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');

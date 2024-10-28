@@ -16,6 +16,7 @@ use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Events\OrderAcceptEvent;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
+use RedJasmine\Order\Domain\Events\OrderClosedEvent;
 use RedJasmine\Order\Domain\Events\OrderConfirmedEvent;
 use RedJasmine\Order\Domain\Events\OrderCreatedEvent;
 use RedJasmine\Order\Domain\Events\OrderCustomStatusChangedEvent;
@@ -30,7 +31,6 @@ use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -77,6 +77,7 @@ class Order extends Model implements OperatorInterface
         'progress'            => OrderProgressEvent::class,
         'finished'            => OrderFinishedEvent::class,
         'confirmed'           => OrderConfirmedEvent::class,
+        'closed'              => OrderClosedEvent::class,
         'customStatusChanged' => OrderCustomStatusChangedEvent::class,
         'starChanged'         => OrderStarChangedEvent::class,
     ];
@@ -90,6 +91,7 @@ class Order extends Model implements OperatorInterface
         'progress',
         'confirmed',
         'canceled',
+        'closed',
         'customStatusChanged',
         'starChanged',
 
@@ -101,7 +103,6 @@ class Order extends Model implements OperatorInterface
         'accept_status'          => AcceptStatusEnum::class,
         'payment_status'         => PaymentStatusEnum::class,
         'shipping_status'        => ShippingStatusEnum::class,
-        'refund_status'          => OrderRefundStatusEnum::class,
         'created_time'           => 'datetime',
         'payment_time'           => 'datetime',
         'accept_time'            => 'datetime',
@@ -126,7 +127,7 @@ class Order extends Model implements OperatorInterface
         'cost_amount'            => AmountCastTransformer::class,
         'tax_amount'             => AmountCastTransformer::class,
         'product_amount'         => AmountCastTransformer::class,
-        'service_amount'         => AmountCastTransformer::class,
+
     ];
 
     /**
@@ -244,6 +245,15 @@ class Order extends Model implements OperatorInterface
     public function addLogistics(OrderLogistics $logistics) : void
     {
         $this->logistics->add($logistics);
+    }
+
+
+    public function isEffective() : bool
+    {
+        if (bcsub($this->payment_amount, $this->refund_amount, 2) <= 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -487,6 +497,13 @@ class Order extends Model implements OperatorInterface
         $this->fireModelEvent('confirmed', false);
     }
 
+    public function close() : void
+    {
+        $this->order_status = OrderStatusEnum::CLOSED;
+        $this->close_time   = now();
+        $this->fireModelEvent('close', false);
+    }
+
     /**
      * @param int $orderProductId
      * @param int $progress
@@ -631,12 +648,11 @@ class Order extends Model implements OperatorInterface
         $this->freight_amount;
         // 订单优惠
         $this->discount_amount;
-        // 订单服务费
-        $this->service_amount;
 
-        // 订单应付金额 = 商品总应付金额 + 邮费 + 订单服务费 - 优惠
+
+        // 订单应付金额 = 商品总应付金额 + 邮费  - 优惠
         $this->payable_amount = bcsub(
-            bcadd(bcadd($this->product_payable_amount, $this->freight_amount, 2), $this->service_amount, 2),
+            bcadd($this->product_payable_amount, $this->freight_amount, 2),
             $this->discount_amount,
             2
         );
@@ -801,6 +817,15 @@ class Order extends Model implements OperatorInterface
                 break;
         }
 
+    }
+
+    public function isRefundFreightAmount() : bool
+    {
+        $excludeFreightAmount = bcsub($this->payment_amount, $this->freight_amount, 2);
+        if (bcsub($this->refund_amount, $excludeFreightAmount, 2) >= 0) {
+            return true;
+        }
+        return false;
     }
 
 

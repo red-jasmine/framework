@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
@@ -29,7 +28,6 @@ return new class extends Migration {
             $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->string('refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('退款状态'));
             $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
@@ -44,7 +42,6 @@ return new class extends Migration {
             $table->decimal('product_payable_amount', 12)->default(0)->comment('商品应付金额');
             $table->decimal('freight_amount', 12)->default(0)->comment('运费');
             $table->decimal('discount_amount', 12)->default(0)->comment('订单优惠');
-            $table->decimal('service_amount', 12)->default(0)->comment('服务费');
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');

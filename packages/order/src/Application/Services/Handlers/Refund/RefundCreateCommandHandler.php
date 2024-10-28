@@ -23,22 +23,20 @@ class RefundCreateCommandHandler extends AbstractOrderCommandHandler
 
         try {
             $order = $this->find($command->id);
+            $order->products;
 
-            $orderRefund                   = OrderRefund::newModel();
-            $orderRefund->order_id         = $order->id;
-            $orderRefund->order_product_id = $command->orderProductId;
-            $orderRefund->refund_type      = $command->refundType;
-            $orderRefund->refund_amount    = $command->refundAmount;
-            $orderRefund->description      = $command->description;
-            $orderRefund->images           = $command->images;
-            $orderRefund->reason           = $command->reason;
-
-
+            $orderProduct = $order->products->where('id', $command->orderProductId)->first();
+            $orderRefund  = OrderRefund::newModel();
+            $orderRefund->setRelation('product', $orderProduct);
+            $orderRefund->order_id          = $order->id;
+            $orderRefund->order_product_id  = $command->orderProductId;
+            $orderRefund->refund_type       = $command->refundType;
+            $orderRefund->refund_amount     = $command->refundAmount;
+            $orderRefund->reason            = $command->reason;
+            $orderRefund->info->description = $command->description;
+            $orderRefund->info->images      = $command->images;
             $order->createRefund($orderRefund);
-
-            $this->orderRepository->update($order);
-
-
+            $this->orderRepository->store($order);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

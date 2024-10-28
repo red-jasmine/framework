@@ -167,19 +167,19 @@ class OrderFake
                                             'refundType'    => RefundTypeEnum::REFUND->value,
                                             'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
                                             'timeLimit'     => 7,
-                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::Day,
                                         ])->toArray(),
                 AfterSalesService::from([
                                             'refundType'    => RefundTypeEnum::EXCHANGE->value,
                                             'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
                                             'timeLimit'     => 7,
-                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::Day,
                                         ])->toArray(),
                 AfterSalesService::from([
                                             'refundType'    => RefundTypeEnum::WARRANTY->value,
                                             'allowStage'    => OrderAfterSaleServiceAllowStageEnum::SIGNED,
                                             'timeLimit'     => 180,
-                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::DAY,
+                                            'timeLimitUnit' => OrderAfterSaleServiceTimeUnit::Day,
                                         ])->toArray(),
 
             ],
