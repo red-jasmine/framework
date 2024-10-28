@@ -198,8 +198,6 @@ class OrderResource extends Resource
                                                 ->useEnum(PaymentStatusEnum::class),
                          Forms\Components\Select::make('shipping_status')
                                                 ->useEnum(ShippingStatusEnum::class),
-                         Forms\Components\Select::make('refund_status')
-                                                ->useEnum(RefundStatusEnum::class),
                          Forms\Components\Select::make('rate_status')
                                                 ->useEnum(RateStatusEnum::class),
                          Forms\Components\Select::make('settlement_status')
@@ -374,7 +372,7 @@ class OrderResource extends Resource
                                                                                   Tables\Columns\TextColumn::make('accept_status')->useEnum()->label(__('red-jasmine-order::order.fields.accept_status')),
                                                                                   Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
                                                                                   Tables\Columns\TextColumn::make('shipping_status')->useEnum()->label(__('red-jasmine-order::order.fields.shipping_status')),
-                                                                                  Tables\Columns\TextColumn::make('refund_status')->useEnum()->label(__('red-jasmine-order::order.fields.refund_status')),
+
 //                                                                                  Tables\Columns\TextColumn::make('rate_status')->useEnum()->label(__('red-jasmine-order::order.fields.rate_status')),
                                                                                   Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status')),
                                                                                   Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')),

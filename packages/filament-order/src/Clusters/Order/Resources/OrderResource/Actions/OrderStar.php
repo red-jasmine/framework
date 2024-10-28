@@ -4,8 +4,6 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use Mokhosh\FilamentRating\Components\Rating;
 use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
 
 trait OrderStar

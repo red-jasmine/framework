@@ -29,7 +29,8 @@
                 </div>
             </td>
             <td   name="alter_sale_service" >
-                <span> {{$orderProduct->refund_status?->getLable()}} </span>
+
+                <span> {{$orderProduct->refund_status?->getLabel()}} </span>
             </td>
 
         </tr>
