@@ -201,7 +201,6 @@ class OrderRefund extends Model
         if (bccomp($amount, $this->refund_amount, 2) > 0) {
             throw RefundException::newFromCodes(RefundException::REFUND_AMOUNT_OVERFLOW, '退款金额超出');
         }
-        // TODO 什么情况下需要加上邮费
         $this->end_time      = now();
         $this->refund_amount = $amount;
         $this->refund_status = RefundStatusEnum::REFUND_SUCCESS;
@@ -218,7 +217,7 @@ class OrderRefund extends Model
 
             // 如果订单退款金额
             if ($this->order->isRefundFreightAmount()) {
-                $this->freight_amount = $this->order->freight_amount;
+                $this->freight_amount = bcsub($this->order->payment_amount, $this->order->refund_amount, 2);
             }
             // 订单退款金额需要加上退邮费
             $this->order->refund_amount = bcadd($this->order->refund_amount, $this->freight_amount, 2);
