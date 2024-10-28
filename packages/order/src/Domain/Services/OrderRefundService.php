@@ -61,11 +61,12 @@ class OrderRefundService
         $orderRefund->payment_amount         = $orderProduct->payment_amount;
         $orderRefund->divided_payment_amount = $orderProduct->divided_payment_amount;
         $orderRefund->shipping_status        = $orderProduct->shipping_status;
-        // TODO 创建人
+        $orderRefund->unit                   = $orderProduct->unit;
+        $orderRefund->unit_quantity          = $orderProduct->unit_quantity;
+
 
         // 获取当售后阶段
         $orderRefund->phase = $this->getRefundPhase($orderProduct);
-
         // 计算退款金额
         $refundAmount = 0;
         if (in_array($orderRefund->refund_type, [
@@ -83,7 +84,7 @@ class OrderRefundService
                 $refundAmount = $maxRefundAmount;
             }
         }
-        // TODO
+
         $orderRefund->freight_amount = new Amount(0);
         $orderRefund->refund_amount  = new Amount($refundAmount);
 
@@ -91,6 +92,9 @@ class OrderRefundService
             $orderRefund->refund_amount->value(),
             $orderRefund->freight_amount->value(),
             2);
+
+
+
         switch ($orderRefund->refund_type) {
             case RefundTypeEnum::RESHIPMENT:
             case RefundTypeEnum::REFUND:
