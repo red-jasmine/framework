@@ -125,6 +125,23 @@ class OrderRefund extends Model
         return $this->hasMany(OrderPayment::class, 'refund_id', 'id');
     }
 
+    /**
+     * 检查当前是否是销售阶段
+     *
+     * 此方法用于判断当前退款阶段是否为销售阶段，即是否可以进行销售操作
+     * 它通过比较当前阶段与预定义的销售阶段枚举值来确定
+     *
+     * @return bool 如果当前阶段是销售阶段，则返回true；否则返回false
+     */
+    public function isSalePhase() : bool
+    {
+        // 检查当前阶段是否为销售阶段
+        if ($this->phase === RefundPhaseEnum::ON_SALE) {
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * 拒绝
@@ -144,8 +161,9 @@ class OrderRefund extends Model
         ],            true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->reject_reason = $reason;
-        $this->refund_status = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->reject_reason          = $reason;
+        $this->refund_status          = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->product->refund_status = RefundStatusEnum::SELLER_REJECT_BUYER;
         $this->fireModelEvent('rejected');
     }
 
@@ -171,7 +189,11 @@ class OrderRefund extends Model
         $this->refund_status = RefundStatusEnum::REFUND_CANCEL;
         $this->end_time      = now();
 
-        $this->fireModelEvent('canceled');
+
+        $this->product->refund_status = RefundStatusEnum::REFUND_CANCEL;
+
+
+        $this->fireModelEvent('canceled', false);
     }
 
     /**
@@ -266,7 +288,8 @@ class OrderRefund extends Model
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE_RETURN) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
+        $this->refund_status          = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
+        $this->product->refund_status = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
         $this->fireModelEvent('agreedReturnGoods');
 
     }
@@ -313,7 +336,8 @@ class OrderRefund extends Model
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_CONFIRM) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
+        $this->refund_status          = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
+        $this->product->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
 
         $this->fireModelEvent('confirmed');
 
@@ -337,7 +361,8 @@ class OrderRefund extends Model
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
 
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_CONFIRM;
+        $this->refund_status          = RefundStatusEnum::WAIT_SELLER_CONFIRM;
+        $this->product->refund_status = RefundStatusEnum::WAIT_SELLER_CONFIRM;
 
 
         $this->logistics->add($orderLogistics);
@@ -362,14 +387,15 @@ class OrderRefund extends Model
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_RESHIPMENT) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status = RefundStatusEnum::REFUND_SUCCESS;
-        $this->end_time      = now();
+        $this->refund_status          = RefundStatusEnum::REFUND_SUCCESS;
+        $this->product->refund_status = RefundStatusEnum::REFUND_SUCCESS;
+        $this->end_time               = now();
 
         $orderLogistics->shippable_type = LogisticsShippableTypeEnum::REFUND;
 
         $this->logistics->add($orderLogistics);
 
-        $this->fireModelEvent('reshipment');
+        $this->fireModelEvent('reshipment', false);
 
 
     }

@@ -3,6 +3,8 @@
 namespace RedJasmine\Order\Application\Services\Handlers\Refund;
 
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRejectCommand;
+use RedJasmine\Support\Exceptions\AbstractException;
+use Throwable;
 
 class RefundRejectCommandHandler extends AbstractRefundCommandHandler
 {
@@ -11,12 +13,25 @@ class RefundRejectCommandHandler extends AbstractRefundCommandHandler
     public function handle(RefundRejectCommand $command) : void
     {
 
-        $refund          = $this->find($command->rid);
+        $this->beginDatabaseTransaction();
 
-        $this->execute(
-            execute: fn() => $refund->reject($command->reason),
-            persistence: fn() => $this->refundRepository->update($refund)
-        );
+        try {
+            $refund = $this->find($command->rid);
+
+            $refund->reject($command->reason);
+
+
+            $this->refundRepository->update($refund);
+
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw  $exception;
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw  $throwable;
+        }
+
     }
 
 }
