@@ -16,7 +16,7 @@ class AfterSalesService extends Data
      * 服务类型
      * @var RefundTypeEnum
      */
-    #[WithCast(EnumCast::class,type: RefundTypeEnum::class)]
+    #[WithCast(EnumCast::class, type: RefundTypeEnum::class)]
     public RefundTypeEnum $refundType;
 
 
@@ -24,7 +24,7 @@ class AfterSalesService extends Data
      * 允许阶段
      * @var OrderAfterSaleServiceAllowStageEnum
      */
-    #[WithCast(EnumCast::class,type: OrderAfterSaleServiceAllowStageEnum::class)]
+    #[WithCast(EnumCast::class, type: OrderAfterSaleServiceAllowStageEnum::class)]
     public OrderAfterSaleServiceAllowStageEnum $allowStage = OrderAfterSaleServiceAllowStageEnum::NEVER;
 
 
@@ -39,10 +39,13 @@ class AfterSalesService extends Data
      * 限制时长
      * @var OrderAfterSaleServiceTimeUnit
      */
-    #[WithCast(EnumCast::class,type: OrderAfterSaleServiceTimeUnit::class)]
-    public OrderAfterSaleServiceTimeUnit $timeLimitUnit = OrderAfterSaleServiceTimeUnit::HOUR;
+    #[WithCast(EnumCast::class, type: OrderAfterSaleServiceTimeUnit::class)]
+    public OrderAfterSaleServiceTimeUnit $timeLimitUnit = OrderAfterSaleServiceTimeUnit::Hour;
 
 
-
+    public function getAddValue() : string
+    {
+        return $this->timeLimit . $this->timeLimitUnit->value;
+    }
 
 }

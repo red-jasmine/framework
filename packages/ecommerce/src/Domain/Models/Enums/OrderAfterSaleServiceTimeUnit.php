@@ -10,22 +10,22 @@ enum OrderAfterSaleServiceTimeUnit: string
     use EnumsHelper;
 
 
-    case MINUTE = 'minute';
-    case HOUR = 'hour';
-    case DAY = 'day';
-    case WEEK = 'week';
-    case MONTH = 'month';
-    case YEAR = 'year';
+    case Minute = 'minute';
+    case Hour = 'hour';
+    case Day = 'day';
+    case Week = 'week';
+    case Month = 'month';
+    case Year = 'year';
 
     public static function labels() : array
     {
         return [
-            self::MINUTE->value => '分钟',
-            self::HOUR->value   => '小时',
-            self::DAY->value    => '天',
-            self::WEEK->value   => '周',
-            self::MONTH->value  => '月',
-            self::YEAR->value   => '年',
+            self::Minute->value => '分钟',
+            self::Hour->value   => '小时',
+            self::Day->value    => '天',
+            self::Week->value   => '周',
+            self::Month->value  => '月',
+            self::Year->value   => '年',
         ];
     }
 
