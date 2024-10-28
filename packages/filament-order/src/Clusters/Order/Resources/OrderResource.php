@@ -334,33 +334,44 @@ class OrderResource extends Resource
                                                    ->label(__('red-jasmine-order::order.fields.id'))
                                                    ->label('ID')
                                                    ->sortable()->copyable(),
-                          Tables\Columns\ColumnGroup::make('products')->label(__('red-jasmine-order::order.fields.products'))
-                                                    ->columns([ OrderProduct::make('products'), ]),
+//                          Tables\Columns\ColumnGroup::make('products')->label(__('red-jasmine-order::order.fields.products'))
+//                                                    ->columns([ OrderProduct::make('products'), ]),
 
-                          Tables\Columns\ColumnGroup::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
-                                                    ->columns([
-                                                                  Tables\Columns\TextColumn::make('buyer_type')
-                                                                                           ->label(__('red-jasmine-order::order.fields.buyer_type')),
-                                                                  Tables\Columns\TextColumn::make('buyer_id')
-                                                                                           ->label(__('red-jasmine-order::order.fields.buyer_id')),
-                                                                  Tables\Columns\TextColumn::make('buyer_nickname')
-                                                                                           ->searchable()->label(__('red-jasmine-order::order.fields.buyer_nickname')),
+                          OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products')
+                          ,
 
-                                                              ]),
+//                          Tables\Columns\ColumnGroup::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
+//                                                    ->columns([
+//                                                                  Tables\Columns\TextColumn::make('buyer_type')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.buyer_type')),
+//                                                                  Tables\Columns\TextColumn::make('buyer_id')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.buyer_id')),
+//                                                                  Tables\Columns\TextColumn::make('buyer_nickname')
+//                                                                                           ->searchable()->label(__('red-jasmine-order::order.fields.buyer_nickname')),
+//
+//                                                              ]),
+                          Tables\Columns\ViewColumn::make('seller')->view('red-jasmine-filament-order::resources.order-resource.columns.seller')
+                                                   ->label(__('red-jasmine-order::order.fields.seller')),
 
-                          Tables\Columns\ColumnGroup::make('seller')
-                                                    ->label(__('red-jasmine-order::order.fields.seller'))
-                                                    ->columns([
-                                                                  Tables\Columns\TextColumn::make('seller_type')
-                                                                                           ->label(__('red-jasmine-order::order.fields.seller_type'))
-                                                                  ,
-                                                                  Tables\Columns\TextColumn::make('seller_id')
-                                                                                           ->label(__('red-jasmine-order::order.fields.seller_id')),
-                                                                  Tables\Columns\TextColumn::make('seller_nickname')
-                                                                                           ->label(__('red-jasmine-order::order.fields.seller_nickname'))
-                                                                                           ->searchable(),
-                                                              ]),
-
+                          Tables\Columns\ViewColumn::make('buyer')->view('red-jasmine-filament-order::resources.order-resource.columns.buyer')
+                                                   ->label(__('red-jasmine-order::order.fields.buyer')),
+//                          Tables\Columns\ColumnGroup::make('seller')
+//                                                    ->label(__('red-jasmine-order::order.fields.seller'))
+//                                                    ->columns([
+//
+//                                                                  Tables\Columns\ViewColumn::make('seller')->view('red-jasmine-filament-order::resources.order-resource.columns.seller')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.seller')),
+//                                                                  //
+//
+//                                                                  Tables\Columns\TextColumn::make('seller_type')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.seller_type'))
+//                                                                  ,
+//                                                                  Tables\Columns\TextColumn::make('seller_id')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.seller_id')),
+//                                                                  Tables\Columns\TextColumn::make('seller_nickname')
+//                                                                                           ->label(__('red-jasmine-order::order.fields.seller_nickname'))
+//                                                                                           ->searchable(),
+//                                                              ]),
 
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
                           Tables\Columns\TextColumn::make('order_type')->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
@@ -368,10 +379,11 @@ class OrderResource extends Resource
 
                                                     ->columns([
 
-                                                                                  Tables\Columns\TextColumn::make('order_status')->useEnum()->label(__('red-jasmine-order::order.fields.order_status')),
-                                                                                  Tables\Columns\TextColumn::make('accept_status')->useEnum()->label(__('red-jasmine-order::order.fields.accept_status')),
+                                                                                  Tables\Columns\ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
+                                                                                                                                 ->label(__('red-jasmine-order::order.fields.order_status')),
+//
                                                                                   Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
-                                                                                  Tables\Columns\TextColumn::make('shipping_status')->useEnum()->label(__('red-jasmine-order::order.fields.shipping_status')),
+//                                                                                  Tables\Columns\TextColumn::make('shipping_status')->useEnum()->label(__('red-jasmine-order::order.fields.shipping_status')),
 
 //                                                                                  Tables\Columns\TextColumn::make('rate_status')->useEnum()->label(__('red-jasmine-order::order.fields.rate_status')),
                                                                                   Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status')),

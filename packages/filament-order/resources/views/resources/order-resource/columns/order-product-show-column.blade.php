@@ -9,11 +9,11 @@
     <tbody class="w-full">
     @foreach($getRecord()->products as $orderProduct)
         <tr class="w-full ">
-            <td  name="product" >
+            <td  name="product"  >
                 <div class="flex items-center gap-x-2 ">
                     <img class="object-cover w-8 h-8" src="{{$orderProduct->image}}" alt="">
                     <div>
-                        <h2 class="text-sm font-medium text-gray-800 dark:text-white ">{{$orderProduct->title}}</h2>
+                        <p class="text-xs font-medium text-gray-800 dark:text-white whitespace-normal break-words ">{{$orderProduct->title}}</p>
                         <p class="text-xs font-normal text-gray-700 dark:text-gray-400">{{$orderProduct->sku_name}}</p>
                         <p class="text-xs font-normal text-gray-700 dark:text-gray-400">
                             <span>{{__('red-jasmine-order::order.fields.product.product_id')}}:</span><span>{{$orderProduct->product_id}}</span>
@@ -29,7 +29,8 @@
                 </div>
             </td>
             <td   name="alter_sale_service" >
-                <span> {{$orderProduct->refund_status?->getLable()}} </span>
+
+                <span></span>
             </td>
 
         </tr>

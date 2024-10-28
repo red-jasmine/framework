@@ -8,6 +8,6 @@ class OrderProductShowColumn extends Column
 {
 
 
-
+    protected string $view = 'red-jasmine-filament-order::resources.order-resource.columns.order-product-show-column';
 
 }
