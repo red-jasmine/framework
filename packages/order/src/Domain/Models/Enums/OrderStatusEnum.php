@@ -33,13 +33,28 @@ enum OrderStatusEnum: string
         ];
     }
 
+    public static function icons() : array
+    {
+        return [
+
+            self::WAIT_BUYER_PAY->value           => 'heroicon-o-banknotes',
+            self::WAIT_SELLER_ACCEPT->value       => 'heroicon-o-bell-alert',
+            self::WAIT_SELLER_SEND_GOODS->value   => 'heroicon-o-arrow-up-on-square-stack',
+            self::WAIT_BUYER_CONFIRM_GOODS->value => 'heroicon-o-truck',
+            self::FINISHED->value                 => 'heroicon-o-shield-check',
+            self::CANCEL->value                   => 'heroicon-o-archive-box-x-mark',
+            self::CLOSED->value                   => 'heroicon-o-x-circle',
+
+        ];
+    }
+
     public static function colors() : array
     {
         return [
 
-            self::WAIT_BUYER_PAY->value           => 'danger',
-            self::WAIT_SELLER_ACCEPT->value       => 'warning',
-            self::WAIT_SELLER_SEND_GOODS->value   => 'primary',
+            self::WAIT_BUYER_PAY->value           => 'warning',
+            self::WAIT_SELLER_ACCEPT->value       => 'danger',
+            self::WAIT_SELLER_SEND_GOODS->value   => 'danger',
             self::WAIT_BUYER_CONFIRM_GOODS->value => 'success',
             self::FINISHED->value                 => 'success',
             self::CANCEL->value                   => 'gray',

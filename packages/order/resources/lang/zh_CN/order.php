@@ -3,18 +3,16 @@
 
 return [
 
-    'labels'  => [
+    'labels' => [
         'order'  => '订单',
         'status' => '状态',
         'amount' => '金额',
     ],
     'fields' => [
         'id'                     => '订单ID',
-        'seller'                 => '卖家',
         'seller_type'            => '卖家类型',
         'seller_id'              => '卖家ID',
         'seller_nickname'        => '卖家昵称',
-        'buyer'                  => '卖家',
         'buyer_type'             => '卖家类型',
         'buyer_id'               => '卖家ID',
         'buyer_nickname'         => '卖家昵称',
@@ -73,8 +71,14 @@ return [
         'outer_order_id'         => '外部订单号',
         'cancel_reason'          => '取消原因',
         'version'                => '版本',
-        'products'               => '商品',
 
+
+        'seller'   => '卖家',
+        'buyer'    => '买家',
+        'channel'  => '渠道',
+        'store'    => '门店',
+        'guide'    => '导购',
+        'products' => '商品',
 
         'product' => [
             'id'              => '订单商品项ID',
@@ -130,9 +134,9 @@ return [
             'no_payment' => '无需支付',
         ],
         'accept_status'  => [
-            'wait_accept' => '等待商家接单',
-            'accepted'    => '接受',
-            'rejected'    => '拒绝',
+            'wait_accept' => '待接单',
+            'accepted'    => '已接单',
+            'rejected'    => '已拒单',
         ],
 
     ],
@@ -147,7 +151,5 @@ return [
         'cancel'                   => '已取消',
         'closed'                   => '已关闭',
         'cancel-closed'            => '已取消/关闭',
-
-
     ],
 ];

@@ -21,11 +21,35 @@ enum AcceptStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::WAIT_ACCEPT->value => '待接单',
-            self::ACCEPTED->value    => '已接单',
-            self::REJECTED->value    => '已拒单'
+            self::WAIT_ACCEPT->value => __('red-jasmine-order::order.enums.accept_status.wait_accept'),
+            self::ACCEPTED->value    => __('red-jasmine-order::order.enums.accept_status.accepted'),
+            self::REJECTED->value    => __('red-jasmine-order::order.enums.accept_status.rejected'),
         ];
 
+    }
+
+
+    public static function icons() : array
+    {
+        return [
+            self::WAIT_ACCEPT->value => 'heroicon-o-clock',
+            self::ACCEPTED->value    => 'heroicon-o-check-badge',
+            self::REJECTED->value    => 'heroicon-o-no-symbol',
+
+
+        ];
+    }
+
+    public static function colors() : array
+    {
+        return [
+
+            self::REJECTED->value    => 'danger',
+            self::WAIT_ACCEPT->value => 'primary',
+            self::ACCEPTED->value    => 'success',
+
+
+        ];
     }
 
 }
