@@ -33,29 +33,32 @@ class Shipping extends Page
     }
 
     public ?array $data = [];
-    protected function getViewData(): array
+
+    protected function getViewData() : array
     {
         return [
-            'forms'=>$this->getForms()
+            'forms' => $this->getForms()
         ];
     }
 
     use InteractsWithFormActions;
-    public function infolist(Infolist $infolist): Infolist
+
+    public function infolist(Infolist $infolist) : Infolist
     {
         return static::getResource()::infolist($infolist);
     }
 
-    protected function makeInfolist(): Infolist
+    protected function makeInfolist() : Infolist
     {
         return parent::makeInfolist()
                      ->record($this->getRecord())
                      ->columns($this->hasInlineLabels() ? 1 : 2)
                      ->inlineLabel($this->hasInlineLabels());
     }
-    protected function hasInfolist(): bool
+
+    protected function hasInfolist() : bool
     {
-        return (bool) count($this->getInfolist('infolist')->getComponents());
+        return (bool)count($this->getInfolist('infolist')->getComponents());
     }
 
 
@@ -66,15 +69,15 @@ class Shipping extends Page
 
 
         $this->dummy->fill([
-                              'order_products' => $this->record->products->pluck('id')->toArray(),
-                              'is_finished'    => true,
-                          ]);
+                               'order_products' => $this->record->products->pluck('id')->toArray(),
+                               'is_finished'    => true,
+                           ]);
 
 
         $this->logistics->fill([
-            'is_split'=>false,
+                                   'is_split' => false,
 
-                          ]);
+                               ]);
     }
 
     protected function getFormActions() : array
@@ -84,9 +87,6 @@ class Shipping extends Page
 
         ];
     }
-
-
-
 
 
     protected function getSaveFormAction() : Action
@@ -105,7 +105,6 @@ class Shipping extends Page
     }
 
 
-
     public function getTitle() : string|Htmlable
     {
         return $this->getRecord()->id;
@@ -114,6 +113,7 @@ class Shipping extends Page
 
     protected function getForms() : array
     {
+
         return [
             'dummy',
             'logistics',
@@ -126,9 +126,11 @@ class Shipping extends Page
         return $form->schema([
 
                                  Forms\Components\CheckboxList::make('order_products')
+                                                              ->label(__('red-jasmine-order::order.fields.products'))
                                                               ->options($record->products->pluck('title', 'id')->toArray()),
 
                                  Forms\Components\ToggleButtons::make('is_finished')
+                                                               ->label(__('red-jasmine-order::commands.shipping.is_finished'))
                                                                ->default(true)
                                                                ->grouped()
                                                                ->boolean()
@@ -168,21 +170,30 @@ class Shipping extends Page
         return $form->schema([
 
                                  Forms\Components\ToggleButtons::make('is_split')
+                                                               ->label(__('red-jasmine-order::commands.shipping.is_split'))
                                                                ->default(false)
                                                                ->grouped()
+                                                               ->live()
                                                                ->boolean(),
                                  Forms\Components\CheckboxList::make('order_products')
+                                                              ->label(__('red-jasmine-order::commands.shipping.products'))
+                                                              ->visible(fn(Forms\Get $get) => $get('is_split'))
                                                               ->options($record->products->pluck('title', 'id')->toArray()),
 
-                                 Forms\Components\TextInput::make('express_company_code')->required(),
-                                 Forms\Components\TextInput::make('express_no')->required(),
+                                 Forms\Components\TextInput::make('express_company_code')
+                                                           ->label(__('red-jasmine-order::commands.shipping.express_company_code'))
+                                                           ->required(),
+                                 Forms\Components\TextInput::make('express_no')
+                                                           ->label(__('red-jasmine-order::commands.shipping.express_no'))
+                                                           ->required(),
 
                              ])
                     ->statePath('data.logistics');
     }
+
     public function logisticsSubmit()
     {
-        $data       = $this->logistics->getState();
+        $data = $this->logistics->getState();
 
         $data['id'] = $this->record->id;
         $command    = OrderLogisticsShippingCommand::from($data);

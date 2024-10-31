@@ -1,7 +1,5 @@
 <x-filament-panels::page>
-    @if ($this->hasInfolist())
-        {{ $this->infolist }}
-    @endif
+
 
     @foreach($forms as $form)
         <x-filament-panels::form
@@ -16,10 +14,10 @@
             />
         </x-filament-panels::form>
 
-
     @endforeach
-
-
+    @if ($this->hasInfolist())
+        {{ $this->infolist }}
+    @endif
 
 
 </x-filament-panels::page>
