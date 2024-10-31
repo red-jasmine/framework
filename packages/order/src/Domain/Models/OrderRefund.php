@@ -186,8 +186,8 @@ class OrderRefund extends Model
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
 
-        $this->refund_status = RefundStatusEnum::REFUND_CANCEL;
-        $this->end_time      = now();
+        $this->refund_status          = RefundStatusEnum::REFUND_CANCEL;
+        $this->end_time               = now();
         $this->product->refund_status = null;
 
         $this->fireModelEvent('canceled', false);
@@ -250,13 +250,12 @@ class OrderRefund extends Model
 
 
         // 设置退款单
-        $payment                 = OrderPayment::newModel();
-        $payment->order_id       = $this->order_id;
-        $payment->refund_id      = $this->id;
-        $payment->seller_type    = $this->seller_type;
-        $payment->seller_id      = $this->seller_id;
-        $payment->buyer_type     = $this->buyer_type;
-        $payment->buyer_id       = $this->buyer_id;
+        $payment            = OrderPayment::newModel();
+        $payment->order_id  = $this->order_id;
+        $payment->refund_id = $this->id;
+        $payment->seller    = $this->seller;
+        $payment->buyer     = $this->buyer;
+
         $payment->amount_type    = AmountTypeEnum::REFUND;
         $payment->payment_amount = bcadd($this->refund_amount, $this->freight_amount, 2);
         $payment->status         = PaymentStatusEnum::WAIT_PAY;

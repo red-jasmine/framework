@@ -9,6 +9,21 @@ class UserAbleColumn extends Column
 
     protected false $hiddenNickname = false;
 
+
+    protected bool $showType = false;
+
+    public function isShowType() : bool
+    {
+        return $this->showType;
+    }
+
+    public function setShowType(bool $showType) : UserAbleColumn
+    {
+        $this->showType = $showType;
+        return $this;
+    }
+
+
     public string $nickname = 'nickname';
 
     public function getNickname() : string

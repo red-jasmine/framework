@@ -50,8 +50,9 @@ class OrderRefundService
         $orderRefund->sku_name               = $orderProduct->sku_name;
         $orderRefund->image                  = $orderProduct->image;
         $orderRefund->category_id            = $orderProduct->category_id;
+        $orderRefund->brand_id               = $orderProduct->brand_id;
         $orderRefund->product_group_id       = $orderProduct->product_group_id;
-        $orderRefund->outer_id               = $orderProduct->outer_id;
+        $orderRefund->outer_product_id       = $orderProduct->outer_product_id;
         $orderRefund->outer_sku_id           = $orderProduct->outer_sku_id;
         $orderRefund->barcode                = $orderProduct->barcode;
         $orderRefund->price                  = $orderProduct->price;
@@ -92,7 +93,6 @@ class OrderRefundService
             $orderRefund->refund_amount->value(),
             $orderRefund->freight_amount->value(),
             2);
-
 
 
         switch ($orderRefund->refund_type) {

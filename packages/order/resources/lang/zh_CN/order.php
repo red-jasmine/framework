@@ -9,7 +9,7 @@ return [
         'amount' => '金额',
     ],
     'fields' => [
-        'id'                     => '订单ID',
+        'id'                     => '订单编号',
         'seller_type'            => '卖家类型',
         'seller_id'              => '卖家ID',
         'seller_nickname'        => '卖家昵称',
@@ -81,13 +81,14 @@ return [
         'products' => '商品',
 
         'product' => [
-            'id'              => '订单商品项ID',
+            'id'              => '订单商品项编号',
             'image'           => '商品图片',
             'product_id'      => '商品ID',
             'sku_id'          => '规格ID',
             'title'           => '商品名称',
             'sku_name'        => '规格名称',
             'price'           => '销售价',
+            'cost_price'      => '成本价',
             'num'             => '数量',
             'unit'            => '单位',
             'unit_quantity'   => '单位数量',
@@ -151,5 +152,8 @@ return [
         'cancel'                   => '已取消',
         'closed'                   => '已关闭',
         'cancel-closed'            => '已取消/关闭',
+    ],
+    'actions'=>[
+        'shipping'=>'发货'
     ],
 ];

@@ -52,10 +52,11 @@ class OrderProductData extends Data
     public Amount  $costPrice;
     public Amount  $taxAmount;
     public Amount  $discountAmount;
+    public int     $brandId             = 0;
     public int     $categoryId          = 0;
     public int     $productGroupId      = 0;
     public ?string $image               = null;
-    public ?string $outerId             = null;
+    public ?string $outerProductId      = null;
     public ?string $outerSkuId          = null;
     public ?string $barcode             = null;
     public ?string $sellerCustomStatus  = null;

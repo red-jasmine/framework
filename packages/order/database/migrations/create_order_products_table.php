@@ -22,18 +22,20 @@ return new class extends Migration {
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
+
             $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
-            $table->string('title')->comment('商品标题');
-            $table->string('sku_name')->nullable()->comment('规格名称');
-            $table->string('image')->nullable()->comment('图片');
             $table->string('product_type', 32)->comment('商品源类型');
             $table->unsignedBigInteger('product_id')->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
+            $table->string('title')->comment('商品标题');
+            $table->string('sku_name')->nullable()->comment('规格名称');
+            $table->string('image')->nullable()->comment('图片');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
+            $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
-            $table->string('outer_id', 64)->nullable()->comment('商品外部编码');
-            $table->string('outer_sku_id', 64)->nullable()->comment('SKU外部编码');
+            $table->string('outer_product_id', 64)->nullable()->comment('外部商品编码');
+            $table->string('outer_sku_id', 64)->nullable()->comment('外部规格编码');
             $table->string('barcode', 64)->nullable()->comment('条形码');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->string('unit')->nullable()->comment('单位');

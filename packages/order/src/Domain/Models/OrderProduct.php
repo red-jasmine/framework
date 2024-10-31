@@ -125,12 +125,11 @@ class OrderProduct extends Model
 
     public function addCardKey(OrderProductCardKey $cardKey) : void
     {
-        $cardKey->seller_type = $this->seller_type;
-        $cardKey->seller_id   = $this->seller_id;
-        $cardKey->buyer_type  = $this->buyer_type;
-        $cardKey->buyer_id    = $this->buyer_id;
-        $cardKey->order_id    = $this->order_id;
-        $this->progress       += $cardKey->num;
+        $cardKey->seller = $this->seller;
+        $cardKey->buyer  = $this->buyer;
+
+        $cardKey->order_id = $this->order_id;
+        $this->progress    += $cardKey->num;
         $this->cardKeys->add($cardKey);
     }
 

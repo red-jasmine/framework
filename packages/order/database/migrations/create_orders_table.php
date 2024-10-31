@@ -16,12 +16,14 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('订单号');
+
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
+
             $table->string('title')->nullable()->comment('标题');
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));

@@ -222,11 +222,11 @@ class Order extends Model implements OperatorInterface
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
-        $orderProduct->order_id       = $this->id;
-        $orderProduct->buyer_type     = $this->buyer_type;
-        $orderProduct->buyer_id       = $this->buyer_id;
-        $orderProduct->seller_type    = $this->seller_type;
-        $orderProduct->seller_id      = $this->seller_id;
+        $orderProduct->order_id = $this->id;
+
+        $orderProduct->buyer  = $this->buyer;
+        $orderProduct->seller = $this->seller;
+
         $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit_quantity, 0);
         $orderProduct->created_time   = now();
         $this->products->add($orderProduct);
@@ -380,12 +380,10 @@ class Order extends Model implements OperatorInterface
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
-        $orderPayment->order_id    = $this->id;
-        $orderPayment->buyer_type  = $this->buyer_type;
-        $orderPayment->buyer_id    = $this->buyer_id;
-        $orderPayment->seller_type = $this->seller_type;
-        $orderPayment->seller_id   = $this->seller_id;
-        $orderPayment->status      = PaymentStatusEnum::PAYING;
+        $orderPayment->order_id = $this->id;
+        $orderPayment->buyer    = $this->buyer;
+        $orderPayment->seller   = $this->seller;
+        $orderPayment->status   = PaymentStatusEnum::PAYING;
 
         $this->addPayment($orderPayment);
         // 设置为支付中

@@ -38,6 +38,7 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
             foreach ($command->orderProducts as $orderProductId) {
                 $this->orderShippingService->dummy($order, $orderProductId, $command->isFinished);
             }
+
             $this->orderRepository->update($order);
 
             $this->commitDatabaseTransaction();

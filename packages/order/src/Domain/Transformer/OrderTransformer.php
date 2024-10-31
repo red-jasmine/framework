@@ -84,8 +84,9 @@ class OrderTransformer
         $orderProduct->discount_amount            = $orderProductData->discountAmount;
         $orderProduct->image                      = $orderProductData->image;
         $orderProduct->category_id                = $orderProductData->categoryId;
+        $orderProduct->brand_id                   = $orderProductData->brandId;
         $orderProduct->product_group_id           = $orderProductData->productGroupId;
-        $orderProduct->outer_id                   = $orderProductData->outerId;
+        $orderProduct->outer_product_id           = $orderProductData->outerProductId;
         $orderProduct->outer_sku_id               = $orderProductData->outerSkuId;
         $orderProduct->seller_custom_status       = $orderProductData->sellerCustomStatus;
         $orderProduct->outer_order_product_id     = $orderProductData->outerOrderProductId;

@@ -14,5 +14,14 @@
 
 
     @endif
+    @if($getState() === OrderStatusEnum::WAIT_SELLER_SEND_GOODS)
+        @if($getRecord()->shipping_status === \RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum::PART_SHIPPED)
+            <x-filament::badge color="{{$getRecord()->shipping_status?->getColor()}}"
+                               icon="{{$getRecord()->shipping_status?->getIcon()}}">
+                {{$getRecord()->shipping_status?->getLabel()}}
+            </x-filament::badge>
+        @endif
+
+    @endif
 </div>
 

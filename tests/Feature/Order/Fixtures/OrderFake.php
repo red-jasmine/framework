@@ -62,7 +62,7 @@ class OrderFake
             'seller'               => [
                 'type'     => 'seller',
                 'id'       => fake()->numberBetween(1000000, 999999999),
-                'nickname' => fake()->name()
+                'nickname' => fake()->name(),
             ],
             'title'                => fake()->text(),
             'order_type'           => $this->orderType->value,
@@ -70,18 +70,21 @@ class OrderFake
             'source_id'            => fake()->numerify('out-order-id-########'),
             'outer_order_id'       => fake()->numerify('out-order-id-########'),
             'wait_accept_max_time' => $this->wait_accept_max_time,
-            'channel' => [
-                'type' => fake()->randomElement([ 'channel', 'promoter' ]),
-                'id'   => fake()->randomNumber(5, true),
+            'channel'              => [
+                'type'     => fake()->randomElement([ 'channel', ]),
+                'id'       => fake()->randomNumber(5, true),
+                'nickname' => fake()->name(),
             ],
 
             'store' => [
-                'type' => fake()->randomElement([ 'self', 'franchise' ]),
-                'id'   => fake()->randomNumber(5, true),
+                'type'     => fake()->randomElement([ 'self', 'franchise' ]),
+                'id'       => fake()->randomNumber(5, true),
+                'nickname' => fake()->name(),
             ],
             'guide' => [
-                'type' => fake()->randomElement([ 'user', 'promoter', 'seller' ]),
-                'id'   => fake()->randomNumber(5, true),
+                'type'     => fake()->randomElement([ 'guide' ]),
+                'id'       => fake()->randomNumber(5, true),
+                'nickname' => fake()->name(),
             ],
 
             'freight_amount'  => fake()->randomFloat(0, 0, 20),
@@ -141,9 +144,10 @@ class OrderFake
             'product_id'             => fake()->numberBetween(1000000, 999999999),
             'sku_id'                 => fake()->numberBetween(1000000, 999999999),
             'category_id'            => 0,
+            'brand_id'               => 2,
             'product_group_id'       => 0,
-            'outer_id'               => fake()->numerify('out-id-########'),
-            'outer_sku_id'           => fake()->numerify('out-sku-id-########'),
+            'outer_product_id'       => fake()->numerify('outer_product_id-########'),
+            'outer_sku_id'           => fake()->numerify('outer_sku_id-########'),
             'barcode'                => fake()->ean13(),
             'num'                    => fake()->numberBetween(1, 10),
             'unit'                   => $this->unit,

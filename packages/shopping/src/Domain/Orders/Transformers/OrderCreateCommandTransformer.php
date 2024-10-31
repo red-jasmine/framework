@@ -45,9 +45,10 @@ class OrderCreateCommandTransformer
             $product->price            = $price;
             $product->costPrice        = new Amount($productData->getSku()->cost_price);
             $product->categoryId       = $productData->getProduct()->category_id;
-            $product->sellerCategoryId = $productData->getProduct()->seller_category_id;
+            $product->brandId          = $productData->getProduct()->brand_id;
+            $product->productGroupId   = $productData->getProduct()->product_group_id;
             $product->image            = $productData->getSku()->image ?? $productData->getProduct()->image ?? null;
-            $product->outerId          = $productData->getProduct()->outer_id;
+            $product->outerProductId   = $productData->getProduct()->outer_id;
             $product->outerSkuId       = $productData->getSku()->outer_id;
             $product->barcode          = $productData->getSku()->barcode ?? $productData->getProduct()->barcode ?? null;
             $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
@@ -59,10 +60,10 @@ class OrderCreateCommandTransformer
 
 
             $product->additional([
-                'sku'     => $productData->getSku(),
-                'product' => $productData->getProduct(),
+                                     'sku'     => $productData->getSku(),
+                                     'product' => $productData->getProduct(),
 
-            ]);
+                                 ]);
             $order->products->push($product);
 
         }

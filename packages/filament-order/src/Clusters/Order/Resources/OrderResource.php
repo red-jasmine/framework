@@ -53,7 +53,7 @@ class OrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $cluster = OrderCluster::class;
-
+    protected static ?int $navigationSort = 1;
     public static function getModelLabel() : string
     {
         return __('red-jasmine-order::order.labels.order');
@@ -147,7 +147,6 @@ class OrderResource extends Resource
                                       ->schema([
 
                                                    TextEntry::make('product_payable_amount')->prefix('￥')->money('CNY'),
-                                                   TextEntry::make('service_amount')->prefix('￥')->money('CNY'),
                                                    TextEntry::make('freight_amount')->prefix('￥')->money('CNY'),
                                                    TextEntry::make('discount_amount')->prefix('￥')->money('CNY'),
                                                    TextEntry::make('payable_amount')->prefix('￥')->money('CNY'),
@@ -256,11 +255,7 @@ class OrderResource extends Resource
                                                    ->numeric()
                                                    ->default(0.00)->formatStateUsing(fn($state
                              ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('service_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
+
                          Forms\Components\DateTimePicker::make('created_time'),
                          Forms\Components\DateTimePicker::make('payment_time'),
                          Forms\Components\DateTimePicker::make('close_time'),
@@ -333,15 +328,18 @@ class OrderResource extends Resource
             ->defaultSort('id', 'DESC')
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-order::order.fields.id'))
-                                                   ->label('ID')
-                                                   ->sortable()->copyable(),
-                          OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products'),
+                                                   ->label(__('red-jasmine-order::order.fields.id'))->copyable(),
+                          OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products')->label(__('red-jasmine-order::order.fields.products')),
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
-                          UserAbleColumn::make('seller')->alignCenter()->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),
-                          UserAbleColumn::make('buyer')->label(__('red-jasmine-order::order.fields.buyer')),
-
                           Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
+                          UserAbleColumn::make('seller')->alignCenter()
+
+                                                        ->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),
+                          UserAbleColumn::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
+                                                       ->extraAttributes(['class'=>'px-4'])
+                                                       ->grow(),
+
+
                           Tables\Columns\ColumnGroup::make('status')->label(__('red-jasmine-order::order.labels.status'))
                                                     ->alignCenter()
                                                     ->columns([
@@ -349,8 +347,8 @@ class OrderResource extends Resource
                                                                   Tables\Columns\ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
                                                                                            ->label(__('red-jasmine-order::order.fields.order_status')),
                                                                   Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
-                                                                  Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status')),
-                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')),
+                                                                  Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status'))->toggleable(isToggledHiddenByDefault: true),
+                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')) ->toggleable(isToggledHiddenByDefault: true),
                                                               ]),
 
                           Tables\Columns\ColumnGroup::make('amount')
@@ -451,9 +449,9 @@ Tables\Columns\TextColumn::make('cost_amount')
                       ])
             ->actions([
                           Tables\Actions\ViewAction::make(),
-                          Tables\Actions\Action::make('shipping')
+                         OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
                                                ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
-                                               ->visible(fn($record) => $record->shipping_status !== ShippingStatusEnum::SHIPPED)
+
                           ,
                           // 其他操作
 
