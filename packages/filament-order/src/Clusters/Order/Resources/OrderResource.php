@@ -332,6 +332,7 @@ class OrderResource extends Resource
                           OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products')->label(__('red-jasmine-order::order.fields.products')),
                           //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
                           Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
+                          Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.shipping_type')),
                           UserAbleColumn::make('seller')->alignCenter()
 
                                                         ->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),

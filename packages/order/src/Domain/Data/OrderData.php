@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -29,7 +30,12 @@ class OrderData extends Data
     #[WithCast(EnumCast::class, type: OrderTypeEnum::class)]
     public OrderTypeEnum $orderType;
 
-
+    /**
+     * 发货类型
+     * @var ShippingTypeEnum
+     */
+    #[WithCast(EnumCast::class, type: ShippingTypeEnum::class)]
+    public ShippingTypeEnum $shippingType;
     /**
      * 渠道
      * @var UserInterface|null

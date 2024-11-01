@@ -23,7 +23,7 @@ use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
-use RedJasmine\Tests\Feature\Order\Fixtures\OrderFake;
+use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 
 beforeEach(function () {
@@ -32,7 +32,7 @@ beforeEach(function () {
     $this->orderRepository     = app(OrderRepositoryInterface::class);
     $this->orderCommandService = app(OrderCommandService::class);
 
-    $orderFake                       = new OrderFake();
+    $orderFake                       = new OrderDummyFake();
     $orderFake->orderType            = OrderTypeEnum::STANDARD;
     $orderFake->shippingType         = ShippingTypeEnum::DUMMY;
     $orderFake->wait_accept_max_time = 30;

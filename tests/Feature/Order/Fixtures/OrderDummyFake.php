@@ -18,7 +18,7 @@ use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use Workbench\App\Models\User;
 
 
-class OrderFake
+class OrderDummyFake
 {
 
 
@@ -66,6 +66,7 @@ class OrderFake
             ],
             'title'                => fake()->text(),
             'order_type'           => $this->orderType->value,
+            'shipping_type'        => $this->shippingType->value,
             'source_type'          => fake()->randomElement([ 'product', 'activity' ]),
             'source_id'            => fake()->numerify('out-order-id-########'),
             'outer_order_id'       => fake()->numerify('out-order-id-########'),

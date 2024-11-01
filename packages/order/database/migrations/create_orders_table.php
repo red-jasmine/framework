@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
@@ -15,17 +16,20 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('订单号');
-
+            $table->unsignedBigInteger('id')->primary()->comment('订单编号');
+            $table->unsignedBigInteger('parent_id')->default(0)->comment('父订单编号');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');
+
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
 
             $table->string('title')->nullable()->comment('标题');
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
+            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
@@ -33,9 +37,8 @@ return new class extends Migration {
             $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
+            $table->string('invoice_status', 32)->nullable()->comment('发票状态');
 
-            // 订单锁
-            // 发票信息 TODO
             $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
             $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
             $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');

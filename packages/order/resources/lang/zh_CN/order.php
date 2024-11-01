@@ -18,6 +18,7 @@ return [
         'buyer_nickname'         => '卖家昵称',
         'title'                  => '标题',
         'order_type'             => '订单类型',
+        'shipping_type'          => '发货类型',
         'pay_type'               => '支付类型',
         'order_status'           => '订单状态',
         'accept_status'          => '接单状态',
@@ -140,9 +141,14 @@ return [
             'rejected'    => '已拒单',
         ],
 
+        'invoice_status' => [
+            'invoicing' => '开票中',
+            'invoiced'  => '已开票',
+        ],
+
     ],
 
-    'scopes' => [
+    'scopes'  => [
         'all'                      => '全部',
         'wait_buyer_pay'           => '待付款',
         'wait_seller_accept'       => '待接单',
@@ -153,7 +159,7 @@ return [
         'closed'                   => '已关闭',
         'cancel-closed'            => '已取消/关闭',
     ],
-    'actions'=>[
-        'shipping'=>'发货'
+    'actions' => [
+        'shipping' => '发货'
     ],
 ];

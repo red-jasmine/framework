@@ -65,7 +65,7 @@ return new class extends Migration {
             // 自动确认时间
             $table->unsignedBigInteger('progress')->nullable()->comment('进度');
             $table->unsignedBigInteger('progress_total')->nullable()->comment('进度总数');
-            $table->unsignedBigInteger('points')->default(0)->comment('赠送积分');
+            $table->unsignedBigInteger('gift_point')->default(0)->comment('赠送积分');
 
             $table->string('warehouse_code', 32)->nullable()->comment('仓库编码');
             $table->timestamp('expiration_date')->nullable()->comment('过期时间');

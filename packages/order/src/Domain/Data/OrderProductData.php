@@ -19,6 +19,8 @@ class OrderProductData extends Data
      */
     #[WithCast(EnumCast::class, type: ProductTypeEnum::class)]
     public ProductTypeEnum $orderProductType;
+
+
     /**
      * 发货类型
      * @var ShippingTypeEnum
@@ -65,7 +67,7 @@ class OrderProductData extends Data
      * 赠送积分
      * @var int
      */
-    public int $points = 0;
+    public int $giftPoint = 0;
     /**
      * 售后服务
      * @var AfterSalesService[]

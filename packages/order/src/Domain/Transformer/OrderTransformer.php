@@ -22,6 +22,7 @@ class OrderTransformer
         $order->store                = $orderData->store;
         $order->title                = $orderData->title;
         $order->order_type           = $orderData->orderType;
+        $order->shipping_type        = $orderData->shippingType;
         $order->source_type          = $orderData->sourceType;
         $order->source_id            = $orderData->sourceId;
         $order->seller_custom_status = $orderData->sellerCustomStatus;
@@ -88,6 +89,7 @@ class OrderTransformer
         $orderProduct->product_group_id           = $orderProductData->productGroupId;
         $orderProduct->outer_product_id           = $orderProductData->outerProductId;
         $orderProduct->outer_sku_id               = $orderProductData->outerSkuId;
+        $orderProduct->gift_point                 = $orderProductData->giftPoint;
         $orderProduct->seller_custom_status       = $orderProductData->sellerCustomStatus;
         $orderProduct->outer_order_product_id     = $orderProductData->outerOrderProductId;
         $orderProduct->info->seller_remarks       = $orderProductData->sellerRemarks;

@@ -11,6 +11,7 @@ use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
@@ -20,7 +21,7 @@ use Throwable;
 
 /**
  * @property Form $dummy
- * @property Form $logistics
+ * @property Form $express
  */
 class Shipping extends Page
 {
@@ -67,17 +68,17 @@ class Shipping extends Page
 
         $this->record = $this->resolveRecord($record);
 
+        $method = $this->record->shipping_type->value;
 
-        $this->dummy->fill([
-                               'order_products' => $this->record->products->pluck('id')->toArray(),
-                               'is_finished'    => true,
-                           ]);
-
-
-        $this->logistics->fill([
-                                   'is_split' => false,
-
+        if (method_exists($this, $method)) {
+            $this->{$method}->fill([
+                                   'order_products' => $this->record->products->pluck('id')->toArray(),
+                                   'is_finished'    => true,
+                                   'is_split'       => false,
                                ]);
+        }
+
+
     }
 
     protected function getFormActions() : array
@@ -114,9 +115,8 @@ class Shipping extends Page
     protected function getForms() : array
     {
 
-        return [
-            'dummy',
-            'logistics',
+        return  [
+            $this->getRecord()->shipping_type->value
         ];
     }
 
@@ -163,7 +163,7 @@ class Shipping extends Page
 
     }
 
-    public function logistics(Form $form) : Form
+    public function express(Form $form) : Form
     {
 
         $record = $this->record;
@@ -188,12 +188,12 @@ class Shipping extends Page
                                                            ->required(),
 
                              ])
-                    ->statePath('data.logistics');
+                    ->statePath('data.express');
     }
 
-    public function logisticsSubmit()
+    public function expressSubmit()
     {
-        $data = $this->logistics->getState();
+        $data = $this->express->getState();
 
         $data['id'] = $this->record->id;
         $command    = OrderLogisticsShippingCommand::from($data);

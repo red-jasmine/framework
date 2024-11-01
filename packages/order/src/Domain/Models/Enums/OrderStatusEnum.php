@@ -58,7 +58,7 @@ enum OrderStatusEnum: string
             self::WAIT_BUYER_CONFIRM_GOODS->value => 'success',
             self::FINISHED->value                 => 'success',
             self::CANCEL->value                   => 'gray',
-            self::CLOSED->value                   => 'danger',
+            self::CLOSED->value                   => 'warning',
 
         ];
     }

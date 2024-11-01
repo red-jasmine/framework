@@ -98,6 +98,7 @@ class Order extends Model implements OperatorInterface
     ];
     protected $casts            = [
         'order_type'             => OrderTypeEnum::class,
+        'shipping_type'          => ShippingTypeEnum::class,
         'pay_type'               => PayTypeEnum::class,
         'order_status'           => OrderStatusEnum::class,
         'accept_status'          => AcceptStatusEnum::class,
@@ -222,11 +223,10 @@ class Order extends Model implements OperatorInterface
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
-        $orderProduct->order_id = $this->id;
-
-        $orderProduct->buyer  = $this->buyer;
-        $orderProduct->seller = $this->seller;
-
+        $orderProduct->shipping_type  = $this->shipping_type;
+        $orderProduct->order_id       = $this->id;
+        $orderProduct->buyer          = $this->buyer;
+        $orderProduct->seller         = $this->seller;
         $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit_quantity, 0);
         $orderProduct->created_time   = now();
         $this->products->add($orderProduct);
