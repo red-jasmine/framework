@@ -43,7 +43,7 @@ class ProductResource extends JsonResource
 
             'delivery_time'    => $this->delivery_time,
             'vip'              => $this->vip,
-            'points'           => $this->points,
+            'gift_point'           => $this->gift_point,
             'min_limit'        => $this->min_limit,
             'max_limit'        => $this->max_limit,
             'step_limit'       => $this->step_limit,

@@ -56,7 +56,7 @@ return new class extends Migration {
             $table->string('outer_id')->nullable()->comment('商品编码');
             $table->string('barcode', 32)->nullable()->comment('商品条码');
             // 运营类
-            $table->unsignedInteger('points')->default(0)->comment('积分');
+            $table->unsignedInteger('gift_point')->default(0)->comment('积分');
             $table->string('unit')->nullable()->comment('单位');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');

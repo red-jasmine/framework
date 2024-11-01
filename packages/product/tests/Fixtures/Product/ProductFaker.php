@@ -52,7 +52,7 @@ class ProductFaker
             'max_limit'           => 0,
             'stop_limit'          => 1,
             'vip'                 => 0,
-            'points'              => fake()->numberBetween(100, 1000),
+            'gift_point'              => fake()->numberBetween(100, 1000),
             'is_hot'              => fake()->boolean(),
             'is_new'              => fake()->boolean(),
             'is_best'             => fake()->boolean(),

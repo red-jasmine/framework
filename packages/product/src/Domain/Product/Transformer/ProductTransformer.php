@@ -83,7 +83,7 @@ class ProductTransformer
         $product->order_quantity_limit_type  = $command->orderQuantityLimitType;
         $product->order_quantity_limit_num   = $command->orderQuantityLimitNum;
         $product->vip                        = $command->vip;
-        $product->points                     = $command->points;
+        $product->gift_point                     = $command->giftPoint;
         $product->is_hot                     = $command->isHot;
         $product->is_new                     = $command->isNew;
         $product->is_best                    = $command->isBest;

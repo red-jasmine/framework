@@ -107,7 +107,7 @@ class Product extends Data
     // 订单数量限制数量（可选）
     public ?int $orderQuantityLimitNum = null;
     // 积分
-    public int $points = 0;
+    public int $giftPoint = 0;
     // 是否热门
     public bool $isHot = false;
     // 是否新品

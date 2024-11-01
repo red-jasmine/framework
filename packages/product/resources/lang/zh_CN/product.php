@@ -64,7 +64,7 @@ return [
         'fake_sales'                => '虚假销量',
         'delivery_time'             => '发货时间',
         'vip'                       => 'VIP',
-        'points'                    => '积分',
+        'gift_point'                    => '积分',
         'is_hot'                    => '热销',
         'is_new'                    => '新品',
         'is_best'                   => '精品',

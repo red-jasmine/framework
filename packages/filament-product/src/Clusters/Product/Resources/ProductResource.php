@@ -754,8 +754,8 @@ class ProductResource extends Resource
         return [
 
             Forms\Components\TextInput::make('tips')->label(__('red-jasmine-product::product.fields.tips'))->maxLength(255),
-            Forms\Components\TextInput::make('points')
-                                      ->label(__('red-jasmine-product::product.fields.points'))
+            Forms\Components\TextInput::make('gift_point')
+                                      ->label(__('red-jasmine-product::product.fields.gift_point'))
                                       ->required()
                                       ->numeric()
                                       ->default(0),
