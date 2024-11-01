@@ -18,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
@@ -27,6 +28,7 @@ use RedJasmine\FilamentOrder\Filament\Tables\Columns\OrderProduct;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
@@ -450,8 +452,19 @@ Tables\Columns\TextColumn::make('cost_amount')
 
                       ])
             ->filters([
+
+
+                          Tables\Filters\SelectFilter::make('order_status')
+                                                     ->label(__('red-jasmine-order::order.fields.order_status'))
+                                                     ->options(OrderStatusEnum::options()),
+                          Tables\Filters\SelectFilter::make('order_type')
+                                                     ->label(__('red-jasmine-order::order.fields.order_type'))
+                                                     ->options(OrderTypeEnum::options()),
+                          Tables\Filters\SelectFilter::make('shipping_type')
+                                                     ->label(__('red-jasmine-order::order.fields.shipping_type'))
+                                                     ->options(ShippingTypeEnum::options()),
                           Tables\Filters\TrashedFilter::make(),
-                      ])
+                      ],layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                           Tables\Actions\ViewAction::make(),
                          OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
