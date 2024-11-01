@@ -80,6 +80,8 @@ return [
         'store'    => '门店',
         'guide'    => '导购',
         'products' => '商品',
+        'amount'   => '金额',
+
 
         'product' => [
             'id'              => '订单商品项编号',
@@ -100,6 +102,12 @@ return [
             'progress'        => '进度',
             'progress_total'  => '进度总数',
 
+        ],
+        'address' => [
+            'address'      => '地址',
+            'full_address' => '地址',
+            'contacts'     => '联系人',
+            'mobile'       => '手机号',
         ],
 
         'seller_remarks' => '卖家备注',
