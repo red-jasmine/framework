@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -394,5 +395,43 @@ class OrderRefund extends Model
         $this->fireModelEvent('reshipment', false);
 
 
+    }
+
+
+    // |---------------scope----------------------------
+
+    public function scopeWaitSellerAgree(Builder $builder) : Builder
+    {
+        $builder->whereIn('refund_status', [
+            RefundStatusEnum::WAIT_SELLER_AGREE,
+            RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
+            RefundStatusEnum::WAIT_SELLER_RESHIPMENT,
+        ]);
+        return $builder;
+    }
+
+    public function scopeWaitSellerConfirm(Builder $builder) : Builder
+    {
+        $builder->where('refund_status', RefundStatusEnum::WAIT_SELLER_CONFIRM);
+        return $builder;
+    }
+
+    public function scopeWaitBuyerHandle(Builder $builder) : Builder
+    {
+        $builder->whereIn('refund_status', [
+            RefundStatusEnum::WAIT_BUYER_RETURN_GOODS,
+            RefundStatusEnum::SELLER_REJECT_BUYER,
+        ]);
+        return $builder;
+    }
+    public function scopeRefundSuccess(Builder $builder) : Builder
+    {
+        $builder->where('refund_status', RefundStatusEnum::REFUND_SUCCESS);
+        return $builder;
+    }
+    public function scopeRefundCancel(Builder $builder) : Builder
+    {
+        $builder->where('refund_status', RefundStatusEnum::REFUND_CANCEL);
+        return $builder;
     }
 }

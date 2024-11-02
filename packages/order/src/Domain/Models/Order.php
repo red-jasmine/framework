@@ -827,7 +827,7 @@ class Order extends Model implements OperatorInterface
     }
 
 
-    // |-------------------------------------------
+    // |---------------scope----------------------------
 
     public function scopeOnWaitBuyerPay(Builder $builder) : Builder
     {

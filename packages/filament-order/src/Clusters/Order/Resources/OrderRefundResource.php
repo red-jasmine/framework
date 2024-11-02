@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages;
@@ -12,6 +13,9 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\Services\RefundQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
+use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -251,11 +255,15 @@ class OrderRefundResource extends Resource
                 ...static::operateTableColumns()
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
-            ])
+                Tables\Filters\SelectFilter::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->options(RefundStatusEnum::options()),
+                Tables\Filters\SelectFilter::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->options(RefundTypeEnum::options()),
+                Tables\Filters\SelectFilter::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->options(RefundPhaseEnum::options()),
+                Tables\Filters\SelectFilter::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->options(RefundGoodsStatusEnum::options()),
+
+            ],layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+               // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

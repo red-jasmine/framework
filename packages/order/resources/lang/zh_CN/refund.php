@@ -4,7 +4,7 @@
 return [
 
     'labels' => [
-        'refund' => '退款售后',
+        'refund' => '售后',
         'status' => '状态',
         'amount' => '金额',
     ],
@@ -112,14 +112,11 @@ return [
     ],
 
     'scopes' => [
-        'all'                      => '全部',
-        'wait_buyer_pay'           => '待付款',
-        'wait_seller_accept'       => '待接单',
-        'wait_seller_send_goods'   => '待发货',
-        'wait_buyer_confirm_goods' => '待收货',
-        'finished'                 => '已完成',
-        'cancel'                   => '已取消',
-        'closed'                   => '已关闭',
-        'cancel-closed'            => '已取消/关闭',
+        'all'                 => '全部',
+        'wait_seller_agree'   => '待卖家处理',
+        'wait_seller_confirm' => '待卖家确认',
+        'wait_buyer_handle'   => '待买家处理',
+        'refund_success'      => '已完成',
+        'refund_cancel'       => '已取消',
     ],
 ];

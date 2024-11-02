@@ -54,8 +54,9 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $cluster = OrderCluster::class;
-    protected static ?int $navigationSort = 1;
+    protected static ?string $cluster        = OrderCluster::class;
+    protected static ?int    $navigationSort = 1;
+
     public static function getModelLabel() : string
     {
         return __('red-jasmine-order::order.labels.order');
@@ -113,7 +114,7 @@ class OrderResource extends Resource
 
 
                                                   Fieldset::make('seller')
-                                                      ->label(__('red-jasmine-order::order.fields.seller'))
+                                                          ->label(__('red-jasmine-order::order.fields.seller'))
                                                           ->schema([
                                                                        TextEntry::make('seller_type')->label(__('red-jasmine-order::order.fields.seller_type')),
                                                                        TextEntry::make('seller_id')->copyable()->label(__('red-jasmine-order::order.fields.seller_id')),
@@ -123,7 +124,7 @@ class OrderResource extends Resource
                                                           ->columns(1)
                                                           ->columnSpan(1),
                                                   Fieldset::make('buyer')
-                                                      ->label(__('red-jasmine-order::order.fields.buyer'))
+                                                          ->label(__('red-jasmine-order::order.fields.buyer'))
                                                           ->schema([
                                                                        TextEntry::make('buyer_type')->label(__('red-jasmine-order::order.fields.buyer_type')),
                                                                        TextEntry::make('buyer_id')->copyable()->label(__('red-jasmine-order::order.fields.buyer_id')),
@@ -149,7 +150,7 @@ class OrderResource extends Resource
                               Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
 
                               Fieldset::make('amount')
-                                     ->label(__('red-jasmine-order::order.fields.amount'))
+                                      ->label(__('red-jasmine-order::order.fields.amount'))
                                       ->schema([
 
                                                    TextEntry::make('product_payable_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.product_payable_amount')),
@@ -340,11 +341,10 @@ class OrderResource extends Resource
                           Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
                           Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.shipping_type')),
                           UserAbleColumn::make('seller')->alignCenter()
-
-                                                        ->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),
+                                        ->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),
                           UserAbleColumn::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
-                                                       ->extraAttributes(['class'=>'px-4'])
-                                                       ->grow(),
+                                        ->extraAttributes([ 'class' => 'px-4' ])
+                                        ->grow(),
 
 
                           Tables\Columns\ColumnGroup::make('status')->label(__('red-jasmine-order::order.labels.status'))
@@ -355,7 +355,7 @@ class OrderResource extends Resource
                                                                                            ->label(__('red-jasmine-order::order.fields.order_status')),
                                                                   Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
                                                                   Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status'))->toggleable(isToggledHiddenByDefault: true),
-                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status')) ->toggleable(isToggledHiddenByDefault: true),
+                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status'))->toggleable(isToggledHiddenByDefault: true),
                                                               ]),
 
                           Tables\Columns\ColumnGroup::make('amount')
@@ -463,12 +463,13 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Filters\SelectFilter::make('shipping_type')
                                                      ->label(__('red-jasmine-order::order.fields.shipping_type'))
                                                      ->options(ShippingTypeEnum::options()),
-                          Tables\Filters\TrashedFilter::make(),
-                      ],layout: Tables\Enums\FiltersLayout::AboveContent)
+                          //Tables\Filters\TrashedFilter::make(),
+                      ], layout: Tables\Enums\FiltersLayout::AboveContent)
+
             ->actions([
                           Tables\Actions\ViewAction::make(),
-                         OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
-                                               ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
+                          OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
+                                                                                                     ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
 
                           ,
                           // 其他操作
