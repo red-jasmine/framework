@@ -2,6 +2,13 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Illuminate\Database\Eloquent\Model;
+use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
@@ -45,6 +52,76 @@ class OrderRefundResource extends Resource
     public static function getModelLabel() : string
     {
         return __('red-jasmine-order::refund.labels.refund');
+    }
+
+    public static function infolist(Infolist $infoList) : Infolist
+    {
+
+        $infoList ->schema([
+                     Section::make(static fn(Model $record) => $record->id)
+                            ->schema([
+                                         TextEntry::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->useEnum(),
+
+                                     ])
+                            ->columns(2)
+                     ,
+                     Section::make('退款信息')
+                            ->schema([
+
+                                         Fieldset::make('infos')
+                                                 ->schema([
+                                                              TextEntry::make('id')->copyable()->label(__('red-jasmine-order::refund.fields.id')),
+                                                              TextEntry::make('created_time')->label(__('red-jasmine-order::refund.fields.created_time')),
+                                                              TextEntry::make('end_time')->label(__('red-jasmine-order::refund.fields.end_time')),
+
+                                                          ])
+                                                 ->inlineLabel()
+                                                 ->columns(1)
+                                                 ->columnSpan(1),
+
+
+                                         Fieldset::make('seller')
+                                                 ->label(__('red-jasmine-order::refund.fields.seller'))
+                                                 ->schema([
+                                                              TextEntry::make('seller_type')->label(__('red-jasmine-order::refund.fields.seller_type')),
+                                                              TextEntry::make('seller_id')->copyable()->label(__('red-jasmine-order::refund.fields.seller_id')),
+                                                              TextEntry::make('seller_nickname')->copyable()->label(__('red-jasmine-order::refund.fields.seller_nickname')),
+                                                          ])
+                                                 ->inlineLabel()
+                                                 ->columns(1)
+                                                 ->columnSpan(1),
+                                         Fieldset::make('buyer')
+                                                 ->label(__('red-jasmine-order::refund.fields.buyer'))
+                                                 ->schema([
+                                                              TextEntry::make('buyer_type')->label(__('red-jasmine-order::refund.fields.buyer_type')),
+                                                              TextEntry::make('buyer_id')->copyable()->label(__('red-jasmine-order::refund.fields.buyer_id')),
+                                                              TextEntry::make('buyer_nickname')->copyable()->label(__('red-jasmine-order::refund.fields.buyer_nickname')),
+                                                          ])
+                                                 ->inlineLabel()
+                                                 ->columns(1)
+                                                 ->columnSpan(1),
+
+                                         Fieldset::make('product')
+                                                 ->label(__('red-jasmine-order::refund.fields.product'))
+                                                 ->schema([
+                                                              TextEntry::make('title')->label(__('red-jasmine-order::refund.fields.title')),
+                                                              ImageEntry::make('image')->label(__('red-jasmine-order::refund.fields.image')),
+                                                              TextEntry::make('sku_name')->label(__('red-jasmine-order::refund.fields.sku_name')),
+                                                              TextEntry::make('num')->label(__('red-jasmine-order::refund.fields.num')),
+                                                              TextEntry::make('unit_quantity')->label(__('red-jasmine-order::refund.fields.unit_quantity')),
+                                                              TextEntry::make('unit')->label(__('red-jasmine-order::refund.fields.unit')),
+                                                              TextEntry::make('price')->label(__('red-jasmine-order::refund.fields.price')),
+                                                              TextEntry::make('product_amount')->label(__('red-jasmine-order::refund.fields.product_amount')),
+                                                          ])
+                                                 ->inlineLabel()
+                                                 ->columns(1)
+                                                 ->columnSpan(1),
+                                     ])->columns(5),
+
+
+                               ]);
+
+        return  $infoList;
     }
     public static function form(Form $form): Form
     {

@@ -98,7 +98,7 @@ class OrderResource extends Resource
                               Section::make('订单信息')
                                      ->schema([
 
-                                                  Fieldset::make('seller')
+                                                  Fieldset::make('infos')
                                                           ->schema([
                                                                        TextEntry::make('id')->copyable()->label(__('red-jasmine-order::order.fields.order_status')),
                                                                        TextEntry::make('created_time')->label(__('red-jasmine-order::order.fields.created_time')),
