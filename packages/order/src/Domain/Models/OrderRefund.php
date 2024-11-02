@@ -44,7 +44,7 @@ class OrderRefund extends Model
     use SoftDeletes;
 
     use HasOperator;
-
+    public bool $withTradePartiesNickname = true;
     use HasTradeParties;
 
     public $incrementing = false;

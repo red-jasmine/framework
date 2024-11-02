@@ -37,10 +37,8 @@ class OrderRefundService
 
 
         // 填充 子商品单
-        $orderRefund->seller_type            = $order->seller_type;
-        $orderRefund->seller_id              = $order->seller_id;
-        $orderRefund->buyer_type             = $order->buyer_type;
-        $orderRefund->buyer_id               = $order->buyer_id;
+        $orderRefund->seller                 = $order->seller;
+        $orderRefund->buyer                  = $order->buyer;
         $orderRefund->shipping_type          = $orderProduct->shipping_type;
         $orderRefund->order_product_type     = $orderProduct->order_product_type;
         $orderRefund->product_type           = $orderProduct->product_type;
