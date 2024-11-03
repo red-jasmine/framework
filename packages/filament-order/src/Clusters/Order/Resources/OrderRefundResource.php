@@ -78,7 +78,9 @@ class OrderRefundResource extends Resource
                                          TextEntry::make('refund_amount')->label(__('red-jasmine-order::refund.fields.refund_amount')),
                                          TextEntry::make('total_refund_amount')->label(__('red-jasmine-order::refund.fields.total_refund_amount')),
                                          TextEntry::make('description')->label(__('red-jasmine-order::refund.fields.description')),
-                                         ImageEntry::make('images')->label(__('red-jasmine-order::refund.fields.images')),
+                                         ImageEntry::make('info.images')->label(__('red-jasmine-order::refund.fields.images'))->stacked()->limit(10)
+                                             ->checkFileExistence(false)
+                                             ->limitedRemainingText(),
 
                                      ])
                             ->inlineLabel()
@@ -356,6 +358,20 @@ class OrderRefundResource extends Resource
                 ...static::operateTableColumns()
             ])
             ->filters([
+
+                Tables\Filters\Filter::make('order_id')->form(
+                    [
+                        Forms\Components\TextInput::make('order_id')->label(__('red-jasmine-order::refund.fields.order_id'))
+                    ]
+                )
+
+                                                       ->query(function (Builder $query, array $data): Builder {
+
+                    return $query->when( $data['order_id'], fn (Builder $query, $data): Builder => $query->where('order_id', $data ));
+                }),
+
+
+
                 Tables\Filters\SelectFilter::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->options(RefundStatusEnum::options()),
                 Tables\Filters\SelectFilter::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->options(RefundTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->options(RefundPhaseEnum::options()),

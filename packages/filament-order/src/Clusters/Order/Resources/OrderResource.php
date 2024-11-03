@@ -16,6 +16,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -453,7 +454,16 @@ Tables\Columns\TextColumn::make('cost_amount')
                       ])
             ->filters([
 
+                          Tables\Filters\Filter::make('id')->form(
+                              [
+                                  Forms\Components\TextInput::make('id')->label(__('red-jasmine-order::order.fields.id'))
+                              ]
+                          )
 
+                                               ->query(function (Builder $query, array $data): Builder {
+
+                                                   return $query->when( $data['id'], fn (Builder $query, $data): Builder => $query->where('id', $data ));
+                                               }),
                           Tables\Filters\SelectFilter::make('order_status')
                                                      ->label(__('red-jasmine-order::order.fields.order_status'))
                                                      ->options(OrderStatusEnum::options()),
