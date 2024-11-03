@@ -37,7 +37,7 @@ return [
 
         'title' => '标题',
 
-        'product'            => '商品',
+        'product'          => '商品',
         'image'            => '商品图片',
         'product_type'     => '商品ID类型',
         'product_id'       => '商品ID',
@@ -76,12 +76,11 @@ return [
 
         'seller_remarks' => '卖家备注',
         'buyer_remarks'  => '买家备注',
-        'buyer_message'  => '买家留言',
-        'seller_message' => '卖家留言',
-        'seller_expands' => '卖家扩展信息',
-        'buyer_expands'  => '买家扩展信息',
-        'other_expands'  => '其他扩展信息',
-        'tools'          => '工具',
+        'description'    => '描述',
+        'images'         => '图片',
+        'reject_reason'  => '拒绝理由',
+        'expands'        => '扩展',
+
 
     ],
     'enums'  => [
