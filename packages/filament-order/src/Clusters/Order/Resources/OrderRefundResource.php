@@ -372,12 +372,14 @@ class OrderRefundResource extends Resource
 
 
 
+
                 Tables\Filters\SelectFilter::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->options(RefundStatusEnum::options()),
                 Tables\Filters\SelectFilter::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->options(RefundTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->options(RefundPhaseEnum::options()),
                 Tables\Filters\SelectFilter::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->options(RefundGoodsStatusEnum::options()),
 
             ],layout: Tables\Enums\FiltersLayout::AboveContent)
+            ->deferFilters()
             ->actions([
                 Tables\Actions\ViewAction::make(),
                // Tables\Actions\EditAction::make(),

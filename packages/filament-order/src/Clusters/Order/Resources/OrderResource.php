@@ -475,7 +475,7 @@ Tables\Columns\TextColumn::make('cost_amount')
                                                      ->options(ShippingTypeEnum::options()),
                           //Tables\Filters\TrashedFilter::make(),
                       ], layout: Tables\Enums\FiltersLayout::AboveContent)
-
+            ->deferFilters()
             ->actions([
                           Tables\Actions\ViewAction::make(),
                           OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
