@@ -16,8 +16,8 @@ enum LogisticsShipperEnum: string
     public static function labels() : array
     {
         return [
-            self::SELLER->value => '卖家',
-            self::BUYER->value  => '买家',
+            self::SELLER->value => __('red-jasmine-order::logistics.enums.shipper.seller'),
+            self::BUYER->value  => __('red-jasmine-order::logistics.enums.shipper.buyer'),
         ];
     }
 

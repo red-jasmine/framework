@@ -182,6 +182,10 @@ class OrderResource extends Resource
                                                           ->columns(2)
                                                           ->columnSpan(2),
 
+
+
+                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
+                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
                                               ])
                                      ->compact()
                                      ->collapsed(),

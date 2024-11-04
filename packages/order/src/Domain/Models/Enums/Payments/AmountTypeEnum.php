@@ -19,10 +19,10 @@ enum AmountTypeEnum: string
     {
 
         return [
-            self::FULL->value    => '全款',
-            self::DEPOSIT->value => '预付',
-            self::TAIL->value    => '尾款',
-            self::REFUND->value  => '退款',
+            self::FULL->value    => __('red-jasmine-order::payment.enums.amount_type.full'),
+            self::DEPOSIT->value => __('red-jasmine-order::payment.enums.amount_type.deposit'),
+            self::TAIL->value    => __('red-jasmine-order::payment.enums.amount_type.tail'),
+            self::REFUND->value  => __('red-jasmine-order::payment.enums.amount_type.refund'),
         ];
     }
 

@@ -15,8 +15,8 @@ enum LogisticsShippableTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::REFUND->value => '售后',
-            self::ORDER->value  => '退款',
+            self::REFUND->value => __('red-jasmine-order::logistics.enums.shippable_type.refund'),
+            self::ORDER->value  => __('red-jasmine-order::logistics.enums.shippable_type.order'),
         ];
     }
 
