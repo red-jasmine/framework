@@ -29,6 +29,7 @@ class OrderLogistics extends Component implements HasTable, HasForms
     {
 
         return $table
+            ->heading(__('red-jasmine-order::logistics.labels.order-logistics'))
             ->modelLabel(__('red-jasmine-order::logistics.labels.order-logistics'))
             ->query(Model::query()->where('shippable_id', $this->id))
             ->paginated(false)

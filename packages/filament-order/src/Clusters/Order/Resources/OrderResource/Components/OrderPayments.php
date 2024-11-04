@@ -28,6 +28,7 @@ class OrderPayments extends Component implements HasTable, HasForms
     {
 
         return $table
+            ->heading(__('red-jasmine-order::payment.labels.order-payments'))
             ->modelLabel(__('red-jasmine-order::payment.labels.order-payments'))
             ->query(OrderPayment::query()->where('order_id', $this->id))
             ->paginated(false)

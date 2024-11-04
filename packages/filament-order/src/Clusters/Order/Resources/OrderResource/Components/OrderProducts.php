@@ -27,6 +27,8 @@ class OrderProducts extends Component implements HasTable, HasForms
     {
 
         return $table
+            ->heading(__('red-jasmine-order::order.labels.products'))
+            ->modelLabel(__('red-jasmine-order::order.labels.products'))
             ->query(OrderProduct::query()->where('order_id', $this->id))
             ->paginated(false)
             ->columns([

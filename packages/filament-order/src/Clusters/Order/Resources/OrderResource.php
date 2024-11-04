@@ -96,6 +96,10 @@ class OrderResource extends Resource
                                                            ),
                                               ])
                                      ->columns(2)
+                              ->footerActions([
+                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('accept'),
+                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('reject'),
+                                              ])
                               ,
 
                               Section::make('订单信息')
