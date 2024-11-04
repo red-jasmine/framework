@@ -4,10 +4,11 @@
 return [
 
     'labels' => [
-        'order'  => '订单',
-        'status' => '状态',
-        'amount' => '金额',
-        'infos'  => '基本信息',
+        'order'    => '订单',
+        'status'   => '状态',
+        'amount'   => '金额',
+        'infos'    => '基本信息',
+        'products' => '商品',
     ],
     'fields' => [
         'id'                     => '订单编号',
@@ -170,6 +171,8 @@ return [
         'cancel-closed'            => '已取消/关闭',
     ],
     'actions' => [
-        'shipping' => '发货'
+        'shipping' => '发货',
+        'accept'   => '接单',
+        'reject'   => '拒单',
     ],
 ];

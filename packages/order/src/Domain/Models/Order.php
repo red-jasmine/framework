@@ -706,6 +706,24 @@ class Order extends Model implements OperatorInterface
         return false;
     }
 
+    public function isAccepting() : bool
+    {
+        if ($this->order_status === OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+            return false;
+        }
+
+        if (in_array($this->accept_status, [
+            AcceptStatusEnum::WAIT_ACCEPT,
+            AcceptStatusEnum::REJECTED,
+        ],           true)) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+
     /**
      * 添加或更新交易双方的备注信息
      *
