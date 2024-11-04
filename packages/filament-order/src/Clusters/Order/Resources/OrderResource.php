@@ -67,9 +67,11 @@ class OrderResource extends Resource
     {
         $infoList->schema([
                               Section::make(static fn(Model $record) => $record->id)
+                                     ->compact()
+                                     ->inlineLabel()
                                      ->schema([
-                                                  TextEntry::make('order_status')->label(__('red-jasmine-order::order.fields.order_status'))
-                                                           ->useEnum(),
+                                                  TextEntry::make('order_status')->label(__('red-jasmine-order::order.fields.order_status'))->useEnum(),
+                                                  TextEntry::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status'))->badge(),
                                                   RatingEntry::make('star')
                                                              ->stars(10)
                                                              ->allowZero()
@@ -87,7 +89,7 @@ class OrderResource extends Resource
                                                   TextEntry::make('info.seller_remarks')
                                                            ->hintColor('primary')
                                                            ->hintIcon('heroicon-m-exclamation-circle')
-                                                           ->hint(__('red-jasmine-order::tips.seller_remarks'))
+                                                           ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
                                                            ->label(__('red-jasmine-order::order.fields.seller_remarks'))
                                                            ->prefixAction(
                                                                OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_remarks')
@@ -97,21 +99,33 @@ class OrderResource extends Resource
                               ,
 
                               Section::make('订单信息')
+                                     ->compact()
                                      ->schema([
 
                                                   Fieldset::make('infos')
+                                                          ->label(__('red-jasmine-order::order.labels.infos'))
                                                           ->schema([
-                                                                       TextEntry::make('id')->copyable()->label(__('red-jasmine-order::order.fields.order_status')),
+                                                                       TextEntry::make('id')->copyable()->label(__('red-jasmine-order::order.fields.id')),
+                                                                       TextEntry::make('shipping_type')->label(__('red-jasmine-order::order.fields.shipping_type'))->useEnum(),
+                                                                       TextEntry::make('order_type')->label(__('red-jasmine-order::order.fields.order_type'))->useEnum(),
                                                                        TextEntry::make('created_time')->label(__('red-jasmine-order::order.fields.created_time')),
                                                                        TextEntry::make('payment_time')->label(__('red-jasmine-order::order.fields.payment_time')),
-                                                                       TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
-                                                                       TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
                                                                        TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
+
+
+                                                                       //TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
+                                                                       //TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
+                                                                       //TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
+                                                                       //TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
+                                                                       //TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
+                                                                       //TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
+                                                                       //TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
+                                                                       //TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
 
                                                                    ])
                                                           ->inlineLabel()
-                                                          ->columns(1)
-                                                          ->columnSpan(1),
+                                                          ->columns(2)
+                                                          ->columnSpan(2),
 
 
                                                   Fieldset::make('seller')
@@ -147,7 +161,30 @@ class OrderResource extends Resource
 
                                               ])->columns(5),
 
+                              Section::make('更多')
+                                     ->schema([
 
+
+                                                  Fieldset::make('infos')
+                                                          ->label(__('red-jasmine-order::order.labels.infos'))
+                                                          ->schema([
+                                                                       TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
+                                                                       TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
+                                                                       TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
+                                                                       TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
+                                                                       TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
+                                                                       TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
+                                                                       TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
+                                                                       TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
+
+                                                                   ])
+                                                          ->inlineLabel()
+                                                          ->columns(2)
+                                                          ->columnSpan(2),
+
+                                              ])
+                                     ->compact()
+                                     ->collapsed(),
                               Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
 
                               Fieldset::make('amount')
@@ -459,10 +496,9 @@ Tables\Columns\TextColumn::make('cost_amount')
                                   Forms\Components\TextInput::make('id')->label(__('red-jasmine-order::order.fields.id'))
                               ]
                           )
+                                               ->query(function (Builder $query, array $data) : Builder {
 
-                                               ->query(function (Builder $query, array $data): Builder {
-
-                                                   return $query->when( $data['id'], fn (Builder $query, $data): Builder => $query->where('id', $data ));
+                                                   return $query->when($data['id'], fn(Builder $query, $data) : Builder => $query->where('id', $data));
                                                }),
                           Tables\Filters\SelectFilter::make('order_status')
                                                      ->label(__('red-jasmine-order::order.fields.order_status'))

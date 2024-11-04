@@ -7,6 +7,7 @@ return [
         'order'  => '订单',
         'status' => '状态',
         'amount' => '金额',
+        'infos'  => '基本信息',
     ],
     'fields' => [
         'id'                     => '订单编号',
@@ -41,6 +42,7 @@ return [
         'service_amount'         => '服务费',
         'created_time'           => '创建时间',
         'payment_time'           => '付款时间',
+        'accept_time'            => '接单时间',
         'close_time'             => '关闭时间',
         'shipping_time'          => '发货时间',
         'collect_time'           => '揽收时间',
