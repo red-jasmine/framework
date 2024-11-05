@@ -4,41 +4,31 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\Livewire;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\View;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentOrder\Clusters\Order as OrderCluster;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
-use RedJasmine\FilamentOrder\Filament\Tables\Columns\OrderProduct;
-
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\FilamentOrder\Clusters\Order as OrderCluster;
 
 class OrderResource extends Resource
 {
@@ -97,15 +87,15 @@ class OrderResource extends Resource
                                                            ),
                                               ])
                                      ->columns(2)
-                              ->footerActions([
-                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('accept')
-                                                  ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
-                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('reject')
-                                                      ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
+                                     ->footerActions([
+                                                         OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('accept')
+                                                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ])),
+                                                         OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('reject')
+                                                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ])),
 
-                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderShippingInfoListAction::make('shipping')
-                                                                                                                                 ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
-                                              ])
+                                                         OrderCluster\Resources\OrderResource\Actions\InfoList\OrderShippingInfoListAction::make('shipping')
+                                                                                                                                          ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ])),
+                                                     ])
                               ,
 
                               Section::make('订单信息')
@@ -193,7 +183,6 @@ class OrderResource extends Resource
                                                           ->columnSpan(2),
 
 
-
                                                   Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-payments')->columnSpanFull(),
                                                   Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-logistics')->columnSpanFull(),
                                               ])
@@ -226,7 +215,7 @@ class OrderResource extends Resource
 
     public static function form(Form $form) : Form
     {
-       return  $form;
+        return $form;
     }
 
     public static function table(Table $table) : Table
@@ -362,6 +351,7 @@ Tables\Columns\TextColumn::make('cost_amount')
 
                                                    return $query->when($data['id'], fn(Builder $query, $data) : Builder => $query->where('id', $data));
                                                }),
+
                           Tables\Filters\SelectFilter::make('order_status')
                                                      ->label(__('red-jasmine-order::order.fields.order_status'))
                                                      ->options(OrderStatusEnum::options()),
@@ -371,8 +361,33 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Filters\SelectFilter::make('shipping_type')
                                                      ->label(__('red-jasmine-order::order.fields.shipping_type'))
                                                      ->options(ShippingTypeEnum::options()),
+
+                          DateRangeFilter::make('created_time')
+                                         ->withIndicator()
+                                         ->alwaysShowCalendar()
+                                         ->timePickerSecond()
+                                         ->displayFormat('YYYY/MM/DD')
+                                         ->format('Y/m/d')
+                                         ->timePicker24()
+                                         ->icon('heroicon-o-backspace')
+                                         ->linkedCalendars()
+                                         ->autoApply()
+                                         ->label(__('red-jasmine-order::order.fields.created_time')),
+
+                          DateRangeFilter::make('payment_time')
+                                         ->withIndicator()
+                                         ->alwaysShowCalendar()
+                                         ->timePickerSecond()
+                                         ->displayFormat('YYYY/MM/DD')
+                                         ->format('Y/m/d')
+                                         ->timePicker24()
+                                         ->icon('heroicon-o-backspace')
+                                         ->linkedCalendars()
+                                         ->autoApply()
+                                         ->label(__('red-jasmine-order::order.fields.payment_time')),
+
                           //Tables\Filters\TrashedFilter::make(),
-                      ], layout: Tables\Enums\FiltersLayout::AboveContent)
+                      ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->actions([
                           Tables\Actions\ViewAction::make(),

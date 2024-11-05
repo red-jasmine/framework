@@ -8,6 +8,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Model;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
@@ -373,12 +374,40 @@ class OrderRefundResource extends Resource
 
 
 
+
+
                 Tables\Filters\SelectFilter::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->options(RefundStatusEnum::options()),
                 Tables\Filters\SelectFilter::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->options(RefundTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->options(RefundPhaseEnum::options()),
                 Tables\Filters\SelectFilter::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->options(RefundGoodsStatusEnum::options()),
 
-            ],layout: Tables\Enums\FiltersLayout::AboveContent)
+
+                DateRangeFilter::make('created_time')
+                               ->withIndicator()
+                               ->alwaysShowCalendar()
+                               ->timePickerSecond()
+                               ->displayFormat('YYYY/MM/DD')
+                               ->format('Y/m/d')
+                               ->timePicker24()
+                               ->icon('heroicon-o-backspace')
+                               ->linkedCalendars()
+                               ->autoApply()
+                               ->label(__('red-jasmine-order::refund.fields.created_time')),
+
+                DateRangeFilter::make('end_time')
+                               ->withIndicator()
+                               ->alwaysShowCalendar()
+                               ->timePickerSecond()
+                               ->displayFormat('YYYY/MM/DD')
+                               ->format('Y/m/d')
+                               ->timePicker24()
+                               ->icon('heroicon-o-backspace')
+                               ->linkedCalendars()
+                               ->autoApply()
+                               ->label(__('red-jasmine-order::refund.fields.end_time')),
+
+
+            ],layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->actions([
                 Tables\Actions\ViewAction::make(),
