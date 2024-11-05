@@ -3,12 +3,15 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyStatusEnum;
 
 return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
+
             $table->string('seller_type')->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type')->comment('买家类型');
@@ -16,8 +19,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->unsignedBigInteger('order_product_id')->comment('商品ID');
             $table->unsignedBigInteger('num')->default(1)->comment('数量');
+            $table->string('content_type')->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
             $table->text('content')->nullable()->comment('内容');
-            $table->string('status')->nullable()->comment('状态');
+            $table->string('source_type')->nullable()->comment('来源类型');
+            $table->string('source_id')->nullable()->comment('来源类型');
+            $table->string('status')->nullable()->comment(OrderCardKeyStatusEnum::comments('状态'));
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();

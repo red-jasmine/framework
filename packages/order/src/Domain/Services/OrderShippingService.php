@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Domain\Services;
 
 use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Order;
@@ -144,6 +145,7 @@ class OrderShippingService
     public function dummy(Order $order, int $orderProductId, bool $isFinished = true) : void
     {
         $this->validate($order);
+
         $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
 
         if ($orderProduct->shipping_type !== ShippingTypeEnum::DUMMY) {
@@ -155,6 +157,8 @@ class OrderShippingService
         }
         $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
+
+
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             $orderProduct->collect_time = now(); // 虚拟商品作为最后一次发货时间
         }

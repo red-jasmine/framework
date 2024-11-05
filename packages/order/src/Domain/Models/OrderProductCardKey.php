@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Order\Domain\Models\Enums\OrderCardKeyStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;

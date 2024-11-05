@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\Domain\Models\Enums;
+namespace RedJasmine\Order\Domain\Models\Enums\CardKeys;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

@@ -72,6 +72,11 @@ class OrderStandardFlow implements OrderFlowInterface
 
     public function shipping(Order $order) : void
     {
+        $order->products->each(function (OrderProduct $product) {
+            if ($product->shipping_status === ShippingStatusEnum::SHIPPED && $product->isEffective()) {
+                $product->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
+            }
+        });
 
     }
 

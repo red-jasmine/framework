@@ -248,4 +248,15 @@ class OrderProduct extends Model
     }
 
 
+    public function isAllowSetProgress()
+    {
+        if ($this->shipping_type === ShippingTypeEnum::DUMMY) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+
 }

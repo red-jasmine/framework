@@ -356,6 +356,9 @@ class Order extends Model implements OperatorInterface
         if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
+        if ($this->accept_status !== AcceptStatusEnum::WAIT_ACCEPT) {
+            throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
+        }
         $this->accept_status = AcceptStatusEnum::REJECTED;
         $this->close_time    = now();
         $this->cancel_reason = $reason;
