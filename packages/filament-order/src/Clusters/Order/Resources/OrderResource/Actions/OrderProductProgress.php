@@ -17,7 +17,7 @@ trait OrderProductProgress
         $this->label(__('red-jasmine-order::order.fields.product.progress'));
         $this->icon('heroicon-o-arrow-right-circle');
 
-        // TODO 根据状态显示
+        $this->visible(fn($record)=>$record->isAllowSetProgress());
 
         $this->fillForm(fn($record) : array => [
             'progress'       => $record->progress,

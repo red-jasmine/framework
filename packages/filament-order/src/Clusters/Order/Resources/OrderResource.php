@@ -194,8 +194,8 @@ class OrderResource extends Resource
 
 
 
-                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
-                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
+                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-payments')->columnSpanFull(),
+                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-logistics')->columnSpanFull(),
                                               ])
                                      ->compact()
                                      ->collapsed(),
@@ -226,159 +226,7 @@ class OrderResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->schema([
-                         Forms\Components\TextInput::make('seller_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('seller_id')
-                                                   ->required()
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('seller_nickname')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('buyer_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('buyer_id')
-                                                   ->required()
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('buyer_nickname')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('title')
-                                                   ->maxLength(255),
-                         Forms\Components\Select::make('order_type')
-                                                ->useEnum(OrderTypeEnum::class)
-                                                ->required()
-                         ,
-                         Forms\Components\Select::make('order_status')
-                                                ->useEnum(PayTypeEnum::class)
-                                                ->required()
-                         ,
-                         Forms\Components\Select::make('payment_status')
-                                                ->useEnum(PaymentStatusEnum::class),
-                         Forms\Components\Select::make('shipping_status')
-                                                ->useEnum(ShippingStatusEnum::class),
-                         Forms\Components\Select::make('rate_status')
-                                                ->useEnum(RateStatusEnum::class),
-                         Forms\Components\Select::make('settlement_status')
-                                                ->useEnum(SettlementStatusEnum::class),
-                         Forms\Components\TextInput::make('seller_custom_status')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('product_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('cost_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('tax_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('commission_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('product_payable_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('freight_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('discount_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('payable_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('payment_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-                         Forms\Components\TextInput::make('refund_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)->formatStateUsing(fn($state
-                             ) => is_object($state) ? $state->value() : $state),
-
-                         Forms\Components\DateTimePicker::make('created_time'),
-                         Forms\Components\DateTimePicker::make('payment_time'),
-                         Forms\Components\DateTimePicker::make('close_time'),
-                         Forms\Components\DateTimePicker::make('shipping_time'),
-                         Forms\Components\DateTimePicker::make('collect_time'),
-                         Forms\Components\DateTimePicker::make('dispatch_time'),
-                         Forms\Components\DateTimePicker::make('signed_time'),
-                         Forms\Components\DateTimePicker::make('confirm_time'),
-                         Forms\Components\DateTimePicker::make('refund_time'),
-                         Forms\Components\DateTimePicker::make('rate_time'),
-                         Forms\Components\DateTimePicker::make('settlement_time'),
-                         Forms\Components\TextInput::make('channel_type')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('channel_id')
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('channel_name')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('guide_type')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('guide_id')
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('guide_name')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('store_type')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('store_id')
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('store_name')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('client_type')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('client_version')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('client_ip')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('source_type')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('source_id')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('contact')->maxLength(255),
-                         Forms\Components\TextInput::make('password')->maxLength(255),
-                         Forms\Components\TextInput::make('star')
-                                                   ->numeric(),
-                         Forms\Components\Toggle::make('is_seller_delete')
-                                                ->required(),
-                         Forms\Components\Toggle::make('is_buyer_delete')
-                                                ->required(),
-                         Forms\Components\TextInput::make('outer_order_id')
-                                                   ->maxLength(64),
-                         Forms\Components\TextInput::make('cancel_reason')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('version')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('creator_type')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('creator_id')
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('updater_type')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('updater_id')
-                                                   ->numeric(),
-                     ]);
+       return  $form;
     }
 
     public static function table(Table $table) : Table
@@ -528,10 +376,9 @@ Tables\Columns\TextColumn::make('cost_amount')
             ->deferFilters()
             ->actions([
                           Tables\Actions\ViewAction::make(),
-                          OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping')
-                                                                                                     ->url(fn($record) => static::getUrl('shipping', [ 'record' => $record->id ]))
-
-                          ,
+                          OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping'),
+                          OrderCluster\Resources\OrderResource\Actions\Table\OrderAcceptTableAction::make('accept'),
+                          OrderCluster\Resources\OrderResource\Actions\Table\OrderAcceptTableAction::make('reject'),
                           // 其他操作
 
                           Tables\Actions\ActionGroup::make([

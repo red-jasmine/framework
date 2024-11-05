@@ -5,6 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderRejectCommand;
+use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait Accept
@@ -20,13 +21,17 @@ trait Accept
         if ($this->getName() === 'accept') {
             $this->color('success');
             $this->icon('heroicon-o-check-badge');
+            $this->visible(fn($record) => $record->isAccepting());
         } else {
             $this->color('danger');
             $this->icon('heroicon-o-x-circle');
-        }
-        //$this->requiresConfirmation();
 
-        $this->visible(fn($record) => $record->isAccepting());
+            $this->visible(fn($record) => $record->isAccepting() && $record->accept_status === AcceptStatusEnum::WAIT_ACCEPT);
+        }
+        $this->requiresConfirmation();
+
+
+
 
         $this->action(function ($data, $record) {
 
@@ -48,7 +53,5 @@ trait Accept
             $this->successNotificationTitle('ok');
             $this->success();
         });
-
-        //$this->requiresConfirmation();
     }
 }

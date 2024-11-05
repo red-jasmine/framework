@@ -3,7 +3,13 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
+use RedJasmine\Support\Exceptions\AbstractException;
 
 trait Shipping
 {
@@ -31,29 +37,85 @@ trait Shipping
         });
 
 
+        $this->action(function ($data, $record) {
+
+            try {
+                match ($record->shipping_type) {
+                    ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
+                    ShippingTypeEnum::EXPRESS => $this->dummyAction($data, $record),
+                    ShippingTypeEnum::CDK => $this->cdkAction($data, $record),
+                    ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
+                    ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
+
+                };
+            } catch (AbstractException $abstractException) {
+                Notification::make()->danger()
+                            ->title($abstractException->getMessage())
+                            ->send();
+                return;
+            }
+
+
+            Notification::make()->success()
+                        ->title('OK')
+                        ->send();
+        });
+
+
     }
 
 
-    protected  function cdkForm($record) : array
+    protected function cdkForm($record) : array
     {
         return [
 
             Forms\Components\Radio::make('order_product_id')
-                                         ->label(__('red-jasmine-order::order.fields.products'))
-                                         ->options($record->products->pluck('title', 'id')->toArray()),
+                                  ->required()
+                                  ->label(__('red-jasmine-order::order.fields.products'))
+                                  ->options($record->products->pluck('title', 'id')->toArray()),
 
+
+            Forms\Components\Radio::make('content_type')
+                                  ->required()
+                                  ->inline()
+                                  ->default(OrderCardKeyContentTypeEnum::TEXT->value)
+                                  ->label(__('red-jasmine-order::card-keys.fields.content_type'))
+                                  ->options(OrderCardKeyContentTypeEnum::options()),
+            Forms\Components\Textarea::make('content')
+                                     ->required()
+                                     ->rows(5)
+                                     ->label(__('red-jasmine-order::card-keys.fields.content'))
+            ,
+            Forms\Components\TextInput::make('num')
+                                      ->required()
+                                      ->default(1)
+                                      ->numeric()->minValue(1)
+                                      ->label(__('red-jasmine-order::card-keys.fields.num'))
+            ,
+            Forms\Components\TextInput::make('source_type')->label(__('red-jasmine-order::card-keys.fields.source_type')),
+            Forms\Components\TextInput::make('source_id')->label(__('red-jasmine-order::card-keys.fields.source_id')),
 
 
         ];
     }
 
+
+
+    protected function cdkAction($data, $record):void
+    {
+        $data['id'] = $record->id;
+        $command    = OrderCardKeyShippingCommand::from($data);
+        app(OrderCommandService::class)->cardKeyShipping($command);
+    }
     protected function dummyForm($record) : array
     {
         return [
 
             Forms\Components\CheckboxList::make('order_products')
                                          ->label(__('red-jasmine-order::order.fields.products'))
-                                         ->options($record->products->pluck('title', 'id')->toArray()),
+                                         ->options($record->products->pluck('title', 'id')->toArray())
+                                         ->bulkToggleable()
+            ,
 
             Forms\Components\ToggleButtons::make('is_finished')
                                           ->label(__('red-jasmine-order::commands.shipping.is_finished'))
@@ -64,10 +126,19 @@ trait Shipping
         ];
     }
 
+
+    protected function dummyAction($data, $record) : void
+    {
+
+        $data['id'] = $record->id;
+        $command    = OrderDummyShippingCommand::from($data);
+        app(OrderCommandService::class)->dummyShipping($command);
+
+    }
+
     protected function expressForm($record) : array
     {
-        return  [
-
+        return [
             Forms\Components\ToggleButtons::make('is_split')
                                           ->label(__('red-jasmine-order::commands.shipping.is_split'))
                                           ->default(false)
@@ -85,6 +156,7 @@ trait Shipping
             Forms\Components\TextInput::make('express_no')
                                       ->label(__('red-jasmine-order::commands.shipping.express_no'))
                                       ->required(),
+
 
         ];
     }
