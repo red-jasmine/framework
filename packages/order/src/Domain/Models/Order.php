@@ -708,7 +708,7 @@ class Order extends Model implements OperatorInterface
 
     public function isAccepting() : bool
     {
-        if ($this->order_status === OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
             return false;
         }
 

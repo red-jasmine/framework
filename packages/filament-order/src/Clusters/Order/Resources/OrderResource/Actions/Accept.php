@@ -4,9 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderRejectCommand;
-use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait Accept
@@ -19,14 +17,14 @@ trait Accept
 
         $this->label(label: __('red-jasmine-order::order.actions.' . $this->getName()));
 
-        if($this->getName() === 'accept'){
+        if ($this->getName() === 'accept') {
             $this->color('success');
             $this->icon('heroicon-o-check-badge');
-        }else{
+        } else {
             $this->color('danger');
             $this->icon('heroicon-o-x-circle');
         }
-
+        //$this->requiresConfirmation();
 
         $this->visible(fn($record) => $record->isAccepting());
 
@@ -35,10 +33,11 @@ trait Accept
             $data['id'] = $record->id;
 
             try {
+
                 if ($this->getName() === 'accept') {
                     app(OrderCommandService::class)->accept(OrderAcceptCommand::from($data));
                 } else {
-                    app(OrderCommandService::class)->accept(OrderRejectCommand::from($data));
+                    app(OrderCommandService::class)->reject(OrderRejectCommand::from($data));
                 }
 
             } catch (AbstractException $abstractException) {
@@ -49,5 +48,7 @@ trait Accept
             $this->successNotificationTitle('ok');
             $this->success();
         });
+
+        //$this->requiresConfirmation();
     }
 }

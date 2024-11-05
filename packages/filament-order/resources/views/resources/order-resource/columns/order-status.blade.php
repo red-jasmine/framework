@@ -5,7 +5,7 @@
         {{$getState()?->getLabel()}}
     </x-filament::badge>
 
-    @if($getState() === OrderStatusEnum::WAIT_SELLER_ACCEPT)
+    @if($getState() === OrderStatusEnum::WAIT_SELLER_ACCEPT && $getRecord()->accept_status === \RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum::REJECTED)
 
         <x-filament::badge color="{{$getRecord()->accept_status?->getColor()}}"
                            icon="{{$getRecord()->accept_status?->getIcon()}}">

@@ -72,6 +72,7 @@ class OrderResource extends Resource
                                      ->schema([
                                                   TextEntry::make('order_status')->label(__('red-jasmine-order::order.fields.order_status'))->useEnum(),
                                                   TextEntry::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status'))->badge(),
+                                                  TextEntry::make('accept_status')->label(__('red-jasmine-order::order.fields.accept_status'))->useEnum(),
                                                   RatingEntry::make('star')
                                                              ->stars(10)
                                                              ->allowZero()
@@ -97,8 +98,13 @@ class OrderResource extends Resource
                                               ])
                                      ->columns(2)
                               ->footerActions([
-                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('accept'),
-                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('reject'),
+                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('accept')
+                                                  ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
+                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderAcceptInfoListAction::make('reject')
+                                                      ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
+
+                                                  OrderCluster\Resources\OrderResource\Actions\InfoList\OrderShippingInfoListAction::make('shipping')
+                                                                                                                                 ->successRedirectUrl(static fn(Model $model)=>static::getUrl('view',['record'=>$model->id])),
                                               ])
                               ,
 
