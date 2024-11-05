@@ -27,7 +27,8 @@
         "guava/filament-clusters": "*",
         "ibrahim-bougaoua/filaprogress": "*",
         "awcodes/filament-table-repeater": "^3.0",
-        "codewithdennis/filament-select-tree": "*"
+        "codewithdennis/filament-select-tree": "*",
+        "malzariey/filament-daterangepicker-filter": "*"
     },
     "require-dev": {
         "nunomaduro/collision": "^7.9",

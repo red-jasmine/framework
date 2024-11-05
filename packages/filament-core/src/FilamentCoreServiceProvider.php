@@ -8,6 +8,7 @@ use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -152,6 +153,8 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
             }
             return $this;
         });
+
+        Table::$defaultDateTimeDisplayFormat = 'Y-m-d H:i:s';
 
 
     }
