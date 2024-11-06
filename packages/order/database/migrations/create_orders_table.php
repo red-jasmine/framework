@@ -50,8 +50,11 @@ return new class extends Migration {
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
-            // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等
+            // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等 分钟
             $table->unsignedInteger('wait_accept_max_time')->default(0)->comment('等待接单最大时长');
+            $table->unsignedInteger('wait_payment_max_time')->default(0)->comment('等待确认最大时长');
+            $table->unsignedInteger('wait_confirm_max_time')->default(0)->comment('等待确认最大时长');
+
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');
             $table->timestamp('accept_time')->nullable()->comment('接单时间');
