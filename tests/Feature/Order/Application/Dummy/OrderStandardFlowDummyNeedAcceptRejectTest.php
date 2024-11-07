@@ -31,7 +31,7 @@ beforeEach(function () {
     $orderFake                       = new OrderDummyFake();
     $orderFake->orderType            = OrderTypeEnum::STANDARD;
     $orderFake->shippingType         = ShippingTypeEnum::DUMMY;
-    $orderFake->wait_accept_max_time = 30;
+    $orderFake->accept_wait_max_time = 30;
     $this->orderFake                 = $orderFake;
     //
 });

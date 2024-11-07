@@ -8,6 +8,8 @@ use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -57,13 +59,7 @@ class OrderData extends Data
      */
     public string $title;
 
-    /**
-     * 等待接单自动确认时间
-     * 单位： 分钟
-     * 当为 0 时 是付款成功后 立即确认
-     * @var int
-     */
-    public int     $waitAcceptMaxTime  = 0;
+
     public ?string $sourceType         = null;
     public ?string $sourceId           = null;
     public ?string $outerOrderId       = null;
@@ -95,6 +91,36 @@ class OrderData extends Data
      * @var OrderAddressData|null
      */
     public ?OrderAddressData $address;
+
+
+    /**
+     * 等待接单自动确认时间
+     * 单位： 分钟
+     * 当为 0 时 是付款成功后 立即确认
+     * 当 为 -1 时  无限等待
+     * @var int
+     */
+    public int $waitAcceptMaxTime = 0;
+
+
+    // 自定处理流程控制
+    /**
+     * @var int
+     */
+    public int $paymentWaitMaxTime = -1;
+    /**
+     * @var int
+     */
+    public int $acceptWaitMaxTime  = -1;
+    /**
+     * @var int
+     */
+    public int $confirmWaitMaxTime = -1;
+    /**
+     * @var int
+     */
+    public int $rateWaitMaxTime    = -1;
+
 
     public function __construct()
     {

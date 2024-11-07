@@ -35,7 +35,7 @@ beforeEach(function () {
     $orderFake                       = new OrderDummyFake();
     $orderFake->orderType            = OrderTypeEnum::STANDARD;
     $orderFake->shippingType         = ShippingTypeEnum::DUMMY;
-    $orderFake->wait_accept_max_time = 30;
+    $orderFake->accept_wait_max_time = 30;
     $this->orderFake                 = $orderFake;
     //
 });
@@ -230,7 +230,6 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 })->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 
-
 test('can confirm a order', function (Order $order) {
 
     $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
@@ -243,8 +242,6 @@ test('can confirm a order', function (Order $order) {
 
 
 })->depends('can shipped a order');
-
-
 
 
 test('can custom status a order', function (Order $order) {

@@ -37,7 +37,10 @@ class OrderDummyFake
     public int    $unitQuantity = 1;
 
 
-    public int $wait_accept_max_time = 0;
+    public int $payment_wait_max_time = -1;
+    public int $accept_wait_max_time  = 0;
+    public int $confirm_wait_max_time = -1;
+    public int $rate_wait_max_time    = -1;
 
     public function order(array $order = []) : array
     {
@@ -54,24 +57,27 @@ class OrderDummyFake
 
 
         $fake = [
-            'buyer'                => [
+            'buyer'                 => [
                 'type'     => $user->getType(),
                 'id'       => $user->getId(),
                 'nickname' => fake()->name(),
             ],
-            'seller'               => [
+            'seller'                => [
                 'type'     => 'seller',
                 'id'       => fake()->numberBetween(1000000, 999999999),
                 'nickname' => fake()->name(),
             ],
-            'title'                => fake()->text(),
-            'order_type'           => $this->orderType->value,
-            'shipping_type'        => $this->shippingType->value,
-            'source_type'          => fake()->randomElement([ 'product', 'activity' ]),
-            'source_id'            => fake()->numerify('out-order-id-########'),
-            'outer_order_id'       => fake()->numerify('out-order-id-########'),
-            'wait_accept_max_time' => $this->wait_accept_max_time,
-            'channel'              => [
+            'title'                 => fake()->text(),
+            'order_type'            => $this->orderType->value,
+            'shipping_type'         => $this->shippingType->value,
+            'source_type'           => fake()->randomElement([ 'product', 'activity' ]),
+            'source_id'             => fake()->numerify('out-order-id-########'),
+            'outer_order_id'        => fake()->numerify('out-order-id-########'),
+            'payment_wait_max_time' => $this->payment_wait_max_time,
+            'accept_wait_max_time'  => $this->accept_wait_max_time,
+            'confirm_wait_max_time' => $this->confirm_wait_max_time,
+            'rate_wait_max_time'    => $this->rate_wait_max_time,
+            'channel'               => [
                 'type'     => fake()->randomElement([ 'channel', ]),
                 'id'       => fake()->randomNumber(5, true),
                 'nickname' => fake()->name(),

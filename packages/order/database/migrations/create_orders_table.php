@@ -50,10 +50,7 @@ return new class extends Migration {
             $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
             $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
-            // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等 分钟
-            $table->unsignedInteger('wait_accept_max_time')->default(0)->comment('等待接单最大时长');
-            $table->unsignedInteger('wait_payment_max_time')->default(0)->comment('等待确认最大时长');
-            $table->unsignedInteger('wait_confirm_max_time')->default(0)->comment('等待确认最大时长');
+
 
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');
@@ -88,6 +85,14 @@ return new class extends Migration {
             // 卡密专用
             $table->string('contact')->nullable()->comment('联系方式');
             $table->string('password')->nullable()->comment('查询密码');
+
+
+            // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等 分钟
+            $table->bigInteger('payment_wait_max_time')->default(0)->comment('付款等待最大时长');
+            $table->bigInteger('accept_wait_max_time')->default(0)->comment('接单等待最大时长');
+            $table->bigInteger('confirm_wait_max_time')->default(0)->comment('确认等待最大时长');
+            $table->bigInteger('rate_wait_max_time')->default(0)->comment('评价等待最大时长');
+
 
             $table->unsignedTinyInteger('star')->nullable()->comment('加星');
             $table->boolean('is_seller_delete')->default(false)->comment('卖家删除');

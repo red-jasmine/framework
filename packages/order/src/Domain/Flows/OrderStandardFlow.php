@@ -42,7 +42,7 @@ class OrderStandardFlow implements OrderFlowInterface
         });
 
         // 为自定接受
-        if ($order->wait_accept_max_time === 0) {
+        if ($order->accept_wait_max_time === 0) {
             $order->accept();
         }
 

@@ -33,7 +33,6 @@ class OrderTransformer
         $order->client_type          = $orderData->clientType;
         $order->client_version       = $orderData->clientVersion;
         $order->client_ip            = $orderData->clientIp;
-        $order->wait_accept_max_time = $orderData->waitAcceptMaxTime;
         $order->outer_order_id       = $orderData->outerOrderId;
         $order->info->seller_remarks = $orderData->sellerRemarks;
         $order->info->seller_message = $orderData->sellerMessage;
@@ -43,6 +42,12 @@ class OrderTransformer
         $order->info->buyer_expands  = $orderData->buyerExpands;
         $order->info->other_expands  = $orderData->otherExpands;
         $order->info->tools          = $orderData->tools;
+
+
+        $order->payment_wait_max_time = $orderData->paymentWaitMaxTime;
+        $order->accept_wait_max_time  = $orderData->acceptWaitMaxTime;
+        $order->confirm_wait_max_time = $orderData->confirmWaitMaxTime;
+        $order->rate_wait_max_time    = $orderData->rateWaitMaxTime;
 
 
         // 转换商品项实体
