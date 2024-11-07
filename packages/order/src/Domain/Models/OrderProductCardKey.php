@@ -5,6 +5,7 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -32,14 +33,16 @@ class OrderProductCardKey extends Model
 
         return $model;
     }
+
     public function getTable() : string
     {
         return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys';
     }
 
     protected $casts = [
-        'expands' => 'array',
-        'status'  => OrderCardKeyStatusEnum::class,
+        'expands'      => 'array',
+        'content_type' => OrderCardKeyContentTypeEnum::class,
+        'status'       => OrderCardKeyStatusEnum::class,
     ];
 
     public function orderProduct() : BelongsTo

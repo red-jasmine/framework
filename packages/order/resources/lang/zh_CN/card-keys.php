@@ -22,6 +22,7 @@ return [
         'content'          => '卡密内容',
         'source_type'      => '来源类型',
         'source_id'        => '来源ID',
+        'status'           => '状态',
 
 
     ],

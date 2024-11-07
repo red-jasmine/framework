@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
             $table->string('shippable_type')->comment(LogisticsShippableTypeEnum::comments('发货单类型'));
             $table->unsignedBigInteger('shippable_id')->comment('订单或退款 ID');
-            $table->string('order_product_id')->nullable()->comment('订单商品单号');
+            $table->string('order_product_id')->nullable()->comment('订单商品项单号');
             $table->string('shipper', 32)->comment(LogisticsShipperEnum::comments('发货方'));
             $table->string('status', 32)->comment(LogisticsStatusEnum::comments('状态'));
             $table->string('express_company_code')->comment('快递公司代码');

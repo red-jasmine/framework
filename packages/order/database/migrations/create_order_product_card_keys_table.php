@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('buyer_type')->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家类型');
             $table->unsignedBigInteger('order_id')->comment('订单ID');
-            $table->unsignedBigInteger('order_product_id')->comment('商品ID');
+            $table->unsignedBigInteger('order_product_id')->comment('订单商品项单号');
             $table->unsignedBigInteger('num')->default(1)->comment('数量');
             $table->string('content_type')->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
             $table->text('content')->nullable()->comment('内容');
