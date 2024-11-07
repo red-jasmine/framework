@@ -3,12 +3,12 @@
 
 return [
 
-    'labels' => [
+    'labels'  => [
         'refund' => '售后',
         'status' => '状态',
         'amount' => '金额',
     ],
-    'fields' => [
+    'fields'  => [
         'id'                   => '售后编号',
         'order_id'             => '订单编号',
         'order_product_id'     => '订单商品项编号',
@@ -83,7 +83,7 @@ return [
 
 
     ],
-    'enums'  => [
+    'enums'   => [
 
         'order_type'     => [
             'standard'       => '标准',
@@ -112,6 +112,10 @@ return [
             'rejected'    => '已拒单',
         ],
 
+    ],
+    'actions' => [
+        'agree'  => '同意退款',
+        'reject' => '拒绝',
     ],
 
     'scopes' => [

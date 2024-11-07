@@ -23,6 +23,7 @@ use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
@@ -44,6 +45,7 @@ class OrderRefund extends Model
     use SoftDeletes;
 
     use HasOperator;
+
     public bool $withTradePartiesNickname = true;
     use HasTradeParties;
 
@@ -155,19 +157,28 @@ class OrderRefund extends Model
     public function reject(string $reason) : void
     {
 
+        if (!$this->isAllowReject()) {
+            throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
+        }
+
+        $this->info->reject_reason    = $reason;
+        $this->refund_status          = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->product->refund_status = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->fireModelEvent('rejected', false);
+    }
+
+    public function isAllowReject() : bool
+    {
         if (!in_array($this->refund_status, [
             RefundStatusEnum::WAIT_SELLER_AGREE,
             RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
             RefundStatusEnum::WAIT_SELLER_CONFIRM,
         ],            true)) {
-            throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
+            return false;
         }
-        $this->reject_reason          = $reason;
-        $this->refund_status          = RefundStatusEnum::SELLER_REJECT_BUYER;
-        $this->product->refund_status = RefundStatusEnum::SELLER_REJECT_BUYER;
-        $this->fireModelEvent('rejected');
-    }
 
+        return true;
+    }
 
     /**
      * 取消
@@ -177,21 +188,30 @@ class OrderRefund extends Model
     public function cancel() : void
     {
 
-        if (!in_array($this->refund_status,
-            [
-                RefundStatusEnum::SELLER_REJECT_BUYER,
-                RefundStatusEnum::WAIT_SELLER_AGREE,
-                RefundStatusEnum::WAIT_SELLER_AGREE_RETURN
-            ], true)) {
-
+        if (!$this->isAllowCancel()) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
+
 
         $this->refund_status          = RefundStatusEnum::REFUND_CANCEL;
         $this->end_time               = now();
         $this->product->refund_status = null;
 
         $this->fireModelEvent('canceled', false);
+    }
+
+    public function isAllowCancel() : bool
+    {
+        if (!in_array($this->refund_status,
+            [
+                RefundStatusEnum::SELLER_REJECT_BUYER,
+                RefundStatusEnum::WAIT_SELLER_AGREE,
+                RefundStatusEnum::WAIT_SELLER_AGREE_RETURN
+            ], true)) {
+            return false;
+
+        }
+        return true;
     }
 
     /**
@@ -204,15 +224,7 @@ class OrderRefund extends Model
      */
     public function agreeRefund(?Amount $amount = null) : void
     {
-        if (!in_array($this->refund_type, [
-            RefundTypeEnum::REFUND,
-            RefundTypeEnum::RETURN_GOODS_REFUND
-        ],            true)) {
-            throw new RefundException();
-        }
-        // 验证状态
-        if (!in_array($this->refund_status,
-                      [ RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM, ], true)) {
+        if (!$this->isAllowAgreeRefund()) {
             throw new RefundException();
         }
 
@@ -230,6 +242,11 @@ class OrderRefund extends Model
             $this->product->refund_amount = bcadd($this->product->refund_amount, $amount, 2);
             $this->product->refund_status = $this->refund_status;
             $this->product->refund_time   = $this->product->refund_time ?? now();
+
+            if (bccomp($this->product->refund_amount, $this->product->divided_discount_amount, 2)) {
+                $this->product->order_status    = OrderStatusEnum::CLOSED;
+                $this->product->shipping_status = null;
+            }
 
             // 设置订单项
             $this->order->refund_amount = bcadd($this->order->refund_amount, $amount, 2);
@@ -267,6 +284,21 @@ class OrderRefund extends Model
         $this->fireModelEvent('agreed', false);
     }
 
+
+    public function isAllowAgreeRefund() : bool
+    {
+        if (!in_array($this->refund_type, [
+            RefundTypeEnum::REFUND,
+            RefundTypeEnum::RETURN_GOODS_REFUND
+        ],            true)) {
+            return false;
+        }
+        if (!in_array($this->refund_status,
+                      [ RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM, ], true)) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 同意退货
@@ -424,11 +456,13 @@ class OrderRefund extends Model
         ]);
         return $builder;
     }
+
     public function scopeRefundSuccess(Builder $builder) : Builder
     {
         $builder->where('refund_status', RefundStatusEnum::REFUND_SUCCESS);
         return $builder;
     }
+
     public function scopeRefundCancel(Builder $builder) : Builder
     {
         $builder->where('refund_status', RefundStatusEnum::REFUND_CANCEL);
