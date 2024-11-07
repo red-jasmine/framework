@@ -29,6 +29,7 @@ use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ListProducts;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ViewProduct;
+use RedJasmine\FilamentProduct\Clusters\Product\Stock\StockTableAction;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateCommand;
@@ -180,7 +181,7 @@ class ProductResource extends Resource
                                                                                      ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
                                                                                      ->nullable()
                                                                                      ->visible(fn(Forms\Get $get) => $get('allow_stage') !== OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                                                                     ->default(OrderAfterSaleServiceTimeUnit::HOUR->value)
+                                                                                     ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
                                                                                      ->options(OrderAfterSaleServiceTimeUnit::options()),
 
                                                           ]);
@@ -204,7 +205,7 @@ class ProductResource extends Resource
                                                                   Forms\Components\Select::make('after_sales_services.' . $refundType->name() . '.time_limit_unit')
                                                                                          ->nullable()
                                                                                          ->visible(fn(Forms\Get $get) => $get('stage') !== OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                                                                         ->default(OrderAfterSaleServiceTimeUnit::HOUR->value)
+                                                                                         ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
                                                                                          ->options(OrderAfterSaleServiceTimeUnit::options()),
 
                                                               ]);
@@ -1094,10 +1095,11 @@ class ProductResource extends Resource
             ->deferFilters()
             ->recordUrl(null)
             ->actions([
+                          Tables\Actions\EditAction::make(),
                           Tables\Actions\ActionGroup::make(
                               [
                                   Tables\Actions\ViewAction::make(),
-                                  Tables\Actions\EditAction::make(),
+                                  StockTableAction::make('stock-edit'),
                                   Tables\Actions\DeleteAction::make(),
                                   Tables\Actions\Action::make('listing-removal')
                                                        ->label(function (Model $record) {
@@ -1109,7 +1111,7 @@ class ProductResource extends Resource
                                                        })
                                                        ->successNotificationTitle('ok')
                                                        ->icon(function (Model $record) {
-                                                           return $record->status === ProductStatusEnum::ON_SALE ?
+                                                           return $record->status !== ProductStatusEnum::ON_SALE ?
 
                                                                FilamentIcon::resolve('product.actions.listing') ?? 'heroicon-o-arrow-up-circle'
                                                                :
