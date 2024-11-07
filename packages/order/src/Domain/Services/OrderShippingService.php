@@ -125,7 +125,7 @@ class OrderShippingService
 
         if ($orderProduct->progress >= $orderProduct->num) {
             $orderProduct->shipping_status = ShippingStatusEnum::SHIPPED;
-            $orderProduct->collect_time    = now(); // 虚拟商品作为最后一次发货时间
+            $orderProduct->signed_time    = now(); // 虚拟商品作为最后一次发货时间
         }
 
         $order->shipping();
@@ -158,9 +158,8 @@ class OrderShippingService
         $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
 
-
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
-            $orderProduct->collect_time = now(); // 虚拟商品作为最后一次发货时间
+            $orderProduct->signed_time = now();
         }
 
         $order->shipping();

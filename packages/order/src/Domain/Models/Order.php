@@ -296,6 +296,11 @@ class Order extends Model implements OperatorInterface
 
         $event = $this->shipping_status === ShippingStatusEnum::SHIPPED ? 'shipped' : 'shipping';
 
+        // 虚拟商品那么就立即签收
+        if (($this->shipping_status === ShippingStatusEnum::SHIPPED) && $this->shipping_type === ShippingTypeEnum::DUMMY) {
+            $this->signed_time = now();
+        }
+
         $this->fireModelEvent($event, false);
 
     }

@@ -26,6 +26,8 @@ class OrderStandardFlow implements OrderFlowInterface
             $product->payment_status = PaymentStatusEnum::WAIT_PAY;
         });
 
+        // 设置 支付超时时间
+
     }
 
     public function paid(Order $order) : void
@@ -44,6 +46,8 @@ class OrderStandardFlow implements OrderFlowInterface
         // 为自定接受
         if ($order->accept_wait_max_time === 0) {
             $order->accept();
+        }else{
+            // 设置最大自动接单时间
         }
 
 
@@ -90,6 +94,9 @@ class OrderStandardFlow implements OrderFlowInterface
         });
         if ($order->shipping_status === ShippingStatusEnum::SHIPPED) {
             $order->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
+
+
+            // 设置最大确认时间 TODO
         }
 
     }
