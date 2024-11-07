@@ -67,6 +67,17 @@ class OrderRefundResource extends Resource
                                          TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks')),
                                      ])
                             ->columns(2)
+
+                     ->footerActions([
+                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeInfoListAction::make('agree')
+                             ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
+                         ,
+                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction::make('reject')
+                             ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
+                         ,
+
+
+                                       ])
                      ,
                      Section::make('退款')
                             ->schema([
@@ -412,6 +423,9 @@ class OrderRefundResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                // Tables\Actions\EditAction::make(),
+                Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeTableAction::make('agree'),
+                Order\Resources\OrderRefundResource\Actions\Table\RefundRejectTableAction::make('reject'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

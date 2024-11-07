@@ -162,30 +162,46 @@ class OrderResource extends Resource
                                               ])->columns(5),
 
                               Section::make('更多')
-                                     ->schema([
+                                     ->schema(function (Model $record) {
+
+                                         $schema = [
 
 
-                                                  Fieldset::make('infos')
-                                                          ->label(__('red-jasmine-order::order.labels.infos'))
-                                                          ->schema([
-                                                                       TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
-                                                                       TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
-                                                                       TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
-                                                                       TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
-                                                                       TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
-                                                                       TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
-                                                                       TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
-                                                                       TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
+                                             Fieldset::make('infos')
+                                                     ->label(__('red-jasmine-order::order.labels.infos'))
+                                                     ->schema([
+                                                                  TextEntry::make('payment_time')->label(__('red-jasmine-order::order.fields.payment_time')),
+                                                                  TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
+                                                                  TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
+                                                                  TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
+                                                                  TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
+                                                                  TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
+                                                                  TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
+                                                                  TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
+                                                                  TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
 
-                                                                   ])
-                                                          ->inlineLabel()
-                                                          ->columns(2)
-                                                          ->columnSpan(2),
+                                                              ])
+                                                     ->inlineLabel()
+                                                     ->columns(2)
+                                                     ->columnSpan(2),
 
 
-                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-payments')->columnSpanFull(),
-                                                  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-logistics')->columnSpanFull(),
-                                              ])
+                                             Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-payments')->columnSpanFull(),
+                                         ];
+                                         if ($record->shipping_type === ShippingTypeEnum::EXPRESS) {
+                                             $schema[] =  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-logistics')->columnSpanFull();
+
+                                         }
+                                         if ($record->shipping_type === ShippingTypeEnum::CDK) {
+                                             $schema[] = Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderCardKeys::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-card-keys')->columnSpanFull();
+
+                                         }
+
+                                         return $schema;
+                                     }
+
+
+                                     )
                                      ->compact()
                                      ->collapsed(),
                               Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
