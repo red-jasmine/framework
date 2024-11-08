@@ -8,7 +8,7 @@ class RefundRemarksCommand extends Data
 {
     public int $id;
 
-    public string $remarks;
+    public ?string $remarks = '';
     /**
      * 是否追加模式
      * @var bool

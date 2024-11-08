@@ -75,7 +75,7 @@ class OrderResource extends Resource
                                                   TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
                                                   ,
                                                   TextEntry::make('info.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
-                                                           ->prefixAction(
+                                                           ->hintAction(
                                                                OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_message')
                                                            ),
                                                   TextEntry::make('info.seller_remarks')
@@ -83,7 +83,7 @@ class OrderResource extends Resource
                                                            ->hintIcon('heroicon-m-exclamation-circle')
                                                            ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
                                                            ->label(__('red-jasmine-order::order.fields.seller_remarks'))
-                                                           ->prefixAction(
+                                                           ->hintAction(
                                                                OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_remarks')
                                                            ),
                                               ])

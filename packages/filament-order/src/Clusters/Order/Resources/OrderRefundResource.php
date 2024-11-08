@@ -2,13 +2,20 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Livewire;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
@@ -17,24 +24,14 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\RelationManagers;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\Services\RefundQueryService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderRefund;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class OrderRefundResource extends Resource
 {
@@ -67,21 +64,43 @@ class OrderRefundResource extends Resource
                                      ->schema([
                                                   TextEntry::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->useEnum(),
                                                   TextEntry::make('seller_custom_status')->label(__('red-jasmine-order::refund.fields.seller_custom_status'))->badge(),
-                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks')),
-                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks')),
+                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks'))
+                                                           ->hintColor('primary')
+                                                           ->hintIcon('heroicon-m-exclamation-circle')
+                                                           ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
+                                                           ->hintAction(
+                                                               Order\Resources\OrderRefundResource\Actions\InfoList\RefundSellerRemarksInfoListAction::make('seller-remarks')
+
+                                                           ),
+
+
+                                                  RatingEntry::make('star')
+                                                             ->stars(10)
+                                                             ->allowZero()
+                                                             ->label(__('red-jasmine-order::refund.fields.star'))
+                                                             ->hintAction(
+                                                                 Order\Resources\OrderRefundResource\Actions\InfoList\RefundStarInfoListAction::make('star'),
+                                                             )
+                                                  ,
                                               ])
                                      ->columns(2)
+                                     ->inlineLabel()
                                      ->footerActions([
                                                          Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeInfoListAction::make('agree')
                                                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
                                                          ,
-                                                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction::make('reject')
-                                                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
-                                                         ,
+
                                                          Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeReshipmentInfoListAction::make('agree-reshipment')
                                                                                                                                                  ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
                                                          ,
 
+                                                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundReshipmentInfoListAction::make('reshipment')
+                                                                                                                                            ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
+                                                         ,
+
+                                                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction::make('reject')
+                                                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
+                                                         ,
 
                                                      ])
                               ,
