@@ -28,7 +28,7 @@ class AbstractRefundRemarksCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund = $this->find($command->rid);
+            $refund = $this->find($command->id);
 
             $refund->remarks($this->getTradeParty(), $command->remarks, $command->isAppend);
 

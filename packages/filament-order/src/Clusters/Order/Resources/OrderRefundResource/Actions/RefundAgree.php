@@ -41,7 +41,7 @@ trait RefundAgree
 
         $this->action(function ($data, $record) {
 
-            $data['rid'] = $record->id;
+            $data['id'] = $record->id;
             $command     = RefundAgreeRefundCommand::from($data);
             try {
                 app(RefundCommandService::class)->agreeRefund($command);

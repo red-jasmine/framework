@@ -28,7 +28,7 @@ trait RefundRemarks
 
         $this->action(function ($data, $record) {
 
-            $data['rid']          = $record->id;
+            $data['id']          = $record->id;
             $refundCommandService = app(RefundCommandService::class);
             $refundCommandService->sellerRemarks(RefundRemarksCommand::from($data));
             $this->successNotificationTitle('ok');

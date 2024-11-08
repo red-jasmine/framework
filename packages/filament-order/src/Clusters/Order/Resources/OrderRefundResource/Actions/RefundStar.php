@@ -30,7 +30,7 @@ trait RefundStar
 
         $this->action(function ($data, $record) {
 
-            $data['rid']    = $record->id;
+            $data['id']    = $record->id;
             $commandService = app(RefundCommandService::class);
             $command        = RefundStarCommand::from($data);
             $commandService->star($command);

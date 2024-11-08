@@ -6,7 +6,7 @@ use RedJasmine\Support\Data\Data;
 
 class RefundStarCommand extends Data
 {
-    public int $rid;
+    public int $id;
 
     public ?int $star = null;
 

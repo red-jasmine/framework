@@ -6,7 +6,7 @@ use RedJasmine\Support\Data\Data;
 
 class RefundRemarksCommand extends Data
 {
-    public int $rid;
+    public int $id;
 
     public string $remarks;
     /**

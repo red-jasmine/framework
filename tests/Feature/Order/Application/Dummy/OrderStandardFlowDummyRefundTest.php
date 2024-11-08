@@ -156,7 +156,7 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
         $refund          = $this->refundRepository->find($refundId);
         $command         = new RefundAgreeRefundCommand();
-        $command->rid    = $refund->id;
+        $command->id    = $refund->id;
         $command->amount = $refund->refund_amount;
 
         $this->refundCommandService->agreeRefund($command);

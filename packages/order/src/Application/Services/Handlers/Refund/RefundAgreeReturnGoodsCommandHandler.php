@@ -17,7 +17,7 @@ class RefundAgreeReturnGoodsCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund = $this->find($command->rid);
+            $refund = $this->find($command->id);
             $refund->agreeReturnGoods();
             $this->refundRepository->update($refund);
             $this->commitDatabaseTransaction();

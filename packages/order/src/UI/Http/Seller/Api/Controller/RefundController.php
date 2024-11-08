@@ -55,16 +55,16 @@ class RefundController extends Controller
     {
         $command = RefundCreateCommand::from($request);
 
-        $rid = $this->commandService->create($command);
+        $refundId = $this->commandService->create($command);
 
-        return static::success([ 'rid' => $rid ]);
+        return static::success([ 'id' => $refundId ]);
     }
 
 
     public function reject(Request $request) : JsonResponse
     {
         $command = RefundRejectCommand::from($request);
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
         $this->commandService->reject($command);
 
         return static::success();
@@ -74,7 +74,7 @@ class RefundController extends Controller
     public function cancel(Request $request) : JsonResponse
     {
         $command = RefundCancelCommand::from($request);
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
         $this->commandService->cancel($command);
 
         return static::success();
@@ -85,7 +85,7 @@ class RefundController extends Controller
     {
         $command = RefundReturnGoodsCommand::from($request);
 
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
         $this->commandService->returnGoods($command);
         return static::success();
     }
@@ -94,7 +94,7 @@ class RefundController extends Controller
     public function agreeRefund(Request $request) : JsonResponse
     {
         $command = RefundAgreeRefundCommand::from($request->all());
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->agreeRefund($command);
 
@@ -104,7 +104,7 @@ class RefundController extends Controller
     public function agreeReturnGoods(Request $request) : JsonResponse
     {
         $command = RefundAgreeReturnGoodsCommand::from($request->all());
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->agreeReturnGoods($command);
 
@@ -115,7 +115,7 @@ class RefundController extends Controller
     public function confirm(Request $request) : JsonResponse
     {
         $command = RefundConfirmCommand::from($request->all());
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->confirm($command);
 
@@ -127,7 +127,7 @@ class RefundController extends Controller
     public function reshipment(Request $request) : JsonResponse
     {
         $command = RefundLogisticsReshipmentCommand::from($request->all());
-        $this->queryService->findById(FindQuery::make($command->rid));
+        $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->reshipment($command);
 

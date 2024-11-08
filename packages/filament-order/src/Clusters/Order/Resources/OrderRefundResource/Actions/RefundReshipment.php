@@ -97,7 +97,7 @@ trait RefundReshipment
 
     protected function cdkAction($data, $record) : void
     {
-        $data['rid'] = $record->id;
+        $data['id'] = $record->id;
         $command     = RefundCardKeyReshipmentCommand::from($data);
         app(RefundCommandService::class)->cardKeyReshipment($command);
     }

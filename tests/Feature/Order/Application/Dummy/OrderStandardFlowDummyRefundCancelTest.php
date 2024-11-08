@@ -156,7 +156,7 @@ test('can cancel refund a order', function (Order $order, $refunds = []) {
 
         $refund       = $this->refundRepository->find($refundId);
         $command      = new RefundCancelCommand();
-        $command->rid = $refund->id;
+        $command->id = $refund->id;
 
 
         $this->refundCommandService->cancel($command);

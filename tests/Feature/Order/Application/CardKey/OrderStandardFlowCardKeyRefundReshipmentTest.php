@@ -207,9 +207,9 @@ test('can agree refund reshipment', function ($refunds) {
     foreach ($refunds as $refund) {
 
         $command      = new RefundAgreeReshipmentCommand();
-        $command->rid = $refund;
+        $command->id = $refund;
         $this->refundCommandService->agreeReshipment($command);
-        $refund = $this->refundRepository->find($command->rid);
+        $refund = $this->refundRepository->find($command->id);
         $this->assertEquals(RefundStatusEnum::WAIT_SELLER_RESHIPMENT, $refund->refund_status, '退款状态不正确');
     }
 
@@ -222,10 +222,10 @@ test('can reshipment', function ($refunds) {
     foreach ($refunds as $refund) {
 
         $command          = new RefundCardKeyReshipmentCommand();
-        $command->rid     = $refund;
+        $command->id     = $refund;
         $command->content = fake()->sentence;
         $this->refundCommandService->cardKeyReshipment($command);
-        $refund = $this->refundRepository->find($command->rid);
+        $refund = $this->refundRepository->find($command->id);
         $this->assertEquals(RefundStatusEnum::FINISHED, $refund->refund_status, '退款状态不正确');
     }
 

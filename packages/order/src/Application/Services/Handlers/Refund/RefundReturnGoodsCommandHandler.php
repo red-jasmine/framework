@@ -26,7 +26,7 @@ class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund                               = $this->find($command->rid);
+            $refund                               = $this->find($command->id);
             $orderLogistics                       = OrderLogistics::newModel();
             $orderLogistics->shipper              = LogisticsShipperEnum::BUYER;
             $orderLogistics->order_product_id     = [ $refund->order_product_id ];

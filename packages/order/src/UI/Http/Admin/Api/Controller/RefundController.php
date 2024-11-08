@@ -52,16 +52,16 @@ class RefundController extends Controller
     {
         $command = RefundCreateCommand::from($request);
 
-        $rid = $this->commandService->create($command);
+        $refundId = $this->commandService->create($command);
 
-        return static::success([ 'rid' => $rid ]);
+        return static::success([ 'id' => $refundId ]);
     }
 
 
     public function reject(Request $request) : JsonResponse
     {
         $command = RefundRejectCommand::from($request);
-        $this->queryService->findById(FindQuery::make($request->rid));
+        $this->queryService->findById(FindQuery::make($request->id));
         $this->commandService->reject($command);
 
         return static::success();
@@ -71,7 +71,7 @@ class RefundController extends Controller
     public function cancel(Request $request) : JsonResponse
     {
         $command = RefundCancelCommand::from($request);
-        $this->queryService->findById(FindQuery::make($request->rid));
+        $this->queryService->findById(FindQuery::make($request->id));
         $this->commandService->cancel($command);
 
         return static::success();

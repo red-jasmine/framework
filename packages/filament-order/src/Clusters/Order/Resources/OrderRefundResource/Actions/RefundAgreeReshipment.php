@@ -23,7 +23,7 @@ trait RefundAgreeReshipment
 
         $this->action(function ($data, $record) {
 
-            $data['rid'] = $record->id;
+            $data['id'] = $record->id;
 
             try {
                 app(RefundCommandService::class)->agreeReshipment(RefundAgreeReshipmentCommand::from($data));

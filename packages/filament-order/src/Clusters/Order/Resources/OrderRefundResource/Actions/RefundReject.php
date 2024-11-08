@@ -35,7 +35,7 @@ trait RefundReject
 
         $this->action(function ($data, $record) {
 
-            $data['rid']    = $record->id;
+            $data['id']    = $record->id;
             $data['reason'] = $data['reason'] ?? '';
             $command        = RefundRejectCommand::from($data);
             try {

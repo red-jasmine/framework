@@ -16,7 +16,7 @@ class RefundRejectCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund = $this->find($command->rid);
+            $refund = $this->find($command->id);
 
             $refund->reject($command->reason);
 

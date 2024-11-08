@@ -10,5 +10,5 @@ class RefundConfirmCommand extends Data
      * 售后ID
      * @var int
      */
-    public int $rid;
+    public int $id;
 }
