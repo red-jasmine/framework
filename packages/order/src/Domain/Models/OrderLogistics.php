@@ -5,11 +5,11 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class OrderLogistics extends Model
@@ -17,6 +17,7 @@ class OrderLogistics extends Model
 
 
     use HasSnowflakeId;
+
     public $incrementing = false;
 
 
@@ -44,7 +45,7 @@ class OrderLogistics extends Model
     protected $casts = [
         'order_product_id' => 'array',
         'shipper'          => LogisticsShipperEnum::class,
-        'shippable_type'   => LogisticsShippableTypeEnum::class,
+        'entity_type'      => EntityTypeEnum::class,
         'status'           => LogisticsStatusEnum::class,
         'expands'          => 'array',
         'shipping_time'    => 'datetime',
@@ -53,7 +54,7 @@ class OrderLogistics extends Model
         'signed_time'      => 'datetime',
     ];
 
-    public function shippable() : MorphTo
+    public function entity() : MorphTo
     {
         return $this->morphTo();
     }

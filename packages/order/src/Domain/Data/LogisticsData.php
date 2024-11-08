@@ -1,18 +1,14 @@
 <?php
 
-namespace RedJasmine\Order\Application\UserCases\Commands\Refund;
+namespace RedJasmine\Order\Domain\Data;
 
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Support\Data\Data;
 
-class RefundReshipmentCommand extends Data
+class LogisticsData extends Data
 {
-
-    public int $rid; // 退款单ID
-
     /**
      * 快递公司
-     *  TODO 改为值对象
      * @var string
      */
     public string $expressCompanyCode;
@@ -25,6 +21,4 @@ class RefundReshipmentCommand extends Data
 
 
     public LogisticsStatusEnum $status = LogisticsStatusEnum::CREATED;
-
-
 }

@@ -14,7 +14,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCancelCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRejectCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReshipmentCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundLogisticsReshipmentCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReturnGoodsCommand;
 use RedJasmine\Order\UI\Http\Admin\Api\Resources\OrderRefundResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -120,9 +120,10 @@ class RefundController extends Controller
     }
 
 
+    // TODO
     public function reshipment(Request $request) : JsonResponse
     {
-        $command = RefundReshipmentCommand::from($request->all());
+        $command = RefundLogisticsReshipmentCommand::from($request->all());
         $this->queryService->findById(FindQuery::make($command->id));
 
         $this->commandService->reshipment($command);

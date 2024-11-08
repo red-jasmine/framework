@@ -13,7 +13,6 @@ class OrderPaymentResource extends JsonResource
     {
         return [
             'id'                 => $this->id,
-            'refund_id'          => $this->refund_id,
             'seller_type'        => $this->seller_type,
             'seller_id'          => $this->seller_id,
             'buyer_type'         => $this->buyer_type,

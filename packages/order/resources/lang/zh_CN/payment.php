@@ -16,7 +16,6 @@ return [
         'buyer_nickname'     => '卖家昵称',
         'id'                 => '订单支付单编号',
         'order_id'           => '订单编号',
-        'refund_id'          => '退款编号',
         'amount_type'        => '金额类型',
         'payment_amount'     => '金额类型',
         'status'             => '支付状态',

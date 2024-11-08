@@ -31,6 +31,7 @@ use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -171,7 +172,7 @@ class Order extends Model implements OperatorInterface
 
     public function logistics() : MorphMany
     {
-        return $this->morphMany(OrderLogistics::class, 'shippable');
+        return $this->morphMany(OrderLogistics::class, 'entity');
     }
 
     public function payments() : HasMany
@@ -388,11 +389,12 @@ class Order extends Model implements OperatorInterface
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
-        $orderPayment->order_id = $this->id;
-        $orderPayment->buyer    = $this->buyer;
-        $orderPayment->seller   = $this->seller;
-        $orderPayment->status   = PaymentStatusEnum::PAYING;
-
+        $orderPayment->order_id    = $this->id;
+        $orderPayment->buyer       = $this->buyer;
+        $orderPayment->seller      = $this->seller;
+        $orderPayment->status      = PaymentStatusEnum::PAYING;
+        $orderPayment->entity_type = EntityTypeEnum::ORDER;
+        $orderPayment->entity_id   = $this->id;
         $this->addPayment($orderPayment);
         // 设置为支付中
         if (in_array($this->payment_status, [ PaymentStatusEnum::WAIT_PAY, null ], true)) {

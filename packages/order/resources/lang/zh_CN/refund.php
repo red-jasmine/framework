@@ -90,14 +90,15 @@ return [
             'presale'        => '预售',
             'group_purchase' => '团购',
         ],
-        'order_status'   => [
-            'wait_buyer_pay'           => '待付款',
-            'wait_seller_accept'       => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
-            'wait_seller_send_goods'   => '待发货',
-            'wait_buyer_confirm_goods' => '待收货',
-            'finished'                 => '已完成',
-            'cancel'                   => '已取消',
-            'closed'                   => '已关闭',
+        'refund_status'  => [
+            'wait_seller_agree'        => '待卖家同意',
+            'wait_seller_agree_return' => '待卖家同意退货',
+            'wait_buyer_return_goods'  => '待买家退货',
+            'wait_seller_reshipment'   => '待卖家发补',
+            'wait_seller_confirm'      => '待卖家确认',
+            'seller_reject_buyer'      => '卖家拒绝',
+            'success'                  => '成功',
+            'cancel'                   => '取消',
         ],
         'payment_status' => [
             'wait_pay'   => '待支付',
@@ -114,13 +115,16 @@ return [
 
     ],
     'actions' => [
-        'agree'  => '同意退款',
-        'reject' => '拒绝',
+        'agree'            => '同意退款',
+        'reject'           => '拒绝',
+        'agree-reshipment' => '同意补发',
+        'reshipment'       => '补发',
     ],
 
     'scopes' => [
         'all'                 => '全部',
         'wait_seller_agree'   => '待卖家处理',
+        'wait_seller_handle'  => '待卖家处理',
         'wait_seller_confirm' => '待卖家确认',
         'wait_buyer_handle'   => '待买家处理',
         'refund_success'      => '已完成',

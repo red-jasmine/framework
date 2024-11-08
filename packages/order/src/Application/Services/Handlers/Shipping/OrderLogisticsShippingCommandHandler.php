@@ -4,6 +4,7 @@ namespace RedJasmine\Order\Application\Services\Handlers\Shipping;
 
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
@@ -31,7 +32,8 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
         try {
             $order                                = $this->find($command->id);
             $orderLogistics                       = OrderLogistics::newModel();
-            $orderLogistics->shippable_id         = $order->id;
+            $orderLogistics->entity_type          = EntityTypeEnum::ORDER;
+            $orderLogistics->entity_id            = $order->id;
             $orderLogistics->seller_type          = $order->seller_type;
             $orderLogistics->seller_id            = $order->seller_id;
             $orderLogistics->buyer_type           = $order->buyer_type;

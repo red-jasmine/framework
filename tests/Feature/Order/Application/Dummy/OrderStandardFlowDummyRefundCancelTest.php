@@ -177,7 +177,7 @@ test('can cancel refund a order', function (Order $order, $refunds = []) {
 
         $refund = $this->refundRepository->find($refundId);
 
-        $this->assertEquals(RefundStatusEnum::REFUND_CANCEL, $refund->refund_status, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::CANCEL, $refund->refund_status, '退款状态不正确');
     }
 
     return $order;

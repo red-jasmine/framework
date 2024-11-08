@@ -5,7 +5,6 @@ namespace RedJasmine\Order\Domain\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +21,7 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
-use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShippableTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -120,12 +119,17 @@ class OrderRefund extends Model
 
     public function logistics() : MorphMany
     {
-        return $this->morphMany(OrderLogistics::class, 'shippable');
+        return $this->morphMany(OrderLogistics::class, 'entity');
     }
 
-    public function payments() : HasMany
+    public function cardKeys() : MorphMany
     {
-        return $this->hasMany(OrderPayment::class, 'refund_id', 'id');
+        return $this->morphMany(OrderProductCardKey::class, 'entity');
+    }
+
+    public function payments() : MorphMany
+    {
+        return $this->morphMany(OrderPayment::class, 'entity');
     }
 
     /**
@@ -193,7 +197,7 @@ class OrderRefund extends Model
         }
 
 
-        $this->refund_status          = RefundStatusEnum::REFUND_CANCEL;
+        $this->refund_status          = RefundStatusEnum::CANCEL;
         $this->end_time               = now();
         $this->product->refund_status = null;
 
@@ -235,7 +239,7 @@ class OrderRefund extends Model
         }
         $this->end_time      = now();
         $this->refund_amount = $amount;
-        $this->refund_status = RefundStatusEnum::REFUND_SUCCESS;
+        $this->refund_status = RefundStatusEnum::SUCCESS;
         // 如果是售中阶段同步状态
         if ($this->phase === RefundPhaseEnum::ON_SALE) {
             // 设置订单商品项信息
@@ -268,12 +272,12 @@ class OrderRefund extends Model
 
 
         // 设置退款单
-        $payment            = OrderPayment::newModel();
-        $payment->order_id  = $this->order_id;
-        $payment->refund_id = $this->id;
-        $payment->seller    = $this->seller;
-        $payment->buyer     = $this->buyer;
-
+        $payment                 = OrderPayment::newModel();
+        $payment->order_id       = $this->order_id;
+        $payment->seller         = $this->seller;
+        $payment->buyer          = $this->buyer;
+        $payment->entity_type    = EntityTypeEnum::REFUND;
+        $payment->entity_id      = $this->id;
         $payment->amount_type    = AmountTypeEnum::REFUND;
         $payment->payment_amount = bcadd($this->refund_amount, $this->freight_amount, 2);
         $payment->status         = PaymentStatusEnum::WAIT_PAY;
@@ -329,23 +333,32 @@ class OrderRefund extends Model
      * @return void
      * @throws RefundException
      */
-    public function agreeReshipment()
+    public function agreeReshipment() : void
+    {
+
+        if (!$this->isAllowAgreeReshipment()) {
+            throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
+        }
+
+        $this->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
+
+        $this->fireModelEvent('agreedReshipment', false);
+    }
+
+
+    public function isAllowAgreeReshipment() : bool
     {
         if (!in_array($this->refund_type, [
             RefundTypeEnum::RESHIPMENT,
         ],            true)) {
-            throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
+            return false;
         }
 
-        if ($this->refund_type === RefundTypeEnum::RESHIPMENT) {
-            throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
-        }
+
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE) {
-            throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
+            return false;
         }
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
-
-        $this->fireModelEvent('agreedReshipment');
+        return true;
     }
 
     /**
@@ -410,29 +423,57 @@ class OrderRefund extends Model
      * @return void
      * @throws RefundException
      */
-    public function reshipment(OrderLogistics $orderLogistics) : void
+    public function logisticsReshipment(OrderLogistics $orderLogistics) : void
     {
 
-        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_RESHIPMENT) {
+        if (!$this->isAllowReshipment()) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status          = RefundStatusEnum::REFUND_SUCCESS;
-        $this->product->refund_status = RefundStatusEnum::REFUND_SUCCESS;
+        $this->refund_status          = RefundStatusEnum::SUCCESS;
+        $this->product->refund_status = RefundStatusEnum::SUCCESS;
         $this->end_time               = now();
 
-        $orderLogistics->shippable_type = LogisticsShippableTypeEnum::REFUND;
+        $orderLogistics->entity_type = EntityTypeEnum::REFUND;
+        $orderLogistics->entity_id   = $this->id;
+        $orderLogistics->order_id    = $this->order_id;
 
         $this->logistics->add($orderLogistics);
 
         $this->fireModelEvent('reshipment', false);
 
+    }
 
+    public function cardKeyReshipment(OrderProductCardKey $cardKey) : void
+    {
+        if (!$this->isAllowReshipment()) {
+            throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
+        }
+        $this->refund_status          = RefundStatusEnum::SUCCESS;
+        $this->product->refund_status = RefundStatusEnum::SUCCESS;
+        $this->end_time               = now();
+
+        $cardKey->entity_type      = EntityTypeEnum::REFUND;
+        $cardKey->entity_id        = $this->id;
+        $cardKey->order_id         = $this->order_id;
+        $cardKey->order_product_id = $this->order_product_id;
+
+        $this->cardKeys->add($cardKey);
+
+        $this->fireModelEvent('reshipment', false);
+    }
+
+    public function isAllowReshipment() : bool
+    {
+        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_RESHIPMENT) {
+            return false;
+        }
+        return true;
     }
 
 
-    // |---------------scope----------------------------
+    // |---------------scopes----------------------------
 
-    public function scopeWaitSellerAgree(Builder $builder) : Builder
+    public function scopeWaitSellerHandle(Builder $builder) : Builder
     {
         $builder->whereIn('refund_status', [
             RefundStatusEnum::WAIT_SELLER_AGREE,
@@ -459,13 +500,13 @@ class OrderRefund extends Model
 
     public function scopeRefundSuccess(Builder $builder) : Builder
     {
-        $builder->where('refund_status', RefundStatusEnum::REFUND_SUCCESS);
+        $builder->where('refund_status', RefundStatusEnum::SUCCESS);
         return $builder;
     }
 
     public function scopeRefundCancel(Builder $builder) : Builder
     {
-        $builder->where('refund_status', RefundStatusEnum::REFUND_CANCEL);
+        $builder->where('refund_status', RefundStatusEnum::CANCEL);
         return $builder;
     }
 }

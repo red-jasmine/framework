@@ -4,6 +4,8 @@ namespace RedJasmine\Order\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -24,6 +26,7 @@ class OrderPayment extends Model
     use HasTradeParties;
 
     protected $casts = [
+        'entity_type' => EntityTypeEnum::class,
         'amount_type' => AmountTypeEnum::class,
         'status'      => PaymentStatusEnum::class,
     ];
@@ -47,11 +50,9 @@ class OrderPayment extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    protected function casts() : array
+
+    public function entity() : MorphTo
     {
-        return [
-            'amount_type' => AmountTypeEnum::class,
-            'status'      => PaymentStatusEnum::class
-        ];
+        return $this->morphTo();
     }
 }

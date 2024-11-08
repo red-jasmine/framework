@@ -15,8 +15,8 @@ return [
         'buyer_id'             => '卖家ID',
         'buyer_nickname'       => '卖家昵称',
         'id'                   => '订单支付单编号',
-        'shippable_type'       => '发货单类型',
-        'shippable_type'       => '单号',
+        'entity_type'       => '发货单类型',
+        'entity_id'       => '单号',
         'order_product_id'     => '订单商品项编号',
         'shipper'              => '发货方',
         'status'               => '状态',
@@ -50,12 +50,7 @@ return [
             'buyer'  => '买家',
             'seller' => '卖家'
 
-        ],
-        'shippable_type' => [
-            'order'  => '订单',
-            'refund' => '售后'
-
-        ],
+        ]
 
     ],
 

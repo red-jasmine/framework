@@ -5,15 +5,19 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\RefundCommandService;
+use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeReshipmentCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCardKeyReshipmentCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
@@ -34,7 +38,8 @@ beforeEach(function () {
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;
-    $orderFake->shippingType = ShippingTypeEnum::DUMMY;
+    $orderFake->shippingType = ShippingTypeEnum::CDK;
+    $orderFake->productCount = 1;
     $this->orderFake         = $orderFake;
     //
 });
@@ -56,7 +61,6 @@ test('cna paying a order', function (Order $order) {
 
 
     //Event::fake();
-
     $command = OrderPayingCommand::from(
         [
             'id'     => $order->id,
@@ -65,7 +69,6 @@ test('cna paying a order', function (Order $order) {
         ]
 
     );
-
 
     $result = $this->orderCommandService->paying($command);
 
@@ -108,29 +111,77 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 })->depends('can create a new order', 'cna paying a order');
 
 
-// 退款
+test('can shipped a order', function (Order $order, OrderPayment $orderPayment, $result) {
+
+    $commands = [];
+
+    foreach ($order->products as $product) {
+        $command = OrderCardKeyShippingCommand::from(
+            [
+                'id'             => $order->id,
+                'orderProductId' => $product->id,
+                'content'        => fake()->sentence(),
+                'num'            => 1
+            ]
+        );
+
+        for ($i = 1; $i <= $product->progress_total; $i++) {
+            $this->orderCommandService->cardKeyShipping($command);
+        }
 
 
-test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
+    }
 
-    $commands    = [];
-    $command     = new RefundCreateCommand;
-    $command->id = $order->id;
+    /**
+     * @var $order Order
+     */
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
+    $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
+
+    foreach ($order->products as $product) {
+        // 判断卡密是否和数量一致
+        $this->assertEquals($product->cardKeys()->sum('num'), $product->progress_total, '卡密数量');
+    }
+
+    return $order;
+})->depends('can create a new order', 'cna paying a order', 'can paid a order');
+
+
+test('can confirm a order', function (Order $order) {
+
+    $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
+
+    $this->orderCommandService->confirm($command);
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals($order->order_status, OrderStatusEnum::FINISHED, '订单状态');
+
+    return $order;
+
+})->depends('can shipped a order');
+
+
+// 测试申请补发
+test('can refund a order', function (Order $order) {
+    $commands = [];
+
 
     $refunds = [];
     foreach ($order->products as $product) {
         $command                 = new RefundCreateCommand;
         $command->id             = $order->id;
         $command->orderProductId = $product->id;
-        $command->refundType     = RefundTypeEnum::REFUND;
-        $command->refundAmount   = $product->payment_amount;
-        $command->reason         = '不想要了';
+        $command->refundType     = RefundTypeEnum::RESHIPMENT;
+        $command->refundAmount   = 0;
+        $command->reason         = '补发';
         $command->description    = fake()->sentence;
         $command->outerRefundId  = fake()->numerify('######');
         $command->images         = [ fake()->imageUrl, fake()->imageUrl, fake()->imageUrl, ];
 
         $commands [] = $command;
-
 
         $refunds[] = $this->refundCommandService->create($command);
     }
@@ -145,44 +196,39 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 
     return $refunds;
 
-})
-    ->depends('can create a new order', 'cna paying a order', 'can paid a order');
+
+})->depends('can confirm a order');
 
 
-test('can agree refund a order', function (Order $order, $refunds = []) {
+// 测试 同意补发
 
+test('can agree refund reshipment', function ($refunds) {
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refund) {
 
-        $refund          = $this->refundRepository->find($refundId);
-        $command         = new RefundAgreeRefundCommand();
-        $command->rid    = $refund->id;
-        $command->amount = $refund->refund_amount;
-
-        $this->refundCommandService->agreeRefund($command);
+        $command      = new RefundAgreeReshipmentCommand();
+        $command->rid = $refund;
+        $this->refundCommandService->agreeReshipment($command);
+        $refund = $this->refundRepository->find($command->rid);
+        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_RESHIPMENT, $refund->refund_status, '退款状态不正确');
     }
 
 
-    $order = $this->orderRepository->find($order->id);
+    return $refunds;
 
+})->depends('can refund a order');
 
-    // 订单为无效单  已关闭
-    // TODO 检查退款金额
+test('can reshipment', function ($refunds) {
+    foreach ($refunds as $refund) {
 
-    $this->assertEquals(OrderStatusEnum::CLOSED, $order->order_status, ' 订单状态不正确');
-
-
-    foreach ($order->products as $product) {
-        $this->assertEquals(RefundStatusEnum::SUCCESS->value, $product->refund_status->value, '退款状态不正确');
-        $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
+        $command          = new RefundCardKeyReshipmentCommand();
+        $command->rid     = $refund;
+        $command->content = fake()->sentence;
+        $this->refundCommandService->cardKeyReshipment($command);
+        $refund = $this->refundRepository->find($command->rid);
+        $this->assertEquals(RefundStatusEnum::SUCCESS, $refund->refund_status, '退款状态不正确');
     }
 
-    return $order;
 
-})->depends('can create a new order', 'can refund a order');
-
-
-
-
-
-
+    return $refunds;
+})->depends('can agree refund reshipment');

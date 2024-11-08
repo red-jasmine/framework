@@ -19,21 +19,23 @@ enum RefundStatusEnum: string
     case  WAIT_SELLER_RESHIPMENT = 'wait_seller_reshipment';
     case  WAIT_SELLER_CONFIRM = 'wait_seller_confirm';
     case  SELLER_REJECT_BUYER = 'seller_reject_buyer';
-    case  REFUND_SUCCESS = 'refund_success';
-    case  REFUND_CANCEL = 'cancel';
+    case  SUCCESS = 'success';
+    case  CANCEL = 'cancel';
+    case  CLOSE = 'close';
 
     public static function labels() : array
     {
         return [
 
-            self::WAIT_SELLER_AGREE->value        => '等待卖家同意退款',
-            self::WAIT_SELLER_AGREE_RETURN->value => '等待卖家同意退货',
-            self::WAIT_BUYER_RETURN_GOODS->value  => '等待买家退货',
-            self::WAIT_SELLER_CONFIRM->value      => '等待卖家确认',
-            self::WAIT_SELLER_RESHIPMENT->value   => '等待卖家发货',
-            self::SELLER_REJECT_BUYER->value      => '卖家拒绝',
-            self::REFUND_SUCCESS->value           => '退款成功',
-            self::REFUND_CANCEL->value            => '退款取消',
+            self::WAIT_SELLER_AGREE->value        => __('red-jasmine-order::refund.enums.refund_status.wait_seller_agree'),
+            self::WAIT_SELLER_AGREE_RETURN->value => __('red-jasmine-order::refund.enums.refund_status.wait_seller_agree_return'),
+            self::WAIT_BUYER_RETURN_GOODS->value  => __('red-jasmine-order::refund.enums.refund_status.wait_buyer_return_goods'),
+            self::WAIT_SELLER_CONFIRM->value      => __('red-jasmine-order::refund.enums.refund_status.wait_seller_confirm'),
+            self::WAIT_SELLER_RESHIPMENT->value   => __('red-jasmine-order::refund.enums.refund_status.wait_seller_reshipment'),
+            self::SELLER_REJECT_BUYER->value      => __('red-jasmine-order::refund.enums.refund_status.seller_reject_buyer'),
+            self::SUCCESS->value                  => __('red-jasmine-order::refund.enums.refund_status.success'),
+            self::CANCEL->value                   => __('red-jasmine-order::refund.enums.refund_status.cancel'),
+            self::CLOSE->value                    => __('red-jasmine-order::refund.enums.refund_status.close'),
         ];
     }
 }

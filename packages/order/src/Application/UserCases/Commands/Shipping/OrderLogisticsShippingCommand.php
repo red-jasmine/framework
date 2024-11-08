@@ -2,10 +2,9 @@
 
 namespace RedJasmine\Order\Application\UserCases\Commands\Shipping;
 
-use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Order\Domain\Data\LogisticsData;
 
-class OrderLogisticsShippingCommand extends Data
+class OrderLogisticsShippingCommand extends LogisticsData
 {
 
     public int $id;
@@ -21,22 +20,6 @@ class OrderLogisticsShippingCommand extends Data
      * @var array|null
      */
     public ?array $orderProducts = null;
-
-
-    /**
-     * 快递公司
-     * @var string
-     */
-    public string $expressCompanyCode;
-
-    /**
-     * 快递单号
-     * @var string|int
-     */
-    public string|int $expressNo;
-
-
-    public LogisticsStatusEnum $status = LogisticsStatusEnum::CREATED;
 
 
 }
