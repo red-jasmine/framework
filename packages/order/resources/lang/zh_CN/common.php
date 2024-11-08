@@ -3,6 +3,7 @@
 return [
 
     'fields' => [
+        'order_id'    => '订单编号',
         'entity_type' => '对象类型',
         'entity_id'   => '对象单号',
     ],

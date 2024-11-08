@@ -41,13 +41,13 @@ class OrderCardKeys extends Component implements HasTable, HasForms
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::card-keys.fields.id')),
-                          TextColumn::make('order_id')->label(__('red-jasmine-order::card-keys.fields.order_id')),
-                          TextColumn::make('order_product_id')->label(__('red-jasmine-order::card-keys.fields.order_product_id')),
+                          TextColumn::make('order_id')->label(__('red-jasmine-order::common.fields.order_id'))->copyable(),
                           TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
-                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id')),
+                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id'))->copyable(),
+                          TextColumn::make('order_product_id')->label(__('red-jasmine-order::card-keys.fields.order_product_id')),
                           TextColumn::make('num')->label(__('red-jasmine-order::card-keys.fields.num')),
                           TextColumn::make('content_type')->label(__('red-jasmine-order::card-keys.fields.content_type'))->useEnum(),
-                          TextColumn::make('content')->label(__('red-jasmine-order::card-keys.fields.content'))->copyable(),
+                          TextColumn::make('content')->label(__('red-jasmine-order::card-keys.fields.content')),
                           TextColumn::make('source_type')->label(__('red-jasmine-order::card-keys.fields.source_type')),
                           TextColumn::make('source_id')->label(__('red-jasmine-order::card-keys.fields.source_id')),
                           TextColumn::make('status')->label(__('red-jasmine-order::card-keys.fields.status'))->useEnum(),

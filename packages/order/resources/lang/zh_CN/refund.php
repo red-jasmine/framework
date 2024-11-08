@@ -97,8 +97,9 @@ return [
             'wait_seller_reshipment'   => '待卖家发补',
             'wait_seller_confirm'      => '待卖家确认',
             'seller_reject_buyer'      => '卖家拒绝',
-            'success'                  => '成功',
-            'cancel'                   => '取消',
+            'finished'                 => '已完成',
+            'cancel'                   => '已取消',
+            'closed'                   => '已关闭',
         ],
         'payment_status' => [
             'wait_pay'   => '待支付',

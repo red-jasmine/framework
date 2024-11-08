@@ -19,9 +19,9 @@ enum RefundStatusEnum: string
     case  WAIT_SELLER_RESHIPMENT = 'wait_seller_reshipment';
     case  WAIT_SELLER_CONFIRM = 'wait_seller_confirm';
     case  SELLER_REJECT_BUYER = 'seller_reject_buyer';
-    case  SUCCESS = 'success';
+    case  FINISHED = 'finished';
     case  CANCEL = 'cancel';
-    case  CLOSE = 'close';
+    case  CLOSED = 'closed';
 
     public static function labels() : array
     {
@@ -33,9 +33,9 @@ enum RefundStatusEnum: string
             self::WAIT_SELLER_CONFIRM->value      => __('red-jasmine-order::refund.enums.refund_status.wait_seller_confirm'),
             self::WAIT_SELLER_RESHIPMENT->value   => __('red-jasmine-order::refund.enums.refund_status.wait_seller_reshipment'),
             self::SELLER_REJECT_BUYER->value      => __('red-jasmine-order::refund.enums.refund_status.seller_reject_buyer'),
-            self::SUCCESS->value                  => __('red-jasmine-order::refund.enums.refund_status.success'),
+            self::FINISHED->value                 => __('red-jasmine-order::refund.enums.refund_status.finished'),
             self::CANCEL->value                   => __('red-jasmine-order::refund.enums.refund_status.cancel'),
-            self::CLOSE->value                    => __('red-jasmine-order::refund.enums.refund_status.close'),
+            self::CLOSED->value                   => __('red-jasmine-order::refund.enums.refund_status.closed'),
         ];
     }
 }

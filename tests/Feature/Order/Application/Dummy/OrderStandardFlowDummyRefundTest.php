@@ -173,7 +173,7 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
 
     foreach ($order->products as $product) {
-        $this->assertEquals(RefundStatusEnum::SUCCESS->value, $product->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::FINISHED->value, $product->refund_status->value, '退款状态不正确');
         $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
     }
 

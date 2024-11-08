@@ -239,7 +239,7 @@ class OrderRefund extends Model
         }
         $this->end_time      = now();
         $this->refund_amount = $amount;
-        $this->refund_status = RefundStatusEnum::SUCCESS;
+        $this->refund_status = RefundStatusEnum::FINISHED;
         // 如果是售中阶段同步状态
         if ($this->phase === RefundPhaseEnum::ON_SALE) {
             // 设置订单商品项信息
@@ -429,8 +429,8 @@ class OrderRefund extends Model
         if (!$this->isAllowReshipment()) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status          = RefundStatusEnum::SUCCESS;
-        $this->product->refund_status = RefundStatusEnum::SUCCESS;
+        $this->refund_status          = RefundStatusEnum::FINISHED;
+        $this->product->refund_status = RefundStatusEnum::FINISHED;
         $this->end_time               = now();
 
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
@@ -448,8 +448,8 @@ class OrderRefund extends Model
         if (!$this->isAllowReshipment()) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status          = RefundStatusEnum::SUCCESS;
-        $this->product->refund_status = RefundStatusEnum::SUCCESS;
+        $this->refund_status          = RefundStatusEnum::FINISHED;
+        $this->product->refund_status = RefundStatusEnum::FINISHED;
         $this->end_time               = now();
 
         $cardKey->entity_type      = EntityTypeEnum::REFUND;
@@ -500,7 +500,7 @@ class OrderRefund extends Model
 
     public function scopeRefundSuccess(Builder $builder) : Builder
     {
-        $builder->where('refund_status', RefundStatusEnum::SUCCESS);
+        $builder->where('refund_status', RefundStatusEnum::FINISHED);
         return $builder;
     }
 
@@ -509,4 +509,9 @@ class OrderRefund extends Model
         $builder->where('refund_status', RefundStatusEnum::CANCEL);
         return $builder;
     }
+    public function scopeOnCancelClosed(Builder $builder) : Builder
+    {
+        return $builder->whereIn('order_status', [ RefundStatusEnum::CLOSED, RefundStatusEnum::CANCEL ]);
+    }
+
 }

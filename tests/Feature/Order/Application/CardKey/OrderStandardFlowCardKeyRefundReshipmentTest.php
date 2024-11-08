@@ -226,7 +226,7 @@ test('can reshipment', function ($refunds) {
         $command->content = fake()->sentence;
         $this->refundCommandService->cardKeyReshipment($command);
         $refund = $this->refundRepository->find($command->rid);
-        $this->assertEquals(RefundStatusEnum::SUCCESS, $refund->refund_status, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::FINISHED, $refund->refund_status, '退款状态不正确');
     }
 
 

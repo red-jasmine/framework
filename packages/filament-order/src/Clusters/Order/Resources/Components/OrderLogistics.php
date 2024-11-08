@@ -44,8 +44,9 @@ class OrderLogistics extends Component implements HasTable, HasForms
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::logistics.fields.id')),
+                          TextColumn::make('order_id')->label(__('red-jasmine-order::common.fields.order_id'))->copyable(),
                           TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
-                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id')),
+                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id'))->copyable(),
                           TextColumn::make('order_product_id')->label(__('red-jasmine-order::logistics.fields.order_product_id')),
                           TextColumn::make('shipper')->label(__('red-jasmine-order::logistics.fields.shipper'))->useEnum(),
                           TextColumn::make('status')->label(__('red-jasmine-order::logistics.fields.status'))->useEnum(),

@@ -109,7 +109,7 @@ class OrderRefundResource extends Resource
                                      RefundTypeEnum::REFUND,
                                      RefundTypeEnum::RETURN_GOODS_REFUND,
                                  ],       true)
-                                 && $record->refund_status === RefundStatusEnum::SUCCESS
+                                 && $record->refund_status === RefundStatusEnum::FINISHED
                              ) {
                                  $components[] = Order\Resources\Components\OrderPayments::class;
                              }
@@ -126,7 +126,7 @@ class OrderRefundResource extends Resource
                              }
                              if ($record->refund_type === RefundTypeEnum::RESHIPMENT
                                  && $record->shipping_type === ShippingTypeEnum::CDK
-                                 && $record->refund_status === RefundStatusEnum::SUCCESS
+                                 && $record->refund_status === RefundStatusEnum::FINISHED
                              ) {
                                  $components[] = Order\Resources\Components\OrderCardKeys::class;
                              }
