@@ -95,6 +95,7 @@ return new class extends Migration {
 
 
             $table->unsignedTinyInteger('star')->nullable()->comment('加星');
+            $table->unsignedTinyInteger('urges')->nullable()->comment('催单');
             $table->boolean('is_seller_delete')->default(false)->comment('卖家删除');
             $table->boolean('is_buyer_delete')->default(false)->comment('买家删除');
             $table->string('outer_order_id', 64)->nullable()->comment('外部订单号');
