@@ -236,7 +236,7 @@ class ProductResource extends Resource
                                           ->label(__('red-jasmine-product::product.fields.shipping_type'))
                                           ->required()
                                           ->inline()
-                                          ->default(ShippingTypeEnum::EXPRESS)
+                                          ->default(ShippingTypeEnum::LOGISTICS)
                                           ->useEnum(ShippingTypeEnum::class),
 
 

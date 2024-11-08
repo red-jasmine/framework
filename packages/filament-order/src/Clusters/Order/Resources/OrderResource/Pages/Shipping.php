@@ -21,7 +21,7 @@ use Throwable;
 
 /**
  * @property Form $dummy
- * @property Form $express
+ * @property Form $logistics
  */
 class Shipping extends Page
 {
@@ -163,7 +163,7 @@ class Shipping extends Page
 
     }
 
-    public function express(Form $form) : Form
+    public function logistics(Form $form) : Form
     {
 
         $record = $this->record;
@@ -180,20 +180,20 @@ class Shipping extends Page
                                                               ->visible(fn(Forms\Get $get) => $get('is_split'))
                                                               ->options($record->products->pluck('title', 'id')->toArray()),
 
-                                 Forms\Components\TextInput::make('express_company_code')
-                                                           ->label(__('red-jasmine-order::commands.shipping.express_company_code'))
+                                 Forms\Components\TextInput::make('logistics_company_code')
+                                                           ->label(__('red-jasmine-order::commands.shipping.logistics_company_code'))
                                                            ->required(),
-                                 Forms\Components\TextInput::make('express_no')
-                                                           ->label(__('red-jasmine-order::commands.shipping.express_no'))
+                                 Forms\Components\TextInput::make('logistics_no')
+                                                           ->label(__('red-jasmine-order::commands.shipping.logistics_no'))
                                                            ->required(),
 
                              ])
-                    ->statePath('data.express');
+                    ->statePath('data.logistics');
     }
 
-    public function expressSubmit()
+    public function logisticsSubmit()
     {
-        $data = $this->express->getState();
+        $data = $this->logistics->getState();
 
         $data['id'] = $this->record->id;
         $command    = OrderLogisticsShippingCommand::from($data);

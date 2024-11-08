@@ -8,6 +8,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 
@@ -26,7 +27,7 @@ trait Shipping
         $this->form(function ($record) {
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
-                ShippingTypeEnum::EXPRESS => $this->expressForm($record),
+                ShippingTypeEnum::LOGISTICS => $this->logisticsForm($record),
                 ShippingTypeEnum::CDK => $this->cdkForm($record),
                 ShippingTypeEnum::DELIVERY => $this->dummyForm($record),
                 ShippingTypeEnum::NONE => $this->dummyForm($record),
@@ -42,7 +43,7 @@ trait Shipping
             try {
                 match ($record->shipping_type) {
                     ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
-                    ShippingTypeEnum::EXPRESS => $this->dummyAction($data, $record),
+                    ShippingTypeEnum::LOGISTICS => $this->logisticsAction($data, $record),
                     ShippingTypeEnum::CDK => $this->cdkAction($data, $record),
                     ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
@@ -100,13 +101,13 @@ trait Shipping
     }
 
 
-
-    protected function cdkAction($data, $record):void
+    protected function cdkAction($data, $record) : void
     {
         $data['id'] = $record->id;
         $command    = OrderCardKeyShippingCommand::from($data);
         app(OrderCommandService::class)->cardKeyShipping($command);
     }
+
     protected function dummyForm($record) : array
     {
         return [
@@ -136,9 +137,25 @@ trait Shipping
 
     }
 
-    protected function expressForm($record) : array
+
+    protected function logisticsAction($data, $record) : void
+    {
+        $data['id'] = $record->id;
+
+        $command    = OrderLogisticsShippingCommand::from($data);
+
+        app(OrderCommandService::class)->logisticsShipping($command);
+
+    }
+
+    protected function logisticsForm($record) : array
     {
         return [
+            Forms\Components\ToggleButtons::make('is_finished')
+                                          ->label(__('red-jasmine-order::commands.shipping.is_finished'))
+                                          ->default(true)
+                                          ->grouped()
+                                          ->boolean(),
             Forms\Components\ToggleButtons::make('is_split')
                                           ->label(__('red-jasmine-order::commands.shipping.is_split'))
                                           ->default(false)
@@ -150,11 +167,11 @@ trait Shipping
                                          ->visible(fn(Forms\Get $get) => $get('is_split'))
                                          ->options($record->products->pluck('title', 'id')->toArray()),
 
-            Forms\Components\TextInput::make('express_company_code')
-                                      ->label(__('red-jasmine-order::commands.shipping.express_company_code'))
+            Forms\Components\TextInput::make('logistics_company_code')
+                                      ->label(__('red-jasmine-order::commands.shipping.logistics_company_code'))
                                       ->required(),
-            Forms\Components\TextInput::make('express_no')
-                                      ->label(__('red-jasmine-order::commands.shipping.express_no'))
+            Forms\Components\TextInput::make('logistics_no')
+                                      ->label(__('red-jasmine-order::commands.shipping.logistics_no'))
                                       ->required(),
 
 

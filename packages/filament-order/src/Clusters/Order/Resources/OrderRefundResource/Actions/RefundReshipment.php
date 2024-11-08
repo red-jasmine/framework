@@ -27,8 +27,8 @@ trait RefundReshipment
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
                 ShippingTypeEnum::CDK => $this->cdkForm($record),
-                ShippingTypeEnum::EXPRESS => $this->expressForm($record),
-                ShippingTypeEnum::DELIVERY => $this->expressForm($record),
+                ShippingTypeEnum::LOGISTICS => $this->logisticsForm($record),
+                ShippingTypeEnum::DELIVERY => $this->logisticsForm($record),
                 ShippingTypeEnum::NONE => []
 
             };
@@ -43,7 +43,7 @@ trait RefundReshipment
                 match ($record->shipping_type) {
                     ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::CDK => $this->cdkAction($data, $record),
-                    ShippingTypeEnum::EXPRESS => $this->dummyAction($data, $record),
+                    ShippingTypeEnum::LOGISTICS => $this->dummyAction($data, $record),
                     ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
 
@@ -131,7 +131,7 @@ trait RefundReshipment
 
     }
 
-    protected function expressForm($record) : array
+    protected function logisticsForm($record) : array
     {
         return [
             Forms\Components\ToggleButtons::make('is_split')
@@ -145,11 +145,11 @@ trait RefundReshipment
                                          ->visible(fn(Forms\Get $get) => $get('is_split'))
                                          ->options($record->products->pluck('title', 'id')->toArray()),
 
-            Forms\Components\TextInput::make('express_company_code')
-                                      ->label(__('red-jasmine-order::commands.shipping.express_company_code'))
+            Forms\Components\TextInput::make('logistics_company_code')
+                                      ->label(__('red-jasmine-order::commands.shipping.logistics_company_code'))
                                       ->required(),
-            Forms\Components\TextInput::make('express_no')
-                                      ->label(__('red-jasmine-order::commands.shipping.express_no'))
+            Forms\Components\TextInput::make('logistics_no')
+                                      ->label(__('red-jasmine-order::commands.shipping.logistics_no'))
                                       ->required(),
 
 

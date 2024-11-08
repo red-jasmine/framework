@@ -119,7 +119,7 @@ class OrderRefundResource extends Resource
                                  RefundTypeEnum::WARRANTY,
                              ],           true)
 
-                                 && $record->shipping_type === ShippingTypeEnum::EXPRESS
+                                 && $record->shipping_type === ShippingTypeEnum::LOGISTICS
 
                              ) {
                                  $components[] = Order\Resources\Components\OrderLogistics::class;

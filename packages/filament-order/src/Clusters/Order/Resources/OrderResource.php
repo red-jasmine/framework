@@ -189,7 +189,7 @@ class OrderResource extends Resource
 
                                              Livewire::make(OrderCluster\Resources\Components\OrderPayments::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-payments')->columnSpanFull(),
                                          ];
-                                         if ($record->shipping_type === ShippingTypeEnum::EXPRESS) {
+                                         if ($record->shipping_type === ShippingTypeEnum::LOGISTICS) {
                                              $schema[] =  Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record) : array => [  'orderId' => $record->id, ])->key('order-logistics')->columnSpanFull();
 
                                          }
