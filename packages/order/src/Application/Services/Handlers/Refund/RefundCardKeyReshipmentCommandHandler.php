@@ -28,12 +28,7 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
             $refund              = $this->find($command->rid);
             $orderProductCardKey = OrderProductCardKey::newModel();
 
-            $orderProductCardKey->seller_type      = $refund->seller_type;
-            $orderProductCardKey->seller_id        = $refund->seller_id;
-            $orderProductCardKey->buyer_type       = $refund->buyer_type;
-            $orderProductCardKey->buyer_id         = $refund->buyer_id;
-            $orderProductCardKey->order_id         = $refund->order_id;
-            $orderProductCardKey->order_product_id = $refund->order_product_id;
+
 
             $orderProductCardKey->content      = $command->content;
             $orderProductCardKey->content_type = $command->contentType;

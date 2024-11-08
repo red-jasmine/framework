@@ -8,20 +8,12 @@ return [
 
     ],
     'fields' => [
-        'seller_type'          => '卖家类型',
-        'seller_id'            => '卖家ID',
-        'seller_nickname'      => '卖家昵称',
-        'buyer_type'           => '卖家类型',
-        'buyer_id'             => '卖家ID',
-        'buyer_nickname'       => '卖家昵称',
-        'id'                   => '订单支付单编号',
-        'entity_type'       => '发货单类型',
-        'entity_id'       => '单号',
+        'id'                   => '订单物流编号',
         'order_product_id'     => '订单商品项编号',
         'shipper'              => '发货方',
         'status'               => '状态',
-        'express_company_code' => '快递公司',
-        'express_no'           => '快递单号',
+        'logistics_company_code' => '物流公司',
+        'logistics_no'           => '物流单号',
         'shipping_time'        => '发货时间',
         'collect_time'         => '揽收时间',
         'dispatch_time'        => '派送时间',
@@ -46,7 +38,7 @@ return [
             'signed'               => '已签收',
         ],
 
-        'shipper'        => [
+        'shipper' => [
             'buyer'  => '买家',
             'seller' => '卖家'
 

@@ -15,13 +15,13 @@ class RefundReturnGoodsCommand extends Data
      *  TODO 改为值对象
      * @var string
      */
-    public string $expressCompanyCode;
+    public string $logisticsCompanyCode;
 
     /**
      * 快递单号
      * @var string|int
      */
-    public string|int $expressNo;
+    public string|int $logisticsNo;
 
 
     public LogisticsStatusEnum $status = LogisticsStatusEnum::CREATED;

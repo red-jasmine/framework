@@ -245,6 +245,13 @@ class Order extends Model implements OperatorInterface
 
     public function addLogistics(OrderLogistics $logistics) : void
     {
+        $logistics->entity_type = EntityTypeEnum::ORDER;
+        $logistics->entity_id   = $this->id;
+        $logistics->order_id    = $this->id;
+        $logistics->seller_type = $this->seller_type;
+        $logistics->seller_id   = $this->seller_id;
+        $logistics->buyer_type  = $this->buyer_type;
+        $logistics->buyer_id    = $this->buyer_id;
         $this->logistics->add($logistics);
     }
 

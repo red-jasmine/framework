@@ -31,12 +31,7 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
         try {
             $order = $this->find($command->id);
 
-            $orderProductCardKey              = OrderProductCardKey::newModel();
-            $orderProductCardKey->order_id    = $order->id;
-            $orderProductCardKey->entity_type = EntityTypeEnum::ORDER;
-            $orderProductCardKey->entity_id   = $order->id;
-
-
+            $orderProductCardKey                   = OrderProductCardKey::newModel();
             $orderProductCardKey->order_product_id = $command->orderProductId;
             $orderProductCardKey->content          = $command->content;
             $orderProductCardKey->content_type     = $command->contentType;
@@ -44,7 +39,6 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
             $orderProductCardKey->status           = $command->status;
             $orderProductCardKey->source_type      = $command->sourceType;
             $orderProductCardKey->source_id        = $command->sourceId;
-
 
             $this->orderShippingService->cardKey($order, $orderProductCardKey);
 

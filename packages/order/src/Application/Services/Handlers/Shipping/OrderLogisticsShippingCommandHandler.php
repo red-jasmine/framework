@@ -30,23 +30,16 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order                                = $this->find($command->id);
-            $orderLogistics                       = OrderLogistics::newModel();
-            $orderLogistics->entity_type          = EntityTypeEnum::ORDER;
-            $orderLogistics->entity_id            = $order->id;
-            $orderLogistics->seller_type          = $order->seller_type;
-            $orderLogistics->seller_id            = $order->seller_id;
-            $orderLogistics->buyer_type           = $order->buyer_type;
-            $orderLogistics->buyer_id             = $order->buyer_id;
-            $orderLogistics->shipper              = LogisticsShipperEnum::SELLER;
-            $orderLogistics->order_product_id     = $command->orderProducts;
-            $orderLogistics->express_company_code = $command->expressCompanyCode;
-            $orderLogistics->express_no           = $command->expressNo;
-            $orderLogistics->status               = $command->status;
-            $orderLogistics->shipping_time        = now();
-            $orderLogistics->creator              = $order->updater;
+            $order          = $this->find($command->id);
+            $orderLogistics = OrderLogistics::newModel();
 
-            $this->orderShippingService->logistics($order, $command->isSplit, $orderLogistics);
+            $orderLogistics->shipper                = LogisticsShipperEnum::SELLER;
+            $orderLogistics->order_product_id       = $command->orderProducts;
+            $orderLogistics->logistics_company_code = $command->logisticsCompanyCode;
+            $orderLogistics->logistics_no           = $command->logisticsNo;
+            $orderLogistics->status                 = $command->status;
+            $orderLogistics->shipping_time          = now();
+            $this->orderShippingService->logistics($order, $command->isSplit, $orderLogistics, $command->isFinished);
 
             $this->orderRepository->update($order);
 

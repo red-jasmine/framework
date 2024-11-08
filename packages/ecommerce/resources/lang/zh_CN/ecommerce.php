@@ -31,7 +31,7 @@ return [
         ],
 
         'shipping_type'             => [
-            'express'  => '快递',
+            'logistics'  => '快递',
             'dummy'    => '虚拟',
             'cdk'      => '卡密',
             'delivery' => '配送',

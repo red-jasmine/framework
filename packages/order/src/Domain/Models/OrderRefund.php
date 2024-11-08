@@ -407,6 +407,15 @@ class OrderRefund extends Model
         $this->product->refund_status = RefundStatusEnum::WAIT_SELLER_CONFIRM;
 
 
+        $orderLogistics->entity_type = EntityTypeEnum::REFUND;
+        $orderLogistics->entity_id   = $this->id;
+        $orderLogistics->seller_type = $this->seller_type;
+        $orderLogistics->seller_id   = $this->seller_id;
+        $orderLogistics->buyer_type  = $this->buyer_type;
+        $orderLogistics->buyer_id    = $this->buyer_id;
+        $orderLogistics->order_id    = $this->order_id;
+
+
         $this->logistics->add($orderLogistics);
 
         $this->fireModelEvent('returnedGoods');
@@ -436,6 +445,11 @@ class OrderRefund extends Model
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
         $orderLogistics->entity_id   = $this->id;
         $orderLogistics->order_id    = $this->order_id;
+        $orderLogistics->seller_type = $this->seller_type;
+        $orderLogistics->seller_id   = $this->seller_id;
+        $orderLogistics->buyer_type  = $this->buyer_type;
+        $orderLogistics->buyer_id    = $this->buyer_id;
+        $orderLogistics->order_id    = $this->order_id;
 
         $this->logistics->add($orderLogistics);
 
@@ -443,6 +457,11 @@ class OrderRefund extends Model
 
     }
 
+    /**
+     * @param OrderProductCardKey $cardKey
+     * @return void
+     * @throws RefundException
+     */
     public function cardKeyReshipment(OrderProductCardKey $cardKey) : void
     {
         if (!$this->isAllowReshipment()) {
@@ -456,6 +475,11 @@ class OrderRefund extends Model
         $cardKey->entity_id        = $this->id;
         $cardKey->order_id         = $this->order_id;
         $cardKey->order_product_id = $this->order_product_id;
+        $cardKey->seller_type      = $this->seller_type;
+        $cardKey->seller_id        = $this->seller_id;
+        $cardKey->buyer_type       = $this->buyer_type;
+        $cardKey->buyer_id         = $this->buyer_id;
+        $cardKey->order_id         = $this->order_id;
 
         $this->cardKeys->add($cardKey);
 
@@ -509,6 +533,7 @@ class OrderRefund extends Model
         $builder->where('refund_status', RefundStatusEnum::CANCEL);
         return $builder;
     }
+
     public function scopeOnCancelClosed(Builder $builder) : Builder
     {
         return $builder->whereIn('order_status', [ RefundStatusEnum::CLOSED, RefundStatusEnum::CANCEL ]);

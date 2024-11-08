@@ -8,12 +8,19 @@ class OrderLogisticsShippingCommand extends LogisticsData
 {
 
     public int $id;
+    /**
+     * 是否完成发货
+     * @var bool
+     */
+    public bool $isFinished = true;
+
 
     /**
      * 是否拆分
      * @var bool
      */
     public bool $isSplit = false;
+
 
     /**
      * 部分订单商品 集合

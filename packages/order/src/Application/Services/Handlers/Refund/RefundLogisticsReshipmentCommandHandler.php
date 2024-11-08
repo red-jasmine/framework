@@ -29,17 +29,11 @@ class RefundLogisticsReshipmentCommandHandler extends AbstractRefundCommandHandl
         try {
             $refund                               = $this->find($command->rid);
             $orderLogistics                       = OrderLogistics::newModel();
-            $orderLogistics->entity_type          = EntityTypeEnum::REFUND;
-            $orderLogistics->entity_id            = $refund->id;
-            $orderLogistics->seller_type          = $refund->seller_type;
-            $orderLogistics->seller_id            = $refund->seller_id;
-            $orderLogistics->buyer_type           = $refund->buyer_type;
-            $orderLogistics->buyer_id             = $refund->buyer_id;
-            $orderLogistics->order_id             = $refund->order_id;
+
             $orderLogistics->shipper              = LogisticsShipperEnum::SELLER;
             $orderLogistics->order_product_id     = [ $refund->order_product_id ];
-            $orderLogistics->express_company_code = $command->expressCompanyCode;
-            $orderLogistics->express_no           = $command->expressNo;
+            $orderLogistics->logistics_company_code = $command->logisticsCompanyCode;
+            $orderLogistics->logistics_no           = $command->logisticsNo;
             $orderLogistics->status               = $command->status;
             $orderLogistics->shipping_time        = now();
             $refund->logisticsReshipment($orderLogistics);

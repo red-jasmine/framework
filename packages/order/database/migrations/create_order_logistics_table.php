@@ -23,8 +23,8 @@ return new class extends Migration {
             $table->string('order_product_id')->nullable()->comment('订单商品项单号');
             $table->string('shipper', 32)->comment(LogisticsShipperEnum::comments('发货方'));
             $table->string('status', 32)->comment(LogisticsStatusEnum::comments('状态'));
-            $table->string('express_company_code')->comment('快递公司代码');
-            $table->string('express_no')->comment('快递单号');
+            $table->string('logistics_company_code')->comment('快递公司代码');
+            $table->string('logistics_no')->comment('快递单号');
             $table->timestamp('shipping_time')->nullable()->comment('发货时间');
             $table->timestamp('collect_time')->nullable()->comment('揽收时间');
             $table->timestamp('dispatch_time')->nullable()->comment('派送时间');
@@ -41,6 +41,7 @@ return new class extends Migration {
             $table->index([ 'entity_id', 'entity_type' ], 'idx_entity');
             $table->index([ 'seller_id', 'seller_type', 'order_id', ], 'idx_seller');
             $table->index([ 'buyer_id', 'buyer_type', 'order_id', ], 'idx_buyer');
+            $table->index([ 'logistics_company_code', 'logistics_no' ], 'idx_logistics');
         });
     }
 

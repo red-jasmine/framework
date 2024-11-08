@@ -11,13 +11,13 @@ class LogisticsData extends Data
      * 快递公司
      * @var string
      */
-    public string $expressCompanyCode;
+    public string $logisticsCompanyCode;
 
     /**
      * 快递单号
      * @var string|int
      */
-    public string|int $expressNo;
+    public string|int $logisticsNo;
 
 
     public LogisticsStatusEnum $status = LogisticsStatusEnum::CREATED;

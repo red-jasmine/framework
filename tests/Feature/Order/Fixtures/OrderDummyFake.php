@@ -28,7 +28,7 @@ class OrderDummyFake
      * 发货类型
      * @var ShippingTypeEnum
      */
-    public ShippingTypeEnum $shippingType = ShippingTypeEnum::EXPRESS;
+    public ShippingTypeEnum $shippingType = ShippingTypeEnum::LOGISTICS;
     // 商品数量
     public int $productCount = 3;
 
@@ -221,11 +221,12 @@ class OrderDummyFake
     public function shippingLogistics(array $merge = []) : OrderLogisticsShippingCommand
     {
         $data = [
-            'id'                   => 1,
-            'is_split'             => false,
-            'order_products'       => null,
-            'express_company_code' => fake()->randomElement([ 'shunfeng', 'yuantong', ]),
-            'express_no'           => fake()->numerify('##########'),
+            'id'                     => 1,
+            'is_split'               => false,
+            'is_finished'            => true,
+            'order_products'         => null,
+            'logistics_company_code' => fake()->randomElement([ 'shunfeng', 'yuantong', ]),
+            'logistics_no'           => fake()->numerify('##########'),
         ];
 
         $data = array_merge($data, $merge);

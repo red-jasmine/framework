@@ -8,12 +8,6 @@ return [
 
     ],
     'fields' => [
-        'seller_type'        => '卖家类型',
-        'seller_id'          => '卖家ID',
-        'seller_nickname'    => '卖家昵称',
-        'buyer_type'         => '卖家类型',
-        'buyer_id'           => '卖家ID',
-        'buyer_nickname'     => '卖家昵称',
         'id'                 => '订单支付单编号',
         'order_id'           => '订单编号',
         'amount_type'        => '金额类型',

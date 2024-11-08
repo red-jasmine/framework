@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Domain\Services;
 
 use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -21,7 +22,7 @@ class OrderShippingService
      * @return void
      * @throws OrderException
      */
-    protected function validate(Order $order) : void
+    protected function validateShipping(Order $order) : void
     {
         if ($order->isAllowShipping() === false) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
@@ -35,50 +36,37 @@ class OrderShippingService
      * @param Order $order
      * @param bool $isSplit
      * @param OrderLogistics $logistics
-     *
+     * @param bool $isFinished
      * @return void
      * @throws OrderException
      */
-    public function logistics(Order $order, bool $isSplit, OrderLogistics $logistics) : void
+    public function logistics(Order $order, bool $isSplit, OrderLogistics $logistics, bool $isFinished = true) : void
     {
 
 
-        $this->validate($order);
+        $this->validateShipping($order);
 
-        $types = $order->products->pluck('shipping_type')->unique()->map(fn($item) => $item->value)->flip();
-
-
-        // 如果存在 物流发货类型的 才能物流发货
-        if ($types->hasAny(collect(ShippingTypeEnum::allowLogistics())->map(fn($item) => $item->value)->toArray()) === false) {
+        if (!in_array($order->shipping_type, ShippingTypeEnum::allowLogistics(), true)) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
 
-        // 如果不是拆分发货 那么必须所有商品都是 快递发货类型
-        if ($isSplit === false) {
-            $otherTypes = $types->keys()->diff(collect(ShippingTypeEnum::allowLogistics())->map(fn($item) => $item->value));
-            if ($otherTypes->count()) {
-                throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '存在不同的发货类型请拆分发货');
-            }
-        }
         // 添加物流记录
         $order->addLogistics($logistics);
         $isEffectiveShipping = false;
-        // 设置 订单商品未发货状态
+
         $order->products
-            ->whereIn('shipping_status', [ null, ShippingStatusEnum::WAIT_SEND ])
-            ->each(function (OrderProduct $orderProduct) use ($isSplit, $logistics, &$isEffectiveShipping) {
+            ->where('shipping_status', '<>', ShippingStatusEnum::SHIPPED) // 如果不是已发货完成的单
+            ->each(function (OrderProduct $orderProduct) use ($isSplit, $isFinished, $logistics, &$isEffectiveShipping) {
+                // 如果不是有效单
                 if ($orderProduct->isEffective() === false) {
                     return;
                 }
-                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->id, $logistics->order_product_id ?? [], true))) {
-                    // 发货必须是允许物流发货的类型
-                    if (!in_array($orderProduct->shipping_type, ShippingTypeEnum::allowLogistics(), true)) {
-                        throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
-                    }
-                    $orderProduct->shipping_status = ShippingStatusEnum::SHIPPED;
-                    $orderProduct->shipping_time   = now();
+                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->id, $logistics->order_product_id ?? [], false))) {
+                    $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
+                    $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
+                    $isEffectiveShipping           = true;
                 }
-                $isEffectiveShipping = true;
+
             });
 
         if ($isEffectiveShipping === false) {
@@ -86,7 +74,6 @@ class OrderShippingService
         }
         // 计算订单 发货状态
         $order->shipping();
-
 
     }
 
@@ -102,13 +89,11 @@ class OrderShippingService
      */
     public function cardKey(Order $order, OrderProductCardKey $orderProductCardKey) : void
     {
-        $this->validate($order);
+        $this->validateShipping($order);
         /**
          * @var $orderProduct OrderProduct
          */
-        $orderProduct = $order->products->where('id', $orderProductCardKey->order_product_id)->firstOrFail();
-
-        if ($orderProduct->shipping_type !== ShippingTypeEnum::CDK) {
+        if ($order->shipping_type !== ShippingTypeEnum::CDK) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
 
@@ -116,16 +101,23 @@ class OrderShippingService
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
 
+        $orderProductCardKey->order_id    = $order->id;
+        $orderProductCardKey->entity_type = EntityTypeEnum::ORDER;
+        $orderProductCardKey->entity_id   = $order->id;
+        $orderProductCardKey->seller_type = $order->seller_type;
+        $orderProductCardKey->seller_id   = $order->seller_id;
+        $orderProductCardKey->buyer_type  = $order->buyer_type;
+        $orderProductCardKey->buyer_id    = $order->buyer_id;
 
         $orderProduct->addCardKey($orderProductCardKey);
+
 
         $orderProduct->shipping_status = ShippingStatusEnum::PART_SHIPPED;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
 
-
         if ($orderProduct->progress >= $orderProduct->num) {
             $orderProduct->shipping_status = ShippingStatusEnum::SHIPPED;
-            $orderProduct->signed_time    = now(); // 虚拟商品作为最后一次发货时间
+            $orderProduct->signed_time     = now(); // 虚拟商品作为最后一次发货时间
         }
 
         $order->shipping();
@@ -144,14 +136,12 @@ class OrderShippingService
      */
     public function dummy(Order $order, int $orderProductId, bool $isFinished = true) : void
     {
-        $this->validate($order);
+        $this->validateShipping($order);
 
-        $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
-
-        if ($orderProduct->shipping_type !== ShippingTypeEnum::DUMMY) {
+        if ($order->shipping_type !== ShippingTypeEnum::DUMMY) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
-
+        $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
