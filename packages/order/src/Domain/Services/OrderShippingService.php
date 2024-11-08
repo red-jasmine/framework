@@ -90,14 +90,17 @@ class OrderShippingService
     public function cardKey(Order $order, OrderProductCardKey $orderProductCardKey) : void
     {
         $this->validateShipping($order);
-        /**
-         * @var $orderProduct OrderProduct
-         */
+
         if ($order->shipping_type !== ShippingTypeEnum::CDK) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
+        /**
+         * @var $orderProduct OrderProduct
+         */
+        $orderProduct = $order->products->where('id', $orderProductCardKey->order_product_id)->firstOrFail();
 
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
+            dd($orderProduct->shipping_status);
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
 
@@ -141,7 +144,9 @@ class OrderShippingService
         if ($order->shipping_type !== ShippingTypeEnum::DUMMY) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
+
         $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }

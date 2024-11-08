@@ -68,7 +68,8 @@ return new class extends Migration {
             $table->decimal('total_refund_amount', 12)->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('end_time')->nullable()->comment('完结时间');
-            $table->string('seller_custom_status', 30)->nullable()->comment('卖家自定义状态');
+            $table->string('seller_custom_status')->nullable()->comment('卖家自定义状态');
+            $table->unsignedTinyInteger('star')->nullable()->comment('加星');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人
             $table->nullableMorphs('updater'); // 更新人

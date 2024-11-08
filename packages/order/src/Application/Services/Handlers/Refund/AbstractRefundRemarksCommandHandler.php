@@ -1,17 +1,15 @@
 <?php
 
-namespace RedJasmine\Order\Application\Services\Handlers\Others;
+namespace RedJasmine\Order\Application\Services\Handlers\Refund;
 
-use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCancelCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRemarksCommand;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
-abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHandler
+class AbstractRefundRemarksCommandHandler extends AbstractRefundCommandHandler
 {
-
-
     protected TradePartyEnums $tradeParty;
 
     public function getTradeParty() : TradePartyEnums
@@ -25,24 +23,17 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
         return $this;
     }
 
-
-    /**
-     * @param OrderRemarksCommand $command
-     * @return void
-     * @throws AbstractException
-     * @throws Throwable
-     */
-    public function handle(OrderRemarksCommand $command) : void
+    public function handle(RefundRemarksCommand $command) : void
     {
-
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $refund = $this->find($command->rid);
 
-            $order->remarks($this->tradeParty, $command->remarks, $command->orderProductId, $command->isAppend);
+            $refund->remarks($this->getTradeParty(), $command->remarks, $command->isAppend);
 
-            $this->orderRepository->update($order);
+            $this->refundRepository->update($refund);
+
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
@@ -52,7 +43,6 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
-
 
     }
 

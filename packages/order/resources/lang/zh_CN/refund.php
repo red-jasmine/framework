@@ -34,6 +34,7 @@ return [
         'created_time'         => '创建时间',
         'end_time'             => '完结时间',
         'seller_custom_status' => '卖家自定义状态',
+        'star'                 => '加星',
 
         'title' => '标题',
 
