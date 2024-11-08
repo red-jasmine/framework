@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Components;
+namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\Components;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -17,8 +17,11 @@ class OrderLogistics extends Component implements HasTable, HasForms
     use InteractsWithTable;
     use InteractsWithForms;
 
+    public int $orderId;
 
-    public int $id;
+    public ?string $entityType = null;
+
+    public ?int $entityId = null;
 
 
 
@@ -31,12 +34,18 @@ class OrderLogistics extends Component implements HasTable, HasForms
         return $table
             ->heading(__('red-jasmine-order::logistics.labels.order-logistics'))
             ->modelLabel(__('red-jasmine-order::logistics.labels.order-logistics'))
-            ->query(Model::query()->where('shippable_id', $this->id))
+            ->query(Model::query()
+                        ->where('order_id', $this->orderId)
+                        ->when($this->entityType && $this->entityId, function ($query) {
+                            $query->where('entity_type', $this->entityType)
+                                  ->where('entity_id', $this->entityId);
+                        })
+            )
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::logistics.fields.id')),
-                          TextColumn::make('shippable_type')->label(__('red-jasmine-order::logistics.fields.shippable_type'))->useEnum(),
-                          TextColumn::make('shippable_id')->label(__('red-jasmine-order::logistics.fields.shippable_id')),
+                          TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
+                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id')),
                           TextColumn::make('order_product_id')->label(__('red-jasmine-order::logistics.fields.order_product_id')),
                           TextColumn::make('shipper')->label(__('red-jasmine-order::logistics.fields.shipper'))->useEnum(),
                           TextColumn::make('status')->label(__('red-jasmine-order::logistics.fields.status'))->useEnum(),

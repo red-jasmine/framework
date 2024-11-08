@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Components;
+namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\Components;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -17,8 +17,11 @@ class OrderCardKeys extends Component implements HasTable, HasForms
     use InteractsWithTable;
     use InteractsWithForms;
 
+    public int $orderId;
 
-    public int $id;
+    public ?string $entityType = null;
+
+    public ?int $entityId = null;
 
 
     public function table(Table $table) : Table
@@ -27,12 +30,21 @@ class OrderCardKeys extends Component implements HasTable, HasForms
         return $table
             ->heading(__('red-jasmine-order::card-keys.labels.order-card-keys'))
             ->modelLabel(__('red-jasmine-order::card-keys.labels.order-card-keys'))
-            ->query(OrderProductCardKey::query()->where('order_id', $this->id))
+            ->query(OrderProductCardKey::query()
+                        ->where('order_id', $this->orderId)
+                        ->when($this->entityType && $this->entityId, function ($query) {
+                            $query->where('entity_type', $this->entityType)
+                                  ->where('entity_id', $this->entityId);
+                        })
+
+            )
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::card-keys.fields.id')),
                           TextColumn::make('order_id')->label(__('red-jasmine-order::card-keys.fields.order_id')),
                           TextColumn::make('order_product_id')->label(__('red-jasmine-order::card-keys.fields.order_product_id')),
+                          TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
+                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id')),
                           TextColumn::make('num')->label(__('red-jasmine-order::card-keys.fields.num')),
                           TextColumn::make('content_type')->label(__('red-jasmine-order::card-keys.fields.content_type'))->useEnum(),
                           TextColumn::make('content')->label(__('red-jasmine-order::card-keys.fields.content'))->copyable(),

@@ -26,6 +26,7 @@ use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationMana
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Order;
@@ -186,14 +187,14 @@ class OrderResource extends Resource
                                                      ->columnSpan(2),
 
 
-                                             Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderPayments::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-payments')->columnSpanFull(),
+                                             Livewire::make(OrderCluster\Resources\Components\OrderPayments::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-payments')->columnSpanFull(),
                                          ];
                                          if ($record->shipping_type === ShippingTypeEnum::EXPRESS) {
-                                             $schema[] =  Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderLogistics::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-logistics')->columnSpanFull();
+                                             $schema[] =  Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record) : array => [  'orderId' => $record->id, ])->key('order-logistics')->columnSpanFull();
 
                                          }
                                          if ($record->shipping_type === ShippingTypeEnum::CDK) {
-                                             $schema[] = Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderCardKeys::class, fn(Model $record) : array => [ 'id' => $record->id ])->key('order-card-keys')->columnSpanFull();
+                                             $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record) : array => [  'orderId' => $record->id,])->key('order-card-keys')->columnSpanFull();
 
                                          }
 

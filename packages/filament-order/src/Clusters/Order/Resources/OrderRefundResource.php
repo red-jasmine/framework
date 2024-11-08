@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Livewire;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages;
@@ -21,6 +23,7 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\Services\RefundQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
@@ -75,26 +78,79 @@ class OrderRefundResource extends Resource
                          Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction::make('reject')
                              ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
                          ,
+                         Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeReshipmentInfoListAction::make('agree-reshipment')
+                                                                                                        ->successRedirectUrl(static fn(Model $model) => static::getUrl('view', [ 'record' => $model->id ]))
+                         ,
 
 
-                                       ])
-                     ,
-                     Section::make('退款')
-                            ->schema([
-                                         TextEntry::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->useEnum(),
-                                         TextEntry::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->useEnum(),
-                                         TextEntry::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return')),
-                                         TextEntry::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
-                                         TextEntry::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
-                                         TextEntry::make('freight_amount')->label(__('red-jasmine-order::refund.fields.freight_amount')),
-                                         TextEntry::make('refund_amount')->label(__('red-jasmine-order::refund.fields.refund_amount')),
-                                         TextEntry::make('total_refund_amount')->label(__('red-jasmine-order::refund.fields.total_refund_amount')),
-                                         TextEntry::make('description')->label(__('red-jasmine-order::refund.fields.description')),
-                                         ImageEntry::make('info.images')->label(__('red-jasmine-order::refund.fields.images'))->stacked()->limit(10)
-                                             ->checkFileExistence(false)
-                                             ->limitedRemainingText(),
 
                                      ])
+                     ,
+                     Section::make('退款')
+                         ->schema(function (OrderRefund $record) {
+                             $schema = [
+                                 TextEntry::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->useEnum(),
+                                 TextEntry::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->useEnum(),
+                                 TextEntry::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return')),
+                                 TextEntry::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
+                                 TextEntry::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
+                                 TextEntry::make('freight_amount')->label(__('red-jasmine-order::refund.fields.freight_amount')),
+                                 TextEntry::make('refund_amount')->label(__('red-jasmine-order::refund.fields.refund_amount')),
+                                 TextEntry::make('total_refund_amount')->label(__('red-jasmine-order::refund.fields.total_refund_amount')),
+                                 TextEntry::make('description')->label(__('red-jasmine-order::refund.fields.description')),
+                                 ImageEntry::make('info.images')->label(__('red-jasmine-order::refund.fields.images'))->stacked()->limit(10)
+                                           ->checkFileExistence(false)
+                                           ->limitedRemainingText(),
+
+                             ];
+                             $components = [];
+
+                             if (in_array($record->refund_type, [
+                                     RefundTypeEnum::REFUND,
+                                     RefundTypeEnum::RETURN_GOODS_REFUND,
+                                 ],       true)
+                                 && $record->refund_status === RefundStatusEnum::SUCCESS
+                             ) {
+                                 $components[] = Order\Resources\Components\OrderPayments::class;
+                             }
+                             if (in_array($record->refund_type, [
+                                 RefundTypeEnum::RETURN_GOODS_REFUND,
+                                 RefundTypeEnum::RESHIPMENT,
+                                 RefundTypeEnum::WARRANTY,
+                             ],           true)
+
+                                 && $record->shipping_type === ShippingTypeEnum::EXPRESS
+
+                             ) {
+                                 $components[] = Order\Resources\Components\OrderLogistics::class;
+                             }
+                             if ($record->refund_type === RefundTypeEnum::RESHIPMENT
+                                 && $record->shipping_type === ShippingTypeEnum::CDK
+                                 && $record->refund_status === RefundStatusEnum::SUCCESS
+                             ) {
+                                 $components[] = Order\Resources\Components\OrderCardKeys::class;
+                             }
+
+
+                             if (filled($components)) {
+                                 foreach ($components as $component) {
+                                     $schema[] = Livewire::make($component,
+                                         fn(OrderRefund $record) : array => [
+                                             'orderId'     => $record->order_id,
+                                             'entityType' => EntityTypeEnum::REFUND->value,
+                                             'entityId'   => $record->id,
+                                         ])
+                                                         ->key($component)
+                                                         ->columnSpanFull();
+                                 }
+
+                             }
+
+
+
+                             return $schema;
+                         })
+
                             ->inlineLabel()
                             ->columns(6),
 
@@ -425,6 +481,8 @@ class OrderRefundResource extends Resource
                // Tables\Actions\EditAction::make(),
                 Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeTableAction::make('agree'),
                 Order\Resources\OrderRefundResource\Actions\Table\RefundRejectTableAction::make('reject'),
+                Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeReshipmentTableAction::make('agree-reshipment'),
+                Order\Resources\OrderRefundResource\Actions\Table\RefundReshipmentTableAction::make('reshipment'),
 
             ])
             ->bulkActions([

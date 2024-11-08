@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Components;
+namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\Components;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -21,7 +21,11 @@ class OrderPayments extends Component implements HasTable, HasForms
     use InteractsWithForms;
 
 
-    public int $id;
+    public int $orderId;
+
+    public ?string $entityType = null;
+
+    public ?int $entityId = null;
 
 
     public function table(Table $table) : Table
@@ -30,12 +34,19 @@ class OrderPayments extends Component implements HasTable, HasForms
         return $table
             ->heading(__('red-jasmine-order::payment.labels.order-payments'))
             ->modelLabel(__('red-jasmine-order::payment.labels.order-payments'))
-            ->query(OrderPayment::query()->where('order_id', $this->id))
+            ->query(OrderPayment::query()
+                        ->where('order_id', $this->orderId)
+                        ->when($this->entityType && $this->entityId, function ($query) {
+                            $query->where('entity_type', $this->entityType)
+                                  ->where('entity_id', $this->entityId);
+                        })
+            )
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::payment.fields.id')),
                           TextColumn::make('order_id')->label(__('red-jasmine-order::payment.fields.order_id')),
-                          TextColumn::make('refund_id')->label(__('red-jasmine-order::payment.fields.refund_id')),
+                          TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
+                          TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id')),
                           TextColumn::make('amount_type')->label(__('red-jasmine-order::payment.fields.amount_type'))->useEnum(),
                           TextColumn::make('payment_amount')->label(__('red-jasmine-order::payment.fields.payment_amount')),
                           TextColumn::make('status')->label(__('red-jasmine-order::payment.fields.status'))->useEnum(),

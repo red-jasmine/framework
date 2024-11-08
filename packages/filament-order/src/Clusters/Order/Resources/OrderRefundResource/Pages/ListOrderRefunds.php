@@ -18,9 +18,9 @@ class ListOrderRefunds extends ListRecords
     {
         return [
             'all'                 => Tab::make()->label(__('red-jasmine-order::refund.scopes.all')),
-            'wait_seller_agree'   => Tab::make()->label(__('red-jasmine-order::refund.scopes.wait_seller_agree'))
-                                        ->badge(static::getResource()::getEloquentQuery()->waitSellerAgree()->count())
-                                        ->modifyQueryUsing(fn(Builder $query) => $query->waitSellerAgree()),
+            'wait_seller_agree'   => Tab::make()->label(__('red-jasmine-order::refund.scopes.wait_seller_handle'))
+                                        ->badge(static::getResource()::getEloquentQuery()->waitSellerHandle()->count())
+                                        ->modifyQueryUsing(fn(Builder $query) => $query->waitSellerHandle()),
             'wait_seller_confirm' => Tab::make()->label(__('red-jasmine-order::refund.scopes.wait_seller_confirm'))
                                         ->badge(static::getResource()::getEloquentQuery()->waitSellerConfirm()->count())
                                         ->modifyQueryUsing(fn(Builder $query) => $query->waitSellerConfirm()),
