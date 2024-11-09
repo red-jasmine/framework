@@ -15,6 +15,7 @@ use RedJasmine\Order\Application\Services\Handlers\Refund\RefundLogisticsReshipm
 use RedJasmine\Order\Application\Services\Handlers\Refund\RefundReturnGoodsCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Refund\RefundSellerRemarksCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Refund\RefundStarCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Refund\RefundUrgeCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeReshipmentCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeReturnGoodsCommand;
@@ -27,6 +28,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundLogisticsReship
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRemarksCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReturnGoodsCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundStarCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundUrgeCommand;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
@@ -44,6 +46,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method void sellerRemarks(RefundRemarksCommand $command)
  * @method void buyerRemarks(RefundRemarksCommand $command)
  * @method void star(RefundStarCommand $command)
+ * @method void urge(RefundUrgeCommand $command)
  */
 class RefundCommandService extends ApplicationCommandService
 {
@@ -61,6 +64,7 @@ class RefundCommandService extends ApplicationCommandService
         'sellerRemarks'       => RefundSellerRemarksCommandHandler::class,
         'buyerRemarks'        => RefundBuyerRemarksCommandHandler::class,
         'star'                => RefundStarCommandHandler::class,
+        'urge'               => RefundUrgeCommandHandler::class,
     ];
 
 }

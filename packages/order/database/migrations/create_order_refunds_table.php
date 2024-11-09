@@ -70,7 +70,7 @@ return new class extends Migration {
             $table->timestamp('end_time')->nullable()->comment('完结时间');
             $table->string('seller_custom_status')->nullable()->comment('卖家自定义状态');
             $table->unsignedTinyInteger('star')->nullable()->comment('加星');
-            $table->unsignedTinyInteger('urges')->nullable()->comment('催单');
+            $table->unsignedTinyInteger('urge')->nullable()->comment('催单');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人
             $table->nullableMorphs('updater'); // 更新人

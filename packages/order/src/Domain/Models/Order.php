@@ -28,6 +28,7 @@ use RedJasmine\Order\Domain\Events\OrderRejectEvent;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
 use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
+use RedJasmine\Order\Domain\Events\OrderUrgeEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
@@ -81,6 +82,7 @@ class Order extends Model implements OperatorInterface
         'closed'              => OrderClosedEvent::class,
         'customStatusChanged' => OrderCustomStatusChangedEvent::class,
         'starChanged'         => OrderStarChangedEvent::class,
+        'urge'               => OrderUrgeEvent::class,
     ];
     protected $observables      = [
         'paying',
@@ -95,6 +97,7 @@ class Order extends Model implements OperatorInterface
         'closed',
         'customStatusChanged',
         'starChanged',
+        'urge',
 
     ];
     protected $casts            = [
@@ -825,6 +828,12 @@ class Order extends Model implements OperatorInterface
         $this->star = $star;
 
         $this->fireModelEvent('starChanged', false);
+    }
+
+    public function urge() : void
+    {
+        ++$this->urge;
+        $this->fireModelEvent('urge', false);
     }
 
 

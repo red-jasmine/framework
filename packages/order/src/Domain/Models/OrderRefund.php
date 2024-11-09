@@ -16,6 +16,7 @@ use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Events\RefundAgreedEvent;
 use RedJasmine\Order\Domain\Events\RefundAgreedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundCanceledEvent;
+use RedJasmine\Order\Domain\Events\RefundCreatedEvent;
 use RedJasmine\Order\Domain\Events\RefundRejectedEvent;
 use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
@@ -97,6 +98,7 @@ class OrderRefund extends Model
     ];
 
     protected $dispatchesEvents = [
+        'created'             => RefundCreatedEvent::class,
         'agreed'              => RefundAgreedEvent::class,
         'rejected'            => RefundRejectedEvent::class,
         'canceled'            => RefundCanceledEvent::class,
@@ -104,6 +106,17 @@ class OrderRefund extends Model
         'rejectedReturnGoods' => RefundRejectedReturnGoodsEvent::class,
         'returnedGoods'       => RefundReturnedGoodsEvent::class,
         'reshippedGoods'      => RefundReshippedGoodsEvent::class,
+        'urge'                => RefundAgreedEvent::class,
+    ];
+    protected $observables      = [
+        'agreed',
+        'rejected',
+        'canceled',
+        'agreedReturnGoods',
+        'rejectedReturnGoods',
+        'returnedGoods',
+        'reshippedGoods',
+        'urge',
     ];
 
 
@@ -520,6 +533,11 @@ class OrderRefund extends Model
         $this->fireModelEvent('starChanged', false);
     }
 
+    public function urge() : void
+    {
+        ++$this->urge;
+        $this->fireModelEvent('urge', false);
+    }
 
     // |---------------scopes----------------------------
 

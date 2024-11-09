@@ -18,6 +18,7 @@ use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerHiddenComma
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerMessageCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderSellerRemarksCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Others\OrderStarCommandHandler;
+use RedJasmine\Order\Application\Services\Handlers\Others\OrderUrgeCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderCardKeyShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderLogisticsShippingCommandHandler;
 use RedJasmine\Order\Application\Services\Handlers\Shipping\OrderDummyShippingCommandHandler;
@@ -33,6 +34,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderUrgeCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
@@ -80,6 +82,8 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method void confirm(OrderConfirmCommand $command)
  * @see  OrderStarCommandHandler::handle()
  * @method void star(OrderStarCommand $command)
+ * @see  OrderUrgeCommandHandler::handle()
+ * @method void urge(OrderUrgeCommand $command)
  */
 class OrderCommandService extends ApplicationCommandService
 {
@@ -113,6 +117,7 @@ class OrderCommandService extends ApplicationCommandService
         'sellerHidden'       => OrderSellerHiddenCommandHandler::class,
         'buyerHidden'        => OrderBuyerHiddenCommandHandler::class,
         'star'               => OrderStarCommandHandler::class,
+        'urge'              => OrderUrgeCommandHandler::class,
     ];
 
 

@@ -8,8 +8,10 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Others\OrderUrgeCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundUrgeCommand;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -108,6 +110,24 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 })->depends('can create a new order', 'cna paying a order');
 
 
+test('can urge a order', function (Order $order, OrderPayment $orderPayment) {
+
+
+    $command = new  OrderUrgeCommand();
+
+    $command->id = $order->id;
+
+    $result = $this->orderCommandService->urge($command);
+
+
+    $order = $this->orderRepository->find($order->id);
+
+    $this->assertEquals(1, $order->urge);
+
+    return $result;
+
+})->depends('can create a new order', 'cna paying a order', 'can paid a order');
+
 // 退款
 
 
@@ -149,6 +169,27 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
     ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 
+test('can urge a refund', function (Order $order, $refunds = []) {
+
+    foreach ($refunds as $refundId) {
+
+
+        $command         = new RefundUrgeCommand();
+        $command->id     = $refundId;
+
+        $this->refundCommandService->urge($command);
+
+        $refund          = $this->refundRepository->find($refundId);
+
+        $this->assertEquals(1, $refund->urge);
+    }
+
+
+    return $order;
+
+})->depends('can create a new order', 'can refund a order');
+
+
 test('can agree refund a order', function (Order $order, $refunds = []) {
 
 
@@ -156,7 +197,7 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
         $refund          = $this->refundRepository->find($refundId);
         $command         = new RefundAgreeRefundCommand();
-        $command->id    = $refund->id;
+        $command->id     = $refund->id;
         $command->amount = $refund->refund_amount;
 
         $this->refundCommandService->agreeRefund($command);
