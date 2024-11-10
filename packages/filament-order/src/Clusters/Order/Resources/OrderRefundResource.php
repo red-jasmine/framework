@@ -63,6 +63,7 @@ class OrderRefundResource extends Resource
                               Section::make(static fn(Model $record) => $record->id)
                                      ->schema([
                                                   TextEntry::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->useEnum(),
+                                                  TextEntry::make('info.reject_reason')->label(__('red-jasmine-order::refund.fields.reject_reason')),
                                                   TextEntry::make('seller_custom_status')->label(__('red-jasmine-order::refund.fields.seller_custom_status'))->badge(),
                                                   TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks'))
                                                            ->hintColor('primary')
