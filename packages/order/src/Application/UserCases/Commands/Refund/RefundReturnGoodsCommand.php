@@ -2,28 +2,12 @@
 
 namespace RedJasmine\Order\Application\UserCases\Commands\Refund;
 
-use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Order\Domain\Data\LogisticsData;
 
-class RefundReturnGoodsCommand extends Data
+class RefundReturnGoodsCommand extends LogisticsData
 {
 
     public int $id; // 退款单ID
 
-    /**
-     * 快递公司
-     *  TODO 改为值对象
-     * @var string
-     */
-    public string $logisticsCompanyCode;
-
-    /**
-     * 快递单号
-     * @var string|int
-     */
-    public string|int $logisticsNo;
-
-
-    public LogisticsStatusEnum $status = LogisticsStatusEnum::CREATED;
 
 }

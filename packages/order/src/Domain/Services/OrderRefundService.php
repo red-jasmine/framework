@@ -111,7 +111,7 @@ class OrderRefundService
         $orderRefund->created_time = now();
 
         // 设置订单项目状态
-        $orderProduct->refund_status = RefundStatusEnum::WAIT_SELLER_AGREE;
+        $orderProduct->refund_status = $orderRefund->refund_status;
         $orderProduct->refund_id     = $orderRefund->id;
         $order->refunds->add($orderRefund);
         return $orderRefund;
