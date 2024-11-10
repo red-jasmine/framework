@@ -2,9 +2,13 @@
 
 namespace RedJasmine\Order\Application;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
+use RedJasmine\Order\Application\Listeners\RefundHandleListener;
+use RedJasmine\Order\Domain\Events\OrderShippedEvent;
+use RedJasmine\Order\Domain\Events\OrderShippingEvent;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServiceValueCastTransformer;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
@@ -44,5 +48,7 @@ class OrderApplicationServiceProvider extends ServiceProvider
 
     public function boot() : void
     {
+        Event::listen(OrderShippingEvent::class, RefundHandleListener::class);
+        Event::listen(OrderShippedEvent::class, RefundHandleListener::class);
     }
 }
