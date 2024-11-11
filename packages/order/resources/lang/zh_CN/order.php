@@ -139,13 +139,7 @@ return [
             'cancel'                   => '已取消',
             'closed'                   => '已关闭',
         ],
-        'payment_status' => [
-            'wait_pay'   => '待支付',
-            'paying'     => '支付中',
-            'part_pay'   => '部分支付',
-            'paid'       => '已支付',
-            'no_payment' => '无需支付',
-        ],
+
         'accept_status'  => [
             'wait_accept' => '待接单',
             'accepted'    => '已接单',

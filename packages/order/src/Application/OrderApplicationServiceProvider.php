@@ -10,12 +10,16 @@ use RedJasmine\Order\Application\Listeners\RefundHandleListener;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServiceValueCastTransformer;
+use RedJasmine\Order\Domain\Repositories\OrderPaymentReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderPaymentReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
+use RedJasmine\Order\Infrastructure\Repositories\Eloquent\OrderPaymentRepository;
 use RedJasmine\Order\Infrastructure\Repositories\Eloquent\OrderRepository;
 use RedJasmine\Order\Infrastructure\Repositories\Eloquent\RefundRepository;
 
@@ -35,6 +39,12 @@ class OrderApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
         $this->app->bind(RefundReadRepositoryInterface::class, RefundReadRepository::class);
+
+
+        $this->app->bind(OrderPaymentRepositoryInterface::class, OrderPaymentRepository::class);
+        $this->app->bind(OrderPaymentReadRepositoryInterface::class, OrderPaymentReadRepository::class);
+
+
 
 
         $config = $this->app->make('config');

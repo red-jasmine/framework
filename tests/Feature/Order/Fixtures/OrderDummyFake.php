@@ -14,6 +14,7 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Domain\Data\OrderPaymentData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use Workbench\App\Models\User;
 
@@ -156,7 +157,7 @@ class OrderDummyFake
             'outer_product_id'       => fake()->numerify('outer_product_id-########'),
             'outer_sku_id'           => fake()->numerify('outer_sku_id-########'),
             'barcode'                => fake()->ean13(),
-            'quantity'                    => fake()->numberBetween(1, 10),
+            'quantity'               => fake()->numberBetween(1, 10),
             'unit'                   => $this->unit,
             'unit_quantity'          => $this->unitQuantity,
             'price'                  => fake()->randomFloat(2, 90, 100),
@@ -291,5 +292,17 @@ class OrderDummyFake
 
         $data = array_merge($data, $merge);
         return RefundCreateCommand::from($data);
+    }
+
+
+    public function fakeOrderPayment(OrderPaymentData $data):void
+    {
+        $data->paymentType      = 'online';
+        $data->paymentId        = fake()->numberBetween(1000000, 999999999);
+        $data->paymentMethod    = fake()->randomElement([ 'app', 'h5', 'mini-program', 'web', 'api' ]);
+        $data->paymentChannel   = fake()->randomElement([ 'alipay', 'wechat', 'bank' ]);
+        $data->paymentChannelNo = fake()->numerify('channel-no-########');
+        $data->paymentTime      = date('Y-m-d H:i:s');
+        $data->message          = fake()->randomElement([ 'ok', 'error' ]);
     }
 }

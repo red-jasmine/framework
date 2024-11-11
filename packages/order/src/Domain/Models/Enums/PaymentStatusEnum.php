@@ -23,14 +23,16 @@ enum PaymentStatusEnum: string
     // 无需支付
     case NO_PAYMENT = 'no_payment';
 
+    case FAIL = 'fail';
+
     public static function labels() : array
     {
         return [
-            self::WAIT_PAY->value   => __('red-jasmine-order::order.enums.payment_status.wait_pay'),
-            self::PAYING->value     => __('red-jasmine-order::order.enums.payment_status.paying'),
-            self::PART_PAY->value   => __('red-jasmine-order::order.enums.payment_status.part_pay'),
-            self::PAID->value       => __('red-jasmine-order::order.enums.payment_status.paid'),
-            self::NO_PAYMENT->value => __('red-jasmine-order::order.enums.payment_status.no_payment'),
+            self::WAIT_PAY->value   => __('red-jasmine-order::common.enums.payment_status.wait_pay'),
+            self::PAYING->value     => __('red-jasmine-order::common.enums.payment_status.paying'),
+            self::PART_PAY->value   => __('red-jasmine-order::common.enums.payment_status.part_pay'),
+            self::PAID->value       => __('red-jasmine-order::common.enums.payment_status.paid'),
+            self::NO_PAYMENT->value => __('red-jasmine-order::common.enums.payment_status.no_payment'),
         ];
 
     }

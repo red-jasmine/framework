@@ -18,9 +18,17 @@ return [
         'urge_time'        => '催单时间',
     ],
     'enums'  => [
-        'entity_type' => [
+        'entity_type'    => [
             'order'  => '订单',
             'refund' => '售后',
+        ],
+        'payment_status' => [
+            'wait_pay'   => '等待支付',
+            'paying'     => '支付中',
+            'part_pay'   => '部分支付',
+            'paid'       => '支付成功',
+            'no_payment' => '无需支付',
+            'fail'       => '支付失败',
         ],
     ],
 

@@ -37,6 +37,8 @@ return new class extends Migration {
             // 对接的第二房单号
             $table->string('payment_channel_no')->nullable()->comment('支付渠道单号');
 
+            $table->string('message')->nullable()->comment('其他信息');
+
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人
             $table->nullableMorphs('updater'); // 更新人

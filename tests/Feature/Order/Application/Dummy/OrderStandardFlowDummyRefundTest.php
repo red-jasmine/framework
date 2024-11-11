@@ -4,11 +4,15 @@
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\Services\OrderPaymentCommandService;
 use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Others\OrderUrgeCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Payments\OrderPaymentFailCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Payments\OrderPaymentPaidCommand;
+use RedJasmine\Order\Application\UserCases\Commands\Payments\OrderPaymentPayingCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundUrgeCommand;
@@ -18,6 +22,7 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
+use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
@@ -27,12 +32,14 @@ use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 beforeEach(function () {
 
-    $this->orderReadRepository  = app(OrderReadRepositoryInterface::class);
-    $this->orderRepository      = app(OrderRepositoryInterface::class);
-    $this->orderCommandService  = app(OrderCommandService::class);
-    $this->refundCommandService = app(RefundCommandService::class);
-    $this->refundRepository     = app(RefundRepositoryInterface::class);
-    $this->refundReadRepository = app(RefundReadRepositoryInterface::class);
+    $this->orderReadRepository        = app(OrderReadRepositoryInterface::class);
+    $this->orderRepository            = app(OrderRepositoryInterface::class);
+    $this->orderCommandService        = app(OrderCommandService::class);
+    $this->refundCommandService       = app(RefundCommandService::class);
+    $this->refundRepository           = app(RefundRepositoryInterface::class);
+    $this->refundReadRepository       = app(RefundReadRepositoryInterface::class);
+    $this->orderPaymentRepository     = app(OrderPaymentRepositoryInterface::class);
+    $this->orderPaymentCommandService = app(OrderPaymentCommandService::class);
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;
@@ -86,14 +93,11 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderPaidCommand;
 
-    $command->id               = $order->id;
-    $command->orderPaymentId   = $orderPayment->id;
-    $command->amount           = $orderPayment->payment_amount;
-    $command->paymentType      = 'online';
-    $command->paymentId        = fake()->numberBetween(1000000, 999999999);
-    $command->paymentChannel   = 'alipay';
-    $command->paymentChannelNo = fake()->numerify('channel-no-########');
-    $command->paymentTime      = date('Y-m-d H:i:s');
+    $command->id             = $order->id;
+    $command->orderPaymentId = $orderPayment->id;
+    $command->amount         = $orderPayment->payment_amount;
+
+    $this->orderFake->fakeOrderPayment($command);
 
 
     $result = $this->orderCommandService->paid($command);
@@ -174,12 +178,12 @@ test('can urge a refund', function (Order $order, $refunds = []) {
     foreach ($refunds as $refundId) {
 
 
-        $command         = new RefundUrgeCommand();
-        $command->id     = $refundId;
+        $command     = new RefundUrgeCommand();
+        $command->id = $refundId;
 
         $this->refundCommandService->urge($command);
 
-        $refund          = $this->refundRepository->find($refundId);
+        $refund = $this->refundRepository->find($refundId);
 
         $this->assertEquals(1, $refund->urge);
     }
@@ -218,12 +222,101 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
         $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
     }
 
-    return $order;
+    return $refunds;
 
 })->depends('can create a new order', 'can refund a order');
 
+test('can refund payment paying', function (Order $order, $refunds = []) {
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund = $this->refundRepository->find($refundId);
+
+        $orderPayment         = $refund->payments->first();
+        $command              = new OrderPaymentPayingCommand();
+        $command->id          = $orderPayment->id;
+        $command->amount      = $orderPayment->payment_amount;
+        $command->paymentType = 'online';
+        $command->paymentId   = fake()->numberBetween(1000000, 999999999);
+        //$command->paymentChannel   = 'alipay';
+        //$command->paymentChannelNo = fake()->numerify('channel-no-########');
+        //$command->paymentTime      = date('Y-m-d H:i:s');
+
+        $this->orderPaymentCommandService->paying($command);
+    }
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund       = $this->refundRepository->find($refundId);
+        $orderPayment = $refund->payments->first();
 
 
+        $this->assertEquals(PaymentStatusEnum::PAYING->value, $orderPayment->status->value, '支付状态不正确');
+
+    }
+
+    return $refunds;
+
+
+})->depends('can create a new order', 'can agree refund a order');
+
+
+test('can refund payment fail', function (Order $order, $refunds = []) {
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund = $this->refundRepository->find($refundId);
+
+        $orderPayment    = $refund->payments->first();
+        $command         = new OrderPaymentFailCommand();
+        $command->id     = $orderPayment->id;
+        $command->amount = $orderPayment->payment_amount;
+        $this->orderFake->fakeOrderPayment($command);
+
+        $this->orderPaymentCommandService->fail($command);
+    }
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund       = $this->refundRepository->find($refundId);
+        $orderPayment = $refund->payments->first();
+
+
+        $this->assertEquals(PaymentStatusEnum::FAIL->value, $orderPayment->status->value, '支付状态不正确');
+
+    }
+
+
+})->depends('can create a new order', 'can refund payment paying');
+
+
+test('can refund payment paid', function (Order $order, $refunds = []) {
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund = $this->refundRepository->find($refundId);
+
+        $orderPayment    = $refund->payments->first();
+        $command         = new OrderPaymentPaidCommand();
+        $command->id     = $orderPayment->id;
+        $command->amount = $orderPayment->payment_amount;
+        $this->orderFake->fakeOrderPayment($command);
+
+        $this->orderPaymentCommandService->paid($command);
+    }
+
+    foreach ($refunds as $refundId) {
+        // 根据退款单 查询支付单
+        $refund       = $this->refundRepository->find($refundId);
+        $orderPayment = $refund->payments->first();
+
+
+        $this->assertEquals(PaymentStatusEnum::PAID->value, $orderPayment->status->value, '支付状态不正确');
+
+    }
+
+
+})->depends('can create a new order', 'can refund payment paying');
 
 
 
