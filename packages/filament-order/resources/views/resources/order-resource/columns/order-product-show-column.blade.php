@@ -35,7 +35,7 @@
             <td name="price" class="p2">
                 <div class="flex items-center gap-x-6">
                     <p class="text-sm font-medium text-gray-800 dark:text-white ">￥ {{$orderProduct->price}}</p>
-                    <p class="text-sm font-medium text-gray-700 dark:text-white "> {{$orderProduct->num}}</p>
+                    <p class="text-sm font-medium text-gray-700 dark:text-white "> {{$orderProduct->quantity}}</p>
                 </div>
             </td>
             <td name="alter_sale_service" class="p2">

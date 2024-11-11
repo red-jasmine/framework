@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
@@ -15,10 +16,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
+use RedJasmine\FilamentCore\Filters\InputFilter;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order as OrderCluster;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
@@ -160,51 +163,53 @@ class OrderResource extends Resource
                                                           ->columns(1)
                                                           ->columnSpan(1),
 
+
+                                                  Section::make('更多')
+                                                         ->schema(function (Model $record) {
+
+                                                             $schema = [
+
+
+                                                                 Fieldset::make('infos')
+                                                                         ->label(__('red-jasmine-order::order.labels.infos'))
+                                                                         ->schema([
+                                                                                      TextEntry::make('payment_time')->label(__('red-jasmine-order::order.fields.payment_time')),
+                                                                                      TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
+                                                                                      TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
+                                                                                      TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
+                                                                                      TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
+                                                                                      TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
+                                                                                      TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
+                                                                                      TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
+                                                                                      TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
+
+                                                                                  ])
+                                                                         ->inlineLabel()
+                                                                         ->columns(2)
+                                                                         ->columnSpan(2),
+
+
+                                                                 Livewire::make(OrderCluster\Resources\Components\OrderPayments::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-payments')->columnSpanFull(),
+                                                             ];
+                                                             if ($record->shipping_type === ShippingTypeEnum::LOGISTICS) {
+                                                                 $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-logistics')->columnSpanFull();
+
+                                                             }
+                                                             if ($record->shipping_type === ShippingTypeEnum::CDK) {
+                                                                 $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-card-keys')->columnSpanFull();
+
+                                                             }
+
+                                                             return $schema;
+                                                         }
+                                                         )
+                                                         ->columnSpanFull()
+                                                         ->compact()
+                                                         ->collapsed(),
+
                                               ])->columns(5),
 
-                              Section::make('更多')
-                                     ->schema(function (Model $record) {
 
-                                         $schema = [
-
-
-                                             Fieldset::make('infos')
-                                                     ->label(__('red-jasmine-order::order.labels.infos'))
-                                                     ->schema([
-                                                                  TextEntry::make('payment_time')->label(__('red-jasmine-order::order.fields.payment_time')),
-                                                                  TextEntry::make('accept_time')->label(__('red-jasmine-order::order.fields.accept_time')),
-                                                                  TextEntry::make('shipping_time')->label(__('red-jasmine-order::order.fields.shipping_time')),
-                                                                  TextEntry::make('signed_time')->label(__('red-jasmine-order::order.fields.signed_time')),
-                                                                  TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
-                                                                  TextEntry::make('close_time')->label(__('red-jasmine-order::order.fields.close_time')),
-                                                                  TextEntry::make('refund_time')->label(__('red-jasmine-order::order.fields.refund_time')),
-                                                                  TextEntry::make('rate_time')->label(__('red-jasmine-order::order.fields.rate_time')),
-                                                                  TextEntry::make('settlement_time')->label(__('red-jasmine-order::order.fields.settlement_time')),
-
-                                                              ])
-                                                     ->inlineLabel()
-                                                     ->columns(2)
-                                                     ->columnSpan(2),
-
-
-                                             Livewire::make(OrderCluster\Resources\Components\OrderPayments::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-payments')->columnSpanFull(),
-                                         ];
-                                         if ($record->shipping_type === ShippingTypeEnum::LOGISTICS) {
-                                             $schema[] =  Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record) : array => [  'orderId' => $record->id, ])->key('order-logistics')->columnSpanFull();
-
-                                         }
-                                         if ($record->shipping_type === ShippingTypeEnum::CDK) {
-                                             $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record) : array => [  'orderId' => $record->id,])->key('order-card-keys')->columnSpanFull();
-
-                                         }
-
-                                         return $schema;
-                                     }
-
-
-                                     )
-                                     ->compact()
-                                     ->collapsed(),
                               Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class, fn(Model $record) : array => [ 'id' => $record->id ])->columnSpanFull(),
 
                               Fieldset::make('amount')
@@ -235,6 +240,11 @@ class OrderResource extends Resource
         return $form;
     }
 
+    /**
+     * @param Table $table
+     * @return Table
+     * @throws Exception
+     */
     public static function table(Table $table) : Table
     {
         return $table
@@ -348,6 +358,11 @@ Tables\Columns\TextColumn::make('cost_amount')
                                                    ->label(__('red-jasmine-order::order.fields.contact'))
                                                    ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('star')->label(__('red-jasmine-order::order.fields.star'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('urge')->label(__('red-jasmine-order::common.fields.urge'))
+                                                                 ->badge()
+                              ->tooltip(fn(Order $record)=>$record->urge_time)
+                                                                 ->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('urge_time')->label(__('red-jasmine-order::common.fields.urge_time'))->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_seller_delete'))->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_buyer_delete'))->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('outer_order_id')->label(__('red-jasmine-order::order.fields.outer_order_id'))->toggleable(isToggledHiddenByDefault: true),
@@ -358,17 +373,8 @@ Tables\Columns\TextColumn::make('cost_amount')
 
                       ])
             ->filters([
-
-                          Tables\Filters\Filter::make('id')->form(
-                              [
-                                  Forms\Components\TextInput::make('id')->label(__('red-jasmine-order::order.fields.id'))
-                              ]
-                          )
-                                               ->query(function (Builder $query, array $data) : Builder {
-
-                                                   return $query->when($data['id'], fn(Builder $query, $data) : Builder => $query->where('id', $data));
-                                               }),
-
+                          InputFilter::make('id')
+                                     ->inputLabel(__('red-jasmine-order::order.fields.id')),
                           Tables\Filters\SelectFilter::make('order_status')
                                                      ->label(__('red-jasmine-order::order.fields.order_status'))
                                                      ->options(OrderStatusEnum::options()),
@@ -404,7 +410,13 @@ Tables\Columns\TextColumn::make('cost_amount')
                                          ->label(__('red-jasmine-order::order.fields.payment_time')),
 
                           //Tables\Filters\TrashedFilter::make(),
-                      ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
+                      ], layout: Tables\Enums\FiltersLayout::AboveContent)
+            ->filtersFormColumns([
+                                     'sm'  => 2,
+                                     'lg'  => 3,
+                                     'xl'  => 4,
+                                     '2xl' => 6,
+                                 ])
             ->deferFilters()
             ->actions([
                           Tables\Actions\ViewAction::make(),
@@ -421,10 +433,6 @@ Tables\Columns\TextColumn::make('cost_amount')
 
 
                                                            ])->label('more'),
-
-
-                          //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_remarks'),
-                          //OrderCluster\Resources\OrderResource\Actions\SellerRemarksAction::make('seller_message'),
 
                       ])
             ->bulkActions([

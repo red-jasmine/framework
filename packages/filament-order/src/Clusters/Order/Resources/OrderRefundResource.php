@@ -5,6 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Livewire;
 use Filament\Infolists\Components\Section;
@@ -110,7 +111,7 @@ class OrderRefundResource extends Resource
                                          $schema     = [
                                              TextEntry::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->useEnum(),
                                              TextEntry::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->useEnum(),
-                                             TextEntry::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return')),
+                                             IconEntry::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return'))->boolean(),
                                              TextEntry::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
                                              TextEntry::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
                                              TextEntry::make('freight_amount')->label(__('red-jasmine-order::refund.fields.freight_amount')),
@@ -132,13 +133,13 @@ class OrderRefundResource extends Resource
                                          ) {
                                              $components[] = Order\Resources\Components\OrderPayments::class;
                                          }
-                                         if (in_array($record->refund_type, [
+                                         if (
+                                             $record->shipping_type === ShippingTypeEnum::LOGISTICS &&
+                                             in_array($record->refund_type, [
                                                  RefundTypeEnum::RETURN_GOODS_REFUND,
                                                  RefundTypeEnum::RESHIPMENT,
                                                  RefundTypeEnum::WARRANTY,
                                              ],       true)
-
-                                             && $record->shipping_type === ShippingTypeEnum::LOGISTICS
 
                                          ) {
                                              $components[] = Order\Resources\Components\OrderLogistics::class;
@@ -237,156 +238,7 @@ class OrderRefundResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->schema([
-                         Forms\Components\Select::make('order_id')
-                                                ->relationship('order', 'title')
-                                                ->required(),
-                         Forms\Components\TextInput::make('order_product_id')
-                                                   ->required()
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('seller_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('seller_id')
-                                                   ->required()
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('buyer_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('buyer_id')
-                                                   ->required()
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('order_product_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('shipping_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('title')
-                                                   ->required()
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('sku_name')
-                                                   ->maxLength(255),
-                         Forms\Components\FileUpload::make('image')
-                                                    ->image(),
-                         Forms\Components\TextInput::make('product_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\Select::make('product_id')
-                                                ->relationship('product', 'title')
-                                                ->required(),
-                         Forms\Components\TextInput::make('sku_id')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('category_id')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('product_group_id')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('outer_product_id')
-                                                   ->maxLength(64),
-                         Forms\Components\TextInput::make('outer_sku_id')
-                                                   ->maxLength(64),
-                         Forms\Components\TextInput::make('barcode')
-                                                   ->maxLength(64),
-                         Forms\Components\TextInput::make('unit_quantity')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(1),
-                         Forms\Components\TextInput::make('unit')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('quantity')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('price')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00)
-                                                   ->prefix('$'),
-                         Forms\Components\TextInput::make('cost_price')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('product_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('tax_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('discount_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('payable_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('payment_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('divided_payment_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('shipping_status')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('refund_type')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('phase')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('has_good_return')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('good_status')
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('reason')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('outer_refund_id')
-                                                   ->maxLength(64),
-                         Forms\Components\TextInput::make('refund_status')
-                                                   ->required()
-                                                   ->maxLength(32),
-                         Forms\Components\TextInput::make('freight_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('refund_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\TextInput::make('total_refund_amount')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0.00),
-                         Forms\Components\DateTimePicker::make('created_time'),
-                         Forms\Components\DateTimePicker::make('end_time'),
-                         Forms\Components\TextInput::make('seller_custom_status')
-                                                   ->maxLength(30),
-                         Forms\Components\TextInput::make('version')
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\TextInput::make('creator_type')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('creator_id')
-                                                   ->numeric(),
-                         Forms\Components\TextInput::make('updater_type')
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('updater_id')
-                                                   ->numeric(),
-                     ]);
+        return $form;
     }
 
     public static function table(Table $table) : Table
@@ -431,8 +283,8 @@ class OrderRefundResource extends Resource
 
                           Tables\Columns\TextColumn::make('refund_type')->useEnum()->label(__('red-jasmine-order::refund.fields.refund_type')),
                           Tables\Columns\TextColumn::make('phase')->useEnum()->label(__('red-jasmine-order::refund.fields.phase')),
-                          Tables\Columns\TextColumn::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return')),
-                          Tables\Columns\TextColumn::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status')),
+                          Tables\Columns\IconColumn::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return'))->boolean(),
+                          Tables\Columns\TextColumn::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
                           Tables\Columns\TextColumn::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
                           Tables\Columns\TextColumn::make('outer_refund_id')->label(__('red-jasmine-order::refund.fields.outer_refund_id')),
 

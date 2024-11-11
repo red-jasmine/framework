@@ -43,7 +43,7 @@ class OrderPayments extends Component implements HasTable, HasForms
             )
             ->paginated(false)
             ->columns([
-                          TextColumn::make('id')->label(__('red-jasmine-order::payment.fields.id')),
+                          TextColumn::make('id')->label(__('red-jasmine-order::payment.fields.id'))->copyable(),
                           TextColumn::make('order_id')->label(__('red-jasmine-order::common.fields.order_id'))->copyable(),
                           TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
                           TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id'))->copyable(),
@@ -52,10 +52,10 @@ class OrderPayments extends Component implements HasTable, HasForms
                           TextColumn::make('status')->label(__('red-jasmine-order::payment.fields.status'))->useEnum(),
                           TextColumn::make('payment_time')->label(__('red-jasmine-order::payment.fields.payment_time')),
                           TextColumn::make('payment_type')->label(__('red-jasmine-order::payment.fields.payment_type')),
-                          TextColumn::make('payment_id')->label(__('red-jasmine-order::payment.fields.payment_id')),
+                          TextColumn::make('payment_id')->label(__('red-jasmine-order::payment.fields.payment_id'))->copyable(),
                           TextColumn::make('payment_method')->label(__('red-jasmine-order::payment.fields.payment_method')),
                           TextColumn::make('payment_channel')->label(__('red-jasmine-order::payment.fields.payment_channel')),
-                          TextColumn::make('payment_channel_no')->label(__('red-jasmine-order::payment.fields.payment_channel_no')),
+                          TextColumn::make('payment_channel_no')->label(__('red-jasmine-order::payment.fields.payment_channel_no'))->copyable(),
                       ])
             ->filters([
                           // ...

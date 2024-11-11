@@ -117,7 +117,7 @@ class OrderCommandService extends ApplicationCommandService
         'sellerHidden'       => OrderSellerHiddenCommandHandler::class,
         'buyerHidden'        => OrderBuyerHiddenCommandHandler::class,
         'star'               => OrderStarCommandHandler::class,
-        'urge'              => OrderUrgeCommandHandler::class,
+        'urge'               => OrderUrgeCommandHandler::class,
     ];
 
 

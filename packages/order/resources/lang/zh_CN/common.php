@@ -14,6 +14,8 @@ return [
         'buyer_type'       => '卖家类型',
         'buyer_id'         => '卖家ID',
         'buyer_nickname'   => '卖家昵称',
+        'urge'             => '催单',
+        'urge_time'        => '催单时间',
     ],
     'enums'  => [
         'entity_type' => [
