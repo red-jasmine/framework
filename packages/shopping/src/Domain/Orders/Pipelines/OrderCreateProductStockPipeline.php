@@ -33,7 +33,7 @@ class OrderCreateProductStockPipeline
             $stockCommand               = new StockCommand();
             $stockCommand->productId    = $productData->productId;
             $stockCommand->skuId        = $productData->skuId;
-            $stockCommand->actionStock  = $productData->num;
+            $stockCommand->actionStock  = $productData->quantity;
             $stockCommand->changeType   = ProductStockChangeTypeEnum::SELLER;
             $stockCommand->changeDetail = '';
             // 锁定库存

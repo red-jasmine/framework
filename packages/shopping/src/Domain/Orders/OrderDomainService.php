@@ -83,7 +83,7 @@ class OrderDomainService extends Service
 
             $productData->getProduct()->isAllowSale();
             $productData->getSku()->isAllowSale();
-            $productData->getProduct()->isAllowNumberBuy($productData->num);
+            $productData->getProduct()->isAllowNumberBuy($productData->quantity);
         }
 
 

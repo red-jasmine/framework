@@ -116,7 +116,7 @@ class OrderCalculationService extends Service
         $productPriceDTO            = new  ProductPriceData;
         $productPriceDTO->productId = $productData->productId;
         $productPriceDTO->skuId     = $productData->skuId;
-        $productPriceDTO->num       = $productData->num;
+        $productPriceDTO->quantity       = $productData->quantity;
         $productPriceDTO->store     = $orderData->store;
         $productPriceDTO->channel   = $orderData->channel;
         $productPriceDTO->guide     = $orderData->guide;
@@ -129,7 +129,7 @@ class OrderCalculationService extends Service
         $price = ShoppingOrderProductPriceHook::hook($productPriceDTO,
             fn() => $this->productPriceDomainService->getPrice($productPriceDTO));
 
-        $productAmount = (clone $price)->mul($productData->num);
+        $productAmount = (clone $price)->mul($productData->quantity);
 
         $productData->additional([
             'price'          => $price->value(),
@@ -151,7 +151,7 @@ class OrderCalculationService extends Service
         $productPriceDTO            = new  ProductPriceData;
         $productPriceDTO->productId = $productData->productId;
         $productPriceDTO->skuId     = $productData->skuId;
-        $productPriceDTO->num       = $productData->num;
+        $productPriceDTO->quantity       = $productData->quantity;
         $productPriceDTO->store     = $orderData->store;
         $productPriceDTO->channel   = $orderData->channel;
         $productPriceDTO->guide     = $orderData->guide;

@@ -34,7 +34,7 @@ class OrderCreateCommandTransformer
             $additionalData            = $productData->getAdditionalData();
             $price                     = Amount::make($additionalData['price']);
             $product                   = new OrderProductData();
-            $product->num              = $productData->num;
+            $product->quantity              = $productData->quantity;
             $product->orderProductType = $productData->getProduct()->product_type;
             $product->shippingType     = $productData->getProduct()->shipping_type;
             $product->title            = $productData->getProduct()->title;

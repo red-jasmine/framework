@@ -370,23 +370,23 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
-     * @param int $num
+     * @param int $quantity
      *
      * @return bool
      * @throws ProductException
      */
-    public function isAllowNumberBuy(int $num) : bool
+    public function isAllowNumberBuy(int $quantity) : bool
     {
-        if ($this->min_limit > 0 && $this->min_limit > $num) {
+        if ($this->min_limit > 0 && $this->min_limit > $quantity) {
             throw  ProductException::newFromCodes(ProductException::PRODUCT_MIN_LIMIT);
 
         }
 
-        if ($this->max_limit > 0 && $this->max_limit < $num) {
+        if ($this->max_limit > 0 && $this->max_limit < $quantity) {
             throw  ProductException::newFromCodes(ProductException::PRODUCT_MAX_LIMIT);
         }
 
-        if ($this->step_limit > 1 && ($num % $this->step_limit) !== 0) {
+        if ($this->step_limit > 1 && ($quantity % $this->step_limit) !== 0) {
             throw  ProductException::newFromCodes(ProductException::PRODUCT_STEP_LIMIT);
         }
 

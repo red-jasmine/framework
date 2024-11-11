@@ -20,7 +20,7 @@ class ProductData extends Data
      * 商品件数
      * @var int
      */
-    public int $num;
+    public int $quantity;
 
     /**
      * 外部单号
