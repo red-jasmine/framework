@@ -10,7 +10,7 @@ return [
     'fields' => [
         'id'               => '订单卡密编号',
         'order_product_id' => '订单商品项编号',
-        'num'              => '数量',
+        'quantity'              => '数量',
         'content_type'     => '卡密类型',
         'content'          => '卡密内容',
         'source_type'      => '来源类型',

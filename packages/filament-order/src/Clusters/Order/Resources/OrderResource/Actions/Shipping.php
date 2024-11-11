@@ -87,11 +87,11 @@ trait Shipping
                                      ->rows(5)
                                      ->label(__('red-jasmine-order::card-keys.fields.content'))
             ,
-            Forms\Components\TextInput::make('num')
+            Forms\Components\TextInput::make('quantity')
                                       ->required()
                                       ->default(1)
                                       ->numeric()->minValue(1)
-                                      ->label(__('red-jasmine-order::card-keys.fields.num'))
+                                      ->label(__('red-jasmine-order::card-keys.fields.quantity'))
             ,
             Forms\Components\TextInput::make('source_type')->label(__('red-jasmine-order::card-keys.fields.source_type')),
             Forms\Components\TextInput::make('source_id')->label(__('red-jasmine-order::card-keys.fields.source_id')),

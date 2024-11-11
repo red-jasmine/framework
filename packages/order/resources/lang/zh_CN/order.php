@@ -95,7 +95,7 @@ return [
             'sku_name'        => '规格名称',
             'price'           => '销售价',
             'cost_price'      => '成本价',
-            'num'             => '数量',
+            'quantity'             => '数量',
             'unit'            => '单位',
             'unit_quantity'   => '单位数量',
             'product_amount'  => '商品金额',

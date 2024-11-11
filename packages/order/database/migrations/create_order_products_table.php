@@ -39,7 +39,7 @@ return new class extends Migration {
             $table->string('barcode', 64)->nullable()->comment('条形码');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->string('unit')->nullable()->comment('单位');
-            $table->unsignedBigInteger('num')->default(0)->comment('数量');
+            $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             $table->decimal('price', 12)->default(0)->comment('价格');
             $table->decimal('cost_price', 12)->default(0)->comment('成本价格');
             $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');

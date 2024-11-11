@@ -83,7 +83,7 @@ class OrderProduct extends Model
         'product_type',
         'product_id',
         'sku_id',
-        'num',
+        'quantity',
         'price',
     ];
 
@@ -129,7 +129,7 @@ class OrderProduct extends Model
         $cardKey->buyer  = $this->buyer;
 
         $cardKey->order_id = $this->order_id;
-        $this->progress    += $cardKey->num;
+        $this->progress    += $cardKey->quantity;
         $this->cardKeys->add($cardKey);
     }
 

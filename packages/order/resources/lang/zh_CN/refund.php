@@ -46,7 +46,7 @@ return [
         'outer_product_id' => '外部商品ID',
         'outer_sku_id'     => '外部规格ID',
         'barcode'          => '条码',
-        'num'              => '数量',
+        'quantity'              => '数量',
         'unit'             => '单位',
         'unit_quantity'    => '单位数量',
         'category_id'      => '类目',

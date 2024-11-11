@@ -156,7 +156,7 @@ class OrderDummyFake
             'outer_product_id'       => fake()->numerify('outer_product_id-########'),
             'outer_sku_id'           => fake()->numerify('outer_sku_id-########'),
             'barcode'                => fake()->ean13(),
-            'num'                    => fake()->numberBetween(1, 10),
+            'quantity'                    => fake()->numberBetween(1, 10),
             'unit'                   => $this->unit,
             'unit_quantity'          => $this->unitQuantity,
             'price'                  => fake()->randomFloat(2, 90, 100),

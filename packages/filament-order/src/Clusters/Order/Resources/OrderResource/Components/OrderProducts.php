@@ -39,7 +39,7 @@ class OrderProducts extends Component implements HasTable, HasForms
                           TextColumn::make('product_id')->label(__('red-jasmine-order::order.fields.product.product_id'))->toggleable(isToggledHiddenByDefault: true),
                           TextColumn::make('sku_id')->label(__('red-jasmine-order::order.fields.product.sku_id'))->toggleable(isToggledHiddenByDefault: true),
                           TextColumn::make('price')->label(__('red-jasmine-order::order.fields.product.price'))->money('CNY'),
-                          TextColumn::make('num')->label(__('red-jasmine-order::order.fields.product.num')),
+                          TextColumn::make('quantity')->label(__('red-jasmine-order::order.fields.product.quantity')),
                           TextColumn::make('unit')->label(__('red-jasmine-order::order.fields.product.unit'))->toggleable(isToggledHiddenByDefault: true),
                           TextColumn::make('unit_quantity')->label(__('red-jasmine-order::order.fields.product.unit_quantity'))->toggleable(isToggledHiddenByDefault: true),
                           TextColumn::make('product_amount')->label(__('red-jasmine-order::order.fields.product.product_amount')),

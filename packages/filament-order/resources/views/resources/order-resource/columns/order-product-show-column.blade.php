@@ -6,7 +6,7 @@
             $tooltipContent=  __('red-jasmine-order::order.fields.product.title').':'.$orderProduct->title."<br>";
             $tooltipContent.= __('red-jasmine-order::order.fields.product.sku_name').':'.$orderProduct->sku_name."<br>";
             $tooltipContent.= __('red-jasmine-order::order.fields.product.price').':'.$orderProduct->price."<br>";
-            $tooltipContent.= __('red-jasmine-order::order.fields.product.num').':'.$orderProduct->num."<br>";
+            $tooltipContent.= __('red-jasmine-order::order.fields.product.quantity').':'.$orderProduct->quantity."<br>";
             $tooltipContent.= __('red-jasmine-order::order.fields.product.product_id').':'.$orderProduct->product_id."<br>";
             $tooltipContent.= __('red-jasmine-order::order.fields.product.sku_id').':'.$orderProduct->sku_id."<br>";
         @endphp

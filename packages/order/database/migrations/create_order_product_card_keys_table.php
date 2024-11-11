@@ -23,7 +23,7 @@ return new class extends Migration {
 
 
             $table->unsignedBigInteger('order_product_id')->comment('订单商品项单号');
-            $table->unsignedBigInteger('num')->default(1)->comment('数量');
+            $table->unsignedBigInteger('quantity')->default(1)->comment('数量');
             $table->string('content_type')->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
             $table->text('content')->nullable()->comment('内容');
             $table->string('source_type')->nullable()->comment('来源类型');

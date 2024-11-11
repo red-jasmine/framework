@@ -83,7 +83,7 @@ class OrderTransformer
         $orderProduct->sku_name                   = $orderProductData->skuName;
         $orderProduct->price                      = $orderProductData->price;
         $orderProduct->cost_price                 = $orderProductData->costPrice;
-        $orderProduct->num                        = $orderProductData->num;
+        $orderProduct->quantity                        = $orderProductData->quantity;
         $orderProduct->unit                       = $orderProductData->unit;
         $orderProduct->unit_quantity              = $orderProductData->unitQuantity;
         $orderProduct->tax_amount                 = $orderProductData->taxAmount;

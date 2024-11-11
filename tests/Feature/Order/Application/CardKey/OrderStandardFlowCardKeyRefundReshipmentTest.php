@@ -121,7 +121,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
                 'id'             => $order->id,
                 'orderProductId' => $product->id,
                 'content'        => fake()->sentence(),
-                'num'            => 1
+                'quantity'            => 1
             ]
         );
 
@@ -142,7 +142,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
     foreach ($order->products as $product) {
         // 判断卡密是否和数量一致
-        $this->assertEquals($product->cardKeys()->sum('num'), $product->progress_total, '卡密数量');
+        $this->assertEquals($product->cardKeys()->sum('quantity'), $product->progress_total, '卡密数量');
     }
 
     return $order;

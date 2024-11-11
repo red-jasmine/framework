@@ -44,7 +44,7 @@ return new class extends Migration {
             $table->string('barcode', 64)->nullable()->comment('条形码');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->string('unit')->nullable()->comment('单位');
-            $table->unsignedBigInteger('num')->default(0)->comment('数量');
+            $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             $table->decimal('price', 12)->default(0)->comment('价格');
             $table->decimal('cost_price', 12)->default(0)->comment('成本价格');
             $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
@@ -71,6 +71,7 @@ return new class extends Migration {
             $table->string('seller_custom_status')->nullable()->comment('卖家自定义状态');
             $table->unsignedTinyInteger('star')->nullable()->comment('加星');
             $table->unsignedTinyInteger('urge')->nullable()->comment('催单');
+            $table->timestamp('urge_time')->nullable()->comment('催单时间');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->nullableMorphs('creator'); // 创建人
             $table->nullableMorphs('updater'); // 更新人

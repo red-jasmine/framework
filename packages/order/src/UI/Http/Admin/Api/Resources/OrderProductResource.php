@@ -26,7 +26,7 @@ class OrderProductResource extends JsonResource
             'product_id'              => $this->product_id,
             'sku_id'                  => $this->sku_id,
             'barcode'                 => $this->barcode,
-            'num'                     => $this->num,
+            'quantity'                     => $this->quantity,
             'unit'                    => $this->unit,
             'price'                   => $this->price,
             'cost_price'              => $this->cost_price,

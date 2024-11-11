@@ -30,6 +30,8 @@ use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
+use RedJasmine\Order\Domain\Models\Features\HasStar;
+use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -47,8 +49,14 @@ class OrderRefund extends Model
 
     use HasOperator;
 
-    public bool $withTradePartiesNickname = true;
     use HasTradeParties;
+
+    use HasUrge;
+
+    use HasStar;
+
+
+    public bool $withTradePartiesNickname = true;
 
     public $incrementing = false;
 
@@ -526,18 +534,6 @@ class OrderRefund extends Model
 
     }
 
-    public function setStar(?int $star = null) : void
-    {
-        $this->star = $star;
-
-        $this->fireModelEvent('starChanged', false);
-    }
-
-    public function urge() : void
-    {
-        ++$this->urge;
-        $this->fireModelEvent('urge', false);
-    }
 
     // |---------------scopes----------------------------
 

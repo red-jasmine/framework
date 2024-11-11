@@ -45,7 +45,7 @@ class OrderCardKeys extends Component implements HasTable, HasForms
                           TextColumn::make('entity_type')->label(__('red-jasmine-order::common.fields.entity_type'))->useEnum(),
                           TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id'))->copyable(),
                           TextColumn::make('order_product_id')->label(__('red-jasmine-order::card-keys.fields.order_product_id')),
-                          TextColumn::make('num')->label(__('red-jasmine-order::card-keys.fields.num')),
+                          TextColumn::make('quantity')->label(__('red-jasmine-order::card-keys.fields.quantity')),
                           TextColumn::make('content_type')->label(__('red-jasmine-order::card-keys.fields.content_type'))->useEnum(),
                           TextColumn::make('content')->label(__('red-jasmine-order::card-keys.fields.content')),
                           TextColumn::make('source_type')->label(__('red-jasmine-order::card-keys.fields.source_type')),

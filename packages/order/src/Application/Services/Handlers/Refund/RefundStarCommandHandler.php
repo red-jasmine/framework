@@ -17,7 +17,7 @@ class RefundStarCommandHandler extends AbstractRefundCommandHandler
         try {
             $refund = $this->find($command->id);
 
-            $refund->setStar($command->star);
+            $refund->star($command->star);
 
             $this->refundRepository->update($refund);
 

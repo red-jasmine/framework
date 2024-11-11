@@ -35,7 +35,7 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
             $orderProductCardKey->order_product_id = $command->orderProductId;
             $orderProductCardKey->content          = $command->content;
             $orderProductCardKey->content_type     = $command->contentType;
-            $orderProductCardKey->num              = $command->num;
+            $orderProductCardKey->quantity         = $command->quantity;
             $orderProductCardKey->status           = $command->status;
             $orderProductCardKey->source_type      = $command->sourceType;
             $orderProductCardKey->source_id        = $command->sourceId;

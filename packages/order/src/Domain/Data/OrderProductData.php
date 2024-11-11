@@ -43,7 +43,7 @@ class OrderProductData extends Data
      * 商品件数
      * @var int
      */
-    public int $num;
+    public int $quantity;
 
     // 单位数量
     public int $unitQuantity = 1;

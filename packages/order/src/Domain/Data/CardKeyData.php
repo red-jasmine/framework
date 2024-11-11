@@ -21,7 +21,7 @@ class CardKeyData extends Data
      * 数量
      * @var int
      */
-    public int $num = 1;
+    public int $quantity = 1;
 
 
     /**

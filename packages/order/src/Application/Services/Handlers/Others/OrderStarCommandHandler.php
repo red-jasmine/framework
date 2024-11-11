@@ -22,7 +22,7 @@ class OrderStarCommandHandler extends AbstractOrderCommandHandler
             $order = $this->find($command->id);
 
 
-            $order->setStar($command->star);
+            $order->star($command->star);
 
             $this->orderRepository->update($order);
 

@@ -176,7 +176,7 @@ class OrderRefundResource extends Resource
                                                   TextEntry::make('title')->label(__('red-jasmine-order::refund.fields.title')),
                                                   ImageEntry::make('image')->label(__('red-jasmine-order::refund.fields.image')),
                                                   TextEntry::make('sku_name')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                                                  TextEntry::make('num')->label(__('red-jasmine-order::refund.fields.num')),
+                                                  TextEntry::make('quantity')->label(__('red-jasmine-order::refund.fields.quantity')),
                                                   TextEntry::make('unit_quantity')->label(__('red-jasmine-order::refund.fields.unit_quantity')),
                                                   TextEntry::make('unit')->label(__('red-jasmine-order::refund.fields.unit')),
                                                   TextEntry::make('price')->label(__('red-jasmine-order::refund.fields.price')),
@@ -300,7 +300,7 @@ class OrderRefundResource extends Resource
                                                    ->default(1),
                          Forms\Components\TextInput::make('unit')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('num')
+                         Forms\Components\TextInput::make('quantity')
                                                    ->required()
                                                    ->numeric()
                                                    ->default(0),
@@ -416,7 +416,7 @@ class OrderRefundResource extends Resource
                           //                Tables\Columns\TextColumn::make('barcode')->label(__('red-jasmine-order::refund.fields.barcode')),
                           //                Tables\Columns\TextColumn::make('unit_quantity')->label(__('red-jasmine-order::refund.fields.unit_quantity')),
                           //                Tables\Columns\TextColumn::make('unit')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                          //                Tables\Columns\TextColumn::make('num')->label(__('red-jasmine-order::refund.fields.sku_name')),
+                          //                Tables\Columns\TextColumn::make('quantity')->label(__('red-jasmine-order::refund.fields.sku_name')),
                           //                Tables\Columns\TextColumn::make('price')->money()->label(__('red-jasmine-order::refund.fields.price')),
                           //                Tables\Columns\TextColumn::make('cost_price')->money()->label(__('red-jasmine-order::refund.fields.cost_price')),
                           //                Tables\Columns\TextColumn::make('product_amount')->money()->label(__('red-jasmine-order::refund.fields.product_amount')),

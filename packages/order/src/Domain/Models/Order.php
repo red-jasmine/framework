@@ -39,6 +39,8 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
+use RedJasmine\Order\Domain\Models\Features\HasStar;
+use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -63,6 +65,10 @@ class Order extends Model implements OperatorInterface
 
     use HasTradeParties;
 
+    use HasUrge;
+
+    use HasStar;
+
     public bool $withTradePartiesNickname = true;
 
     public $incrementing = false;
@@ -82,7 +88,7 @@ class Order extends Model implements OperatorInterface
         'closed'              => OrderClosedEvent::class,
         'customStatusChanged' => OrderCustomStatusChangedEvent::class,
         'starChanged'         => OrderStarChangedEvent::class,
-        'urge'               => OrderUrgeEvent::class,
+        'urge'                => OrderUrgeEvent::class,
     ];
     protected $observables      = [
         'paying',
@@ -231,7 +237,7 @@ class Order extends Model implements OperatorInterface
         $orderProduct->order_id       = $this->id;
         $orderProduct->buyer          = $this->buyer;
         $orderProduct->seller         = $this->seller;
-        $orderProduct->progress_total = (int)bcmul($orderProduct->num, $orderProduct->unit_quantity, 0);
+        $orderProduct->progress_total = (int)bcmul($orderProduct->quantity, $orderProduct->unit_quantity, 0);
         $orderProduct->created_time   = now();
         $this->products->add($orderProduct);
         return $this;
@@ -610,10 +616,10 @@ class Order extends Model implements OperatorInterface
     {
         foreach ($this->products as $product) {
             // 成本金额
-            $product->cost_amount = bcmul($product->num, $product->cost_price->value(), 2);
+            $product->cost_amount = bcmul($product->quantity, $product->cost_price->value(), 2);
 
             // 商品总金额   < 0 TODO 验证金额
-            $product->product_amount = bcmul($product->num, $product->price->value(), 2);
+            $product->product_amount = bcmul($product->quantity, $product->price->value(), 2);
             // 计算税费
             $product->tax_amount;
             // 单品优惠
@@ -821,19 +827,6 @@ class Order extends Model implements OperatorInterface
 
         $this->fireModelEvent('customStatusChanged', false);
 
-    }
-
-    public function setStar(?int $star = null) : void
-    {
-        $this->star = $star;
-
-        $this->fireModelEvent('starChanged', false);
-    }
-
-    public function urge() : void
-    {
-        ++$this->urge;
-        $this->fireModelEvent('urge', false);
     }
 
 
