@@ -32,6 +32,7 @@ use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 
 class OrderResource extends Resource
@@ -384,7 +385,9 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Filters\SelectFilter::make('shipping_type')
                                                      ->label(__('red-jasmine-order::order.fields.shipping_type'))
                                                      ->options(ShippingTypeEnum::options()),
-
+                          Tables\Filters\SelectFilter::make('payment_status')
+                                                     ->label(__('red-jasmine-order::order.fields.payment_status'))
+                                                     ->options(PaymentStatusEnum::options()),
                           DateRangeFilter::make('created_time')
                                          ->withIndicator()
                                          ->alwaysShowCalendar()

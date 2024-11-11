@@ -49,7 +49,9 @@ class OrderPayments extends Component implements HasTable, HasForms
                           TextColumn::make('entity_id')->label(__('red-jasmine-order::common.fields.entity_id'))->copyable(),
                           TextColumn::make('amount_type')->label(__('red-jasmine-order::payment.fields.amount_type'))->useEnum(),
                           TextColumn::make('payment_amount')->label(__('red-jasmine-order::payment.fields.payment_amount')),
-                          TextColumn::make('status')->label(__('red-jasmine-order::payment.fields.status'))->useEnum(),
+                          TextColumn::make('status')->label(__('red-jasmine-order::payment.fields.status'))->useEnum()
+                          ->tooltip(fn($record)=>$record->message)
+                          ,
                           TextColumn::make('payment_time')->label(__('red-jasmine-order::payment.fields.payment_time')),
                           TextColumn::make('payment_type')->label(__('red-jasmine-order::payment.fields.payment_type')),
                           TextColumn::make('payment_id')->label(__('red-jasmine-order::payment.fields.payment_id'))->copyable(),
