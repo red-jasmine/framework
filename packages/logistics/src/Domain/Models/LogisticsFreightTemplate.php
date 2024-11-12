@@ -1,14 +1,14 @@
 <?php
 
-namespace RedJasmine\Logistics\Models;
+namespace RedJasmine\Logistics\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Logistics\Enums\FreightTemplates\FreightChargeTypeEnum;
+use RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightChargeTypeEnum;
 use RedJasmine\Support\Traits\Models\HasOperator;
 use RedJasmine\Support\Traits\Models\HasOwner;
-use RedJasmine\Support\Traits\Models\WithDTO;
+
 
 class LogisticsFreightTemplate extends Model
 {
@@ -18,7 +18,6 @@ class LogisticsFreightTemplate extends Model
 
     use HasOperator;
 
-    use WithDTO;
 
     public $incrementing = false;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Logistics\Models;
+namespace RedJasmine\Logistics\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

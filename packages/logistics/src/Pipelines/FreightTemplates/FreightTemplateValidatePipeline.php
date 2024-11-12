@@ -4,7 +4,7 @@ namespace RedJasmine\Logistics\Pipelines\FreightTemplates;
 
 use Closure;
 use Illuminate\Support\Facades\Validator;
-use RedJasmine\Logistics\Models\LogisticsFreightTemplate;
+use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
 use RedJasmine\Region\Rules\RegionsExistRule;
 
 class FreightTemplateValidatePipeline

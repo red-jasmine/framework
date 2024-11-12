@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Logistics\Enums\FreightTemplates;
+namespace RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

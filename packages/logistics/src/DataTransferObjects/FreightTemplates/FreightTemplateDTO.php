@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Logistics\DataTransferObjects\FreightTemplates;
 
-use RedJasmine\Logistics\Enums\FreightTemplates\FreightChargeTypeEnum;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\DataCollection;
 
@@ -11,7 +10,7 @@ class FreightTemplateDTO extends Data
 
     public string $name;
 
-    public FreightChargeTypeEnum $chargeType;
+    public \RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightChargeTypeEnum $chargeType;
 
     public bool $isFree;
 

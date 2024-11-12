@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Logistics;
 
-use RedJasmine\Logistics\Models\LogisticsCompany;
+use RedJasmine\Logistics\Domain\Models\LogisticsCompany;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**

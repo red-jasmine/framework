@@ -10,10 +10,10 @@ return new class extends Migration {
         // 运费
         Schema::create('logistics_companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('名称');
             $table->string('code')->comment('编码');
+            $table->string('name')->comment('名称');
             $table->string('letter')->nullable()->comment('首字母');
-            $table->string('logo')->nullable()->comment('名称');
+            $table->string('logo')->nullable()->comment('图标');
             $table->string('tel')->nullable()->comment('电话');
             $table->string('url')->nullable()->comment('网址');
             $table->timestamps();

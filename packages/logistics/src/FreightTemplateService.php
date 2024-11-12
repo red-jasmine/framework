@@ -3,13 +3,11 @@
 namespace RedJasmine\Logistics;
 
 
-use Exception;
 use RedJasmine\Logistics\Actions\FreightTemplates\FreightTemplateUpdateAction;
 use RedJasmine\Logistics\DataTransferObjects\FreightTemplates\FreightTemplateDTO;
-use RedJasmine\Logistics\Models\LogisticsFreightTemplate;
+use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Foundation\Service\ServiceAwareAction;
-use RedJasmine\Support\Helpers\ID\Snowflake;
 
 /**
  * @see FreightTemplateCreateAction::execute()
