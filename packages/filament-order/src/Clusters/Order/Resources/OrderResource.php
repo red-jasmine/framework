@@ -440,6 +440,9 @@ Tables\Columns\TextColumn::make('cost_amount')
                                                            ])->label('more'),
 
                       ])
+            ->headerActions([
+                Tables\Actions\ExportAction::make()->exporter(OrderCluster\Resources\OrderResource\Actions\OrderExport::class)
+                            ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
                                                                        Tables\Actions\DeleteBulkAction::make(),

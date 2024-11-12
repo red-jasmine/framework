@@ -30,6 +30,7 @@ return [
         'rate_status'            => '评价状态',
         'settlement_status'      => '结算状态',
         'seller_custom_status'   => '卖家自定义状态',
+        'invoice_status'         => '发票状态',
         'product_amount'         => '商品金额',
         'cost_amount'            => '成本金额',
         'tax_amount'             => '税费金额',
@@ -95,7 +96,7 @@ return [
             'sku_name'        => '规格名称',
             'price'           => '销售价',
             'cost_price'      => '成本价',
-            'quantity'             => '数量',
+            'quantity'        => '数量',
             'unit'            => '单位',
             'unit_quantity'   => '单位数量',
             'product_amount'  => '商品金额',
@@ -125,12 +126,12 @@ return [
     ],
     'enums'  => [
 
-        'order_type'     => [
+        'order_type'   => [
             'standard'       => '标准',
             'presale'        => '预售',
             'group_purchase' => '团购',
         ],
-        'order_status'   => [
+        'order_status' => [
             'wait_buyer_pay'           => '待付款',
             'wait_seller_accept'       => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
             'wait_seller_send_goods'   => '待发货',
@@ -140,7 +141,7 @@ return [
             'closed'                   => '已关闭',
         ],
 
-        'accept_status'  => [
+        'accept_status' => [
             'wait_accept' => '待接单',
             'accepted'    => '已接单',
             'rejected'    => '已拒单',

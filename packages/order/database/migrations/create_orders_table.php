@@ -18,6 +18,7 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('订单编号');
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父订单编号');
+            //$table->string('serial_number')->nullable()->comment('流水号');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');

@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCore;
 
+use Filament\Actions\Exports\ExportColumn;
 use Filament\Forms\Components\Field;
 use Filament\Infolists\Components\Entry;
 use Filament\Support\Assets\Asset;
@@ -114,6 +115,12 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
             }
             return $this;
 
+        });
+        ExportColumn::macro('useEnum', function () {
+            if (method_exists($this, 'formatStateUsing')) {
+                $this->formatStateUsing(fn($state):string => $state->getLabel());
+            }
+            return $this;
         });
 
 

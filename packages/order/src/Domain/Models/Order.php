@@ -109,7 +109,7 @@ class Order extends Model implements OperatorInterface
     protected $casts            = [
         'order_type'             => OrderTypeEnum::class,
         'shipping_type'          => ShippingTypeEnum::class,
-        'pay_type'               => PayTypeEnum::class,
+        //'pay_type'               => PayTypeEnum::class,
         'order_status'           => OrderStatusEnum::class,
         'accept_status'          => AcceptStatusEnum::class,
         'payment_status'         => PaymentStatusEnum::class,

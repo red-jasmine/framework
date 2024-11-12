@@ -31,11 +31,11 @@ return [
         ],
 
         'shipping_type'             => [
-            'logistics'  => '快递',
-            'dummy'    => '虚拟',
-            'cdk'      => '卡密',
-            'delivery' => '配送',
-            'none'     => '免发',
+            'logistics' => '快递',
+            'dummy'     => '虚拟',
+            'cdk'       => '卡密',
+            'delivery'  => '配送',
+            'none'      => '免发',
         ],
         'order_quantity_limit_type' => [
 
@@ -49,7 +49,7 @@ return [
         ],
 
         'refund_type' => [
-            'refund'              => '退款',
+            'refund'              => '仅退款',
             'return_goods_refund' => '退货退款',
             'exchange'            => '换货',
             'warranty'            => '保修',
