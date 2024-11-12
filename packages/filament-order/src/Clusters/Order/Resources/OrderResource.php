@@ -366,16 +366,15 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Columns\TextColumn::make('urge_time')->label(__('red-jasmine-order::common.fields.urge_time'))->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_seller_delete'))->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_buyer_delete'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('outer_order_id')->label(__('red-jasmine-order::order.fields.outer_order_id'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('outer_order_id')->label(__('red-jasmine-order::order.fields.outer_order_id'))->toggleable(isToggledHiddenByDefault: true)->copyable(),
                           Tables\Columns\TextColumn::make('cancel_reason')->label(__('red-jasmine-order::order.fields.cancel_reason'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('version')
-                                                   ->sortable()->label(__('red-jasmine-order::order.fields.version'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('version')->label(__('red-jasmine-order::order.fields.version'))->toggleable(isToggledHiddenByDefault: true),
                           ...static::operateTableColumns()
 
                       ])
             ->filters([
-                          InputFilter::make('id')
-                                     ->inputLabel(__('red-jasmine-order::order.fields.id')),
+                          InputFilter::make('id')->inputLabel(__('red-jasmine-order::order.fields.id')),
+
                           Tables\Filters\SelectFilter::make('order_status')
                                                      ->label(__('red-jasmine-order::order.fields.order_status'))
                                                      ->options(OrderStatusEnum::options()),
@@ -411,6 +410,9 @@ Tables\Columns\TextColumn::make('cost_amount')
                                          ->linkedCalendars()
                                          ->autoApply()
                                          ->label(__('red-jasmine-order::order.fields.payment_time')),
+
+                          InputFilter::make('outer_order_id')->inputLabel(__('red-jasmine-order::order.fields.outer_order_id')),
+
 
                           //Tables\Filters\TrashedFilter::make(),
                       ], layout: Tables\Enums\FiltersLayout::AboveContent)
