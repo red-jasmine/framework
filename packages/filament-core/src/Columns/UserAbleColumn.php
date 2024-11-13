@@ -12,6 +12,14 @@ class UserAbleColumn extends Column
 
     protected bool $showType = false;
 
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->alignCenter();
+    }
+
     public function isShowType() : bool
     {
         return $this->showType;
