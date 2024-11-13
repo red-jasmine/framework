@@ -9,7 +9,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Livewire\Component;
-use RedJasmine\Order\Domain\Models\OrderProductCardKey;
+use RedJasmine\Order\Domain\Models\OrderCardKey;
 
 class OrderCardKeys extends Component implements HasTable, HasForms
 {
@@ -30,9 +30,9 @@ class OrderCardKeys extends Component implements HasTable, HasForms
         return $table
             ->heading(__('red-jasmine-order::card-keys.labels.order-card-keys'))
             ->modelLabel(__('red-jasmine-order::card-keys.labels.order-card-keys'))
-            ->query(OrderProductCardKey::query()
-                        ->where('order_id', $this->orderId)
-                        ->when($this->entityType && $this->entityId, function ($query) {
+            ->query(OrderCardKey::query()
+                                ->where('order_id', $this->orderId)
+                                ->when($this->entityType && $this->entityId, function ($query) {
                             $query->where('entity_type', $this->entityType)
                                   ->where('entity_id', $this->entityId);
                         })

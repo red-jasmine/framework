@@ -12,12 +12,6 @@ return [
     ],
     'fields' => [
         'id'                     => '订单编号',
-        'seller_type'            => '卖家类型',
-        'seller_id'              => '卖家ID',
-        'seller_nickname'        => '卖家昵称',
-        'buyer_type'             => '买家类型',
-        'buyer_id'               => '买家ID',
-        'buyer_nickname'         => '买家昵称',
         'title'                  => '标题',
         'order_type'             => '订单类型',
         'shipping_type'          => '发货类型',
@@ -75,16 +69,8 @@ return [
         'is_buyer_delete'        => '买家删除',
         'outer_order_id'         => '外部订单号',
         'cancel_reason'          => '取消原因',
-        'version'                => '版本',
 
 
-        'seller'   => '卖家',
-        'buyer'    => '买家',
-        'channel'  => '渠道',
-        'store'    => '门店',
-        'guide'    => '导购',
-        'products' => '商品',
-        'amount'   => '金额',
 
 
         'product' => [
@@ -122,6 +108,29 @@ return [
         'buyer_expands'  => '买家扩展信息',
         'other_expands'  => '其他扩展信息',
         'tools'          => '工具',
+
+        // |--------------公共部分-------------------
+        'order_id'         => '订单编号',
+        'order_product_id' => '订单商品项编号',
+        'refund_id'        => '售后编号',
+        'entity_type'      => '对象类型',
+        'entity_id'        => '对象编号',
+        'seller_type'      => '卖家类型',
+        'seller_id'        => '卖家ID',
+        'seller_nickname'  => '卖家昵称',
+        'buyer_type'       => '买家类型',
+        'buyer_id'         => '买家ID',
+        'buyer_nickname'   => '买家昵称',
+        'version'          => '版本',
+        'urge'             => '催单',
+        'urge_time'        => '催单时间',
+        'seller'           => '卖家',
+        'buyer'            => '买家',
+        'channel'          => '渠道',
+        'store'            => '门店',
+        'guide'            => '导购',
+        'products'         => '商品',
+        // |--------------公共部分-------------------
 
     ],
     'enums'  => [

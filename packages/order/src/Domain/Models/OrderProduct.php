@@ -120,10 +120,10 @@ class OrderProduct extends Model
 
     public function cardKeys() : HasMany
     {
-        return $this->hasMany(OrderProductCardKey::class, 'order_product_id', 'id');
+        return $this->hasMany(OrderCardKey::class, 'order_product_id', 'id');
     }
 
-    public function addCardKey(OrderProductCardKey $cardKey) : void
+    public function addCardKey(OrderCardKey $cardKey) : void
     {
         $cardKey->seller = $this->seller;
         $cardKey->buyer  = $this->buyer;

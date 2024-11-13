@@ -3,7 +3,6 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use Exception;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\Livewire;
@@ -14,13 +13,11 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
+use RedJasmine\FilamentCore\Filters\DateRangeFilter;
 use RedJasmine\FilamentCore\Filters\InputFilter;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order as OrderCluster;
@@ -29,7 +26,6 @@ use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationMana
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -53,7 +49,6 @@ class OrderResource extends Resource
 
     protected static ?string $cluster        = OrderCluster::class;
     protected static ?int    $navigationSort = 1;
-
 
 
     public static function getModelLabel() : string
@@ -199,7 +194,7 @@ class OrderResource extends Resource
                                                                  $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-logistics')->columnSpanFull();
 
                                                              }
-                                                             if ($record->shipping_type === ShippingTypeEnum::CDK) {
+                                                             if ($record->shipping_type === ShippingTypeEnum::CARD_KEY) {
                                                                  $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record) : array => [ 'orderId' => $record->id, ])->key('order-card-keys')->columnSpanFull();
 
                                                              }
@@ -251,7 +246,7 @@ class OrderResource extends Resource
      */
     public static function table(Table $table) : Table
     {
-         $table
+        $table
             ->defaultSort('id', 'DESC')
             ->columns([
                           Tables\Columns\TextColumn::make('id')
@@ -260,7 +255,7 @@ class OrderResource extends Resource
                           //Tables\Columns\TextColumn::make('title'),
                           Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum(),
                           Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum(),
-                          UserAbleColumn::make('seller')->alignCenter()
+                          UserAbleColumn::make('seller')
                                         ->toggleable(isToggledHiddenByDefault: true),
                           UserAbleColumn::make('buyer')
                                         ->extraAttributes([ 'class' => 'px-4' ])
@@ -272,7 +267,7 @@ class OrderResource extends Resource
                                                     ->columns([
 
                                                                   Tables\Columns\ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
-                                                                                           ,
+                                                                  ,
                                                                   Tables\Columns\TextColumn::make('payment_status')->useEnum(),
                                                                   Tables\Columns\TextColumn::make('settlement_status')->badge()->toggleable(isToggledHiddenByDefault: true),
                                                                   Tables\Columns\TextColumn::make('seller_custom_status')->toggleable(isToggledHiddenByDefault: true),
@@ -280,7 +275,6 @@ class OrderResource extends Resource
 
                           Tables\Columns\ColumnGroup::make('amount')
                                                     ->alignCenter()
-
                                                     ->columns([
 //                                                                                  Tables\Columns\TextColumn::make('product_payable_amount')
 //                                                                                                           ->numeric()
@@ -298,16 +292,15 @@ class OrderResource extends Resource
 //                                                                                                           ,
 Tables\Columns\TextColumn::make('payable_amount')
                          ->numeric()
-                         ,
+,
 Tables\Columns\TextColumn::make('payment_amount')
                          ->numeric()
-                         ,
+,
 Tables\Columns\TextColumn::make('refund_amount')
                          ->numeric()
-                         ,
+,
 Tables\Columns\TextColumn::make('commission_amount')
                          ->numeric()
-
                          ->toggleable(isToggledHiddenByDefault: true),
 Tables\Columns\TextColumn::make('cost_amount')
                          ->numeric()
@@ -359,13 +352,12 @@ Tables\Columns\TextColumn::make('cost_amount')
                           Tables\Columns\TextColumn::make('source_type')->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('source_id')->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('contact')
-
                                                    ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('star')->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('urge')
-                                                                 ->badge()
-                              ->tooltip(fn(Order $record)=>$record->urge_time)
-                                                                 ->toggleable(isToggledHiddenByDefault: true),
+                                                   ->badge()
+                                                   ->tooltip(fn(Order $record) => $record->urge_time)
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('urge_time')->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
@@ -376,45 +368,20 @@ Tables\Columns\TextColumn::make('cost_amount')
 
                       ])
             ->filters([
-                          InputFilter::make('id')->inputLabel(__('red-jasmine-order::order.fields.id')),
+                          InputFilter::make('id')->label(__('red-jasmine-order::order.fields.id')),
 
                           Tables\Filters\SelectFilter::make('order_status')
-
                                                      ->options(OrderStatusEnum::options()),
                           Tables\Filters\SelectFilter::make('order_type')
-
                                                      ->options(OrderTypeEnum::options()),
                           Tables\Filters\SelectFilter::make('shipping_type')
-
                                                      ->options(ShippingTypeEnum::options()),
                           Tables\Filters\SelectFilter::make('payment_status')
-
                                                      ->options(PaymentStatusEnum::options()),
-                          DateRangeFilter::make('created_time')
-                                         ->withIndicator()
-                                         ->alwaysShowCalendar()
-                                         ->timePickerSecond()
-                                         ->displayFormat('YYYY/MM/DD')
-                                         ->format('Y/m/d')
-                                         ->timePicker24()
-                                         ->icon('heroicon-o-backspace')
-                                         ->linkedCalendars()
-                                         ->autoApply()
-                                         ,
+                          DateRangeFilter::make('created_time'),
+                          DateRangeFilter::make('payment_time'),
 
-                          DateRangeFilter::make('payment_time')
-                                         ->withIndicator()
-                                         ->alwaysShowCalendar()
-                                         ->timePickerSecond()
-                                         ->displayFormat('YYYY/MM/DD')
-                                         ->format('Y/m/d')
-                                         ->timePicker24()
-                                         ->icon('heroicon-o-backspace')
-                                         ->linkedCalendars()
-                                         ->autoApply()
-                                         ,
-
-                          InputFilter::make('outer_order_id')->inputLabel(__('red-jasmine-order::order.fields.outer_order_id')),
+                          InputFilter::make('outer_order_id')->label(__('red-jasmine-order::order.fields.outer_order_id')),
 
 
                           //Tables\Filters\TrashedFilter::make(),
@@ -444,7 +411,7 @@ Tables\Columns\TextColumn::make('cost_amount')
 
                       ])
             ->headerActions([
-                Tables\Actions\ExportAction::make()->exporter(OrderCluster\Resources\OrderResource\Actions\OrderExport::class)
+                                Tables\Actions\ExportAction::make()->exporter(OrderCluster\Resources\OrderResource\Actions\OrderExport::class)
                             ])
             ->bulkActions([
                               Tables\Actions\BulkActionGroup::make([
@@ -455,7 +422,7 @@ Tables\Columns\TextColumn::make('cost_amount')
                           ])
             ->recordUrl(null);
 
-         return  static::translationLabels($table);
+        return static::translationLabels($table);
     }
 
     public static function getRelations() : array

@@ -80,10 +80,10 @@ class OrderPackageServiceProvider extends PackageServiceProvider
             'create_order_addresses_table',
             'create_order_logistics_table',
             'create_order_payments',
-            'create_order_product_card_keys_table',
             'create_order_product_infos_table',
             'create_order_refund_infos_table',
             'create_order_refunds_table',
+            'create_order_card_keys_table',
 
         ];
 

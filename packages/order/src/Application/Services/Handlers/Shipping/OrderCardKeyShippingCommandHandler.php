@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\Services\Handlers\Shipping;
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
-use RedJasmine\Order\Domain\Models\OrderProductCardKey;
+use RedJasmine\Order\Domain\Models\OrderCardKey;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
 use RedJasmine\Support\Exceptions\AbstractException;
@@ -31,7 +31,7 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
         try {
             $order = $this->find($command->id);
 
-            $orderProductCardKey                   = OrderProductCardKey::newModel();
+            $orderProductCardKey                   = OrderCardKey::newModel();
             $orderProductCardKey->order_product_id = $command->orderProductId;
             $orderProductCardKey->content          = $command->content;
             $orderProductCardKey->content_type     = $command->contentType;

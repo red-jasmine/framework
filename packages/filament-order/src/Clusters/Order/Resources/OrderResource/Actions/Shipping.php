@@ -28,7 +28,7 @@ trait Shipping
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
                 ShippingTypeEnum::LOGISTICS => $this->logisticsForm($record),
-                ShippingTypeEnum::CDK => $this->cdkForm($record),
+                ShippingTypeEnum::CARD_KEY => $this->cardKeyForm($record),
                 ShippingTypeEnum::DELIVERY => $this->dummyForm($record),
                 ShippingTypeEnum::NONE => $this->dummyForm($record),
 
@@ -44,7 +44,7 @@ trait Shipping
                 match ($record->shipping_type) {
                     ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::LOGISTICS => $this->logisticsAction($data, $record),
-                    ShippingTypeEnum::CDK => $this->cdkAction($data, $record),
+                    ShippingTypeEnum::CARD_KEY => $this->cardKeyAction($data, $record),
                     ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
 
@@ -66,7 +66,7 @@ trait Shipping
     }
 
 
-    protected function cdkForm($record) : array
+    protected function cardKeyForm($record) : array
     {
         return [
 
@@ -101,7 +101,7 @@ trait Shipping
     }
 
 
-    protected function cdkAction($data, $record) : void
+    protected function cardKeyAction($data, $record) : void
     {
         $data['id'] = $record->id;
         $command    = OrderCardKeyShippingCommand::from($data);

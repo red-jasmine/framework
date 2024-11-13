@@ -2,7 +2,6 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\IconEntry;
@@ -17,10 +16,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Mokhosh\FilamentRating\Entries\RatingEntry;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\FilamentCore\Filters\DateRangeFilter;
+use RedJasmine\FilamentCore\Filters\InputFilter;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages;
@@ -29,8 +29,6 @@ use RedJasmine\Order\Application\Services\RefundCommandService;
 use RedJasmine\Order\Application\Services\RefundQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 
@@ -45,6 +43,8 @@ class OrderRefundResource extends Resource
     protected static ?string $createCommand  = RefundCreateCommand::class;
 
     protected static ?string $model = OrderRefund::class;
+
+    public static string $translationNamespace = 'red-jasmine-order::refund';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -79,7 +79,6 @@ class OrderRefundResource extends Resource
                                                   RatingEntry::make('star')
                                                              ->stars(10)
                                                              ->allowZero()
-
                                                              ->hintAction(
                                                                  Order\Resources\OrderRefundResource\Actions\InfoList\RefundStarInfoListAction::make('star'),
                                                              )
@@ -145,7 +144,7 @@ class OrderRefundResource extends Resource
                                              $components[] = Order\Resources\Components\OrderLogistics::class;
                                          }
                                          if ($record->refund_type === RefundTypeEnum::RESHIPMENT
-                                             && $record->shipping_type === ShippingTypeEnum::CDK
+                                             && $record->shipping_type === ShippingTypeEnum::CARD_KEY
                                              && $record->refund_status === RefundStatusEnum::FINISHED
                                          ) {
                                              $components[] = Order\Resources\Components\OrderCardKeys::class;
@@ -208,7 +207,6 @@ class OrderRefundResource extends Resource
 
 
                                                   Fieldset::make('seller')
-
                                                           ->schema([
                                                                        TextEntry::make('seller_type'),
                                                                        TextEntry::make('seller_id')->copyable(),
@@ -218,7 +216,6 @@ class OrderRefundResource extends Resource
                                                           ->columns(1)
                                                           ->columnSpan(1),
                                                   Fieldset::make('buyer')
-
                                                           ->schema([
                                                                        TextEntry::make('buyer_type'),
                                                                        TextEntry::make('buyer_id')->copyable(),
@@ -243,14 +240,14 @@ class OrderRefundResource extends Resource
 
     public static function table(Table $table) : Table
     {
-        return $table
+        $table
             ->defaultSort('id', 'DESC')
             ->recordUrl(null)
             ->columns([
-                          Tables\Columns\TextColumn::make('id')
-                                                   ,
+                          Tables\Columns\TextColumn::make('id')->copyable()
+                          ,
 
-                          Tables\Columns\TextColumn::make('order_id'),
+                          Tables\Columns\TextColumn::make('order_id')->copyable(),
                           //                Tables\Columns\TextColumn::make('order_product_id') ,
 
                           Tables\Columns\TextColumn::make('order_product_type')->useEnum(),
@@ -297,49 +294,16 @@ class OrderRefundResource extends Resource
                       ])
             ->filters([
 
-                          Tables\Filters\Filter::make('order_id')->form(
-                              [
-                                  Forms\Components\TextInput::make('order_id')
-                              ]
-                          )
-                                               ->query(function (Builder $query, array $data) : Builder {
-
-                                                   return $query->when($data['order_id'], fn(Builder $query, $data) : Builder => $query->where('order_id', $data));
-                                               }),
-
-
+                          InputFilter::make('id'),
+                          InputFilter::make('order_id'),
                           Tables\Filters\SelectFilter::make('refund_status'),
                           Tables\Filters\SelectFilter::make('refund_type'),
                           Tables\Filters\SelectFilter::make('phase'),
                           Tables\Filters\SelectFilter::make('good_status'),
+                          DateRangeFilter::make('created_time'),
+                          DateRangeFilter::make('end_time'),
 
-
-                          DateRangeFilter::make('created_time')
-                                         ->withIndicator()
-                                         ->alwaysShowCalendar()
-                                         ->timePickerSecond()
-                                         ->displayFormat('YYYY/MM/DD')
-                                         ->format('Y/m/d')
-                                         ->timePicker24()
-                                         ->icon('heroicon-o-backspace')
-                                         ->linkedCalendars()
-                                         ->autoApply()
-                                         ,
-
-                          DateRangeFilter::make('end_time')
-                                         ->withIndicator()
-                                         ->alwaysShowCalendar()
-                                         ->timePickerSecond()
-                                         ->displayFormat('YYYY/MM/DD')
-                                         ->format('Y/m/d')
-                                         ->timePicker24()
-                                         ->icon('heroicon-o-backspace')
-                                         ->linkedCalendars()
-                                         ->autoApply()
-                                         ,
-
-
-                      ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
+                      ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->deferFilters()
             ->actions([
                           Tables\Actions\ViewAction::make(),
@@ -363,6 +327,9 @@ class OrderRefundResource extends Resource
                                                                        Tables\Actions\RestoreBulkAction::make(),
                                                                    ]),
                           ]);
+
+        return static::translationLabels($table);
+
     }
 
     public static function getRelations() : array

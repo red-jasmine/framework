@@ -13,7 +13,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class OrderProductCardKey extends Model
+class OrderCardKey extends Model
 {
 
     use HasSnowflakeId;
@@ -38,7 +38,7 @@ class OrderProductCardKey extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_product_card_keys';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_card_keys';
     }
 
     protected $casts = [

@@ -10,7 +10,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
 use RedJasmine\Order\Domain\Models\OrderProduct;
-use RedJasmine\Order\Domain\Models\OrderProductCardKey;
+use RedJasmine\Order\Domain\Models\OrderCardKey;
 
 
 class OrderShippingService
@@ -82,16 +82,16 @@ class OrderShippingService
      * 卡密发货
      *
      * @param Order $order
-     * @param OrderProductCardKey $orderProductCardKey
+     * @param OrderCardKey $orderProductCardKey
      *
      * @return void
      * @throws OrderException
      */
-    public function cardKey(Order $order, OrderProductCardKey $orderProductCardKey) : void
+    public function cardKey(Order $order, OrderCardKey $orderProductCardKey) : void
     {
         $this->validateShipping($order);
 
-        if ($order->shipping_type !== ShippingTypeEnum::CDK) {
+        if ($order->shipping_type !== ShippingTypeEnum::CARD_KEY) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
         /**

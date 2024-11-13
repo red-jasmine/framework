@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Handlers\Refund;
 
 use Exception;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCardKeyReshipmentCommand;
-use RedJasmine\Order\Domain\Models\OrderProductCardKey;
+use RedJasmine\Order\Domain\Models\OrderCardKey;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -26,7 +26,7 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
 
         try {
             $refund              = $this->find($command->id);
-            $orderProductCardKey = OrderProductCardKey::newModel();
+            $orderProductCardKey = OrderCardKey::newModel();
 
 
 

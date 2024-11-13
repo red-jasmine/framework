@@ -7,12 +7,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use RedJasmine\FilamentCore\Columns\UserAbleColumn;
+use RedJasmine\FilamentCore\Filters\DateRangeFilter;
+use RedJasmine\FilamentCore\Filters\InputFilter;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderLogisticsResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderLogisticsResource\RelationManagers;
 use RedJasmine\Order\Application\Services\OrderLogisticsCommandService;
 use RedJasmine\Order\Application\Services\OrderLogisticsQueryService;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
 
 class OrderLogisticsResource extends Resource
@@ -26,19 +31,19 @@ class OrderLogisticsResource extends Resource
     protected static ?string $queryService   = OrderLogisticsQueryService::class;
 
 
-    protected static string  $translationNamespace = 'red-jasmine-order::logistics';
+    protected static string $translationNamespace = 'red-jasmine-order::logistics';
+
     public static function getModelLabel() : string
     {
         return __(static::$translationNamespace . '.label');
     }
 
-
-    protected static ?string $model = OrderLogistics::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?int    $navigationSort = 3;
 
+    protected static ?string $model   = OrderLogistics::class;
     protected static ?string $cluster = Order::class;
-    protected static ?int $navigationSort = 3;
+
 
     public static function form(Form $form) : Form
     {
@@ -102,72 +107,51 @@ class OrderLogisticsResource extends Resource
     public static function table(Table $table) : Table
     {
 
-         $table
+        $table
+            ->defaultSort('id', 'desc')
             ->columns([
-                          Tables\Columns\TextColumn::make('seller_type'),
-                          Tables\Columns\TextColumn::make('seller_id'),
-                          Tables\Columns\TextColumn::make('buyer_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('buyer_id')
-                                                   ->numeric(),
-
-                          Tables\Columns\TextColumn::make('order_id'),
-                          Tables\Columns\TextColumn::make('entity_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('entity_id')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('order_product_id')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('shipper')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('status')
-                                                   ->searchable(),
+                          Tables\Columns\TextColumn::make('id')->copyable(),
+                          Tables\Columns\TextColumn::make('order_id')->copyable(),
+                          UserAbleColumn::make('seller')->toggleable(isToggledHiddenByDefault: true),
+                          UserAbleColumn::make('buyer'),
+                          Tables\Columns\TextColumn::make('entity_type')->useEnum(),
+                          Tables\Columns\TextColumn::make('entity_id')->copyable()
+                          ,
+                          Tables\Columns\TextColumn::make('order_product_id')->copyable()
+                          ,
+                          Tables\Columns\TextColumn::make('shipper')->useEnum(),
+                          Tables\Columns\TextColumn::make('status')->useEnum(),
                           Tables\Columns\TextColumn::make('logistics_company_code')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('logistics_no')
-                                                   ->searchable(),
+                          ,
+                          Tables\Columns\TextColumn::make('logistics_no')->copyable()
+                          ,
                           Tables\Columns\TextColumn::make('shipping_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                          ,
                           Tables\Columns\TextColumn::make('collect_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                          ,
                           Tables\Columns\TextColumn::make('dispatch_time')
                                                    ->dateTime()
-                                                   ->sortable(),
+                          ,
                           Tables\Columns\TextColumn::make('signed_time')
                                                    ->dateTime()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('version')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('creator_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('creator_id')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('updater_type')
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('updater_id')
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('created_at')
-                                                   ->dateTime()
-                                                   ->sortable()
-                                                   ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('updated_at')
-                                                   ->dateTime()
-                                                   ->sortable()
-                                                   ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('deleted_at')
-                                                   ->dateTime()
-                                                   ->sortable()
-                                                   ->toggleable(isToggledHiddenByDefault: true),
+                          ,
+
+                          ...static::operateTableColumns()
                       ])
+            ->deferFilters()
             ->filters([
-                          //
-                      ])
+                          InputFilter::make('id'),
+                          InputFilter::make('order_id'),
+                          InputFilter::make('logistics_company_code'),
+                          InputFilter::make('logistics_no'),
+                          //Tables\Filters\SelectFilter::make('shipper')->options(LogisticsShipperEnum::options()),
+                          Tables\Filters\SelectFilter::make('status')->options(LogisticsStatusEnum::options()),
+
+                          DateRangeFilter::make('shipping_time'),
+                          DateRangeFilter::make('signed_time'),
+                      ], Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                           //Tables\Actions\EditAction::make(),
                       ])
@@ -190,7 +174,7 @@ class OrderLogisticsResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListOrderLogistics::route('/'),
+            'index' => Pages\ListOrderLogistics::route('/'),
             //'create' => Pages\CreateOrderLogistics::route('/create'),
             //'edit'   => Pages\EditOrderLogistics::route('/{record}/edit'),
         ];

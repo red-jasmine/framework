@@ -2,22 +2,15 @@
 
 
 return [
-    'label'  => '售后',
+    'label'   => '售后',
     'labels'  => [
         'refund' => '售后',
         'status' => '状态',
         'amount' => '金额',
     ],
     'fields'  => [
-        'id'                   => '售后编号',
-        'order_id'             => '订单编号',
-        'order_product_id'     => '订单商品项编号',
-        'seller_type'          => '卖家类型',
-        'seller_id'            => '卖家ID',
-        'seller_nickname'      => '卖家昵称',
-        'buyer_type'           => '卖家类型',
-        'buyer_id'             => '卖家ID',
-        'buyer_nickname'       => '卖家昵称',
+        'id' => '售后编号',
+
         'order_product_type'   => '商品类型',
         'shipping_type'        => '发货类型',
         'refund_type'          => '售后类型',
@@ -34,7 +27,8 @@ return [
         'created_time'         => '创建时间',
         'end_time'             => '完结时间',
         'seller_custom_status' => '卖家自定义状态',
-        'star'                 => '加星',
+
+        'star' => '加星',
 
         'title' => '标题',
 
@@ -46,7 +40,7 @@ return [
         'outer_product_id' => '外部商品ID',
         'outer_sku_id'     => '外部规格ID',
         'barcode'          => '条码',
-        'quantity'              => '数量',
+        'quantity'         => '数量',
         'unit'             => '单位',
         'unit_quantity'    => '单位数量',
         'category_id'      => '类目',
@@ -67,20 +61,35 @@ return [
         'progress_total'         => '进度总数',
 
 
-        'seller'   => '卖家',
-        'buyer'    => '买家',
-        'channel'  => '渠道',
-        'store'    => '门店',
-        'guide'    => '导购',
-        'products' => '商品',
-
-
         'seller_remarks' => '卖家备注',
         'buyer_remarks'  => '买家备注',
         'description'    => '描述',
         'images'         => '图片',
         'reject_reason'  => '拒绝理由',
         'expands'        => '扩展',
+
+        // |--------------公共部分-------------------
+        'order_id'         => '订单编号',
+        'order_product_id' => '订单商品项编号',
+        'refund_id'        => '售后编号',
+        'entity_type'      => '对象类型',
+        'entity_id'        => '对象编号',
+        'seller_type'      => '卖家类型',
+        'seller_id'        => '卖家ID',
+        'seller_nickname'  => '卖家昵称',
+        'buyer_type'       => '买家类型',
+        'buyer_id'         => '买家ID',
+        'buyer_nickname'   => '买家昵称',
+        'version'          => '版本',
+        'urge'             => '催单',
+        'urge_time'        => '催单时间',
+        'seller'           => '卖家',
+        'buyer'            => '买家',
+        'channel'          => '渠道',
+        'store'            => '门店',
+        'guide'            => '导购',
+        'products'         => '商品',
+        // |--------------公共部分-------------------
 
 
     ],

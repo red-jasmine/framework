@@ -146,7 +146,7 @@ class OrderRefund extends Model
 
     public function cardKeys() : MorphMany
     {
-        return $this->morphMany(OrderProductCardKey::class, 'entity');
+        return $this->morphMany(OrderCardKey::class, 'entity');
     }
 
     public function payments() : MorphMany
@@ -480,11 +480,11 @@ class OrderRefund extends Model
     }
 
     /**
-     * @param OrderProductCardKey $cardKey
+     * @param OrderCardKey $cardKey
      * @return void
      * @throws RefundException
      */
-    public function cardKeyReshipment(OrderProductCardKey $cardKey) : void
+    public function cardKeyReshipment(OrderCardKey $cardKey) : void
     {
         if (!$this->isAllowReshipment()) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
