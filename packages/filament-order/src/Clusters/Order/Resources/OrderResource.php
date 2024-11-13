@@ -29,7 +29,7 @@ use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationMana
 use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\Services\OrderQueryService;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
+
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -45,6 +45,7 @@ class OrderResource extends Resource
     protected static ?string $queryService   = OrderQueryService::class;
     protected static ?string $createCommand  = OrderCreateCommand::class;
 
+    public static string $translationNamespace = 'red-jasmine-order::order';
 
     protected static ?string $model = Order::class;
 
@@ -52,6 +53,8 @@ class OrderResource extends Resource
 
     protected static ?string $cluster        = OrderCluster::class;
     protected static ?int    $navigationSort = 1;
+
+
 
     public static function getModelLabel() : string
     {
@@ -248,127 +251,127 @@ class OrderResource extends Resource
      */
     public static function table(Table $table) : Table
     {
-        return $table
+         $table
             ->defaultSort('id', 'DESC')
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-order::order.fields.id'))->copyable(),
-                          OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products')->label(__('red-jasmine-order::order.fields.products')),
-                          //Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::order.fields.title')),
-                          Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.order_type')),
-                          Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum()->label(__('red-jasmine-order::order.fields.shipping_type')),
+                                                   ->copyable(),
+                          OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products'),
+                          //Tables\Columns\TextColumn::make('title'),
+                          Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum(),
+                          Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum(),
                           UserAbleColumn::make('seller')->alignCenter()
-                                        ->label(__('red-jasmine-order::order.fields.seller'))->toggleable(isToggledHiddenByDefault: true),
-                          UserAbleColumn::make('buyer')->label(__('red-jasmine-order::order.fields.buyer'))
+                                        ->toggleable(isToggledHiddenByDefault: true),
+                          UserAbleColumn::make('buyer')
                                         ->extraAttributes([ 'class' => 'px-4' ])
                                         ->grow(),
 
 
-                          Tables\Columns\ColumnGroup::make('status')->label(__('red-jasmine-order::order.labels.status'))
+                          Tables\Columns\ColumnGroup::make('status')
                                                     ->alignCenter()
                                                     ->columns([
 
                                                                   Tables\Columns\ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
-                                                                                           ->label(__('red-jasmine-order::order.fields.order_status')),
-                                                                  Tables\Columns\TextColumn::make('payment_status')->useEnum()->label(__('red-jasmine-order::order.fields.payment_status')),
-                                                                  Tables\Columns\TextColumn::make('settlement_status')->badge()->label(__('red-jasmine-order::order.fields.settlement_status'))->toggleable(isToggledHiddenByDefault: true),
-                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->label(__('red-jasmine-order::order.fields.seller_custom_status'))->toggleable(isToggledHiddenByDefault: true),
+                                                                                           ,
+                                                                  Tables\Columns\TextColumn::make('payment_status')->useEnum(),
+                                                                  Tables\Columns\TextColumn::make('settlement_status')->badge()->toggleable(isToggledHiddenByDefault: true),
+                                                                  Tables\Columns\TextColumn::make('seller_custom_status')->toggleable(isToggledHiddenByDefault: true),
                                                               ]),
 
                           Tables\Columns\ColumnGroup::make('amount')
                                                     ->alignCenter()
-                                                    ->label(__('red-jasmine-order::order.labels.amount'))
+
                                                     ->columns([
 //                                                                                  Tables\Columns\TextColumn::make('product_payable_amount')
 //                                                                                                           ->numeric()
-//                                                                                                           ->label(__('red-jasmine-order::order.fields.product_payable_amount')),
+//                                                                                                           ,
 //
 //                                                                                  Tables\Columns\TextColumn::make('service_amount')
 //                                                                                                           ->numeric()
-//                                                                                                           ->label(__('red-jasmine-order::order.fields.service_amount'))->toggleable(isToggledHiddenByDefault: true),
+//                                                                                                           ->toggleable(isToggledHiddenByDefault: true),
 //
 //                                                                                  Tables\Columns\TextColumn::make('freight_amount')
 //                                                                                                           ->numeric()
-//                                                                                                           ->label(__('red-jasmine-order::order.fields.freight_amount')),
+//                                                                                                           ,
 //                                                                                  Tables\Columns\TextColumn::make('discount_amount')
 //                                                                                                           ->numeric()
-//                                                                                                           ->label(__('red-jasmine-order::order.fields.discount_amount')),
+//                                                                                                           ,
 Tables\Columns\TextColumn::make('payable_amount')
                          ->numeric()
-                         ->label(__('red-jasmine-order::order.fields.payable_amount')),
+                         ,
 Tables\Columns\TextColumn::make('payment_amount')
                          ->numeric()
-                         ->label(__('red-jasmine-order::order.fields.payment_amount')),
+                         ,
 Tables\Columns\TextColumn::make('refund_amount')
                          ->numeric()
-                         ->label(__('red-jasmine-order::order.fields.refund_amount')),
+                         ,
 Tables\Columns\TextColumn::make('commission_amount')
                          ->numeric()
-                         ->label(__('red-jasmine-order::order.fields.commission_amount'))
+
                          ->toggleable(isToggledHiddenByDefault: true),
 Tables\Columns\TextColumn::make('cost_amount')
                          ->numeric()
-                         ->label(__('red-jasmine-order::order.fields.cost_amount'))->toggleable(isToggledHiddenByDefault: true),
+                         ->toggleable(isToggledHiddenByDefault: true),
                                                               ]),
 
                           Tables\Columns\TextColumn::make('created_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.created_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('payment_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.payment_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('close_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.close_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('shipping_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.shipping_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('collect_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.collect_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('dispatch_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.dispatch_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('signed_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.signed_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('confirm_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.confirm_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('refund_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.refund_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('rate_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.rate_time'))->toggleable(isToggledHiddenByDefault: true),
+                                                   ->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('settlement_time')
                                                    ->dateTime()
-                                                   ->label(__('red-jasmine-order::order.fields.settlement_time'))->toggleable(isToggledHiddenByDefault: true),
-
-                          UserAbleColumn::make('channel')->setNickname('name')->label(__('red-jasmine-order::order.fields.channel')),
-                          UserAbleColumn::make('guide')->setNickname('name')->label(__('red-jasmine-order::order.fields.guide')),
-                          UserAbleColumn::make('store')->setNickname('name')->label(__('red-jasmine-order::order.fields.store')),
-
-                          Tables\Columns\TextColumn::make('client_type')->label(__('red-jasmine-order::order.fields.client_type'))
                                                    ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('client_version')->label(__('red-jasmine-order::order.fields.client_version'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('client_ip')->label(__('red-jasmine-order::order.fields.client_ip'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('source_type')->label(__('red-jasmine-order::order.fields.source_type'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('source_id')->label(__('red-jasmine-order::order.fields.source_id'))->toggleable(isToggledHiddenByDefault: true),
+
+                          UserAbleColumn::make('channel')->setNickname('name'),
+                          UserAbleColumn::make('guide')->setNickname('name'),
+                          UserAbleColumn::make('store')->setNickname('name'),
+
+                          Tables\Columns\TextColumn::make('client_type')
+                                                   ->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('client_version')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('client_ip')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('source_type')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('source_id')->toggleable(isToggledHiddenByDefault: true),
                           Tables\Columns\TextColumn::make('contact')
-                                                   ->label(__('red-jasmine-order::order.fields.contact'))
+
                                                    ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('star')->label(__('red-jasmine-order::order.fields.star'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('urge')->label(__('red-jasmine-order::common.fields.urge'))
+                          Tables\Columns\TextColumn::make('star')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('urge')
                                                                  ->badge()
                               ->tooltip(fn(Order $record)=>$record->urge_time)
                                                                  ->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('urge_time')->label(__('red-jasmine-order::common.fields.urge_time'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_seller_delete'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->label(__('red-jasmine-order::order.fields.is_buyer_delete'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('outer_order_id')->label(__('red-jasmine-order::order.fields.outer_order_id'))->toggleable(isToggledHiddenByDefault: true)->copyable(),
-                          Tables\Columns\TextColumn::make('cancel_reason')->label(__('red-jasmine-order::order.fields.cancel_reason'))->toggleable(isToggledHiddenByDefault: true),
-                          Tables\Columns\TextColumn::make('version')->label(__('red-jasmine-order::order.fields.version'))->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('urge_time')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('outer_order_id')->toggleable(isToggledHiddenByDefault: true)->copyable(),
+                          Tables\Columns\TextColumn::make('cancel_reason')->toggleable(isToggledHiddenByDefault: true),
+                          Tables\Columns\TextColumn::make('version')->toggleable(isToggledHiddenByDefault: true),
                           ...static::operateTableColumns()
 
                       ])
@@ -376,16 +379,16 @@ Tables\Columns\TextColumn::make('cost_amount')
                           InputFilter::make('id')->inputLabel(__('red-jasmine-order::order.fields.id')),
 
                           Tables\Filters\SelectFilter::make('order_status')
-                                                     ->label(__('red-jasmine-order::order.fields.order_status'))
+
                                                      ->options(OrderStatusEnum::options()),
                           Tables\Filters\SelectFilter::make('order_type')
-                                                     ->label(__('red-jasmine-order::order.fields.order_type'))
+
                                                      ->options(OrderTypeEnum::options()),
                           Tables\Filters\SelectFilter::make('shipping_type')
-                                                     ->label(__('red-jasmine-order::order.fields.shipping_type'))
+
                                                      ->options(ShippingTypeEnum::options()),
                           Tables\Filters\SelectFilter::make('payment_status')
-                                                     ->label(__('red-jasmine-order::order.fields.payment_status'))
+
                                                      ->options(PaymentStatusEnum::options()),
                           DateRangeFilter::make('created_time')
                                          ->withIndicator()
@@ -397,7 +400,7 @@ Tables\Columns\TextColumn::make('cost_amount')
                                          ->icon('heroicon-o-backspace')
                                          ->linkedCalendars()
                                          ->autoApply()
-                                         ->label(__('red-jasmine-order::order.fields.created_time')),
+                                         ,
 
                           DateRangeFilter::make('payment_time')
                                          ->withIndicator()
@@ -409,7 +412,7 @@ Tables\Columns\TextColumn::make('cost_amount')
                                          ->icon('heroicon-o-backspace')
                                          ->linkedCalendars()
                                          ->autoApply()
-                                         ->label(__('red-jasmine-order::order.fields.payment_time')),
+                                         ,
 
                           InputFilter::make('outer_order_id')->inputLabel(__('red-jasmine-order::order.fields.outer_order_id')),
 
@@ -451,6 +454,8 @@ Tables\Columns\TextColumn::make('cost_amount')
                                                                    ]),
                           ])
             ->recordUrl(null);
+
+         return  static::translationLabels($table);
     }
 
     public static function getRelations() : array

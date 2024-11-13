@@ -2,7 +2,7 @@
 
 
 return [
-
+    'label'  => '订单支付单',
     'labels' => [
         'order-payments' => '订单支付单',
 

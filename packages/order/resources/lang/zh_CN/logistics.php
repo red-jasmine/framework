@@ -3,8 +3,9 @@
 
 return [
 
+    'label'  => '订单物流',
     'labels' => [
-        'order-logistics' => '物流信息',
+        'order-logistics' => '订单物流',
 
     ],
     'fields' => [
@@ -18,6 +19,7 @@ return [
         'collect_time'           => '揽收时间',
         'dispatch_time'          => '派送时间',
         'signed_time'            => '签收时间',
+        'order_id'               => '订单编号',
 
 
     ],

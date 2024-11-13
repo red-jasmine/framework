@@ -2,7 +2,7 @@
 
 
 return [
-
+    'label'  => '订单',
     'labels'   => [
         'order'  => '订单',
         'status' => '状态',

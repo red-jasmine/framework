@@ -2,7 +2,7 @@
 
 
 return [
-
+    'label'  => '订单卡密',
     'labels' => [
         'order-card-keys' => '订单卡密',
 

@@ -4,8 +4,12 @@ namespace RedJasmine\FilamentCore\Helpers;
 
 use App\Models\User;
 use Filament\Forms;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
+use Filament\Support\Components\ViewComponent;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -13,9 +17,10 @@ use Illuminate\Validation\ValidationException;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
+use function Filament\Support\get_model_label;
 
 /**
- *
+ * @property string $translationNamespace
  */
 trait ResourcePageHelper
 {
@@ -297,4 +302,86 @@ trait ResourcePageHelper
             Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()->toggleable(isToggledHiddenByDefault: true),
         ];
     }
+
+
+
+    public static function translationLabels(ViewComponent $component) : ViewComponent
+    {
+        if (property_exists($component,'label') && !$component->isSetLabel()) {
+            $component->label(static function (ViewComponent $component) {
+                return __(static::$translationNamespace . '.fields.' . $component->getName());
+            });
+        }
+
+        if (method_exists($component, 'getComponents')) {
+
+            foreach ($component->getComponents(true) as $childComponent) {
+                static::translationLabels($childComponent);
+            }
+
+        }
+        if (method_exists($component, 'getChildComponents')) {
+
+//            foreach ($component->getChildComponents(true) as $childComponent) {
+////
+//                try {
+//
+//                    static::translationLabels($childComponent);
+//                }catch (\Throwable $throwable){
+//                        dd($childComponent);
+//                }
+//
+//            }
+
+        }
+
+        if ($component instanceof Table) {
+
+            // 字段翻译
+            foreach ($component->getColumns() as $column) {
+
+                if (!$column->isSetLabel()) {
+                    $column->label(static function (Tables\Columns\Column $column) {
+                        return __(static::$translationNamespace . '.fields.' . $column->getName());
+                    });
+                }
+            }
+            // 如何获取列分组
+
+            // 过滤条件翻译
+
+            /**
+             * @var$filter  Tables\Filters\BaseFilter
+             */
+            foreach ($component->getFilters() as $filter) {
+
+                if (!$filter->isSetLabel()) {
+                    $filter->label(static function (Tables\Filters\BaseFilter $filter) {
+                        return __(static::$translationNamespace . '.fields.' . $filter->getName());
+                    });
+                }
+
+            }
+
+
+        }
+
+
+        if ($component instanceof Infolist) {
+
+//            foreach ($component->getComponents(true) as $entity) {
+//
+//                static::translationLabels($entity);
+//            }
+
+        }
+
+
+
+
+
+        return $component;
+    }
+
+
 }

@@ -6,9 +6,11 @@ use Filament\Actions\Exports\ExportColumn;
 use Filament\Forms\Components\Field;
 use Filament\Infolists\Components\Entry;
 use Filament\Support\Assets\Asset;
+use Filament\Support\Components\ViewComponent;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
@@ -98,7 +100,15 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
         // Icon Registration
         FilamentIcon::register($this->getIcons());
 
-
+        BaseFilter::macro('isSetLabel', function () {
+            return $this->label !== null;
+        });
+        ViewComponent::macro('isSetLabel', function () {
+            return $this->label !== null;
+        });
+        Column::macro('isSetLabel', function () {
+            return $this->label !== null;
+        });
         Column::macro('useEnum', function () {
 
             if (method_exists($this, 'badge')) {

@@ -63,10 +63,10 @@ class OrderRefundResource extends Resource
         $infoList->schema([
                               Section::make(static fn(Model $record) => $record->id)
                                      ->schema([
-                                                  TextEntry::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->useEnum(),
-                                                  TextEntry::make('info.reject_reason')->label(__('red-jasmine-order::refund.fields.reject_reason')),
-                                                  TextEntry::make('seller_custom_status')->label(__('red-jasmine-order::refund.fields.seller_custom_status'))->badge(),
-                                                  TextEntry::make('info.seller_remarks')->label(__('red-jasmine-order::refund.fields.seller_remarks'))
+                                                  TextEntry::make('refund_status')->useEnum(),
+                                                  TextEntry::make('info.reject_reason'),
+                                                  TextEntry::make('seller_custom_status')->badge(),
+                                                  TextEntry::make('info.seller_remarks')
                                                            ->hintColor('primary')
                                                            ->hintIcon('heroicon-m-exclamation-circle')
                                                            ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
@@ -79,7 +79,7 @@ class OrderRefundResource extends Resource
                                                   RatingEntry::make('star')
                                                              ->stars(10)
                                                              ->allowZero()
-                                                             ->label(__('red-jasmine-order::refund.fields.star'))
+
                                                              ->hintAction(
                                                                  Order\Resources\OrderRefundResource\Actions\InfoList\RefundStarInfoListAction::make('star'),
                                                              )
@@ -109,16 +109,16 @@ class OrderRefundResource extends Resource
                               Section::make('退款')
                                      ->schema(function (OrderRefund $record) {
                                          $schema     = [
-                                             TextEntry::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->useEnum(),
-                                             TextEntry::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->useEnum(),
-                                             IconEntry::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return'))->boolean(),
-                                             TextEntry::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
-                                             TextEntry::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
-                                             TextEntry::make('freight_amount')->label(__('red-jasmine-order::refund.fields.freight_amount')),
-                                             TextEntry::make('refund_amount')->label(__('red-jasmine-order::refund.fields.refund_amount')),
-                                             TextEntry::make('total_refund_amount')->label(__('red-jasmine-order::refund.fields.total_refund_amount')),
-                                             TextEntry::make('description')->label(__('red-jasmine-order::refund.fields.description')),
-                                             ImageEntry::make('info.images')->label(__('red-jasmine-order::refund.fields.images'))->stacked()->limit(10)
+                                             TextEntry::make('refund_type')->useEnum(),
+                                             TextEntry::make('phase')->useEnum(),
+                                             IconEntry::make('has_good_return')->boolean(),
+                                             TextEntry::make('good_status')->useEnum(),
+                                             TextEntry::make('reason'),
+                                             TextEntry::make('freight_amount'),
+                                             TextEntry::make('refund_amount'),
+                                             TextEntry::make('total_refund_amount'),
+                                             TextEntry::make('description'),
+                                             ImageEntry::make('info.images')->stacked()->limit(10)
                                                        ->checkFileExistence(false)
                                                        ->limitedRemainingText(),
 
@@ -174,20 +174,20 @@ class OrderRefundResource extends Resource
 
                               Section::make('商品')
                                      ->schema([
-                                                  TextEntry::make('title')->label(__('red-jasmine-order::refund.fields.title')),
-                                                  ImageEntry::make('image')->label(__('red-jasmine-order::refund.fields.image')),
-                                                  TextEntry::make('sku_name')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                                                  TextEntry::make('quantity')->label(__('red-jasmine-order::refund.fields.quantity')),
-                                                  TextEntry::make('unit_quantity')->label(__('red-jasmine-order::refund.fields.unit_quantity')),
-                                                  TextEntry::make('unit')->label(__('red-jasmine-order::refund.fields.unit')),
-                                                  TextEntry::make('price')->label(__('red-jasmine-order::refund.fields.price')),
-                                                  TextEntry::make('product_amount')->label(__('red-jasmine-order::refund.fields.product_amount')),
-                                                  TextEntry::make('tax_amount')->label(__('red-jasmine-order::refund.fields.tax_amount')),
-                                                  TextEntry::make('discount_amount')->label(__('red-jasmine-order::refund.fields.discount_amount')),
-                                                  TextEntry::make('payable_amount')->label(__('red-jasmine-order::refund.fields.payable_amount')),
-                                                  TextEntry::make('payment_amount')->label(__('red-jasmine-order::refund.fields.payment_amount')),
-                                                  TextEntry::make('divided_payment_amount')->label(__('red-jasmine-order::refund.fields.divided_payment_amount')),
-                                                  TextEntry::make('shipping_status')->label(__('red-jasmine-order::refund.fields.shipping_status')),
+                                                  TextEntry::make('title'),
+                                                  ImageEntry::make('image'),
+                                                  TextEntry::make('sku_name'),
+                                                  TextEntry::make('quantity'),
+                                                  TextEntry::make('unit_quantity'),
+                                                  TextEntry::make('unit'),
+                                                  TextEntry::make('price'),
+                                                  TextEntry::make('product_amount'),
+                                                  TextEntry::make('tax_amount'),
+                                                  TextEntry::make('discount_amount'),
+                                                  TextEntry::make('payable_amount'),
+                                                  TextEntry::make('payment_amount'),
+                                                  TextEntry::make('divided_payment_amount'),
+                                                  TextEntry::make('shipping_status'),
                                               ])
                                      ->inlineLabel()
                                      ->columns(6),
@@ -196,10 +196,10 @@ class OrderRefundResource extends Resource
 
                                                   Fieldset::make('infos')
                                                           ->schema([
-                                                                       TextEntry::make('id')->copyable()->label(__('red-jasmine-order::refund.fields.id')),
-                                                                       TextEntry::make('order_id')->copyable()->label(__('red-jasmine-order::refund.fields.order_id')),
-                                                                       TextEntry::make('created_time')->label(__('red-jasmine-order::refund.fields.created_time')),
-                                                                       TextEntry::make('end_time')->label(__('red-jasmine-order::refund.fields.end_time')),
+                                                                       TextEntry::make('id')->copyable(),
+                                                                       TextEntry::make('order_id')->copyable(),
+                                                                       TextEntry::make('created_time'),
+                                                                       TextEntry::make('end_time'),
 
                                                                    ])
                                                           ->inlineLabel()
@@ -208,21 +208,21 @@ class OrderRefundResource extends Resource
 
 
                                                   Fieldset::make('seller')
-                                                          ->label(__('red-jasmine-order::refund.fields.seller'))
+
                                                           ->schema([
-                                                                       TextEntry::make('seller_type')->label(__('red-jasmine-order::refund.fields.seller_type')),
-                                                                       TextEntry::make('seller_id')->copyable()->label(__('red-jasmine-order::refund.fields.seller_id')),
-                                                                       TextEntry::make('seller_nickname')->copyable()->label(__('red-jasmine-order::refund.fields.seller_nickname')),
+                                                                       TextEntry::make('seller_type'),
+                                                                       TextEntry::make('seller_id')->copyable(),
+                                                                       TextEntry::make('seller_nickname')->copyable(),
                                                                    ])
                                                           ->inlineLabel()
                                                           ->columns(1)
                                                           ->columnSpan(1),
                                                   Fieldset::make('buyer')
-                                                          ->label(__('red-jasmine-order::refund.fields.buyer'))
+
                                                           ->schema([
-                                                                       TextEntry::make('buyer_type')->label(__('red-jasmine-order::refund.fields.buyer_type')),
-                                                                       TextEntry::make('buyer_id')->copyable()->label(__('red-jasmine-order::refund.fields.buyer_id')),
-                                                                       TextEntry::make('buyer_nickname')->copyable()->label(__('red-jasmine-order::refund.fields.buyer_nickname')),
+                                                                       TextEntry::make('buyer_type'),
+                                                                       TextEntry::make('buyer_id')->copyable(),
+                                                                       TextEntry::make('buyer_nickname')->copyable(),
                                                                    ])
                                                           ->inlineLabel()
                                                           ->columns(1)
@@ -248,50 +248,50 @@ class OrderRefundResource extends Resource
             ->recordUrl(null)
             ->columns([
                           Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-order::refund.fields.id')),
+                                                   ,
 
-                          Tables\Columns\TextColumn::make('order_id')->label(__('red-jasmine-order::refund.fields.order_id')),
-                          //                Tables\Columns\TextColumn::make('order_product_id') ->label(__('red-jasmine-order::refund.fields.order_product_id')),
+                          Tables\Columns\TextColumn::make('order_id'),
+                          //                Tables\Columns\TextColumn::make('order_product_id') ,
 
-                          Tables\Columns\TextColumn::make('order_product_type')->useEnum()->label(__('red-jasmine-order::refund.fields.order_product_type')),
-                          Tables\Columns\TextColumn::make('shipping_type')->useEnum()->label(__('red-jasmine-order::refund.fields.shipping_type')),
+                          Tables\Columns\TextColumn::make('order_product_type')->useEnum(),
+                          Tables\Columns\TextColumn::make('shipping_type')->useEnum(),
 
-                          Tables\Columns\TextColumn::make('title')->label(__('red-jasmine-order::refund.fields.title')),
-                          //                Tables\Columns\TextColumn::make('sku_name')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                          //                Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine-order::refund.fields.image')),
-                          //                Tables\Columns\TextColumn::make('product_type')->label(__('red-jasmine-order::refund.fields.product_type')),
-                          //                Tables\Columns\TextColumn::make('sku_id')->label(__('red-jasmine-order::refund.fields.sku_id')),
-                          //                Tables\Columns\TextColumn::make('category_id')->label(__('red-jasmine-order::refund.fields.category_id')),
-                          //                Tables\Columns\TextColumn::make('product_group_id')->label(__('red-jasmine-order::refund.fields.product_group_id')),
-                          //                Tables\Columns\TextColumn::make('outer_product_id')->label(__('red-jasmine-order::refund.fields.outer_product_id')),
-                          //                Tables\Columns\TextColumn::make('outer_sku_id')->label(__('red-jasmine-order::refund.fields.outer_sku_id')),
-                          //                Tables\Columns\TextColumn::make('barcode')->label(__('red-jasmine-order::refund.fields.barcode')),
-                          //                Tables\Columns\TextColumn::make('unit_quantity')->label(__('red-jasmine-order::refund.fields.unit_quantity')),
-                          //                Tables\Columns\TextColumn::make('unit')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                          //                Tables\Columns\TextColumn::make('quantity')->label(__('red-jasmine-order::refund.fields.sku_name')),
-                          //                Tables\Columns\TextColumn::make('price')->money()->label(__('red-jasmine-order::refund.fields.price')),
-                          //                Tables\Columns\TextColumn::make('cost_price')->money()->label(__('red-jasmine-order::refund.fields.cost_price')),
-                          //                Tables\Columns\TextColumn::make('product_amount')->money()->label(__('red-jasmine-order::refund.fields.product_amount')),
-                          //                Tables\Columns\TextColumn::make('tax_amount')->money()->label(__('red-jasmine-order::refund.fields.tax_amount')),
-                          //                Tables\Columns\TextColumn::make('discount_amount')->money()->label(__('red-jasmine-order::refund.fields.discount_amount')),
-                          //                Tables\Columns\TextColumn::make('payable_amount')->money()->label(__('red-jasmine-order::refund.fields.payable_amount')),
-                          //                Tables\Columns\TextColumn::make('payment_amount')->money()->label(__('red-jasmine-order::refund.fields.payment_amount')),
-                          //                Tables\Columns\TextColumn::make('divided_payment_amount')->money()->label(__('red-jasmine-order::refund.fields.divided_payment_amount')),
-                          //                Tables\Columns\TextColumn::make('shipping_status')->label(__('red-jasmine-order::refund.fields.shipping_status')),
+                          Tables\Columns\TextColumn::make('title'),
+                          //                Tables\Columns\TextColumn::make('sku_name'),
+                          //                Tables\Columns\ImageColumn::make('image'),
+                          //                Tables\Columns\TextColumn::make('product_type'),
+                          //                Tables\Columns\TextColumn::make('sku_id'),
+                          //                Tables\Columns\TextColumn::make('category_id'),
+                          //                Tables\Columns\TextColumn::make('product_group_id'),
+                          //                Tables\Columns\TextColumn::make('outer_product_id'),
+                          //                Tables\Columns\TextColumn::make('outer_sku_id'),
+                          //                Tables\Columns\TextColumn::make('barcode'),
+                          //                Tables\Columns\TextColumn::make('unit_quantity'),
+                          //                Tables\Columns\TextColumn::make('unit'),
+                          //                Tables\Columns\TextColumn::make('quantity'),
+                          //                Tables\Columns\TextColumn::make('price')->money(),
+                          //                Tables\Columns\TextColumn::make('cost_price')->money(),
+                          //                Tables\Columns\TextColumn::make('product_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('tax_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('discount_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('payable_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('payment_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('divided_payment_amount')->money(),
+                          //                Tables\Columns\TextColumn::make('shipping_status'),
                           //
 
 
-                          Tables\Columns\TextColumn::make('refund_type')->useEnum()->label(__('red-jasmine-order::refund.fields.refund_type')),
-                          Tables\Columns\TextColumn::make('phase')->useEnum()->label(__('red-jasmine-order::refund.fields.phase')),
-                          Tables\Columns\IconColumn::make('has_good_return')->label(__('red-jasmine-order::refund.fields.has_good_return'))->boolean(),
-                          Tables\Columns\TextColumn::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->useEnum(),
-                          Tables\Columns\TextColumn::make('reason')->label(__('red-jasmine-order::refund.fields.reason')),
-                          Tables\Columns\TextColumn::make('outer_refund_id')->label(__('red-jasmine-order::refund.fields.outer_refund_id')),
+                          Tables\Columns\TextColumn::make('refund_type')->useEnum(),
+                          Tables\Columns\TextColumn::make('phase')->useEnum(),
+                          Tables\Columns\IconColumn::make('has_good_return')->boolean(),
+                          Tables\Columns\TextColumn::make('good_status')->useEnum(),
+                          Tables\Columns\TextColumn::make('reason'),
+                          Tables\Columns\TextColumn::make('outer_refund_id'),
 
-                          Tables\Columns\TextColumn::make('refund_status')->useEnum()->label(__('red-jasmine-order::refund.fields.refund_status')),
-                          Tables\Columns\TextColumn::make('freight_amount')->money()->label(__('red-jasmine-order::refund.fields.freight_amount')),
-                          Tables\Columns\TextColumn::make('refund_amount')->money()->label(__('red-jasmine-order::refund.fields.refund_amount')),
-                          Tables\Columns\TextColumn::make('total_refund_amount')->money()->label(__('red-jasmine-order::refund.fields.total_refund_amount')),
+                          Tables\Columns\TextColumn::make('refund_status')->useEnum(),
+                          Tables\Columns\TextColumn::make('freight_amount')->money(),
+                          Tables\Columns\TextColumn::make('refund_amount')->money(),
+                          Tables\Columns\TextColumn::make('total_refund_amount')->money(),
 
                           ...static::operateTableColumns()
                       ])
@@ -299,7 +299,7 @@ class OrderRefundResource extends Resource
 
                           Tables\Filters\Filter::make('order_id')->form(
                               [
-                                  Forms\Components\TextInput::make('order_id')->label(__('red-jasmine-order::refund.fields.order_id'))
+                                  Forms\Components\TextInput::make('order_id')
                               ]
                           )
                                                ->query(function (Builder $query, array $data) : Builder {
@@ -308,10 +308,10 @@ class OrderRefundResource extends Resource
                                                }),
 
 
-                          Tables\Filters\SelectFilter::make('refund_status')->label(__('red-jasmine-order::refund.fields.refund_status'))->options(RefundStatusEnum::options()),
-                          Tables\Filters\SelectFilter::make('refund_type')->label(__('red-jasmine-order::refund.fields.refund_type'))->options(RefundTypeEnum::options()),
-                          Tables\Filters\SelectFilter::make('phase')->label(__('red-jasmine-order::refund.fields.phase'))->options(RefundPhaseEnum::options()),
-                          Tables\Filters\SelectFilter::make('good_status')->label(__('red-jasmine-order::refund.fields.good_status'))->options(RefundGoodsStatusEnum::options()),
+                          Tables\Filters\SelectFilter::make('refund_status'),
+                          Tables\Filters\SelectFilter::make('refund_type'),
+                          Tables\Filters\SelectFilter::make('phase'),
+                          Tables\Filters\SelectFilter::make('good_status'),
 
 
                           DateRangeFilter::make('created_time')
@@ -324,7 +324,7 @@ class OrderRefundResource extends Resource
                                          ->icon('heroicon-o-backspace')
                                          ->linkedCalendars()
                                          ->autoApply()
-                                         ->label(__('red-jasmine-order::refund.fields.created_time')),
+                                         ,
 
                           DateRangeFilter::make('end_time')
                                          ->withIndicator()
@@ -336,7 +336,7 @@ class OrderRefundResource extends Resource
                                          ->icon('heroicon-o-backspace')
                                          ->linkedCalendars()
                                          ->autoApply()
-                                         ->label(__('red-jasmine-order::refund.fields.end_time')),
+                                         ,
 
 
                       ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)

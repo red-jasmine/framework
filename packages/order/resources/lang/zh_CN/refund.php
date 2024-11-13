@@ -2,7 +2,7 @@
 
 
 return [
-
+    'label'  => '售后',
     'labels'  => [
         'refund' => '售后',
         'status' => '状态',
