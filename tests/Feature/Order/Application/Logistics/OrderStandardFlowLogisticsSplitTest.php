@@ -2,18 +2,14 @@
 
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Order\Application\Services\OrderLogisticsCommandService;
 use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\UserCases\Commands\Logistics\LogisticsChangeStatusCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
-use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -27,9 +23,10 @@ use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 beforeEach(function () {
 
-    $this->orderReadRepository = app(OrderReadRepositoryInterface::class);
-    $this->orderRepository     = app(OrderRepositoryInterface::class);
-    $this->orderCommandService = app(OrderCommandService::class);
+    $this->orderReadRepository          = app(OrderReadRepositoryInterface::class);
+    $this->orderRepository              = app(OrderRepositoryInterface::class);
+    $this->orderCommandService          = app(OrderCommandService::class);
+    $this->orderLogisticsCommandService = app(OrderLogisticsCommandService::class);
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;
@@ -109,9 +106,10 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
 test('can shipped a order', function (Order $order, OrderPayment $orderPayment, $result) {
 
+    $logisticsCommands = [];
     // 拆分发货
     // 对 商品1 多次分开发货
-    $num = 2;
+    $num      = 2;
     $product1 = $order->products[0];
     for ($i = 1; $i <= $num; $i++) {
         $isFinished = false;
@@ -119,19 +117,19 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
             $isFinished = true;
         }
-        $command = $this->orderFake->shippingLogistics([
-                                                           'id'             => $order->id,
-                                                           'is_split'       => true,
-                                                           'is_finished'    => $isFinished,
-                                                           'order_products' => [ $product1->id ]
-                                                       ]);
-
+        $command             = $this->orderFake->shippingLogistics([
+                                                                       'id'             => $order->id,
+                                                                       'is_split'       => true,
+                                                                       'is_finished'    => $isFinished,
+                                                                       'order_products' => [ $product1->id ]
+                                                                   ]);
+        $logisticsCommands[] = $command;
         $this->orderCommandService->logisticsShipping($command);
 
         /**
          * @var $order Order
          */
-        $order = $this->orderRepository->find($order->id);
+        $order    = $this->orderRepository->find($order->id);
         $product1 = $order->products[0];
 
         if ($i === $num) {
@@ -157,13 +155,13 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
         if ($index === 0) {
             continue;
         }
-        $command = $this->orderFake->shippingLogistics([
-                                                           'id'             => $order->id,
-                                                           'is_split'       => true,
-                                                           'is_finished'    => true,
-                                                           'order_products' => [ $product->id ]
-                                                       ]);
-
+        $command             = $this->orderFake->shippingLogistics([
+                                                                       'id'             => $order->id,
+                                                                       'is_split'       => true,
+                                                                       'is_finished'    => true,
+                                                                       'order_products' => [ $product->id ]
+                                                                   ]);
+        $logisticsCommands[] = $command;
         $this->orderCommandService->logisticsShipping($command);
     }
 
@@ -175,11 +173,35 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
 
-    return $order;
-})->depends('can create a new order', 'cna paying a order', 'can paid a order');
+    return $logisticsCommands;
+})
+    ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
 
-test('can confirm a order', function (Order $order) {
+test('can change logistics status', function (Order $order, OrderPayment $orderPayment, $logisticsCommands) {
+
+    // 设置 物流状态
+
+    foreach ($logisticsCommands as $command) {
+        $changeStatusCommand = new   LogisticsChangeStatusCommand;
+
+        $changeStatusCommand->logisticsCompanyCode = $command->logisticsCompanyCode;
+        $changeStatusCommand->logisticsNo          = $command->logisticsNo;
+        $changeStatusCommand->status               = LogisticsStatusEnum::SIGNED;
+
+        $this->orderLogisticsCommandService->changeStatus($changeStatusCommand);
+    }
+
+    $order = $this->orderRepository->find($order->id);
+
+    foreach ($order->logistics as $logistic) {
+        $this->assertEquals(LogisticsStatusEnum::SIGNED->value, $logistic->status->value, '物流状态');
+    }
+
+
+})->depends('can create a new order', 'cna paying a order', 'can shipped a order');
+
+test('can confirm a order', function (Order $order, $logisticsCommands) {
 
     $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
 
@@ -190,213 +212,7 @@ test('can confirm a order', function (Order $order) {
     $this->assertEquals($order->order_status, OrderStatusEnum::FINISHED, '订单状态');
 
 
-})->depends('can shipped a order');
-
-
-test('can custom status a order', function (Order $order) {
-
-    $sellerCustomStatus = 'TEST';
-    $commands[]         = OrderSellerCustomStatusCommand::from([
-                                                                   'id'                 => $order->id,
-                                                                   'sellerCustomStatus' => $sellerCustomStatus
-
-                                                               ]);
-
-
-    foreach ($order->products as $product) {
-        $commands[] = OrderSellerCustomStatusCommand::from([
-                                                               'id'                 => $order->id,
-                                                               'orderProductId'     => $product->id,
-                                                               'sellerCustomStatus' => $sellerCustomStatus
-
-                                                           ]);
-    }
-
-    foreach ($commands as $command) {
-        $this->orderCommandService->sellerCustomStatus($command);
-    }
-
-
-    $order = $this->orderRepository->find($order->id);
-
-    $this->assertEquals($order->seller_custom_status, $sellerCustomStatus, '自定义状态设置失败');
-
-    foreach ($order->products as $product) {
-
-        $this->assertEquals($product->seller_custom_status, $sellerCustomStatus, '自定义状态设置失败');
-    }
-
-
-})->depends('can shipped a order');
-
-
-test('can star a order', function (Order $order) {
-
-    $star    = 1;
-    $command = OrderStarCommand::from([
-                                          'id'   => $order->id,
-                                          'star' => $star
-                                      ]);
-
-    $this->orderCommandService->star($command);
-
-    $order = $this->orderRepository->find($order->id);
-
-    $this->assertEquals($order->star, $star, ' 加星设置失败');
-
-
-    $star    = null;
-    $command = OrderStarCommand::from([
-                                          'id'   => $order->id,
-                                          'star' => $star
-                                      ]);
-
-    $this->orderCommandService->star($command);
-
-    $order = $this->orderRepository->find($order->id);
-
-    $this->assertEquals($order->star, $star, '加星设置失败');
-
-
-})->depends('can shipped a order');
-
-
-test('can remarks a order', function (Order $order) {
-
-    $commands = [];
-    // 订单备注
-    $remarks = '测试备注';
-    // 订单商品项备注
-    $commands[] = OrderRemarksCommand::from([
-                                                'id'      => $order->id,
-                                                'remarks' => $remarks
-                                            ]);
-
-
-    foreach ($order->products as $product) {
-        $commands[] = OrderRemarksCommand::from([
-                                                    'id'             => $order->id,
-                                                    'orderProductId' => $product->id,
-                                                    'remarks'        => $remarks,
-                                                ]);
-    }
-
-    foreach ($commands as $command) {
-        $this->orderCommandService->sellerRemarks($command);
-        $this->orderCommandService->buyerRemarks($command);
-    }
-
-
-    $command           = OrderRemarksCommand::from([
-                                                       'id'      => $order->id,
-                                                       'remarks' => $remarks
-                                                   ]);
-    $command->isAppend = true;
-
-    $this->orderCommandService->sellerRemarks($command);
-    $this->orderCommandService->buyerRemarks($command);
-
-
-    $order = $this->orderRepository->find($order->id);
-
-    $actualCount  = \Illuminate\Support\Str::substrCount($order->info->seller_remarks, $remarks);
-    $actualCount1 = \Illuminate\Support\Str::substrCount($order->info->buyer_remarks, $remarks);
-    $this->assertEquals($actualCount, 2);
-    $this->assertEquals($actualCount1, 2);
-
-    foreach ($order->products as $product) {
-        $this->assertEquals($product->info->seller_remarks, $remarks, '订单商品项目备注不匹配');
-        $this->assertEquals($product->info->buyer_remarks, $remarks, '订单商品项目备注不匹配');
-    }
-
-})->depends('can create a new order');
-
-
-test('can message a order', function (Order $order) {
-
-    $commands = [];
-    // 订单备注
-    $message = '测试留言';
-    // 订单商品项备注
-    $commands[] = OrderMessageCommand::from([
-                                                'id'      => $order->id,
-                                                'message' => $message
-                                            ]);
-
-
-    foreach ($order->products as $product) {
-        $commands[] = OrderMessageCommand::from([
-                                                    'id'             => $order->id,
-                                                    'orderProductId' => $product->id,
-                                                    'message'        => $message
-                                                ]);
-    }
-
-    foreach ($commands as $command) {
-        $this->orderCommandService->sellerMessage($command);
-        $this->orderCommandService->buyerMessage($command);
-    }
-
-
-    $command           = OrderMessageCommand::from([
-                                                       'id'      => $order->id,
-                                                       'message' => $message
-                                                   ]);
-    $command->isAppend = true;
-
-    $this->orderCommandService->sellerMessage($command);
-    $this->orderCommandService->buyerMessage($command);
-
-
-    $order = $this->orderRepository->find($order->id);
-
-    $actualCount  = \Illuminate\Support\Str::substrCount($order->info->seller_message, $message);
-    $actualCount1 = \Illuminate\Support\Str::substrCount($order->info->buyer_message, $message);
-    $this->assertEquals($actualCount, 2);
-    $this->assertEquals($actualCount1, 2);
-
-    foreach ($order->products as $product) {
-        $this->assertEquals($product->info->seller_message, $message, '订单商品项目留言不匹配');
-        $this->assertEquals($product->info->buyer_message, $message, '订单商品项目留言不匹配');
-    }
-
-})->depends('can create a new order');
-
-
-test('can hidden a order', function (Order $order) {
-
-
-    $command = OrderHiddenCommand::from([
-                                            'id'       => $order->id,
-                                            'isHidden' => true,
-
-                                        ]);
-
-
-    $this->orderCommandService->sellerHidden($command);
-    $this->orderCommandService->buyerHidden($command);
-
-    $order = $this->orderRepository->find($order->id);
-    $this->assertEquals($order->is_seller_delete, true, '卖家隐藏');
-    $this->assertEquals($order->is_buyer_delete, true, '买家隐藏');
-
-
-    // 设置为显示
-    $command = OrderHiddenCommand::from([
-                                            'id'       => $order->id,
-                                            'isHidden' => false,
-                                        ]);
-
-    $this->orderCommandService->sellerHidden($command);
-    $this->orderCommandService->buyerHidden($command);
-
-
-    $order = $this->orderRepository->find($order->id);
-    $this->assertEquals($order->is_seller_delete, false, '卖家显示');
-    $this->assertEquals($order->is_buyer_delete, false, '买家显示');
-
-})->depends('can create a new order');
-
+})->depends('can create a new order', 'can shipped a order');
 
 
 
