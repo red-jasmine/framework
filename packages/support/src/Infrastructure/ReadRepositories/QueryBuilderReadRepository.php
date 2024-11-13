@@ -16,7 +16,7 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
- * @property  Model $modelClass
+ * @property Model $modelClass
  */
 abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 {

@@ -3,7 +3,6 @@
 namespace RedJasmine\Support\Infrastructure\Repositories\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Throwable;
 
@@ -22,7 +21,7 @@ class EloquentRepository implements RepositoryInterface
 
 
     /**
-     * @param  Model  $model
+     * @param Model $model
      *
      * @return mixed
      * @throws Throwable
@@ -34,7 +33,7 @@ class EloquentRepository implements RepositoryInterface
     }
 
     /**
-     * @param  Model  $model
+     * @param Model $model
      *
      * @return void
      * @throws Throwable
