@@ -33,7 +33,7 @@ return [
         'shipping_type'             => [
             'logistics' => '快递',
             'dummy'     => '虚拟',
-            'cdk'       => '卡密',
+            'cardKey'   => '卡密',
             'delivery'  => '配送',
             'none'      => '免发',
         ],

@@ -16,7 +16,8 @@ enum ShippingTypeEnum: string
 
     case  DUMMY = 'dummy';  // 虚拟发货
 
-    case CDK = 'cdk'; // 卡密
+
+    case CARD_KEY = 'cardKey'; // 卡密
 
     case DELIVERY = 'delivery'; // 配送
 
@@ -27,7 +28,7 @@ enum ShippingTypeEnum: string
     {
         return [
             self::LOGISTICS->value => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.logistics'),
-            self::CDK->value       => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cdk'),
+            self::CARD_KEY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cardKey'),
             self::DUMMY->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
             self::DELIVERY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
             self::NONE->value      => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
@@ -39,7 +40,7 @@ enum ShippingTypeEnum: string
         return [
             self::LOGISTICS->value => 'heroicon-o-truck',
             self::DUMMY->value     => 'heroicon-o-bolt',
-            self::CDK->value       => 'heroicon-o-key',
+            self::CARD_KEY->value  => 'heroicon-o-key',
             self::DELIVERY->value  => 'heroicon-o-home-modern',
             self::NONE->value      => 'heroicon-o-cloud',
 
