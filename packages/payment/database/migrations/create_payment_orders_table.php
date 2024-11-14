@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') . 'payment_orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('表ID');
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级ID');
 
@@ -43,12 +43,19 @@ return new class extends Migration {
             $table->timestamp('expired_time')->nullable()->comment('过期时间');
             $table->timestamp('pay_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
+
+            $table->string('payer_open_id')->nullable()->comment('买家OPENID');
+            $table->string('request_url')->nullable()->comment('请求地址');
+            $table->string('return_url')->nullable()->comment('成功重定向地址');
+            $table->string('notify_url')->nullable()->comment('业务通知地址');
+            $table->json('pass_back_params')->nullable()->comment('回传参数');
+            $table->json('extends')->nullable()->comment('扩展参数');
             $table->timestamps();
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') . 'payment_orders');
     }
 };

@@ -16,26 +16,21 @@
         "league/omnipay": "^3.2",
         "liushoukun/omnipay-alipay": "*"
     },
-    "require-dev": {
-        "orchestra/testbench": "^8.0"
-    },
     "autoload": {
         "psr-4": {
             "RedJasmine\\Payment\\": "src/"
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "RedJasmine\\Payment\\Tests\\": "tests"
-        }
+
     },
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Payment\\PaymentServiceProvider"
+              "PaymentPackageServiceProvider"
             ],
             "aliases": {
-                "Payment": "RedJasmine\\Payment\\Facades\\Payment"
+
             }
         },
         "branch-alias": {

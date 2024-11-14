@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Enums;
+namespace RedJasmine\Payment\Domain\Models\Enums;
 
 enum PaymentMode: string
 {

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('payment_channel_apps', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix') . 'payment_channel_apps', function (Blueprint $table) {
             $table->id()->comment('ID');
             $table->string('owner_type', 20)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者UID');
@@ -23,12 +23,12 @@ return new class extends Migration {
             $table->text('channel_public_key')->nullable()->comment('渠道公钥');
             $table->string('modes')->nullable()->comment('支持模式');
             $table->timestamps();
-            $table->comment('支付渠道');
+            $table->comment('支付渠道应用');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists('payment_channel_apps');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') . 'payment_channel_apps');
     }
 };
