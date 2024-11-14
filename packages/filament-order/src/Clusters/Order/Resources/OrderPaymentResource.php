@@ -3,6 +3,7 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
+use RedJasmine\FilamentCore\Filters\DateRangeFilter;
 use RedJasmine\FilamentCore\Filters\InputFilter;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
@@ -155,7 +156,7 @@ class OrderPaymentResource extends Resource
                 InputFilter::make('payment_channel_no'),
                 Tables\Filters\SelectFilter::make('amount_type')->options(AmountTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('status')->options(PaymentStatusEnum::options()),
-                //
+                DateRangeFilter::make('payment_time')
             ],Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 //Tables\Actions\EditAction::make(),
