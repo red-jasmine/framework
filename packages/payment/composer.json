@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-              "PaymentPackageServiceProvider"
+              "RedJasmine\\Payment\\PaymentPackageServiceProvider"
             ],
             "aliases": {
 

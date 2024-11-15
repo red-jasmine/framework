@@ -16,6 +16,7 @@
         "red-jasmine/support": "*",
         "red-jasmine/filament-core": "*",
         "red-jasmine/order": "*",
+        "red-jasmine/payment": "*",
         "nunomaduro/collision": "^7.9",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.30",
@@ -63,7 +64,8 @@
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     }
 }

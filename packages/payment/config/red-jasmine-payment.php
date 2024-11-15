@@ -3,6 +3,11 @@
 return [
     //
 
+    'tables' => [
+        'connection' => null,
+        'prefix'     => 'jasmine_',
+    ],
+
 
     'channels' => [
         'alipay' => [
