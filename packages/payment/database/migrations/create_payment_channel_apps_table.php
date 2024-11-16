@@ -13,11 +13,10 @@ return new class extends Migration {
             $table->string('channel')->nullable()->comment('支付渠道');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户ID');
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
-            $table->text('channel_public_key')->nullable()->comment('渠道公钥');
-            $table->text('channel_app_public_key')->nullable()->comment('应用公钥');
-            $table->text('channel_app_private_key')->nullable()->comment('应用私钥');
-            $table->text('channel_public_key')->nullable()->comment('渠道公钥');
-
+            $table->string('channel_public_key')->nullable()->comment('渠道公钥');
+            $table->string('channel_app_public_key')->nullable()->comment('应用公钥');
+            $table->string('channel_app_private_key')->nullable()->comment('应用私钥');
+            $table->string('channel_public_key')->nullable()->comment('渠道公钥');
             $table->string('status')->comment('状态');
             $table->string('remarks')->comment('备注');
             $table->nullableMorphs('creator');
