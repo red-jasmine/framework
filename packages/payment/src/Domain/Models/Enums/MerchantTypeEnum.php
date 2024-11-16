@@ -18,7 +18,7 @@ enum MerchantTypeEnum: string
     case SUB = 'sub';
 
 
-    public static function lables() : array
+    public static function labels() : array
     {
         return [
             self::GENERAL->value => '普通商户',
