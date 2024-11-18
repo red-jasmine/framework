@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class PaymentMerchantApp extends Model
@@ -14,6 +15,8 @@ class PaymentMerchantApp extends Model
     use HasSnowflakeId;
 
     use SoftDeletes;
+
+    use HasOperator;
 
     protected $casts = [
         'status' => MerchantAppStatusEnum::class,
@@ -31,3 +34,4 @@ class PaymentMerchantApp extends Model
     }
 
 }
+

@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_channel_apps', function (Blueprint $table) {
-            $table->id()->comment('ID');
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->morphs('owner');
             $table->string('channel')->nullable()->comment('支付渠道');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户ID');
