@@ -19,7 +19,7 @@ class OrderAddress extends Model
     use HasDateTimeFormatter;
 
     use SoftDeletes;
-    
+
     use HasOperator;
 
 
@@ -34,7 +34,7 @@ class OrderAddress extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses';
+        return config('red-jasmine-order.tables.prefix') . 'order_addresses';
     }
 
 

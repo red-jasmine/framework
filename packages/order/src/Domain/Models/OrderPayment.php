@@ -43,7 +43,7 @@ class OrderPayment extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_payments';
+        return config('red-jasmine-order.tables.prefix') . 'order_payments';
     }
 
 
