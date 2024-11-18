@@ -9,15 +9,16 @@ enum MerchantStatusEnum: string
     use EnumsHelper;
 
 
-    case  Enable = 'Enable';// 启用
-    case  Disabled = 'disabled';// 禁用
+    case  ENABLE = 'enable';// 启用
+
+    case  DISABLED = 'disabled';// 禁用
 
 
     public static function labels() : array
     {
         return [
-            self::Enable->value   => '启用',
-            self::Disabled->value => '禁用',
+            self::ENABLE->value   => '启用',
+            self::DISABLED->value => '禁用',
         ];
 
     }

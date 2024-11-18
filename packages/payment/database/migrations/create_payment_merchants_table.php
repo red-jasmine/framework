@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -15,8 +16,8 @@ return new class extends Migration {
             $table->string('short_name')->comment('短名称');
             $table->string('type')->comment(MerchantTypeEnum::comments('类型'));
             $table->unsignedBigInteger('isv_id')->nullable()->comment('服务商ID');
-            $table->string('status')->comment('状态');
-            $table->string('remarks')->comment('备注');
+            $table->string('status')->comment(MerchantStatusEnum::comments('状态'));
+            $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();

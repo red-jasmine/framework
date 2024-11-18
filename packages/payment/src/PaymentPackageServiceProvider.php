@@ -11,9 +11,9 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
 {
 
 
-    public static string $name = 'red-jasmine-order';
+    public static string $name = 'red-jasmine-payment';
 
-    public static string $viewNamespace = 'red-jasmine-order';
+    public static string $viewNamespace = 'red-jasmine-payment';
 
     public function configurePackage(Package $package) : void
     {

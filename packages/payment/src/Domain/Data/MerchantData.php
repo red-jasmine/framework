@@ -12,8 +12,8 @@ class MerchantData extends Data
 
     public UserInterface $owner;
 
-
     public string $name;
+    public string $shortName;
 
     public MerchantTypeEnum $type = MerchantTypeEnum::GENERAL;
 
@@ -21,7 +21,7 @@ class MerchantData extends Data
     public ?int $isvId = null;
 
 
-    public MerchantStatusEnum $status;
+    public MerchantStatusEnum $status = MerchantStatusEnum::ENABLE;
 
 
 }
