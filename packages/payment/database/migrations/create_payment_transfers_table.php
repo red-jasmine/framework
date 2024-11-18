@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('payment_transfers', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-payment.tables.prefix') .'payment_transfers', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('表ID');
 
 
@@ -19,6 +19,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('payment_transfers');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix') .'payment_transfers');
     }
 };

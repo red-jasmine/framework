@@ -61,12 +61,11 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
     public function getMigrations() : array
     {
         return [
-
-            'create_payment_apps_table',
+            'create_payment_merchants_table',
+            'create_payment_merchant_apps_table',
             'create_payment_channel_apps_table',
             'create_payment_channels_table',
             'create_payment_isvs_table',
-            'create_payment_merchants_table',
             'create_payment_orders_table',
             'create_payment_refunds_table',
             'create_payment_transfers_table',

@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('channel_app_public_key')->nullable()->comment('应用公钥');
             $table->string('channel_app_private_key')->nullable()->comment('应用私钥');
             $table->string('status')->comment('状态');
-            $table->string('remarks')->comment('备注');
+            $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();

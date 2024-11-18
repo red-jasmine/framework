@@ -2,15 +2,17 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Support\Data\Data;
 
 class MerchantAppData extends Data
 {
 
-    public UserInterface $owner;
+    public int $merchantId;
 
-    public string        $channel;
+    public string $name;
+
+    public MerchantAppStatusEnum $status = MerchantAppStatusEnum::ENABLE;
 
 
 }

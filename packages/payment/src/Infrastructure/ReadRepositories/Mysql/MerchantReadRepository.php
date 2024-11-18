@@ -3,10 +3,10 @@
 namespace RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql;
 
 use RedJasmine\Payment\Domain\Models\PaymentMerchant;
-use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
-class MerchantReadRepository extends QueryBuilderReadRepository implements ReadRepositoryInterface
+class MerchantReadRepository extends QueryBuilderReadRepository implements MerchantReadRepositoryInterface
 {
 
     /**
