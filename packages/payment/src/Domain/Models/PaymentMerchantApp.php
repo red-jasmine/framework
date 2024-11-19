@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Helpers\Encrypter\AES;
 
 class PaymentMerchantApp extends Model
 {
@@ -19,7 +20,7 @@ class PaymentMerchantApp extends Model
     use HasOperator;
 
     protected $casts = [
-        'status' => MerchantAppStatusEnum::class,
+        'status'                  => MerchantAppStatusEnum::class,
     ];
 
     protected $fillable = [

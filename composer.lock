@@ -10140,7 +10140,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/payment",
-                "reference": "f747ad6bf3325c03f29c29f23a67020170fa7053"
+                "reference": "f0f7afe0c13d94dedc7dbd92de3c359fd556adda"
             },
             "require": {
                 "league/omnipay": "^3.2",
@@ -10151,7 +10151,8 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "RedJasmine\\Payment\\PaymentPackageServiceProvider"
+                        "RedJasmine\\Payment\\PaymentPackageServiceProvider",
+                        "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider"
                     ],
                     "aliases": []
                 },
