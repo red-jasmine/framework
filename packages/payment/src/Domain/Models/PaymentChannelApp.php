@@ -11,7 +11,6 @@ use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Helpers\Encrypter\AES;
 
 class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterface
 {
@@ -43,7 +42,7 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix') . 'payment_channel_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
     }
 
     protected $casts = [

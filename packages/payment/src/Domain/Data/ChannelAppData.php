@@ -27,5 +27,7 @@ class ChannelAppData extends Data
 
     public string $channelAppPrivateKey;
 
+    public string $feeRate = '0';
+
 
 }

@@ -2,20 +2,21 @@
 
 namespace RedJasmine\Payment\Domain\Models\Enums;
 
-enum PaymentStatus: int
+enum OrderStatus: string
 {
-    case  NOT_PAY = 0; // 等待支付
-    case  SUCCESS = 1; // 成功有效订单
-    case  REFUND = 2; // 全款退
-    case  CLOSED = 3; // 操时关闭
-    case  PAYING = 4; // 支付中
-    case  FAIL = 5; // 支付失败
+    case  WAIT = 'WAIT'; // 等待支付
+    case  SUCCESS = 'SUCCESS'; // 成功有效订单
+    case  REFUND = 'REFUND'; // 全款退
+    case  CLOSED = 'CLOSED'; // 操时关闭
+    case  PAYING = 'PAYING'; // 支付中
+    case  FAIL = 'FAIL'; // 支付失败
+    case  FINISH = 'FINISH'; // 支付失败
 
     public static function options() : array
     {
         return [
 
-            self::NOT_PAY->value => '等待支付',
+            self::WAIT->value    => '等待',
             self::SUCCESS->value => '成功',
             self::CLOSED->value  => '已关闭',
             self::REFUND->value  => '已退款',
