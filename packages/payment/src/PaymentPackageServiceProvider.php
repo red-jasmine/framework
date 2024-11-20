@@ -63,8 +63,9 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
         return [
             'create_payment_merchants_table',
             'create_payment_merchant_apps_table',
-            'create_payment_channel_apps_table',
             'create_payment_channels_table',
+            'create_payment_channel_products_table',
+            'create_payment_channel_apps_table',
             'create_payment_isvs_table',
             'create_payment_orders_table',
             'create_payment_refunds_table',

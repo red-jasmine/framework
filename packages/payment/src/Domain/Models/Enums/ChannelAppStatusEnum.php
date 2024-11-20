@@ -17,8 +17,8 @@ enum ChannelAppStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::ENABLE->value   => '启用',
-            self::DISABLED->value => '禁用',
+            self::ENABLE->value   => __('red-jasmine-support::support.enable'),
+            self::DISABLED->value => __('red-jasmine-support::support.disabled'),
         ];
 
     }

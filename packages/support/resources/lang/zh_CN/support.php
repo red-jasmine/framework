@@ -25,6 +25,8 @@ return [
     'images'       => '图片集',
     'video'        => '视频',
     'videos'       => '视频集',
+    'enable'       => '启用',
+    'disabled'     => '禁用',
 
 
 ];
