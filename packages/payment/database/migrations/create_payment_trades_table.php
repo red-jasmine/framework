@@ -3,12 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Payment\Domain\Models\Enums\TradeStatus;
 
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_orders', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('表ID');
+        Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_trades', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();
 
             $table->unsignedBigInteger('merchant_id')->comment('商户ID');
             $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
@@ -25,42 +26,38 @@ return new class extends Migration {
             $table->string('channel_payer_user_type')->nullable()->comment('支付者类型');
             $table->string('merchant_order_no')->nullable()->comment('商户原始单号');
 
-            $table->string('cashier_type')->nullable()->comment('收银类型'); // WEB,H5,APP,小程序
-            $table->string('cashier_type')->nullable()->comment('收银类型');
+            // 服务商信息
 
             $table->string('currency')->comment('货币');
-
-            // 渠道
             $table->decimal('amount')->default(0)->comment('金额');
             // 实付金额 + 优惠 = 金额
-            $table->decimal('payment_amount')->default(0)->comment('实付金额');
             $table->decimal('discount_amount')->default(0)->comment('优惠金额');
+            $table->decimal('payment_amount')->default(0)->comment('实付金额');
             $table->decimal('receipt_amount')->default(0)->comment('实收金额');
-            $table->decimal('fee_rate', 10)->default(0)->comment('手续费率');
-            $table->decimal('fee', 10)->default(0)->comment('手续费');
+            $table->decimal('channel_fee_rate', 10)->default(0)->comment('渠道手续费率');
+            $table->decimal('channel_fee', 10)->default(0)->comment('渠道手续费');
 
 
             $table->decimal('invoice_amount')->default(0)->comment('开票金额');
 
-
-            $table->decimal('service_amount', 10)->default(0)->comment('技术服务费');
+            // 场景信息
+            // 门店信息
+            // 结算信息
+            // 操作人员信息
 
 
             // 状态类
-            $table->string('status')->comment('支付状态');
+            $table->string('status')->comment(TradeStatus::comments('状态'));
 
             $table->timestamp('create_time')->nullable()->comment('创建时间');
             $table->timestamp('expired_time')->nullable()->comment('过期时间');
             $table->timestamp('pay_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
+            $table->timestamp('settlement_time')->nullable()->comment('结算时间');
 
 
-            $table->string('request_url')->nullable()->comment('请求地址');
-            $table->string('return_url')->nullable()->comment('成功重定向地址');
-            $table->string('notify_url')->nullable()->comment('业务通知地址');
-            $table->json('pass_back_params')->nullable()->comment('回传参数');
-            $table->json('extends')->nullable()->comment('扩展参数');
-            $table->json('detail')->nullable()->comment('支付明细');
+            $table->nullableMorphs('creator');
+            $table->nullableMorphs('updater');
             $table->timestamps();
             $table->comment('支付-支付单');
         });
@@ -68,6 +65,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix') . 'payment_orders');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix') . 'payment_trades');
     }
 };

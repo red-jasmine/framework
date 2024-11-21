@@ -2,17 +2,22 @@
 
 namespace RedJasmine\Payment\Domain\Models\Enums;
 
-enum OrderStatus: string
+use RedJasmine\Support\Helpers\Enums\EnumsHelper;
+
+enum TradeStatus: string
 {
+
+    use EnumsHelper;
+
     case  WAIT = 'WAIT'; // 等待支付
     case  SUCCESS = 'SUCCESS'; // 成功有效订单
     case  REFUND = 'REFUND'; // 全款退
     case  CLOSED = 'CLOSED'; // 操时关闭
     case  PAYING = 'PAYING'; // 支付中
     case  FAIL = 'FAIL'; // 支付失败
-    case  FINISH = 'FINISH'; // 支付失败
+    case  FINISH = 'FINISH'; // 支付结束
 
-    public static function options() : array
+    public static function labels() : array
     {
         return [
 
