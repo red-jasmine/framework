@@ -3,23 +3,29 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use DateTime;
+use Money\Currency;
 use RedJasmine\Support\Data\Data;
 
 class TradeData extends Data
 {
 
+
+    public function __construct()
+    {
+        //$this->currency = new Currency('CNY');
+    }
+
     public string $merchantOrderNo;
 
     public int $merchantAppId;
 
-    public string $currency = 'CNY';
+    public string $currency;
 
-    public string $amount;
+    public int $amount;
 
     public string $subject;
 
     public string $description;
-
 
     public ?DateTime $expiredTime = null;
 
@@ -27,7 +33,6 @@ class TradeData extends Data
      * @var GoodDetailData[]
      */
     public array $goodDetails = [];
-
 
 
     // 门店信息
