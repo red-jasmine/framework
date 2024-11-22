@@ -11,6 +11,7 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_trades', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
 
+            // 服务商信息
             $table->unsignedBigInteger('merchant_id')->comment('商户ID');
             $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
 
@@ -30,30 +31,34 @@ return new class extends Migration {
 
             $table->string('currency')->comment('货币');
             $table->decimal('amount')->default(0)->comment('金额');
+            $table->decimal('channel_fee_rate', 10)->default(0)->comment('渠道手续费率');
+            $table->decimal('channel_fee', 10)->default(0)->comment('渠道手续费');
             // 实付金额 + 优惠 = 金额
             $table->decimal('discount_amount')->default(0)->comment('优惠金额');
             $table->decimal('payment_amount')->default(0)->comment('实付金额');
+
+            $table->string('payment_currency')->comment('支付货币');
+
+            $table->decimal('settle_currency')->default(0)->comment('结算货币');
             $table->decimal('receipt_amount')->default(0)->comment('实收金额');
-            $table->decimal('channel_fee_rate', 10)->default(0)->comment('渠道手续费率');
-            $table->decimal('channel_fee', 10)->default(0)->comment('渠道手续费');
 
 
             $table->decimal('invoice_amount')->default(0)->comment('开票金额');
-
+            $table->string('status')->comment(TradeStatus::comments('状态'));
             // 场景信息
+
             // 门店信息
+            $table->string('store_type')->nullable()->comment('门店类型');
+            $table->string('store_id')->nullable()->comment('门店ID');
+            $table->string('store_name')->nullable()->comment('门店名称');
             // 结算信息
             // 操作人员信息
-
-
             // 状态类
-            $table->string('status')->comment(TradeStatus::comments('状态'));
-
             $table->timestamp('create_time')->nullable()->comment('创建时间');
             $table->timestamp('expired_time')->nullable()->comment('过期时间');
             $table->timestamp('pay_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
-            $table->timestamp('settlement_time')->nullable()->comment('结算时间');
+            $table->timestamp('settle_time')->nullable()->comment('结算时间');
 
 
             $table->nullableMorphs('creator');

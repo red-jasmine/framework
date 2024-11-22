@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('channel')->nullable()->comment('支付渠道');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户ID');
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
-            $table->decimal('fee_rate')->default(0)->comment('费率');// ‰
+            $table->decimal('fee_rate')->default(0)->comment('费率');// ‰ // 根据支付产品不同不一样的费率
             $table->text('channel_public_key')->nullable()->comment('渠道公钥');
             $table->text('channel_app_public_key')->nullable()->comment('应用公钥');
             $table->text('channel_app_private_key')->nullable()->comment('应用私钥');

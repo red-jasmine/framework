@@ -12,13 +12,14 @@ class TradeData extends Data
 
     public int $merchantAppId;
 
+    public string $currency = 'CNY';
+
     public string $amount;
 
     public string $subject;
 
     public string $description;
 
-    public string $currency = 'CNY';
 
     public ?DateTime $expiredTime = null;
 
@@ -27,8 +28,17 @@ class TradeData extends Data
      */
     public array $goodDetails = [];
 
-    // 场景信息
+
+
     // 门店信息
-    // 商户信息
+    public ?string $storeType;
+
+    public ?string $storeID;
+
+    public ?string $storeName;
+
+
+    public ?string $passbackParams = null;
+
 
 }
