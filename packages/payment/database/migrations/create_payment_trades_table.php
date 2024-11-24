@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->string('subject')->nullable()->comment('交易标题');
             $table->string('description')->nullable()->comment('说明');
 
-
             $table->string('channel_merchant_id')->comment('渠道商户号');
             $table->string('channel_app_id')->comment('渠道应用ID');
             $table->string('channel')->nullable()->comment('支付渠道');
