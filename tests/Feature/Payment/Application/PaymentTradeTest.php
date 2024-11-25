@@ -32,7 +32,6 @@ beforeEach(function () {
                                                                'merchant_id' => $this->merchant->id,
                                                                'name'        => '测试应用',
                                                                'status'      => MerchantAppStatusEnum::ENABLE->value
-
                                                            ],
                                                            [
                                                                'merchant_id' => $this->merchant->id,

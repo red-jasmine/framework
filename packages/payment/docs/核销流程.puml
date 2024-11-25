@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor 用户 #FFCCCC
+participant 商户系统 #FFCC99
+participant 支付中心 #CCFFCC
+participant 支付渠道 #CCCCFF
+
+
+autonumber 1.1
+
+用户 -> 商户系统: 下单
+
+activate 商户系统
+商户系统 --> 支付中心: 创建与支付单
+deactivate 商户系统
+activate 支付中心
+支付中心 --> 商户系统: 返回支付单号
+deactivate 支付中心
+
+group WEB支付
+
+商户系统 -> 支付中心: 跳转支付
+activate 支付中心
+支付中心 --> 用户: 支付页面
+deactivate 支付中心
+activate 用户
+
+用户 --> 用户: 选择支付方式
+
+用户 -> 支付中心: 发起支付
+deactivate 用户
+
+
+支付中心 --> 支付渠道: 跳转支付
+activate 支付渠道
+支付渠道 --> 支付中心: 支付结果页
+deactivate 支付渠道
+
+
+
+支付中心 --> 商户系统: 跳转商户系统页面
+end
+
+
+
+@enduml

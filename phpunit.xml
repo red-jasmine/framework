@@ -25,7 +25,7 @@
         <env name="DB_HOST" value="mysql"/>
         <env name="DB_USERNAME" value="root"/>
         <env name="DB_PASSWORD" value="root"/>
-        <env name="DB_DATABASE" value="mall_test"/>
+        <env name="DB_DATABASE" value="testing"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
