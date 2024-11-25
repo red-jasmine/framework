@@ -10,22 +10,17 @@ class TradeData extends Data
 {
 
 
-    public function __construct()
-    {
-        //$this->currency = new Currency('CNY');
-    }
-
     public string $merchantOrderNo;
 
     public int $merchantAppId;
 
-    public string $currency;
+    public string $currency = 'CNY';
 
     public int $amount;
 
     public string $subject;
 
-    public string $description;
+    public ?string $description = null;
 
     public ?DateTime $expiredTime = null;
 

@@ -21,11 +21,19 @@ class PaymentMerchant extends Model
 
     use SoftDeletes;
 
-
-    public $casts = [
-       'status' => MerchantStatusEnum::class
+    protected $fillable = [
+        'owner_type',
+        'owner_id',
+        'status',
+        'name',
+        'short_name',
+        'type',
     ];
 
+    public $casts = [
+
+        'status' => MerchantStatusEnum::class,
+    ];
 
 
     public function getTable() : string

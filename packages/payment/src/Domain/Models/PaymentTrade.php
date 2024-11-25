@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -18,6 +19,15 @@ class PaymentTrade extends Model
     use HasOperator;
 
     use SoftDeletes;
+
+    protected $casts = [
+        'status' => TradeStatusEnum::class,
+    ];
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-payment.tables.prefix') . 'payment_trades';
+    }
 
     /**
      * Generate unique keys for the model.
@@ -42,5 +52,17 @@ class PaymentTrade extends Model
     public function extension() : HasOne
     {
         return $this->hasOne(PaymentTradeExtension::class, 'id', 'id');
+    }
+
+    public function setMerchantApp(PaymentMerchantApp $merchantApp) : void
+    {
+        $this->merchant_app_id = $merchantApp->id;
+        $this->merchant_id     = $merchantApp->merchant_id;
+    }
+
+
+    public function preCreate()
+    {
+        $this->status = TradeStatusEnum::PRE;
     }
 }

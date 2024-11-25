@@ -2,9 +2,15 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
+use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
+use RedJasmine\Payment\Application\Services\CommandHandlers\TradePreCreateCommandHandler;
 use RedJasmine\Payment\Domain\Models\PaymentTrade;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
+/**
+ * @see  TradePreCreateCommandHandler::handle()
+ * @method PaymentTrade preCreate(TradePreCreateCommand $command)
+ */
 class TradeCommandService extends ApplicationCommandService
 {
     /**
@@ -14,5 +20,10 @@ class TradeCommandService extends ApplicationCommandService
     public static string $hookNamePrefix = 'payment.application.trade.command';
 
     protected static string $modelClass = PaymentTrade::class;
+
+
+    protected static $macros = [
+        'preCreate' => TradePreCreateCommandHandler::class,
+    ];
 
 }

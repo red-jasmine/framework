@@ -26,6 +26,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductReposi
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 
 class PaymentApplicationServiceProvider extends ServiceProvider
 {
