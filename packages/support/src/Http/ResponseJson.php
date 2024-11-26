@@ -11,17 +11,17 @@ trait ResponseJson
 
     private static function wrapData(mixed $data, string $message, int|string $code, array $errors = []) : array
     {
-        $json = [
+        $result = [
             'code'    => $code,
             'message' => $message,
         ];
         if ($data !== null) {
-            $json['data'] = $data;
+            $result['data'] = $data;
         }
         if (filled($errors)) {
-            $json['errors'] = $errors;
+            $result['errors'] = $errors;
         }
-        return $json;
+        return $result;
     }
 
 
@@ -29,7 +29,7 @@ trait ResponseJson
      * 成功响应
      *
      * @param mixed|null $data
-     * @param string     $message
+     * @param string $message
      *
      * @return JsonResponse|JsonResource
      */
@@ -44,17 +44,23 @@ trait ResponseJson
     /**
      * 失败响应
      *
-     * @param string     $message
+     * @param string $message
      * @param int|string $code
-     * @param int        $statusCode
-     * @param array      $errors
-     * @param mixed      $data
+     * @param int $statusCode
+     * @param array $errors
+     * @param mixed $data
      *
      * @return JsonResponse
      */
     public static function error(string $message = 'error', int|string $code = 100000, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResponse
     {
 
-        return response()->json(self::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
+        return response()->json(static::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
+    }
+
+
+    public static function fail(string $message = 'fail', int|string $code = 100000, int $statusCode = 400, array $errors = [], mixed $data = null) : JsonResource
+    {
+        return response()->json(static::wrapData($data, $message, $code, $errors))->setStatusCode($statusCode);
     }
 }
