@@ -4,17 +4,17 @@ namespace RedJasmine\Payment\Domain\Models\Enums;
 
 enum PaymentMode: string
 {
-    case  WEB = 'WEB';
+    case  WEB = 'web';
 
-    case  WAP = 'WAP';
+    case  WAP = 'wap';
 
-    case APP = 'APP';
+    case APP = 'app';
 
-    case MINI_APP = 'MINI_APP';
+    case MINI_APP = 'mini_app';
 
-    case QRCODE = 'QRCODE';
+    case QRCODE = 'qrcode';
 
-    case FACE = 'FACE';
+    case FACE = 'face';
 
 
     public static function options() : array

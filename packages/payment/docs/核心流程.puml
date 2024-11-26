@@ -19,6 +19,7 @@ activate 支付中心
 deactivate 支付中心
 
 
+
 alt WEB、H5
 autonumber 2.1
 
@@ -39,6 +40,13 @@ activate 支付渠道
 支付渠道 --> 支付中心: 支付结果页
 deactivate 支付渠道
 支付中心 --> 商户系统: 跳转商户系统页面
+end
+
+
+alt 其他支付
+商户系统 -> 支付中心: 通过支付方式查询可支付平台
+
+支付中心 --> 商户系统: 返回可支付平台
 end
 
 
