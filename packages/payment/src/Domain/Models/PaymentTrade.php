@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -61,8 +62,15 @@ class PaymentTrade extends Model
     }
 
 
-    public function preCreate()
+    public function preCreate():void
     {
         $this->status = TradeStatusEnum::PRE;
     }
+
+
+    public function merchantApp() : BelongsTo
+    {
+        return $this->belongsTo(PaymentMerchantApp::class,'id','merchant_app_id');
+    }
+
 }

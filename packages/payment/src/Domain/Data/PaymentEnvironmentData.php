@@ -1,17 +1,11 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Commands\Trade;
+namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
+use RedJasmine\Support\Data\Data;
 
-/**
- * 支付准备
- * 通过支付准备命令，返回可选的支付平台如：微信、支付宝、银联等
- */
-class TradeReadyCommand extends PaymentEnvironmentData
+class PaymentEnvironmentData extends Data
 {
-    public int $id;
-
     /**
      * 支付方式
      * 小程序下 用 JSAPI
@@ -36,6 +30,5 @@ class TradeReadyCommand extends PaymentEnvironmentData
      * @var string
      */
     public string $client;
-
 
 }
