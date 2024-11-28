@@ -3,16 +3,17 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Helpers\Encrypter\AES;
 
 class PaymentMerchantApp extends Model
 {
 
     public $incrementing = false;
+
     use HasSnowflakeId;
 
     use SoftDeletes;
@@ -20,7 +21,7 @@ class PaymentMerchantApp extends Model
     use HasOperator;
 
     protected $casts = [
-        'status'                  => MerchantAppStatusEnum::class,
+        'status' => MerchantAppStatusEnum::class,
     ];
 
     protected $fillable = [
@@ -32,6 +33,12 @@ class PaymentMerchantApp extends Model
     public function getTable() : string
     {
         return config('red-jasmine-payment.tables.prefix') . 'payment_merchant_apps';
+    }
+
+
+    public function merchant() : BelongsTo
+    {
+        return $this->belongsTo(PaymentMerchant::class, 'merchant_id', 'id');
     }
 
 }

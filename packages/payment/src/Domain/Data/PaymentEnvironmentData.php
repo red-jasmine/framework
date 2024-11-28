@@ -4,6 +4,9 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
 
+/**
+ * 支付环境
+ */
 class PaymentEnvironmentData extends Data
 {
     /**
