@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -40,6 +41,8 @@ class PaymentMerchantApp extends Model
     {
         return $this->belongsTo(PaymentMerchant::class, 'merchant_id', 'id');
     }
+
+
 
 }
 
