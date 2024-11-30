@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class PaymentIsv extends Model
+class PaymentProvider extends Model
 {
 
     use SoftDeletes;
@@ -15,7 +15,7 @@ class PaymentIsv extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix') . 'payment_isv';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_providers';
     }
 
 }

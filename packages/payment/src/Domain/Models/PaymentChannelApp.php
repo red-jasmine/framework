@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelAppStatusEnum;
 use RedJasmine\Support\Casts\AesEncrypted;
@@ -29,7 +30,7 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
 
 
     protected $fillable = [
-        'channel',
+        'channel_code',
         'channel_merchant_id',
         'channel_app_id',
         'channel_public_key',
@@ -51,4 +52,10 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
         'channel_app_public_key'  => AesEncrypted::class,
         'channel_app_private_key' => AesEncrypted::class,
     ];
+
+
+    public function channel() : BelongsTo
+    {
+        return $this->belongsTo(PaymentChannel::class, 'channel', 'code');
+    }
 }

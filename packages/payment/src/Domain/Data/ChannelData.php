@@ -11,11 +11,9 @@ use RedJasmine\Support\Data\Data;
 class ChannelData extends Data
 {
 
-    public string $channel;
-
+    public string $code;
 
     public string $name;
-
 
     public ?string $remarks = null;
 

@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_merchants', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_merchants', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('商户ID');
             $table->morphs('owner');
             $table->string('name')->comment('名称');
@@ -28,6 +28,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix') . 'payment_merchants');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_merchants');
     }
 };

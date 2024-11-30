@@ -11,4 +11,10 @@ class PaymentRefund extends Model
 
     use HasOperator;
     use SoftDeletes;
+
+
+    public function getTable() : string
+    {
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
+    }
 }

@@ -17,15 +17,15 @@ beforeEach(function () {
 
 
 test('can create channel', function () {
-    $command          = new ChannelData();
-    $command->name    = fake()->word();
-    $command->channel = fake()->word();
+    $command       = new ChannelData();
+    $command->name = fake()->word();
+    $command->code = fake()->word();
 
 
     $model = $this->commandService->create($command);
 
 
     $this->assertEquals($command->name, $model->name);
-    $this->assertEquals($command->channel, $model->channel);
+    $this->assertEquals($command->code, $model->code);
 
 });

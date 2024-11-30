@@ -8,11 +8,13 @@ use RedJasmine\Support\Data\Data;
 class ChannelProductData extends Data
 {
 
-    public int $channelId;
+    public string $channelCode;
 
     public string $code;
 
     public string $name;
+
+    public float $rate = 0;
 
     public ChannelProductStatusEnum $status = ChannelProductStatusEnum::ENABLE;
 

@@ -21,8 +21,8 @@ test('create payment channel app', function () {
 
     $command = new ChannelAppCreateCommand();
 
-    $command->owner   = $this->owner;
-    $command->channel = 'alipay';
+    $command->owner       = $this->owner;
+    $command->channelCode = 'alipay';
 
     $command->channelMerchantId    = fake()->numerify('channel-merchant-id-########');
     $command->channelAppId         = fake()->numerify('channel-app-id-########');
@@ -34,7 +34,7 @@ test('create payment channel app', function () {
 
     $model = $this->repository->find($model->id);
 
-    $this->assertEquals($command->channel, $model->channel);
+    $this->assertEquals($command->channelCode, $model->channel_code);
     $this->assertEquals($command->channelMerchantId, $model->channel_merchant_id);
     $this->assertEquals($command->channelAppId, $model->channel_app_id);
     $this->assertEquals($command->channelAppPublicKey, $model->channel_app_public_key);
@@ -49,7 +49,7 @@ test('update payment channel app', function (PaymentChannelApp $channelApp) {
 
     $command                       = new ChannelAppUpdateCommand();
     $command->id                   = $channelApp->id;
-    $command->channel              = 'wechatpay';
+    $command->channelCode          = 'wechatpay';
     $command->channelMerchantId    = fake()->numerify('channel-merchant-id-########');
     $command->channelAppId         = fake()->numerify('channel-app-id-########');
     $command->channelAppPublicKey  = fake()->text(3000);//
@@ -60,7 +60,7 @@ test('update payment channel app', function (PaymentChannelApp $channelApp) {
 
     $model = $this->repository->find($model->id);
 
-    $this->assertEquals($command->channel, $model->channel);
+    $this->assertEquals($command->channelCode, $model->channel_code);
     $this->assertEquals($command->channelMerchantId, $model->channel_merchant_id);
     $this->assertEquals($command->channelAppId, $model->channel_app_id);
     $this->assertEquals($command->channelAppPublicKey, $model->channel_app_public_key);

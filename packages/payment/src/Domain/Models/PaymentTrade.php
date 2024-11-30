@@ -27,7 +27,7 @@ class PaymentTrade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix') . 'payment_trades';
+        return config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_trades';
     }
 
     /**

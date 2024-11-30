@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix') . 'payment_refunds', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_refunds', function (Blueprint $table) {
             $table->id();
 
             $table->string('currency')->comment('货币');
@@ -20,6 +20,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix') . 'payment_refunds');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_refunds');
     }
 };

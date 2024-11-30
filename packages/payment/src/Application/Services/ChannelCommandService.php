@@ -5,7 +5,11 @@ namespace RedJasmine\Payment\Application\Services;
 use RedJasmine\Payment\Domain\Models\PaymentChannel;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Data\Data;
 
+/**
+ * @method PaymentChannel create(Data $command)
+ */
 class ChannelCommandService extends ApplicationCommandService
 {
     public function __construct(protected ChannelRepositoryInterface $repository)
