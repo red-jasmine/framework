@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-card.tables.prefix').'card_group_bind_products', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-card.tables.prefix','jasmine_').'card_group_bind_products', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->morphs('owner');
             $table->morphs('product');
@@ -23,6 +23,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-card.tables.prefix').'card_group_bind_products');
+        Schema::dropIfExists(config('red-jasmine-card.tables.prefix','jasmine_').'card_group_bind_products');
     }
 };

@@ -20,7 +20,7 @@ class ProductServicePivot extends Pivot
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_service_pivots';
+        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_service_pivots';
     }
 
 

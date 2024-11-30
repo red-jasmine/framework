@@ -28,7 +28,7 @@ class ProductCategory extends Model implements OperatorInterface
 
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_categories';
+        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_categories';
     }
 
 

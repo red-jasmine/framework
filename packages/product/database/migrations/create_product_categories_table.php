@@ -8,7 +8,7 @@ use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix') .'product_categories', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'product_categories', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('类目ID');
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级');
             $table->string('name')->comment('类目名称');
@@ -35,6 +35,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_categories');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') .'product_categories');
     }
 };

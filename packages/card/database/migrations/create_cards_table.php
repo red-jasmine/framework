@@ -8,7 +8,7 @@ use RedJasmine\Card\Domain\Enums\CardStatus;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-card.tables.prefix'). 'cards', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-card.tables.prefix','jasmine_'). 'cards', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->morphs('owner');
             $table->unsignedBigInteger('group_id')->default(0)->comment('卡密分组ID');
@@ -28,6 +28,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-card.tables.prefix').'cards');
+        Schema::dropIfExists(config('red-jasmine-card.tables.prefix','jasmine_').'cards');
     }
 };

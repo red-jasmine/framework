@@ -36,7 +36,7 @@ class Card extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-card.tables.prefix') . 'cards';
+        return config('red-jasmine-card.tables.prefix','jasmine_') . 'cards';
     }
 
     public function group() : BelongsTo

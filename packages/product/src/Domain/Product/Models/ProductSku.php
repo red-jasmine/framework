@@ -34,7 +34,7 @@ class ProductSku extends Model implements OperatorInterface
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_skus';
+        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_skus';
     }
 
 

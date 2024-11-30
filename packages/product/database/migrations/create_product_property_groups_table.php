@@ -9,7 +9,7 @@ return new class extends Migration {
     public function up() : void
     {
 
-        Schema::create(config('red-jasmine-product.tables.prefix') .'product_property_groups', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'product_property_groups', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('属性组ID');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
@@ -25,6 +25,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix') .'product_property_groups');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') .'product_property_groups');
     }
 };

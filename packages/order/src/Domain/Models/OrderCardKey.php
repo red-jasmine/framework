@@ -38,7 +38,7 @@ class OrderCardKey extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix') . 'order_card_keys';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_card_keys';
     }
 
     protected $casts = [

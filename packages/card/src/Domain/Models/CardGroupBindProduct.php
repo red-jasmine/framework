@@ -25,7 +25,7 @@ class CardGroupBindProduct extends Model implements OwnerInterface, OperatorInte
 
     public function getTable() : string
     {
-        return config('red-jasmine-card.tables.prefix') . 'card_group_bind_products';
+        return config('red-jasmine-card.tables.prefix','jasmine_') . 'card_group_bind_products';
     }
 
     public $incrementing = false;

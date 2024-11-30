@@ -21,7 +21,7 @@ class ProductExtendGroupPivot extends Pivot
      */
     public function getTable()
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_extend_group_pivots';
+        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_extend_group_pivots';
     }
 
 

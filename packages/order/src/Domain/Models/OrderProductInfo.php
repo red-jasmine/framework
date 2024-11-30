@@ -17,7 +17,7 @@ class OrderProductInfo extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix') . 'order_product_infos';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_product_infos';
     }
 
     protected $casts = [

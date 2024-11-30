@@ -33,7 +33,7 @@ class ProductGroup extends Model implements OperatorInterface, OwnerInterface
 
     public function getTable():string
     {
-        return config('red-jasmine-product.tables.prefix') .'product_groups';
+        return config('red-jasmine-product.tables.prefix','jasmine_') .'product_groups';
     }
 
 

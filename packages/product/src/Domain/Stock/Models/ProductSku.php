@@ -33,7 +33,7 @@ class ProductSku extends Model implements OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . Str::snake(Str::pluralStudly(class_basename($this)));;
+        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));;
     }
 
     protected $casts = [

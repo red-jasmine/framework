@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-card.tables.prefix').'card_groups', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-card.tables.prefix','jasmine_').'card_groups', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->morphs('owner');
             $table->string('name')->comment('分组名称');
@@ -22,6 +22,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-card.tables.prefix').'card_groups');
+        Schema::dropIfExists(config('red-jasmine-card.tables.prefix','jasmine_').'card_groups');
     }
 };

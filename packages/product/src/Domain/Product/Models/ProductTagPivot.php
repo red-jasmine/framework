@@ -20,7 +20,7 @@ class ProductTagPivot extends Pivot
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix') . 'product_tag_pivots';
+        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tag_pivots';
     }
 
 

@@ -16,7 +16,7 @@ class OrderInfo extends Model
     public $incrementing = false;
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix') . 'order_infos';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_infos';
     }
     protected $casts = [
         'buyer_expands'       => 'array',
