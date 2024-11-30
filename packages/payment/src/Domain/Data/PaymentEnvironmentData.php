@@ -6,6 +6,7 @@ use RedJasmine\Support\Data\Data;
 
 /**
  * 支付环境
+ * 支付环境会影响支付可选的平台，需要根据环境来选择支付平台
  */
 class PaymentEnvironmentData extends Data
 {

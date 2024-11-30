@@ -5,7 +5,8 @@ namespace RedJasmine\Payment\Application\Commands\Trade;
 use RedJasmine\Support\Data\Data;
 
 /**
- * 发起支付
+ * 加载支付
+ * 这些因素是会 决定可选的 支付平台
  */
 class TradePayingCommand extends Data
 {
@@ -18,7 +19,7 @@ class TradePayingCommand extends Data
     public string $platform;
 
     /**
-     * 支付方式
+     * 支付产品
      * @var string
      */
     public string $method;
