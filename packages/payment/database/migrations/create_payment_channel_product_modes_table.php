@@ -9,15 +9,14 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes', function (Blueprint $table) {
             $table->id();
-            $table->string('channel_code')->comment('支付渠道');
-            $table->string('product_code')->comment('支付产品');
+            $table->unsignedBigInteger('payment_channel_product_id')->comment('支付产品ID');
             $table->string('method_code')->comment('支付方式');
             $table->string('platform_code')->comment('支付平台');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('updater');
             $table->timestamps();
 
-            $table->unique([ 'channel', 'product', 'platform', 'method' ], 'uk_channel_product_method_platform');
+            $table->unique([ 'channel_code', 'payment_channel_product_id', 'method_code', 'platform_code' ], 'uk_channel_product_method_platform');
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
+use Omnipay\Common\PaymentMethod;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -18,9 +19,9 @@ class PaymentEnvironmentData extends Data
      * H5 用 H5
      * WEB 用 WEB
      * ...
-     * @var string
+     * @var PaymentMethod
      */
-    public string $method;
+    public PaymentMethod $method;
 
     /**
      * 设备

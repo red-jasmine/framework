@@ -58,4 +58,5 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
     {
         return $this->belongsTo(PaymentChannel::class, 'channel', 'code');
     }
+
 }
