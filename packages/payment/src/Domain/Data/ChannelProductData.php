@@ -20,6 +20,7 @@ class ChannelProductData extends Data
 
 
     /**
+     * 渠道支付模式
      * @var ChannelProductMode[]
      */
     public array $modes = [];

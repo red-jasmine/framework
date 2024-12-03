@@ -12,7 +12,8 @@ return new class extends Migration {
 
             $table->string('currency')->comment('货币');
             $table->decimal('amount')->default(0)->comment('金额');
-
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->comment('支付-退款');
         });

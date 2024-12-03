@@ -12,8 +12,9 @@ return new class extends Migration {
             $table->string('code')->comment('标识');
             $table->string('name')->comment('平台名称');
             $table->string('icon')->nullable()->comment('图标');
-            $table->string('type')->nullable()->comment('平台类型');
             $table->string('remarks')->nullable()->comment('备注');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->unique('code', 'uk_platform');
             $table->comment('支付平台');

@@ -20,8 +20,8 @@ return new class extends Migration {
             $table->text('channel_app_private_key')->nullable()->comment('应用私钥');
             $table->string('status')->comment(ChannelAppStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('支付渠道应用');

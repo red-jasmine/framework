@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->decimal('rate')->default(0)->comment('默认费率');
             $table->string('status')->comment(ChannelStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->softDeletes();
             $table->unique([ 'channel_code', 'code' ], 'uk_channel_code');

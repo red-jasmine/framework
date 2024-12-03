@@ -12,6 +12,8 @@ return new class extends Migration {
 
 
 
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->comment('支付-转账');
         });

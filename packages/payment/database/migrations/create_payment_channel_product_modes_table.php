@@ -12,11 +12,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('payment_channel_product_id')->comment('支付产品ID');
             $table->string('method_code')->comment('支付方式');
             $table->string('platform_code')->comment('支付平台');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
-
-            $table->unique([ 'channel_code', 'payment_channel_product_id', 'method_code', 'platform_code' ], 'uk_channel_product_method_platform');
+            $table->unique(['payment_channel_product_id', 'method_code', 'platform_code' ], 'uk_platform');
         });
     }
 

@@ -11,7 +11,7 @@ enum ChannelProductStatusEnum: string
 
     case  ENABLE = 'enable';// 启用
 
-    case  DISABLED = 'disabled';// 禁用
+    case  DISABLED = 'disabled';// 停用
 
 
     public static function labels() : array

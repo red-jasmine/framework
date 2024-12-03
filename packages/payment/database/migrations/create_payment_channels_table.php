@@ -13,8 +13,8 @@ return new class extends Migration {
             $table->string('code')->comment('渠道标识');
             $table->string('name')->comment('渠道名称');
             $table->string('status')->comment(ChannelStatusEnum::comments('状态'));
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('支付渠道');

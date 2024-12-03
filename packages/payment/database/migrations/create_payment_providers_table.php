@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->string('name')->comment('名称');
             $table->string('status')->comment('状态');
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->nullableMorphs('creator','idx_creator');
+            $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('服务商');

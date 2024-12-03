@@ -13,6 +13,8 @@ use RedJasmine\Payment\Domain\Repositories\MerchantAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\PlatformReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
@@ -20,12 +22,14 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelProductReadR
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\PlatformReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\PlatformRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 
 class PaymentApplicationServiceProvider extends ServiceProvider
@@ -49,9 +53,11 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ChannelProductRepositoryInterface::class, ChannelProductRepository::class);
         $this->app->bind(ChannelProductReadRepositoryInterface::class, ChannelProductReadRepository::class);
 
-
         $this->app->bind(TradeRepositoryInterface::class, TradeRepository::class);
         $this->app->bind(TradeReadRepositoryInterface::class, TradeReadRepository::class);
+
+        $this->app->bind(PlatformRepositoryInterface::class, PlatformRepository::class);
+        $this->app->bind(PlatformReadRepositoryInterface::class, PlatformReadRepository::class);
 
 
     }
