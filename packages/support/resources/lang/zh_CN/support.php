@@ -15,18 +15,10 @@ return [
     'created_at'   => '创建时间',
     'updated_at'   => '更新时间',
     'deleted_at'   => '删除时间',
-    'id'           => 'ID',
-    'status'       => '状态',
-    'name'         => '名称',
-    'title'        => '标题',
-    'description'  => '描述',
-    'content'      => '内容',
-    'image'        => '图片',
-    'images'       => '图片集',
-    'video'        => '视频',
-    'videos'       => '视频集',
-    'enable'       => '启用',
-    'disabled'     => '禁用',
+    'id'           => '序号',
+
+    'enable'   => '启用',
+    'disabled' => '停用',
 
 
 ];

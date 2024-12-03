@@ -3,11 +3,16 @@
 
 use RedJasmine\Payment\Application\Services\ChannelCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
+use RedJasmine\Payment\Application\Services\PlatformCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
+use RedJasmine\Payment\Domain\Data\ChannelProductMode;
+use RedJasmine\Payment\Domain\Data\PlatformData;
+use RedJasmine\Payment\Domain\Models\Enums\PaymentMethodEnum;
 use RedJasmine\Payment\Domain\Models\PaymentChannel;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
 
 beforeEach(function () {
@@ -20,6 +25,30 @@ beforeEach(function () {
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
     $this->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
+
+
+    $this->platformRepository     = app(PlatformRepositoryInterface::class);
+    $this->platformCommandService = app(PlatformCommandService::class);
+
+
+});
+
+test('init', function () {
+    $command = new PlatformData();
+
+    $command->code    = 'wechat';
+    $command->name    = '微信';
+    $command->icon    = fake()->imageUrl(40, 40);
+    $command->remarks = fake()->text();
+
+    $this->platformCommandService->create($command);
+
+    $command->code = 'alipay';
+    $command->name = '支付宝';
+
+    $this->platformCommandService->create($command);
+
+
 });
 
 
@@ -44,6 +73,11 @@ test('can create channel product', function (PaymentChannel $channel) {
     $command->code        = fake()->word();
     $command->name        = fake()->word();
     $command->rate        = 0.6;
+    $command->modes = [
+        ChannelProductMode::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platFromCode' => 'alipay' ]),
+        ChannelProductMode::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platFromCode' => 'wechat' ]),
+    ];
+
 
     $model = $this->productCommandService->create($command);
     $this->assertEquals($command->name, $model->name);
