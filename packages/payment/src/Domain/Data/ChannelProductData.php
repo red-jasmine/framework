@@ -19,4 +19,10 @@ class ChannelProductData extends Data
     public ChannelProductStatusEnum $status = ChannelProductStatusEnum::ENABLE;
 
 
+    /**
+     * @var ChannelProductMode[]
+     */
+    public array $modes = [];
+
+
 }
