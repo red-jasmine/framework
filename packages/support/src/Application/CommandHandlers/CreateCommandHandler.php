@@ -5,9 +5,8 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Facades\ServiceContext;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use Throwable;
 
 class CreateCommandHandler extends CommandHandler
@@ -74,7 +73,21 @@ class CreateCommandHandler extends CommandHandler
     protected function fill(Data $command) : void
     {
 
-        $this->model->fill($command->all());
+
+        if ($this->getService()::getTransformerClass()) {
+
+            /**
+             * @var TransformerInterface $transformer
+             */
+            $transformer = app($this->getService()::getTransformerClass());
+
+
+            $this->model = $transformer->transform($command, $this->model);
+
+        } else {
+            $this->model->fill($command->all());
+        }
+
 
         if ($this->model instanceof OwnerInterface && property_exists($command, 'owner')) {
             $this->model->owner = $command->owner;
@@ -82,14 +95,5 @@ class CreateCommandHandler extends CommandHandler
 
     }
 
-
-    protected function withOperator() : void
-    {
-        if ($this->model instanceof OperatorInterface) {
-            $this->model->creator = ServiceContext::getOperator();
-        }
-
-
-    }
 
 }

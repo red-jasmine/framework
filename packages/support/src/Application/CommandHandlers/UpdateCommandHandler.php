@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use RedJasmine\Support\Facades\ServiceContext;
 
 class UpdateCommandHandler extends CommandHandler
@@ -45,16 +46,19 @@ class UpdateCommandHandler extends CommandHandler
     protected function fill(Data $command) : void
     {
 
-        $this->model->fill($command->all());
-    }
+        if ($this->getService()::getTransformerClass()) {
 
-    protected function withOperator() : void
-    {
-        if ($this->model instanceof OperatorInterface) {
-            $this->model->updater = ServiceContext::getOperator();
+            /**
+             * @var TransformerInterface $transformer
+             */
+            $transformer = app($this->getService()::getTransformerClass());
+
+
+            $this->model = $transformer->transform($command, $this->model);
+
+        } else {
+            $this->model->fill($command->all());
         }
-
-
     }
 
 
