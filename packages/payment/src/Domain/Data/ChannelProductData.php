@@ -14,14 +14,15 @@ class ChannelProductData extends Data
 
     public string $name;
 
-    public float $rate = 0;
+    public float   $rate    = 0;
+    public ?string $remarks = null;
 
     public ChannelProductStatusEnum $status = ChannelProductStatusEnum::ENABLE;
 
 
     /**
      * 渠道支付模式
-     * @var ChannelProductMode[]
+     * @var ChannelProductModeData[]
      */
     public array $modes = [];
 

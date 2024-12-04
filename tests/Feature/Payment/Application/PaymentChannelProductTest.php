@@ -6,10 +6,12 @@ use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
 use RedJasmine\Payment\Application\Services\PlatformCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
-use RedJasmine\Payment\Domain\Data\ChannelProductMode;
+use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
 use RedJasmine\Payment\Domain\Data\PlatformData;
+use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\PaymentMethodEnum;
 use RedJasmine\Payment\Domain\Models\PaymentChannel;
+use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
@@ -41,13 +43,30 @@ test('init', function () {
     $command->icon    = fake()->imageUrl(40, 40);
     $command->remarks = fake()->text();
 
-    $this->platformCommandService->create($command);
+
+    try {
+        $this->platformRepository->findByCode($command->code);
+    } catch (Throwable $throwable) {
+        $this->platformCommandService->create($command);
+    }
+
+    $wechat = $this->platformRepository->findByCode($command->code);
+
+    $this->assertEquals($command->code, $wechat->code);
+
 
     $command->code = 'alipay';
     $command->name = '支付宝';
 
-    $this->platformCommandService->create($command);
+    try {
+        $this->platformRepository->findByCode($command->code);
+    } catch (Throwable $throwable) {
+        $this->platformCommandService->create($command);
+    }
 
+    $alipay = $this->platformRepository->findByCode($command->code);
+
+    $this->assertEquals($command->code, $alipay->code);
 
 });
 
@@ -73,21 +92,20 @@ test('can create channel product', function (PaymentChannel $channel) {
     $command->code        = fake()->word();
     $command->name        = fake()->word();
     $command->rate        = 0.6;
-    $command->modes = [
-        ChannelProductMode::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platFromCode' => 'alipay' ]),
-        ChannelProductMode::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platFromCode' => 'wechat' ]),
+    $command->modes       = [
+        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platFromCode' => 'alipay' ]),
+        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platFromCode' => 'wechat' ]),
     ];
 
 
     $model = $this->productCommandService->create($command);
+
+
     $this->assertEquals($command->name, $model->name);
     $this->assertEquals($command->code, $model->code);
     $this->assertEquals($command->channelCode, $model->channel_code);
     $this->assertEquals($command->rate, $model->rate);
-
-
     $this->assertEquals($command->channelCode, $model->channel->code);
-
 
     $this->assertEquals(true, $model->channel->products->where('channel_code', $command->channelCode)->count() >= 1);
 
@@ -95,3 +113,39 @@ test('can create channel product', function (PaymentChannel $channel) {
     return $model;
 
 })->depends('can create channel');
+
+
+test('can update a channel product', function (PaymentChannel $channel, PaymentChannelProduct $channelProduct) {
+
+    $command              = new ChannelProductData();
+    $command->channelCode = $channel->code;
+    $command->code        = fake()->word();
+    $command->name        = fake()->word();
+    $command->rate        = 0.6;
+    $command->modes       = [
+        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value,
+                                       'platFromCode' => 'alipay' ]),
+        ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::JSAPI->value,
+                                       'platFromCode' => 'wechat',
+                                       'status' => ModeStatusEnum::DISABLED ]),
+        ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::WEB->value,
+                                       'platFromCode' => 'wechat' ]),
+    ];
+
+    $command->id = $channelProduct->id;
+
+    $this->productCommandService->update($command);
+
+    $model = $this->productRepository->find($command->id);
+    $this->assertEquals($command->name, $model->name);
+    $this->assertEquals($command->code, $model->code);
+    $this->assertEquals($command->channelCode, $model->channel_code);
+    $this->assertEquals($command->rate, $model->rate);
+    $this->assertEquals($command->channelCode, $model->channel->code);
+
+    $this->assertEquals(count($command->modes), $model->modes->count());
+    $this->assertEquals(1, $model->modes->where('status', ModeStatusEnum::DISABLED)->count());
+
+    return $model;
+
+})->depends('can create channel', 'can create channel product');

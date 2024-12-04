@@ -24,7 +24,7 @@ class PlatformReadRepository extends QueryBuilderReadRepository implements Platf
     public function findByCode(Query $query) : ?PaymentPlatform
     {
         $code = $query->code;
-        return $this->query($query->except('id'))->where('code', $code)->findOrFail();
+        return $this->query($query->except('id'))->where('code', $code)->firstOrFail();
     }
 
 

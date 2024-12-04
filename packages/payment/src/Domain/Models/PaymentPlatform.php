@@ -3,12 +3,11 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
 class PaymentPlatform extends Model
 {
-    use SoftDeletes;
+
 
     use HasOperator;
 

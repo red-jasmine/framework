@@ -9,7 +9,7 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channels', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('code')->comment('渠道标识');
             $table->string('name')->comment('渠道名称');
             $table->string('status')->comment(ChannelStatusEnum::comments('状态'));

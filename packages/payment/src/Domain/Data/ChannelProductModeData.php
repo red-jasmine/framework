@@ -2,9 +2,10 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
+use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Support\Data\Data;
 
-class ChannelProductMode extends Data
+class ChannelProductModeData extends Data
 {
 
     /**
@@ -19,5 +20,8 @@ class ChannelProductMode extends Data
      * @var string
      */
     public string $platFromCode;
+
+    public ModeStatusEnum $status = ModeStatusEnum::ENABLE;
+
 
 }

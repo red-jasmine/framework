@@ -13,7 +13,7 @@ class PlatformRepository extends EloquentRepository implements PlatformRepositor
 
     public function findByCode(string $code) : ?PaymentPlatform
     {
-        return static::$eloquentModelClass::where('code', $code)->findOrFail();
+        return static::$eloquentModelClass::where('code', $code)->firstOrFail();
     }
 
 

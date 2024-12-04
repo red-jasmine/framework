@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\PaymentChannel;
 use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
@@ -13,12 +14,16 @@ class PaymentChannelProductMode extends Model
 
     use HasOperator;
 
-
     protected $fillable = [
         'payment_channel_product_id',
         'platform_code',
         'method_code',
+        'status',
 
+    ];
+
+    protected $casts = [
+        'status' => ModeStatusEnum::class
     ];
 
     public function getTable() : string

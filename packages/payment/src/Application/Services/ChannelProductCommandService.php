@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Application\Services;
 
 use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
+use RedJasmine\Payment\Domain\Transformer\ChannelProductTransformer;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 
@@ -23,4 +24,6 @@ class ChannelProductCommandService extends ApplicationCommandService
     public static string $hookNamePrefix = 'payment.application.channel-product.command';
 
     protected static string $modelClass = PaymentChannelProduct::class;
+
+    protected static ?string $transformerClass = ChannelProductTransformer::class;
 }
