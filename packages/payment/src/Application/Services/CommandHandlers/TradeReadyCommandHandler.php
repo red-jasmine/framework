@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers;
 use Closure;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Payment\Domain\Services\PaymentPlatformRouteService;
+use RedJasmine\Payment\Domain\Services\TradeRouteService;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
@@ -18,9 +18,9 @@ class TradeReadyCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected TradeRepositoryInterface    $repository,
-        protected MerchantAppRepository       $merchantAppRepository,
-        protected PaymentPlatformRouteService $paymentPlatformRouteService,
+        protected TradeRepositoryInterface $repository,
+        protected MerchantAppRepository    $merchantAppRepository,
+        protected TradeRouteService        $paymentPlatformRouteService,
 
     )
     {

@@ -36,4 +36,10 @@ class PaymentEnvironmentData extends Data
      */
     public string $client;
 
+
+    /**
+     * 选择的支付平台
+     * @var string|null
+     */
+    public ?string $platform;
 }
