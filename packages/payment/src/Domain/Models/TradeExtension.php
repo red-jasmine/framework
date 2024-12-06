@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Payment\Domain\Models\Casts\GoodDetailCollectionCast;
 
 
-class PaymentTradeExtension extends Model
+class TradeExtension extends Model
 {
     public $incrementing = false;
 
 
     protected $casts = [
-        'detail'           => 'array',
         'detail'           => GoodDetailCollectionCast::class,
         'pass_back_params' => 'array',
         'expands'          => 'array',
@@ -21,11 +20,11 @@ class PaymentTradeExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_trade_extensions';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades_extensions';
     }
 
     public function trade() : BelongsTo
     {
-        return $this->belongsTo(PaymentTrade::class, 'id', 'id');
+        return $this->belongsTo(Trade::class, 'id', 'id');
     }
 }

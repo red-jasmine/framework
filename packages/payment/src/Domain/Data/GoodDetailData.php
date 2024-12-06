@@ -2,17 +2,10 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Payment\Domain\Models\ValueObjects\GoodDetail;
 
-class GoodDetailData extends Data
+class GoodDetailData extends GoodDetail
 {
 
-
-    public string  $goodsName;
-    public string  $price;
-    public int     $quantity;
-    public ?string $goodsId;
-
-    public ?string $category;
 
 }

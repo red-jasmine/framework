@@ -8,14 +8,14 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\PaymentMerchantApp;
 
 beforeEach(function () {
     /**
-     * @var PaymentMerchant $merchant
+     * @var Merchant $merchant
      */
-    $this->merchant = PaymentMerchant::firstOrCreate(
+    $this->merchant = Merchant::firstOrCreate(
         [
             'owner_type' => 'user',
             'owner_id'   => 1,

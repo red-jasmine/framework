@@ -3,13 +3,13 @@
 namespace RedJasmine\Payment\Domain\Transformer;
 
 use RedJasmine\Payment\Domain\Data\TradeData;
-use RedJasmine\Payment\Domain\Models\PaymentTrade;
+use RedJasmine\Payment\Domain\Models\Trade;
 
 class TradeTransformer
 {
-    public function transform(TradeData $data, ?PaymentTrade $trade = null) : PaymentTrade
+    public function transform(TradeData $data, ?Trade $trade = null) : Trade
     {
-        $trade                    = $trade ?? PaymentTrade::newModel();
+        $trade                    = $trade ?? Trade::newModel();
         $trade->merchant_app_id   = $data->merchantAppId;
         $trade->merchant_order_no = $data->merchantOrderNo;
         $trade->currency          = $data->currency;

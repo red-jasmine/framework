@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
-use RedJasmine\Payment\Domain\Models\PaymentChannel;
+use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 
 /**
- * @method PaymentChannel create(Data $command)
+ * @method Channel create(Data $command)
  */
 class ChannelCommandService extends ApplicationCommandService
 {
@@ -22,5 +22,5 @@ class ChannelCommandService extends ApplicationCommandService
      */
     public static string $hookNamePrefix = 'payment.application.channel.command';
 
-    protected static string $modelClass = PaymentChannel::class;
+    protected static string $modelClass = Channel::class;
 }

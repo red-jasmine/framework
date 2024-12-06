@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
-use RedJasmine\Payment\Domain\Models\ValueObjects\PaymentChannelProductMode;
+use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentChannelProduct extends Model
+class ChannelProduct extends Model
 {
 
     public $incrementing = false;
@@ -50,7 +50,7 @@ class PaymentChannelProduct extends Model
 
     public function channel() : BelongsTo
     {
-        return $this->belongsTo(PaymentChannel::class, 'channel_code', 'code');
+        return $this->belongsTo(Channel::class, 'channel_code', 'code');
     }
 
 
@@ -65,7 +65,7 @@ class PaymentChannelProduct extends Model
                                                                  ->where('method_code', $mode->methodCode)
                                                                  ->first();
 
-            $modeModel                             = $modeModel ?? new PaymentChannelProductMode;
+            $modeModel                             = $modeModel ?? new ChannelProductMode;
             $modeModel->payment_channel_product_id = $this->id;
             $modeModel->platform_code              = $mode->platformCode;
             $modeModel->method_code                = $mode->methodCode;
@@ -78,7 +78,7 @@ class PaymentChannelProduct extends Model
 
     public function modes() : HasMany
     {
-        return $this->hasMany(PaymentChannelProductMode::class, 'payment_channel_product_id', 'id');
+        return $this->hasMany(ChannelProductMode::class, 'payment_channel_product_id', 'id');
     }
 
 }

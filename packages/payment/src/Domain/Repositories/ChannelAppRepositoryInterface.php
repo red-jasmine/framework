@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Repositories;
 
-use RedJasmine\Payment\Domain\Models\PaymentChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
- * @method PaymentChannelApp  find($id)
+ * @method ChannelApp  find($id)
  */
 interface ChannelAppRepositoryInterface extends RepositoryInterface
 {

@@ -10,8 +10,8 @@ use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
 use RedJasmine\Payment\Domain\Data\PlatformData;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\PaymentMethodEnum;
-use RedJasmine\Payment\Domain\Models\PaymentChannel;
-use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
+use RedJasmine\Payment\Domain\Models\Channel;
+use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
@@ -52,7 +52,9 @@ test('init', function () {
 
     $wechat = $this->platformRepository->findByCode($command->code);
 
+
     $this->assertEquals($command->code, $wechat->code);
+
 
 
     $command->code = 'alipay';
@@ -86,15 +88,17 @@ test('can create channel', function () {
     return $model;
 });
 
-test('can create channel product', function (PaymentChannel $channel) {
+test('can create channel product', function (Channel $channel) {
+
+
     $command              = new ChannelProductData();
     $command->channelCode = $channel->code;
     $command->code        = fake()->word();
     $command->name        = fake()->word();
     $command->rate        = 0.6;
     $command->modes       = [
-        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platFromCode' => 'alipay' ]),
-        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platFromCode' => 'wechat' ]),
+        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platformCode' => 'alipay' ]),
+        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platformCode' => 'wechat' ]),
     ];
 
 
@@ -115,7 +119,7 @@ test('can create channel product', function (PaymentChannel $channel) {
 })->depends('can create channel');
 
 
-test('can update a channel product', function (PaymentChannel $channel, PaymentChannelProduct $channelProduct) {
+test('can update a channel product', function (Channel $channel, ChannelProduct $channelProduct) {
 
     $command              = new ChannelProductData();
     $command->channelCode = $channel->code;
@@ -124,12 +128,12 @@ test('can update a channel product', function (PaymentChannel $channel, PaymentC
     $command->rate        = 0.6;
     $command->modes       = [
         ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value,
-                                       'platFromCode' => 'alipay' ]),
+                                       'platformCode' => 'alipay' ]),
         ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::JSAPI->value,
-                                       'platFromCode' => 'wechat',
+                                       'platformCode' => 'wechat',
                                        'status' => ModeStatusEnum::DISABLED ]),
         ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::WEB->value,
-                                       'platFromCode' => 'wechat' ]),
+                                       'platformCode' => 'wechat' ]),
     ];
 
     $command->id = $channelProduct->id;

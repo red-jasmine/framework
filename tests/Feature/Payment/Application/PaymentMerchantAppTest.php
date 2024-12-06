@@ -6,7 +6,7 @@ use RedJasmine\Payment\Application\Commands\MerchantApp\MerchantAppUpdateCommand
 use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
 use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\PaymentMerchantApp;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
@@ -42,7 +42,7 @@ test('can create merchant', function () {
     return $merchant;
 });
 
-test('can create a merchant app', function (PaymentMerchant $merchant) {
+test('can create a merchant app', function (Merchant $merchant) {
 
 
     $command             = new MerchantAppCreateCommand();

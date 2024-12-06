@@ -3,12 +3,12 @@
 namespace RedJasmine\Payment\Application\Services;
 
 use RedJasmine\Payment\Domain\Data\PlatformData;
-use RedJasmine\Payment\Domain\Models\PaymentPlatform;
+use RedJasmine\Payment\Domain\Models\Platform;
 use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
- * @method PaymentPlatform create(PlatformData $command)
+ * @method Platform create(PlatformData $command)
  */
 class PlatformCommandService extends ApplicationCommandService
 {
@@ -24,6 +24,6 @@ class PlatformCommandService extends ApplicationCommandService
      */
     public static string $hookNamePrefix = 'payment.application.platform.command';
 
-    protected static string $modelClass = PaymentPlatform::class;
+    protected static string $modelClass = Platform::class;
 
 }

@@ -12,7 +12,7 @@ class ChannelAppData extends Data
     public UserInterface $owner;
 
 
-    public string $channelCode;
+    public int $channelId;
 
 
     public ChannelAppStatusEnum $status = ChannelAppStatusEnum::ENABLE;

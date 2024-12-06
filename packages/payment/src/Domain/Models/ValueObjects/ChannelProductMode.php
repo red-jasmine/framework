@@ -5,11 +5,11 @@ namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Model;
-use RedJasmine\Payment\Domain\Models\PaymentChannel;
-use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
+use RedJasmine\Payment\Domain\Models\Channel;
+use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class PaymentChannelProductMode extends Model
+class ChannelProductMode extends Model
 {
 
     use HasOperator;
@@ -34,7 +34,7 @@ class PaymentChannelProductMode extends Model
 
     public function product() : BelongsTo
     {
-        return $this->belongsTo(PaymentChannelProduct::class, 'payment_channel_product_id', 'id');
+        return $this->belongsTo(ChannelProduct::class, 'payment_channel_product_id', 'id');
     }
 
 

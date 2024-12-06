@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Payment\Domain\Repositories;
 
-use RedJasmine\Payment\Domain\Models\PaymentChannel;
+use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
- * @method PaymentChannel  find($id)
+ * @method Channel  find($id)
  */
 interface ChannelRepositoryInterface extends RepositoryInterface
 {
 
-    public function findByCode(string $code) : ?PaymentChannel;
+    public function findByCode(string $code) : ?Channel;
 
 }

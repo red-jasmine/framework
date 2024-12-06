@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class PaymentPlatform extends Model
+class Platform extends Model
 {
 
 

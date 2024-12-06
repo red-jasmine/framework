@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers;
 
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantCreateCommand;
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantUpdateCommand;
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\MerchantTransformer;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
@@ -20,10 +20,10 @@ class MerchantUpdateCommandHandle extends CommandHandler
 
     /**
      * @param MerchantUpdateCommand $command
-     * @return PaymentMerchant
+     * @return Merchant
      * @throws Throwable
      */
-    public function handle(MerchantUpdateCommand $command) : PaymentMerchant
+    public function handle(MerchantUpdateCommand $command) : Merchant
     {
         $this->beginDatabaseTransaction();
 

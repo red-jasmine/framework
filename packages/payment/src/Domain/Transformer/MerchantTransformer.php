@@ -3,15 +3,15 @@
 namespace RedJasmine\Payment\Domain\Transformer;
 
 use RedJasmine\Payment\Domain\Data\MerchantData;
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 
 class MerchantTransformer
 {
 
-    public function transform(MerchantData $data, ?PaymentMerchant $merchant = null) : PaymentMerchant
+    public function transform(MerchantData $data, ?Merchant $merchant = null) : Merchant
     {
 
-        $merchant = $merchant ?? PaymentMerchant::newModel();
+        $merchant = $merchant ?? Merchant::newModel();
 
         $merchant->owner      = $data->owner;
         $merchant->name       = $data->name;

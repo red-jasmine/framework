@@ -4,17 +4,17 @@ namespace RedJasmine\Payment\Domain\Transformer;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Domain\Data\ChannelAppData;
-use RedJasmine\Payment\Domain\Models\PaymentChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class ChannelAppTransformer implements TransformerInterface
 {
-    public function transform(Data|ChannelAppData $data, Model|PaymentChannelApp|null $model = null) : ?PaymentChannelApp
+    public function transform(Data|ChannelAppData $data, Model|ChannelApp|null $model = null) : ?ChannelApp
     {
-        $model = $model ?? PaymentChannelApp::newModel();
+        $model = $model ?? ChannelApp::newModel();
 
-        $model->channel_code            = $data->channelCode;
+        $model->channel_id            = $data->channelId;
         $model->channel_merchant_id     = $data->channelMerchantId;
         $model->channel_app_id          = $data->channelAppId;
         $model->fee_rate                = $data->feeRate;

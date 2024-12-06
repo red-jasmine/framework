@@ -15,7 +15,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterface
+class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 {
 
     public $incrementing = false;
@@ -30,9 +30,14 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
 
     use HasOperator;
 
+    public function getTable() : string
+    {
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
+    }
+
 
     protected $fillable = [
-        'channel_code',
+        'channel_id',
         'channel_merchant_id',
         'channel_app_id',
         'channel_public_key',
@@ -67,11 +72,11 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
     {
 
         parent::boot();
-        static::saving(static function (PaymentChannelApp $channelApp) {
+        static::saving(static function (ChannelApp $channelApp) {
 
 
             if ($channelApp->relationLoaded('products')) {
-             
+
                 if ($channelApp->products?->count() > 0) {
                     if (!is_array($channelApp->products->first())) {
                         $data = $channelApp->products;
@@ -90,21 +95,15 @@ class PaymentChannelApp extends Model implements OwnerInterface, OperatorInterfa
     }
 
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
-    }
-
-
     public function channel() : BelongsTo
     {
-        return $this->belongsTo(PaymentChannel::class, 'channel', 'code');
+        return $this->belongsTo(Channel::class, 'channel_id', 'id');
     }
 
     public function products() : BelongsToMany
     {
         return $this->belongsToMany(
-            PaymentChannelProduct::class,
+            ChannelProduct::class,
             config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_app_products',
             'payment_channel_app_id',
             'payment_channel_product_id',

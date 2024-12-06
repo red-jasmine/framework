@@ -11,7 +11,7 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->morphs('owner');
-            $table->string('channel_code')->comment('支付渠道');
+            $table->unsignedBigInteger('channel_id')->comment('渠道ID');
             $table->string('channel_app_id')->comment('渠道应用ID');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户ID');
             $table->decimal('fee_rate')->default(0)->comment('费率');// ‰ // 根据支付产品不同不一样的费率

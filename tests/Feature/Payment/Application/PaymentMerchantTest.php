@@ -5,7 +5,7 @@ use RedJasmine\Payment\Application\Commands\Merchant\MerchantSetStatusCommand;
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantUpdateCommand;
 use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
 
@@ -38,7 +38,7 @@ test('can create merchant', function () {
     return $merchant;
 });
 
-test('can set status', function (PaymentMerchant $merchant) {
+test('can set status', function (Merchant $merchant) {
     $command         = new MerchantSetStatusCommand();
     $command->id     = $merchant->id;
     $command->status = MerchantStatusEnum::DISABLED;
@@ -51,7 +51,7 @@ test('can set status', function (PaymentMerchant $merchant) {
 })->depends('can create merchant');
 
 
-test('can update merchant', function (PaymentMerchant $merchant) {
+test('can update merchant', function (Merchant $merchant) {
 
     $command     = new MerchantUpdateCommand();
     $command->id = $merchant->id;

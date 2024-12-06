@@ -4,11 +4,11 @@ namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Payment\Domain\Models\Model;
-use RedJasmine\Payment\Domain\Models\PaymentChannelApp;
-use RedJasmine\Payment\Domain\Models\PaymentChannelProduct;
+use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class PaymentChannelAppProduct extends Model
+class ChannelAppProduct extends Model
 {
 
     use HasOperator;
@@ -26,13 +26,13 @@ class PaymentChannelAppProduct extends Model
 
     public function channelApp() : BelongsTo
     {
-        return $this->belongsTo(PaymentChannelApp::class, 'payment_channel_app_id', 'id');
+        return $this->belongsTo(ChannelApp::class, 'payment_channel_app_id', 'id');
     }
 
 
     public function product() : BelongsTo
     {
-        return $this->belongsTo(PaymentChannelProduct::class, 'payment_channel_product_id', 'id');
+        return $this->belongsTo(ChannelProduct::class, 'payment_channel_product_id', 'id');
     }
 
 }

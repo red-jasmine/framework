@@ -3,14 +3,16 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Payment\Domain\Models\Enums\StatusEnum;
 
 return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_apps', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('merchant_id')->comment('商户ID');
             $table->unsignedBigInteger('channel_app_id')->comment('渠道应用表ID');
+            $table->string('status')->default(StatusEnum::ENABLE->value)->comment(StatusEnum::comments('状态'));
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql;
 
-use RedJasmine\Payment\Domain\Models\PaymentMerchant;
+use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
@@ -13,6 +13,6 @@ class MerchantReadRepository extends QueryBuilderReadRepository implements Merch
      *
      * @var $modelClass class-string
      */
-    protected static string $modelClass = PaymentMerchant::class;
+    protected static string $modelClass = Merchant::class;
 
 }

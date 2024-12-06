@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Application\Services\CommandHandlers;
 
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
-use RedJasmine\Payment\Domain\Models\PaymentTrade;
+use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\TradeTransformer;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
@@ -26,11 +26,11 @@ class TradePreCreateCommandHandler extends CommandHandler
 
     /**
      * @param TradePreCreateCommand $command
-     * @return PaymentTrade
+     * @return Trade
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(TradePreCreateCommand $command) : PaymentTrade
+    public function handle(TradePreCreateCommand $command) : Trade
     {
 
         $this->beginDatabaseTransaction();
@@ -40,7 +40,7 @@ class TradePreCreateCommandHandler extends CommandHandler
             $merchantApp = $this->merchantAppRepository->find($command->merchantAppId);
 
             // 创建支付单
-            $model = PaymentTrade::newModel();
+            $model = Trade::newModel();
             // 填充数据
             $model = app(TradeTransformer::class)->transform($command, $model);
             // 设置商户应用

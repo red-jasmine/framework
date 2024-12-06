@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentChannel extends Model
+class Channel extends Model
 {
 
     public $incrementing = false;
@@ -35,13 +35,13 @@ class PaymentChannel extends Model
 
     public function products() : HasMany
     {
-        return $this->hasMany(PaymentChannelProduct::class, 'channel_code', 'code');
+        return $this->hasMany(ChannelProduct::class, 'channel_code', 'code');
     }
 
 
     public function apps() : HasMany
     {
-        return $this->hasMany(PaymentChannelApp::class, 'channel_code', 'code');
+        return $this->hasMany(ChannelApp::class, 'channel_code', 'code');
     }
 
 

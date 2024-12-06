@@ -39,7 +39,7 @@ class PaymentMerchantApp extends Model
 
     public function merchant() : BelongsTo
     {
-        return $this->belongsTo(PaymentMerchant::class, 'merchant_id', 'id');
+        return $this->belongsTo(Merchant::class, 'merchant_id', 'id');
     }
 
 

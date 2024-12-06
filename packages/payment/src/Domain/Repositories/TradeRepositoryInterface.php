@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Repositories;
 
-use RedJasmine\Payment\Domain\Models\PaymentTrade;
+use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
- * @method PaymentTrade  find($id)
+ * @method Trade  find($id)
  */
 interface TradeRepositoryInterface extends RepositoryInterface
 {

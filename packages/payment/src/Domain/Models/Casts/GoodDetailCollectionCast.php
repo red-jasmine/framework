@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Domain\Models\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use JsonException;
-use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Models\ValueObjects\GoodDetail;
 
 class GoodDetailCollectionCast implements CastsAttributes
 {
@@ -14,7 +14,7 @@ class GoodDetailCollectionCast implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return false|mixed|string
+     * @return string
      * @throws JsonException
      */
     public function set(Model $model, string $key, mixed $value, array $attributes)
@@ -23,9 +23,10 @@ class GoodDetailCollectionCast implements CastsAttributes
         return json_encode($value ?? [], JSON_THROW_ON_ERROR);
     }
 
+
     public function get(Model $model, string $key, mixed $value, array $attributes)
     {
-        return GoodDetailData::collect(json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? []);
+        return GoodDetail::collect(json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? []);
     }
 
 

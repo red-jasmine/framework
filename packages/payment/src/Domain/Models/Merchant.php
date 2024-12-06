@@ -9,14 +9,16 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentMerchant extends Model
+class Merchant extends Model
 {
 
 
     public $incrementing = false;
+    use HasSnowflakeId;
+
     use HasOwner;
 
-    use HasSnowflakeId;
+
     use HasOperator;
 
     use SoftDeletes;

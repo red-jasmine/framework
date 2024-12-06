@@ -10,7 +10,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentTrade extends Model
+class Trade extends Model
 {
 
     public $incrementing = false;
@@ -45,14 +45,14 @@ class PaymentTrade extends Model
     public static function newModel() : static
     {
         $model = new static();
-        $model->setRelation('extension', new PaymentTradeExtension());
+        $model->setRelation('extension', new TradeExtension());
         return $model;
     }
 
 
     public function extension() : HasOne
     {
-        return $this->hasOne(PaymentTradeExtension::class, 'id', 'id');
+        return $this->hasOne(TradeExtension::class, 'id', 'id');
     }
 
     public function setMerchantApp(PaymentMerchantApp $merchantApp) : void
