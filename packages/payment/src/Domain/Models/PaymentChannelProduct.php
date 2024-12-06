@@ -61,13 +61,13 @@ class PaymentChannelProduct extends Model
     public function setModes(array $modes) : static
     {
         foreach ($modes as $mode) {
-            $modeModel                             = $this->modes->where('platform_code', $mode->platFromCode)
+            $modeModel                             = $this->modes->where('platform_code', $mode->platformCode)
                                                                  ->where('method_code', $mode->methodCode)
                                                                  ->first();
 
             $modeModel                             = $modeModel ?? new PaymentChannelProductMode;
             $modeModel->payment_channel_product_id = $this->id;
-            $modeModel->platform_code              = $mode->platFromCode;
+            $modeModel->platform_code              = $mode->platformCode;
             $modeModel->method_code                = $mode->methodCode;
             $modeModel->status                     = $mode->status;
             $this->modes->add($modeModel);

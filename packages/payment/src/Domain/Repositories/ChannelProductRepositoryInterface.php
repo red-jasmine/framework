@@ -12,4 +12,7 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 interface ChannelProductRepositoryInterface extends RepositoryInterface
 {
 
+
+    public function findByCode(string $channelCode, string $code) : ?PaymentChannelProduct;
+
 }

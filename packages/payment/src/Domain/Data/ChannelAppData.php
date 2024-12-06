@@ -17,17 +17,26 @@ class ChannelAppData extends Data
 
     public ChannelAppStatusEnum $status = ChannelAppStatusEnum::ENABLE;
 
-    public string $channelMerchantId;
 
-    public string $channelAppId;
-
-    public string $channelPublicKey;
+    public string  $channelAppId;
+    public ?string $channelMerchantId;
+    public ?string $appName      = null;
+    public ?string $merchantName = null;
+    public string  $channelPublicKey;
 
     public string $channelAppPublicKey;
 
     public string $channelAppPrivateKey;
 
-    public string $feeRate = '0';
+    public string  $feeRate = '0';
+    public ?string $remarks = null;
+
+
+    /**
+     * 开通产品
+     * @var array
+     */
+    public array $products = [];
 
 
 }

@@ -11,5 +11,12 @@ class ChannelProductRepository extends EloquentRepository implements ChannelProd
 
     protected static string $eloquentModelClass = PaymentChannelProduct::class;
 
+    public function findByCode(string $channelCode, string $code) : ?PaymentChannelProduct
+    {
+        return static::$eloquentModelClass::where('code', $code)
+                                          ->where('channel_code', $channelCode)
+                                          ->firstOrFail();
+    }
+
 
 }

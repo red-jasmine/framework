@@ -11,5 +11,10 @@ class ChannelRepository extends EloquentRepository implements ChannelRepositoryI
 
     protected static string $eloquentModelClass = PaymentChannel::class;
 
+    public function findByCode(string $code) : ?PaymentChannel
+    {
+        return static::$eloquentModelClass::where('code', $code)->firstOrFail();
+    }
+
 
 }

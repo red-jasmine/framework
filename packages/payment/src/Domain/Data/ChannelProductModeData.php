@@ -16,10 +16,10 @@ class ChannelProductModeData extends Data
 
 
     /**
-     * 支付平台
+     * 支付 平台
      * @var string
      */
-    public string $platFromCode;
+    public string $platformCode;
 
     public ModeStatusEnum $status = ModeStatusEnum::ENABLE;
 
