@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Services;
 
 use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
-use RedJasmine\Payment\Domain\Models\PaymentMerchantApp;
+use RedJasmine\Payment\Domain\Models\MerchantApp;
 
 /**
  * 交易路由
@@ -14,11 +14,11 @@ class TradeRouteService
 
     /**
      * 获取支付平台
-     * @param PaymentMerchantApp $merchantApp
+     * @param MerchantApp $merchantApp
      * @param PaymentEnvironmentData $paymentEnvironment
      * @return array
      */
-    public function getPlatforms(PaymentMerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment) : array
+    public function getPlatforms(MerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment) : array
     {
         // TODO
         // 获取当前 商户应用 允许的 渠道应用列表、根据应用开通的产品、产品支付的方式 枚举出所有的支付平台
@@ -40,7 +40,7 @@ class TradeRouteService
     }
 
 
-    public function getChannelApp(PaymentMerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment)
+    public function getChannelApp(MerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment)
     {
         // 根据选择的  支付平台、支付方式
 

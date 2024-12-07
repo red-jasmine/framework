@@ -55,7 +55,7 @@ class Trade extends Model
         return $this->hasOne(TradeExtension::class, 'id', 'id');
     }
 
-    public function setMerchantApp(PaymentMerchantApp $merchantApp) : void
+    public function setMerchantApp(MerchantApp $merchantApp) : void
     {
         $this->merchant_app_id = $merchantApp->id;
         $this->merchant_id     = $merchantApp->merchant_id;
@@ -70,7 +70,7 @@ class Trade extends Model
 
     public function merchantApp() : BelongsTo
     {
-        return $this->belongsTo(PaymentMerchantApp::class,'id','merchant_app_id');
+        return $this->belongsTo(MerchantApp::class, 'id', 'merchant_app_id');
     }
 
 }

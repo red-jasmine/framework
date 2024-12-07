@@ -6,7 +6,7 @@ use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
-class MerchantAppCommandService extends ApplicationCommandService
+class MerchantChannelAppCommandService extends ApplicationCommandService
 {
     public function __construct(protected MerchantAppRepositoryInterface $repository)
     {

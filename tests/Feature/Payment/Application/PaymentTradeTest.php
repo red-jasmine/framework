@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
-use RedJasmine\Payment\Domain\Models\PaymentMerchantApp;
+use RedJasmine\Payment\Domain\Models\MerchantApp;
 
 beforeEach(function () {
     /**
@@ -28,12 +28,12 @@ beforeEach(function () {
         ]);
 
 
-    $this->merchantApp = PaymentMerchantApp::firstOrCreate([
+    $this->merchantApp = MerchantApp::firstOrCreate([
                                                                'merchant_id' => $this->merchant->id,
                                                                'name'        => '测试应用',
                                                                'status'      => MerchantAppStatusEnum::ENABLE->value
                                                            ],
-                                                           [
+                                                    [
                                                                'merchant_id' => $this->merchant->id,
                                                                'name'        => '测试应用',
                                                            ]

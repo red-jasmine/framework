@@ -10,7 +10,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PaymentMerchantApp extends Model
+class MerchantApp extends Model
 {
 
     public $incrementing = false;
