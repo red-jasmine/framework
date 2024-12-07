@@ -2,13 +2,21 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
-use RedJasmine\Payment\Domain\Models\MerchantApp;
-use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Data\MerchantChannelAppData;
+use RedJasmine\Payment\Domain\Models\MerchantChannelApp;
+use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\DeleteCommandHandler;
+use RedJasmine\Support\Data\Data;
 
+/**
+ * @method MerchantChannelApp create(MerchantChannelAppData $command)
+ * @method void delete(Data $command)
+ */
 class MerchantChannelAppCommandService extends ApplicationCommandService
 {
-    public function __construct(protected MerchantAppRepositoryInterface $repository)
+    public function __construct(protected MerchantChannelAppRepositoryInterface $repository)
     {
     }
 
@@ -16,7 +24,14 @@ class MerchantChannelAppCommandService extends ApplicationCommandService
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix = 'payment.application.merchant-app.command';
+    public static string $hookNamePrefix = 'payment.application.merchant-channel-app.command';
 
-    protected static string $modelClass = MerchantApp::class;
+    protected static string $modelClass = MerchantChannelApp::class;
+
+
+    protected static $macros = [
+        'create' => CreateCommandHandler::class,
+        //'update' => UpdateCommandHandler::class,
+        'delete' => DeleteCommandHandler::class,
+    ];
 }
