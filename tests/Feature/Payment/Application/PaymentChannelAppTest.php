@@ -259,3 +259,6 @@ test('update payment channel apps', function ($products, $channelApps) {
 
 
 })->depends('can create channel product', 'create payment channel apps');
+
+
+// TEST 给商户授权 TODO
