@@ -3,8 +3,10 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -40,7 +42,7 @@ class Merchant extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_merchants';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchants';
     }
 
 
@@ -60,5 +62,18 @@ class Merchant extends Model
 
         $this->fireModelEvent('changeStatus', false);
 
+    }
+
+
+    public function channelApps() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            ChannelApp::class,
+            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions',
+            'merchant_id',
+            'channel_app_id',
+        )
+                    ->wherePivot('status', PermissionStatusEnum::ENABLE->value)
+                    ->withTimestamps();
     }
 }

@@ -74,6 +74,7 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_providers_table',
             'create_payment_merchants_table',
             'create_payment_merchant_apps_table',
+            'create_payment_merchant_channel_app_permissions_table',
 
 
             'create_payment_trades_table',

@@ -11,8 +11,8 @@ use RedJasmine\Payment\Domain\Repositories\ChannelReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppReadRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\PlatformReadRepositoryInterface;
@@ -22,7 +22,7 @@ use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelProductReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelReadRepository;
-use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppPermissionReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\PlatformReadRepository;
@@ -31,7 +31,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
-use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantChannelAppRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantChannelAppPermissionRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\PlatformRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
@@ -46,7 +46,7 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(MerchantReadRepositoryInterface::class, MerchantReadRepository::class);
 
         $this->app->bind(MerchantAppRepositoryInterface::class, MerchantAppRepository::class);
-        $this->app->bind(MerchantAppReadRepositoryInterface::class, MerchantAppReadRepository::class);
+        $this->app->bind(MerchantAppReadRepositoryInterface::class, MerchantAppPermissionReadRepository::class);
 
         $this->app->bind(ChannelAppRepositoryInterface::class, ChannelAppRepository::class);
         $this->app->bind(ChannelAppReadRepositoryInterface::class, ChannelAppReadRepository::class);
@@ -63,8 +63,8 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(PlatformRepositoryInterface::class, PlatformRepository::class);
         $this->app->bind(PlatformReadRepositoryInterface::class, PlatformReadRepository::class);
 
-        $this->app->bind(MerchantChannelAppRepositoryInterface::class, MerchantChannelAppRepository::class);
-        $this->app->bind(MerchantChannelAppReadRepositoryInterface::class, MerchantChannelAppReadRepository::class);
+        $this->app->bind(MerchantChannelAppPermissionRepositoryInterface::class, MerchantChannelAppPermissionRepository::class);
+        $this->app->bind(MerchantChannelAppPermissionReadRepositoryInterface::class, MerchantChannelAppReadRepository::class);
 
 
     }
