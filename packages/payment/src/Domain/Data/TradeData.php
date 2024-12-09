@@ -9,10 +9,9 @@ use RedJasmine\Support\Data\Data;
 class TradeData extends Data
 {
 
+    public int $merchantAppId;
 
     public string $merchantOrderNo;
-
-    public int $merchantAppId;
 
     public string $currency = 'CNY';
 

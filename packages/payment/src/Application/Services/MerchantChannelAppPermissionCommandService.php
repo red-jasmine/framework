@@ -9,6 +9,7 @@ use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositor
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
+ * @see MerchantChannelAppPermissionCommandHandler::handle()
  * @method void authorize(MerchantChannelAppPermissionData $command)
  */
 class MerchantChannelAppPermissionCommandService extends ApplicationCommandService
