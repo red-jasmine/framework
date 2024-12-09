@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class Platform extends Model
+class Method extends Model
 {
 
 
@@ -22,7 +22,7 @@ class Platform extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_platforms';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_methods';
     }
 
 

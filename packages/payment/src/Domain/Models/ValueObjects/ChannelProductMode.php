@@ -16,8 +16,8 @@ class ChannelProductMode extends Model
 
     protected $fillable = [
         'payment_channel_product_id',
-        'platform_code',
-        'method_code',
+        'method_code', // 支付方式
+        'scene_code', // 支付场景
         'status',
 
     ];

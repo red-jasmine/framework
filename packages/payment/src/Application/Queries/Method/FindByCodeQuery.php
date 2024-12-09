@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Queries\Platform;
+namespace RedJasmine\Payment\Application\Queries\Method;
 
 use RedJasmine\Support\Domain\Data\Queries\Query;
 

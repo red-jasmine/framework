@@ -15,8 +15,8 @@ use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionReadRepos
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\PlatformReadRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MethodReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
@@ -25,7 +25,7 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelReadReposito
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppPermissionReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadRepository;
-use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\PlatformReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MethodReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
@@ -33,7 +33,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantChannelAppPermissionRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
-use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\PlatformRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MethodRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 
 class PaymentApplicationServiceProvider extends ServiceProvider
@@ -60,8 +60,8 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(TradeRepositoryInterface::class, TradeRepository::class);
         $this->app->bind(TradeReadRepositoryInterface::class, TradeReadRepository::class);
 
-        $this->app->bind(PlatformRepositoryInterface::class, PlatformRepository::class);
-        $this->app->bind(PlatformReadRepositoryInterface::class, PlatformReadRepository::class);
+        $this->app->bind(MethodRepositoryInterface::class, MethodRepository::class);
+        $this->app->bind(MethodReadRepositoryInterface::class, MethodReadRepository::class);
 
         $this->app->bind(MerchantChannelAppPermissionRepositoryInterface::class, MerchantChannelAppPermissionRepository::class);
         $this->app->bind(MerchantChannelAppPermissionReadRepositoryInterface::class, MerchantChannelAppReadRepository::class);

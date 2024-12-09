@@ -3,25 +3,25 @@
 namespace RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql;
 
 
-use RedJasmine\Payment\Domain\Models\Platform;
-use RedJasmine\Payment\Domain\Repositories\PlatformReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Models\Method;
+use RedJasmine\Payment\Domain\Repositories\MethodReadRepositoryInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
-class PlatformReadRepository extends QueryBuilderReadRepository implements PlatformReadRepositoryInterface
+class MethodReadRepository extends QueryBuilderReadRepository implements MethodReadRepositoryInterface
 {
 
     /**
      *
      * @var $modelClass class-string
      */
-    protected static string $modelClass = Platform::class;
+    protected static string $modelClass = Method::class;
 
     /**
      * @param Query $query
-     * @return Platform|null
+     * @return Method|null
      */
-    public function findByCode(Query $query) : ?Platform
+    public function findByCode(Query $query) : ?Method
     {
         $code = $query->code;
         return $this->query($query->except('id'))->where('code', $code)->firstOrFail();

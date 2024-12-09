@@ -5,9 +5,9 @@ namespace RedJasmine\Payment\Domain\Models\Enums;
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
 /**
- * 支付方式
+ * 支付场景
  */
-enum PaymentMethodEnum: string
+enum SceneEnum: string
 {
 
     use EnumsHelper;

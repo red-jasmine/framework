@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_platforms', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_methods', function (Blueprint $table) {
             $table->id();
             $table->string('code')->comment('标识');
             $table->string('name')->comment('平台名称');
@@ -16,13 +16,13 @@ return new class extends Migration {
             $table->nullableMorphs('creator','idx_creator');
             $table->nullableMorphs('updater','idx_updater');
             $table->timestamps();
-            $table->unique('code', 'uk_platform');
-            $table->comment('支付平台');
+            $table->unique('code', 'uk_method');
+            $table->comment('支付方式');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_platforms');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_methods');
     }
 };

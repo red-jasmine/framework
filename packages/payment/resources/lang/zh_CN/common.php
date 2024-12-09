@@ -7,7 +7,7 @@ return [
     'enums' => [
 
 
-        'method' => [
+        'scene' => [
             'web'      => '电脑网站支付',
             'wap'      => '手机网站支付',
             'jsapi'    => '小程序支付',

@@ -3,18 +3,18 @@
 
 use RedJasmine\Payment\Application\Services\ChannelCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\PlatformCommandService;
+use RedJasmine\Payment\Application\Services\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
-use RedJasmine\Payment\Domain\Data\PlatformData;
+use RedJasmine\Payment\Domain\Data\MethodData;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
-use RedJasmine\Payment\Domain\Models\Enums\PaymentMethodEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
 
 beforeEach(function () {
@@ -29,14 +29,14 @@ beforeEach(function () {
     $this->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
 
 
-    $this->platformRepository     = app(PlatformRepositoryInterface::class);
-    $this->platformCommandService = app(PlatformCommandService::class);
+    $this->methodRepository     = app(MethodRepositoryInterface::class);
+    $this->methodCommandService = app(MethodCommandService::class);
 
 
 });
 
 test('init', function () {
-    $command = new PlatformData();
+    $command = new MethodData();
 
     $command->code    = 'wechat';
     $command->name    = '微信';
@@ -45,12 +45,12 @@ test('init', function () {
 
 
     try {
-        $this->platformRepository->findByCode($command->code);
+        $this->methodRepository->findByCode($command->code);
     } catch (Throwable $throwable) {
-        $this->platformCommandService->create($command);
+        $this->methodCommandService->create($command);
     }
 
-    $wechat = $this->platformRepository->findByCode($command->code);
+    $wechat = $this->methodRepository->findByCode($command->code);
 
 
     $this->assertEquals($command->code, $wechat->code);
@@ -61,12 +61,12 @@ test('init', function () {
     $command->name = '支付宝';
 
     try {
-        $this->platformRepository->findByCode($command->code);
+        $this->methodRepository->findByCode($command->code);
     } catch (Throwable $throwable) {
-        $this->platformCommandService->create($command);
+        $this->methodCommandService->create($command);
     }
 
-    $alipay = $this->platformRepository->findByCode($command->code);
+    $alipay = $this->methodRepository->findByCode($command->code);
 
     $this->assertEquals($command->code, $alipay->code);
 
@@ -97,8 +97,8 @@ test('can create channel product', function (Channel $channel) {
     $command->name        = fake()->word();
     $command->rate        = 0.6;
     $command->modes       = [
-        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value, 'platformCode' => 'alipay' ]),
-        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::JSAPI->value, 'platformCode' => 'wechat' ]),
+        ChannelProductModeData::from([ 'sceneCode' => SceneEnum::WEB->value, 'methodCode' => 'alipay' ]),
+        ChannelProductModeData::from([ 'sceneCode' => SceneEnum::JSAPI->value, 'methodCode' => 'wechat' ]),
     ];
 
 
@@ -127,13 +127,13 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
     $command->name        = fake()->word();
     $command->rate        = 0.6;
     $command->modes       = [
-        ChannelProductModeData::from([ 'methodCode' => PaymentMethodEnum::WEB->value,
-                                       'platformCode' => 'alipay' ]),
-        ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::JSAPI->value,
-                                       'platformCode' => 'wechat',
+        ChannelProductModeData::from([ 'sceneCode' => SceneEnum::WEB->value,
+                                       'methodCode' => 'alipay' ]),
+        ChannelProductModeData::from([ 'sceneCode'   => SceneEnum::JSAPI->value,
+                                       'methodCode' => 'wechat',
                                        'status' => ModeStatusEnum::DISABLED ]),
-        ChannelProductModeData::from([ 'methodCode'   => PaymentMethodEnum::WEB->value,
-                                       'platformCode' => 'wechat' ]),
+        ChannelProductModeData::from([ 'sceneCode'   => SceneEnum::WEB->value,
+                                       'methodCode' => 'wechat' ]),
     ];
 
     $command->id = $channelProduct->id;

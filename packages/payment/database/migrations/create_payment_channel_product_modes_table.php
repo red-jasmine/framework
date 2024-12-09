@@ -11,13 +11,13 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('payment_channel_product_id')->comment('支付产品ID');
+            $table->string('scene_code')->comment('支付场景');
             $table->string('method_code')->comment('支付方式');
-            $table->string('platform_code')->comment('支付平台');
             $table->string('status')->comment(ModeStatusEnum::comments('状态'));
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');
             $table->timestamps();
-            $table->unique([ 'payment_channel_product_id', 'method_code', 'platform_code' ], 'uk_platform');
+            $table->unique([ 'payment_channel_product_id', 'scene_code', 'method_code' ], 'uk_method');
         });
     }
 

@@ -1,21 +1,21 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\PlatformCommandService;
-use RedJasmine\Payment\Domain\Data\PlatformData;
-use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
+use RedJasmine\Payment\Application\Services\MethodCommandService;
+use RedJasmine\Payment\Domain\Data\MethodData;
+use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 
 beforeEach(function () {
 
-    $this->repository     = app(PlatformRepositoryInterface::class);
-    $this->commandService = app(PlatformCommandService::class);
+    $this->repository     = app(MethodRepositoryInterface::class);
+    $this->commandService = app(MethodCommandService::class);
 
 
     //
 });
 
-test('can create a platform', function () {
-    $command = new PlatformData();
+test('can create a method', function () {
+    $command = new MethodData();
 
     $command->code    = fake()->word();
     $command->name    = fake()->name();

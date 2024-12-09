@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
 
-class PlatformData extends Data
+class MethodData extends Data
 {
 
     public string $code;

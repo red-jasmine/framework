@@ -6,17 +6,17 @@ use RedJasmine\Support\Data\Data;
 
 /**
  * 加载支付
- * 这些因素是会 决定可选的 支付平台
+ * 这些因素是会 决定可选的 支付方式
  */
 class TradePayingCommand extends Data
 {
     public int $id;
 
     /**
-     * 支付平台
+     * 支付方式
      * @var string
      */
-    public string $platform;
+    public string $method;
 
     /**
      * 支付产品

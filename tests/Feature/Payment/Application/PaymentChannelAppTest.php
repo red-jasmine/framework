@@ -5,16 +5,16 @@ use RedJasmine\Payment\Application\Commands\ChannelApp\ChannelAppUpdateCommand;
 use RedJasmine\Payment\Application\Services\ChannelAppCommandService;
 use RedJasmine\Payment\Application\Services\ChannelCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\PlatformCommandService;
+use RedJasmine\Payment\Application\Services\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
-use RedJasmine\Payment\Domain\Data\PlatformData;
+use RedJasmine\Payment\Domain\Data\MethodData;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\PlatformRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
 
 beforeEach(function () {
@@ -28,8 +28,8 @@ beforeEach(function () {
     $this->ChannelRepository     = app(ChannelRepositoryInterface::class);
 
 
-    $this->platformRepository     = app(PlatformRepositoryInterface::class);
-    $this->platformCommandService = app(PlatformCommandService::class);
+    $this->methodRepository     = app(MethodRepositoryInterface::class);
+    $this->methodCommandService = app(MethodCommandService::class);
 
 
     $this->productCommandService = app(ChannelProductCommandService::class);
@@ -39,7 +39,7 @@ beforeEach(function () {
     $this->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
 
 
-    $this->platformData = [
+    $this->methodData = [
         [ 'code' => 'alipay', 'name' => '支付宝' ],
         [ 'code' => 'wechat', 'name' => '微信' ],
     ];
@@ -56,7 +56,7 @@ beforeEach(function () {
             'name'   => '电脑网站支付',
             'models' => [
                 [
-                    'method_code' => 'web',
+                    'scene_code' => 'web',
 
                 ]
             ],
@@ -66,7 +66,7 @@ beforeEach(function () {
             'name'   => '手机网站支付',
             'models' => [
                 [
-                    'method_code' => 'wap',
+                    'scene_code' => 'wap',
 
                 ]
             ],
@@ -78,19 +78,19 @@ beforeEach(function () {
 });
 
 // 创建平台
-test('can create a platform', function () {
-    $command = new PlatformData();
+test('can create a method', function () {
+    $command = new MethodData();
 
     $command->icon    = fake()->imageUrl(40, 40);
     $command->remarks = fake()->text();
-    foreach ($this->platformData as $platform) {
-        $command->code = $platform['code'];
-        $command->name = $platform['name'];
+    foreach ($this->methodData as $method) {
+        $command->code = $method['code'];
+        $command->name = $method['name'];
         try {
 
-            $model = $this->platformRepository->findByCode($command->code);
+            $model = $this->methodRepository->findByCode($command->code);
         } catch (Throwable $throwable) {
-            $model = $this->platformCommandService->create($command);
+            $model = $this->methodCommandService->create($command);
         }
 
 
@@ -137,8 +137,8 @@ test('can create channel product', function () {
             foreach ($productData['models'] as $modelData) {
                 $channelProductModeData = new ChannelProductModeData();
 
-                $channelProductModeData->methodCode   = $modelData['method_code'];
-                $channelProductModeData->platformCode = $command->channelCode;
+                $channelProductModeData->sceneCode   = $modelData['scene_code'];
+                $channelProductModeData->methodCode = $command->channelCode;
                 $models[]                             = $channelProductModeData;
             }
             $command->modes = $models;
