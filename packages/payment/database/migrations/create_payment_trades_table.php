@@ -26,25 +26,26 @@ return new class extends Migration {
             $table->string('payment_currency')->nullable()->comment('支付货币');
             $table->bigInteger('payment_amount')->default(0)->comment('实付金额');
 
+            // 支付渠道
             $table->string('channel_code')->nullable()->comment('支付渠道');
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
             $table->string('channel_trade_no', 64)->nullable()->comment('渠道支付单号');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
             // 支付者信息
-            $table->string('channel_payer_user_type')->nullable()->comment('支付者类型');
-            $table->string('channel_payer_open_id', 64)->nullable()->comment('支付者ID');
-            $table->string('channel_payer_nickname', 64)->nullable()->comment('支付者昵称');
+            $table->string('payer_type')->nullable()->comment('支付者类型');
+            $table->string('payer_open_id', 64)->nullable()->comment('支付者ID');
+            $table->string('payer_nickname', 64)->nullable()->comment('支付者昵称');
 
             $table->bigInteger('channel_fee_rate')->default(0)->comment('渠道手续费率');
             $table->bigInteger('channel_fee')->default(0)->comment('渠道手续费');
 
             $table->bigInteger('settle_currency')->default(0)->comment('结算货币');
             $table->bigInteger('settle_amount')->default(0)->comment('结算金额');
+            $table->bigInteger('receipt_amount')->default(0)->comment('实付金额');
             $table->bigInteger('receipt_amount')->default(0)->comment('实收金额');
 
-
-            $table->bigInteger('invoice_amount')->default(0)->comment('开票金额');
             $table->string('status')->comment(TradeStatusEnum::comments('状态'));
+            $table->string('notify_status')->nullable()->comment('异步通知状态');
             // 场景信息
             $table->string('scene_code')->comment('支付场景');
             $table->string('method_code')->comment('支付方式');
@@ -60,6 +61,10 @@ return new class extends Migration {
             $table->timestamp('pay_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
             $table->timestamp('settle_time')->nullable()->comment('结算时间');
+            $table->timestamp('notify_status')->nullable()->comment('异步通知时间');
+
+            // 异步通知状态
+
 
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');
