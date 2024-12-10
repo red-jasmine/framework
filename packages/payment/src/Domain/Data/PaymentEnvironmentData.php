@@ -2,7 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use Omnipay\Common\PaymentMethod;
+
+use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -19,9 +20,9 @@ class PaymentEnvironmentData extends Data
      * H5 用 H5
      * WEB 用 WEB
      * ...
-     * @var PaymentMethod
+     * @var SceneEnum
      */
-    public PaymentMethod $method;
+    public SceneEnum $scene;
 
     /**
      * 设备

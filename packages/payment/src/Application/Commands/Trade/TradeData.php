@@ -1,9 +1,11 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Data;
+namespace RedJasmine\Payment\Application\Commands\Trade;
 
 use DateTime;
-use Money\Currency;
+use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;
 
 class TradeData extends Data
@@ -13,9 +15,7 @@ class TradeData extends Data
 
     public string $merchantOrderNo;
 
-    public string $currency = 'CNY';
-
-    public int $amount;
+    public Money $amount;
 
     public string $subject;
 
@@ -27,15 +27,13 @@ class TradeData extends Data
      * @var GoodDetailData[]
      */
     public array $goodDetails = [];
-
-
     // 门店信息
-    public ?string $storeType;
 
-    public ?string $storeID;
+    public ?Store $store = null;
 
-    public ?string $storeName;
+    public ?string $notifyUrl = null;
 
+    public ?string $returnUrl = null;
 
     public ?string $passbackParams = null;
 

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use RedJasmine\Payment\Domain\Data\TradeData;
+use RedJasmine\Payment\Application\Commands\Trade\TradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
 
 class TradeTransformer

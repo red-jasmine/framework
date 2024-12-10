@@ -19,10 +19,10 @@ class TradePayingCommand extends Data
     public string $method;
 
     /**
-     * 支付产品
+     * 支付场景
      * @var string
      */
-    public string $method;
+    public string $scene;
 
     /**
      * 设备
