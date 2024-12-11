@@ -3,13 +3,17 @@
 namespace RedJasmine\Payment\Application\Services;
 
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
-use RedJasmine\Payment\Application\Services\CommandHandlers\TradePreCreateCommandHandler;
+use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
+use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePreCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradeReadyCommandHandler;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
  * @see  TradePreCreateCommandHandler::handle()
  * @method Trade preCreate(TradePreCreateCommand $command)
+ * @see  TradeReadyCommandHandler::handle()
+ * @method Trade ready(TradeReadyCommand $command)
  */
 class TradeCommandService extends ApplicationCommandService
 {
@@ -24,6 +28,7 @@ class TradeCommandService extends ApplicationCommandService
 
     protected static $macros = [
         'preCreate' => TradePreCreateCommandHandler::class,
+        'ready'     => TradeReadyCommandHandler::class
     ];
 
 }

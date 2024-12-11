@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers;
+namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
 
 use Closure;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
@@ -45,6 +45,7 @@ class TradeReadyCommandHandler extends CommandHandler
 
             // 根据 支付环境 获取 支付方式
             $methods = $this->paymentRouteService->getMethods($trade->merchantApp, $command);
+            dd($methods);
             // 返回支付场景等信息
             $this->commitDatabaseTransaction();
             return $methods;

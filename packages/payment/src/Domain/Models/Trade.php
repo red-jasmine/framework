@@ -20,8 +20,6 @@ class Trade extends Model
 
     use HasOperator;
 
-    use SoftDeletes;
-
     protected $casts = [
         'status' => TradeStatusEnum::class,
     ];
@@ -84,7 +82,7 @@ class Trade extends Model
 
     public function merchantApp() : BelongsTo
     {
-        return $this->belongsTo(MerchantApp::class, 'id', 'merchant_app_id');
+        return $this->belongsTo(MerchantApp::class, 'merchant_app_id','id');
     }
 
 }

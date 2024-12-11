@@ -46,8 +46,10 @@ return new class extends Migration {
             $table->string('status')->comment(TradeStatusEnum::comments('状态'));
             $table->string('notify_status')->nullable()->comment('异步通知状态');
             // 场景信息
-            $table->string('scene_code')->comment('支付场景');
-            $table->string('method_code')->comment('支付方式');
+            $table->string('scene_code')->nullable()->comment('支付场景');
+            $table->string('method_code')->nullable()->comment('支付方式');
+            $table->string('device')->nullable()->comment('支付设备');
+            $table->string('client')->nullable()->comment('支付客户端');
             // 门店信息
             $table->string('store_type')->nullable()->comment('门店类型');
             $table->string('store_id')->nullable()->comment('门店ID');

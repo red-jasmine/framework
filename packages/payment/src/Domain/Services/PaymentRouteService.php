@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Services;
 
 use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
 /**
  * 交易路由
@@ -15,15 +16,16 @@ class PaymentRouteService
     /**
      * 获取支付渠道
      * @param MerchantApp $merchantApp
-     * @param PaymentEnvironmentData $paymentEnvironment
+     * @param Environment $environment
      * @return array
      */
-    public function getMethods(MerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment) : array
+    public function getMethods(MerchantApp $merchantApp, Environment $environment) : array
     {
         // TODO
         // 获取当前 商户应用 允许的 渠道应用列表、根据应用开通的产品、产品支付的方式 枚举出所有的支付方式
 
         $merchant = $merchantApp->merchant;
+
 
 
         $channelApps = [];
@@ -40,7 +42,12 @@ class PaymentRouteService
     }
 
 
-    public function getChannelApp(MerchantApp $merchantApp, PaymentEnvironmentData $paymentEnvironment)
+    /**
+     * @param MerchantApp $merchantApp
+     * @param Environment $environment
+     * @return void
+     */
+    public function getChannelApp(MerchantApp $merchantApp, Environment $environment)
     {
         // 根据选择的  支付方式、支付场景
 
