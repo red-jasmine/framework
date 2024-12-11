@@ -18,8 +18,8 @@ return new class extends Migration {
 
             $table->string('subject')->nullable()->comment('交易标题');
             $table->string('description')->nullable()->comment('说明');
-            $table->string('currency')->comment('货币');
-            $table->bigInteger('amount')->default(0)->comment('总金额');
+            $table->string('amount_currency')->comment('金额货币');
+            $table->bigInteger('amount_value')->default(0)->comment('金额值');
             $table->bigInteger('discount_amount')->default(0)->comment('优惠金额');
             $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
             // 支付渠道
@@ -27,10 +27,10 @@ return new class extends Migration {
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
             $table->string('channel_trade_no', 64)->nullable()->comment('渠道支付单号');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
-            $table->string('payment_currency')->nullable()->comment('支付货币');
-            $table->bigInteger('payment_amount')->default(0)->comment('支付金额');
-            $table->string('receipt_currency')->nullable()->comment('实收货币');
-            $table->bigInteger('receipt_amount')->default(0)->comment('实收金额');
+            $table->string('payment_amount_currency')->nullable()->comment('支付金额货币');
+            $table->bigInteger('payment_amount_value')->default(0)->comment('支付金额值');
+            $table->string('receipt_amount_currency')->nullable()->comment('实收金额货币');
+            $table->bigInteger('receipt_amount_value')->default(0)->comment('实收金额值');
             // 支付者信息
             $table->string('payer_type')->nullable()->comment('支付者类型');
             $table->string('payer_user_id', 64)->nullable()->comment('支付者ID');
@@ -40,8 +40,8 @@ return new class extends Migration {
             $table->bigInteger('channel_fee_rate')->default(0)->comment('渠道手续费率');
             $table->bigInteger('channel_fee')->default(0)->comment('渠道手续费');
 
-            $table->string('settle_currency')->nullable()->comment('结算货币');
-            $table->bigInteger('settle_amount')->default(0)->comment('结算金额');
+            $table->string('settle_amount_currency')->nullable()->comment('结算货币');
+            $table->bigInteger('settle_amount_value')->default(0)->comment('结算金额');
 
             $table->string('status')->comment(TradeStatusEnum::comments('状态'));
             $table->string('notify_status')->nullable()->comment('异步通知状态');

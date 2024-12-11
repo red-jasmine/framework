@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -27,7 +28,20 @@ class Trade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix','jasmine_') . 'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
+    }
+
+    public function setAmount(Money $money) : void
+    {
+        $this->amount_currency = $money->currency;
+        $this->amount_value    = $money->amount;
+
+    }
+
+    public function setGoodsDetails(array $goodDetails = []) : void
+    {
+        $this->extension->good_details = $goodDetails;
+
     }
 
     /**
@@ -62,7 +76,7 @@ class Trade extends Model
     }
 
 
-    public function preCreate():void
+    public function preCreate() : void
     {
         $this->status = TradeStatusEnum::PRE;
     }

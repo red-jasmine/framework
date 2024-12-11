@@ -13,7 +13,7 @@ class TradeExtension extends Model
 
 
     protected $casts = [
-        'detail'           => GoodDetailCollectionCast::class,
+        'good_details'     => GoodDetailCollectionCast::class,
         'pass_back_params' => 'array',
         'expands'          => 'array',
     ];
