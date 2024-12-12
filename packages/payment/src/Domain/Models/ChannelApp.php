@@ -113,4 +113,12 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     }
 
 
+    /**
+     * 是否可用
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        return $this->status === ChannelAppStatusEnum::ENABLE;
+    }
 }

@@ -39,4 +39,11 @@ class Environment extends Data
      * @var string|null
      */
     public ?string $method;
+
+
+    /**
+     * SDK 版本
+     * @var string|null
+     */
+    public ?string $sdkVerison;
 }

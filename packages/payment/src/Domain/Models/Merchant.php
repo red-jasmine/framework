@@ -77,4 +77,16 @@ class Merchant extends Model
                     ->wherePivot('status', PermissionStatusEnum::ENABLE->value)
                     ->withTimestamps();
     }
+
+
+    /**
+     * @return ChannelApp[]
+     */
+    public function getAvailableChannelApps()
+    {
+        return $this->channelApps->filter(function (ChannelApp $channelApp) {
+            return $channelApp->isAvailable();
+        });
+
+    }
 }

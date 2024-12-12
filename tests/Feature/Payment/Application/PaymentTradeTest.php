@@ -1,6 +1,8 @@
 <?php
 
 
+use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\TradeCommandService;
@@ -225,10 +227,6 @@ beforeEach(function () {
     $this->merchant->channelApps()->sync(collect($this->channelApps)->pluck('id')->toArray());
 
 
-
-
-
-
     $this->tradeCommandService = app(TradeCommandService::class);
 
 });
@@ -283,7 +281,7 @@ test('pre create a payment trade', function () {
 
 });
 
-// 查询能获取支付方式
+// 查询取支付方式
 
 test('can get trade pay methods', function (Trade $trade) {
 
@@ -293,8 +291,24 @@ test('can get trade pay methods', function (Trade $trade) {
     $command->device = 'mobile';
     $command->client = 'alipay-ios-app';
 
+    $methods = $this->tradeCommandService->ready($command);
 
-    $this->tradeCommandService->ready($command);
+    $this->assertEquals($methods instanceof Collection, true, '返回值类型错误');
 
-
+    return $methods;
 })->depends('pre create a payment trade');
+
+// 测试发起支付
+
+test('can paying a trade', function (Trade $trade, $methods) {
+    $command     = new TradePayingCommand();
+    $command->id = $trade->id;
+
+    $command->scene  = SceneEnum::APP;
+    $command->device = 'mobile';
+    $command->client = 'alipay-ios-app';
+    $command->method = 'alipay';
+    // TODO
+
+
+})->depends('pre create a payment trade', 'can get trade pay methods');

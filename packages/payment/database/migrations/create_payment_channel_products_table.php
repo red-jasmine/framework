@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Payment\Domain\Models\Enums\ChannelStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('code')->comment('产品标识');
             $table->string('name')->comment('产品名称');
             $table->decimal('rate')->default(0)->comment('默认费率');
-            $table->string('status')->default(ChannelStatusEnum::ENABLE->value)->comment(ChannelStatusEnum::comments('状态'));
+            $table->string('status')->default(ChannelProductStatusEnum::ENABLE->value)->comment(ChannelProductStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');

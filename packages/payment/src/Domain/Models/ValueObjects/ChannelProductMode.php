@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
@@ -37,5 +38,16 @@ class ChannelProductMode extends Model
         return $this->belongsTo(ChannelProduct::class, 'payment_channel_product_id', 'id');
     }
 
+
+    public function method() : BelongsTo
+    {
+        return $this->belongsTo(Method::class, 'method_code', 'code');
+    }
+
+
+    public function isEnabled() : bool
+    {
+        return $this->status === ModeStatusEnum::ENABLE;
+    }
 
 }

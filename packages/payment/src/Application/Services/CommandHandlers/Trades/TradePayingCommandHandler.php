@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
 
-use Closure;
 use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentRouteService;
@@ -13,28 +13,28 @@ use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 /**
- * 创建预支付单
+ * 发起支付
  */
-class TradeReadyCommandHandler extends CommandHandler
+class TradePayingCommandHandler extends CommandHandler
 {
 
     public function __construct(
         protected TradeRepositoryInterface $repository,
         protected MerchantAppRepository    $merchantAppRepository,
         protected PaymentRouteService      $paymentRouteService,
+
     )
     {
     }
 
-    protected bool|Closure $hasDatabaseTransactions = false;
 
     /**
-     * @param TradeReadyCommand $command
+     * @param TradePayingCommand $command
      * @return Collection
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(TradeReadyCommand $command) : Collection
+    public function handle(TradePayingCommand $command) : Collection
     {
 
         $this->beginDatabaseTransaction();
@@ -43,7 +43,11 @@ class TradeReadyCommandHandler extends CommandHandler
             // 获取支付单
             $trade = $this->repository->find($command->id);
 
-            // 根据 支付环境 获取 支付方式
+            // 根据 支付环境、支付方式、 选择 支付应用
+            $channelApp = $this->paymentRouteService->getChannelApp($trade, $command);
+            // 根据应用 去支付渠道 创建支付单
+            // 根据 支付场景 返回 支付参数
+
             $methods = $this->paymentRouteService->getMethods($trade, $command);
 
             // 返回支付场景等信息
