@@ -14,7 +14,7 @@ class ChannelAppTransformer implements TransformerInterface
     {
         $model = $model ?? ChannelApp::newModel();
 
-        $model->channel_id            = $data->channelId;
+        $model->channel_code            = $data->channelCode;
         $model->channel_merchant_id     = $data->channelMerchantId;
         $model->channel_app_id          = $data->channelAppId;
         $model->fee_rate                = $data->feeRate;

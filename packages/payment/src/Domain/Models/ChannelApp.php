@@ -37,7 +37,9 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
 
     protected $fillable = [
-        'channel_id',
+        'owner_type',
+        'owner_id',
+        'channel_code',
         'channel_merchant_id',
         'channel_app_id',
         'channel_public_key',
@@ -97,7 +99,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public function channel() : BelongsTo
     {
-        return $this->belongsTo(Channel::class, 'channel_id', 'id');
+        return $this->belongsTo(Channel::class, 'channel_code', 'code');
     }
 
     public function products() : BelongsToMany

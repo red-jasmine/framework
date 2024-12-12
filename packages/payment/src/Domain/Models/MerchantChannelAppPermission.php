@@ -4,17 +4,17 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class MerchantChannelAppPermission extends Model
+class MerchantChannelAppPermission extends Pivot
 {
 
-    public $incrementing = false;
-    use HasSnowflakeId;
-    use HasOperator;
+    public $incrementing = true;
 
+    use HasOperator;
 
     protected $fillable = [
         'merchant_id',

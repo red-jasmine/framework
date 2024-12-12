@@ -190,7 +190,7 @@ test('create payment channel apps', function ($products) {
     $apps           = [];
     foreach ($this->channelData as $channelData) {
         $channel                       = $this->ChannelRepository->findByCode($channelData['code']);
-        $command->channelId            = $channel->id;
+        $command->channelCode          = $channel->code;
         $command->channelMerchantId    = fake()->numerify('channel-merchant-id-########');
         $command->channelAppId         = fake()->numerify('channel-app-id-########');
         $command->channelAppPublicKey  = fake()->text(3000);//
@@ -211,7 +211,7 @@ test('create payment channel apps', function ($products) {
 
         $apps[] = $model = $this->channelAppRepository->find($model->id);
 
-        $this->assertEquals($command->channelId, $model->channel_id);
+        $this->assertEquals($command->channelCode, $model->channel_code);
         $this->assertEquals($command->channelMerchantId, $model->channel_merchant_id);
         $this->assertEquals($command->channelAppId, $model->channel_app_id);
         $this->assertEquals($command->channelAppPublicKey, $model->channel_app_public_key);

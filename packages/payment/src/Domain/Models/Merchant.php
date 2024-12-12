@@ -16,6 +16,7 @@ class Merchant extends Model
 
 
     public $incrementing = false;
+
     use HasSnowflakeId;
 
     use HasOwner;
@@ -72,7 +73,7 @@ class Merchant extends Model
             config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions',
             'merchant_id',
             'channel_app_id',
-        )
+        )->using(MerchantChannelAppPermission::class)
                     ->wherePivot('status', PermissionStatusEnum::ENABLE->value)
                     ->withTimestamps();
     }

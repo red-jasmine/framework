@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('payment_channel_product_id')->comment('支付产品ID');
             $table->string('scene_code')->comment('支付场景');
             $table->string('method_code')->comment('支付方式');
-            $table->string('status')->comment(ModeStatusEnum::comments('状态'));
+            $table->string('status')->default(ModeStatusEnum::ENABLE->value)->comment(ModeStatusEnum::comments('状态'));
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');
             $table->timestamps();

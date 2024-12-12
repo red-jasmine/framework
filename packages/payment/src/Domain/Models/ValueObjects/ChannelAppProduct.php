@@ -3,16 +3,12 @@
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Payment\Domain\Models\Model;
 
 class ChannelAppProduct extends Model
 {
-
-    use HasOperator;
-
 
     protected $fillable = [
         'payment_channel_product_id',
