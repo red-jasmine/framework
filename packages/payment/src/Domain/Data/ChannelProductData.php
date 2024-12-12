@@ -14,7 +14,7 @@ class ChannelProductData extends Data
 
     public string $name;
 
-    public float   $rate    = 0;
+
     public ?string $remarks = null;
 
     public ChannelProductStatusEnum $status = ChannelProductStatusEnum::ENABLE;

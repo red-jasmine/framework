@@ -75,8 +75,9 @@ beforeEach(function () {
     );
 
     $this->channels[] = Channel::firstOrCreate(
-          [ 'name' => '微信', 'code' => 'wechat' ]
-        , [ 'code' => 'wechat' ]);
+        [ 'code' => 'wechat' ],
+        [ 'name' => '微信', 'code' => 'wechat' ]
+    );
 
     // 创建产品
 
@@ -309,6 +310,8 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $command->client = 'alipay-ios-app';
     $command->method = 'alipay';
     // TODO
+
+    $this->tradeCommandService->paying($command);
 
 
 })->depends('pre create a payment trade', 'can get trade pay methods');

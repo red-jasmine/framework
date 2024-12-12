@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Payment\Domain\Services\PaymentChannelService;
 use RedJasmine\Payment\Domain\Services\PaymentRouteService;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
@@ -41,11 +42,13 @@ class TradePayingCommandHandler extends CommandHandler
 
         try {
             // 获取支付单
-            $trade = $this->repository->find($command->id);
-
+            $trade       = $this->repository->find($command->id);
+            $environment = $command;
             // 根据 支付环境、支付方式、 选择 支付应用
-            $channelApp = $this->paymentRouteService->getChannelApp($trade, $command);
+            $channelApp = $this->paymentRouteService->getChannelApp($trade, $environment);
+
             // 根据应用 去支付渠道 创建支付单
+            app(PaymentChannelService::class)->createTrade($channelApp, $trade, $environment);
             // 根据 支付场景 返回 支付参数
 
             $methods = $this->paymentRouteService->getMethods($trade, $command);

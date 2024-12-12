@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Services;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
@@ -41,9 +42,10 @@ class PaymentRouteService
     /**
      * @param Trade $trade
      * @param Environment $environment
-     * @return ChannelApp|null
+     * @return ChannelApp
+     * @throws PaymentException
      */
-    public function getChannelApp(Trade $trade, Environment $environment) : ?ChannelApp
+    public function getChannelApp(Trade $trade, Environment $environment) : ChannelApp
     {
         // 根据选择的  支付方式、支付场景
         $merchantApp = $trade->merchantApp;
@@ -51,13 +53,17 @@ class PaymentRouteService
         // 获取可选的渠道应用
         // 可用的支付应用
         $availableChannelApps = $merchant->getAvailableChannelApps();
-        // 选定 一个支付应用
+        // 过滤
         $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use ($environment) {
-            return $this->channelAppEnvironmentFilter($channelApp, $environment);
+            return $this->channelAppEnvironmentFilter($environment, $channelApp) && $channelApp->isAvailable();
         })->all();
-
-
-        dd($availableChannelApps);
+        $availableChannelApps = collect($availableChannelApps);
+        if ($availableChannelApps->count() <= 0) {
+            throw PaymentException::newFromCodes(PaymentException::CHANNEL_ROUTE);
+        }
+        // TODO 路由渠道
+        // 最终返回随机一个渠道应用
+        return collect($availableChannelApps)->random(1)->first();
 
 
     }
@@ -79,7 +85,7 @@ class PaymentRouteService
                     if ($isAvailable) {
                         return;
                     }
-                    if ($this->isModeAvailabel($channelProductMode, $environment)) {
+                    if ($this->isModeAvailable($channelProductMode, $environment)) {
                         $isAvailable = true;
                     }
 
@@ -90,10 +96,10 @@ class PaymentRouteService
         return $isAvailable;
     }
 
-    protected function isModeAvailabel(ChannelProductMode $channelProductMode, Environment $environment) : bool
+    protected function isModeAvailable(ChannelProductMode $channelProductMode, Environment $environment) : bool
     {
         // 满足 场景 一致
-        if ($channelProductMode->scene_code !== $environment->scene) {
+        if ($channelProductMode->scene_code !== $environment->scene->value) {
             return false;
         }
         // 满足支付方式一致

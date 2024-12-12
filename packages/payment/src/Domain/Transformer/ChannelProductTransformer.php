@@ -22,7 +22,7 @@ class ChannelProductTransformer implements TransformerInterface
         $channelProduct->channel_code = $data->channelCode;
         $channelProduct->code         = $data->code;
         $channelProduct->name         = $data->name;
-        $channelProduct->rate         = $data->rate;
+
         $channelProduct->status       = $data->status;
         $channelProduct->setModes($data->modes);
         return $channelProduct;

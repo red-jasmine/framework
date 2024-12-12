@@ -127,7 +127,7 @@ test('can create channel product', function () {
     foreach ($this->channelData as $channelData) {
 
         $command->channelCode = $channelData['code'];
-        $command->rate        = 0.6;
+
 
         foreach ($this->productsData as $productData) {
 
@@ -155,7 +155,7 @@ test('can create channel product', function () {
             $this->assertEquals($command->name, $model->name);
             $this->assertEquals($command->code, $model->code);
             $this->assertEquals($command->channelCode, $model->channel_code);
-            $this->assertEquals($command->rate, $model->rate);
+
             $this->assertEquals($command->channelCode, $model->channel->code);
         }
 

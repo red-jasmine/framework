@@ -95,7 +95,7 @@ test('can create channel product', function (Channel $channel) {
     $command->channelCode = $channel->code;
     $command->code        = fake()->word();
     $command->name        = fake()->word();
-    $command->rate        = 0.6;
+
     $command->modes       = [
         ChannelProductModeData::from([ 'sceneCode' => SceneEnum::WEB->value, 'methodCode' => 'alipay' ]),
         ChannelProductModeData::from([ 'sceneCode' => SceneEnum::JSAPI->value, 'methodCode' => 'wechat' ]),
@@ -108,7 +108,7 @@ test('can create channel product', function (Channel $channel) {
     $this->assertEquals($command->name, $model->name);
     $this->assertEquals($command->code, $model->code);
     $this->assertEquals($command->channelCode, $model->channel_code);
-    $this->assertEquals($command->rate, $model->rate);
+
     $this->assertEquals($command->channelCode, $model->channel->code);
 
     $this->assertEquals(true, $model->channel->products->where('channel_code', $command->channelCode)->count() >= 1);
@@ -125,7 +125,7 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
     $command->channelCode = $channel->code;
     $command->code        = fake()->word();
     $command->name        = fake()->word();
-    $command->rate        = 0.6;
+
     $command->modes       = [
         ChannelProductModeData::from([ 'sceneCode' => SceneEnum::WEB->value,
                                        'methodCode' => 'alipay' ]),
@@ -144,7 +144,7 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
     $this->assertEquals($command->name, $model->name);
     $this->assertEquals($command->code, $model->code);
     $this->assertEquals($command->channelCode, $model->channel_code);
-    $this->assertEquals($command->rate, $model->rate);
+
     $this->assertEquals($command->channelCode, $model->channel->code);
 
     $this->assertEquals(count($command->modes), $model->modes->count());

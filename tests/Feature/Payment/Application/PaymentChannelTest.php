@@ -18,7 +18,7 @@ beforeEach(function () {
 
 test('can create channel', function () {
     $command       = new ChannelData();
-    $command->name = fake()->word();
+    $command->name = fake()->password();
     $command->code = fake()->word();
 
 

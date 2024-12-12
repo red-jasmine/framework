@@ -32,7 +32,6 @@ class ChannelProduct extends Model
 
     protected $fillable = [
         'channel_code',
-        'rate',
         'name',
         'code',
         'status',
