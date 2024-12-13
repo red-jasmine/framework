@@ -31,31 +31,25 @@ class TradePayingCommandHandler extends CommandHandler
 
     /**
      * @param TradePayingCommand $command
-     * @return Collection
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(TradePayingCommand $command) : Collection
+    public function handle(TradePayingCommand $command)
     {
-
         $this->beginDatabaseTransaction();
-
         try {
             // 获取支付单
             $trade       = $this->repository->find($command->id);
             $environment = $command;
             // 根据 支付环境、支付方式、 选择 支付应用
             $channelApp = $this->paymentRouteService->getChannelApp($trade, $environment);
-
             // 根据应用 去支付渠道 创建支付单
-            app(PaymentChannelService::class)->createTrade($channelApp, $trade, $environment);
-            // 根据 支付场景 返回 支付参数
-
-            $methods = $this->paymentRouteService->getMethods($trade, $command);
-
+            $channelProduct = $this->paymentRouteService->getChannelProduct($environment, $channelApp);
+            // 如何选出支付产品
+            app(PaymentChannelService::class)->createTrade( $channelApp, $channelProduct,$trade, $environment);
             // 返回支付场景等信息
             $this->commitDatabaseTransaction();
-            return $methods;
+
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
@@ -65,7 +59,7 @@ class TradePayingCommandHandler extends CommandHandler
         }
 
 
-        return $methods;
+        return;
 
     }
 

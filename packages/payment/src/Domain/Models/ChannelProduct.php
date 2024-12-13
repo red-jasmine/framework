@@ -80,4 +80,9 @@ class ChannelProduct extends Model
         return $this->hasMany(ChannelProductMode::class, 'payment_channel_product_id', 'id');
     }
 
+    public function isAvailable() : bool
+    {
+        return $this->status === ChannelProductStatusEnum::ENABLE;
+    }
+
 }

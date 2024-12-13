@@ -4,8 +4,11 @@ namespace RedJasmine\Payment\Domain\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Omnipay\Alipay\AopAppGateway;
+use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
+use RedJasmine\Payment\Domain\Gateway\GatewayAdapter;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
@@ -20,7 +23,7 @@ class PaymentChannelService
      * 创建交易单
      * @return void
      */
-    public function createTrade(ChannelApp $channelApp, Trade $trade, Environment $environment)
+    public function createTrade(ChannelApp $channelApp, ChannelProduct $channelProduct, Trade $trade, Environment $environment)
     {
         // 设置为支付中
         // 根据选中的渠道，选择出签约的产品
@@ -28,21 +31,14 @@ class PaymentChannelService
         // TODO 如何只智能的转换 参数 更新 不同渠道 不同网关 设置不同的参数?
         // 只能每支持一个渠道 需要创建一个 渠道管处理器
         // 创建支付网关
-//        $class = 'Alipay_AopPage';
-//        // 创建渠道订单
-//        /**
-//         * @var $gateway AopAppGateway
-//         */
-//        $gateway = Omnipay::create($class);
-//
-//        $gateway->setAppId($channelApp->channel_app_id);
-//
-//        $gateway->setSignType($channelApp->sign_type);
-//        $gateway->purchase()->setBizContent([
-//
-//
-//                                            ]);
-//
+
+        // 支付网关  由 渠道产品决定
+
+        $adapter = GatewayAdapter::create($channelApp);
+        // 创建网关
+        $response = $adapter->init($channelApp, $channelProduct)->purchase($trade)->send();
+        // 设置支付参数
+
 
     }
 

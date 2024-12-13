@@ -3,12 +3,10 @@
 namespace RedJasmine\Payment\Domain\Services;
 
 use Illuminate\Support\Collection;
-use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
-use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
@@ -68,32 +66,49 @@ class PaymentRouteService
 
     }
 
+
+    /**
+     * @param Environment $environment
+     * @param ChannelApp $channelApp
+     * @return ChannelProduct
+     * @throws PaymentException
+     */
+    public function getChannelProduct(Environment $environment, ChannelApp $channelApp) : ChannelProduct
+    {
+        $channelProducts = $channelApp
+            ->products
+            ->filter(function (ChannelProduct $channelProduct) use ($environment) {
+                return $this->channelProductEnvironmentFilter($channelProduct, $environment);
+            })->all();
+        if (collect($channelProducts)->count() <= 0) {
+            throw PaymentException::newFromCodes(PaymentException::CHANNEL_PRODUCT_ROUTE);
+        }
+        return collect($channelProducts)->random(1)->first();
+    }
+
+    protected function channelProductEnvironmentFilter(ChannelProduct $channelProduct, Environment $environment) : bool
+    {
+        if (!$channelProduct->isAvailable()) {
+            return false;
+        }
+        $isAvailable = false;
+        foreach ($channelProduct->modes as $channelProductMode) {
+            if ($this->isModeAvailable($channelProductMode, $environment)) {
+                $isAvailable = true;
+            }
+        }
+        return $isAvailable;
+    }
+
     protected function channelAppEnvironmentFilter(Environment $environment, ChannelApp $channelApp) : bool
     {
-        // 过滤渠道应用
-        $isAvailable = false;
-        // 判断当前渠道应用是否满足环境要求
-
         // 签约的产品
-        $channelApp->products
-            ->each(function (ChannelProduct $channelProduct) use ($environment, &$isAvailable) {
-                if ($isAvailable) {
-                    return;
-                }
-                // 产品支付的支付方式 和 场景
-                $channelProduct->modes->each(function (ChannelProductMode $channelProductMode) use ($environment, &$isAvailable) {
-                    if ($isAvailable) {
-                        return;
-                    }
-                    if ($this->isModeAvailable($channelProductMode, $environment)) {
-                        $isAvailable = true;
-                    }
-
-                });
-
-            });
-
-        return $isAvailable;
+        $channelProducts = $channelApp
+            ->products
+            ->filter(function (ChannelProduct $channelProduct) use ($environment) {
+                return $this->channelProductEnvironmentFilter($channelProduct, $environment);
+            })->all();
+        return collect($channelProducts)->count() > 0;
     }
 
     protected function isModeAvailable(ChannelProductMode $channelProductMode, Environment $environment) : bool
@@ -111,7 +126,6 @@ class PaymentRouteService
             return false;
         }
         return true;
-        // 支付方式启用
 
     }
 

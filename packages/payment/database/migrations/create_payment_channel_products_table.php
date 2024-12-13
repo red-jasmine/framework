@@ -13,7 +13,6 @@ return new class extends Migration {
             $table->string('channel_code')->comment('渠道');
             $table->string('code')->comment('产品标识');
             $table->string('name')->comment('产品名称');
-            $table->string('gateway')->nullable()->comment('网关');
             $table->string('status')->default(ChannelProductStatusEnum::ENABLE->value)->comment(ChannelProductStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
             $table->nullableMorphs('creator', 'idx_creator');

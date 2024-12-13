@@ -10,6 +10,7 @@ use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
@@ -21,6 +22,8 @@ use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 
 beforeEach(function () {
@@ -235,6 +238,7 @@ beforeEach(function () {
 test('pre create a payment trade', function () {
 
 
+
     $command = new  TradePreCreateCommand();
 
     $command->merchantAppId = $this->merchantApp->id;
@@ -289,8 +293,25 @@ test('can get trade pay methods', function (Trade $trade) {
     $command         = new TradeReadyCommand();
     $command->id     = $trade->id;
     $command->scene  = SceneEnum::APP;
-    $command->device = 'mobile';
-    $command->client = 'alipay-ios-app';
+    $command->method = 'alipay';
+    $command->device = Device::from([
+                                        'id'         => fake()->uuid(),
+                                        'model'      => fake()->uuid(),
+                                        'os'         => fake()->randomElement([ 'ios', 'android' ]),
+                                        'brand'      => fake()->randomElement([ 'apple', 'huawei', 'xiaomi' ]),
+                                        'version'    => fake()->randomElement([ '9.0.0', '10.0.0', '11.0.0' ]),
+                                        'token'      => fake()->uuid(),
+                                        'language'   => fake()->randomElement([ 'zh-CN', 'en-US' ]),
+                                        'extensions' => '{sss: "sss"}'
+                                    ]);
+
+    $command->client = Client::from([
+                                        'name'    => fake()->randomElement([ 'alipay', 'wechat' ]),
+                                        'type'    => fake()->randomElement(ClientTypeEnum::values()),
+                                        'ip'      => fake()->ipv4(),
+                                        'version' => fake()->numerify('v#.##.###'),
+                                        'agent'   => fake()->userAgent(),
+                                    ]);
 
     $methods = $this->tradeCommandService->ready($command);
 
@@ -306,10 +327,25 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $command->id = $trade->id;
 
     $command->scene  = SceneEnum::APP;
-    $command->device = 'mobile';
-    $command->client = 'alipay-ios-app';
     $command->method = 'alipay';
-    // TODO
+    $command->device = Device::from([
+                                        'id'         => fake()->uuid(),
+                                        'model'      => fake()->uuid(),
+                                        'os'         => fake()->randomElement([ 'ios', 'android' ]),
+                                        'brand'      => fake()->randomElement([ 'apple', 'huawei', 'xiaomi' ]),
+                                        'version'    => fake()->randomElement([ '9.0.0', '10.0.0', '11.0.0' ]),
+                                        'token'      => fake()->uuid(),
+                                        'language'   => fake()->randomElement([ 'zh-CN', 'en-US' ]),
+                                        'extensions' => json_encode([ 'ss' => 'ss' ], JSON_THROW_ON_ERROR)
+                                    ]);
+    $command->client = Client::from([
+                                        'name'    => fake()->randomElement([ 'alipay', 'wechat' ]),
+                                        'type'    => fake()->randomElement(ClientTypeEnum::values()),
+                                        'ip'      => fake()->ipv4(),
+                                        'version' => fake()->numerify('v#.##.###'),
+                                        'agent'   => fake()->userAgent(),
+                                    ]);
+
 
     $this->tradeCommandService->paying($command);
 
