@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('name')->comment('产品名称');
             $table->string('status')->default(ChannelProductStatusEnum::ENABLE->value)->comment(ChannelProductStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
+            $table->string('gateway')->nullable()->comment('支付网关名称');
+            $table->json('extensions')->nullable()->comment('扩展');
             $table->nullableMorphs('creator', 'idx_creator');
             $table->nullableMorphs('updater', 'idx_updater');
             $table->timestamps();

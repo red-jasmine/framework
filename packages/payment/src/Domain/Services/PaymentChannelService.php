@@ -36,8 +36,13 @@ class PaymentChannelService
 
         $adapter = GatewayAdapter::create($channelApp);
         // 创建网关
-        $response = $adapter->init($channelApp, $channelProduct)->purchase($trade)->send();
+        $response = $adapter->init($channelApp, $channelProduct)
+                            ->purchase($trade)->send();
         // 设置支付参数
+        if($response->isSuccessful()){
+
+
+        }
 
 
     }

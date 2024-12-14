@@ -35,7 +35,7 @@ class GatewayAdapter
         // 根据渠道应用 创建 支付网关适配器
         $channelApp->channel_code;
         $factory = self::getFactory();
-        return $factory->create($channelApp->channel_code);
+        return $factory->create((string)$channelApp->channel_code);
     }
 
 }

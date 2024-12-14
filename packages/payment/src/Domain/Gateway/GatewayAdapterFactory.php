@@ -8,7 +8,7 @@ class GatewayAdapterFactory
 {
 
 
-    public function create($className): GatewayAdapterInterface
+    public function create(string $className) : GatewayAdapterInterface
     {
         $class = $this->geClassName($className);
         if (!class_exists($class)) {
@@ -19,14 +19,16 @@ class GatewayAdapterFactory
 
     }
 
-    protected function geClassName($className)
+    protected function geClassName(string $className) : string
     {
         if (is_subclass_of($className, GatewayAdapterInterface::class)) {
             return $className;
         }
-        // TODO 根据名称生成
+        // 首字母大写
+        $className = ucfirst($className);
 
-        return $className;
+        return '\\RedJasmine\\Payment\\Domain\\Gateway\\' . $className . 'GatewayAdapter';
+
 
     }
 }
