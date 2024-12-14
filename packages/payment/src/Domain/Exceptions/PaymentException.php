@@ -12,4 +12,7 @@ class PaymentException extends AbstractException
     public const int CHANNEL_ROUTE         = 602010; // 渠道路由
     public const int CHANNEL_PRODUCT_ROUTE = 602011; // 渠道路由
 
+
+    public const int TRADE_PAYING = 603001; // 渠道路由
+
 }
