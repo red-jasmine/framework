@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Gateway;
 
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 
-class GatewayAdapter
+class GatewayDrive
 {
 
     /**
@@ -12,12 +12,12 @@ class GatewayAdapter
      *
      * Creates a new empty GatewayFactory if none has been set previously.
      *
-     * @return GatewayAdapterFactory A GatewayFactory instance
+     * @return GatewayDriveFactory A GatewayFactory instance
      */
-    public static function getFactory() : GatewayAdapterFactory
+    public static function getFactory() : GatewayDriveFactory
     {
         if (is_null(self::$factory)) {
-            self::$factory = new GatewayAdapterFactory;
+            self::$factory = new GatewayDriveFactory;
         }
 
         return self::$factory;
@@ -26,16 +26,17 @@ class GatewayAdapter
     /**
      * Internal factory storage
      *
-     * @var GatewayAdapterFactory
+     * @var GatewayDriveFactory
      */
-    private static GatewayAdapterFactory $factory;
+    private static GatewayDriveFactory $factory;
 
-    public static function create(ChannelApp $channelApp) : GatewayAdapterInterface
+    public static function create(string $className) : GatewayDriveInterface
     {
+
         // 根据渠道应用 创建 支付网关适配器
-        $channelApp->channel_code;
+
         $factory = self::getFactory();
-        return $factory->create((string)$channelApp->channel_code);
+        return $factory->create($className);
     }
 
 }

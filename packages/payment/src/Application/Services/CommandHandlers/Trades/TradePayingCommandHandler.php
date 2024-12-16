@@ -45,9 +45,10 @@ class TradePayingCommandHandler extends CommandHandler
             $channelApp = $this->paymentRouteService->getChannelApp($trade, $environment);
             // 根据应用 去支付渠道 创建支付单
             $channelProduct = $this->paymentRouteService->getChannelProduct($environment, $channelApp);
-            // 如何选出支付产品
-            app(PaymentChannelService::class)->createTrade( $channelApp, $channelProduct,$trade, $environment);
+            // 去渠道创建 支付单
+            $result = app(PaymentChannelService::class)->createTrade($channelApp, $channelProduct, $trade, $environment);
             // 返回支付场景等信息
+            $result->isSuccessFul();
             $this->commitDatabaseTransaction();
 
         } catch (AbstractException $exception) {

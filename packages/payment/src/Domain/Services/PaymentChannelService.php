@@ -5,7 +5,8 @@ namespace RedJasmine\Payment\Domain\Services;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Support\Facades\Cache;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Gateway\GatewayAdapter;
+use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
+use RedJasmine\Payment\Domain\Gateway\GatewayDrive;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Trade;
@@ -25,36 +26,26 @@ class PaymentChannelService
      * @param ChannelProduct $channelProduct
      * @param Trade $trade
      * @param Environment $environment
-     * @return void
+     * @return PurchaseResult
      * @throws PaymentException
      * @throws Throwable
      */
-    public function createTrade(ChannelApp $channelApp, ChannelProduct $channelProduct, Trade $trade, Environment $environment)
+    public function createTrade(ChannelApp $channelApp, ChannelProduct $channelProduct, Trade $trade, Environment $environment) : PurchaseResult
     {
-        // 设置为支付中
-        // 根据选中的渠道，选择出签约的产品
-        // 更具渠道、产品、环境、渠道应用、
-        // TODO 如何只智能的转换 参数 更新 不同渠道 不同网关 设置不同的参数?
-        // 只能每支持一个渠道 需要创建一个 渠道管处理器
-        // 创建支付网关
 
         $lock = $this->getLock($trade);
-        // 支付网关  由 渠道产品决定
+
         if (!$lock->get()) {
             throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
         }
+        // 支付网关适配器
+        $gateway = GatewayDrive::create($channelApp->channel_code);
 
-        $adapter = GatewayAdapter::create($channelApp);
         try {
-            $response = $adapter->init($channelApp, $channelProduct)->purchase($trade)->send();
+            return $gateway->gateway($channelApp, $channelProduct)->purchase($trade, $environment);
         } catch (Throwable $throwable) {
             throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
             throw $throwable;
-
-        }
-        // 设置支付参数
-        if ($response->isSuccessful()) {
-
 
         }
 
