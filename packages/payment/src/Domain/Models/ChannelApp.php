@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelAppStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -49,10 +50,15 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     ];
 
     protected $casts = [
-        'status'                  => ChannelAppStatusEnum::class,
-        'channel_public_key'      => AesEncrypted::class,
-        'channel_app_public_key'  => AesEncrypted::class,
-        'channel_app_private_key' => AesEncrypted::class,
+        'sign_method'                 => SignMethodEnum::class,
+        'status'                      => ChannelAppStatusEnum::class,
+        'encrypt_key'                 => 'encrypted',
+        'channel_public_key'          => 'encrypted',
+        'channel_app_public_key'      => 'encrypted',
+        'channel_app_private_key'     => 'encrypted',
+        'channel_public_key_cert'     => 'encrypted',
+        'channel_root_cert'           => 'encrypted',
+        'channel_app_public_key_cert' => 'encrypted',
     ];
 
 

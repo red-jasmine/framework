@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelAppStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -17,7 +18,7 @@ return new class extends Migration {
             $table->string('merchant_name')->nullable()->comment('商户名称');
             $table->string('icon')->nullable()->comment('应用图标');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户ID');
-            $table->string('sign_method')->nullable()->comment('接口加签方式');
+            $table->string('sign_method')->nullable()->comment(SignMethodEnum::comments('加签方式'));
             $table->string('sign_type')->nullable()->comment('接口加签算法');
             $table->string('encrypt_type')->nullable()->comment('内容加密算法');
             $table->string('encrypt_key')->nullable()->comment('内容加密密钥');

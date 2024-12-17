@@ -35,18 +35,17 @@ class PaymentChannelService
 
         $lock = $this->getLock($trade);
 
-        if (!$lock->get()) {
-            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
-        }
+//        if (!$lock->get()) {
+//            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
+//        }
         // 支付网关适配器
         $gateway = GatewayDrive::create($channelApp->channel_code);
 
         try {
             return $gateway->gateway($channelApp, $channelProduct)->purchase($trade, $environment);
         } catch (Throwable $throwable) {
-            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
             throw $throwable;
-
+            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
         }
 
 
@@ -56,9 +55,7 @@ class PaymentChannelService
     {
 
         $name = 'red-jasmine-payment:trade:' . $trade->id;
-
         return Cache::lock($name, 60);
-
     }
 
 

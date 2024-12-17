@@ -13,6 +13,10 @@ class ChannelProductData extends Data
     public string $code;
 
     public string $name;
+    /*
+     * 网关名称
+     */
+    public ?string $gateway;
 
 
     public ?string $remarks = null;

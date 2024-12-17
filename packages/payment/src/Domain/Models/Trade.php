@@ -82,7 +82,18 @@ class Trade extends Model
 
     public function merchantApp() : BelongsTo
     {
-        return $this->belongsTo(MerchantApp::class, 'merchant_app_id','id');
+        return $this->belongsTo(MerchantApp::class, 'merchant_app_id', 'id');
+    }
+
+
+    /**
+     *
+     * @return void
+     */
+    public function paying():void
+    {
+        $this->status = TradeStatusEnum::PAYING;
+
     }
 
 }

@@ -84,11 +84,12 @@ beforeEach(function () {
 
     // 创建产品
 
-    $productsData          = [
+    $productsData = [
         [
             'channel_code' => 'alipay',
             'code'         => 'FACE_TO_FACE_PAYMENT',
             'name'         => '当面付',
+            'gateway'      => 'Alipay_AopF2F',
             'modes'        => [
                 [
                     'scene_code'  => SceneEnum::FACE,
@@ -104,6 +105,7 @@ beforeEach(function () {
             'channel_code' => 'alipay',
             'code'         => 'JSAPI',
             'name'         => '小程序支付',
+            'gateway'      => 'Alipay_AopJs',
             'modes'        => [
                 [
                     'scene_code'  => SceneEnum::JSAPI,
@@ -115,6 +117,7 @@ beforeEach(function () {
             'channel_code' => 'alipay',
             'code'         => 'QUICK_MSECURITY_PAY',
             'name'         => 'APP支付',
+            'gateway'      => 'Alipay_AopApp',
             'modes'        => [
                 [
                     'scene_code'  => SceneEnum::APP,
@@ -126,6 +129,7 @@ beforeEach(function () {
             'channel_code' => 'alipay',
             'code'         => 'QUICK_WAP_WAY',
             'name'         => '手机网站支付',
+            'gateway'      => 'Alipay_AopWap',
             'modes'        => [
                 [
                     'scene_code'  => SceneEnum::WAP,
@@ -133,21 +137,12 @@ beforeEach(function () {
                 ],
             ],
         ],
-        [
-            'channel_code' => 'alipay',
-            'code'         => 'QUICK_WAP_WAY',
-            'name'         => '手机网站支付',
-            'modes'        => [
-                [
-                    'scene_code'  => SceneEnum::WAP,
-                    'method_code' => 'alipay'
-                ],
-            ],
-        ],
+
         [
             'channel_code' => 'alipay',
             'code'         => 'FAST_INSTANT_TRADE_PAY',
             'name'         => '电脑网站支付',
+            'gateway'      => 'Alipay_AopPage',
             'modes'        => [
                 [
                     'scene_code'  => SceneEnum::WEB,
@@ -165,11 +160,7 @@ beforeEach(function () {
                 'channel_code' => $productData['channel_code'],
                 'code'         => $productData['code'],
             ],
-            [
-                'channel_code' => $productData['channel_code'],
-                'code'         => $productData['code'],
-                'name'         => $productData['name'],
-            ],
+            $productData
         );
 
         foreach ($productData['modes'] as $mode) {
@@ -189,16 +180,9 @@ beforeEach(function () {
             'owner_type'     => 'user',
             'owner_id'       => 1,
             'channel_code'   => 'alipay',
-            'channel_app_id' => '2016101100000000000000000001',
+            'channel_app_id' => '2021003187696362',
             'name'           => '测试应用1',
-        ],
-        [
-            'owner_type'     => 'user',
-            'owner_id'       => 1,
-            'channel_code'   => 'alipay',
-            'channel_app_id' => '2016101100000000000000000002',
-            'name'           => '测试应用2',
-        ],
+        ]
     ];
     $this->channelApps = [];
     foreach ($channelAppsData as $channelAppData) {
@@ -326,7 +310,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $command     = new TradePayingCommand();
     $command->id = $trade->id;
 
-    $command->scene  = SceneEnum::APP;
+    $command->scene  = SceneEnum::WEB;
     $command->method = 'alipay';
     $command->device = Device::from([
                                         'id'         => fake()->uuid(),
@@ -345,6 +329,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
                                         'version' => fake()->numerify('v#.##.###'),
                                         'agent'   => fake()->userAgent(),
                                     ]);
+
 
 
     $this->tradeCommandService->paying($command);

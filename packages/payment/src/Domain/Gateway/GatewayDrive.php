@@ -24,11 +24,9 @@ class GatewayDrive
     }
 
     /**
-     * Internal factory storage
-     *
-     * @var GatewayDriveFactory
+     * @var GatewayDriveFactory|null
      */
-    private static GatewayDriveFactory $factory;
+    private static ?GatewayDriveFactory $factory = null;
 
     public static function create(string $className) : GatewayDriveInterface
     {

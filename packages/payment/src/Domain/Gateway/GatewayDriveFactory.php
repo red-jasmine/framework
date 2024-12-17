@@ -27,7 +27,7 @@ class GatewayDriveFactory
         // 首字母大写
         $className = ucfirst($className);
 
-        return '\\RedJasmine\\Payment\\Domain\\Gateway\\' . $className . 'GatewayAdapter';
+        return '\\RedJasmine\\Payment\\Infrastructure\\Gateway\\' . $className . 'GatewayDrive';
 
 
     }
