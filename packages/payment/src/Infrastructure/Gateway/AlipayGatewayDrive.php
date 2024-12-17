@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Infrastructure\Gateway;
 
 use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Money\Currencies\ISOCurrencies;
 use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -68,10 +69,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         }
 
         if ($channelApp->sign_method === SignMethodEnum::Cert) {
-            $gateway->setAlipayRootCert($channelApp->channel_root_cert);
 
-            $gateway->setParameter('alipay_public_key', $this->getPublicKey($channelApp->channel_public_key_cert));
-            $gateway->setParameter('alipay_public_cert', $channelApp->channel_public_key_cert);
+            $gateway->setAlipayRootCert($channelApp->channel_root_cert);
+            $gateway->setAlipayPublicCert($channelApp->channel_public_key_cert);
             $gateway->setAppCert($channelApp->channel_app_public_key_cert);
             $gateway->setCheckAlipayPublicCert(true);
         }
