@@ -42,6 +42,7 @@ class PaymentApplicationServiceProvider extends ServiceProvider
     public function register() : void
     {
 
+
         $this->app->bind(MerchantRepositoryInterface::class, MerchantRepository::class);
         $this->app->bind(MerchantReadRepositoryInterface::class, MerchantReadRepository::class);
 

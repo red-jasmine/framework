@@ -13,7 +13,11 @@ use Omnipay\Alipay\AbstractAopGateway;
 use Omnipay\Alipay\AopAppGateway;
 use Omnipay\Alipay\AopPageGateway;
 use Omnipay\Common\GatewayInterface;
+use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
+use RedJasmine\Payment\Domain\Facades\PaymentUrl;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
+use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
 use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
@@ -29,32 +33,30 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 class AlipayGatewayDrive implements GatewayDriveInterface
 {
 
+
     /**
-     * @var GatewayInterface|AbstractAopGateway
+     * @var GatewayInterface
      */
-    protected GatewayInterface $gateway;
-    protected ChannelApp       $channelApp;
-    protected ?ChannelProduct  $channelProduct;
+    protected GatewayInterface    $gateway;
+    protected ChannelApp          $channelApp;
+    protected ?ChannelProduct     $channelProduct;
+    protected ?PaymentChannelData $paymentChannelData;
 
-
-    public function gateway(ChannelApp $channelApp, ?ChannelProduct $channelProduct = null) : static
+    public function gateway(PaymentChannelData $paymentChannelData) : static
     {
-
-        $gatewayName = $channelProduct->gateway ?? 'Alipay_AopApp';
-
-        $this->channelProduct = $channelProduct;
-        $this->channelApp     = $channelApp;
-
-        $this->gateway = $this->initChannelApp(Omnipay::create($gatewayName), $channelApp);
+        $this->paymentChannelData = $paymentChannelData;
+        $this->channelProduct     = $paymentChannelData->channelProduct;
+        $this->channelApp         = $paymentChannelData->channelApp;
+        $gatewayName              = $this->channelProduct->gateway ?? 'Alipay_AopApp';
+        $this->gateway            = $this->initChannelApp(Omnipay::create($gatewayName), $this->channelApp);
 
         return $this;
+
     }
 
 
     protected function initChannelApp(GatewayInterface $gateway, ChannelApp $channelApp) : GatewayInterface
     {
-
-
         /**
          * @var $gateway AopPageGateway
          */
@@ -62,7 +64,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $gateway->setSignType('RSA2');
         $gateway->setAppId($channelApp->channel_app_id);
         $gateway->setPrivateKey($channelApp->channel_app_private_key);
-
+        $gateway->setNotifyUrl(PaymentUrl::notifyUrl($channelApp));
 
         if ($channelApp->sign_method === SignMethodEnum::Secret) {
             $gateway->setAlipayPublicKey($channelApp->channel_public_key);
@@ -90,7 +92,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         return trim(str_replace('-----END PUBLIC KEY-----', '', $public_key));
     }
 
-    public function purchase(Trade $trade, Environment $environment) : PurchaseResult
+    public function purchase(Trade $trade, Environment $environment) : ChannelResult
     {
 
         $money = new Money($trade->amount_value, new Currency($trade->amount_currency));
@@ -102,30 +104,30 @@ class AlipayGatewayDrive implements GatewayDriveInterface
          */
         $gateway = $this->gateway;
 
-        $gateway->setReturnUrl('http://red-jasmine.top/payment/callback/aliapy/');
-        $gateway->setNotifyUrl('http://red-jasmine.top/payment/notify/aliapy/');
-        $request = $gateway->purchase()->setBizContent([
-                                                           'out_trade_no'      => $trade->id,
-                                                           'total_amount'      => $moneyFormatter->format($money),
-                                                           'subject'           => $trade->subject,
-                                                           'product_code'      => $this->channelProduct->code,
-                                                           'merchant_order_no' => $trade->merchant_order_no,
-                                                       ]);
+        $gateway->setReturnUrl(PaymentUrl::returnUrl($trade));
+
+        $request = $gateway->purchase(
+            [ 'biz_content' => [
+                'out_trade_no'      => $trade->id,
+                'total_amount'      => $moneyFormatter->format($money),
+                'subject'           => $trade->subject,
+                'product_code'      => $this->channelProduct->code,
+                'merchant_order_no' => $trade->merchant_order_no,
+            ] ]
+        );
 
         $response = $request->send();
+
+        $result = new ChannelResult;
+        $result->setSuccessFul(false);
         if ($response->isSuccessful()) {
-
-
-            $result = $response->getRedirectUrl();
-            Log::info($result);
-            dd($result);
-        } else {
-            dd($response);
-
+            $result->setSuccessFul(true);
+            // TODO 根据不同的返回
+            $result->setResult($response->getRedirectUrl());
         }
 
-        dd($trade, $environment);
-        // TODO: Implement purchase() method.
+        return $result;
+
     }
 
 

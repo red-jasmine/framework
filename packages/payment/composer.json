@@ -14,7 +14,8 @@
     "require": {
         "red-jasmine/support": "1.0.x-dev",
         "league/omnipay": "^3.2",
-        "liushoukun/omnipay-alipay": "*"
+        "moneyphp/money": "^4.6",
+        "liushoukun/omnipay-alipay": "^3.16"
     },
     "autoload": {
         "psr-4": {
@@ -43,5 +44,10 @@
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }

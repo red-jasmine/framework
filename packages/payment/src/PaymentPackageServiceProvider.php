@@ -46,10 +46,18 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
         if (file_exists($package->basePath('/../resources/views'))) {
             $package->hasViews(static::$viewNamespace);
         }
+
+        if (file_exists($package->basePath('/../routes'))) {
+            $package->hasRoutes($this->getRoutes());
+        }
+
+
     }
 
     public function packageRegistered() : void
     {
+
+
 
     }
 
@@ -84,7 +92,16 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
 
         ];
     }
-
+    /**
+     * @return array<string>
+     */
+    protected function getRoutes(): array
+    {
+        return [
+            'notify',
+            'payer'
+        ];
+    }
     public function getCommands() : array
     {
         return [];

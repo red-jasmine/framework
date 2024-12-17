@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
 
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
@@ -31,12 +32,12 @@ class TradePayingCommandHandler extends CommandHandler
 
     /**
      * @param TradePayingCommand $command
-     * @return PurchaseResult
+     * @return ChannelResult
      * @throws AbstractException
      * @throws PaymentException
      * @throws Throwable
      */
-    public function handle(TradePayingCommand $command) : PurchaseResult
+    public function handle(TradePayingCommand $command) : ChannelResult
     {
         $this->beginDatabaseTransaction();
         try {
@@ -48,9 +49,11 @@ class TradePayingCommandHandler extends CommandHandler
             // 根据应用 去支付渠道 创建支付单
             $channelProduct = $this->paymentRouteService->getChannelProduct($environment, $channelApp);
             // 去渠道创建 支付单
-            $result = app(PaymentChannelService::class)->createTrade($channelApp, $channelProduct, $trade, $environment);
+            $channelResult = app(PaymentChannelService::class)->createTrade($channelApp, $channelProduct, $trade, $environment);
 
-            if (!$result->isSuccessFul()) {
+
+            dd($channelResult);
+            if (!$channelResult->isSuccessFul()) {
                 throw PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
             }
             // 更新支付单状态
@@ -62,7 +65,7 @@ class TradePayingCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-            return $result;
+            return $channelResult;
 
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
