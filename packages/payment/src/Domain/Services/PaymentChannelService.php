@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Services;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
@@ -24,43 +25,55 @@ class PaymentChannelService
 {
 
 
-    protected function getNotifyUrl(string $channelCode) : string
-    {
-        return URL::signedRoute('payment.notify.notify', [ 'channel' => $channelCode ]);
-    }
-
-
     /**
      * 创建交易单
      * @param ChannelApp $channelApp
      * @param ChannelProduct $channelProduct
      * @param Trade $trade
      * @param Environment $environment
-     * @return ChannelResult
+     * @return ChannelTradeData
      * @throws PaymentException
-     * @throws Throwable
      */
-    public function createTrade(ChannelApp $channelApp, ChannelProduct $channelProduct, Trade $trade, Environment $environment) : ChannelResult
+    public function purchase(
+        ChannelApp     $channelApp,
+        ChannelProduct $channelProduct,
+        Trade          $trade,
+        Environment    $environment) : ChannelTradeData
     {
-
-        $lock = $this->getLock($trade);
-
-//        if (!$lock->get()) {
-//            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
-//        }
         // 支付网关适配器
         $gateway = GatewayDrive::create($channelApp->channel_code);
-
         // 设置支付渠道信息
         $paymentChannelData                 = new  PaymentChannelData;
         $paymentChannelData->channelApp     = $channelApp;
         $paymentChannelData->channelProduct = $channelProduct;
 
         try {
-            return $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
+            $channelResult = $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
+
+            if ($channelResult->isSuccessFul() === false) {
+                throw new PaymentException($channelResult->getMessage(), PaymentException::TRADE_PAYING);
+            }
+
+
+            $channelTradeData                     = new ChannelTradeData();
+            $channelTradeData->merchantId         = $trade->merchant_id;
+            $channelTradeData->merchantAppId      = $trade->merchant_app_id;
+            $channelTradeData->id                 = $trade->id;
+            $channelTradeData->amount             = $trade->amount;
+            $channelTradeData->channelCode        = $channelApp->channel_code;
+            $channelTradeData->channelProductCode = $channelProduct->code;
+            $channelTradeData->channelAppId       = $channelApp->channel_app_id;
+            $channelTradeData->channelMerchantId  = $channelApp->channel_merchant_id;
+            $channelTradeData->channelTradeNo     = $channelResult->getTradeNo();
+            $channelTradeData->sceneCode          = $environment->scene->value;
+            $channelTradeData->methodCode         = $environment->method;
+
+
+            return $channelTradeData;
         } catch (Throwable $throwable) {
-            throw $throwable;
-            throw  PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
+
+            report($throwable);
+            throw new PaymentException($throwable->getMessage(), PaymentException::TRADE_PAYING);
         }
 
 

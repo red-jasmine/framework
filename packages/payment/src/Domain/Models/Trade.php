@@ -6,11 +6,16 @@ namespace RedJasmine\Payment\Domain\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
+/**
+ * @property Money $amount
+ */
 class Trade extends Model
 {
 
@@ -29,11 +34,15 @@ class Trade extends Model
         return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
     }
 
-    public function setAmount(Money $money) : void
+    public function setAmountAttribute(Money $money) : void
     {
         $this->amount_currency = $money->currency;
-        $this->amount_value    = $money->amount;
+        $this->amount_value    = $money->value;
+    }
 
+    public function getAmountAttribute() : Money
+    {
+        return new Money($this->amount_value, $this->amount_currency);
     }
 
     public function setGoodsDetails(array $goodDetails = []) : void
@@ -88,11 +97,23 @@ class Trade extends Model
 
     /**
      *
+     * @param Environment $environment
+     * @param ChannelTradeData $channelTrade
      * @return void
      */
-    public function paying():void
+    public function paying(Environment $environment, ChannelTradeData $channelTrade) : void
     {
-        $this->status = TradeStatusEnum::PAYING;
+        $this->status               = TradeStatusEnum::PAYING;
+        $this->channel_code         = $channelTrade->channelCode;
+        $this->channel_app_id       = $channelTrade->channelAppId;
+        $this->channel_product_code = $channelTrade->channelProductCode;
+        $this->channel_merchant_id  = $channelTrade->channelMerchantId;
+        $this->scene_code           = $channelTrade->sceneCode;
+        $this->method_code          = $channelTrade->methodCode;
+        $this->channel_trade_no     = $channelTrade->channelTradeNo;
+
+        $this->extension->device = $environment->device?->toArray();
+        $this->extension->client = $environment->client?->toArray();
 
     }
 

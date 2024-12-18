@@ -14,7 +14,7 @@ class TradeTransformer
         $trade->subject           = $data->subject;
         $trade->description       = $data->description;
         $trade->expired_time      = $data->expiredTime;
-        $trade->setAmount($data->amount);
+        $trade->amount            = $data->amount;
         $trade->setGoodsDetails($data->goodDetails);
         return $trade;
     }

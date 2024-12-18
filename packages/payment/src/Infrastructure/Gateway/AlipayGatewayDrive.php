@@ -2,24 +2,19 @@
 
 namespace RedJasmine\Payment\Infrastructure\Gateway;
 
-use Dflydev\DotAccessData\Data;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Money\Currencies\ISOCurrencies;
-use Money\Currency;
-use Money\Formatter\DecimalMoneyFormatter;
-use Money\Money;
-use Omnipay\Alipay\AbstractAopGateway;
-use Omnipay\Alipay\AopAppGateway;
 use Omnipay\Alipay\AopPageGateway;
+use Omnipay\Alipay\Responses\AbstractResponse;
+use Omnipay\Alipay\Responses\AopTradeAppPayResponse;
+use Omnipay\Alipay\Responses\AopTradeCreateResponse;
+use Omnipay\Alipay\Responses\AopTradePagePayResponse;
+use Omnipay\Alipay\Responses\AopTradePreCreateResponse;
+use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
 use Omnipay\Common\GatewayInterface;
-use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
-use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
@@ -95,35 +90,55 @@ class AlipayGatewayDrive implements GatewayDriveInterface
     public function purchase(Trade $trade, Environment $environment) : ChannelResult
     {
 
-        $money = new Money($trade->amount_value, new Currency($trade->amount_currency));
 
-        $currencies     = new ISOCurrencies();
-        $moneyFormatter = new DecimalMoneyFormatter($currencies);
         /**
          * @var $gateway AopPageGateway
          */
         $gateway = $this->gateway;
 
-        $gateway->setReturnUrl(PaymentUrl::returnUrl($trade));
+        if (method_exists($gateway, 'setReturnUrl')) {
+            $gateway->setReturnUrl(PaymentUrl::returnUrl($trade));
+        }
+
 
         $request = $gateway->purchase(
             [ 'biz_content' => [
+                // TODO 更多参数
                 'out_trade_no'      => $trade->id,
-                'total_amount'      => $moneyFormatter->format($money),
+                'total_amount'      => $trade->amount->format(),
                 'subject'           => $trade->subject,
                 'product_code'      => $this->channelProduct->code,
                 'merchant_order_no' => $trade->merchant_order_no,
             ] ]
         );
 
+        /**
+         * @var $response AbstractResponse
+         */
         $response = $request->send();
-
-        $result = new ChannelResult;
+        $result   = new ChannelResult;
+        $result->setMessage($response->getMessage());
+        $result->setCode($response->getCode());
         $result->setSuccessFul(false);
+        $result->setData($response->getData());
         if ($response->isSuccessful()) {
             $result->setSuccessFul(true);
-            // TODO 根据不同的返回
-            $result->setResult($response->getRedirectUrl());
+            if ($response instanceof AopTradePagePayResponse) {
+                $result->setResult($response->getRedirectUrl());
+            }
+            if ($response instanceof AopTradeWapPayResponse) {
+                $result->setResult($response->getRedirectUrl());
+            }
+            if ($response instanceof AopTradeAppPayResponse) {
+                $result->setResult($response->getOrderString());
+            }
+            if ($response instanceof AopTradePreCreateResponse) {
+                $result->setResult($response->getQrCode());
+            }
+            if ($response instanceof AopTradeCreateResponse) {
+                $result->setResult($response->getTradeNo());
+                $result->setTradeNo($response->getTradeNo());
+            }
         }
 
         return $result;

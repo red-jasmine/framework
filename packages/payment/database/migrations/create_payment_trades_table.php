@@ -20,12 +20,12 @@ return new class extends Migration {
             $table->string('description')->nullable()->comment('说明');
             $table->string('amount_currency')->comment('金额货币');
             $table->bigInteger('amount_value')->default(0)->comment('金额值');
-            $table->bigInteger('discount_amount')->default(0)->comment('优惠金额');
-            $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
+
             // 支付渠道
             $table->string('channel_code')->nullable()->comment('支付渠道');
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
             $table->string('channel_trade_no', 64)->nullable()->comment('渠道支付单号');
+            $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
             $table->string('payment_amount_currency')->nullable()->comment('支付金额货币');
             $table->bigInteger('payment_amount_value')->default(0)->comment('支付金额值');
@@ -48,14 +48,14 @@ return new class extends Migration {
             // 场景信息
             $table->string('scene_code')->nullable()->comment('支付场景');
             $table->string('method_code')->nullable()->comment('支付方式');
-            $table->string('device')->nullable()->comment('支付设备');
-            $table->string('client')->nullable()->comment('支付客户端');
             // 门店信息
             $table->string('store_type')->nullable()->comment('门店类型');
             $table->string('store_id')->nullable()->comment('门店ID');
             $table->string('store_name')->nullable()->comment('门店名称');
-            $table->timestamp('create_time')->nullable()->comment('创建时间');
+
             $table->timestamp('expired_time')->nullable()->comment('过期时间');
+            $table->timestamp('create_time')->nullable()->comment('创建时间');
+            $table->timestamp('paying_time')->nullable()->comment('发起支付时间');
             $table->timestamp('pay_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
             $table->timestamp('settle_time')->nullable()->comment('结算时间');

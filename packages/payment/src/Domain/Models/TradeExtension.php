@@ -15,7 +15,8 @@ class TradeExtension extends Model
     protected $casts = [
         'good_details'     => GoodDetailCollectionCast::class,
         'pass_back_params' => 'array',
-        'expands'          => 'array',
+        'device'           => 'array',
+        'client'           => 'array',
     ];
 
     public function getTable() : string

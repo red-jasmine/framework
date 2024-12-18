@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
 
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
@@ -32,12 +33,12 @@ class TradePayingCommandHandler extends CommandHandler
 
     /**
      * @param TradePayingCommand $command
-     * @return ChannelResult
+     * @return ChannelTradeData
      * @throws AbstractException
      * @throws PaymentException
      * @throws Throwable
      */
-    public function handle(TradePayingCommand $command) : ChannelResult
+    public function handle(TradePayingCommand $command) : ChannelTradeData
     {
         $this->beginDatabaseTransaction();
         try {
@@ -49,23 +50,13 @@ class TradePayingCommandHandler extends CommandHandler
             // 根据应用 去支付渠道 创建支付单
             $channelProduct = $this->paymentRouteService->getChannelProduct($environment, $channelApp);
             // 去渠道创建 支付单
-            $channelResult = app(PaymentChannelService::class)->createTrade($channelApp, $channelProduct, $trade, $environment);
-
-
-            dd($channelResult);
-            if (!$channelResult->isSuccessFul()) {
-                throw PaymentException::newFromCodes(PaymentException::TRADE_PAYING);
-            }
+            $channelTrade = app(PaymentChannelService::class)->purchase($channelApp, $channelProduct, $trade, $environment);
             // 更新支付单状态
-            $trade->paying();
+            $trade->paying($environment, $channelTrade);
             // 返回支付场景等信息
-
             $this->repository->update($trade);
             // 返回支付结果信息
-
             $this->commitDatabaseTransaction();
-
-            return $channelResult;
 
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
@@ -76,7 +67,7 @@ class TradePayingCommandHandler extends CommandHandler
         }
 
 
-        return $result;
+        return $channelTrade;
 
     }
 

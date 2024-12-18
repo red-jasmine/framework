@@ -25,6 +25,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 
 beforeEach(function () {
     // 数据准备
@@ -84,7 +85,7 @@ beforeEach(function () {
 
     // 创建产品
 
-    $productsData = [
+    $productsData          = [
         [
             'channel_code' => 'alipay',
             'code'         => 'FACE_TO_FACE_PAYMENT',
@@ -216,18 +217,18 @@ beforeEach(function () {
 
 
     $this->tradeCommandService = app(TradeCommandService::class);
+    $this->tradeRepository     = app(TradeRepositoryInterface::class);
 
 });
 
 test('pre create a payment trade', function () {
 
 
-
     $command = new  TradePreCreateCommand();
 
     $command->merchantAppId = $this->merchantApp->id;
 
-    $command->amount          = Money::from([ 'amount' => 1, 'currency' => 'CNY' ]);
+    $command->amount          = Money::from([ 'value' => 1, 'currency' => 'CNY' ]);
     $command->merchantOrderNo = fake()->numerify('trade-##########');
     $command->subject         = '测试支付';
     $command->description     = '支付描述';
@@ -254,7 +255,7 @@ test('pre create a payment trade', function () {
 
     $this->assertEquals($trade->merchant_app_id, $command->merchantAppId, '商户应用id不一致');
     $this->assertEquals($trade->amount_currency, $command->amount->currency, '货币不一致');
-    $this->assertEquals($trade->amount_value, $command->amount->amount, '金额不一致');
+    $this->assertEquals($trade->amount_value, $command->amount->value, '金额不一致');
     $this->assertEquals($trade->merchant_order_no, $command->merchantOrderNo, '商户订单号不一致');
     $this->assertEquals($trade->subject, $command->subject, '订单主题不一致');
     $this->assertEquals($trade->description, $command->description, '订单描述不一致');
@@ -310,7 +311,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $command     = new TradePayingCommand();
     $command->id = $trade->id;
 
-    $command->scene  = SceneEnum::WEB;
+    $command->scene  = SceneEnum::WAP;
     $command->method = 'alipay';
     $command->device = Device::from([
                                         'id'         => fake()->uuid(),
@@ -331,8 +332,18 @@ test('can paying a trade', function (Trade $trade, $methods) {
                                     ]);
 
 
+    $channelTrade = $this->tradeCommandService->paying($command);
 
-    $this->tradeCommandService->paying($command);
+
+    $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
+    $this->assertEquals($command->method, $channelTrade->methodCode, '支付方式不一致');
+
+    // 查询交易单
+    $trade = $this->tradeRepository->find($trade->id);
+
+    $this->assertEquals($channelTrade->channelCode, $trade->channel_code, '支付单号不一致');
+    $this->assertEquals($channelTrade->sceneCode, $trade->scene_code, '支付场景');
+    $this->assertEquals($channelTrade->methodCode, $trade->method_code, '支付方式不一致');
 
 
 })->depends('pre create a payment trade', 'can get trade pay methods');
