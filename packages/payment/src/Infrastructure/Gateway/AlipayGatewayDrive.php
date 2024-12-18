@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Payment\Infrastructure\Gateway;
 
+use Dflydev\DotAccessData\Data;
+use Exception;
 use Omnipay\Alipay\AopPageGateway;
 use Omnipay\Alipay\Responses\AbstractResponse;
+use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
 use Omnipay\Alipay\Responses\AopTradeAppPayResponse;
 use Omnipay\Alipay\Responses\AopTradeCreateResponse;
 use Omnipay\Alipay\Responses\AopTradePagePayResponse;
@@ -11,6 +14,7 @@ use Omnipay\Alipay\Responses\AopTradePreCreateResponse;
 use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
@@ -21,6 +25,7 @@ use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 
 /**
  * 渠道适配器
@@ -79,14 +84,6 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         return $gateway;
     }
 
-    protected function getPublicKey($cert) : string
-    {
-        $pkey       = openssl_pkey_get_public($cert);
-        $keyData    = openssl_pkey_get_details($pkey);
-        $public_key = str_replace('-----BEGIN PUBLIC KEY-----', '', $keyData['key']);
-        return trim(str_replace('-----END PUBLIC KEY-----', '', $public_key));
-    }
-
     public function purchase(Trade $trade, Environment $environment) : ChannelResult
     {
 
@@ -143,6 +140,59 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
         return $result;
 
+    }
+
+    public function completePurchase(array $parameters = []) : ChannelTradeData
+    {
+        /**
+         * @var $gateway AopPageGateway
+         */
+        $gateway = $this->gateway;
+
+
+        $request = $gateway->completePurchase()->setParams($parameters);
+        $result  = new ChannelResult;
+
+        $result->setSuccessFul(false);
+        try {
+            /**
+             * @var $response AopCompletePurchaseResponse
+             */
+            $response = $request->send();
+
+            $result->setMessage($response->getMessage());
+            $result->setCode($response->getCode());
+            if ($response->isPaid()) {
+                $result->setSuccessFul(true);
+
+                $data = $response->getData();
+
+                $channelTradeData                 = new  ChannelTradeData;
+                $channelTradeData->channelAppId   = (string)$data['app_id'];
+                $channelTradeData->id             = (int)$data['out_trade_no'];
+                $channelTradeData->channelTradeNo = (string)$data['trade_no'];
+                $channelTradeData->amount         = new Money(bcadd($data['total_amount'], 100, 0));
+
+
+                return $channelTradeData;
+                // 支付者等信息
+                /**
+                 * Payment is successful
+                 */
+                //die('success'); //The notify response should be 'success' only
+            } else {
+                /**
+                 * Payment is not successful
+                 */
+                //die('fail'); //The notify response
+            }
+        } catch (Exception $e) {
+            throw $e;
+            /**
+             * Payment is not successful
+             */
+            //die('fail'); //The notify response
+        }
     }
 
 

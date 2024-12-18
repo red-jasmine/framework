@@ -8,7 +8,7 @@ class ChannelResult extends Data
 {
     public bool $successFul;
 
-    public ?string $result  = null;
+    public mixed   $result  = null;
     public ?string $code    = null;
     public ?string $message = null;
 
@@ -36,7 +36,6 @@ class ChannelResult extends Data
         $this->message = $message;
         return $this;
     }
-
 
 
     /**
@@ -70,12 +69,12 @@ class ChannelResult extends Data
     }
 
 
-    public function getResult() : ?string
+    public function getResult() : mixed
     {
         return $this->result;
     }
 
-    public function setResult(?string $result) : static
+    public function setResult(mixed $result) : static
     {
         $this->result = $result;
         return $this;

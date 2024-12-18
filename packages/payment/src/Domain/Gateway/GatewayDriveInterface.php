@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Gateway;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\Common\Message\ResponseInterface;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
@@ -20,5 +21,8 @@ interface GatewayDriveInterface
     public function gateway(PaymentChannelData $paymentChannelData) : static;
 
     public function purchase(Trade $trade, Environment $environment) : ChannelResult;
+
+
+    public function completePurchase(array $parameters = []) : ChannelTradeData;
 
 }

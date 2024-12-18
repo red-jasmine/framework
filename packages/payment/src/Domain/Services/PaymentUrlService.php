@@ -14,7 +14,11 @@ class PaymentUrlService
 
     public function notifyUrl(ChannelApp $channelApp) : string
     {
-        return URL::signedRoute($this->notifyUrlRouteName, [ 'channel' => $channelApp->channel_code ]);
+        return URL::signedRoute($this->notifyUrlRouteName,
+                                [
+                                    'channel' => $channelApp->channel_code,
+                                    'app'     => $channelApp->id
+                                ]);
     }
 
 

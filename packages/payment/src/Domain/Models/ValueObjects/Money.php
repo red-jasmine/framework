@@ -13,7 +13,7 @@ class Money extends Data
 
     public function __construct(
         public int    $value,
-        public string $currency,
+        public string $currency = 'CNY',
     )
     {
     }

@@ -67,8 +67,7 @@ class PaymentChannelService
             $channelTradeData->channelTradeNo     = $channelResult->getTradeNo();
             $channelTradeData->sceneCode          = $environment->scene->value;
             $channelTradeData->methodCode         = $environment->method;
-
-
+            $channelTradeData->purchaseResult     = $channelResult->getResult();
             return $channelTradeData;
         } catch (Throwable $throwable) {
 
@@ -84,6 +83,20 @@ class PaymentChannelService
 
         $name = 'red-jasmine-payment:trade:' . $trade->id;
         return Cache::lock($name, 60);
+    }
+
+
+    public function completePurchase(ChannelApp $channelApp, array $data) : ChannelTradeData
+    {
+        // 支付网关适配器
+        // 支付网关适配器
+        $gateway = GatewayDrive::create($channelApp->channel_code);
+        // 设置支付渠道信息
+        $paymentChannelData = new  PaymentChannelData;
+
+        $paymentChannelData->channelApp = $channelApp;
+
+        return $gateway->gateway($paymentChannelData)->completePurchase($data);
     }
 
 
