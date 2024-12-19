@@ -17,6 +17,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
@@ -31,6 +32,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
+use RuntimeException;
 
 /**
  * 渠道适配器
@@ -71,20 +73,38 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $gateway->setPrivateKey($channelApp->channel_app_private_key);
         $gateway->setNotifyUrl(PaymentUrl::notifyUrl($channelApp));
 
-        if ($channelApp->sign_method === SignMethodEnum::Secret) {
-            $gateway->setAlipayPublicKey($channelApp->channel_public_key);
+
+        switch ($channelApp->sign_method) {
+            case SignMethodEnum::Secret:
+                if (blank($channelApp->channel_public_key)) {
+                    throw new RuntimeException('支付宝证书公钥不存在');
+                }
+                $gateway->setAlipayPublicKey($channelApp->channel_public_key);
+                break;
+            case SignMethodEnum::Cert:
+                if (blank($channelApp->channel_root_cert)) {
+                    throw new RuntimeException('支付宝证书根证书不存在');
+                }
+                if (blank($channelApp->channel_public_key_cert)) {
+                    throw new RuntimeException('支付宝证书公钥不存在');
+                }
+
+                if (blank($channelApp->channel_app_public_key_cert)) {
+                    throw new RuntimeException('支付宝证书应用公钥不存在');
+                }
+                $gateway->setAlipayRootCert($channelApp->channel_root_cert);
+                $gateway->setAlipayPublicCert($channelApp->channel_public_key_cert);
+                $gateway->setAppCert($channelApp->channel_app_public_key_cert);
+                $gateway->setCheckAlipayPublicCert(true);
+                break;
+            default:
+                throw new RuntimeException('不支持的签名方式');
         }
-
-        if ($channelApp->sign_method === SignMethodEnum::Cert) {
-
-            $gateway->setAlipayRootCert($channelApp->channel_root_cert);
-            $gateway->setAlipayPublicCert($channelApp->channel_public_key_cert);
-            $gateway->setAppCert($channelApp->channel_app_public_key_cert);
-            $gateway->setCheckAlipayPublicCert(true);
-        }
-
         // 内容加密
-        $gateway->setEncryptKey($channelApp->encrypt_key);
+        if (filled($channelApp->encrypt_key)) {
+            $gateway->setEncryptKey($channelApp->encrypt_key);
+        }
+
 
         return $gateway;
     }

@@ -22,15 +22,16 @@ return new class extends Migration {
             $table->bigInteger('amount_value')->default(0)->comment('金额值');
 
             // 支付渠道
+            $table->unsignedBigInteger('payment_channel_app_id')->nullable()->comment('系统内渠道应用ID');
             $table->string('channel_code')->nullable()->comment('支付渠道');
             $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
             $table->string('channel_trade_no', 64)->nullable()->comment('渠道支付单号');
-            $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
             $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
             $table->string('payment_amount_currency')->nullable()->comment('支付金额货币');
             $table->bigInteger('payment_amount_value')->default(0)->comment('支付金额值');
             $table->string('receipt_amount_currency')->nullable()->comment('实收金额货币');
             $table->bigInteger('receipt_amount_value')->default(0)->comment('实收金额值');
+            $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
             // 支付者信息
             $table->string('payer_type')->nullable()->comment('支付者类型');
             $table->string('payer_user_id', 64)->nullable()->comment('支付者ID');

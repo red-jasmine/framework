@@ -52,7 +52,7 @@ class TradePayingCommandHandler extends CommandHandler
             // 去渠道创建 支付单
             $channelTrade = app(PaymentChannelService::class)->purchase($channelApp, $channelProduct, $trade, $environment);
             // 更新支付单状态
-            $trade->paying($environment, $channelTrade);
+            $trade->paying($channelApp, $environment, $channelTrade);
             // 返回支付场景等信息
             $this->repository->update($trade);
             // 返回支付结果信息

@@ -6,10 +6,9 @@ namespace RedJasmine\Payment\Domain\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use phpDocumentor\Reflection\Types\True_;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
+use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
@@ -20,6 +19,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property Money $amount
+ * @property Money $paymentAmount
  */
 class Trade extends Model
 {
@@ -32,6 +32,7 @@ class Trade extends Model
 
     protected $casts = [
         'status'      => TradeStatusEnum::class,
+        'create_time' => 'datetime',
         'pay_time'    => 'datetime',
         'paid_time'   => 'datetime',
         'notify_time' => 'datetime',
@@ -58,11 +59,13 @@ class Trade extends Model
     }
 
     protected $dispatchesEvents = [
-        'paid' => TradePaidEvent::class,
+        'paying' => TradePayingEvent::class,
+        'paid'   => TradePaidEvent::class,
     ];
 
     protected $observables = [
-        'paid'
+        'paying',
+        'paid',
     ];
 
 
@@ -140,7 +143,8 @@ class Trade extends Model
 
     public function preCreate() : void
     {
-        $this->status = TradeStatusEnum::PRE;
+        $this->status      = TradeStatusEnum::PRE;
+        $this->create_time = now();
     }
 
 
@@ -160,29 +164,31 @@ class Trade extends Model
 
     /**
      *
+     * @param ChannelApp $channelApp
      * @param Environment $environment
      * @param ChannelTradeData $channelTrade
      * @return void
      * @throws PaymentException
      */
-    public function paying(Environment $environment, ChannelTradeData $channelTrade) : void
+    public function paying(ChannelApp $channelApp, Environment $environment, ChannelTradeData $channelTrade) : void
     {
         if (!$this->isAllowPaying()) {
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
-        $this->status               = TradeStatusEnum::PAYING;
-        $this->channel_code         = $channelTrade->channelCode;
-        $this->channel_app_id       = $channelTrade->channelAppId;
-        $this->channel_merchant_id  = $channelTrade->channelMerchantId;
-        $this->channel_product_code = $channelTrade->channelProductCode;
-        $this->scene_code           = $channelTrade->sceneCode;
-        $this->method_code          = $channelTrade->methodCode;
-        $this->channel_trade_no     = $channelTrade->channelTradeNo;
-        $this->paying_time          = now();
+        $this->status                 = TradeStatusEnum::PAYING;
+        $this->payment_channel_app_id = $channelApp->id;
+        $this->channel_code           = $channelTrade->channelCode;
+        $this->channel_app_id         = $channelTrade->channelAppId;
+        $this->channel_merchant_id    = $channelTrade->channelMerchantId;
+        $this->channel_product_code   = $channelTrade->channelProductCode;
+        $this->scene_code             = $channelTrade->sceneCode;
+        $this->method_code            = $channelTrade->methodCode;
+        $this->channel_trade_no       = $channelTrade->channelTradeNo;
+        $this->paying_time            = now();
 
         $this->extension->device = $environment->device?->toArray();
         $this->extension->client = $environment->client?->toArray();
-
+        $this->fireModelEvent('paying', false);
     }
 
 
