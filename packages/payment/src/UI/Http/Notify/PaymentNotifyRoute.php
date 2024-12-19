@@ -14,7 +14,7 @@ class PaymentNotifyRoute
                      ], function () {
 
 
-            Route::any('notify/{channel}/{app}', [ NotifyController::class, 'notify' ])->name('payment.notify.notify');
+            Route::any('notify/{channel}/{app}/{time}/{signature}', [ NotifyController::class, 'notify' ])->name('payment.notify.notify');
         });
 
     }

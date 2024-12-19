@@ -34,6 +34,7 @@ return new class extends Migration {
             // 支付者信息
             $table->string('payer_type')->nullable()->comment('支付者类型');
             $table->string('payer_user_id', 64)->nullable()->comment('支付者ID');
+            $table->string('payer_open_id', 64)->nullable()->comment('支付者OpenId');
             $table->string('payer_name', 64)->nullable()->comment('支付者名称');
             $table->string('payer_account', 64)->nullable()->comment('支付者账号');
 
@@ -56,7 +57,7 @@ return new class extends Migration {
             $table->timestamp('expired_time')->nullable()->comment('过期时间');
             $table->timestamp('create_time')->nullable()->comment('创建时间');
             $table->timestamp('paying_time')->nullable()->comment('发起支付时间');
-            $table->timestamp('pay_time')->nullable()->comment('支付时间');
+            $table->timestamp('paid_time')->nullable()->comment('支付时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
             $table->timestamp('settle_time')->nullable()->comment('结算时间');
             $table->timestamp('notify_time')->nullable()->comment('异步通知时间');

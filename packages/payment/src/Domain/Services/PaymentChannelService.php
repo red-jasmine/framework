@@ -11,6 +11,7 @@ use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\GatewayDrive;
+use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Trade;
@@ -89,7 +90,6 @@ class PaymentChannelService
     public function completePurchase(ChannelApp $channelApp, array $data) : ChannelTradeData
     {
         // 支付网关适配器
-        // 支付网关适配器
         $gateway = GatewayDrive::create($channelApp->channel_code);
         // 设置支付渠道信息
         $paymentChannelData = new  PaymentChannelData;
@@ -97,6 +97,20 @@ class PaymentChannelService
         $paymentChannelData->channelApp = $channelApp;
 
         return $gateway->gateway($paymentChannelData)->completePurchase($data);
+    }
+
+
+    public function notifyResponse(ChannelApp $channelApp) : NotifyResponseInterface
+    {
+
+        $gateway = GatewayDrive::create($channelApp->channel_code);
+        // 设置支付渠道信息
+        $paymentChannelData = new  PaymentChannelData;
+
+        $paymentChannelData->channelApp = $channelApp;
+
+        return $gateway->gateway($paymentChannelData)->notifyResponse();
+
     }
 
 

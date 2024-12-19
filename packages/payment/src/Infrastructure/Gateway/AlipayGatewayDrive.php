@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Infrastructure\Gateway;
 
 use Dflydev\DotAccessData\Data;
 use Exception;
+use Illuminate\Support\Carbon;
 use Omnipay\Alipay\AopPageGateway;
 use Omnipay\Alipay\Responses\AbstractResponse;
 use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
@@ -12,6 +13,7 @@ use Omnipay\Alipay\Responses\AopTradeCreateResponse;
 use Omnipay\Alipay\Responses\AopTradePagePayResponse;
 use Omnipay\Alipay\Responses\AopTradePreCreateResponse;
 use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
@@ -20,12 +22,15 @@ use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
 use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
+use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 
 /**
  * 渠道适配器
@@ -142,6 +147,12 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
     }
 
+    /**
+     * 完成支付
+     * @param array $parameters
+     * @return ChannelTradeData
+     * @throws InvalidRequestException
+     */
     public function completePurchase(array $parameters = []) : ChannelTradeData
     {
         /**
@@ -163,28 +174,44 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             $result->setMessage($response->getMessage());
             $result->setCode($response->getCode());
             if ($response->isPaid()) {
-                $result->setSuccessFul(true);
-
                 $data = $response->getData();
 
-                $channelTradeData                 = new  ChannelTradeData;
-                $channelTradeData->channelAppId   = (string)$data['app_id'];
-                $channelTradeData->id             = (int)$data['out_trade_no'];
-                $channelTradeData->channelTradeNo = (string)$data['trade_no'];
-                $channelTradeData->amount         = new Money(bcadd($data['total_amount'], 100, 0));
+                // 调用查询接口
+                $queryResponse = $gateway->query([
+                                                     'biz_content' => [
+                                                         'trade_no'      => $data['trade_no'],
+                                                         'query_options' => [
+                                                             'buyer_user_type',
+                                                             'buyer_open_id'
+                                                         ],
+                                                     ] ])->send();
 
+
+                if ($queryResponse->isSuccessful()) {
+                    // 合并参数
+                    $data = array_merge($data, $queryResponse->getAlipayResponse());
+                }
+                $result->setSuccessFul(true);
+                $channelTradeData                     = new  ChannelTradeData;
+                $channelTradeData->originalParameters = $data;
+                $channelTradeData->channelCode        = $this->channelApp->channel_code;
+                $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
+                $channelTradeData->channelAppId       = (string)$data['app_id'];
+                $channelTradeData->id                 = (int)$data['out_trade_no'];
+                $channelTradeData->channelTradeNo     = (string)$data['trade_no'];
+                $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->status             = TradeStatusEnum::SUCCESS;
+                $channelTradeData->payer              = Payer::from([
+                                                                        'type'    => $data['buyer_user_type'] ?? null,
+                                                                        'userId'  => $data['buyer_id'] ?? null,
+                                                                        'account' => $data['buyer_logon_id'] ?? null,
+                                                                        'openId'  => $data['buyer_open_id'] ?? null,
+                                                                        'name'    => null,
+                                                                    ]);
+                $channelTradeData->paidTime           = Carbon::make($data['gmt_payment']);
 
                 return $channelTradeData;
-                // 支付者等信息
-                /**
-                 * Payment is successful
-                 */
-                //die('success'); //The notify response should be 'success' only
-            } else {
-                /**
-                 * Payment is not successful
-                 */
-                //die('fail'); //The notify response
             }
         } catch (Exception $e) {
             throw $e;
@@ -193,6 +220,11 @@ class AlipayGatewayDrive implements GatewayDriveInterface
              */
             //die('fail'); //The notify response
         }
+    }
+
+    public function notifyResponse() : NotifyResponseInterface
+    {
+        return new   AlipayNotifyResponse();
     }
 
 

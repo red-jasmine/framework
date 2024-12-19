@@ -9,15 +9,15 @@ enum TradeStatusEnum: string
 
     use EnumsHelper;
 
-    case  PRE = 'pre'; // 等待支付
+    case  PRE = 'pre'; // 预创建
     case  PAYING = 'paying'; // 支付中
-    case  PENDING = 'pending'; //
-    case  SUCCESS = 'success'; // 成功有效订单
+    case  PENDING = 'pending'; // // 处理中
+    case  SUCCESS = 'success'; // 支持成功
     case  REFUND = 'refund'; // 全款退
     case  CLOSED = 'closed'; // 操时关闭
     case  CANCEL = 'cancel'; // 取消
     case  FAIL = 'fail'; // 支付失败
-    case  FINISH = 'finish'; // 支付结束
+    case  FINISH = 'finish'; // 完成
 
 
     public static function labels() : array

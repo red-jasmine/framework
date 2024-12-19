@@ -27,4 +27,17 @@ class Money extends Data
 
         return $moneyFormatter->format($money);
     }
+
+
+    public function equal(self $money) : bool
+    {
+        if ($this->value === $money->value
+            && $money->currency === $this->currency
+        ) {
+            return true;
+        }
+
+        return false;
+
+    }
 }

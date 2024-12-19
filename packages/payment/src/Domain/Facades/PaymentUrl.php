@@ -9,6 +9,7 @@ use RedJasmine\Payment\Domain\Services\PaymentUrlService;
 
 
 /**
+ * @method string validSignature(array $parameters)
  * @method string notifyUrl(ChannelApp $channelApp)
  * @method string returnUrl(Trade $trade)
  */
