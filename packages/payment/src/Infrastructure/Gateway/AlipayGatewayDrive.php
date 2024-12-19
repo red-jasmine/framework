@@ -68,7 +68,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
          * @var $gateway AopPageGateway
          */
 
-        $gateway->setSignType('RSA2');
+        $gateway->setSignType($channelApp->sign_type);
         $gateway->setAppId($channelApp->channel_app_id);
         $gateway->setPrivateKey($channelApp->channel_app_private_key);
         $gateway->setNotifyUrl(PaymentUrl::notifyUrl($channelApp));
