@@ -4,7 +4,6 @@ namespace RedJasmine\Payment\Application\Commands\Trade;
 
 use DateTime;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;
@@ -14,7 +13,9 @@ class TradeData extends Data
 
     public int $merchantAppId;
 
-    public string $merchantOrderNo;
+    public string $merchantTradeNo;
+
+    public ?string $merchantOrderNo;
 
     public Money $amount;
 
@@ -36,7 +37,7 @@ class TradeData extends Data
 
     public ?string $returnUrl = null;
 
-    public ?string $passbackParams = null;
+    public ?string $passBackParams = null;
 
 
 }

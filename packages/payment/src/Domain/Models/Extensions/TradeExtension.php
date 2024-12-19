@@ -1,10 +1,12 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Models;
+namespace RedJasmine\Payment\Domain\Models\Extensions;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Payment\Domain\Models\Casts\GoodDetailCollectionCast;
+use RedJasmine\Payment\Domain\Models\Model;
+use RedJasmine\Payment\Domain\Models\Trade;
 
 
 class TradeExtension extends Model

@@ -9,9 +9,9 @@ class GoodDetail extends Data
 
     public string $goodsName;
 
-    public int $quantity;
+    public int $quantity = 1;
 
-    public string $price;
+    public Money $price;
 
     public ?string $goodsId;
 

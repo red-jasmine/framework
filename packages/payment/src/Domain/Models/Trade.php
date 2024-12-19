@@ -5,12 +5,16 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
+use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
@@ -20,9 +24,11 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 /**
  * @property Money $amount
  * @property Money $paymentAmount
+ * @property Money $refundAmount
  */
 class Trade extends Model
 {
+
 
     public $incrementing = false;
 
@@ -31,31 +37,22 @@ class Trade extends Model
     use HasOperator;
 
     protected $casts = [
-        'status'      => TradeStatusEnum::class,
-        'create_time' => 'datetime',
-        'pay_time'    => 'datetime',
-        'paid_time'   => 'datetime',
-        'notify_time' => 'datetime',
-        'refund_time' => 'datetime',
-        'settle_time' => 'datetime',
+        'status'        => TradeStatusEnum::class,
+        'create_time'   => 'datetime',
+        'pay_time'      => 'datetime',
+        'paid_time'     => 'datetime',
+        'notify_time'   => 'datetime',
+        'refund_time'   => 'datetime',
+        'settle_time'   => 'datetime',
+        'amount'        => MoneyCast::class,
+        'paymentAmount' => MoneyCast::class,
+        'refundAmount'  => MoneyCast::class,
     ];
+
 
     public function getTable() : string
     {
         return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
-    }
-
-    protected function amount() : Attribute
-    {
-        return Attribute::make(get: static fn($value, array $attributes) => new Money(
-            $attributes['amount_value'] ?? 0,
-            $attributes['amount_currency'] ?? null
-        ),
-            set: static fn(Money $value, array $attributes) => [
-                'amount_value'    => $value->value,
-                'amount_currency' => $value->currency,
-            ],
-        );
     }
 
     protected $dispatchesEvents = [
@@ -67,21 +64,6 @@ class Trade extends Model
         'paying',
         'paid',
     ];
-
-
-    protected function paymentAmount() : Attribute
-    {
-        return Attribute::make(get: static fn($value, array $attributes) => new Money(
-            $attributes['payment_amount_value'] ?? 0,
-            $attributes['payment_amount_currency'] ?? null
-        ),
-            set: static fn(Money $value, array $attributes) => [
-                'payment_amount_value'    => $value->value,
-                'payment_amount_currency' => $value->currency,
-            ],
-        );
-    }
-
 
     protected function payer() : Attribute
     {
@@ -106,7 +88,6 @@ class Trade extends Model
     public function setGoodsDetails(array $goodDetails = []) : void
     {
         $this->extension->good_details = $goodDetails;
-
     }
 
     /**
@@ -134,6 +115,21 @@ class Trade extends Model
         return $this->hasOne(TradeExtension::class, 'id', 'id');
     }
 
+
+    /**
+     * 获取与此交易相关的所有退款
+     *
+     * 此方法建立了一个一对多的关系，表示一个交易可以有多个退款
+     * 它通过 'trade_id' 字段与Refund模型中的'id'字段进行关联
+     *
+     * @return HasMany 代表与此交易相关的退款集合
+     */
+    public function refunds() : HasMany
+    {
+        return $this->hasMany(Refund::class, 'trade_id', 'id');
+    }
+
+
     public function setMerchantApp(MerchantApp $merchantApp) : void
     {
         $this->merchant_app_id = $merchantApp->id;
@@ -143,8 +139,9 @@ class Trade extends Model
 
     public function preCreate() : void
     {
-        $this->status      = TradeStatusEnum::PRE;
-        $this->create_time = now();
+        $this->status       = TradeStatusEnum::PRE;
+        $this->refundAmount = new Money(0, $this->amount->currency);
+        $this->create_time  = now();
     }
 
 
@@ -228,6 +225,46 @@ class Trade extends Model
 
         $this->fireModelEvent('paid', false);
 
+
+    }
+
+    /**
+     * @param Refund $refund
+     * @return void
+     * @throws PaymentException
+     */
+    public function createRefund(Refund $refund) : void
+    {
+
+        // 验证支付状态
+        if ($this->status !== TradeStatusEnum::SUCCESS) {
+            throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
+        }
+
+
+        // 验证 退款金额 和 不能超过订单金额
+        if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new Money())) < 0) {
+            throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
+        }
+        // 退款 时间不能超过支付时间一年
+        if ($this->paid_time->diffInYears(now()) > 1) {
+            throw new PaymentException('退款时间不能超过支付时间一年', PaymentException::TRADE_REFUND_TIME_ERROR);
+        }
+        $this->refunding_amount_value += $refund->refundAmount->value;
+
+        $refund->merchant_id            = $this->merchant_id;
+        $refund->trade_id               = $this->id;
+        $refund->merchant_app_id        = $this->merchant_app_id;
+        $refund->merchant_trade_no      = $this->merchant_trade_no;
+        $refund->merchant_order_no      = $this->merchant_order_no;
+        $refund->channel_code           = $this->channel_code;
+        $refund->channel_trade_no       = $this->channel_trade_no;
+        $refund->channel_app_id         = $this->channel_app_id;
+        $refund->channel_merchant_id    = $this->channel_merchant_id;
+        $refund->payment_channel_app_id = $this->payment_channel_app_id;
+        $refund->status                 = RefundStatusEnum::PRE;
+        $refund->save();
+        $this->refunds->add($refund);
 
     }
 

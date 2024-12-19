@@ -229,20 +229,27 @@ test('pre create a payment trade', function () {
     $command->merchantAppId = $this->merchantApp->id;
 
     $command->amount          = Money::from([ 'value' => 1, 'currency' => 'CNY' ]);
-    $command->merchantOrderNo = fake()->numerify('trade-##########');
+    $command->merchantTradeNo = fake()->numerify('trade-no-##########');
+    $command->merchantOrderNo = fake()->numerify('order-no-##########');
     $command->subject         = '测试支付';
     $command->description     = '支付描述';
     $command->goodDetails     = GoodDetailData::collect([
                                                             [
                                                                 'goods_name' => fake()->word(),
-                                                                'price'      => fake()->randomFloat(2, 90, 100),
+                                                                'price'      => [
+                                                                    'currency' => 'CNY',
+                                                                    'value'    => fake()->randomNumber(2, 90),
+                                                                ],
                                                                 'quantity'   => fake()->randomNumber(1, 10),
                                                                 'goods_id'   => fake()->numerify('goods-id-########'),
                                                                 'category'   => fake()->word(),
                                                             ],
                                                             [
                                                                 'goods_name' => fake()->word(),
-                                                                'price'      => fake()->randomFloat(2, 90, 100),
+                                                                'price'      => [
+                                                                    'currency' => 'CNY',
+                                                                    'value'    => fake()->randomNumber(2, 90),
+                                                                ],
                                                                 'quantity'   => fake()->randomNumber(1, 10),
                                                                 'goods_id'   => fake()->numerify('goods-id-########'),
                                                                 'category'   => fake()->word(),
@@ -256,7 +263,8 @@ test('pre create a payment trade', function () {
     $this->assertEquals($trade->merchant_app_id, $command->merchantAppId, '商户应用id不一致');
     $this->assertEquals($trade->amount_currency, $command->amount->currency, '货币不一致');
     $this->assertEquals($trade->amount_value, $command->amount->value, '金额不一致');
-    $this->assertEquals($trade->merchant_order_no, $command->merchantOrderNo, '商户订单号不一致');
+    $this->assertEquals($trade->merchant_trade_no, $command->merchantTradeNo, '商户单号不一致');
+    $this->assertEquals($trade->merchant_order_no, $command->merchantOrderNo, '商户原始订单号不一致');
     $this->assertEquals($trade->subject, $command->subject, '订单主题不一致');
     $this->assertEquals($trade->description, $command->description, '订单描述不一致');
     $this->assertEquals($trade->status->value, TradeStatusEnum::PRE->value, '订单状态不一致');
