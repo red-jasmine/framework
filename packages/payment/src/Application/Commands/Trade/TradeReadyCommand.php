@@ -10,9 +10,10 @@ use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
  */
 class TradeReadyCommand extends PaymentEnvironmentData
 {
-    public int $id;
-
-
+    // 两者必须存在一个
+    public int     $merchantAppId;
+    public ?int    $id      = null;
+    public ?string $tradeNo = null;
 
 
 }

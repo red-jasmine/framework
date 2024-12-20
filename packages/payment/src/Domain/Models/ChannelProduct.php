@@ -21,12 +21,15 @@ class ChannelProduct extends Model
 
     use HasOperator;
 
-    public static function newModel() : static
+
+    public function newInstance($attributes = [], $exists = false) : static
     {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
-        $model->setRelation('modes', Collection::make());
-        return $model;
+        $instance = parent::newInstance($attributes, $exists);
+        if ($exists === false) {
+            $instance->setUniqueIds();
+            $instance->setRelation('modes', Collection::make());
+        }
+        return $instance;
     }
 
 
@@ -60,12 +63,13 @@ class ChannelProduct extends Model
      */
     public function setModes(array $modes) : static
     {
+
         foreach ($modes as $mode) {
             $modeModel = $this->modes->where('method_code', $mode->methodCode)
                                      ->where('scene_code', $mode->sceneCode)
                                      ->first();
 
-            $modeModel                             = $modeModel ?? new ChannelProductMode;
+            $modeModel                             = $modeModel ?? ChannelProductMode::make();
             $modeModel->payment_channel_product_id = $this->id;
             $modeModel->method_code                = $mode->methodCode;
             $modeModel->scene_code                 = $mode->sceneCode;

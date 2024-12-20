@@ -35,33 +35,32 @@ class Trade extends Model
 
     use HasOperator;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        if (!$this->exists) {
-            $this->setRelation('extension', new TradeExtension());
-        }
-    }
-
-    protected function buildTradeNo() : void
-    {
-        $this->trade_no = app(TradeNumberGenerator::class)->generator(
-            ['merchant_app_id' => $this->merchant_app_id, 'merchant_id' => $this->merchant_id]
-        );
-    }
-
-
     public static function boot() : void
     {
         parent::boot();
-        static::creating(static function (Trade $trade) {
+        static::creating(function (Trade $trade) {
             $trade->buildTradeNo();
             if ($trade->relationLoaded('extension')) {
                 $trade->extension->trade_id = $trade->id;
             }
         });
+    }
 
+    public function newInstance($attributes = [], $exists = false) : static
+    {
+        $instance = parent::newInstance($attributes, $exists);
+        if (!$instance->exists) {
+            $instance->setRelation('extension', new TradeExtension());
+        }
+        return $instance;
+    }
+
+
+    protected function buildTradeNo() : void
+    {
+        $this->trade_no = app(TradeNumberGenerator::class)->generator(
+            [ 'merchant_app_id' => $this->merchant_app_id, 'merchant_id' => $this->merchant_id ]
+        );
     }
 
 
@@ -81,7 +80,7 @@ class Trade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
     }
 
     protected $dispatchesEvents = [
@@ -96,13 +95,13 @@ class Trade extends Model
 
     protected function payer() : Attribute
     {
-        return Attribute::make(get: static fn($value, array $attributes) => Payer::from([
-            'type'    => $attributes['payer_type'],
-            'account' => $attributes['payer_account'],
-            'name'    => $attributes['payer_name'],
-            'user_id' => $attributes['payer_user_id'],
-            'open_id' => $attributes['payer_open_id'],
-        ])
+        return Attribute::make(get: fn($value, array $attributes) => Payer::from([
+                                                                                     'type'    => $attributes['payer_type'],
+                                                                                     'account' => $attributes['payer_account'],
+                                                                                     'name'    => $attributes['payer_name'],
+                                                                                     'user_id' => $attributes['payer_user_id'],
+                                                                                     'open_id' => $attributes['payer_open_id'],
+                                                                                 ])
             ,
             set: static fn(Payer $value, array $attributes) => [
                 'payer_type'    => $value->type,
@@ -162,7 +161,7 @@ class Trade extends Model
 
     protected function isAllowPaying() : bool
     {
-        if (in_array($this->status, [TradeStatusEnum::PRE], true)) {
+        if (in_array($this->status, [ TradeStatusEnum::PRE ], true)) {
             return true;
         }
         return false;
@@ -170,9 +169,9 @@ class Trade extends Model
 
     /**
      *
-     * @param  ChannelApp  $channelApp
-     * @param  Environment  $environment
-     * @param  ChannelTradeData  $channelTrade
+     * @param ChannelApp $channelApp
+     * @param Environment $environment
+     * @param ChannelTradeData $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -192,9 +191,8 @@ class Trade extends Model
         $this->method_code            = $channelTrade->methodCode;
         $this->channel_trade_no       = $channelTrade->channelTradeNo;
         $this->paying_time            = now();
-
-        $this->extension->device = $environment->device?->toArray();
-        $this->extension->client = $environment->client?->toArray();
+        $this->extension->device      = $environment->device?->toArray();
+        $this->extension->client      = $environment->client?->toArray();
         $this->fireModelEvent('paying', false);
     }
 
@@ -202,7 +200,7 @@ class Trade extends Model
     public function isAllowPaid() : bool
     {
 
-        if (in_array($this->status, [TradeStatusEnum::PRE, TradeStatusEnum::PAYING], true)) {
+        if (in_array($this->status, [ TradeStatusEnum::PRE, TradeStatusEnum::PAYING ], true)) {
             return true;
         }
         return false;
@@ -211,7 +209,7 @@ class Trade extends Model
     /**
      * 支付成功
      *
-     * @param  ChannelTradeData  $channelTrade
+     * @param ChannelTradeData $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -241,7 +239,7 @@ class Trade extends Model
     }
 
     /**
-     * @param  Refund  $refund
+     * @param Refund $refund
      *
      * @return void
      * @throws PaymentException

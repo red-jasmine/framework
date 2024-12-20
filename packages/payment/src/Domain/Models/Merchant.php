@@ -47,15 +47,6 @@ class Merchant extends Model
     }
 
 
-    public static function newModel() : static
-    {
-        $model = new static();
-
-
-        return $model;
-    }
-
-
     public function setStatus(MerchantStatusEnum $status) : void
     {
 

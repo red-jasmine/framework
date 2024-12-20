@@ -12,7 +12,7 @@ class ChannelAppTransformer implements TransformerInterface
 {
     public function transform(Data|ChannelAppData $data, Model|ChannelApp|null $model = null) : ?ChannelApp
     {
-        $model = $model ?? ChannelApp::newModel();
+        $model = $model ?? ChannelApp::make();
 
         $model->channel_code            = $data->channelCode;
         $model->channel_merchant_id     = $data->channelMerchantId;

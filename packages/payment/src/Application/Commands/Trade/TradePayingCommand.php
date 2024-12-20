@@ -10,6 +10,9 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
  */
 class TradePayingCommand extends Environment
 {
-    public int $id;
+    // 两者必须存在一个
+    public int     $merchantAppId;
+    public ?int    $id      = null;
+    public ?string $tradeNo = null;
 
 }

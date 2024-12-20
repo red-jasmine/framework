@@ -11,7 +11,7 @@ class MerchantTransformer
     public function transform(MerchantData $data, ?Merchant $merchant = null) : Merchant
     {
 
-        $merchant = $merchant ?? Merchant::newModel();
+        $merchant = $merchant ?? Merchant::make();
 
         $merchant->owner      = $data->owner;
         $merchant->name       = $data->name;

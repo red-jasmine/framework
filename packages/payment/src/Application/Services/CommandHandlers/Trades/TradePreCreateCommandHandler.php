@@ -19,12 +19,13 @@ class TradePreCreateCommandHandler extends CommandHandler
 
     public function __construct(
         protected TradeRepositoryInterface $repository,
-        protected MerchantAppRepository $merchantAppRepository
-    ) {
+        protected MerchantAppRepository    $merchantAppRepository
+    )
+    {
     }
 
     /**
-     * @param  TradePreCreateCommand  $command
+     * @param TradePreCreateCommand $command
      *
      * @return Trade
      * @throws AbstractException
@@ -39,7 +40,7 @@ class TradePreCreateCommandHandler extends CommandHandler
             // 获取商户应用
             $merchantApp = $this->merchantAppRepository->find($command->merchantAppId);
             // 创建支付单
-            $model = new Trade();
+            $model = Trade::make();
             // 设置商户应用
             $model->setMerchantApp($merchantApp);
             // 填充数据

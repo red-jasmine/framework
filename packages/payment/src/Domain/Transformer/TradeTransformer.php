@@ -9,7 +9,8 @@ class TradeTransformer
 {
     public function transform(TradeData $data, ?Trade $trade = null) : Trade
     {
-        $trade                              = $trade ?? Trade::newModel();
+
+        $trade                              = $trade ?? new Trade();
         $trade->merchant_trade_no           = $data->merchantTradeNo;
         $trade->merchant_trade_order_no     = $data->merchantTradeOrderNo;
         $trade->subject                     = $data->subject;

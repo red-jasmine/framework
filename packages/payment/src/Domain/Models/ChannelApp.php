@@ -62,17 +62,14 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     ];
 
 
-    public static function newModel() : static
+    public function newInstance($attributes = [], $exists = false) : static
     {
-
-        $model = new static();
-
-        $model->id = $model->newUniqueId();
-
-        $model->setRelation('products', Collection::make());
-
-        return $model;
-
+        $instance = parent::newInstance($attributes, $exists);
+        if (!$exists) {
+            $instance->setUniqueIds();
+            $instance->setRelation('products', Collection::make());
+        }
+        return $instance;
     }
 
 
