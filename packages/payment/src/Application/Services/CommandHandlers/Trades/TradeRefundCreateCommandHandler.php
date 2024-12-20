@@ -33,7 +33,7 @@ class TradeRefundCreateCommandHandler extends CommandHandler
         try {
             $trade = $this->tradeRepository->find($command->tradeId);
 
-            $refund = new  Refund;
+            $refund = new  Refund();
 
             $refund->merchant_refund_no       = $command->merchantRefundNo;
             $refund->merchant_refund_order_no = $command->merchantRefundOrderNo;
@@ -42,8 +42,9 @@ class TradeRefundCreateCommandHandler extends CommandHandler
             $refund->setGoodsDetails($command->goodDetails);
 
             $trade->createRefund($refund);
-
             $this->tradeRepository->update($refund);
+
+
             $this->commitDatabaseTransaction();
             // 触发 事件 异步申请退款 还是同步申请退款？
             // 异步退款 提示系统 能力

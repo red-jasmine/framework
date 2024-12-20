@@ -15,7 +15,7 @@ class TradeData extends Data
 
     public string $merchantTradeNo;
 
-    public ?string $merchantOrderNo;
+    public ?string $merchantTradeOrderNo;
 
     public Money $amount;
 

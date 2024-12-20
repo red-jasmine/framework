@@ -11,6 +11,7 @@ use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
+use RedJasmine\Payment\Domain\Generator\TradeNumberGenerator;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -28,13 +29,41 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  */
 class Trade extends Model
 {
-
-
     public $incrementing = false;
 
     use HasSnowflakeId;
 
     use HasOperator;
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        if (!$this->exists) {
+            $this->setRelation('extension', new TradeExtension());
+        }
+    }
+
+    protected function buildTradeNo() : void
+    {
+        $this->trade_no = app(TradeNumberGenerator::class)->generator(
+            ['merchant_app_id' => $this->merchant_app_id, 'merchant_id' => $this->merchant_id]
+        );
+    }
+
+
+    public static function boot() : void
+    {
+        parent::boot();
+        static::creating(static function (Trade $trade) {
+            $trade->buildTradeNo();
+            if ($trade->relationLoaded('extension')) {
+                $trade->extension->trade_id = $trade->id;
+            }
+        });
+
+    }
+
 
     protected $casts = [
         'status'        => TradeStatusEnum::class,
@@ -52,7 +81,7 @@ class Trade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
     }
 
     protected $dispatchesEvents = [
@@ -68,12 +97,12 @@ class Trade extends Model
     protected function payer() : Attribute
     {
         return Attribute::make(get: static fn($value, array $attributes) => Payer::from([
-                                                                                            'type'    => $attributes['payer_type'],
-                                                                                            'account' => $attributes['payer_account'],
-                                                                                            'name'    => $attributes['payer_name'],
-                                                                                            'user_id' => $attributes['payer_user_id'],
-                                                                                            'open_id' => $attributes['payer_open_id'],
-                                                                                        ])
+            'type'    => $attributes['payer_type'],
+            'account' => $attributes['payer_account'],
+            'name'    => $attributes['payer_name'],
+            'user_id' => $attributes['payer_user_id'],
+            'open_id' => $attributes['payer_open_id'],
+        ])
             ,
             set: static fn(Payer $value, array $attributes) => [
                 'payer_type'    => $value->type,
@@ -90,29 +119,9 @@ class Trade extends Model
         $this->extension->good_details = $goodDetails;
     }
 
-    /**
-     * Generate unique keys for the model.
-     *
-     * @return void
-     */
-    public function setUniqueIds() : void
-    {
-        parent::setUniqueIds();
-        $this->extension->{$this->extension->getKeyName()} = $this->{$this->getKeyName()};
-    }
-
-
-    public static function newModel() : static
-    {
-        $model = new static();
-        $model->setRelation('extension', new TradeExtension());
-        return $model;
-    }
-
-
     public function extension() : HasOne
     {
-        return $this->hasOne(TradeExtension::class, 'id', 'id');
+        return $this->hasOne(TradeExtension::class, 'trade_id', 'id');
     }
 
 
@@ -153,7 +162,7 @@ class Trade extends Model
 
     protected function isAllowPaying() : bool
     {
-        if (in_array($this->status, [ TradeStatusEnum::PRE ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE], true)) {
             return true;
         }
         return false;
@@ -161,9 +170,10 @@ class Trade extends Model
 
     /**
      *
-     * @param ChannelApp $channelApp
-     * @param Environment $environment
-     * @param ChannelTradeData $channelTrade
+     * @param  ChannelApp  $channelApp
+     * @param  Environment  $environment
+     * @param  ChannelTradeData  $channelTrade
+     *
      * @return void
      * @throws PaymentException
      */
@@ -192,7 +202,7 @@ class Trade extends Model
     public function isAllowPaid() : bool
     {
 
-        if (in_array($this->status, [ TradeStatusEnum::PRE, TradeStatusEnum::PAYING ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE, TradeStatusEnum::PAYING], true)) {
             return true;
         }
         return false;
@@ -200,7 +210,9 @@ class Trade extends Model
 
     /**
      * 支付成功
-     * @param ChannelTradeData $channelTrade
+     *
+     * @param  ChannelTradeData  $channelTrade
+     *
      * @return void
      * @throws PaymentException
      */
@@ -229,7 +241,8 @@ class Trade extends Model
     }
 
     /**
-     * @param Refund $refund
+     * @param  Refund  $refund
+     *
      * @return void
      * @throws PaymentException
      */

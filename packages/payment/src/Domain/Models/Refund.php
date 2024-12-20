@@ -18,18 +18,27 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 class Refund extends Model
 {
 
+    public static function boot() : void
+    {
+        parent::boot();
+
+        static::saving(static function (Refund $refund) {
+            if ($refund->relationLoaded('extension')) {
+                $refund->extension->refund_id = $refund->id;
+            }
+        });
+
+    }
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        if (!$this->exists()) {
+
+        if (!$this->exists) {
             $this->setRelation('extension', new RefundExtension());
         }
-    }
 
-    public function setUniqueIds() : void
-    {
-        parent::setUniqueIds();
-        $this->extension->refund_id = $this->{$this->getKeyName()};
+
     }
 
     public $incrementing = false;
@@ -48,7 +57,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
     }
 
     public function trade() : BelongsTo

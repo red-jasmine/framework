@@ -11,7 +11,7 @@ class TradeTransformer
     {
         $trade                              = $trade ?? Trade::newModel();
         $trade->merchant_trade_no           = $data->merchantTradeNo;
-        $trade->merchant_order_no           = $data->merchantOrderNo;
+        $trade->merchant_trade_order_no     = $data->merchantTradeOrderNo;
         $trade->subject                     = $data->subject;
         $trade->description                 = $data->description;
         $trade->expired_time                = $data->expiredTime;

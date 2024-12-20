@@ -13,10 +13,9 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 class RefundExtension extends Model
 {
 
-    use HasSnowflakeId;
 
     public $incrementing = false;
-
+    use HasSnowflakeId;
 
     protected $casts = [
         'good_details'     => GoodDetailCollectionCast::class,
@@ -27,7 +26,7 @@ class RefundExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds_extensions';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds_extensions';
     }
 
     public function refund() : BelongsTo
