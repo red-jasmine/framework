@@ -70,9 +70,8 @@ abstract class ApplicationCommandService extends Service
         /**
          * @var $model Model
          */
-        $model = new (static::getModelClass());
+        return (static::getModelClass())::make();
 
-        return $model;
     }
 
     public static function getModelClass() : string
