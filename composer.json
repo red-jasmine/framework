@@ -1,9 +1,7 @@
 {
     "name": "red-jasmine/framework",
     "autoload": {
-        "psr-4": {
-
-        }
+        "psr-4": []
     },
     "authors": [
         {
@@ -13,16 +11,16 @@
     ],
     "minimum-stability": "dev",
     "require-dev": {
+        "php": "^8.3",
         "red-jasmine/support": "1.0.x-dev",
-        "red-jasmine/filament-core":  "1.0.x-dev",
-        "red-jasmine/order":  "1.0.x-dev",
-        "red-jasmine/payment":  "1.0.x-dev",
-        "nunomaduro/collision": "^7.9",
-        "orchestra/testbench": "^8.0",
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/order": "1.0.x-dev",
+        "red-jasmine/payment": "1.0.x-dev",
         "pestphp/pest": "^2.30",
         "pestphp/pest-plugin-arch": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.0",
-        "brianium/paratest": "^7.3"
+        "brianium/paratest": "^7.3",
+        "orchestra/testbench": "9.x-dev"
     },
     "autoload-dev": {
         "psr-4": {
