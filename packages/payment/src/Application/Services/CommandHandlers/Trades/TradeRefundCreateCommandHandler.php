@@ -33,7 +33,7 @@ class TradeRefundCreateCommandHandler extends CommandHandler
         try {
             $trade = $this->tradeRepository->find($command->tradeId);
 
-            $refund = new  Refund();
+            $refund = Refund::make();
 
             $refund->merchant_refund_no       = $command->merchantRefundNo;
             $refund->merchant_refund_order_no = $command->merchantRefundOrderNo;
