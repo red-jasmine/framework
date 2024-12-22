@@ -217,7 +217,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                 $channelTradeData->channelCode        = $this->channelApp->channel_code;
                 $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
                 $channelTradeData->channelAppId       = (string)$data['app_id'];
-                $channelTradeData->id                 = (int)$data['out_trade_no'];
+                $channelTradeData->tradeNo            = (int)$data['out_trade_no'];
                 $channelTradeData->channelTradeNo     = (string)$data['trade_no'];
                 $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
                 $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));

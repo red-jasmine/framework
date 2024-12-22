@@ -2,11 +2,13 @@
 
 
 use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
@@ -25,6 +27,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 
 beforeEach(function () {
@@ -360,4 +363,40 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $this->assertEquals($channelTrade->methodCode, $trade->method_code, '支付方式不一致');
 
 
+    return $trade;
+
+
 })->depends('pre create a payment trade', 'can get trade pay methods');
+
+
+test('can paid a trade', function (Trade $trade) {
+
+    $channelTradeData = new TradePaidCommand();
+
+    $channelTradeData->tradeNo           = $trade->trade_no;
+    $channelTradeData->channelTradeNo    = fake()->numerify('channel-trade-no-##########');
+    $channelTradeData->channelCode       = 'alipay';
+    $channelTradeData->channelAppId      = fake()->numerify('channelAppId-##########');
+    $channelTradeData->channelMerchantId = fake()->numerify('channelMerchantId-##########');
+    $channelTradeData->paidTime          = now();
+    $channelTradeData->paymentAmount     = $trade->amount;
+    $channelTradeData->payer             = Payer::from([
+                                                           'type'    => fake()->randomElement([ 'private', 'company' ]),
+                                                           'name'    => fake()->name(),
+                                                           'account' => fake()->numerify('account-##########'),
+                                                           'openId'  => fake()->uuid(),
+                                                           'userId'  => fake()->uuid(),
+                                                       ]);
+
+
+    $result = $this->tradeCommandService->paid($channelTradeData);
+
+    $this->assertEquals(true, $result);
+
+    $this->expectException(PaymentException::class);
+
+    $result = $this->tradeCommandService->paid($channelTradeData);
+
+
+
+})->depends('can paying a trade');

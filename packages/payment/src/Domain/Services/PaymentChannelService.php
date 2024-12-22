@@ -57,9 +57,7 @@ class PaymentChannelService
 
 
             $channelTradeData                     = new ChannelTradeData();
-            $channelTradeData->merchantId         = $trade->merchant_id;
-            $channelTradeData->merchantAppId      = $trade->merchant_app_id;
-            $channelTradeData->id                 = $trade->id;
+            $channelTradeData->tradeNo            = $trade->trade_no;
             $channelTradeData->amount             = $trade->amount;
             $channelTradeData->channelCode        = $channelApp->channel_code;
             $channelTradeData->channelProductCode = $channelProduct->code;

@@ -50,6 +50,7 @@ class Trade extends Model
     {
         $instance = parent::newInstance($attributes, $exists);
         if (!$instance->exists) {
+            $this->setUniqueIds();
             $instance->setRelation('extension', new TradeExtension());
         }
         return $instance;

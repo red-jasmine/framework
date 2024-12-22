@@ -12,11 +12,9 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 class ChannelTradeData extends Data
 {
-    public int    $merchantAppId;
-    public int    $merchantId;
-    public int    $id;
-    public ?Money $amount;
-    public ?Money $paymentAmount;
+    public ?string $tradeNo = null;
+    public ?Money  $amount;
+    public ?Money  $paymentAmount;
 
 
     public ?string $channelCode;

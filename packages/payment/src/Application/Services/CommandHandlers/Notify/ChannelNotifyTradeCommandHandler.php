@@ -3,9 +3,11 @@
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Notify;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Application\Commands\Notify\ChannelNotifyTradeCommand;
-use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
+use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
@@ -20,8 +22,7 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
         protected TradeRepositoryInterface      $repository,
         protected ChannelAppRepositoryInterface $channelAppRepository,
         protected MerchantAppRepository         $merchantAppRepository,
-
-
+        protected PaymentChannelService         $paymentChannelService,
     )
     {
     }
@@ -33,35 +34,56 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
     public function handle(ChannelNotifyTradeCommand $command) : Response
     {
         $channelApp = $this->channelAppRepository->find($command->appId);
-        $response   = app(PaymentChannelService::class)->notifyResponse($channelApp);
-        try {
-            $channelTradeData = app(PaymentChannelService::class)->completePurchase($channelApp, $command->content);
+        // 获取渠道标准响应
+        $response = $this->paymentChannelService->notifyResponse($channelApp);
 
+        try {
+            // 渠道完成支付、获取渠道订单信息
+            $channelTradeData = $this->paymentChannelService->completePurchase($channelApp, $command->content);
+            // 交易已支付
+            $this->handleTradePaid($channelTradeData);
         } catch (Throwable $throwable) {
             report($throwable);
             return $response->fail();
         }
+        return $response->success();
+
+    }
+
+
+    /**
+     * @param ChannelTradeData $channelTradeData
+     * @return true
+     * @throws AbstractException
+     * @throws PaymentException
+     * @throws Throwable
+     */
+    protected function handleTradePaid(ChannelTradeData $channelTradeData) : bool
+    {
         try {
+
             $this->beginDatabaseTransaction();
-            $trade = $this->repository->find($channelTradeData->id);
+
+            $trade = $this->repository->findByTradeNo($channelTradeData->tradeNo);
+
             $trade->paid($channelTradeData);
 
             $this->repository->update($trade);
 
             $this->commitDatabaseTransaction();
+
+
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
             Log::info('Payment-Notify', [ 'message' => $exception->getMessage() ]);
-            return $response->fail();
+            throw $exception;
         } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
             report($throwable);
-            return $response->fail();
+            throw $throwable;
         }
 
-
-        return $response->success();
-
+        return true;
 
     }
 
