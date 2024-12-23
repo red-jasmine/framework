@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Generator;
+namespace RedJasmine\Support\Domain\Generator;
 
 interface UniqueIdGeneratorInterface
 {
