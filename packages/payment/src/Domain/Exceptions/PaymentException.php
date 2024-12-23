@@ -22,6 +22,9 @@ class PaymentException extends AbstractException
     public const int TRADE_REFUND_TIME_ERROR = 603014; // 支付状态错误
 
 
+    public const int CHANNEL_REFUND_ERROR = 604020; // 支付状态错误
+
+
     public const int URL_SIGN = 604001; // 签名错误
 
 }

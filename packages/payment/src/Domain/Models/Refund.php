@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
@@ -32,6 +33,11 @@ class Refund extends Model
         });
 
     }
+
+
+    protected $dispatchesEvents = [
+        'created' => RefundCreatedEvent::class,
+    ];
 
     protected function generateNo() : void
     {
@@ -70,7 +76,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
     }
 
     public function trade() : BelongsTo
@@ -91,5 +97,13 @@ class Refund extends Model
         return $this->hasOne(RefundExtension::class, 'refund_id', 'id');
     }
 
+
+    public function refunding()
+    {
+
+        // 退款处理中
+        $this->status = RefundStatusEnum::PROCESSING;
+
+    }
 
 }

@@ -2,7 +2,10 @@
 
 namespace RedJasmine\Payment\Application;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Payment\Application\Listeners\RefundChannelListener;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductReadRepositoryInterface;
@@ -81,6 +84,13 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
         $this->app->bind(RefundReadRepositoryInterface::class, RefundReadRepository::class);
 
+
+    }
+
+    public function boot() : void
+    {
+
+        Event::listen(RefundCreatedEvent::class, RefundChannelListener::class);
 
     }
 

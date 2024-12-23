@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor 用户 #FFCCCC
+participant 商户系统 #FFCC99
+participant 支付中心 #CCFFCC
+participant 支付渠道 #CCCCFF
+
+
+autonumber 1.1
+
+用户 -> 商户系统: 发起退款
+
+activate 商户系统
+商户系统 --> 支付中心: 创建退款单
+deactivate 商户系统
+activate 支付中心
+支付中心 --> 商户系统: 创建成功，返回退款单号
+deactivate 支付中心
+
+
+group 异步发起退款
+
+商户系统 -> 支付中心: 发起退款
+
+支付中心 --> 商户系统: 返回请求是否成功
+
+end
+
+group 定时轮询退款结果
+支付中心 --> 支付渠道: 查询退款结果
+支付渠道 --> 支付中心: 返回退款结果
+end
+
+
+
+@enduml

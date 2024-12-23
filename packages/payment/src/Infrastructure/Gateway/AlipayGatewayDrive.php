@@ -28,11 +28,13 @@ use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RuntimeException;
+use Throwable;
 
 /**
  * 渠道适配器
@@ -126,7 +128,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $request = $gateway->purchase(
             [ 'biz_content' => [
                 // TODO 更多参数
-                'out_trade_no'      => $trade->id,
+                'out_trade_no'      => $trade->trade_no,
                 'total_amount'      => $trade->amount->format(),
                 'subject'           => $trade->subject,
                 'product_code'      => $this->channelProduct->code,
@@ -134,36 +136,44 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             ] ]
         );
 
-        /**
-         * @var $response AbstractResponse
-         */
-        $response = $request->send();
-        $result   = new ChannelResult;
-        $result->setMessage($response->getMessage());
-        $result->setCode($response->getCode());
-        $result->setSuccessFul(false);
-        $result->setData($response->getData());
-        if ($response->isSuccessful()) {
-            $result->setSuccessFul(true);
-            if ($response instanceof AopTradePagePayResponse) {
-                $result->setResult($response->getRedirectUrl());
-            }
-            if ($response instanceof AopTradeWapPayResponse) {
-                $result->setResult($response->getRedirectUrl());
-            }
-            if ($response instanceof AopTradeAppPayResponse) {
-                $result->setResult($response->getOrderString());
-            }
-            if ($response instanceof AopTradePreCreateResponse) {
-                $result->setResult($response->getQrCode());
-            }
-            if ($response instanceof AopTradeCreateResponse) {
-                $result->setResult($response->getTradeNo());
-                $result->setTradeNo($response->getTradeNo());
-            }
-        }
 
-        return $result;
+        try {
+
+            /**
+             * @var $response AbstractResponse
+             */
+            $response = $request->send();
+
+            $result = new ChannelResult;
+            $result->setMessage($response->getMessage());
+            $result->setCode($response->getCode());
+            $result->setSuccessFul(false);
+            $result->setData($response->getData());
+            if ($response->isSuccessful()) {
+                $result->setSuccessFul(true);
+                if ($response instanceof AopTradePagePayResponse) {
+                    $result->setResult($response->getRedirectUrl());
+                }
+                if ($response instanceof AopTradeWapPayResponse) {
+                    $result->setResult($response->getRedirectUrl());
+                }
+                if ($response instanceof AopTradeAppPayResponse) {
+                    $result->setResult($response->getOrderString());
+                }
+                if ($response instanceof AopTradePreCreateResponse) {
+                    $result->setResult($response->getQrCode());
+                }
+                if ($response instanceof AopTradeCreateResponse) {
+                    $result->setResult($response->getTradeNo());
+                    $result->setTradeNo($response->getTradeNo());
+                }
+            }
+            return $result;
+        } catch (Throwable $throwable) {
+            report($throwable);
+            throw $throwable;
+
+        }
 
     }
 
@@ -196,6 +206,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             if ($response->isPaid()) {
                 $data = $response->getData();
 
+
                 // 调用查询接口
                 $queryResponse = $gateway->query([
                                                      'biz_content' => [
@@ -211,13 +222,14 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                     // 合并参数
                     $data = array_merge($data, $queryResponse->getAlipayResponse());
                 }
+
                 $result->setSuccessFul(true);
                 $channelTradeData                     = new  ChannelTradeData;
                 $channelTradeData->originalParameters = $data;
                 $channelTradeData->channelCode        = $this->channelApp->channel_code;
                 $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
                 $channelTradeData->channelAppId       = (string)$data['app_id'];
-                $channelTradeData->tradeNo            = (int)$data['out_trade_no'];
+                $channelTradeData->tradeNo            = (string)$data['out_trade_no'];
                 $channelTradeData->channelTradeNo     = (string)$data['trade_no'];
                 $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
                 $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
@@ -241,6 +253,54 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             //die('fail'); //The notify response
         }
     }
+
+    public function refund(Refund $refund) : ChannelResult
+    {
+        /**
+         * @var $gateway AopPageGateway
+         */
+        $gateway = $this->gateway;
+
+        $request = $gateway->refund([
+                                        'biz_content' => [
+                                            'refund_amount'       => $refund->refundAmount->format(),
+                                            'out_request_no'      => $refund->refund_no,
+                                            'out_trade_no'        => $refund->trade_no,
+                                            'trade_no'            => $refund->channel_trade_no,
+                                            'refund_reason'       => $refund->refund_reason,
+                                            'refund_goods_detail' => [],
+
+                                        ]
+                                    ]);
+
+        try {
+            $response = $request->send();
+            $data     = $response->getData();
+
+            $result = new ChannelResult;
+            $result->setMessage($response->getMessage());
+            $result->setCode($response->getCode());
+            $result->setSuccessFul(false);
+            $result->setData($response->getData());
+            // 请求成功
+            if ($response->isSuccessful()) {
+                // gmt_refund_pay
+                //
+                $data['fund_change'];
+                $data['refund_fee'];
+
+                $result->setSuccessFul(true);
+            }
+
+            return $result;
+
+
+        } catch (Throwable $throwable) {
+            throw new $throwable;
+        }
+
+    }
+
 
     public function notifyResponse() : NotifyResponseInterface
     {

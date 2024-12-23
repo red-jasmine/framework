@@ -40,6 +40,7 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
         try {
             // 渠道完成支付、获取渠道订单信息
             $channelTradeData = $this->paymentChannelService->completePurchase($channelApp, $command->content);
+
             // 交易已支付
             $this->handleTradePaid($channelTradeData);
         } catch (Throwable $throwable) {
@@ -66,12 +67,16 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
 
             $trade = $this->repository->findByNo($channelTradeData->tradeNo);
 
+            if ($trade->isPaid()) {
+                $this->commitDatabaseTransaction();
+                return true;
+            }
+
             $trade->paid($channelTradeData);
 
             $this->repository->update($trade);
 
             $this->commitDatabaseTransaction();
-
 
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

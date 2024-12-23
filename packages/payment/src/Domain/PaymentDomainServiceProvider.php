@@ -2,7 +2,10 @@
 
 namespace RedJasmine\Payment\Domain;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Payment\Application\Listeners\RefundChannelListener;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGenerator;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGenerator;
@@ -25,9 +28,12 @@ class PaymentDomainServiceProvider extends ServiceProvider
             RefundNumberGenerator::class
         );
 
+
     }
+
 
     public function boot() : void
     {
+
     }
 }

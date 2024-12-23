@@ -19,7 +19,7 @@ class PaymentUrlService
      * @return void
      * @throws PaymentException
      */
-    public function validSignature(array $parameters)
+    public function validSignature(array $parameters) : void
     {
 
         $signature = $parameters['signature'] ?? '';
@@ -58,7 +58,7 @@ class PaymentUrlService
     {
 
         $parameters              = [
-            'id'   => $trade->id,
+            'id'   => $trade->trade_no,
             'time' => time()
         ];
         $parameters['signature'] = $this->signature($parameters);

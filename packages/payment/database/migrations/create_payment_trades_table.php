@@ -52,7 +52,7 @@ return new class extends Migration {
                 $table->unsignedTinyInteger('refunds_count')->default(0)->comment('退款次数');
                 $table->string('refund_amount_currency')->nullable()->comment('实收金额货币');
                 $table->unsignedBigInteger('refund_amount_value')->default(0)->comment('退款金额值');
-                $table->unsignedBigInteger('refunding_amount_value')->default(0)->comment('退款金额值');
+                $table->unsignedBigInteger('refunding_amount_value')->default(0)->comment('退款中金额值');
 
                 $table->string('settle_amount_currency')->nullable()->comment('结算货币');
                 $table->bigInteger('settle_amount_value')->default(0)->comment('结算金额');

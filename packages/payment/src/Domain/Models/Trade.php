@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -79,12 +80,13 @@ class Trade extends Model
         'amount'        => MoneyCast::class,
         'paymentAmount' => MoneyCast::class,
         'refundAmount'  => MoneyCast::class,
+
     ];
 
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
     }
 
     protected $dispatchesEvents = [
@@ -100,12 +102,12 @@ class Trade extends Model
     protected function payer() : Attribute
     {
         return Attribute::make(get: fn($value, array $attributes) => Payer::from([
-            'type'    => $attributes['payer_type'],
-            'account' => $attributes['payer_account'],
-            'name'    => $attributes['payer_name'],
-            'user_id' => $attributes['payer_user_id'],
-            'open_id' => $attributes['payer_open_id'],
-        ])
+                                                                                     'type'    => $attributes['payer_type'],
+                                                                                     'account' => $attributes['payer_account'],
+                                                                                     'name'    => $attributes['payer_name'],
+                                                                                     'user_id' => $attributes['payer_user_id'],
+                                                                                     'open_id' => $attributes['payer_open_id'],
+                                                                                 ])
             ,
             set: static fn(Payer $value, array $attributes) => [
                 'payer_type'    => $value->type,
@@ -165,7 +167,7 @@ class Trade extends Model
 
     protected function isAllowPaying() : bool
     {
-        if (in_array($this->status, [TradeStatusEnum::PRE], true)) {
+        if (in_array($this->status, [ TradeStatusEnum::PRE ], true)) {
             return true;
         }
         return false;
@@ -173,9 +175,9 @@ class Trade extends Model
 
     /**
      *
-     * @param  ChannelApp  $channelApp
-     * @param  Environment  $environment
-     * @param  ChannelTradeData  $channelTrade
+     * @param ChannelApp $channelApp
+     * @param Environment $environment
+     * @param ChannelTradeData $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -204,16 +206,26 @@ class Trade extends Model
     public function isAllowPaid() : bool
     {
 
-        if (in_array($this->status, [TradeStatusEnum::PRE, TradeStatusEnum::PAYING], true)) {
+        if (in_array($this->status, [ TradeStatusEnum::PRE, TradeStatusEnum::PAYING ], true)) {
             return true;
         }
         return false;
     }
 
+    public function isPaid() : bool
+    {
+
+        if (in_array($this->status, [ TradeStatusEnum::SUCCESS, TradeStatusEnum::FINISH ], true)) {
+            return true;
+        }
+        return false;
+
+    }
+
     /**
      * 支付成功
      *
-     * @param  ChannelTradeData  $channelTrade
+     * @param ChannelTradeData $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -245,7 +257,7 @@ class Trade extends Model
     /**
      * 创建退款单
      *
-     * @param  Refund  $refund
+     * @param Refund $refund
      *
      * @return void
      * @throws PaymentException
@@ -261,11 +273,15 @@ class Trade extends Model
         if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new Money())) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
+
+        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value, $this->amount->currency))) < 0) {
+            throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
+        }
         // 退款 时间不能超过支付时间一年
         if ($this->paid_time->diffInYears(now()) > 1) {
             throw new PaymentException('退款时间不能超过支付时间一年', PaymentException::TRADE_REFUND_TIME_ERROR);
         }
-        $this->refunding_amount_value += $refund->refundAmount->value;
+
 
         //
         $refund->merchant_id            = $this->merchant_id;
@@ -281,6 +297,13 @@ class Trade extends Model
         $refund->payment_channel_app_id = $this->payment_channel_app_id;
         $refund->status                 = RefundStatusEnum::PRE;
 
+
+        $this->refunding_amount_value = (int)($this->refunding_amount_value + $refund->refundAmount->value);
+
+
+        if (!$this->relationLoaded('refunds')) {
+            $this->setRelation('refunds', Collection::make([]));
+        }
         $this->refunds->add($refund);
 
     }

@@ -14,6 +14,7 @@ use RedJasmine\Payment\Domain\Gateway\GatewayDrive;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use Throwable;
@@ -97,6 +98,24 @@ class PaymentChannelService
         return $gateway->gateway($paymentChannelData)->completePurchase($data);
     }
 
+
+    // TODO 修改返回值
+    public function refund(ChannelApp $channelApp, Refund $refund) : bool
+    {
+
+        // 支付网关适配器
+        $gateway = GatewayDrive::create($channelApp->channel_code);
+
+        $paymentChannelData             = new  PaymentChannelData;
+        $paymentChannelData->channelApp = $channelApp;
+
+        $channelResult = $gateway->gateway($paymentChannelData)->refund($refund);
+        if ($channelResult->isSuccessFul()) {
+            // 渠道退款异常
+            throw new PaymentException($channelResult->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
+        }
+        return true;
+    }
 
     public function notifyResponse(ChannelApp $channelApp) : NotifyResponseInterface
     {

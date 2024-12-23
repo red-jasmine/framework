@@ -14,11 +14,12 @@ class RefundCreateCommandHandler extends CommandHandler
 
     public function __construct(
         protected TradeRepositoryInterface $tradeRepository
-    ) {
+    )
+    {
     }
 
     /**
-     * @param  RefundCreateCommand  $command
+     * @param RefundCreateCommand $command
      *
      * @return Refund
      * @throws AbstractException
@@ -45,7 +46,7 @@ class RefundCreateCommandHandler extends CommandHandler
 
             $trade->createRefund($refund);
 
-            $this->tradeRepository->update($refund);
+            $this->tradeRepository->update($trade);
 
             $this->commitDatabaseTransaction();
 

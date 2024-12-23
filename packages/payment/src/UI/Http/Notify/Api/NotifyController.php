@@ -23,10 +23,12 @@ class NotifyController extends Controller
      */
     public function notify(string $channel, int $app, string $time, string $signature, Request $request)
     {
+
+        Log::info('Payment-Notify-Request;channel:' . $channel, ['data'=>$request->all(),'url'=>$request->url()]);
         // 验证 回调 url 签名
         PaymentUrl::validSignature(compact('app', 'channel', 'time', 'signature'));
         $data = $request->all();
-        Log::info('Payment-Notify;channel:' . $channel, $request->all());
+
         // 调用渠道支付回调方法
         $command              = new ChannelNotifyTradeCommand();
         $command->channelCode = $channel;

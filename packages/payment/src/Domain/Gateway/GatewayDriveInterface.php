@@ -6,6 +6,7 @@ use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
+use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
@@ -15,6 +16,8 @@ interface GatewayDriveInterface
     public function gateway(PaymentChannelData $paymentChannelData) : static;
 
     public function purchase(Trade $trade, Environment $environment) : ChannelResult;
+
+    public function refund(Refund $refund) : ChannelResult;
 
     public function completePurchase(array $parameters = []) : ChannelTradeData;
 
