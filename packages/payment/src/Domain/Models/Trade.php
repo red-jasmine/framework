@@ -11,7 +11,7 @@ use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Generator\TradeNumberGenerator;
+use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -39,7 +39,7 @@ class Trade extends Model
     {
         parent::boot();
         static::creating(function (Trade $trade) {
-            $trade->buildTradeNo();
+            $trade->generateNo();
             if ($trade->relationLoaded('extension')) {
                 $trade->extension->trade_id = $trade->id;
             }
@@ -57,10 +57,13 @@ class Trade extends Model
     }
 
 
-    protected function buildTradeNo() : void
+    protected function generateNo() : void
     {
-        $this->trade_no = app(TradeNumberGenerator::class)->generator(
-            [ 'merchant_app_id' => $this->merchant_app_id, 'merchant_id' => $this->merchant_id ]
+        $this->trade_no = app(TradeNumberGeneratorInterface::class)->generator(
+            [
+                'merchant_app_id' => $this->merchant_app_id,
+                'merchant_id'     => $this->merchant_id
+            ]
         );
     }
 
@@ -81,7 +84,7 @@ class Trade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
     }
 
     protected $dispatchesEvents = [
@@ -97,12 +100,12 @@ class Trade extends Model
     protected function payer() : Attribute
     {
         return Attribute::make(get: fn($value, array $attributes) => Payer::from([
-                                                                                     'type'    => $attributes['payer_type'],
-                                                                                     'account' => $attributes['payer_account'],
-                                                                                     'name'    => $attributes['payer_name'],
-                                                                                     'user_id' => $attributes['payer_user_id'],
-                                                                                     'open_id' => $attributes['payer_open_id'],
-                                                                                 ])
+            'type'    => $attributes['payer_type'],
+            'account' => $attributes['payer_account'],
+            'name'    => $attributes['payer_name'],
+            'user_id' => $attributes['payer_user_id'],
+            'open_id' => $attributes['payer_open_id'],
+        ])
             ,
             set: static fn(Payer $value, array $attributes) => [
                 'payer_type'    => $value->type,
@@ -162,7 +165,7 @@ class Trade extends Model
 
     protected function isAllowPaying() : bool
     {
-        if (in_array($this->status, [ TradeStatusEnum::PRE ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE], true)) {
             return true;
         }
         return false;
@@ -170,9 +173,9 @@ class Trade extends Model
 
     /**
      *
-     * @param ChannelApp $channelApp
-     * @param Environment $environment
-     * @param ChannelTradeData $channelTrade
+     * @param  ChannelApp  $channelApp
+     * @param  Environment  $environment
+     * @param  ChannelTradeData  $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -201,7 +204,7 @@ class Trade extends Model
     public function isAllowPaid() : bool
     {
 
-        if (in_array($this->status, [ TradeStatusEnum::PRE, TradeStatusEnum::PAYING ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE, TradeStatusEnum::PAYING], true)) {
             return true;
         }
         return false;
@@ -210,7 +213,7 @@ class Trade extends Model
     /**
      * 支付成功
      *
-     * @param ChannelTradeData $channelTrade
+     * @param  ChannelTradeData  $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -240,7 +243,9 @@ class Trade extends Model
     }
 
     /**
-     * @param Refund $refund
+     * 创建退款单
+     *
+     * @param  Refund  $refund
      *
      * @return void
      * @throws PaymentException
@@ -252,8 +257,6 @@ class Trade extends Model
         if ($this->status !== TradeStatusEnum::SUCCESS) {
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
-
-
         // 验证 退款金额 和 不能超过订单金额
         if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new Money())) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
@@ -264,8 +267,10 @@ class Trade extends Model
         }
         $this->refunding_amount_value += $refund->refundAmount->value;
 
+        //
         $refund->merchant_id            = $this->merchant_id;
         $refund->trade_id               = $this->id;
+        $refund->trade_no               = $this->trade_no;
         $refund->merchant_app_id        = $this->merchant_app_id;
         $refund->merchant_trade_no      = $this->merchant_trade_no;
         $refund->merchant_order_no      = $this->merchant_order_no;
@@ -275,7 +280,7 @@ class Trade extends Model
         $refund->channel_merchant_id    = $this->channel_merchant_id;
         $refund->payment_channel_app_id = $this->payment_channel_app_id;
         $refund->status                 = RefundStatusEnum::PRE;
-        $refund->save();
+
         $this->refunds->add($refund);
 
     }

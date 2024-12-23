@@ -43,7 +43,7 @@ class TradePayingCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 获取支付单
-            $trade = $command->id ? $this->repository->find($command->id) : $this->repository->findByTradeNo($command->tradeNo);
+            $trade = $command->id ? $this->repository->find($command->id) : $this->repository->findByNo($command->tradeNo);
 
             $environment = $command;
             // 根据 支付环境、支付方式、 选择 支付应用

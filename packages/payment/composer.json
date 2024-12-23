@@ -29,6 +29,7 @@
         "laravel": {
             "providers": [
               "RedJasmine\\Payment\\PaymentPackageServiceProvider",
+              "RedJasmine\\Payment\\Domain\\PaymentDomainServiceProvider",
               "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider"
             ],
             "aliases": {

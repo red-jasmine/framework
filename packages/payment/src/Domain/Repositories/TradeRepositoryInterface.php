@@ -11,6 +11,7 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 interface TradeRepositoryInterface extends RepositoryInterface
 {
 
-    public function findByTradeNo(string $tradeNo) : ?Trade;
+
+    public function findByNo(string $tradeNo) : ?Trade;
 
 }

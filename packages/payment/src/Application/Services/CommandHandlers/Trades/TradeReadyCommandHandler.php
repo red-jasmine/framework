@@ -41,7 +41,7 @@ class TradeReadyCommandHandler extends CommandHandler
 
         try {
             // 获取支付单
-            $trade = $command->id ? $this->repository->find($command->id) : $this->repository->findByTradeNo($command->tradeNo);
+            $trade = $command->id ? $this->repository->find($command->id) : $this->repository->findByNo($command->tradeNo);
 
             // 根据 支付环境 获取 支付方式
             $methods = $this->paymentRouteService->getMethods($trade, $command);

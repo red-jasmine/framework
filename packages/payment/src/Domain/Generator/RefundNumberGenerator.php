@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Generator;
 
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 
-class TradeNumberGenerator implements TradeNumberGeneratorInterface
+class RefundNumberGenerator implements RefundNumberGeneratorInterface
 {
     /**
      * @param  array{merchant_id:int,merchant_app_id:int}  $factors

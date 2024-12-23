@@ -64,7 +64,7 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
 
             $this->beginDatabaseTransaction();
 
-            $trade = $this->repository->findByTradeNo($channelTradeData->tradeNo);
+            $trade = $this->repository->findByNo($channelTradeData->tradeNo);
 
             $trade->paid($channelTradeData);
 

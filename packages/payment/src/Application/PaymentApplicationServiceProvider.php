@@ -17,6 +17,8 @@ use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\RefundReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
@@ -26,6 +28,7 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppPermissi
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MethodReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
@@ -34,6 +37,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepositor
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantChannelAppPermissionRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MethodRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\RefundRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 
 class PaymentApplicationServiceProvider extends ServiceProvider
@@ -58,14 +62,24 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ChannelProductRepositoryInterface::class, ChannelProductRepository::class);
         $this->app->bind(ChannelProductReadRepositoryInterface::class, ChannelProductReadRepository::class);
 
-        $this->app->bind(TradeRepositoryInterface::class, TradeRepository::class);
-        $this->app->bind(TradeReadRepositoryInterface::class, TradeReadRepository::class);
 
         $this->app->bind(MethodRepositoryInterface::class, MethodRepository::class);
         $this->app->bind(MethodReadRepositoryInterface::class, MethodReadRepository::class);
 
-        $this->app->bind(MerchantChannelAppPermissionRepositoryInterface::class, MerchantChannelAppPermissionRepository::class);
-        $this->app->bind(MerchantChannelAppPermissionReadRepositoryInterface::class, MerchantChannelAppReadRepository::class);
+        $this->app->bind(
+            MerchantChannelAppPermissionRepositoryInterface::class,
+            MerchantChannelAppPermissionRepository::class
+        );
+        $this->app->bind(
+            MerchantChannelAppPermissionReadRepositoryInterface::class,
+            MerchantChannelAppReadRepository::class
+        );
+
+        $this->app->bind(TradeRepositoryInterface::class, TradeRepository::class);
+        $this->app->bind(TradeReadRepositoryInterface::class, TradeReadRepository::class);
+
+        $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
+        $this->app->bind(RefundReadRepositoryInterface::class, RefundReadRepository::class);
 
 
     }

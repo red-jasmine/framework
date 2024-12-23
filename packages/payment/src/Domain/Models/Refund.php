@@ -5,6 +5,8 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
+use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
@@ -23,11 +25,22 @@ class Refund extends Model
         parent::boot();
 
         static::creating(static function (Refund $refund) {
+            $refund->generateNo();
             if ($refund->relationLoaded('extension')) {
                 $refund->extension->refund_id = $refund->id;
             }
         });
 
+    }
+
+    protected function generateNo() : void
+    {
+        $this->refund_no = app(RefundNumberGeneratorInterface::class)->generator(
+            [
+                'merchant_app_id' => $this->merchant_app_id,
+                'merchant_id'     => $this->merchant_id
+            ]
+        );
     }
 
     public function newInstance($attributes = [], $exists = false) : static
@@ -57,7 +70,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
     }
 
     public function trade() : BelongsTo
@@ -71,6 +84,7 @@ class Refund extends Model
     {
         $this->extension->good_details = $goodDetails;
     }
+
 
     public function extension() : HasOne
     {

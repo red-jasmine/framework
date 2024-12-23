@@ -2,16 +2,16 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
+use RedJasmine\Payment\Application\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradeRefundCreateCommand;
+use RedJasmine\Payment\Application\Services\CommandHandlers\Refunds\RefundCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePaidCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePayingCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePreCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradeReadyCommandHandler;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradeRefundCreateCommandHandler;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Support\Application\ApplicationCommandService;
@@ -23,8 +23,6 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method Trade ready(TradeReadyCommand $command)
  * @see  TradePayingCommandHandler::handle()
  * @method ChannelTradeData paying(TradePayingCommand $command)
- * @see  TradeRefundCreateCommandHandler::handle()
- * @method void refund(TradeRefundCreateCommand $command)
  * @see  TradePaidCommandHandler::handle()
  * @method bool paid(TradePaidCommand $command)
  */
@@ -44,7 +42,6 @@ class TradeCommandService extends ApplicationCommandService
         'ready'     => TradeReadyCommandHandler::class,
         'paying'    => TradePayingCommandHandler::class,
         'paid'      => TradePaidCommandHandler::class,
-        'refund'    => TradeRefundCreateCommandHandler::class,
     ];
 
 }

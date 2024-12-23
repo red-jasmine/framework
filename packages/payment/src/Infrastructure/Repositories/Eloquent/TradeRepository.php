@@ -11,9 +11,9 @@ class TradeRepository extends EloquentRepository implements TradeRepositoryInter
 
     protected static string $eloquentModelClass = Trade::class;
 
-    public function findByTradeNo(string $tradeNo) : ?Trade
+    public function findByNo(string $no) : ?Trade
     {
-        return static::$eloquentModelClass::where('trade_no', $tradeNo)->first();
+        return static::$eloquentModelClass::where('trade_no', $no)->first();
     }
 
 

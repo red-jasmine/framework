@@ -35,7 +35,7 @@ class TradePaidCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $trade = $this->repository->findByTradeNo($command->tradeNo);
+            $trade = $this->repository->findByNo($command->tradeNo);
 
             $trade->paid($command);
 

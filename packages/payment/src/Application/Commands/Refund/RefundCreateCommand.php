@@ -1,14 +1,14 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Commands\Trade;
+namespace RedJasmine\Payment\Application\Commands\Refund;
 
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Support\Data\Data;
 
-class TradeRefundCreateCommand extends Data
+class RefundCreateCommand extends Data
 {
-    public int $tradeId;
+    public string $tradeNo;
     /**
      * 商户退款单号
      * @var string
@@ -17,7 +17,7 @@ class TradeRefundCreateCommand extends Data
 
     public Money $refundAmount;
 
-    public ?string $refundSeason;
+    public ?string $refundReason = null;
 
     /**
      * 商户原始退款订单号
@@ -31,5 +31,5 @@ class TradeRefundCreateCommand extends Data
 
     public ?string $notifyUrl = null;
 
-    public ?string $passbackParams = null;
+    public ?string $passBackParams = null;
 }

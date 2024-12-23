@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b703649f0a51ca95667a48d641792461",
+    "content-hash": "76d89ece3dc4a289440a5270220dd62b",
     "packages": [],
     "packages-dev": [
         {
@@ -9475,7 +9475,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/payment",
-                "reference": "8a99bc70b7e4d492624eb1d8127aa17d1ae3d68c"
+                "reference": "1ea3b8f17aa87e3ab52f1eb12fc58b9aca1291a9"
             },
             "require": {
                 "league/omnipay": "^3.2",
@@ -9488,6 +9488,7 @@
                 "laravel": {
                     "providers": [
                         "RedJasmine\\Payment\\PaymentPackageServiceProvider",
+                        "RedJasmine\\Payment\\Domain\\PaymentDomainServiceProvider",
                         "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider"
                     ],
                     "aliases": []
@@ -13920,14 +13921,15 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "red-jasmine/support": 20,
+        "orchestra/testbench": 20,
         "red-jasmine/filament-core": 20,
         "red-jasmine/order": 20,
-        "red-jasmine/payment": 20
+        "red-jasmine/payment": 20,
+        "red-jasmine/support": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {},
     "platform-dev": {
         "php": "^8.3"
     },

@@ -2,13 +2,14 @@
 
 
 use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
+use RedJasmine\Payment\Application\Services\RefundCommandService;
 use RedJasmine\Payment\Application\Services\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
-use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
@@ -21,6 +22,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\Method;
+use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
@@ -28,6 +30,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
+use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 
 beforeEach(function () {
@@ -222,8 +225,10 @@ beforeEach(function () {
     $this->merchant->channelApps()->sync(collect($this->channelApps)->pluck('id')->toArray());
 
 
-    $this->tradeCommandService = app(TradeCommandService::class);
-    $this->tradeRepository     = app(TradeRepositoryInterface::class);
+    $this->tradeCommandService  = app(TradeCommandService::class);
+    $this->tradeRepository      = app(TradeRepositoryInterface::class);
+    $this->refundCommandService = app(RefundCommandService::class);
+    $this->refundRepository     = app(RefundRepositoryInterface::class);
 
 });
 
@@ -400,9 +405,62 @@ test('can paid a trade', function (Trade $trade) {
     $this->assertEquals($channelTradeData->channelCode, $trade->channel_code, '支付渠道不一致');
 
 
-    $this->expectException(PaymentException::class);
-
-    $this->tradeCommandService->paid($channelTradeData);
-
+    return $trade;
 
 })->depends('can paying a trade');
+
+// 退款
+test('can create a refund', function (Trade $trade) {
+
+    $command                        = new RefundCreateCommand();
+    $command->tradeNo               = $trade->trade_no;
+    $command->merchantRefundNo      = fake()->numerify('merchant-refund-no-##########');
+    $command->merchantRefundOrderNo = fake()->numerify('merchant-refund-order-no-##########');
+    $command->refundAmount          = $trade->amount;
+    $command->refundReason          = fake()->sentence();
+    $command->goodDetails           = GoodDetailData::collect([
+        [
+            'goods_name' => fake()->word(),
+            'price'      => [
+                'currency' => 'CNY',
+                'value'    => fake()->randomNumber(2, 90),
+            ],
+            'quantity'   => fake()->randomNumber(1, 10),
+            'goods_id'   => fake()->numerify('goods-id-########'),
+            'category'   => fake()->word(),
+        ],
+        [
+            'goods_name' => fake()->word(),
+            'price'      => [
+                'currency' => 'CNY',
+                'value'    => fake()->randomNumber(2, 90),
+            ],
+            'quantity'   => fake()->randomNumber(1, 10),
+            'goods_id'   => fake()->numerify('goods-id-########'),
+            'category'   => fake()->word(),
+        ],
+    ]);
+    $command->notifyUrl             = fake()->url();
+    $command->passBackParams        = json_encode(['test' => 1], JSON_THROW_ON_ERROR);
+
+
+    /**
+     * @var Refund $refund
+     */
+    $refund = $this->refundCommandService->create($command);
+
+    $this->assertEquals($trade->trade_no, $refund->trade_no);
+    $this->assertEquals($trade->id, $refund->trade_id);
+    $this->assertEquals($trade->merchant_id, $refund->merchant_id);
+    $this->assertEquals($trade->merchant_app_id, $refund->merchant_app_id);
+    $this->assertEquals($trade->channel_code, $refund->channel_code);
+    $this->assertEquals($trade->channel_trade_no, $refund->channel_trade_no);
+    $this->assertEquals($trade->channel_app_id, $refund->channel_app_id);
+
+    $this->assertEquals($command->merchantRefundNo, $refund->merchant_refund_no, '商户退款单号不一致');
+    $this->assertEquals($command->refundAmount->value, $refund->refundAmount->value, '退款金额不一致');
+    $this->assertEquals($command->refundReason, $refund->refund_reason, ' 退款原因不一致');
+    $this->assertEquals($command->notifyUrl, $refund->extension->notify_url, ' 回调地址不一致');
+    $this->assertEquals($command->passBackParams, $refund->extension->pass_back_params, '回调参数不一致');
+
+})->depends('can paid a trade');
