@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds_extensions', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refund_extensions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('refund_id')->comment('退款ID');
             $table->string('notify_url')->nullable()->comment('业务通知地址');
@@ -25,6 +25,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds_extensions');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refund_extensions');
     }
 };
