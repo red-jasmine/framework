@@ -16,7 +16,6 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
  * @method bind(CardGroupBindProductBindCommand $command)
- * @method CardGroupBindProductRepositoryInterface  getRepository()
  */
 class CardGroupBindProductCommandService extends ApplicationCommandService
 {

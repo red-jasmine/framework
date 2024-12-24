@@ -4,12 +4,10 @@ namespace RedJasmine\Shopping\Domain\Orders\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
-use RedJasmine\Support\Application\Command;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Data\Data;
 
-class OrderData extends Command
+class OrderData extends Data
 {
 
 

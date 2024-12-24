@@ -3,9 +3,9 @@
 namespace RedJasmine\Product\Application\Product\UserCases\Commands;
 
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Support\Application\Command;
+use RedJasmine\Support\Data\Data;
 
-class ProductSetStatusCommand extends Command
+class ProductSetStatusCommand extends Data
 {
 
     public int $id;

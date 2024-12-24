@@ -3,9 +3,9 @@
 namespace RedJasmine\Card\Application\UserCases\Command\GroupBindProduct;
 
 
-use RedJasmine\Support\Application\Command;
+use RedJasmine\Support\Data\Data;
 
-class CardGroupBindProductDeleteCommand extends Command
+class CardGroupBindProductDeleteCommand extends Data
 {
 
     public int $id;
