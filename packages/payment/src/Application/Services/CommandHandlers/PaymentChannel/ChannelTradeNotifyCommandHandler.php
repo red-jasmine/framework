@@ -1,27 +1,22 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Notify;
+namespace RedJasmine\Payment\Application\Services\CommandHandlers\PaymentChannel;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Application\Commands\Notify\ChannelNotifyTradeCommand;
-use RedJasmine\Payment\Application\Services\ChannelNotifyCommandService;
+use RedJasmine\Payment\Application\Services\PaymentChannelHandlerService;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
-class ChannelNotifyTradeCommandHandler extends CommandHandler
+class ChannelTradeNotifyCommandHandler extends CommandHandler
 {
 
 
-    public function __construct(protected ChannelNotifyCommandService $service)
+    public function __construct(protected PaymentChannelHandlerService $service)
     {
 
     }

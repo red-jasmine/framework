@@ -5,7 +5,10 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
@@ -36,7 +39,12 @@ class Refund extends Model
 
 
     protected $dispatchesEvents = [
-        'created' => RefundCreatedEvent::class,
+        'created'    => RefundCreatedEvent::class,
+        'processing' => RefundProcessingEvent::class,
+    ];
+
+    protected $observables = [
+        'processing'
     ];
 
     protected function generateNo() : void
@@ -98,12 +106,49 @@ class Refund extends Model
     }
 
 
-    public function refunding()
+    // 是否允许渠道处理
+    public function isAllowProcessing() : bool
     {
 
+        if (in_array($this->status, [ RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL, ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @return void
+     * @throws PaymentException
+     */
+    public function processing() : void
+    {
+        if (!$this->isAllowProcessing()) {
+            throw new PaymentException('退款状态不允许处理', PaymentException::REFUND_STATUS_ERROR);
+        }
         // 退款处理中
         $this->status = RefundStatusEnum::PROCESSING;
 
+        $this->fireModelEvent('processing', false);
+
+    }
+
+    public function refunded(ChannelRefundData $data) : void
+    {
+        // TODO 验证状态、金额
+        $this->status            = RefundStatusEnum::REFUNDED;
+        $this->refund_time       = $data->refundTime;
+        $this->channel_refund_no = $data->channelRefundNo;
+        $this->fireModelEvent('refunded', false);
+    }
+
+
+    public function abnormal(?string $errorMessage) : void
+    {
+        $this->status                   = RefundStatusEnum::ABNORMAL;
+        $this->extension->error_message = $errorMessage;
+        $this->fireModelEvent('abnormal', false);
     }
 
 }

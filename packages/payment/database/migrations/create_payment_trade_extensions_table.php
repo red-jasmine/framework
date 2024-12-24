@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trade_extensions',
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trade_extensions',
             static function (Blueprint $table) {
                 $table->id()->comment('表ID');
                 $table->unsignedBigInteger('trade_id')->unique()->comment('交易表ID');
@@ -20,6 +20,7 @@ return new class extends Migration {
                 $table->json('device')->nullable()->comment('设备信息');
                 $table->json('client')->nullable()->comment('客户端信息');
                 $table->json('expands')->nullable()->comment('扩展参数');
+                $table->string('error_message')->nullable()->comment('错误信息');
                 $table->timestamps();
                 $table->comment('支付-支付扩展信息表');
             });
@@ -27,6 +28,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trade_extensions');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trade_extensions');
     }
 };

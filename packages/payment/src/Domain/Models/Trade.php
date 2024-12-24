@@ -284,18 +284,18 @@ class Trade extends Model
 
 
         //
-        $refund->merchant_id            = $this->merchant_id;
-        $refund->trade_id               = $this->id;
-        $refund->trade_no               = $this->trade_no;
-        $refund->merchant_app_id        = $this->merchant_app_id;
-        $refund->merchant_trade_no      = $this->merchant_trade_no;
-        $refund->merchant_order_no      = $this->merchant_order_no;
-        $refund->channel_code           = $this->channel_code;
-        $refund->channel_trade_no       = $this->channel_trade_no;
-        $refund->channel_app_id         = $this->channel_app_id;
-        $refund->channel_merchant_id    = $this->channel_merchant_id;
-        $refund->payment_channel_app_id = $this->payment_channel_app_id;
-        $refund->status                 = RefundStatusEnum::PRE;
+        $refund->merchant_id             = $this->merchant_id;
+        $refund->trade_id                = $this->id;
+        $refund->trade_no                = $this->trade_no;
+        $refund->merchant_app_id         = $this->merchant_app_id;
+        $refund->merchant_trade_no       = $this->merchant_trade_no;
+        $refund->merchant_trade_order_no = $this->merchant_trade_order_no;
+        $refund->channel_code            = $this->channel_code;
+        $refund->channel_trade_no        = $this->channel_trade_no;
+        $refund->channel_app_id          = $this->channel_app_id;
+        $refund->channel_merchant_id     = $this->channel_merchant_id;
+        $refund->payment_channel_app_id  = $this->payment_channel_app_id;
+        $refund->status                  = RefundStatusEnum::PRE;
 
 
         $this->refunding_amount_value = (int)($this->refunding_amount_value + $refund->refundAmount->value);

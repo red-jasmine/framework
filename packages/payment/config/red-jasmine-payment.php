@@ -1,24 +1,16 @@
 <?php
 
+use RedJasmine\Payment\Channels\AlipayChannel;
+
 return [
     //
 
-    'tables' => [
+    'tables'                => [
         'connection' => null,
         'prefix'     => 'jasmine_',
     ],
 
 
-    'channels' => [
-        'alipay' => [
-            'name'  => '支付宝',
-            'drive' => \RedJasmine\Payment\Channels\AlipayChannel::class,
-            'icon'  => '',
-        ],
-        'wechat' => [
-            'name'  => '微信',
-            'drive' => \RedJasmine\Payment\Channels\AlipayChannel::class,
-            'icon'  => '',
-        ],
-    ],
+    // 退款申请后 查询间隔
+    'refund_query_interval' => 60, // 单位m秒
 ];

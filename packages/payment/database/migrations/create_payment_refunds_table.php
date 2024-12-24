@@ -19,7 +19,7 @@ return new class extends Migration {
                 $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
                 $table->string('merchant_refund_no')->comment('商户退款单号'); // 交易好下唯一
                 $table->string('merchant_trade_no')->comment('商户交易单号');
-                $table->string('merchant_order_no')->nullable()->comment('商户原始订单号');
+                $table->string('merchant_trade_order_no')->nullable()->comment('商户交易原始订单号');
                 $table->string('merchant_refund_order_no')->nullable()->comment('商户原始退款订单号');
                 $table->unsignedBigInteger('payment_channel_app_id')->comment('系统内渠道应用ID');
                 $table->string('channel_code')->comment('支付渠道');

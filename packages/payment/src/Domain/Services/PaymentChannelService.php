@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Services;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
+use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
@@ -99,7 +100,12 @@ class PaymentChannelService
     }
 
 
-    // TODO 修改返回值
+    /**
+     * @param ChannelApp $channelApp
+     * @param Refund $refund
+     * @return bool
+     * @throws PaymentException
+     */
     public function refund(ChannelApp $channelApp, Refund $refund) : bool
     {
 
@@ -110,11 +116,22 @@ class PaymentChannelService
         $paymentChannelData->channelApp = $channelApp;
 
         $channelResult = $gateway->gateway($paymentChannelData)->refund($refund);
-        if ($channelResult->isSuccessFul()) {
+        if (!$channelResult->isSuccessFul()) {
             // 渠道退款异常
             throw new PaymentException($channelResult->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
         }
         return true;
+    }
+
+    public function refundQuery(ChannelApp $channelApp, Refund $refund) : ChannelRefundData
+    {
+        // 支付网关适配器
+        $gateway = GatewayDrive::create($channelApp->channel_code);
+
+        $paymentChannelData             = new  PaymentChannelData;
+        $paymentChannelData->channelApp = $channelApp;
+
+        return $gateway->gateway($paymentChannelData)->refundQuery($refund);
     }
 
     public function notifyResponse(ChannelApp $channelApp) : NotifyResponseInterface

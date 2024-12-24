@@ -16,6 +16,7 @@ use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
+use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
@@ -26,6 +27,7 @@ use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
@@ -275,30 +277,73 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
         try {
             $response = $request->send();
-            $data     = $response->getData();
+            $data     = $response->getAlipayResponse();
 
             $result = new ChannelResult;
-            $result->setMessage($response->getMessage());
+            $result->setMessage($data['sub_msg'] ?? $response->getMessage());
             $result->setCode($response->getCode());
             $result->setSuccessFul(false);
             $result->setData($response->getData());
             // 请求成功
             if ($response->isSuccessful()) {
-                // gmt_refund_pay
-                //
-                $data['fund_change'];
-                $data['refund_fee'];
-
                 $result->setSuccessFul(true);
             }
-
             return $result;
-
-
         } catch (Throwable $throwable) {
-            throw new $throwable;
+            throw  $throwable;
         }
 
+    }
+
+    public function refundQuery(Refund $refund) : ChannelRefundData
+    {
+        /**
+         * @var $gateway AopPageGateway
+         */
+        $gateway = $this->gateway;
+
+        $request = $gateway->refundQuery([
+                                             'biz_content' => [
+
+                                                 'out_request_no' => $refund->refund_no,
+                                                 'out_trade_no'   => $refund->trade_no,
+                                                 'trade_no'       => $refund->channel_trade_no,
+                                                 'query_options'  => [
+                                                     'refund_royaltys',
+                                                     'gmt_refund_pay',
+                                                     'refund_detail_item_list',
+                                                     'send_back_fee',
+                                                     'deposit_back_info',
+                                                     'refund_voucher_detail_list',
+                                                     'pre_auth_cancel_fee',
+                                                     'refund_hyb_amount',
+                                                     'refund_charge_info_list',
+                                                 ],
+                                             ]
+                                         ]);
+
+        try {
+
+            $response = $request->send();
+
+            if (!$response->isSuccessful()) {
+                throw new RuntimeException('退款失败');
+            }
+            $data                        = $response->getAlipayResponse();
+            $channelRefundData           = new ChannelRefundData();
+            $channelRefundData->status   = RefundStatusEnum::PROCESSING;
+            $channelRefundData->tradeNo  = $data['out_trade_no'];
+            $channelRefundData->refundNo = $data['out_request_no'];
+            if ((($data['refund_status'] ?? '') === 'REFUND_SUCCESS')) {
+                $channelRefundData->refundTime   = Carbon::make($data['gmt_refund_pay']);
+                $channelRefundData->refundAmount = new Money(bcmul($data['refund_amount'], 100, 0));
+
+                return $channelRefundData;
+            }
+            return $channelRefundData;
+        } catch (Throwable $throwable) {
+            throw $throwable;
+        }
     }
 
 
