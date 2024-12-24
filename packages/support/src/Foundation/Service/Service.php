@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionException;
-use \Illuminate\Pipeline\Pipeline;
+use Illuminate\Pipeline\Pipeline;
 
 /**
  * 服务基础
@@ -44,7 +44,7 @@ abstract class Service
     {
 
         if (is_string($macro)) {
-            $macro = app($macro);
+            $macro = app($macro, ['service' => $this]);
         }
 
         if ($macro instanceof MacroAwareService) {

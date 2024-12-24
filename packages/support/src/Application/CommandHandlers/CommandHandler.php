@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Application\CommandHandlers;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
@@ -10,8 +11,9 @@ use RedJasmine\Support\Foundation\Service\AwareServiceAble;
 use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
 use RedJasmine\Support\Foundation\Service\MacroAwareService;
 
-abstract class CommandHandler implements MacroAwareService
+abstract class CommandHandler
 {
+
     use HasHooks;
 
     use AwareServiceAble;

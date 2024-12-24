@@ -19,9 +19,8 @@ use RedJasmine\Support\Foundation\Service\Service;
  * @method void  delete(Data $command)
  * @property RepositoryInterface $repository
  */
-abstract class ApplicationCommandService extends Service
+abstract class ApplicationCommandService extends ApplicationService
 {
-
     /**
      * @var string
      */
@@ -57,7 +56,7 @@ abstract class ApplicationCommandService extends Service
     }
 
     /**
-     * @param null $command
+     * @param  null  $command
      *
      * @return Model
      * @throws Exception

@@ -6,7 +6,6 @@ class ServiceMacro implements MacroAwareService, MacroAwareArguments
 {
 
 
-
     use AwareServiceAble;
 
 

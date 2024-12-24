@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
@@ -12,11 +13,15 @@ use Throwable;
 class CreateCommandHandler extends CommandHandler
 {
 
+    public function __construct(protected ApplicationCommandService $service)
+    {
+    }
+
 
     /**
      * 处理命令对象
      *
-     * @param Data $command 被处理的命令对象
+     * @param  Data  $command  被处理的命令对象
      *
      * @return Model|null 返回处理后的模型对象或其他相关结果
      * @throws Throwable
@@ -34,12 +39,12 @@ class CreateCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 对数据进行验证
-            $this->hook('create.validate', $command, fn() => $this->validate($command));
+            $this->service->hook('create.validate', $command, fn() => $this->validate($command));
 
-            $this->hook('create.fill', $command, fn() => $this->fill($command));
+            $this->service->hook('create.fill', $command, fn() => $this->fill($command));
 
             // 存储模型到仓库
-            $this->getRepository()->store($this->model);
+            $this->service->repository->store($this->model);
 
             // 提交事务
             $this->commitDatabaseTransaction();
@@ -53,14 +58,16 @@ class CreateCommandHandler extends CommandHandler
 
     protected function createModel(Data $command) : Model
     {
+
         if ($this->getService()) {
             return $this->getService()->newModel($command);
         }
-
-        if (method_exists($this->getModelClass(), 'create')) {
-            return $this->getModelClass()::create($command);
+        if (method_exists($this->service, 'newModel')) {
+            // TODO 弃用
+            return $this->service->newModel($command);
         }
-        return new ($this->getModelClass())();
+
+        return $this->service::getModelClass()::make();
     }
 
 
@@ -70,20 +77,19 @@ class CreateCommandHandler extends CommandHandler
     }
 
 
-    protected function fill(Data $command) : void
+    /**
+     * 填充转换数据
+     *
+     * @param  Data  $command
+     *
+     * @return Model
+     */
+    protected function fill(Data $command) : Model
     {
-
-
-        if ($this->getService()::getTransformerClass()) {
-
-            /**
-             * @var TransformerInterface $transformer
-             */
-            $transformer = app($this->getService()::getTransformerClass());
-
-
-            $this->model = $transformer->transform($command, $this->model);
-
+        if (property_exists($this->service, 'transformer')) {
+            if ($this->service->transformer instanceof TransformerInterface) {
+                $this->model = $this->service->transformer->transform($command, $this->model);
+            }
         } else {
             $this->model->fill($command->all());
         }
@@ -92,6 +98,7 @@ class CreateCommandHandler extends CommandHandler
         if ($this->model instanceof OwnerInterface && property_exists($command, 'owner')) {
             $this->model->owner = $command->owner;
         }
+        return $this->model;
 
     }
 

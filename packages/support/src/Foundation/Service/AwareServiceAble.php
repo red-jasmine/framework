@@ -7,7 +7,7 @@ namespace RedJasmine\Support\Foundation\Service;
  */
 trait AwareServiceAble
 {
-    protected Service $service;
+
 
     public function getService() : Service
     {

@@ -7,7 +7,7 @@ use RedJasmine\Support\Foundation\Hook\HasHooks;
 use RedJasmine\Support\Foundation\Service\AwareServiceAble;
 use RedJasmine\Support\Foundation\Service\MacroAwareService;
 
-abstract class QueryHandler implements MacroAwareService
+abstract class QueryHandler
 {
 
     use HasHooks;
