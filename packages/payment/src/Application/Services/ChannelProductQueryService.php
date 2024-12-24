@@ -8,7 +8,7 @@ use RedJasmine\Support\Application\ApplicationQueryService;
 class ChannelProductQueryService extends ApplicationQueryService
 {
 
-    public function __construct(protected ChannelProductReadRepositoryInterface $repository)
+    public function __construct(public ChannelProductReadRepositoryInterface $repository)
     {
 
     }

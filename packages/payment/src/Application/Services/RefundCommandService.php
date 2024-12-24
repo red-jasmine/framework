@@ -5,6 +5,8 @@ namespace RedJasmine\Payment\Application\Services;
 use RedJasmine\Payment\Application\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Refunds\RefundCreateCommandHandler;
 use RedJasmine\Payment\Domain\Models\Refund;
+use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
@@ -13,6 +15,14 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class RefundCommandService extends ApplicationCommandService
 {
+
+    public function __construct(
+        public TradeRepositoryInterface $tradeRepository,
+        public RefundRepositoryInterface $refundRepository,
+
+    ) {
+    }
+
     /**
      * 钩子前缀
      * @var string

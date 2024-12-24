@@ -351,7 +351,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
 
     $channelTrade = $this->tradeCommandService->paying($command);
 
-    dd($channelTrade->purchaseResult);
+
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
     $this->assertEquals($command->method, $channelTrade->methodCode, '支付方式不一致');
@@ -368,7 +368,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
 
 
 })->depends('pre create a payment trade', 'can get trade pay methods');
-return;
+
 
 test('can paid a trade', function (Trade $trade) {
 

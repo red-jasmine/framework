@@ -13,8 +13,10 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class ChannelAppCommandService extends ApplicationCommandService
 {
-    public function __construct(protected ChannelAppRepositoryInterface $repository)
-    {
+    public function __construct(
+        public ChannelAppRepositoryInterface $repository,
+        public ChannelAppTransformer $transformer
+    ) {
     }
 
     /**

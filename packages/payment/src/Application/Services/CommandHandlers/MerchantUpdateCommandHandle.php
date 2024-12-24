@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers;
 
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantCreateCommand;
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantUpdateCommand;
+use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\MerchantTransformer;
@@ -13,13 +14,15 @@ use Throwable;
 class MerchantUpdateCommandHandle extends CommandHandler
 {
 
-
-    public function __construct(protected MerchantRepositoryInterface $repository)
+    public function __construct(protected MerchantCommandService $service)
     {
+
     }
 
+
     /**
-     * @param MerchantUpdateCommand $command
+     * @param  MerchantUpdateCommand  $command
+     *
      * @return Merchant
      * @throws Throwable
      */
@@ -28,11 +31,11 @@ class MerchantUpdateCommandHandle extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $model = $this->repository->find($command->id);
+            $model = $this->service->repository->find($command->id);
 
-            $model = app(MerchantTransformer::class)->transform($command, $model);
+            $model = $this->service->transformer->transform($command, $model);
 
-            $this->repository->update($model);
+            $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

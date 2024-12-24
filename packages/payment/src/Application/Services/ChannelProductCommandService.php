@@ -13,8 +13,11 @@ use RedJasmine\Support\Data\Data;
  */
 class ChannelProductCommandService extends ApplicationCommandService
 {
-    public function __construct(protected ChannelProductRepositoryInterface $repository)
-    {
+    public function __construct(
+        public ChannelProductRepositoryInterface $repository,
+        public ChannelProductTransformer $transformer,
+
+    ) {
     }
 
     /**
@@ -25,5 +28,4 @@ class ChannelProductCommandService extends ApplicationCommandService
 
     protected static string $modelClass = ChannelProduct::class;
 
-    protected static ?string $transformerClass = ChannelProductTransformer::class;
 }

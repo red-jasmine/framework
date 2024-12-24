@@ -164,6 +164,7 @@ test('can create channel product', function () {
                 $products[$command->channelCode][] = $model;
                 $this->productCommandService->update($command);
             } catch (Throwable $throwable) {
+                throw $throwable;
                 $products[$command->channelCode][] = $model = $this->productCommandService->create($command);
             }
 

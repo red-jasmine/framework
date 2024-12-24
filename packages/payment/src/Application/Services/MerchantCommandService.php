@@ -9,7 +9,12 @@ use RedJasmine\Payment\Application\Services\CommandHandlers\MerchantCreateComman
 use RedJasmine\Payment\Application\Services\CommandHandlers\MerchantSetStatusCommandHandle;
 use RedJasmine\Payment\Application\Services\CommandHandlers\MerchantUpdateCommandHandle;
 use RedJasmine\Payment\Domain\Models\Merchant;
+use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
+use RedJasmine\Payment\Domain\Transformer\MerchantTransformer;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\DeleteCommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\UpdateCommandHandler;
 
 /**
  * @method Merchant create(MerchantCreateCommand $command)
@@ -18,6 +23,14 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class MerchantCommandService extends ApplicationCommandService
 {
+    public function __construct(
+        public MerchantRepositoryInterface $repository,
+        public MerchantTransformer $transformer,
+    ) {
+    }
+
+
+    protected static string $modelClass = Merchant::class;
 
     /**
      * 钩子前缀
@@ -25,14 +38,20 @@ class MerchantCommandService extends ApplicationCommandService
      */
     public static string $hookNamePrefix = 'payment.application.merchant.command';
 
-    protected static string $modelClass = Merchant::class;
-
 
     protected static $macros = [
-        'create'    => MerchantCreateCommandHandle::class,
+        'create'    => CreateCommandHandler::class,
+        'update'    => UpdateCommandHandler::class,
         'setStatus' => MerchantSetStatusCommandHandle::class,
-        'update'    => MerchantUpdateCommandHandle::class,
+        'delete'    => DeleteCommandHandler::class,
     ];
+
+
+    // protected static $macros = [
+    //     'create'    => MerchantCreateCommandHandle::class,
+    //     'setStatus' => MerchantSetStatusCommandHandle::class,
+    //     'update'    => MerchantUpdateCommandHandle::class,
+    // ];
 
 
 }

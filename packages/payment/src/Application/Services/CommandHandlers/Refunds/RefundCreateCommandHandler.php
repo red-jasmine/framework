@@ -3,23 +3,21 @@
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Refunds;
 
 use RedJasmine\Payment\Application\Commands\Refund\RefundCreateCommand;
+use RedJasmine\Payment\Application\Services\RefundCommandService;
 use RedJasmine\Payment\Domain\Models\Refund;
-use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 class RefundCreateCommandHandler extends CommandHandler
 {
-
-    public function __construct(
-        protected TradeRepositoryInterface $tradeRepository
-    )
+    public function __construct(protected RefundCommandService $service)
     {
     }
 
+
     /**
-     * @param RefundCreateCommand $command
+     * @param  RefundCreateCommand  $command
      *
      * @return Refund
      * @throws AbstractException
@@ -32,7 +30,7 @@ class RefundCreateCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $trade = $this->tradeRepository->findByNo($command->tradeNo);
+            $trade = $this->service->tradeRepository->findByNo($command->tradeNo);
 
             $refund = Refund::make();
 
@@ -46,7 +44,7 @@ class RefundCreateCommandHandler extends CommandHandler
 
             $trade->createRefund($refund);
 
-            $this->tradeRepository->update($trade);
+            $this->service->tradeRepository->update($trade);
 
             $this->commitDatabaseTransaction();
 

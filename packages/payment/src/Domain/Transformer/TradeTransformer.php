@@ -2,13 +2,18 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Application\Commands\Trade\TradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Data\Data;
 
-class TradeTransformer
+class TradeTransformer implements TransformerInterface
 {
-    public function transform(TradeData $data, ?Trade $trade = null) : Trade
-    {
+    public function transform(
+        TradeData|Data $data,
+        Trade|Model|null $trade = null
+    ) : Trade {
 
         $trade                              = $trade ?? new Trade();
         $trade->merchant_trade_no           = $data->merchantTradeNo;

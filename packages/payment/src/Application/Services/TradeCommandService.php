@@ -14,6 +14,10 @@ use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePreCreat
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradeReadyCommandHandler;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Payment\Domain\Services\PaymentChannelService;
+use RedJasmine\Payment\Domain\Services\PaymentRouteService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
@@ -28,6 +32,15 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class TradeCommandService extends ApplicationCommandService
 {
+
+    public function __construct(
+        public TradeRepositoryInterface $repository,
+        public MerchantAppRepositoryInterface $merchantAppRepository,
+        public PaymentRouteService $paymentRouteService,
+        public PaymentChannelService $paymentChannelService,
+    ) {
+    }
+
     /**
      * 钩子前缀
      * @var string

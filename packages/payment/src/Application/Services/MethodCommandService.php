@@ -14,7 +14,7 @@ class MethodCommandService extends ApplicationCommandService
 {
 
 
-    public function __construct(protected MethodRepositoryInterface $repository)
+    public function __construct(public MethodRepositoryInterface $repository)
     {
     }
 

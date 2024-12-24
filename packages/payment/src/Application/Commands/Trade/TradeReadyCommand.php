@@ -12,7 +12,6 @@ class TradeReadyCommand extends PaymentEnvironmentData
 {
     // 两者必须存在一个
     public int     $merchantAppId;
-    public ?int    $id      = null;
     public ?string $tradeNo = null;
 
 

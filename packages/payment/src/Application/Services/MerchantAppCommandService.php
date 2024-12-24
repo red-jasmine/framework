@@ -8,7 +8,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 class MerchantAppCommandService extends ApplicationCommandService
 {
-    public function __construct(protected MerchantAppRepositoryInterface $repository)
+    public function __construct(public MerchantAppRepositoryInterface $repository)
     {
     }
 

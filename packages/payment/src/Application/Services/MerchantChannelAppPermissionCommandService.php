@@ -14,7 +14,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class MerchantChannelAppPermissionCommandService extends ApplicationCommandService
 {
-    public function __construct(protected MerchantChannelAppPermissionRepositoryInterface $repository)
+    public function __construct(public MerchantChannelAppPermissionRepositoryInterface $repository)
     {
     }
 

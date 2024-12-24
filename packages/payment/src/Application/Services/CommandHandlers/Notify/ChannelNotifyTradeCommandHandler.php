@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Application\Commands\Notify\ChannelNotifyTradeCommand;
+use RedJasmine\Payment\Application\Services\ChannelNotifyCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
@@ -18,28 +19,29 @@ use Throwable;
 
 class ChannelNotifyTradeCommandHandler extends CommandHandler
 {
-    public function __construct(
-        protected TradeRepositoryInterface      $repository,
-        protected ChannelAppRepositoryInterface $channelAppRepository,
-        protected MerchantAppRepository         $merchantAppRepository,
-        protected PaymentChannelService         $paymentChannelService,
-    )
+
+
+    public function __construct(protected ChannelNotifyCommandService $service)
     {
+
     }
 
     /**
-     * @param ChannelNotifyTradeCommand $command
+     * @param  ChannelNotifyTradeCommand  $command
+     *
      * @return Response
      */
     public function handle(ChannelNotifyTradeCommand $command) : Response
     {
-        $channelApp = $this->channelAppRepository->find($command->appId);
+        $channelApp = $this->service->channelAppRepository->find($command->appId);
         // 获取渠道标准响应
-        $response = $this->paymentChannelService->notifyResponse($channelApp);
+        $response = $this->service->paymentChannelService->notifyResponse($channelApp);
 
         try {
             // 渠道完成支付、获取渠道订单信息
-            $channelTradeData = $this->paymentChannelService->completePurchase($channelApp, $command->content);
+            $channelTradeData = $this->service
+                ->paymentChannelService
+                ->completePurchase($channelApp, $command->content);
 
             // 交易已支付
             $this->handleTradePaid($channelTradeData);
@@ -53,7 +55,8 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
 
 
     /**
-     * @param ChannelTradeData $channelTradeData
+     * @param  ChannelTradeData  $channelTradeData
+     *
      * @return true
      * @throws AbstractException
      * @throws PaymentException
@@ -65,7 +68,7 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
 
             $this->beginDatabaseTransaction();
 
-            $trade = $this->repository->findByNo($channelTradeData->tradeNo);
+            $trade = $this->service->tradeRepository->findByNo($channelTradeData->tradeNo);
 
             if ($trade->isPaid()) {
                 $this->commitDatabaseTransaction();
@@ -74,13 +77,13 @@ class ChannelNotifyTradeCommandHandler extends CommandHandler
 
             $trade->paid($channelTradeData);
 
-            $this->repository->update($trade);
+            $this->service->tradeRepository->update($trade);
 
             $this->commitDatabaseTransaction();
 
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
-            Log::info('Payment-Notify', [ 'message' => $exception->getMessage() ]);
+            Log::info('Payment-Notify', ['message' => $exception->getMessage()]);
             throw $exception;
         } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
