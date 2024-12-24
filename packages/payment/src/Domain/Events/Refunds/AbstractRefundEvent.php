@@ -2,10 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Events\Refunds;
 
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use RedJasmine\Payment\Domain\Models\Refund;
 
-abstract class AbstractRefundEvent
+abstract class AbstractRefundEvent  implements ShouldDispatchAfterCommit
 {
 
     use Dispatchable;
