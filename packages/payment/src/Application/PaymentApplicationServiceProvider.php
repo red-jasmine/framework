@@ -21,6 +21,8 @@ use RedJasmine\Payment\Domain\Repositories\MerchantReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\NotifyReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\NotifyRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
@@ -32,6 +34,7 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppPermissi
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MethodReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\NotifyReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
@@ -41,6 +44,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepositor
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantChannelAppPermissionRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MethodRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\NotifyRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\RefundRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 
@@ -49,8 +53,7 @@ class PaymentApplicationServiceProvider extends ServiceProvider
 
     public function register() : void
     {
-
-
+        
         $this->app->bind(MerchantRepositoryInterface::class, MerchantRepository::class);
         $this->app->bind(MerchantReadRepositoryInterface::class, MerchantReadRepository::class);
 
@@ -84,6 +87,9 @@ class PaymentApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
         $this->app->bind(RefundReadRepositoryInterface::class, RefundReadRepository::class);
+
+        $this->app->bind(NotifyRepositoryInterface::class, NotifyRepository::class);
+        $this->app->bind(NotifyReadRepositoryInterface::class, NotifyReadRepository::class);
 
 
     }

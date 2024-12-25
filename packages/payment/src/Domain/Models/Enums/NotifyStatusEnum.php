@@ -8,17 +8,18 @@ enum NotifyStatusEnum: string
 {
     use EnumsHelper;
 
-    // 异步通知状态枚举
+    case WAIT = 'wait';
     case SUCCESS = 'success';
+    case TRYING = 'trying';
     case FAIL = 'fail';
-    case TRYING = 'Trying';
 
 
     public static function labels() : array
     {
         return [
-            self::SUCCESS->value => '成功',
+            self::WAIT->value    => '等待中',
             self::TRYING->value  => '重试中',
+            self::SUCCESS->value => '成功',
             self::FAIL->value    => '失败',
         ];
     }
