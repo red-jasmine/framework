@@ -3,9 +3,8 @@
 namespace RedJasmine\Payment\Application\Listeners;
 
 
-use Illuminate\Support\Facades\Log;
-use RedJasmine\Payment\Application\Jobs\ChannelRefundRequestJob;
 use RedJasmine\Payment\Application\Jobs\ChannelRefundQueryJob;
+use RedJasmine\Payment\Application\Jobs\ChannelRefundRequestJob;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 
@@ -15,6 +14,7 @@ class RefundChannelListener
 
     /**
      * @param $event
+     *
      * @return void
      */
     public function handle($event) : void

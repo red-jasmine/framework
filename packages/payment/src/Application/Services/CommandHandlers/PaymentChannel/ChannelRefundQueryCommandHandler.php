@@ -28,7 +28,7 @@ class ChannelRefundQueryCommandHandler extends CommandHandler
             // 调用服务
             $channelRefundData = $this->service->paymentChannelService->refundQuery($channelApp, $refund);
 
-            $refund->refunded($channelRefundData);
+            $refund->success($channelRefundData);
 
             $this->service->refundRepository->update($refund);
 

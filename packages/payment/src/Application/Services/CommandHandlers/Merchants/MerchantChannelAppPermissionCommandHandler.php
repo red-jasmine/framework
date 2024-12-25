@@ -1,12 +1,10 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers;
+namespace RedJasmine\Payment\Application\Services\CommandHandlers\Merchants;
 
+use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
-use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
@@ -14,17 +12,13 @@ use Throwable;
 class MerchantChannelAppPermissionCommandHandler extends CommandHandler
 {
 
-    public function __construct(
-        protected MerchantChannelAppPermissionRepositoryInterface $repository,
-        protected MerchantRepositoryInterface                     $merchantRepository,
-        protected ChannelAppRepositoryInterface                   $channelAppRepository,
-
-    )
+    public function __construct(protected MerchantAppCommandService $service)
     {
     }
 
     /**
-     * @param MerchantChannelAppPermissionData $command
+     * @param  MerchantChannelAppPermissionData  $command
+     *
      * @return void
      * @throws AbstractException
      * @throws Throwable
@@ -35,14 +29,15 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
 
         $this->beginDatabaseTransaction();
         try {
-            $this->merchantRepository->find($command->merchantId);
-            $this->channelAppRepository->find($command->channelAppId);
-            $permission                 = $this->repository->find($command->merchantId, $command->channelAppId);
-            $permission                 = $permission ?? new MerchantChannelAppPermission();
+            $this->service->merchantRepository->find($command->merchantId);
+            $this->service->channelAppRepository->find($command->channelAppId);
+            $permission                 = $this->service
+                ->permissionRepository->find($command->merchantId, $command->channelAppId);
+            $permission                 = $permission ?? MerchantChannelAppPermission::make();
             $permission->channel_app_id = $command->channelAppId;
             $permission->merchant_id    = $command->merchantId;
             $permission->status         = $command->status;
-            $this->repository->store($permission);
+            $this->service->permissionRepository->store($permission);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

@@ -1,8 +1,9 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers;
+namespace RedJasmine\Payment\Application\Services\CommandHandlers\Merchants;
 
 use RedJasmine\Payment\Application\Commands\Merchant\MerchantSetStatusCommand;
+use RedJasmine\Payment\Application\Services\CommandHandlers\AbstractException;
 use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use Throwable;

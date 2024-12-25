@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
@@ -41,10 +42,13 @@ class Refund extends Model
     protected $dispatchesEvents = [
         'created'    => RefundCreatedEvent::class,
         'processing' => RefundProcessingEvent::class,
+        'success'    => RefundSuccessEvent::class,
     ];
 
     protected $observables = [
-        'processing'
+        'created',
+        'processing',
+        'success'
     ];
 
     protected function generateNo() : void
@@ -84,7 +88,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
     }
 
     public function trade() : BelongsTo
@@ -110,7 +114,7 @@ class Refund extends Model
     public function isAllowProcessing() : bool
     {
 
-        if (in_array($this->status, [ RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL, ], true)) {
+        if (in_array($this->status, [RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL,], true)) {
             return true;
         }
 
@@ -134,13 +138,42 @@ class Refund extends Model
 
     }
 
-    public function refunded(ChannelRefundData $data) : void
+
+    public function isAllowSuccess() : bool
     {
-        // TODO 验证状态、金额
-        $this->status            = RefundStatusEnum::REFUNDED;
+        if (in_array($this->status, [
+            RefundStatusEnum::PRE,
+            RefundStatusEnum::ABNORMAL,
+            RefundStatusEnum::PROCESSING,
+        ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 退款成功
+     *
+     * @param  ChannelRefundData  $data
+     *
+     * @return void
+     * @throws PaymentException
+     */
+    public function success(ChannelRefundData $data) : void
+    {
+        // 验证状态 验证金额
+        if (!$this->isAllowSuccess()) {
+            throw new PaymentException('退款状态不允许处理', PaymentException::REFUND_STATUS_ERROR);
+        }
+        $this->status            = RefundStatusEnum::SUCCESS;
         $this->refund_time       = $data->refundTime;
         $this->channel_refund_no = $data->channelRefundNo;
-        $this->fireModelEvent('refunded', false);
+        // 设置交易数据
+
+        $this->trade->refundSuccess($this);
+
+        $this->fireModelEvent('success', false);
     }
 
 

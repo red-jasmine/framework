@@ -86,7 +86,7 @@ class Trade extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
     }
 
     protected $dispatchesEvents = [
@@ -102,12 +102,12 @@ class Trade extends Model
     protected function payer() : Attribute
     {
         return Attribute::make(get: fn($value, array $attributes) => Payer::from([
-                                                                                     'type'    => $attributes['payer_type'],
-                                                                                     'account' => $attributes['payer_account'],
-                                                                                     'name'    => $attributes['payer_name'],
-                                                                                     'user_id' => $attributes['payer_user_id'],
-                                                                                     'open_id' => $attributes['payer_open_id'],
-                                                                                 ])
+            'type'    => $attributes['payer_type'],
+            'account' => $attributes['payer_account'],
+            'name'    => $attributes['payer_name'],
+            'user_id' => $attributes['payer_user_id'],
+            'open_id' => $attributes['payer_open_id'],
+        ])
             ,
             set: static fn(Payer $value, array $attributes) => [
                 'payer_type'    => $value->type,
@@ -167,7 +167,7 @@ class Trade extends Model
 
     protected function isAllowPaying() : bool
     {
-        if (in_array($this->status, [ TradeStatusEnum::PRE ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE], true)) {
             return true;
         }
         return false;
@@ -175,9 +175,9 @@ class Trade extends Model
 
     /**
      *
-     * @param ChannelApp $channelApp
-     * @param Environment $environment
-     * @param ChannelTradeData $channelTrade
+     * @param  ChannelApp  $channelApp
+     * @param  Environment  $environment
+     * @param  ChannelTradeData  $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -206,7 +206,7 @@ class Trade extends Model
     public function isAllowPaid() : bool
     {
 
-        if (in_array($this->status, [ TradeStatusEnum::PRE, TradeStatusEnum::PAYING ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::PRE, TradeStatusEnum::PAYING], true)) {
             return true;
         }
         return false;
@@ -215,7 +215,7 @@ class Trade extends Model
     public function isPaid() : bool
     {
 
-        if (in_array($this->status, [ TradeStatusEnum::SUCCESS, TradeStatusEnum::FINISH ], true)) {
+        if (in_array($this->status, [TradeStatusEnum::SUCCESS, TradeStatusEnum::FINISH], true)) {
             return true;
         }
         return false;
@@ -225,7 +225,7 @@ class Trade extends Model
     /**
      * 支付成功
      *
-     * @param ChannelTradeData $channelTrade
+     * @param  ChannelTradeData  $channelTrade
      *
      * @return void
      * @throws PaymentException
@@ -257,7 +257,7 @@ class Trade extends Model
     /**
      * 创建退款单
      *
-     * @param Refund $refund
+     * @param  Refund  $refund
      *
      * @return void
      * @throws PaymentException
@@ -274,7 +274,8 @@ class Trade extends Model
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
 
-        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value, $this->amount->currency))) < 0) {
+        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value,
+                $this->amount->currency))) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
         // 退款 时间不能超过支付时间一年
@@ -298,14 +299,26 @@ class Trade extends Model
         $refund->status                  = RefundStatusEnum::PRE;
 
 
-        $this->refunding_amount_value = (int)($this->refunding_amount_value + $refund->refundAmount->value);
-
+        $this->refunding_amount_value = (int) ($this->refunding_amount_value + $refund->refundAmount->value);
 
         if (!$this->relationLoaded('refunds')) {
             $this->setRelation('refunds', Collection::make([]));
         }
         $this->refunds->add($refund);
 
+    }
+
+
+    public function refundSuccess(Refund $refund) : void
+    {
+        $this->refunding_amount_value -= $refund->refundAmount->value;
+        $this->refund_amount_value    += $refund->refundAmount->value;
+
+        $this->refund_time = $this->refund_time ?? $refund->refund_time;
+        // 如果退款金额 等于 支付金额 那么支付状态为完成
+        if ($this->refund_amount_value >= $this->amount_value) {
+            $this->status = TradeStatusEnum::REFUND;
+        }
     }
 
 }

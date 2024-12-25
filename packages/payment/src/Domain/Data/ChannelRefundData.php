@@ -11,11 +11,11 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 class ChannelRefundData extends Data
 {
-    public ?string $tradeNo = null;
+    public ?string $tradeNo  = null;
     public ?string $refundNo = null;
     public ?Money  $refundAmount;
 
-    public ?string $channelRefundNo;
+    public ?string $channelRefundNo = null;
 
     public ?string $channelCode;
     public ?string $channelProductCode;

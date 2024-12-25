@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->json('device')->nullable()->comment('设备信息');
             $table->json('client')->nullable()->comment('客户端信息');
             $table->json('expands')->nullable()->comment('扩展参数');
+            $table->string('error_message')->nullable()->comment('错误信息');
             $table->timestamps();
             $table->unique('refund_id', 'uk_refund');
             $table->comment('支付-退款扩展信息表');

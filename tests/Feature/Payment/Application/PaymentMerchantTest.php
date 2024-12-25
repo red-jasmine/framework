@@ -7,7 +7,7 @@ use RedJasmine\Payment\Application\Commands\Merchant\MerchantUpdateCommand;
 use RedJasmine\Payment\Application\Services\ChannelAppCommandService;
 use RedJasmine\Payment\Application\Services\ChannelCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\MerchantChannelAppPermissionCommandService;
+use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
 use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Payment\Application\Services\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
@@ -51,19 +51,19 @@ beforeEach(function () {
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
 
-    $this->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
+    $this->owner = UserData::from(['type' => 'user', 'id' => 1]);
 
 
     // 支付方式
     $this->methodData = [
-        [ 'code' => 'alipay', 'name' => '支付宝' ],
-        [ 'code' => 'wechat', 'name' => '微信' ],
+        ['code' => 'alipay', 'name' => '支付宝'],
+        ['code' => 'wechat', 'name' => '微信'],
     ];
 
     // 支付渠道
     $this->channelData = [
-        [ 'code' => 'alipay', 'name' => '支付宝' ],
-        [ 'code' => 'wechat', 'name' => '微信支付' ],
+        ['code' => 'alipay', 'name' => '支付宝'],
+        ['code' => 'wechat', 'name' => '微信支付'],
     ];
 
 
@@ -159,7 +159,8 @@ test('can create channel product', function () {
             }
             $command->modes = $models;
             try {
-                $model                             = $this->productRepository->findByCode($command->channelCode, $command->code);
+                $model                             = $this->productRepository->findByCode($command->channelCode,
+                    $command->code);
                 $command->id                       = $model->id;
                 $products[$command->channelCode][] = $model;
                 $this->productCommandService->update($command);
@@ -233,7 +234,7 @@ test('create payment channel apps', function ($products) {
 test('can create merchant', function () {
 
     $command            = new MerchantCreateCommand();
-    $command->owner     = UserData::from([ 'type' => 'user', 'id' => 1 ]);
+    $command->owner     = UserData::from(['type' => 'user', 'id' => 1]);
     $command->name      = 'XXX有限公司';
     $command->shortName = '测试';
     $merchant           = $this->paymentMerchantCommandService->create($command);
@@ -253,7 +254,7 @@ test('can authorize channel app', function ($apps, $merchant) {
         $command               = new MerchantChannelAppPermissionData();
         $command->channelAppId = $app->id;
         $command->merchantId   = $merchant->id;
-        $service               = app(MerchantChannelAppPermissionCommandService::class);
+        $service               = app(MerchantAppCommandService::class);
         $service->authorize($command);
 
 
@@ -271,7 +272,7 @@ test('can authorize channel app', function ($apps, $merchant) {
         $command->channelAppId = $app->id;
         $command->merchantId   = $merchant->id;
         $command->status       = PermissionStatusEnum::DISABLED;
-        $service               = app(MerchantChannelAppPermissionCommandService::class);
+        $service               = app(MerchantAppCommandService::class);
         $service->authorize($command);
 
 
@@ -301,7 +302,7 @@ test('can update merchant', function (Merchant $merchant) {
     $command     = new MerchantUpdateCommand();
     $command->id = $merchant->id;
 
-    $command->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
+    $command->owner = UserData::from(['type' => 'user', 'id' => 1]);
 
     $command->name      = 'XXXX有限公司';
     $command->shortName = '测试';
