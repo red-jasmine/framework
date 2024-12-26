@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('status')->comment(MerchantAppStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
 
-            $table->text('system_private_key')->nullable()->comment('平台私钥');
+            $table->text('system_private_key')->nullable()->comment('系统私钥');
             $table->text('system_public_key')->nullable()->comment('系统公钥');
             $table->text('app_public_key')->nullable()->comment('应用公钥');
             $table->text('app_private_key')->nullable()->comment('应用私钥');

@@ -2,14 +2,15 @@
 
 namespace RedJasmine\Payment\Application\Listeners;
 
-use RedJasmine\Payment\Application\Services\NotifyCommandService;
+use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
 use RedJasmine\Payment\Domain\Contracts\AsyncNotifyInterface;
 
-class NotifyListener
+class AsyncNotifyListener
 {
     public function __construct(
-        public NotifyCommandService $service
-    ) {
+        public AsyncNotifyCommandService $service
+    )
+    {
     }
 
     public function handle($event) : void

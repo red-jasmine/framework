@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Payment\Domain\Events\Notifies\NotifyCreateEvent;
 use RedJasmine\Payment\Domain\Generator\NotifyNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -24,6 +25,10 @@ class Notify extends Model
         'business_no',
         'url',
         'body'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => NotifyCreateEvent::class,
     ];
 
     public static function boot() : void
@@ -52,7 +57,7 @@ class Notify extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_notifies';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_notifies';
     }
 
 
@@ -62,14 +67,24 @@ class Notify extends Model
     }
 
 
+    public function success() : void
+    {
+        $this->status = NotifyStatusEnum::SUCCESS;
+    }
+
+    public function fail() : void
+    {
+        $this->status = NotifyStatusEnum::FAIL;
+    }
+
     public function setResponse(array $response = []) : void
     {
         $this->response    = $response;
         $this->notify_time = now();
         if (($response['body'] ?? '') === 'success') {
-            $this->status = NotifyStatusEnum::SUCCESS;
+            $this->success();
         } else {
-            $this->status = NotifyStatusEnum::FAIL;
+            $this->fail();
         }
     }
 

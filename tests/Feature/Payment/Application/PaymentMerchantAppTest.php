@@ -53,10 +53,13 @@ test('can create a merchant app', function (Merchant $merchant) {
 
     $this->assertEquals($command->name, $model->name, '商户应用名称');
 
+    $this->assertNotEmpty($model->system_public_key);
+    $this->assertNotEmpty($model->system_private_key);
+
+
     return $model;
 
 })->depends('can create merchant');
-
 
 
 test('can update a merchant app', function (MerchantApp $merchantApp) {
