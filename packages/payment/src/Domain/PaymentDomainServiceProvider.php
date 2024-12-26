@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Payment\Application\Listeners\RefundChannelListener;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
+use RedJasmine\Payment\Domain\Generator\NotifyNumberGenerator;
+use RedJasmine\Payment\Domain\Generator\NotifyNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGenerator;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGenerator;
@@ -26,6 +28,11 @@ class PaymentDomainServiceProvider extends ServiceProvider
         $this->app->bind(
             RefundNumberGeneratorInterface::class,
             RefundNumberGenerator::class
+        );
+
+        $this->app->bind(
+            NotifyNumberGeneratorInterface::class,
+            NotifyNumberGenerator::class
         );
 
 

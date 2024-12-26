@@ -12,7 +12,7 @@ abstract class AbstractTradeEvent implements ShouldDispatchAfterCommit
     use Dispatchable;
 
 
-    public function __construct(protected Trade $trade)
+    public function __construct(public Trade $trade)
     {
     }
 }

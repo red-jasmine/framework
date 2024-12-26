@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use RedJasmine\Payment\Domain\Contracts\AsyncNotifyInterface;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Data\NotifyData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
@@ -28,7 +31,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property Money $paymentAmount
  * @property Money $refundAmount
  */
-class Trade extends Model
+class Trade extends Model implements AsyncNotifyInterface
 {
     public $incrementing = false;
 
@@ -319,6 +322,43 @@ class Trade extends Model
         if ($this->refund_amount_value >= $this->amount_value) {
             $this->status = TradeStatusEnum::REFUND;
         }
+    }
+
+
+    public function getNotifyUlr() : ?string
+    {
+        return $this->extension->notify_url;
+    }
+
+    public function getAsyncNotify() : ?NotifyData
+    {
+        $command                = new NotifyData();
+        $command->merchantId    = $this->merchant_id;
+        $command->merchantAppId = $this->merchant_app_id;
+        $command->businessType  = NotifyBusinessTypeEnum::TRADE;
+        $command->businessNo    = $this->trade_no;
+        $command->notifyType    = 'trade_status_sync';
+
+        if (blank($this->getNotifyUlr())) {
+            return null;
+        }
+        $command->url  = $this->getNotifyUlr();
+        $command->body = [
+            'merchant_app_id'         => $this->merchant_app_id,
+            'trade_no'                => $this->trade_no,
+            'merchant_trade_no'       => $this->merchant_trade_no,
+            'merchant_trade_order_no' => $this->merchant_trade_order_no,
+            'channel_code'            => $this->channel_code,
+            'method_code'             => $this->method_code,
+            'status'                  => $this->status->value,
+            'create_time'             => $this->create_time?->format('Y-m-d H:i:s'),
+            'paid_time'               => $this->paid_time?->format('Y-m-d H:i:s'),
+            'subject'                 => $this->subject,
+            'amount_currency'         => $this->amount->currency,
+            'amount_value'            => $this->amount->value,
+            'pass_back_params'        => $this->extension->pass_back_params,
+        ];
+        return $command;
     }
 
 }

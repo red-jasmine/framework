@@ -91,6 +91,9 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_refund_extensions_table',
             'create_payment_transfers_table',
 
+
+            'create_payment_notifies_table',
+
         ];
     }
     /**
