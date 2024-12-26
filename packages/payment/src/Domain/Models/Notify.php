@@ -61,4 +61,16 @@ class Notify extends Model
         return $this->belongsTo(MerchantApp::class, 'merchant_app_id', 'id');
     }
 
+
+    public function setResponse(array $response = []) : void
+    {
+        $this->response    = $response;
+        $this->notify_time = now();
+        if (($response['body'] ?? '') === 'success') {
+            $this->status = NotifyStatusEnum::SUCCESS;
+        } else {
+            $this->status = NotifyStatusEnum::FAIL;
+        }
+    }
+
 }
