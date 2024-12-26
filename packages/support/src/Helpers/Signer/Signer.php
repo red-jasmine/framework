@@ -15,7 +15,7 @@ class Signer
     public const int KEY_TYPE_PUBLIC  = 1;
     public const int KEY_TYPE_PRIVATE = 2;
 
-    protected array $ignores = ['sign'];
+    protected array $ignores = [ 'sign' ];
 
     protected bool $sort = true;
 
@@ -43,7 +43,7 @@ class Signer
     {
         $content = $this->getContentToSign();
 
-        return md5($content.$key);
+        return md5($content . $key);
     }
 
 
@@ -105,7 +105,7 @@ class Signer
 
 
     /**
-     * @param  array  $ignores
+     * @param array $ignores
      *
      * @return $this
      */
@@ -133,8 +133,8 @@ class Signer
 
 
     /**
-     * @param  string  $privateKey
-     * @param  int  $alg
+     * @param string $privateKey
+     * @param int $alg
      *
      * @return string
      * @throws Exception
@@ -148,9 +148,9 @@ class Signer
 
 
     /**
-     * @param  string  $content
-     * @param  string  $privateKey
-     * @param  int  $alg
+     * @param string $content
+     * @param string $privateKey
+     * @param int $alg
      *
      * @return string
      * @throws Exception
@@ -188,7 +188,7 @@ class Signer
     private function prefix($key)
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN' && is_file($key) && substr($key, 0, 7) != 'file://') {
-            $key = 'file://'.$key;
+            $key = 'file://' . $key;
         }
 
         return $key;
@@ -221,8 +221,8 @@ class Signer
     /**
      * Convert one line key to standard format
      *
-     * @param  string  $key
-     * @param  int  $type
+     * @param string $key
+     * @param int $type
      *
      * @return string
      */
@@ -252,15 +252,15 @@ class Signer
 
     public function verifyWithMD5($content, $sign, $key) : bool
     {
-        return md5($content.$key) === $sign;
+        return md5($content . $key) === $sign;
     }
 
 
     /**
-     * @param  string  $content
-     * @param  string  $sign
-     * @param  string  $publicKey
-     * @param  int  $alg
+     * @param string $content
+     * @param string $sign
+     * @param string $publicKey
+     * @param int $alg
      *
      * @return bool
      * @throws Exception
@@ -279,13 +279,13 @@ class Signer
             throw new RuntimeException($message);
         }
 
-        return (bool) openssl_verify($content, base64_decode($sign), $res, $alg);
+        return (bool)openssl_verify($content, base64_decode($sign), $res, $alg);
 
     }
 
 
     /**
-     * @param  boolean  $sort
+     * @param boolean $sort
      *
      * @return Signer
      */
@@ -298,7 +298,7 @@ class Signer
 
 
     /**
-     * @param  string  $encodePolicy
+     * @param string $encodePolicy
      *
      * @return Signer
      */
@@ -307,5 +307,60 @@ class Signer
         $this->encodePolicy = $encodePolicy;
 
         return $this;
+    }
+
+
+    /**
+     * @param int $bits
+     * @param int $type
+     * @return array{public:string,private:string}
+     */
+    public function generateKeys(int $bits = 2048, int $type = OPENSSL_KEYTYPE_RSA) : array
+    {
+        // 生成密钥对
+        $config = array (
+            'digest_alg'       => 'sha256',
+            "private_key_bits" => $bits, // 密钥长度
+            "private_key_type" => $type,
+        );
+
+        // 创建密钥对
+        $res = openssl_pkey_new($config);
+
+        // 提取私钥
+        openssl_pkey_export($res, $privateKey);
+
+        // 提取公钥
+        $publicKeyDetails = openssl_pkey_get_details($res);
+        $publicKey        = $publicKeyDetails["key"];
+
+        // 去除私钥的头部和尾部
+        $privateKey = $this->removeKeyHeaders($privateKey);
+
+        // 去除公钥的头部和尾部
+        $publicKey = $this->removeKeyHeaders($publicKey);
+
+        return [
+            'private' => $privateKey,
+            'public'  => $publicKey,
+        ];
+    }
+
+    /**
+     * 去除密钥的头部和尾部
+     *
+     * @param string $key
+     * @return string
+     */
+    private function removeKeyHeaders(string $key) : string
+    {
+        $key = str_replace([ '-----BEGIN RSA PRIVATE KEY-----',
+                             '-----END RSA PRIVATE KEY-----',
+                             '-----BEGIN PRIVATE KEY-----',
+                             '-----END PRIVATE KEY-----',
+                             '-----BEGIN PUBLIC KEY-----',
+                             '-----END PUBLIC KEY-----' ], '', $key);
+        $key = str_replace([ "\n", "\r" ], '', $key);
+        return $key;
     }
 }
