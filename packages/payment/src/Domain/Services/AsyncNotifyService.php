@@ -45,11 +45,9 @@ class AsyncNotifyService
      */
     public function notify(Notify $notify) : void
     {
-        Log::info('AsyncNotifyService.notify', [
-            'notify_no' => $notify->notify_no,
-            'url'       => $notify->url,
-            'body'      => $notify->body,
-        ]);
+        Log::info('AsyncNotifyService.notify',
+                  [ 'notify_no' => $notify->notify_no, 'url' => $notify->url, 'body' => $notify->body, ]
+        );
 
         // 获取参数
         $url  = $notify->url;
@@ -73,26 +71,24 @@ class AsyncNotifyService
 
     }
 
+    /**
+     * @param string $url
+     * @param array $body
+     * @return array
+     */
     public function request(string $url, array $body) : array
     {
-        Log::info('AsyncNotifyService.request', [
-            'url'  => $url,
-            'body' => $body,
-        ]);
+        Log::info('AsyncNotifyService.request', [ 'url' => $url, 'body' => $body, ]);
         try {
-            $client = new Client([
-                                     'http_errors' => false,
-                                     'timeout'     => 5
-                                 ]);
+            $client = new Client([ 'http_errors' => false, 'timeout' => 5 ]);
 
-            $response = $client->request('POST', $url, [
-                'json' => $body
-            ]);
+            $response = $client->request('POST', $url, [ 'json' => $body ]);
 
             $responseData = [
                 'status' => $response->getStatusCode(),
                 'body'   => $response->getBody()->getContents(),
             ];
+
             Log::info('AsyncNotifyService.response', $responseData);
 
             return $responseData;
