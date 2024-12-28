@@ -20,6 +20,7 @@ class AsyncNotifySendJob implements ShouldQueue
 
     public function handle() : void
     {
+       // 异步发送通知
         app(AsyncNotifyCommandService::class)->notify(new NotifySendCommand(notifyNo: $this->notifyNo));
     }
 }
