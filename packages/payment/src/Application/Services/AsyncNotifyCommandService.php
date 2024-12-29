@@ -2,12 +2,19 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
+use RedJasmine\Payment\Application\Commands\Notify\NotifySendCommand;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Notify\NotifyCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\CommandHandlers\Notify\NotifySendCommandHandler;
 use RedJasmine\Payment\Domain\Models\Notify;
 use RedJasmine\Payment\Domain\Repositories\NotifyRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\AsyncNotifyService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
+
+/**
+ * @see NotifySendCommandHandler::handle()
+ * @method void send(NotifySendCommand $command)
+ */
 class AsyncNotifyCommandService extends ApplicationCommandService
 {
 
@@ -30,6 +37,8 @@ class AsyncNotifyCommandService extends ApplicationCommandService
 
     protected static $macros = [
         'create' => NotifyCreateCommandHandler::class,
+        'send'   => NotifySendCommandHandler::class,
+
     ];
 
 }

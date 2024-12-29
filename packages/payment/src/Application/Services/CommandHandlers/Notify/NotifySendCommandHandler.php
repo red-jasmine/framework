@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Notify;
 
+use Exception;
 use RedJasmine\Payment\Application\Commands\Notify\NotifySendCommand;
 use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
 use RedJasmine\Support\Application\CommandHandler;
-use Throwable;
 
 class NotifySendCommandHandler extends CommandHandler
 {
@@ -14,6 +14,11 @@ class NotifySendCommandHandler extends CommandHandler
 
     }
 
+    /**
+     * @param NotifySendCommand $command
+     * @return void
+     * @throws Exception
+     */
     public function handle(NotifySendCommand $command) : void
     {
         $notify = $this->service->repository->findByNo($command->notifyNo);

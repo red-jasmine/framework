@@ -39,14 +39,14 @@ class AsyncNotifyService
 
     /**
      * @param Notify $notify
-     *
      * @return void
      * @throws Exception
      */
     public function notify(Notify $notify) : void
     {
         Log::info('AsyncNotifyService.notify',
-                  [ 'notify_no' => $notify->notify_no, 'url' => $notify->url, 'body' => $notify->body, ]
+                  [ 'notify_no' => $notify->notify_no,
+                    'url' => $notify->url, 'body' => $notify->body, ]
         );
 
         // 获取参数
