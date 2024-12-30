@@ -57,6 +57,7 @@ class AsyncNotifyService
         $privateKey  = $merchantApp->system_private_key;
         // 固定签名
         $signType            = 'RSA2';
+        $body['notify_no']   = $notify->notify_no;
         $body['notify_type'] = $notify->notify_type;
         $body['notify_time'] = now()->format('Y-m-d hH:i:s');
         $body['sign_type']   = $signType;
