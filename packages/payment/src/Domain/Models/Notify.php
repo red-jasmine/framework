@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Payment\Domain\Data\NotifyResponse;
 use RedJasmine\Payment\Domain\Events\Notifies\NotifyCreateEvent;
 use RedJasmine\Payment\Domain\Generator\NotifyNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
@@ -77,15 +78,19 @@ class Notify extends Model
         $this->status = NotifyStatusEnum::FAIL;
     }
 
-    public function setResponse(array $response = []) : void
+
+    public function response(NotifyResponse $response) : void
     {
         $this->response    = $response;
         $this->notify_time = now();
-        if (($response['body'] ?? '') === 'success') {
+
+        if ($response->isSuccessFul()) {
             $this->success();
         } else {
             $this->fail();
         }
+
     }
+
 
 }
