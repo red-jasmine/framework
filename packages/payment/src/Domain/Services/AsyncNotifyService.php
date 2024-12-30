@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use RedJasmine\Payment\Domain\Data\NotifyResponse;
+use RedJasmine\Payment\Domain\Data\NotifyResponseData;
 use RedJasmine\Payment\Domain\Models\Notify;
 use RedJasmine\Support\Helpers\Signer\Signer;
 use Throwable;
@@ -83,15 +83,15 @@ class AsyncNotifyService
      *
      * @param string $url 接收通知的URL地址
      * @param array $body 通知的主体内容，为键值对数组
-     * @return NotifyResponse 返回通知响应对象，包含状态码和响应体
+     * @return NotifyResponseData 返回通知响应对象，包含状态码和响应体
      */
-    public function request(string $url, array $body) : NotifyResponse
+    public function request(string $url, array $body) : NotifyResponseData
     {
         // 记录请求日志，包括请求URL和请求体
         Log::info('AsyncNotifyService.request', [ 'url' => $url, 'body' => $body, ]);
 
         // 初始化通知响应对象
-        $notifyResponse = new NotifyResponse();
+        $notifyResponse = new NotifyResponseData();
 
         try {
             // 创建HTTP客户端，配置忽略HTTP错误、设置超时时间和禁止重定向

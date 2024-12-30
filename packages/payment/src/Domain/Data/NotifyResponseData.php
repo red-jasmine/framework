@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
 
-class NotifyResponse extends Data
+class NotifyResponseData extends Data
 {
 
     public int $statusCode = 0;

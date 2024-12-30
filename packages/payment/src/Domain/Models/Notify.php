@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Payment\Domain\Data\NotifyResponse;
+use RedJasmine\Payment\Domain\Data\NotifyResponseData;
 use RedJasmine\Payment\Domain\Events\Notifies\NotifyCreateEvent;
 use RedJasmine\Payment\Domain\Generator\NotifyNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
@@ -79,7 +79,7 @@ class Notify extends Model
     }
 
 
-    public function response(NotifyResponse $response) : void
+    public function response(NotifyResponseData $response) : void
     {
         $this->response    = $response;
         $this->notify_time = now();
