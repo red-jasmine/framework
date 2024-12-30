@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Services;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use RedJasmine\Payment\Domain\Models\Notify;
@@ -44,10 +45,9 @@ class AsyncNotifyService
      */
     public function notify(Notify $notify) : void
     {
-        Log::info('AsyncNotifyService.notify',
-                  [ 'notify_no' => $notify->notify_no,
-                    'url' => $notify->url, 'body' => $notify->body, ]
-        );
+
+        Log::withContext([ 'notify_no' => $notify->notify_no ]);
+        Log::info('AsyncNotifyService.notify');
 
         // 获取参数
         $url  = $notify->url;
@@ -55,9 +55,8 @@ class AsyncNotifyService
 
         $merchantApp = $notify->merchantApp;
         $privateKey  = $merchantApp->system_private_key;
-
-        $signType = 'RSA2';
-
+        // 固定签名
+        $signType            = 'RSA2';
         $body['notify_type'] = $notify->notify_type;
         $body['notify_time'] = now()->format('Y-m-d hH:i:s');
         $body['sign_type']   = $signType;
@@ -65,6 +64,7 @@ class AsyncNotifyService
 
         // 发送请求
         $response = $this->request($url, $body);
+
         // 设置响应
         $notify->setResponse($response);
 
@@ -79,26 +79,28 @@ class AsyncNotifyService
     public function request(string $url, array $body) : array
     {
         Log::info('AsyncNotifyService.request', [ 'url' => $url, 'body' => $body, ]);
+
+        $result['status'] = 0;
+        $result['body']   = null;
+
         try {
-            $client = new Client([ 'http_errors' => false, 'timeout' => 5 ]);
+            $client = new Client([ 'http_errors' => false, 'timeout' => 3.0, 'allow_redirects' => false ]);
 
             $response = $client->request('POST', $url, [ 'json' => $body ]);
 
-            $responseData = [
-                'status' => $response->getStatusCode(),
-                'body'   => $response->getBody()->getContents(),
-            ];
+            $result['status'] = $response->getStatusCode();
+            $result['body']   = $response->getBody()->getContents();
 
-            Log::info('AsyncNotifyService.response', $responseData);
-
-            return $responseData;
-
+        } catch (ConnectException $connectException) {
+            $result['status'] = 504;
+            $result['body']   = 'request timeout';
         } catch (Throwable $throwable) {
             report($throwable);
-
+            $result['status'] = 500;
+            $result['body']   = null;
         }
-
-        return [];
+        Log::info('AsyncNotifyService.response', $result);
+        return $result;
 
 
     }
