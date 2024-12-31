@@ -4,13 +4,10 @@ namespace RedJasmine\Payment\Domain\Services;
 
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
-use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\GatewayDrive;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
@@ -51,10 +48,10 @@ class PaymentChannelService
         $paymentChannelData->channelProduct = $channelProduct;
 
         try {
-            $channelResult = $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
+            $channelPurchaseResult = $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
 
-            if ($channelResult->isSuccessFul() === false) {
-                throw new PaymentException($channelResult->getMessage(), PaymentException::TRADE_PAYING);
+            if ($channelPurchaseResult->isSuccessFul() === false) {
+                throw new PaymentException($channelPurchaseResult->getMessage(), PaymentException::TRADE_PAYING);
             }
 
 
@@ -65,10 +62,10 @@ class PaymentChannelService
             $channelTradeData->channelProductCode = $channelProduct->code;
             $channelTradeData->channelAppId       = $channelApp->channel_app_id;
             $channelTradeData->channelMerchantId  = $channelApp->channel_merchant_id;
-            $channelTradeData->channelTradeNo     = $channelResult->getTradeNo();
+            $channelTradeData->channelTradeNo     = $channelPurchaseResult->getTradeNo();
             $channelTradeData->sceneCode          = $environment->scene->value;
             $channelTradeData->methodCode         = $environment->method;
-            $channelTradeData->purchaseResult     = $channelResult->getResult();
+            $channelTradeData->paymentTrigger     = $channelPurchaseResult->paymentTrigger;
             return $channelTradeData;
         } catch (Throwable $throwable) {
 

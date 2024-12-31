@@ -35,7 +35,9 @@ class ChannelTradeData extends Data
 
     // 补充更多信息
     // TODO  支付人,支付状态,支付时间等
-    public ?string $purchaseResult;
+
+    public ?PaymentTrigger $paymentTrigger = null;
+    public ?string         $purchaseResult;
 
 
     /**

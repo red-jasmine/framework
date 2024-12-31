@@ -2,11 +2,12 @@
 
 namespace RedJasmine\Payment\Domain\Gateway\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Payment\Domain\Data\PaymentTrigger;
 
-class ChannelResult extends Data
+class ChannelPurchaseResult extends AbstractChannelResult
 {
-    public bool $successFul;
+
+    public ?PaymentTrigger $paymentTrigger = null;
 
     public mixed   $result  = null;
     public ?string $code    = null;
@@ -77,18 +78,6 @@ class ChannelResult extends Data
     public function setResult(mixed $result) : static
     {
         $this->result = $result;
-        return $this;
-    }
-
-
-    public function isSuccessFul() : bool
-    {
-        return $this->successFul;
-    }
-
-    public function setSuccessFul(bool $successFul) : static
-    {
-        $this->successFul = $successFul;
         return $this;
     }
 

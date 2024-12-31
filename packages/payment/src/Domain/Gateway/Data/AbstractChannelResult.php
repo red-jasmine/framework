@@ -4,7 +4,10 @@ namespace RedJasmine\Payment\Domain\Gateway\Data;
 
 use RedJasmine\Support\Data\Data;
 
-class PurchaseResult extends Data
+/**
+ * 渠道返回的结果
+ */
+abstract class AbstractChannelResult extends Data
 {
 
     public bool $successFul;
@@ -14,7 +17,7 @@ class PurchaseResult extends Data
         return $this->successFul;
     }
 
-    public function setSuccessFul(bool $successFul) : PurchaseResult
+    public function setSuccessFul(bool $successFul) : static
     {
         $this->successFul = $successFul;
         return $this;

@@ -5,13 +5,6 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
-use RedJasmine\Payment\Domain\Gateway\Data\PurchaseResult;
-use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Payment\Domain\Services\PaymentRouteService;
-use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -22,7 +15,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
 {
 
     /**
-     * @param  TradePayingCommand  $command
+     * @param TradePayingCommand $command
      *
      * @return ChannelTradeData
      * @throws AbstractException

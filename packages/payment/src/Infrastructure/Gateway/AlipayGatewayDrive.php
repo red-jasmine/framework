@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Payment\Infrastructure\Gateway;
 
-use Dflydev\DotAccessData\Data;
 use Exception;
 use Illuminate\Support\Carbon;
 use Omnipay\Alipay\AopPageGateway;
@@ -18,15 +17,17 @@ use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
-use RedJasmine\Payment\Domain\Exceptions\PaymentException;
+use RedJasmine\Payment\Domain\Data\PaymentTrigger;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
-use RedJasmine\Payment\Domain\Gateway\Data\ChannelResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
 use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Enums\PaymentTriggerTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -113,7 +114,13 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         return $gateway;
     }
 
-    public function purchase(Trade $trade, Environment $environment) : ChannelResult
+    /**
+     * @param Trade $trade
+     * @param Environment $environment
+     * @return ChannelPurchaseResult
+     * @throws Throwable
+     */
+    public function purchase(Trade $trade, Environment $environment) : ChannelPurchaseResult
     {
 
 
@@ -126,10 +133,10 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             $gateway->setReturnUrl(PaymentUrl::returnUrl($trade));
         }
 
-
+        // TODO 更多参数
         $request = $gateway->purchase(
             [ 'biz_content' => [
-                // TODO 更多参数
+
                 'out_trade_no'      => $trade->trade_no,
                 'total_amount'      => $trade->amount->format(),
                 'subject'           => $trade->subject,
@@ -146,29 +153,41 @@ class AlipayGatewayDrive implements GatewayDriveInterface
              */
             $response = $request->send();
 
-            $result = new ChannelResult;
+            $result = new ChannelPurchaseResult;
+
+            $result->setSuccessFul(false);
+
             $result->setMessage($response->getMessage());
             $result->setCode($response->getCode());
-            $result->setSuccessFul(false);
             $result->setData($response->getData());
+
             if ($response->isSuccessful()) {
                 $result->setSuccessFul(true);
+                $paymentTrigger = new PaymentTrigger();
+
                 if ($response instanceof AopTradePagePayResponse) {
-                    $result->setResult($response->getRedirectUrl());
+                    $paymentTrigger->type    = PaymentTriggerTypeEnum::REDIRECT;
+                    $paymentTrigger->content = $response->getRedirectUrl();
+
                 }
                 if ($response instanceof AopTradeWapPayResponse) {
-                    $result->setResult($response->getRedirectUrl());
+                    $paymentTrigger->type    = PaymentTriggerTypeEnum::REDIRECT;
+                    $paymentTrigger->content = $response->getRedirectUrl();
                 }
                 if ($response instanceof AopTradeAppPayResponse) {
-                    $result->setResult($response->getOrderString());
+                    $paymentTrigger->type = PaymentTriggerTypeEnum::IN_APP;
+
+                    $paymentTrigger->content = $response->getOrderString();
                 }
                 if ($response instanceof AopTradePreCreateResponse) {
-                    $result->setResult($response->getQrCode());
+                    $paymentTrigger->type    = PaymentTriggerTypeEnum::QR_CODE;
+                    $paymentTrigger->content = $response->getQrCode();
                 }
                 if ($response instanceof AopTradeCreateResponse) {
-                    $result->setResult($response->getTradeNo());
-                    $result->setTradeNo($response->getTradeNo());
+                    $paymentTrigger->type    = PaymentTriggerTypeEnum::APPLET;
+                    $paymentTrigger->content = $response->getTradeNo();
                 }
+                $result->paymentTrigger = $paymentTrigger;
             }
             return $result;
         } catch (Throwable $throwable) {
@@ -194,17 +213,14 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
 
         $request = $gateway->completePurchase()->setParams($parameters);
-        $result  = new ChannelResult;
 
-        $result->setSuccessFul(false);
         try {
             /**
              * @var $response AopCompletePurchaseResponse
              */
             $response = $request->send();
 
-            $result->setMessage($response->getMessage());
-            $result->setCode($response->getCode());
+
             if ($response->isPaid()) {
                 $data = $response->getData();
 
@@ -225,7 +241,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                     $data = array_merge($data, $queryResponse->getAlipayResponse());
                 }
 
-                $result->setSuccessFul(true);
+
                 $channelTradeData                     = new  ChannelTradeData;
                 $channelTradeData->originalParameters = $data;
                 $channelTradeData->channelCode        = $this->channelApp->channel_code;
@@ -256,7 +272,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         }
     }
 
-    public function refund(Refund $refund) : ChannelResult
+    public function refund(Refund $refund) : ChannelRefundResult
     {
         /**
          * @var $gateway AopPageGateway
@@ -279,7 +295,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             $response = $request->send();
             $data     = $response->getAlipayResponse();
 
-            $result = new ChannelResult;
+            $result = new ChannelRefundResult;
             $result->setMessage($data['sub_msg'] ?? $response->getMessage());
             $result->setCode($response->getCode());
             $result->setSuccessFul(false);
