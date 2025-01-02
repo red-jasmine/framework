@@ -78,12 +78,15 @@ class Refund extends Model
 
     use HasOperator;
 
-    protected $casts = [
-        'status'       => RefundStatusEnum::class,
-        'create_time'  => 'datetime',
-        'refund_time'  => 'datetime',
-        'refundAmount' => MoneyCast::class,
-    ];
+    protected function casts() : array
+    {
+        return [
+            'status'       => RefundStatusEnum::class,
+            'create_time'  => 'datetime',
+            'refund_time'  => 'datetime',
+            'refundAmount' => MoneyCast::class,
+        ];
+    }
 
 
     public function getTable() : string

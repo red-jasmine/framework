@@ -36,10 +36,13 @@ class Merchant extends Model implements OwnerInterface
         'type',
     ];
 
-    public $casts = [
+    protected function casts() : array
+    {
+        return [
 
-        'status' => MerchantStatusEnum::class,
-    ];
+            'status' => MerchantStatusEnum::class,
+        ];
+    }
 
 
     public function getTable() : string

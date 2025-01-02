@@ -22,9 +22,12 @@ class MerchantChannelAppPermission extends Pivot
         'status'
     ];
 
-    protected $casts = [
-        'status' => PermissionStatusEnum::class
-    ];
+    protected function casts() : array
+    {
+        return [
+            'status' => PermissionStatusEnum::class
+        ];
+    }
 
 
     public function getTable() : string

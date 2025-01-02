@@ -50,15 +50,18 @@ class Notify extends Model
         );
     }
 
-    protected $casts = [
-        'status'   => NotifyStatusEnum::class,
-        'body'     => 'array',
-        'response' => 'array'
-    ];
+    protected function casts() : array
+    {
+        return [
+            'status'   => NotifyStatusEnum::class,
+            'body'     => 'array',
+            'response' => 'array'
+        ];
+    }
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_notifies';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_notifies';
     }
 
 

@@ -18,9 +18,12 @@ class Channel extends Model
     use SoftDeletes;
 
 
-    protected $casts = [
-        'status' => ChannelStatusEnum::class,
-    ];
+    protected function casts() : array
+    {
+        return [
+            'status' => ChannelStatusEnum::class,
+        ];
+    }
 
     protected $fillable = [
         'code',
@@ -30,7 +33,7 @@ class Channel extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channels';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channels';
     }
 
     public function products() : HasMany

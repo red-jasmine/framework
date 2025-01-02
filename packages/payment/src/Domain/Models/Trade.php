@@ -72,19 +72,22 @@ class Trade extends Model implements AsyncNotifyInterface
     }
 
 
-    protected $casts = [
-        'status'        => TradeStatusEnum::class,
-        'create_time'   => 'datetime',
-        'pay_time'      => 'datetime',
-        'paid_time'     => 'datetime',
-        'notify_time'   => 'datetime',
-        'refund_time'   => 'datetime',
-        'settle_time'   => 'datetime',
-        'amount'        => MoneyCast::class,
-        'paymentAmount' => MoneyCast::class,
-        'refundAmount'  => MoneyCast::class,
+    protected function casts() : array
+    {
+        return [
+            'status'        => TradeStatusEnum::class,
+            'create_time'   => 'datetime',
+            'pay_time'      => 'datetime',
+            'paid_time'     => 'datetime',
+            'notify_time'   => 'datetime',
+            'refund_time'   => 'datetime',
+            'settle_time'   => 'datetime',
+            'amount'        => MoneyCast::class,
+            'paymentAmount' => MoneyCast::class,
+            'refundAmount'  => MoneyCast::class,
 
-    ];
+        ];
+    }
 
 
     public function getTable() : string

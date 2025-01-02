@@ -22,14 +22,17 @@ class MerchantApp extends Model
 
     use HasOperator;
 
-    protected $casts = [
-        'status'             => MerchantAppStatusEnum::class,
-        'app_public_key'     => 'encrypted',
-        'app_private_key'    => 'encrypted',
-        'system_public_key'  => 'encrypted',
-        'system_private_key' => 'encrypted',
+    protected function casts() : array
+    {
+        return [
+            'status'             => MerchantAppStatusEnum::class,
+            'app_public_key'     => 'encrypted',
+            'app_private_key'    => 'encrypted',
+            'system_public_key'  => 'encrypted',
+            'system_private_key' => 'encrypted',
 
-    ];
+        ];
+    }
 
     public static function boot() : void
     {
@@ -51,7 +54,7 @@ class MerchantApp extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps';
     }
 
 

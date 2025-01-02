@@ -33,7 +33,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps';
     }
 
 
@@ -49,18 +49,20 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
         'status',
     ];
 
-    protected $casts = [
-        'sign_method'                 => SignMethodEnum::class,
-        'status'                      => ChannelAppStatusEnum::class,
-        'encrypt_key'                 => 'encrypted',
-        'channel_public_key'          => 'encrypted',
-        'channel_app_public_key'      => 'encrypted',
-        'channel_app_private_key'     => 'encrypted',
-        'channel_public_key_cert'     => 'encrypted',
-        'channel_root_cert'           => 'encrypted',
-        'channel_app_public_key_cert' => 'encrypted',
-    ];
-
+    protected function casts() : array
+    {
+        return [
+            'sign_method'                 => SignMethodEnum::class,
+            'status'                      => ChannelAppStatusEnum::class,
+            'encrypt_key'                 => 'encrypted',
+            'channel_public_key'          => 'encrypted',
+            'channel_app_public_key'      => 'encrypted',
+            'channel_app_private_key'     => 'encrypted',
+            'channel_public_key_cert'     => 'encrypted',
+            'channel_root_cert'           => 'encrypted',
+            'channel_app_public_key_cert' => 'encrypted',
+        ];
+    }
 
     public function newInstance($attributes = [], $exists = false) : static
     {
@@ -109,7 +111,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     {
         return $this->belongsToMany(
             ChannelProduct::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_app_products',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_app_products',
             'payment_channel_app_id',
             'payment_channel_product_id',
         )->withTimestamps();

@@ -42,9 +42,12 @@ class ChannelProduct extends Model
     ];
 
 
-    protected $casts = [
-        'status' => ChannelProductStatusEnum::class,
-    ];
+    protected function casts() : array
+    {
+        return [
+            'status' => ChannelProductStatusEnum::class,
+        ];
+    }
 
     public function getTable() : string
     {
