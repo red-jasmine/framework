@@ -61,7 +61,7 @@ class Notify extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_notifies';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_notifies';
     }
 
 
@@ -84,9 +84,9 @@ class Notify extends Model
 
     public function response(NotifyResponseData $response) : void
     {
+        ++$this->notify_count;
         $this->response    = $response;
         $this->notify_time = now();
-
         if ($response->isSuccessFul()) {
             $this->success();
         } else {

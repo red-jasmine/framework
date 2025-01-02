@@ -16,6 +16,7 @@ class NotifyListener
 
     public function handle($event) : void
     {
+
         if ($event instanceof NotifyCreateEvent) {
             AsyncNotifySendJob::dispatch($event->notify->notify_no);
         }

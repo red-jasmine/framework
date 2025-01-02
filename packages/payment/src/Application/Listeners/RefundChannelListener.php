@@ -27,9 +27,12 @@ class RefundChannelListener
 
 
             ChannelRefundQueryJob::dispatch($event->refund->refund_no)
-                                 ->delay(now()->addSeconds(config('red-jasmine.payment.refund_query_interval', 60)));
+                                 ->delay(
+                                     now()->addSeconds(config('red-jasmine.payment.refund_query_interval', 60))
+                                 );
 
         }
+
 
     }
 }

@@ -11,6 +11,7 @@ class NotifyData extends Data
 {
 
     public int $merchantId;
+
     public int $merchantAppId;
 
     /**

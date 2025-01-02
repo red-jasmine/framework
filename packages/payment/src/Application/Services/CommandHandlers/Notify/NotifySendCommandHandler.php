@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Application\Services\CommandHandlers\Notify;
 use Exception;
 use RedJasmine\Payment\Application\Commands\Notify\NotifySendCommand;
 use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
+use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
 use RedJasmine\Support\Application\CommandHandler;
 
 class NotifySendCommandHandler extends CommandHandler
@@ -16,10 +17,10 @@ class NotifySendCommandHandler extends CommandHandler
 
     /**
      * @param NotifySendCommand $command
-     * @return void
+     * @return NotifyStatusEnum
      * @throws Exception
      */
-    public function handle(NotifySendCommand $command) : void
+    public function handle(NotifySendCommand $command) : NotifyStatusEnum
     {
         $notify = $this->service->repository->findByNo($command->notifyNo);
 
@@ -28,6 +29,9 @@ class NotifySendCommandHandler extends CommandHandler
 
         $this->service->repository->update($notify);
 
+        // TODO 如何触发失败重试
+
+        return $notify->status;
 
     }
 

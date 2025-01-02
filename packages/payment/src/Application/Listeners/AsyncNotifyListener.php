@@ -15,6 +15,7 @@ class AsyncNotifyListener
 
     public function handle($event) : void
     {
+
         if (($event instanceof AsyncNotifyInterface) && $notifyCommand = $event->getAsyncNotify()) {
             $this->service->create($notifyCommand);
         }

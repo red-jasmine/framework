@@ -6,6 +6,7 @@ namespace RedJasmine\Payment\Domain\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
+use RedJasmine\Payment\Domain\Data\NotifyData;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
@@ -13,6 +14,7 @@ use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
@@ -91,7 +93,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
     }
 
     public function trade() : BelongsTo
@@ -117,7 +119,7 @@ class Refund extends Model
     public function isAllowProcessing() : bool
     {
 
-        if (in_array($this->status, [RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL,], true)) {
+        if (in_array($this->status, [ RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL, ], true)) {
             return true;
         }
 
@@ -148,7 +150,7 @@ class Refund extends Model
             RefundStatusEnum::PRE,
             RefundStatusEnum::ABNORMAL,
             RefundStatusEnum::PROCESSING,
-        ], true)) {
+        ],           true)) {
             return true;
         }
 
@@ -158,7 +160,7 @@ class Refund extends Model
     /**
      * 退款成功
      *
-     * @param  ChannelRefundData  $data
+     * @param ChannelRefundData $data
      *
      * @return void
      * @throws PaymentException
@@ -185,6 +187,39 @@ class Refund extends Model
         $this->status                   = RefundStatusEnum::ABNORMAL;
         $this->extension->error_message = $errorMessage;
         $this->fireModelEvent('abnormal', false);
+    }
+
+    public function getNotifyUlr() : ?string
+    {
+        return $this->extension->notify_url;
+    }
+
+    public function getAsyncNotify() : ?NotifyData
+    {
+        $command                = new NotifyData();
+        $command->merchantId    = $this->merchant_id;
+        $command->merchantAppId = $this->merchant_app_id;
+        $command->businessType  = NotifyBusinessTypeEnum::REFUND;
+        $command->businessNo    = $this->refund_no;
+        $command->notifyType    = 'trade_status_sync';
+
+        if (blank($this->getNotifyUlr())) {
+            return null;
+        }
+        $command->url  = $this->getNotifyUlr();
+        $command->body = [
+            'merchant_app_id'        => $this->merchant_app_id,
+            'refund_no'              => $this->refund_no,
+            'trade_no'               => $this->trade_no,
+            'status'                 => $this->status->value,
+            'create_time'            => $this->create_time?->format('Y-m-d H:i:s'),
+            'paid_time'              => $this->refund_time?->format('Y-m-d H:i:s'),
+            'subject'                => $this->subject,
+            'refund_amount_currency' => $this->refundAmount->currency,
+            'refund_amount_value'    => $this->refundAmount->value,
+            'pass_back_params'       => $this->extension->pass_back_params,
+        ];
+        return $command;
     }
 
 }

@@ -27,20 +27,27 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 获取支付单
-            $trade       = $this->service->repository->findByNo($command->tradeNo);
+            $trade = $this->service->repository->findByNo($command->tradeNo);
+
             $environment = $command;
+
             // 根据 支付环境、支付方式、 选择 支付应用
             $channelApp = $this->service->paymentRouteService->getChannelApp($trade, $environment);
-            // 根据应用 去支付渠道 创建支付单
+
+            // 根据支付环境、支付方式、 选择 支付产品
             $channelProduct = $this->service->paymentRouteService->getChannelProduct($environment, $channelApp);
-            // 去渠道创建 支付单
-            $channelTrade = $this->service
-                ->paymentChannelService->purchase($channelApp, $channelProduct, $trade, $environment);
-            // 更新支付单状态
+
+            // 根据应用去渠道发起支付单
+            $channelTrade = $this->service->paymentChannelService
+                ->purchase($channelApp, $channelProduct, $trade, $environment);
+
+            // 交易设置为 支付中
             $trade->paying($channelApp, $environment, $channelTrade);
-            // 返回支付场景等信息
+
+            // 更新数据库
             $this->service->repository->update($trade);
-            // 返回支付结果信息
+
+            // 提交数据库事务
             $this->commitDatabaseTransaction();
 
         } catch (AbstractException $exception) {

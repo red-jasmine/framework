@@ -5,7 +5,9 @@ namespace RedJasmine\Payment\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Payment\Application\Listeners\AsyncNotifyListener;
+use RedJasmine\Payment\Application\Listeners\NotifyListener;
 use RedJasmine\Payment\Application\Listeners\RefundChannelListener;
+use RedJasmine\Payment\Domain\Events\Notifies\NotifyCreateEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
@@ -106,6 +108,9 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         // 注册通知 通知监听器
         Event::listen(TradePaidEvent::class, AsyncNotifyListener::class);
         Event::listen(RefundSuccessEvent::class, AsyncNotifyListener::class);
+
+
+        Event::listen(NotifyCreateEvent::class, NotifyListener::class);
 
     }
 

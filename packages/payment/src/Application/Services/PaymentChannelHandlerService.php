@@ -36,9 +36,9 @@ class PaymentChannelHandlerService extends ApplicationService
 
 
     protected static $macros = [
-        'tradeNotify' => ChannelTradeNotifyCommandHandler::class,
-        'refund'      => ChannelRefundCreateCommandHandler::class,
-        'refundQuery' => ChannelRefundQueryCommandHandler::class,
+        'refund'      => ChannelRefundCreateCommandHandler::class, // 异步发起退款
+        'refundQuery' => ChannelRefundQueryCommandHandler::class, // 发起退款查询
+        'tradeNotify' => ChannelTradeNotifyCommandHandler::class, // 接受交易通知
     ];
 
 
