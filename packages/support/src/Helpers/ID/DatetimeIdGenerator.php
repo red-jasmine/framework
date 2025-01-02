@@ -80,8 +80,8 @@ class DatetimeIdGenerator
     public static function buildId(
         int|null $workerId = null,
         int|null $datacenterId = null,
-        int $workerIdBits = 10,
-        int $datacenterIdBits = 12,
+        int $workerIdBits = 5,
+        int $datacenterIdBits = 5,
         int $sequenceBits = 12,
     ) : string {
         return static::getInstance($workerId, $datacenterId, $workerIdBits, $datacenterIdBits, $sequenceBits)->nextId();
@@ -112,11 +112,11 @@ class DatetimeIdGenerator
 
         // 17 位
         $datetime = date('YmdHis', (int) (floor($timestamp / 1000))).substr((int) $timestamp, -3);
-        // 序号 8 位
+
+
         $sequence = (($this->datacenterId << $this->datacenterIdShift) |
                      ($this->workerId << $this->workerIdShift) |
                      $this->sequence);
-        // php 给定一个整数  如何获取整数的 位数
 
         $len            = strlen(pow(2, ($this->datacenterIdShift + $this->datacenterIdBits)));
         $sequenceNumber = sprintf("%0{$len}d", $sequence);
