@@ -36,7 +36,6 @@ use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\PayTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
@@ -48,14 +47,11 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use Spatie\LaravelData\WithData;
 
 
 class Order extends Model implements OperatorInterface
 {
     use HasSnowflakeId;
-
-    use WithData;
 
     use HasDateTimeFormatter;
 
@@ -106,40 +102,43 @@ class Order extends Model implements OperatorInterface
         'urge',
 
     ];
-    protected $casts            = [
-        'order_type'             => OrderTypeEnum::class,
-        'shipping_type'          => ShippingTypeEnum::class,
-        //'pay_type'               => PayTypeEnum::class,
-        'order_status'           => OrderStatusEnum::class,
-        'accept_status'          => AcceptStatusEnum::class,
-        'payment_status'         => PaymentStatusEnum::class,
-        'shipping_status'        => ShippingStatusEnum::class,
-        'created_time'           => 'datetime',
-        'payment_time'           => 'datetime',
-        'accept_time'            => 'datetime',
-        'close_time'             => 'datetime',
-        'shipping_time'          => 'datetime',
-        'collect_time'           => 'datetime',
-        'dispatch_time'          => 'datetime',
-        'signed_time'            => 'datetime',
-        'confirm_time'           => 'datetime',
-        'refund_time'            => 'datetime',
-        'rate_time'              => 'datetime',
-        'contact'                => AesEncrypted::class,
-        'is_seller_delete'       => 'boolean',
-        'is_buyer_delete'        => 'boolean',
-        'freight_amount'         => AmountCastTransformer::class,
-        'discount_amount'        => AmountCastTransformer::class,
-        'product_payable_amount' => AmountCastTransformer::class,
-        'payable_amount'         => AmountCastTransformer::class,
-        'payment_amount'         => AmountCastTransformer::class,
-        'refund_amount'          => AmountCastTransformer::class,
-        'commission_amount'      => AmountCastTransformer::class,
-        'cost_amount'            => AmountCastTransformer::class,
-        'tax_amount'             => AmountCastTransformer::class,
-        'product_amount'         => AmountCastTransformer::class,
 
-    ];
+    public function casts() : array
+    {
+        return [
+            'order_type'             => OrderTypeEnum::class,
+            'shipping_type'          => ShippingTypeEnum::class,
+            'order_status'           => OrderStatusEnum::class,
+            'accept_status'          => AcceptStatusEnum::class,
+            'payment_status'         => PaymentStatusEnum::class,
+            'shipping_status'        => ShippingStatusEnum::class,
+            'created_time'           => 'datetime',
+            'payment_time'           => 'datetime',
+            'accept_time'            => 'datetime',
+            'close_time'             => 'datetime',
+            'shipping_time'          => 'datetime',
+            'collect_time'           => 'datetime',
+            'dispatch_time'          => 'datetime',
+            'signed_time'            => 'datetime',
+            'confirm_time'           => 'datetime',
+            'refund_time'            => 'datetime',
+            'rate_time'              => 'datetime',
+            'contact'                => AesEncrypted::class,
+            'is_seller_delete'       => 'boolean',
+            'is_buyer_delete'        => 'boolean',
+            'freight_amount'         => AmountCastTransformer::class,
+            'discount_amount'        => AmountCastTransformer::class,
+            'product_payable_amount' => AmountCastTransformer::class,
+            'payable_amount'         => AmountCastTransformer::class,
+            'payment_amount'         => AmountCastTransformer::class,
+            'refund_amount'          => AmountCastTransformer::class,
+            'commission_amount'      => AmountCastTransformer::class,
+            'cost_amount'            => AmountCastTransformer::class,
+            'tax_amount'             => AmountCastTransformer::class,
+            'product_amount'         => AmountCastTransformer::class,
+
+        ];
+    }
 
     /**
      * @return static
@@ -161,7 +160,7 @@ class Order extends Model implements OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'orders';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders';
     }
 
     public function info() : HasOne
