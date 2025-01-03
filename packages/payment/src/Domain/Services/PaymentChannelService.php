@@ -27,19 +27,21 @@ class PaymentChannelService
 
     /**
      * 创建交易单
-     * @param ChannelApp $channelApp
-     * @param ChannelProduct $channelProduct
-     * @param Trade $trade
-     * @param Environment $environment
+     *
+     * @param  ChannelApp  $channelApp
+     * @param  ChannelProduct  $channelProduct
+     * @param  Trade  $trade
+     * @param  Environment  $environment
+     *
      * @return ChannelTradeData
      * @throws PaymentException
      */
     public function purchase(
-        ChannelApp     $channelApp,
+        ChannelApp $channelApp,
         ChannelProduct $channelProduct,
-        Trade          $trade,
-        Environment    $environment) : ChannelTradeData
-    {
+        Trade $trade,
+        Environment $environment
+    ) : ChannelTradeData {
         // 支付网关适配器
         $gateway = GatewayDrive::create($channelApp->channel_code);
         // 设置支付渠道信息
@@ -79,7 +81,7 @@ class PaymentChannelService
     protected function getLock(Trade $trade) : Lock
     {
 
-        $name = 'red-jasmine-payment:trade:' . $trade->id;
+        $name = 'red-jasmine-payment:trade:'.$trade->id;
         return Cache::lock($name, 60);
     }
 
@@ -98,8 +100,9 @@ class PaymentChannelService
 
 
     /**
-     * @param ChannelApp $channelApp
-     * @param Refund $refund
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
+     *
      * @return bool
      * @throws PaymentException
      */
@@ -120,6 +123,13 @@ class PaymentChannelService
         return true;
     }
 
+    /**
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
+     *
+     * @return ChannelRefundData
+     * @throws PaymentException
+     */
     public function refundQuery(ChannelApp $channelApp, Refund $refund) : ChannelRefundData
     {
         // 支付网关适配器
@@ -128,7 +138,28 @@ class PaymentChannelService
         $paymentChannelData             = new  PaymentChannelData;
         $paymentChannelData->channelApp = $channelApp;
 
-        return $gateway->gateway($paymentChannelData)->refundQuery($refund);
+        $channelRefundQueryResult = $gateway->gateway($paymentChannelData)->refundQuery($refund);
+
+        // 查询失败
+        if ($channelRefundQueryResult->isSuccessFul() === false) {
+            throw new PaymentException(
+                $channelRefundQueryResult->getMessage(),
+                PaymentException::CHANNEL_REFUND_QUERY_ERROR);
+        }
+        $channelRefundData                    = new ChannelRefundData();
+        $channelRefundData->status            = $channelRefundQueryResult->status;
+        $channelRefundData->refundNo          = $channelRefundQueryResult->refundNo;
+        $channelRefundData->tradeNo           = $channelRefundQueryResult->tradeNo;
+        $channelRefundData->refundAmount      = $channelRefundQueryResult->refundAmount;
+        $channelRefundData->refundTime        = $channelRefundQueryResult->refundTime;
+        $channelRefundData->channelAppId      = $channelRefundQueryResult->channelAppId;
+        $channelRefundData->channelMerchantId = $channelRefundQueryResult->channelMerchantId;
+        $channelRefundData->channelTradeNo    = $channelRefundQueryResult->channelTradeNo;
+        $channelRefundData->channelRefundNo   = $channelRefundQueryResult->channelRefundNo;
+
+
+        return $channelRefundData;
+
     }
 
     public function notifyResponse(ChannelApp $channelApp) : NotifyResponseInterface

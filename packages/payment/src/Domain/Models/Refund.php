@@ -3,8 +3,10 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\NotifyData;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
@@ -93,7 +95,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_refunds';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
     }
 
     public function trade() : BelongsTo
@@ -119,7 +121,7 @@ class Refund extends Model
     public function isAllowProcessing() : bool
     {
 
-        if (in_array($this->status, [ RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL, ], true)) {
+        if (in_array($this->status, [RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL,], true)) {
             return true;
         }
 
@@ -150,35 +152,58 @@ class Refund extends Model
             RefundStatusEnum::PRE,
             RefundStatusEnum::ABNORMAL,
             RefundStatusEnum::PROCESSING,
-        ],           true)) {
+        ], true)) {
             return true;
         }
 
         return false;
     }
 
+
     /**
      * 退款成功
      *
-     * @param ChannelRefundData $data
+     * @param  Carbon|null  $refundTime
      *
      * @return void
      * @throws PaymentException
      */
-    public function success(ChannelRefundData $data) : void
+    public function success(?Carbon $refundTime = null) : void
     {
         // 验证状态 验证金额
         if (!$this->isAllowSuccess()) {
             throw new PaymentException('退款状态不允许处理', PaymentException::REFUND_STATUS_ERROR);
         }
-        $this->status            = RefundStatusEnum::SUCCESS;
-        $this->refund_time       = $data->refundTime;
-        $this->channel_refund_no = $data->channelRefundNo;
+        $this->refund_time = $refundTime ?? now();
+        $this->status      = RefundStatusEnum::SUCCESS;
         // 设置交易数据
-
         $this->trade->refundSuccess($this);
 
         $this->fireModelEvent('success', false);
+    }
+
+    /**
+     * @param  ChannelRefundData  $data
+     *
+     * @return void
+     * @throws PaymentException
+     */
+    public function setChannelQueryResult(ChannelRefundData $data) : void
+    {
+
+        switch ($data->status) {
+            case RefundStatusEnum::SUCCESS:
+                $this->success($data->refundTime);
+                break;
+            case RefundStatusEnum::ABNORMAL:
+                $this->abnormal();
+                break;
+
+            default:
+                break;
+
+        }
+
     }
 
 

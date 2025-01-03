@@ -25,6 +25,9 @@ class PaymentException extends AbstractException
     public const int REFUND_STATUS_ERROR  = 605010; // 退款状态错误
 
 
+    public const  int CHANNEL_REFUND_QUERY_ERROR = 604021; // 渠道查询退款状态错误
+
+
     public const int URL_SIGN = 604001; // 签名错误
 
 }

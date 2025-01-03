@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Gateway;
 
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
@@ -21,7 +22,7 @@ interface GatewayDriveInterface
 
     public function refund(Refund $refund) : ChannelRefundResult;
 
-    public function refundQuery(Refund $refund) : ChannelRefundData;
+    public function refundQuery(Refund $refund) : ChannelRefundQueryResult;
 
     public function completePurchase(array $parameters = []) : ChannelTradeData;
 

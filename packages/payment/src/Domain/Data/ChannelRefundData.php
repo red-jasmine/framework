@@ -15,26 +15,15 @@ class ChannelRefundData extends Data
     public ?string $refundNo = null;
     public ?Money  $refundAmount;
 
-    public ?string $channelRefundNo = null;
-
-    public ?string $channelCode;
-    public ?string $channelProductCode;
     public ?string $channelAppId;
     public ?string $channelMerchantId;
     public ?string $channelTradeNo;
-
+    public ?string $channelRefundNo = null;
 
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $refundTime;
 
     public ?RefundStatusEnum $status;
-
-
-    /**
-     * 原始参数信息
-     * @var array
-     */
-    public array $originalParameters = [];
 
 
 }

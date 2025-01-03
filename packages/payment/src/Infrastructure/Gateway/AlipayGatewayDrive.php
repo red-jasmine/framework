@@ -11,16 +11,17 @@ use Omnipay\Alipay\Responses\AopTradeAppPayResponse;
 use Omnipay\Alipay\Responses\AopTradeCreateResponse;
 use Omnipay\Alipay\Responses\AopTradePagePayResponse;
 use Omnipay\Alipay\Responses\AopTradePreCreateResponse;
+use Omnipay\Alipay\Responses\AopTradeRefundQueryResponse;
 use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
-use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Data\PaymentTrigger;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
-use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
 use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
@@ -115,8 +116,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
     }
 
     /**
-     * @param Trade $trade
-     * @param Environment $environment
+     * @param  Trade  $trade
+     * @param  Environment  $environment
+     *
      * @return ChannelPurchaseResult
      * @throws Throwable
      */
@@ -135,14 +137,16 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
         // TODO 更多参数
         $request = $gateway->purchase(
-            [ 'biz_content' => [
+            [
+                'biz_content' => [
 
-                'out_trade_no'      => $trade->trade_no,
-                'total_amount'      => $trade->amount->format(),
-                'subject'           => $trade->subject,
-                'product_code'      => $this->channelProduct->code,
-                'merchant_order_no' => $trade->merchant_order_no,
-            ] ]
+                    'out_trade_no'      => $trade->trade_no,
+                    'total_amount'      => $trade->amount->format(),
+                    'subject'           => $trade->subject,
+                    'product_code'      => $this->channelProduct->code,
+                    'merchant_order_no' => $trade->merchant_order_no,
+                ]
+            ]
         );
 
 
@@ -200,7 +204,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
     /**
      * 完成支付
-     * @param array $parameters
+     *
+     * @param  array  $parameters
+     *
      * @return ChannelTradeData
      * @throws InvalidRequestException
      */
@@ -227,13 +233,14 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
                 // 调用查询接口
                 $queryResponse = $gateway->query([
-                                                     'biz_content' => [
-                                                         'trade_no'      => $data['trade_no'],
-                                                         'query_options' => [
-                                                             'buyer_user_type',
-                                                             'buyer_open_id'
-                                                         ],
-                                                     ] ])->send();
+                    'biz_content' => [
+                        'trade_no'      => $data['trade_no'],
+                        'query_options' => [
+                            'buyer_user_type',
+                            'buyer_open_id'
+                        ],
+                    ]
+                ])->send();
 
 
                 if ($queryResponse->isSuccessful()) {
@@ -246,19 +253,19 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                 $channelTradeData->originalParameters = $data;
                 $channelTradeData->channelCode        = $this->channelApp->channel_code;
                 $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
-                $channelTradeData->channelAppId       = (string)$data['app_id'];
-                $channelTradeData->tradeNo            = (string)$data['out_trade_no'];
-                $channelTradeData->channelTradeNo     = (string)$data['trade_no'];
+                $channelTradeData->channelAppId       = (string) $data['app_id'];
+                $channelTradeData->tradeNo            = (string) $data['out_trade_no'];
+                $channelTradeData->channelTradeNo     = (string) $data['trade_no'];
                 $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
                 $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
                 $channelTradeData->status             = TradeStatusEnum::SUCCESS;
                 $channelTradeData->payer              = Payer::from([
-                                                                        'type'    => $data['buyer_user_type'] ?? null,
-                                                                        'userId'  => $data['buyer_id'] ?? null,
-                                                                        'account' => $data['buyer_logon_id'] ?? null,
-                                                                        'openId'  => $data['buyer_open_id'] ?? null,
-                                                                        'name'    => null,
-                                                                    ]);
+                    'type'    => $data['buyer_user_type'] ?? null,
+                    'userId'  => $data['buyer_id'] ?? null,
+                    'account' => $data['buyer_logon_id'] ?? null,
+                    'openId'  => $data['buyer_open_id'] ?? null,
+                    'name'    => null,
+                ]);
                 $channelTradeData->paidTime           = Carbon::make($data['gmt_payment']);
 
                 return $channelTradeData;
@@ -280,16 +287,16 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $gateway = $this->gateway;
 
         $request = $gateway->refund([
-                                        'biz_content' => [
-                                            'refund_amount'       => $refund->refundAmount->format(),
-                                            'out_request_no'      => $refund->refund_no,
-                                            'out_trade_no'        => $refund->trade_no,
-                                            'trade_no'            => $refund->channel_trade_no,
-                                            'refund_reason'       => $refund->refund_reason,
-                                            'refund_goods_detail' => [],
+            'biz_content' => [
+                'refund_amount'       => $refund->refundAmount->format(),
+                'out_request_no'      => $refund->refund_no,
+                'out_trade_no'        => $refund->trade_no,
+                'trade_no'            => $refund->channel_trade_no,
+                'refund_reason'       => $refund->refund_reason,
+                'refund_goods_detail' => [],
 
-                                        ]
-                                    ]);
+            ]
+        ]);
 
         try {
             $response = $request->send();
@@ -311,52 +318,63 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
     }
 
-    public function refundQuery(Refund $refund) : ChannelRefundData
+    public function refundQuery(Refund $refund) : ChannelRefundQueryResult
     {
         /**
          * @var $gateway AopPageGateway
          */
         $gateway = $this->gateway;
 
-        $request = $gateway->refundQuery([
-                                             'biz_content' => [
+        $request           = $gateway->refundQuery([
+            'biz_content' => [
 
-                                                 'out_request_no' => $refund->refund_no,
-                                                 'out_trade_no'   => $refund->trade_no,
-                                                 'trade_no'       => $refund->channel_trade_no,
-                                                 'query_options'  => [
-                                                     'refund_royaltys',
-                                                     'gmt_refund_pay',
-                                                     'refund_detail_item_list',
-                                                     'send_back_fee',
-                                                     'deposit_back_info',
-                                                     'refund_voucher_detail_list',
-                                                     'pre_auth_cancel_fee',
-                                                     'refund_hyb_amount',
-                                                     'refund_charge_info_list',
-                                                 ],
-                                             ]
-                                         ]);
-
+                'out_request_no' => $refund->refund_no,
+                'out_trade_no'   => $refund->trade_no,
+                'trade_no'       => $refund->channel_trade_no,
+                'query_options'  => [
+                    'refund_royaltys',
+                    'gmt_refund_pay',
+                    'refund_detail_item_list',
+                    'send_back_fee',
+                    'deposit_back_info',
+                    'refund_voucher_detail_list',
+                    'pre_auth_cancel_fee',
+                    'refund_hyb_amount',
+                    'refund_charge_info_list',
+                ],
+            ]
+        ]);
+        $channelRefundData = new ChannelRefundQueryResult();
         try {
 
+            /**
+             * @var $response AopTradeRefundQueryResponse
+             */
             $response = $request->send();
-
+            $channelRefundData->setSuccessFul(false);
             if (!$response->isSuccessful()) {
                 throw new RuntimeException('退款失败');
             }
-            $data                        = $response->getAlipayResponse();
-            $channelRefundData           = new ChannelRefundData();
-            $channelRefundData->status   = RefundStatusEnum::PROCESSING;
-            $channelRefundData->tradeNo  = $data['out_trade_no'];
-            $channelRefundData->refundNo = $data['out_request_no'];
-            if ((($data['refund_status'] ?? '') === 'REFUND_SUCCESS')) {
+            $data = $response->getAlipayResponse();
+
+            $channelRefundData->originalParameters = $data;
+            $channelRefundData->setSuccessFul(true);
+            $channelRefundData->status            = RefundStatusEnum::PROCESSING;
+            $channelRefundData->tradeNo           = $data['out_trade_no'];
+            $channelRefundData->refundNo          = $data['out_request_no'];
+            $channelRefundData->channelTradeNo    = $data['trade_no'];
+            $channelRefundData->channelAppId      = $this->channelApp->channel_app_id;
+            $channelRefundData->channelMerchantId = $this->channelApp->channel_merchant_id;
+            // 判断是否退款成功
+
+            if (($data['refund_status'] ?? '') === 'REFUND_SUCCESS') {
+                $channelRefundData->status       = RefundStatusEnum::SUCCESS;
                 $channelRefundData->refundTime   = Carbon::make($data['gmt_refund_pay']);
                 $channelRefundData->refundAmount = new Money(bcmul($data['refund_amount'], 100, 0));
-
-                return $channelRefundData;
             }
+
             return $channelRefundData;
+
         } catch (Throwable $throwable) {
             throw $throwable;
         }
