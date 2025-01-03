@@ -17,7 +17,7 @@ return new class extends Migration {
                 $table->string('trade_no')->comment('交易号');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
                 $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
-                $table->string('merchant_refund_no')->comment('商户退款单号'); // 交易好下唯一
+                $table->string('merchant_refund_no')->comment('商户退款单号'); // 交易号下唯一
                 $table->string('merchant_trade_no')->comment('商户交易单号');
                 $table->string('merchant_trade_order_no')->nullable()->comment('商户交易原始订单号');
                 $table->string('merchant_refund_order_no')->nullable()->comment('商户原始退款订单号');
@@ -38,7 +38,7 @@ return new class extends Migration {
                 $table->nullableMorphs('updater', 'idx_updater');
                 $table->timestamps();
                 // 一个交易下  商户退款单号是唯一的
-                $table->unique(['trade_id', 'merchant_refund_no'], 'uk_trade_merchant_refund_no');
+                $table->unique(['trade_no', 'merchant_refund_no'], 'uk_trade_merchant_refund_no');
                 $table->comment('支付-退款单');
             });
     }
