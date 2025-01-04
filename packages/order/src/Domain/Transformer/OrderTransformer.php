@@ -14,7 +14,7 @@ class OrderTransformer
 {
     public function transform(OrderData $orderData, ?Order $order = null) : Order
     {
-        $order                       = $order ?? Order::newModel();
+        $order                       = $order ?? Order::make();
         $order->seller               = $orderData->seller;
         $order->buyer                = $orderData->buyer;
         $order->guide                = $orderData->guide;
