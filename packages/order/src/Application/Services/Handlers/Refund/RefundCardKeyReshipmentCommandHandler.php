@@ -26,7 +26,7 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
 
         try {
             $refund              = $this->find($command->id);
-            $orderProductCardKey = OrderCardKey::newModel();
+            $orderProductCardKey = OrderCardKey::make();
 
 
 
