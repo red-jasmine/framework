@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package 转帐{
+
+class 批量转账{
+    + 批次号
+    + List<转账列表>
+}
+
+class 转账 {
+    - 收款方
+    - 付款方
+    - 渠道
+    - 渠道应用
+    - 转账金额
+    - 转账时间
+    - 转账状态
+}
+
+
+}
+@enduml
