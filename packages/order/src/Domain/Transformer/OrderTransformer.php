@@ -113,7 +113,7 @@ class OrderTransformer
 
     public function transformAddress(OrderAddressData $orderAddressData, ?OrderAddress $orderAddress = null) : OrderAddress
     {
-        $orderAddress = $orderAddress ?? OrderAddress::newModel();
+        $orderAddress = $orderAddress ?? OrderAddress::make();
 
         $orderAddress->fill($orderAddressData->toArray());
         return $orderAddress;

@@ -28,6 +28,9 @@ class OrderCardKey extends Model
 
     use SoftDeletes;
 
+
+
+
     public static function newModel() : static
     {
         $model     = new static();

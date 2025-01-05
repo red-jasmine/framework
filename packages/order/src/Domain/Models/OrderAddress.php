@@ -23,18 +23,11 @@ class OrderAddress extends Model
     use HasOperator;
 
 
-    public static function newModel() : static
-    {
-        $model = new static();
-
-        return $model;
-    }
-
     public $incrementing = false;
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_addresses';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses';
     }
 
 
