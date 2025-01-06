@@ -18,8 +18,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('isv_id')->nullable()->comment('服务商ID');
             $table->string('status')->comment(MerchantStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator','idx_creator');
-            $table->nullableMorphs('updater','idx_updater');
+            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('支付商户');

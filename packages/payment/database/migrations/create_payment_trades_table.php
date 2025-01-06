@@ -79,8 +79,10 @@ return new class extends Migration {
                 $table->timestamp('settle_time')->nullable()->comment('结算时间');
                 $table->timestamp('notify_time')->nullable()->comment('异步通知时间');
 
-                $table->nullableMorphs('creator', 'idx_creator');
-                $table->nullableMorphs('updater', 'idx_updater');
+                $table->string('creator_type', 32)->nullable();
+                $table->string('creator_id', 64)->nullable();
+                $table->string('updater_type', 32)->nullable();
+                $table->string('updater_id', 64)->nullable();
                 $table->timestamps();
                 $table->comment('支付-支付单');
 

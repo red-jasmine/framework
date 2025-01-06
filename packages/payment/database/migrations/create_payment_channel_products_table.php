@@ -17,8 +17,10 @@ return new class extends Migration {
             $table->string('remarks')->nullable()->comment('备注');
             $table->string('gateway')->nullable()->comment('支付网关名称');
             $table->json('extensions')->nullable()->comment('扩展');
-            $table->nullableMorphs('creator', 'idx_creator');
-            $table->nullableMorphs('updater', 'idx_updater');
+            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->unique([ 'channel_code', 'code' ], 'uk_channel_code');

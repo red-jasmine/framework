@@ -34,8 +34,10 @@ return new class extends Migration {
                 $table->bigInteger('amount_value')->default(0)->comment('金额值');
                 $table->string('transfer_status')->comment('转账状态');
 
-                $table->nullableMorphs('creator', 'idx_creator');
-                $table->nullableMorphs('updater', 'idx_updater');
+                $table->string('creator_type', 32)->nullable();
+                $table->string('creator_id', 64)->nullable();
+                $table->string('updater_type', 32)->nullable();
+                $table->string('updater_id', 64)->nullable();
                 $table->timestamps();
                 $table->comment('支付-转账');
             });
