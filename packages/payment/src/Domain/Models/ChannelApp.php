@@ -33,7 +33,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
     }
 
 
@@ -54,6 +54,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
         return [
             'sign_method'                 => SignMethodEnum::class,
             'status'                      => ChannelAppStatusEnum::class,
+            'is_sandbox'                  => 'boolean',
             'encrypt_key'                 => 'encrypted',
             'channel_public_key'          => 'encrypted',
             'channel_app_public_key'      => 'encrypted',
@@ -111,7 +112,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     {
         return $this->belongsToMany(
             ChannelProduct::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_app_products',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_app_products',
             'payment_channel_app_id',
             'payment_channel_product_id',
         )->withTimestamps();

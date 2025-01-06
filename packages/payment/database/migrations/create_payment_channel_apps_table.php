@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->morphs('owner');
             $table->string('channel_code')->comment('渠道编码');
+            $table->boolean('is_sandbox')->default(false)->comment('是否沙箱');
             $table->string('channel_app_id')->comment('渠道应用ID');
             $table->string('app_name')->nullable()->comment('应用名称');
             $table->string('merchant_name')->nullable()->comment('商户名称');

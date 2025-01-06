@@ -27,6 +27,11 @@ class ChannelAppData extends Data
     public string $channelAppPublicKey;
 
     public string $channelAppPrivateKey;
+    /**
+     * 是否沙箱
+     * @var bool
+     */
+    public bool $isSandbox = false;
 
 
     public ?string $remarks = null;
