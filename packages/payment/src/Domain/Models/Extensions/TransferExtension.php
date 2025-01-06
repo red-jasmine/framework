@@ -10,27 +10,20 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
-class TradeExtension extends Model
+class TransferExtension extends Model
 {
     public $incrementing = false;
 
     use HasSnowflakeId;
 
-
     protected function casts() : array
     {
-        return
-            [
-                'good_details'     => GoodDetailCollectionCast::class,
-                'pass_back_params' => 'array',
-                'device'           => 'array',
-                'client'           => 'array',
-            ];
+        return [];
     }
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trade_extensions';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfer_extensions';
     }
 
     public function trade() : BelongsTo

@@ -154,6 +154,19 @@ beforeEach(function () {
                 ],
             ],
         ],
+        [
+            'channel_code' => 'alipay',
+            'code'         => 'TRANS_ACCOUNT_NO_PWD',
+            'name'         => '转账',
+            'gateway'      => 'Alipay_AopPage',
+            'modes'        => [
+                [
+                    'scene_code'  => SceneEnum::API,
+                    'method_code' => 'alipay'
+                ],
+            ],
+        ],
+
 
     ];
     $this->channelProducts = [];

@@ -8,10 +8,11 @@ use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
 use RedJasmine\Payment\Domain\Data\MethodData;
-use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
-use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
@@ -92,6 +93,7 @@ test('can create channel product', function (Channel $channel) {
 
     $command              = new ChannelProductData();
     $command->channelCode = $channel->code;
+    $command->type        = ChannelProductTypeEnum::PAYMENT;
     $command->code        = fake()->word();
     $command->name        = fake()->word();
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -46,12 +47,13 @@ class ChannelProduct extends Model
     {
         return [
             'status' => ChannelProductStatusEnum::class,
+            'type'   => ChannelProductTypeEnum::class,
         ];
     }
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_products';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_products';
     }
 
     public function channel() : BelongsTo
@@ -61,7 +63,8 @@ class ChannelProduct extends Model
 
 
     /**
-     * @param ChannelProductModeData[] $modes
+     * @param  ChannelProductModeData[]  $modes
+     *
      * @return $this
      */
     public function setModes(array $modes) : static

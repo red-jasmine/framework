@@ -11,7 +11,7 @@ return new class extends Migration {
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('表ID');
                 $table->string('transfer_no')->unique()->comment('转账号');
-                $table->string('batch_no')->comment('批次号');
+                $table->string('batch_no')->nullable()->comment('批次号');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
                 $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
                 // 渠道信息

@@ -3,10 +3,13 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
 use RedJasmine\Support\Data\Data;
 
 class ChannelProductData extends Data
 {
+
+    public ChannelProductTypeEnum $type = ChannelProductTypeEnum::PAYMENT;
 
     public string $channelCode;
 

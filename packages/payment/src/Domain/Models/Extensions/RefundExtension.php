@@ -17,12 +17,15 @@ class RefundExtension extends Model
     public $incrementing = false;
     use HasSnowflakeId;
 
-    protected $casts = [
-        'good_details'     => GoodDetailCollectionCast::class,
-        'pass_back_params' => 'array',
-        'device'           => 'array',
-        'client'           => 'array',
-    ];
+    protected function casts() : array
+    {
+        return [
+            'good_details'     => GoodDetailCollectionCast::class,
+            'pass_back_params' => 'array',
+            'device'           => 'array',
+            'client'           => 'array',
+        ];
+    }
 
     public function getTable() : string
     {

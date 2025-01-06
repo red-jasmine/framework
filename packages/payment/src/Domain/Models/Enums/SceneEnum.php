@@ -26,6 +26,8 @@ enum SceneEnum: string
 
     case PROTOCOL = 'protocol';
 
+    case API = 'api';
+
 
     public static function labels() : array
     {
@@ -38,6 +40,7 @@ enum SceneEnum: string
             self::QRCODE->value   => __('red-jasmine-payment::common.enums.method.qrcode'),
             self::FACE->value     => __('red-jasmine-payment::common.enums.method.face'),
             self::PROTOCOL->value => __('red-jasmine-payment::common.enums.method.protocol'),
+            self::API->value      => __('red-jasmine-payment::common.enums.method.api'),
 
         ];
     }

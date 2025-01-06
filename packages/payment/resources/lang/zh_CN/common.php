@@ -2,11 +2,8 @@
 
 
 return [
-
-
+    
     'enums' => [
-
-
         'scene' => [
             'web'      => '电脑网站支付',
             'wap'      => '手机网站支付',
@@ -15,6 +12,7 @@ return [
             'qrcode'   => '扫码支付',
             'face'     => '刷脸支付',
             'protocol' => '协议支付',
+            'api'      => 'API',
         ],
 
     ],
