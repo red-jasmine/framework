@@ -188,7 +188,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                     $paymentTrigger->content = $response->getRedirectUrl();
                 }
                 if ($response instanceof AopTradeAppPayResponse) {
-                    $paymentTrigger->type = PaymentTriggerTypeEnum::IN_APP;
+                    $paymentTrigger->type = PaymentTriggerTypeEnum::APP;
 
                     $paymentTrigger->content = $response->getOrderString();
                 }
