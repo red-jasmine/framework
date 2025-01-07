@@ -68,6 +68,13 @@ class AlipayGatewayDrive implements GatewayDriveInterface
     }
 
 
+    /**
+     * @param  GatewayInterface  $gateway
+     * @param  ChannelApp  $channelApp
+     *
+     * @return GatewayInterface
+     * @throws InvalidRequestException
+     */
     protected function initChannelApp(GatewayInterface $gateway, ChannelApp $channelApp) : GatewayInterface
     {
         /**
@@ -79,7 +86,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $gateway->setPrivateKey($channelApp->channel_app_private_key);
         $gateway->setNotifyUrl(PaymentUrl::notifyUrl($channelApp));
 
-
+        if ($channelApp->isSandbox()) {
+            $gateway->sandbox();
+        }
         switch ($channelApp->sign_method) {
             case SignMethodEnum::Secret:
                 if (blank($channelApp->channel_public_key)) {
