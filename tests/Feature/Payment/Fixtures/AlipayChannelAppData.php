@@ -1,6 +1,6 @@
 <?php
 
-namespace Fixtures;
+namespace RedJasmine\Tests\Feature\Payment\Fixtures;
 
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 
@@ -165,9 +165,10 @@ DOC;
 
 
         return [
-            'app_id'                      => '9021000140685250',
-            'merchant_id'                 => '2088721045098969',
-            'name'                        => 'sandbox 默认应用:2088721045098969',
+            'channel_app_id'              => '9021000140685250',
+            'channel_merchant_id'         => '2088721045098969',
+            'app_name'                    => 'sandbox 默认应用:2088721045098969',
+            'merchant_name'               => '商户',
             'is_sandbox'                  => true,
             'channel_code'                => 'alipay',
             'sign_method'                 => SignMethodEnum::Cert->value,

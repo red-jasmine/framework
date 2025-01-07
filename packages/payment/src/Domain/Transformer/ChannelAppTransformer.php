@@ -17,6 +17,7 @@ class ChannelAppTransformer implements TransformerInterface
         $model->channel_merchant_id     = $data->channelMerchantId;
         $model->channel_app_id          = $data->channelAppId;
         $model->is_sandbox              = $data->isSandbox;
+        $model->sign_type               = $data->signType;
         $model->channel_public_key      = $data->channelPublicKey;
         $model->channel_app_public_key  = $data->channelAppPublicKey;
         $model->channel_app_private_key = $data->channelAppPrivateKey;

@@ -33,19 +33,30 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps';
     }
 
 
     protected $fillable = [
         'owner_type',
         'owner_id',
-        'channel_code',
-        'channel_merchant_id',
         'channel_app_id',
+        'channel_merchant_id',
+        'app_name',
+        'merchant_name',
+        'is_sandbox',
+        'channel_code',
+        'sign_method',
+        'sign_type',
+        'encrypt_type',
+        'encrypt_key',
         'channel_public_key',
         'channel_app_public_key',
         'channel_app_private_key',
+        'channel_app_public_key_cert',
+        'channel_root_cert',
+        'channel_public_key_cert',
+        'channel_app_public_key_cert',
         'status',
     ];
 
@@ -112,7 +123,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     {
         return $this->belongsToMany(
             ChannelProduct::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_app_products',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_app_products',
             'payment_channel_app_id',
             'payment_channel_product_id',
         )->withTimestamps();
@@ -123,8 +134,17 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
      * 是否可用
      * @return bool
      */
-    public function isAvailable()
+    public function isAvailable() : bool
     {
         return $this->status === ChannelAppStatusEnum::ENABLE;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isSandbox() : bool
+    {
+        return $this->is_sandbox;
     }
 }

@@ -22,6 +22,9 @@ class ChannelAppData extends Data
     public ?string $channelMerchantId;
     public ?string $appName      = null;
     public ?string $merchantName = null;
+
+
+    public string  $signType = 'RSA2';
     public string  $channelPublicKey;
 
     public string $channelAppPublicKey;
