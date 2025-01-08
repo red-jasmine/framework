@@ -58,7 +58,6 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
     {
 
 
-
     }
 
     public function packageBooted() : void
@@ -78,7 +77,6 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_channel_apps_products_table',
 
 
-
             'create_payment_providers_table',
             'create_payment_merchants_table',
             'create_payment_merchant_apps_table',
@@ -90,22 +88,24 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_refunds_table',
             'create_payment_refund_extensions_table',
             'create_payment_transfers_table',
-
+            'create_payment_transfer_extensions_table',
 
             'create_payment_notifies_table',
 
         ];
     }
+
     /**
      * @return array<string>
      */
-    protected function getRoutes(): array
+    protected function getRoutes() : array
     {
         return [
             'notify',
             'payer'
         ];
     }
+
     public function getCommands() : array
     {
         return [];

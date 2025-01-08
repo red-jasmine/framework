@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers',
             function (Blueprint $table) {
-                $table->unsignedBigInteger('id')->primary()->comment('表ID');
+                $table->unsignedBigInteger('id')->primary();
                 $table->string('transfer_no')->unique()->comment('转账号');
                 $table->string('batch_no')->nullable()->comment('批次号');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');

@@ -239,10 +239,10 @@ test('create a transfer', function () {
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
     $command->subject            = fake()->word();
     $command->payee              = TransferPayee::from([
-        'identityType' => 'ALIPAY_LOGON_ID',
+        'identity_type' => 'login_id',
         'identityId'   => 'sildsg4556@sandbox.com',
         'certNo'       => '933396192809243496',
-        'certType'     => 'IDENTITY_CARD',
+        'certType'     => 'ID_CARD',
         'name'         => 'sildsg4556',
     ]);
 

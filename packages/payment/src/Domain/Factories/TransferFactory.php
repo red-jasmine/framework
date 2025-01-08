@@ -19,6 +19,9 @@ class TransferFactory
         $transfer->merchant_app_id = $command->merchantAppId;
         $transfer->payee           = $command->payee;
         $transfer->amount          = $command->amount;
+        $transfer->scene_code      = $command->sceneCode;
+        $transfer->subject         = $command->subject;
+        $transfer->description     = $command->description ?? null;
 
         $transfer->transfer_status = TransferStatusEnum::PRE;
         return $transfer;

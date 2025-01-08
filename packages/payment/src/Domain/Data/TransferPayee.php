@@ -2,7 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
+use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\IdentityTypeEnum;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 /**
  * TransferPayee 类用于表示转账收款方的信息
@@ -10,11 +14,8 @@ use RedJasmine\Support\Data\Data;
 class TransferPayee extends Data
 {
 
-    /**
-     * 收款方身份类型
-     * @var string
-     */
-    public string $identityType;
+    #[WithCast(EnumCast::class, IdentityTypeEnum::class)]
+    public IdentityTypeEnum $identityType;
 
     /**
      * 收款方身份ID
@@ -28,11 +29,8 @@ class TransferPayee extends Data
      */
     public ?string $name;
 
-    /**
-     * 收款方证件类型（可选）
-     * @var string|null
-     */
-    public ?string $certType;
+    #[WithCast(EnumCast::class, CertTypeEnum::class)]
+    public ?CertTypeEnum $certType;
 
     /**
      * 收款方证件号码（可选）
