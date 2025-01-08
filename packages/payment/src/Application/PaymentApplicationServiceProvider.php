@@ -32,6 +32,8 @@ use RedJasmine\Payment\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TransferReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelProductReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelReadRepository;
@@ -42,6 +44,7 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MethodReadRepositor
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\NotifyReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TransferReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
@@ -52,6 +55,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MethodRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\NotifyRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\RefundRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TransferRepository;
 
 class PaymentApplicationServiceProvider extends ServiceProvider
 {
@@ -86,6 +90,10 @@ class PaymentApplicationServiceProvider extends ServiceProvider
             MerchantChannelAppPermissionReadRepositoryInterface::class,
             MerchantChannelAppReadRepository::class
         );
+
+
+        $this->app->bind(TransferRepositoryInterface::class, TransferRepository::class);
+        $this->app->bind(TransferReadRepositoryInterface::class, TransferReadRepository::class);
 
         $this->app->bind(TradeRepositoryInterface::class, TradeRepository::class);
         $this->app->bind(TradeReadRepositoryInterface::class, TradeReadRepository::class);

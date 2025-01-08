@@ -12,6 +12,6 @@ interface TradeRepositoryInterface extends RepositoryInterface
 {
 
 
-    public function findByNo(string $tradeNo) : ?Trade;
+    public function findByNo(string $no) : ?Trade;
 
 }
