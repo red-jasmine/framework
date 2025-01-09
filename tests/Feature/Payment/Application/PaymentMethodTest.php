@@ -1,7 +1,7 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\MethodCommandService;
+use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\MethodData;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 

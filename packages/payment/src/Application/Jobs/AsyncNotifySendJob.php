@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use RedJasmine\Payment\Application\Commands\Notify\NotifySendCommand;
-use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
+use RedJasmine\Payment\Application\Services\AsyncNotify\AsyncNotifyCommandService;
+use RedJasmine\Payment\Application\Services\AsyncNotify\Commands\NotifySendCommand;
 
 class AsyncNotifySendJob implements ShouldQueue
 {

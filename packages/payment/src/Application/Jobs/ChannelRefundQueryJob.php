@@ -7,9 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use RedJasmine\Payment\Application\Commands\PaymentChannel\ChannelRefundCreateCommand;
-use RedJasmine\Payment\Application\Commands\PaymentChannel\ChannelRefundQueryCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannelHandlerService;
+use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefundQueryCommand;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
 use Throwable;
 
 class ChannelRefundQueryJob implements ShouldQueue

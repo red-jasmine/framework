@@ -4,13 +4,11 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Payment\Application\Services\MerchantCommandService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use Throwable;
-use function Livewire\of;
 
 class CreateCommandHandler extends CommandHandler
 {

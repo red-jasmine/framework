@@ -1,9 +1,9 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\ChannelCommandService;
-use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\MethodCommandService;
+use RedJasmine\Payment\Application\Services\Channel\ChannelCommandService;
+use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
+use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Application\Listeners;
 
-use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
+use RedJasmine\Payment\Application\Services\AsyncNotify\AsyncNotifyCommandService;
 use RedJasmine\Payment\Domain\Contracts\AsyncNotifyInterface;
 
 class AsyncNotifyListener

@@ -1,15 +1,14 @@
 <?php
 
-use RedJasmine\Payment\Application\Commands\ChannelApp\ChannelAppCreateCommand;
-use RedJasmine\Payment\Application\Commands\Merchant\MerchantCreateCommand;
-use RedJasmine\Payment\Application\Commands\Merchant\MerchantSetStatusCommand;
-use RedJasmine\Payment\Application\Commands\Merchant\MerchantUpdateCommand;
-use RedJasmine\Payment\Application\Services\ChannelAppCommandService;
-use RedJasmine\Payment\Application\Services\ChannelCommandService;
-use RedJasmine\Payment\Application\Services\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
-use RedJasmine\Payment\Application\Services\MerchantCommandService;
-use RedJasmine\Payment\Application\Services\MethodCommandService;
+use RedJasmine\Payment\Application\Services\Channel\ChannelCommandService;
+use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
+use RedJasmine\Payment\Application\Services\ChannelApp\Commands\ChannelAppCreateCommand;
+use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
+use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantCreateCommand;
+use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantSetStatusCommand;
+use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantUpdateCommand;
+use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
+use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;

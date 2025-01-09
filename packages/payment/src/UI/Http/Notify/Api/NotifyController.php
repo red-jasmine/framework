@@ -4,8 +4,8 @@ namespace RedJasmine\Payment\UI\Http\Notify\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use RedJasmine\Payment\Application\Commands\Notify\ChannelNotifyTradeCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannelHandlerService;
+use RedJasmine\Payment\Application\Services\AsyncNotify\Commands\ChannelNotifyTradeCommand;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 
 class NotifyController extends Controller

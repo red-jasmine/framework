@@ -29,6 +29,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Tests\Feature\Payment\Fixtures\AlipayChannelAppData;
 
 beforeEach(function () {
     // 数据准备
@@ -154,6 +155,19 @@ beforeEach(function () {
                 ],
             ],
         ],
+        [
+            'channel_code' => 'alipay',
+            'code'         => 'TRANS_ACCOUNT_NO_PWD',
+            'name'         => '转账',
+            'gateway'      => 'Alipay_AopPage',
+            'modes'        => [
+                [
+                    'scene_code'  => SceneEnum::API,
+                    'method_code' => 'alipay'
+                ],
+            ],
+        ],
+
 
     ];
     $this->channelProducts = [];
@@ -169,30 +183,26 @@ beforeEach(function () {
 
         foreach ($productData['modes'] as $mode) {
             ChannelProductMode::firstOrCreate([
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ], [
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ]);
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ], [
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ]);
         }
     }
 
 
     $channelAppsData   = [
-        [
-            'owner_type'     => 'user',
-            'owner_id'       => 1,
-            'channel_code'   => 'alipay',
-            'channel_app_id' => '2021003187696362',
-            'name'           => '测试应用1',
-        ]
+        AlipayChannelAppData::get()
     ];
     $this->channelApps = [];
     foreach ($channelAppsData as $channelAppData) {
-        $this->channelApps[] = $channelApp = ChannelApp::firstOrCreate(
+        $channelAppData['owner_type'] = 'user';
+        $channelAppData['owner_id']   = 1;
+        $this->channelApps[]          = $channelApp = ChannelApp::updateOrCreate(
             \Illuminate\Support\Arr::only($channelAppData, [
                 'owner_type',
                 'owner_id',
@@ -205,12 +215,12 @@ beforeEach(function () {
         foreach ($this->channelProducts as $channelProduct) {
             if ($channelApp->channel_code === $channelProduct->channel_code) {
                 ChannelAppProduct::firstOrCreate([
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ], [
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ]);
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ], [
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ]);
             }
         }
     }
@@ -227,8 +237,6 @@ beforeEach(function () {
 
 });
 
-
-
 test('pre create a payment trade', function () {
 
 
@@ -241,29 +249,28 @@ test('pre create a payment trade', function () {
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';
     $command->description          = '支付描述';
-    $command->notifyUrl            = fake()->url();
     $command->goodDetails          = GoodDetailData::collect([
-        [
-            'goods_name' => fake()->word(),
-            'price'      => [
-                'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
-            ],
-            'quantity'   => fake()->randomNumber(1, 10),
-            'goods_id'   => fake()->numerify('goods-id-########'),
-            'category'   => fake()->word(),
-        ],
-        [
-            'goods_name' => fake()->word(),
-            'price'      => [
-                'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
-            ],
-            'quantity'   => fake()->randomNumber(1, 10),
-            'goods_id'   => fake()->numerify('goods-id-########'),
-            'category'   => fake()->word(),
-        ],
-    ]);
+                                                                 [
+                                                                     'goods_name' => fake()->word(),
+                                                                     'price'      => [
+                                                                         'currency' => 'CNY',
+                                                                         'value'    => fake()->randomNumber(2, 90),
+                                                                     ],
+                                                                     'quantity'   => fake()->randomNumber(1, 10),
+                                                                     'goods_id'   => fake()->numerify('goods-id-########'),
+                                                                     'category'   => fake()->word(),
+                                                                 ],
+                                                                 [
+                                                                     'goods_name' => fake()->word(),
+                                                                     'price'      => [
+                                                                         'currency' => 'CNY',
+                                                                         'value'    => fake()->randomNumber(2, 90),
+                                                                     ],
+                                                                     'quantity'   => fake()->randomNumber(1, 10),
+                                                                     'goods_id'   => fake()->numerify('goods-id-########'),
+                                                                     'category'   => fake()->word(),
+                                                                 ],
+                                                             ]);
 
 
     $trade = $this->tradeCommandService->preCreate($command);
@@ -299,23 +306,23 @@ test('can get trade pay methods', function (Trade $trade) {
     $command->scene  = SceneEnum::APP;
     $command->method = 'alipay';
     $command->device = Device::from([
-        'id'         => fake()->uuid(),
-        'model'      => fake()->uuid(),
-        'os'         => fake()->randomElement(['ios', 'android']),
-        'brand'      => fake()->randomElement(['apple', 'huawei', 'xiaomi']),
-        'version'    => fake()->randomElement(['9.0.0', '10.0.0', '11.0.0']),
-        'token'      => fake()->uuid(),
-        'language'   => fake()->randomElement(['zh-CN', 'en-US']),
-        'extensions' => '{sss: "sss"}'
-    ]);
+                                        'id'         => fake()->uuid(),
+                                        'model'      => fake()->uuid(),
+                                        'os'         => fake()->randomElement(['ios', 'android']),
+                                        'brand'      => fake()->randomElement(['apple', 'huawei', 'xiaomi']),
+                                        'version'    => fake()->randomElement(['9.0.0', '10.0.0', '11.0.0']),
+                                        'token'      => fake()->uuid(),
+                                        'language'   => fake()->randomElement(['zh-CN', 'en-US']),
+                                        'extensions' => '{sss: "sss"}'
+                                    ]);
 
     $command->client = Client::from([
-        'name'    => fake()->randomElement(['alipay', 'wechat']),
-        'type'    => fake()->randomElement(ClientTypeEnum::values()),
-        'ip'      => fake()->ipv4(),
-        'version' => fake()->numerify('v#.##.###'),
-        'agent'   => fake()->userAgent(),
-    ]);
+                                        'name'    => fake()->randomElement(['alipay', 'wechat']),
+                                        'type'    => fake()->randomElement(ClientTypeEnum::values()),
+                                        'ip'      => fake()->ipv4(),
+                                        'version' => fake()->numerify('v#.##.###'),
+                                        'agent'   => fake()->userAgent(),
+                                    ]);
 
     $methods = $this->tradeCommandService->ready($command);
 
@@ -334,26 +341,25 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $command->scene  = SceneEnum::WEB;
     $command->method = 'alipay';
     $command->device = Device::from([
-        'id'         => fake()->uuid(),
-        'model'      => fake()->uuid(),
-        'os'         => fake()->randomElement(['ios', 'android']),
-        'brand'      => fake()->randomElement(['apple', 'huawei', 'xiaomi']),
-        'version'    => fake()->randomElement(['9.0.0', '10.0.0', '11.0.0']),
-        'token'      => fake()->uuid(),
-        'language'   => fake()->randomElement(['zh-CN', 'en-US']),
-        'extensions' => json_encode(['ss' => 'ss'], JSON_THROW_ON_ERROR)
-    ]);
+                                        'id'         => fake()->uuid(),
+                                        'model'      => fake()->uuid(),
+                                        'os'         => fake()->randomElement(['ios', 'android']),
+                                        'brand'      => fake()->randomElement(['apple', 'huawei', 'xiaomi']),
+                                        'version'    => fake()->randomElement(['9.0.0', '10.0.0', '11.0.0']),
+                                        'token'      => fake()->uuid(),
+                                        'language'   => fake()->randomElement(['zh-CN', 'en-US']),
+                                        'extensions' => json_encode(['ss' => 'ss'], JSON_THROW_ON_ERROR)
+                                    ]);
     $command->client = Client::from([
-        'name'    => fake()->randomElement(['alipay', 'wechat']),
-        'type'    => fake()->randomElement(ClientTypeEnum::values()),
-        'ip'      => fake()->ipv4(),
-        'version' => fake()->numerify('v#.##.###'),
-        'agent'   => fake()->userAgent(),
-    ]);
+                                        'name'    => fake()->randomElement(['alipay', 'wechat']),
+                                        'type'    => fake()->randomElement(ClientTypeEnum::values()),
+                                        'ip'      => fake()->ipv4(),
+                                        'version' => fake()->numerify('v#.##.###'),
+                                        'agent'   => fake()->userAgent(),
+                                    ]);
 
 
     $channelTrade = $this->tradeCommandService->paying($command);
-
 
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
@@ -385,12 +391,12 @@ test('can paid a trade', function (Trade $trade) {
     $channelTradeData->paidTime          = now();
     $channelTradeData->paymentAmount     = $trade->amount;
     $channelTradeData->payer             = Payer::from([
-        'type'    => fake()->randomElement(['private', 'company']),
-        'name'    => fake()->name(),
-        'account' => fake()->numerify('account-##########'),
-        'openId'  => fake()->uuid(),
-        'userId'  => fake()->uuid(),
-    ]);
+                                                           'type'    => fake()->randomElement(['private', 'company']),
+                                                           'name'    => fake()->name(),
+                                                           'account' => fake()->numerify('account-##########'),
+                                                           'openId'  => fake()->uuid(),
+                                                           'userId'  => fake()->uuid(),
+                                                       ]);
 
 
     $result = $this->tradeCommandService->paid($channelTradeData);
@@ -410,6 +416,3 @@ test('can paid a trade', function (Trade $trade) {
 
 
 })->depends('can paying a trade');
-
-
-

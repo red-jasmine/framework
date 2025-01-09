@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Application\Listeners;
 
 use RedJasmine\Payment\Application\Jobs\AsyncNotifySendJob;
-use RedJasmine\Payment\Application\Services\AsyncNotifyCommandService;
+use RedJasmine\Payment\Application\Services\AsyncNotify\AsyncNotifyCommandService;
 use RedJasmine\Payment\Domain\Events\Notifies\NotifyCreateEvent;
 
 class NotifyListener

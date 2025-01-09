@@ -1,10 +1,10 @@
 <?php
 
-use RedJasmine\Payment\Application\Commands\Merchant\MerchantCreateCommand;
-use RedJasmine\Payment\Application\Commands\MerchantApp\MerchantAppCreateCommand;
-use RedJasmine\Payment\Application\Commands\MerchantApp\MerchantAppUpdateCommand;
-use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
-use RedJasmine\Payment\Application\Services\MerchantCommandService;
+use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantCreateCommand;
+use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
+use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppCreateCommand;
+use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppUpdateCommand;
+use RedJasmine\Payment\Application\Services\MerchantApp\MerchantAppCommandService;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\MerchantApp;

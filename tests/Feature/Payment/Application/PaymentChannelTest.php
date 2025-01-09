@@ -1,7 +1,7 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\ChannelCommandService;
+use RedJasmine\Payment\Application\Services\Channel\ChannelCommandService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
