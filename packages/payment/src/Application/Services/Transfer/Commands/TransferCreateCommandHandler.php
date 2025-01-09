@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Transfers;
+namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
-use RedJasmine\Payment\Application\Commands\Transfer\TransferCreateCommand;
-use RedJasmine\Payment\Application\Services\TransferCommandService;
+use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
 use RedJasmine\Payment\Domain\Factories\TransferFactory;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\Routing\TransferRoutingService;
@@ -32,6 +31,7 @@ class TransferCreateCommandHandler extends CommandHandler
             $transfer->merchant_id     = $merchantApp->merchant_id;
             $transfer->merchant_app_id = $merchantApp->id;
             // 设置渠道应用
+            $transfer->channel_app_id = $command->channelAppId;
             $transfer->channel_app_id = $command->channelAppId;
             // 路由转账产品 TODO
             $this->transferRoutingService->getChannelApp($transfer, $merchantApp);

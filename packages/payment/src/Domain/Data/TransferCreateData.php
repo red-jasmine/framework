@@ -22,12 +22,10 @@ class TransferCreateData extends Data
 
     public TransferPayee $payee;
 
-
     /**
      * @var string
      */
-    public string $channelCode;
-
+    public string $methodCode;
     /**
      * 渠道应用ID
      * @var ?string

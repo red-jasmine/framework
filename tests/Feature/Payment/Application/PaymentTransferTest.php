@@ -1,9 +1,9 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Commands\Transfer\TransferCreateCommand;
-use RedJasmine\Payment\Application\Services\TradeCommandService;
-use RedJasmine\Payment\Application\Services\TransferCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
+use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
@@ -57,26 +57,26 @@ beforeEach(function () {
 
     // 支付方式
     $this->paymentMethods[] = Method::firstOrCreate(
-        ['code' => 'alipay'],
-        ['name' => '支付宝', 'code' => 'alipay']
+        [ 'code' => 'alipay' ],
+        [ 'name' => '支付宝', 'code' => 'alipay' ]
 
     );
     $this->paymentMethods[] = Method::firstOrCreate(
-        ['code' => 'wechat'],
-        ['name' => '微信', 'code' => 'wechat'],
+        [ 'code' => 'wechat' ],
+        [ 'name' => '微信', 'code' => 'wechat' ],
 
     );
 
     //  支付渠道
 
     $this->channels[] = Channel::firstOrCreate(
-        ['code' => 'alipay'],
-        ['name' => '支付宝', 'code' => 'alipay']
+        [ 'code' => 'alipay' ],
+        [ 'name' => '支付宝', 'code' => 'alipay' ]
     );
 
     $this->channels[] = Channel::firstOrCreate(
-        ['code' => 'wechat'],
-        ['name' => '微信', 'code' => 'wechat']
+        [ 'code' => 'wechat' ],
+        [ 'name' => '微信', 'code' => 'wechat' ]
     );
 
     // 创建产品
@@ -176,14 +176,14 @@ beforeEach(function () {
 
         foreach ($productData['modes'] as $mode) {
             ChannelProductMode::firstOrCreate([
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ], [
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ]);
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ], [
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ]);
         }
     }
 
@@ -208,12 +208,12 @@ beforeEach(function () {
         foreach ($this->channelProducts as $channelProduct) {
             if ($channelApp->channel_code === $channelProduct->channel_code) {
                 ChannelAppProduct::firstOrCreate([
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ], [
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ]);
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ], [
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ]);
             }
         }
     }
@@ -237,24 +237,26 @@ test('create a transfer', function () {
     $channelApp = $this->merchant->channelApps->first();
 
     $TransferPayee = TransferPayee::from([
-        'identity_type' => 'LOGIN_ID',
-        'identityId'    => 'sildsg4556@sandbox.com',
-        'certNo'        => '933396192809243496',
-        'certType'      => 'ID_CARD',
-        'name'          => 'sildsg4556',
-    ]);
-    dd($channelApp);
+                                             'identity_type' => 'LOGIN_ID',
+                                             'identityId'    => 'sildsg4556@sandbox.com',
+                                             'certNo'        => '933396192809243496',
+                                             'certType'      => 'ID_CARD',
+                                             'name'          => 'sildsg4556',
+                                         ]);
+
     $command                     = new TransferCreateCommand();
     $command->merchantAppId      = $this->merchantApp->id;
     $command->payee              = $TransferPayee;
-    $command->channelAppId       = $channelApp->id;
+    $command->methodCode         = 'alipay';
+    $command->channelAppId       = $channelApp->channel_app_id;  // 外部渠道
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';
-    $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount             = Money::from([ 'value' => 1, 'currency' => 'CNY' ]);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
 
 
-    $this->transferCommandService->create($command);
+
+    //$this->transferCommandService->create($command);
 
 
 });

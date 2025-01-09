@@ -2,11 +2,11 @@
 
 
 use Illuminate\Support\Collection;
-use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommand;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
+use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Channel;

@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Commands\Trade;
+namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
-use RedJasmine\Support\Data\Data;
 
 class TradePaidCommand extends ChannelTradeData
 {

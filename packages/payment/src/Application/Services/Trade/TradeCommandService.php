@@ -1,15 +1,12 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services;
+namespace RedJasmine\Payment\Application\Services\Trade;
 
-use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
-use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePaidCommandHandler;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePayingCommandHandler;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePreCreateCommandHandler;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradeReadyCommandHandler;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommandHandler;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommandHandler;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommandHandler;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
@@ -19,14 +16,14 @@ use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
- * @see  TradePreCreateCommandHandler::handle()
- * @method Trade preCreate(TradePreCreateCommand $command)
- * @see  TradeReadyCommandHandler::handle()
+ * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommandHandler::handle()
+ * @method Trade preCreate(Commands\TradePreCreateCommand $command)
+ * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommandHandler::handle()
  * @method Trade ready(TradeReadyCommand $command)
- * @see  TradePayingCommandHandler::handle()
- * @method ChannelTradeData paying(TradePayingCommand $command)
+ * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommandHandler::handle()
+ * @method ChannelTradeData paying(Commands\TradePayingCommand $command)
  * @see  TradePaidCommandHandler::handle()
- * @method bool paid(TradePaidCommand $command)
+ * @method bool paid(Commands\TradePaidCommand $command)
  */
 class TradeCommandService extends ApplicationCommandService
 {

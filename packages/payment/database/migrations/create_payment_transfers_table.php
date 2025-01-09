@@ -3,11 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers',
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('transfer_no')->unique()->comment('转账号');
@@ -21,12 +22,14 @@ return new class extends Migration {
                 $table->bigInteger('amount_value')->default(0)->comment('金额值');
                 $table->string('transfer_status')->comment('转账状态');
                 // 渠道信息
+                $table->string('method_code')->comment('支付方式');
+                $table->string('scene_code')->comment(TransferSceneEnum::comments('转账场景'));
                 $table->string('channel_batch_no')->nullable()->comment('渠道批次号');
                 $table->unsignedBigInteger('payment_channel_app_id')->nullable()->comment('系统内渠道应用ID');
                 $table->string('channel_code')->nullable()->comment('支付渠道');
                 $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
                 $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
-                $table->string('scene_code')->comment('场景');
+
 
                 // 收款方
                 $table->string('payee_identity_type')->nullable()->comment('收款方身份标识类型');
@@ -47,6 +50,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers');
     }
 };

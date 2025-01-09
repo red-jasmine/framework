@@ -17,6 +17,7 @@ class TransferFactory
     {
         $transfer                  = Transfer::make();
         $transfer->merchant_app_id = $command->merchantAppId;
+        $transfer->method_code = $command->methodCode;
         $transfer->payee           = $command->payee;
         $transfer->amount          = $command->amount;
         $transfer->scene_code      = $command->sceneCode;

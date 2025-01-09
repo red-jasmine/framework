@@ -254,7 +254,7 @@ test('can authorize channel app', function ($apps, $merchant) {
         $command               = new MerchantChannelAppPermissionData();
         $command->channelAppId = $app->id;
         $command->merchantId   = $merchant->id;
-        $service               = app(MerchantAppCommandService::class);
+        $service               = app(ChannelAppCommandService::class);
         $service->authorize($command);
 
 
@@ -272,7 +272,7 @@ test('can authorize channel app', function ($apps, $merchant) {
         $command->channelAppId = $app->id;
         $command->merchantId   = $merchant->id;
         $command->status       = PermissionStatusEnum::DISABLED;
-        $service               = app(MerchantAppCommandService::class);
+        $service               = app(ChannelAppCommandService::class);
         $service->authorize($command);
 
 

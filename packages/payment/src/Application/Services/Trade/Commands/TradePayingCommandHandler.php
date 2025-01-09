@@ -1,8 +1,7 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
+namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
-use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Support\Exceptions\AbstractException;
@@ -15,7 +14,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
 {
 
     /**
-     * @param TradePayingCommand $command
+     * @param \RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand $command
      *
      * @return ChannelTradeData
      * @throws AbstractException

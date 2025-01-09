@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Commands\Transfer;
+namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
 use RedJasmine\Payment\Domain\Data\TransferCreateData;
 

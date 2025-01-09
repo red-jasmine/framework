@@ -1,9 +1,9 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services;
+namespace RedJasmine\Payment\Application\Services\Transfer;
 
-use RedJasmine\Payment\Application\Commands\Transfer\TransferCreateCommand;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Transfers\TransferCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommandHandler;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
@@ -38,6 +38,6 @@ class TransferCommandService extends ApplicationCommandService
     protected static string $modelClass = Transfer::class;
 
     protected static $macros = [
-        'create' => TransferCreateCommandHandler::class,
+        'create' => Commands\TransferCreateCommandHandler::class,
     ];
 }

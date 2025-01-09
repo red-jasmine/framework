@@ -1,8 +1,8 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
+namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
-use RedJasmine\Payment\Application\Services\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Support\Application\CommandHandler;
 
 /**

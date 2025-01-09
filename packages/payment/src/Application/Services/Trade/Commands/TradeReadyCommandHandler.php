@@ -1,10 +1,9 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
+namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
 use Closure;
 use Illuminate\Support\Collection;
-use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -14,7 +13,7 @@ class TradeReadyCommandHandler extends AbstractTradeCommandHandler
     protected bool|Closure $hasDatabaseTransactions = false;
 
     /**
-     * @param  TradeReadyCommand  $command
+     * @param  \RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand  $command
      *
      * @return Collection
      * @throws AbstractException

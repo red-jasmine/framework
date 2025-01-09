@@ -1,8 +1,7 @@
 <?php
 
-namespace RedJasmine\Payment\Application\Services\CommandHandlers\Trades;
+namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
-use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Transformer\TradeTransformer;
 use RedJasmine\Support\Exceptions\AbstractException;
