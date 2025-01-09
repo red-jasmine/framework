@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Services;
+namespace RedJasmine\Payment\Domain\Services\Routing;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
@@ -12,9 +12,9 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
 /**
- * 交易路由
+ * 交易 路由器
  */
-class PaymentRouteService
+class TradeRoutingService
 {
 
 

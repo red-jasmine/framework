@@ -30,7 +30,7 @@ class TradeReadyCommandHandler extends AbstractTradeCommandHandler
             $trade = $this->service->repository->findByNo($command->tradeNo);
 
             // 根据 支付环境 获取 支付方式
-            $methods = $this->service->paymentRouteService->getMethods($trade, $command);
+            $methods = $this->service->tradeRoutingService->getMethods($trade, $command);
 
             // 返回支付场景等信息
             $this->commitDatabaseTransaction();

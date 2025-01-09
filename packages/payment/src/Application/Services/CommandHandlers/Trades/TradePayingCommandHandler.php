@@ -32,10 +32,10 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
             $environment = $command;
 
             // 根据 支付环境、支付方式、 选择 支付应用
-            $channelApp = $this->service->paymentRouteService->getChannelApp($trade, $environment);
+            $channelApp = $this->service->tradeRoutingService->getChannelApp($trade, $environment);
 
             // 根据支付环境、支付方式、 选择 支付产品
-            $channelProduct = $this->service->paymentRouteService->getChannelProduct($environment, $channelApp);
+            $channelProduct = $this->service->tradeRoutingService->getChannelProduct($environment, $channelApp);
 
             // 根据应用去渠道发起支付单
             $channelTrade = $this->service->paymentChannelService

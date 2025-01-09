@@ -2,12 +2,10 @@
 
 namespace RedJasmine\Payment\Application\Services;
 
-use RedJasmine\Payment\Application\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePaidCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePayingCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Commands\Trade\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\CommandHandlers\Refunds\RefundCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePaidCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePayingCommandHandler;
 use RedJasmine\Payment\Application\Services\CommandHandlers\Trades\TradePreCreateCommandHandler;
@@ -17,7 +15,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Payment\Domain\Services\PaymentRouteService;
+use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
@@ -36,7 +34,7 @@ class TradeCommandService extends ApplicationCommandService
     public function __construct(
         public TradeRepositoryInterface $repository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
-        public PaymentRouteService $paymentRouteService,
+        public TradeRoutingService $tradeRoutingService,
         public PaymentChannelService $paymentChannelService,
     ) {
     }

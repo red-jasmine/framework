@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Application\Services\CommandHandlers\Merchants;
 
-use RedJasmine\Payment\Application\Services\MerchantAppCommandService;
+use RedJasmine\Payment\Application\Services\ChannelAppCommandService;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Support\Application\CommandHandler;
@@ -12,7 +12,7 @@ use Throwable;
 class MerchantChannelAppPermissionCommandHandler extends CommandHandler
 {
 
-    public function __construct(protected MerchantAppCommandService $service)
+    public function __construct(protected ChannelAppCommandService $service)
     {
     }
 
@@ -30,7 +30,7 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             $this->service->merchantRepository->find($command->merchantId);
-            $this->service->channelAppRepository->find($command->channelAppId);
+            $this->service->repository->find($command->channelAppId);
             $permission                 = $this->service
                 ->permissionRepository->find($command->merchantId, $command->channelAppId);
             $permission                 = $permission ?? MerchantChannelAppPermission::make();

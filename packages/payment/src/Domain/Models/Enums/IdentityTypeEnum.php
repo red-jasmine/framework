@@ -8,9 +8,9 @@ enum IdentityTypeEnum: string
 {
     use EnumsHelper;
 
-    case  USER_ID = 'user_id';
-    case  LOGIN_ID = 'login_id';
-    case  OPEN_ID = 'open_id';
+    case  USER_ID = 'USER_ID';
+    case  LOGIN_ID = 'LOGIN_ID';
+    case  OPEN_ID = 'OPEN_ID';
 
 
     public static function labels() : array

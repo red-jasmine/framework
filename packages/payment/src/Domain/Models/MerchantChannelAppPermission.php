@@ -30,9 +30,14 @@ class MerchantChannelAppPermission extends Pivot
     }
 
 
+    public function isAvailable() : bool
+    {
+        return $this->status === PermissionStatusEnum::ENABLE;
+    }
+
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_channel_app_permissions';
     }
 
 

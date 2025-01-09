@@ -12,6 +12,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\Method;
@@ -148,8 +149,9 @@ beforeEach(function () {
         ],
         [
             'channel_code' => 'alipay',
+            'type'         => 'transfer',
             'code'         => 'TRANS_ACCOUNT_NO_PWD',
-            'name'         => '转账',
+            'name'         => '单笔无密转账',
             'gateway'      => 'Alipay_AopPage',
             'modes'        => [
                 [
@@ -232,24 +234,27 @@ beforeEach(function () {
 
 
 test('create a transfer', function () {
+    $channelApp = $this->merchant->channelApps->first();
 
+    $TransferPayee = TransferPayee::from([
+        'identity_type' => 'LOGIN_ID',
+        'identityId'    => 'sildsg4556@sandbox.com',
+        'certNo'        => '933396192809243496',
+        'certType'      => 'ID_CARD',
+        'name'          => 'sildsg4556',
+    ]);
+    dd($channelApp);
     $command                     = new TransferCreateCommand();
     $command->merchantAppId      = $this->merchantApp->id;
+    $command->payee              = $TransferPayee;
+    $command->channelAppId       = $channelApp->id;
+    $command->sceneCode          = TransferSceneEnum::OTHER;
+    $command->subject            = '测试转账';
     $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
-    $command->subject            = fake()->word();
-    $command->payee              = TransferPayee::from([
-        'identity_type' => 'login_id',
-        'identityId'   => 'sildsg4556@sandbox.com',
-        'certNo'       => '933396192809243496',
-        'certType'     => 'ID_CARD',
-        'name'         => 'sildsg4556',
-    ]);
 
 
     $this->transferCommandService->create($command);
-
-    dd($command);
 
 
 });
