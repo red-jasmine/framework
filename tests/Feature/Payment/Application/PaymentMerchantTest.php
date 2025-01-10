@@ -270,7 +270,7 @@ test('can authorize channel app', function ($apps, $merchant) {
         $command               = new MerchantChannelAppPermissionData();
         $command->channelAppId = $app->id;
         $command->merchantId   = $merchant->id;
-        $command->status       = PermissionStatusEnum::DISABLED;
+        $command->status       = PermissionStatusEnum::DISABLE;
         $service               = app(ChannelAppCommandService::class);
         $service->authorize($command);
 
@@ -286,7 +286,7 @@ test('can authorize channel app', function ($apps, $merchant) {
 test('can set status', function (Merchant $merchant) {
     $command         = new MerchantSetStatusCommand();
     $command->id     = $merchant->id;
-    $command->status = MerchantStatusEnum::DISABLED;
+    $command->status = MerchantStatusEnum::DISABLE;
     $this->paymentMerchantCommandService->setStatus($command);
 
     $merchant = $this->paymentMerchantRepository->find($command->id);

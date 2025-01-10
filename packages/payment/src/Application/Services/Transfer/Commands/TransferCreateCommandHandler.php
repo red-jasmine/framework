@@ -3,7 +3,9 @@
 namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
 use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Factories\TransferFactory;
+use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\Routing\TransferRoutingService;
 use RedJasmine\Support\Application\CommandHandler;
@@ -20,7 +22,15 @@ class TransferCreateCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(TransferCreateCommand $command)
+    /**
+     * @param  TransferCreateCommand  $command
+     *
+     * @return Transfer
+     * @throws AbstractException
+     * @throws Throwable
+     * @throws PaymentException
+     */
+    public function handle(TransferCreateCommand $command) : Transfer
     {
         $this->beginDatabaseTransaction();
 
@@ -31,10 +41,14 @@ class TransferCreateCommandHandler extends CommandHandler
             $transfer->merchant_id     = $merchantApp->merchant_id;
             $transfer->merchant_app_id = $merchantApp->id;
             // 设置渠道应用
+            $transfer->method_code    = $command->methodCode;
             $transfer->channel_app_id = $command->channelAppId;
-            $transfer->channel_app_id = $command->channelAppId;
-            // 路由转账产品 TODO
-            $this->transferRoutingService->getChannelApp($transfer, $merchantApp);
+            // 路由渠道应用
+            $channelApp     = $this->transferRoutingService->getChannelApp($transfer);
+            $channelProduct = $this->transferRoutingService->getChannelProduct($transfer, $channelApp);
+
+            $transfer->setChannelApp($channelApp, $channelProduct);
+
             $this->service->repository->store($transfer);
 
             $this->commitDatabaseTransaction();
@@ -45,6 +59,8 @@ class TransferCreateCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
+
+        return $transfer;
 
     }
 

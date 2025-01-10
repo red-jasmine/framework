@@ -135,7 +135,7 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
         ChannelProductModeData::from([
             'sceneCode'  => SceneEnum::JSAPI->value,
             'methodCode' => 'wechat',
-            'status'     => ModeStatusEnum::DISABLED
+            'status'     => ModeStatusEnum::DISABLE
         ]),
         ChannelProductModeData::from([
             'sceneCode'  => SceneEnum::WEB->value,
@@ -155,7 +155,7 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
     $this->assertEquals($command->channelCode, $model->channel->code);
 
     $this->assertEquals(count($command->modes), $model->modes->count());
-    $this->assertEquals(1, $model->modes->where('status', ModeStatusEnum::DISABLED)->count());
+    $this->assertEquals(1, $model->modes->where('status', ModeStatusEnum::DISABLE)->count());
 
     return $model;
 

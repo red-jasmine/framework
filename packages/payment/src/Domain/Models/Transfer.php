@@ -12,6 +12,7 @@ use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TransferExtension;
+use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -36,7 +37,7 @@ class Transfer extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers';
     }
 
     protected function casts() : array
@@ -90,12 +91,12 @@ class Transfer extends Model
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
                 return TransferPayee::from([
-                                               'identityType' => $attributes['payee_identity_type'],
-                                               'identityId'   => $attributes['payee_identity_id'],
-                                               'name'         => $attributes['payee_name'],
-                                               'certType'     => $attributes['payee_cert_type'],
-                                               'certNo'       => $attributes['payee_cert_no'],
-                                           ]);
+                    'identityType' => $attributes['payee_identity_type'],
+                    'identityId'   => $attributes['payee_identity_id'],
+                    'name'         => $attributes['payee_name'],
+                    'certType'     => $attributes['payee_cert_type'],
+                    'certNo'       => $attributes['payee_cert_no'],
+                ]);
             },
             set: static function (TransferPayee $payee) {
                 $attributes                        = [];
@@ -110,4 +111,15 @@ class Transfer extends Model
         );
     }
 
+
+    public function setChannelApp(ChannelApp $channelApp, ChannelProduct $channelProduct) : void
+    {
+
+        $this->payment_channel_app_id = $channelApp->id;
+        $this->channel_code           = $channelApp->channel_code;
+        $this->channel_merchant_id    = $channelApp->channel_merchant_id;
+        $this->channel_app_id         = $channelApp->channel_app_id;
+        $this->channel_product_code   = $channelProduct->code;
+
+    }
 }

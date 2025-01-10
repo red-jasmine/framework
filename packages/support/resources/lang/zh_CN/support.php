@@ -17,8 +17,8 @@ return [
     'deleted_at'   => '删除时间',
     'id'           => '序号',
 
-    'enable'   => '启用',
-    'disabled' => '停用',
+    'enable'  => '启用',
+    'disable' => '停用',
 
 
 ];

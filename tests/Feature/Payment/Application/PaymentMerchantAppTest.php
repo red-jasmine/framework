@@ -69,7 +69,7 @@ test('can update a merchant app', function (MerchantApp $merchantApp) {
     $command->id         = $merchantApp->id;
     $command->name       = fake()->company;
     $command->merchantId = $merchantApp->merchant_id;
-    $command->status     = MerchantAppStatusEnum::DISABLED;
+    $command->status     = MerchantAppStatusEnum::DISABLE;
     $model               = $this->paymentMerchantAppCommandService->update($command);
 
     $this->assertEquals($command->name, $model->name, '商户应用名称');

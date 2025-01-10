@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
@@ -22,8 +23,10 @@ class TradeRoutingService
 
     /**
      * 获取支付渠道
-     * @param Trade $trade
-     * @param Environment $environment
+     *
+     * @param  Trade  $trade
+     * @param  Environment  $environment
+     *
      * @return Collection
      */
     public function getMethods(Trade $trade, Environment $environment) : Collection
@@ -38,8 +41,9 @@ class TradeRoutingService
 
 
     /**
-     * @param Trade $trade
-     * @param Environment $environment
+     * @param  Trade  $trade
+     * @param  Environment  $environment
+     *
      * @return ChannelApp
      * @throws PaymentException
      */
@@ -52,7 +56,9 @@ class TradeRoutingService
         // 可用的支付应用
         $availableChannelApps = $merchant->getAvailableChannelApps();
         // 过滤
-        $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use ($environment) {
+        $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use (
+            $environment
+        ) {
             return $this->channelAppEnvironmentFilter($environment, $channelApp) && $channelApp->isAvailable();
         })->all();
         $availableChannelApps = collect($availableChannelApps);
@@ -68,8 +74,9 @@ class TradeRoutingService
 
 
     /**
-     * @param Environment $environment
-     * @param ChannelApp $channelApp
+     * @param  Environment  $environment
+     * @param  ChannelApp  $channelApp
+     *
      * @return ChannelProduct
      * @throws PaymentException
      */
@@ -92,6 +99,11 @@ class TradeRoutingService
             return false;
         }
         $isAvailable = false;
+
+        if ($channelProduct->type !== ChannelProductTypeEnum::PAYMENT) {
+            return false;
+        }
+
         foreach ($channelProduct->modes as $channelProductMode) {
             if ($this->isModeAvailable($channelProductMode, $environment)) {
                 $isAvailable = true;
@@ -162,9 +174,11 @@ class TradeRoutingService
             // 如果当前模式是开启的
             if ($mode->status === ModeStatusEnum::ENABLE) {
                 $methods[$mode->method_code] = $mode->method;
-            } else if (!isset($methods[$mode->method_code])) {
-                $mode->method->status        = ModeStatusEnum::DISABLED;
-                $methods[$mode->method_code] = $mode->method;
+            } else {
+                if (!isset($methods[$mode->method_code])) {
+                    $mode->method->status = ModeStatusEnum::DISABLED;
+                    $methods[$mode->method_code] = $mode->method;
+                }
             }
 
         }

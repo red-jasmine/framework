@@ -15,12 +15,13 @@ class TransferCreateData extends Data
 
     public string $subject;
 
-    #[WithCast(EnumCast::class, TransferSceneEnum::class)]
-    public TransferSceneEnum $sceneCode = TransferSceneEnum::TRANSFER;
-
     public Money $amount;
 
     public TransferPayee $payee;
+
+
+    #[WithCast(EnumCast::class, TransferSceneEnum::class)]
+    public TransferSceneEnum $sceneCode = TransferSceneEnum::TRANSFER;
 
     /**
      * @var string
@@ -31,6 +32,9 @@ class TransferCreateData extends Data
      * @var ?string
      */
     public ?string $channelAppId;
+
+
+
 
 
     public ?string $merchantTransferNo;

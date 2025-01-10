@@ -27,10 +27,12 @@ return new class extends Migration {
                 // 支付渠道
                 $table->unsignedBigInteger('payment_channel_app_id')->nullable()->comment('系统内渠道应用ID');
                 $table->string('channel_code')->nullable()->comment('支付渠道');
-                $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
-                $table->string('channel_trade_no')->nullable()->comment('渠道支付单号');
                 $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
+                $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
                 $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
+
+                $table->string('channel_trade_no')->nullable()->comment('渠道支付单号');
+
 
                 // 支付者信息
                 $table->string('payer_type')->nullable()->comment('支付者类型');

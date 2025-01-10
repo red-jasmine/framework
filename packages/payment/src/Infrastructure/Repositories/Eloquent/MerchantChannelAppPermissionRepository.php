@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 
@@ -23,6 +24,13 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
         $model->push();
 
         return $model;
+    }
+
+    public function findMerchantAuthorizedChannelApps(int $merchantId) : Collection
+    {
+        return static::$eloquentModelClass::with(['channelApp'])
+                                          ->where('merchant_id', $merchantId)
+                                          ->get();
     }
 
 
