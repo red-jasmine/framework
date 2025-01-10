@@ -16,6 +16,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\Method;
+use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
@@ -57,26 +58,26 @@ beforeEach(function () {
 
     // 支付方式
     $this->paymentMethods[] = Method::firstOrCreate(
-        [ 'code' => 'alipay' ],
-        [ 'name' => '支付宝', 'code' => 'alipay' ]
+        ['code' => 'alipay'],
+        ['name' => '支付宝', 'code' => 'alipay']
 
     );
     $this->paymentMethods[] = Method::firstOrCreate(
-        [ 'code' => 'wechat' ],
-        [ 'name' => '微信', 'code' => 'wechat' ],
+        ['code' => 'wechat'],
+        ['name' => '微信', 'code' => 'wechat'],
 
     );
 
     //  支付渠道
 
     $this->channels[] = Channel::firstOrCreate(
-        [ 'code' => 'alipay' ],
-        [ 'name' => '支付宝', 'code' => 'alipay' ]
+        ['code' => 'alipay'],
+        ['name' => '支付宝', 'code' => 'alipay']
     );
 
     $this->channels[] = Channel::firstOrCreate(
-        [ 'code' => 'wechat' ],
-        [ 'name' => '微信', 'code' => 'wechat' ]
+        ['code' => 'wechat'],
+        ['name' => '微信', 'code' => 'wechat']
     );
 
     // 创建产品
@@ -176,14 +177,14 @@ beforeEach(function () {
 
         foreach ($productData['modes'] as $mode) {
             ChannelProductMode::firstOrCreate([
-                                                  'payment_channel_product_id' => $channelProduct->id,
-                                                  'method_code'                => $mode['method_code'],
-                                                  'scene_code'                 => $mode['scene_code']
-                                              ], [
-                                                  'payment_channel_product_id' => $channelProduct->id,
-                                                  'method_code'                => $mode['method_code'],
-                                                  'scene_code'                 => $mode['scene_code']
-                                              ]);
+                'payment_channel_product_id' => $channelProduct->id,
+                'method_code'                => $mode['method_code'],
+                'scene_code'                 => $mode['scene_code']
+            ], [
+                'payment_channel_product_id' => $channelProduct->id,
+                'method_code'                => $mode['method_code'],
+                'scene_code'                 => $mode['scene_code']
+            ]);
         }
     }
 
@@ -208,12 +209,12 @@ beforeEach(function () {
         foreach ($this->channelProducts as $channelProduct) {
             if ($channelApp->channel_code === $channelProduct->channel_code) {
                 ChannelAppProduct::firstOrCreate([
-                                                     'payment_channel_product_id' => $channelProduct->id,
-                                                     'payment_channel_app_id'     => $channelApp->id,
-                                                 ], [
-                                                     'payment_channel_product_id' => $channelProduct->id,
-                                                     'payment_channel_app_id'     => $channelApp->id,
-                                                 ]);
+                    'payment_channel_product_id' => $channelProduct->id,
+                    'payment_channel_app_id'     => $channelApp->id,
+                ], [
+                    'payment_channel_product_id' => $channelProduct->id,
+                    'payment_channel_app_id'     => $channelApp->id,
+                ]);
             }
         }
     }
@@ -223,7 +224,6 @@ beforeEach(function () {
 
 
     $this->merchant->channelApps()->sync(collect($this->channelApps)->pluck('id')->toArray());
-
 
     $this->tradeCommandService    = app(TradeCommandService::class);
     $this->tradeRepository        = app(TradeRepositoryInterface::class);
@@ -237,27 +237,26 @@ test('create a transfer', function () {
     $channelApp = $this->merchant->channelApps->first();
 
     $TransferPayee = TransferPayee::from([
-                                             'identity_type' => 'LOGIN_ID',
-                                             'identityId'    => 'sildsg4556@sandbox.com',
-                                             'certNo'        => '933396192809243496',
-                                             'certType'      => 'ID_CARD',
-                                             'name'          => 'sildsg4556',
-                                         ]);
+        'identity_type' => 'LOGIN_ID',
+        'identityId'    => 'sildsg4556@sandbox.com',
+        'certNo'        => '933396192809243496',
+        'certType'      => 'ID_CARD',
+        'name'          => 'sildsg4556',
+    ]);
 
     $command                     = new TransferCreateCommand();
     $command->merchantAppId      = $this->merchantApp->id;
-    $command->payee              = $TransferPayee;
-    $command->methodCode         = 'alipay';
-    $command->channelAppId       = $channelApp->channel_app_id;  // 外部渠道
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';
-    $command->amount             = Money::from([ 'value' => 1, 'currency' => 'CNY' ]);
+    $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
+    $command->methodCode         = 'alipay';
+    $command->channelAppId       = $channelApp->channel_app_id;  // 指定渠道应用
+    $command->payee              = $TransferPayee;
+    $result                      = $this->transferCommandService->create($command);
 
+    $this->assertInstanceOf(Transfer::class, $result);
 
-
-    //$this->transferCommandService->create($command);
-
-
+    $this->assertEquals($command->amount->value, $result->amount->value);
 });
 
