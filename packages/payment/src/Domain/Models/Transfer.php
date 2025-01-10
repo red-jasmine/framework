@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferSuccessEvent;
+use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TransferNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
@@ -27,7 +28,7 @@ class Transfer extends Model
     public static function boot() : void
     {
         parent::boot();
-        static::creating(function (Transfer $transfer) {
+        static::creating(static function (Transfer $transfer) {
             $transfer->generateNo();
             if ($transfer->relationLoaded('extension')) {
                 $transfer->extension->transfer_id = $transfer->id;
@@ -121,5 +122,33 @@ class Transfer extends Model
         $this->channel_app_id         = $channelApp->channel_app_id;
         $this->channel_product_code   = $channelProduct->code;
 
+    }
+
+    public function isAllowExecuting() : bool
+    {
+        if (!in_array($this->transfer_status,
+            [
+                TransferStatusEnum::PRE,
+                TransferStatusEnum::FAIL,
+            ], true
+        )) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @return void
+     * @throws PaymentException
+     */
+    public function executing() : void
+    {
+        if (!$this->isAllowExecuting()) {
+            throw new PaymentException('转账不允许执行');
+        }
+        $this->transfer_status = TransferStatusEnum::PROCESSING;
+        $this->executing_time  = now();
+        $this->fireModelEvent('executing', false);
     }
 }

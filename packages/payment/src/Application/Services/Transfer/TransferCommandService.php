@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Transfer;
 
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
@@ -14,6 +15,8 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 
 /**
+ * @see TransferExecutingCommandHandler::handle()
+ * @method executing(TransferExecutingCommand $command)
  * @see TransferCreateCommandHandler::handle()
  * @method create(TransferCreateCommand $command)
  */
@@ -25,7 +28,6 @@ class TransferCommandService extends ApplicationCommandService
         public MerchantAppRepositoryInterface $merchantAppRepository,
         public PaymentChannelService $paymentChannelService,
         public MerchantChannelAppPermissionRepositoryInterface $permissionRepository
-
     ) {
     }
 
@@ -38,6 +40,7 @@ class TransferCommandService extends ApplicationCommandService
     protected static string $modelClass = Transfer::class;
 
     protected static $macros = [
-        'create' => Commands\TransferCreateCommandHandler::class,
+        'create'    => Commands\TransferCreateCommandHandler::class,
+        'executing' => Commands\TransferExecutingCommandHandler::class,
     ];
 }

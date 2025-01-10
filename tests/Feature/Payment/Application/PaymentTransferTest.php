@@ -3,6 +3,7 @@
 
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
 use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Models\Channel;
@@ -13,6 +14,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\Method;
@@ -258,5 +260,20 @@ test('create a transfer', function () {
     $this->assertInstanceOf(Transfer::class, $result);
 
     $this->assertEquals($command->amount->value, $result->amount->value);
+
+    return $result;
 });
+
+test('can executing a transfer', function (Transfer $transfer) {
+
+    $command             = new  TransferExecutingCommand;
+    $command->transferNo = $transfer->transfer_no;
+    $result              = $this->transferCommandService->executing($command);
+    $this->assertEquals(true, $result);
+    $transfer = $this->transferRepository->findByNo($transfer->transfer_no);
+
+    $this->assertEquals(TransferStatusEnum::PROCESSING->value, $transfer->transfer_status->value);
+
+
+})->depends('create a transfer');
 

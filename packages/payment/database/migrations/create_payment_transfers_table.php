@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers',
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('transfer_no')->unique()->comment('转账号');
@@ -32,14 +32,15 @@ return new class extends Migration {
                 $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
                 $table->string('channel_product_code')->nullable()->comment('支付产品CODE');
 
-
-
                 // 收款方
                 $table->string('payee_identity_type')->nullable()->comment('收款方身份标识类型');
                 $table->string('payee_identity_id')->nullable()->comment('收款方身份标识ID');
                 $table->string('payee_cert_type')->nullable()->comment('收款证件类型');
                 $table->string('payee_cert_no')->nullable()->comment('收款方证件号');
                 $table->string('payee_name')->nullable()->comment('收款方类型');
+
+
+                $table->timestamp('executing_time')->nullable()->comment('执行时间');
 
 
                 $table->string('creator_type', 32)->nullable();
@@ -53,6 +54,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers');
     }
 };

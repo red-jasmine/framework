@@ -37,6 +37,7 @@ class PaymentChannelHandlerService extends ApplicationService
         'refund'      => Commands\ChannelRefundCreateCommandHandler::class, // 异步发起退款
         'refundQuery' => Commands\ChannelRefundQueryCommandHandler::class, // 发起退款查询
         'tradeNotify' => ChannelTradeNotifyCommandHandler::class, // 接受交易通知
+
     ];
 
 
