@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
-use RedJasmine\Payment\Domain\Gateway\GatewayDrive;
+use RedJasmine\Payment\Domain\Gateway\ChannelGatewayDrive;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
@@ -43,7 +43,7 @@ class PaymentChannelService
         Environment $environment
     ) : ChannelTradeData {
         // 支付网关适配器
-        $gateway = GatewayDrive::create($channelApp->channel_code);
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
         // 设置支付渠道信息
         $paymentChannelData                 = new  PaymentChannelData;
         $paymentChannelData->channelApp     = $channelApp;
@@ -89,7 +89,7 @@ class PaymentChannelService
     public function completePurchase(ChannelApp $channelApp, array $data) : ChannelTradeData
     {
         // 支付网关适配器
-        $gateway = GatewayDrive::create($channelApp->channel_code);
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
         // 设置支付渠道信息
         $paymentChannelData = new  PaymentChannelData;
 
@@ -110,7 +110,7 @@ class PaymentChannelService
     {
 
         // 支付网关适配器
-        $gateway = GatewayDrive::create($channelApp->channel_code);
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
 
         $paymentChannelData             = new  PaymentChannelData;
         $paymentChannelData->channelApp = $channelApp;
@@ -133,7 +133,7 @@ class PaymentChannelService
     public function refundQuery(ChannelApp $channelApp, Refund $refund) : ChannelRefundData
     {
         // 支付网关适配器
-        $gateway = GatewayDrive::create($channelApp->channel_code);
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
 
         $paymentChannelData             = new  PaymentChannelData;
         $paymentChannelData->channelApp = $channelApp;
@@ -165,7 +165,7 @@ class PaymentChannelService
     public function notifyResponse(ChannelApp $channelApp) : NotifyResponseInterface
     {
 
-        $gateway = GatewayDrive::create($channelApp->channel_code);
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
         // 设置支付渠道信息
         $paymentChannelData = new  PaymentChannelData;
 

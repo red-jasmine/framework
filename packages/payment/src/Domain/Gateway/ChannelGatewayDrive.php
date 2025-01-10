@@ -2,9 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Gateway;
 
-use RedJasmine\Payment\Domain\Models\ChannelApp;
-
-class GatewayDrive
+class ChannelGatewayDrive
 {
 
     /**
