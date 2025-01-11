@@ -14,7 +14,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
 {
 
     /**
-     * @param \RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand $command
+     * @param TradePayingCommand $command
      *
      * @return ChannelTradeData
      * @throws AbstractException
@@ -37,8 +37,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
             $channelProduct = $this->service->tradeRoutingService->getChannelProduct($environment, $channelApp);
 
             // 根据应用去渠道发起支付单
-            $channelTrade = $this->service->paymentChannelService
-                ->purchase($channelApp, $channelProduct, $trade, $environment);
+            $channelTrade = $this->service->paymentChannelService->purchase($channelApp, $channelProduct, $trade, $environment);
 
             // 交易设置为 支付中
             $trade->paying($channelApp, $environment, $channelTrade);

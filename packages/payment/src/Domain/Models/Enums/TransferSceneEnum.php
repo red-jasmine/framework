@@ -11,11 +11,10 @@ enum TransferSceneEnum: string
 {
     use EnumsHelper;
 
-    case OTHER = 'other';
+
     case TRANSFER = 'transfer';
     case MARKETING = 'marketing';
     case COMMISSION = 'commission';
-
     case ADMINISTRATIVE = 'administrative';
     case CLAIMS = 'claims';
     case REMUNERATION = 'remuneration';
@@ -23,11 +22,12 @@ enum TransferSceneEnum: string
     case SUBSIDY = 'subsidy';
     case SERVICE = 'service';
     case PROCUREMENT = 'procurement';
+    case OTHER = 'other';
 
     public static function labels() : array
     {
         return [
-            self::OTHER->value          => '其他',
+
             self::TRANSFER->value       => '转账',
             self::MARKETING->value      => '营销',
             self::COMMISSION->value     => '佣金',
@@ -38,6 +38,7 @@ enum TransferSceneEnum: string
             self::SUBSIDY->value        => '补贴',
             self::SERVICE->value        => '服务',
             self::PROCUREMENT->value    => '采购',
+            self::OTHER->value          => '其他',
         ];
     }
 }

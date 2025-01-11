@@ -7,10 +7,12 @@ use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelTransferResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
+use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
 interface GatewayDriveInterface
@@ -28,5 +30,5 @@ interface GatewayDriveInterface
 
     public function notifyResponse() : NotifyResponseInterface;
 
-
+    public function transfer(Transfer $transfer) : ChannelTransferResult;
 }

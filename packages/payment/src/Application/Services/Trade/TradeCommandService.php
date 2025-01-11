@@ -16,11 +16,11 @@ use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
- * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommandHandler::handle()
+ * @see  TradePreCreateCommandHandler::handle
  * @method Trade preCreate(Commands\TradePreCreateCommand $command)
- * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommandHandler::handle()
+ * @see  TradeReadyCommandHandler::handle
  * @method Trade ready(TradeReadyCommand $command)
- * @see  \RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommandHandler::handle()
+ * @see  TradePayingCommandHandler::handle
  * @method ChannelTradeData paying(Commands\TradePayingCommand $command)
  * @see  TradePaidCommandHandler::handle()
  * @method bool paid(Commands\TradePaidCommand $command)
@@ -29,11 +29,12 @@ class TradeCommandService extends ApplicationCommandService
 {
 
     public function __construct(
-        public TradeRepositoryInterface $repository,
+        public TradeRepositoryInterface       $repository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
-        public TradeRoutingService $tradeRoutingService,
-        public PaymentChannelService $paymentChannelService,
-    ) {
+        public TradeRoutingService            $tradeRoutingService,
+        public PaymentChannelService          $paymentChannelService,
+    )
+    {
     }
 
     /**

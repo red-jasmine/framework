@@ -4,6 +4,8 @@
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferFailCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferSuccessCommand;
 use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Models\Channel;
@@ -60,26 +62,26 @@ beforeEach(function () {
 
     // 支付方式
     $this->paymentMethods[] = Method::firstOrCreate(
-        ['code' => 'alipay'],
-        ['name' => '支付宝', 'code' => 'alipay']
+        [ 'code' => 'alipay' ],
+        [ 'name' => '支付宝', 'code' => 'alipay' ]
 
     );
     $this->paymentMethods[] = Method::firstOrCreate(
-        ['code' => 'wechat'],
-        ['name' => '微信', 'code' => 'wechat'],
+        [ 'code' => 'wechat' ],
+        [ 'name' => '微信', 'code' => 'wechat' ],
 
     );
 
     //  支付渠道
 
     $this->channels[] = Channel::firstOrCreate(
-        ['code' => 'alipay'],
-        ['name' => '支付宝', 'code' => 'alipay']
+        [ 'code' => 'alipay' ],
+        [ 'name' => '支付宝', 'code' => 'alipay' ]
     );
 
     $this->channels[] = Channel::firstOrCreate(
-        ['code' => 'wechat'],
-        ['name' => '微信', 'code' => 'wechat']
+        [ 'code' => 'wechat' ],
+        [ 'name' => '微信', 'code' => 'wechat' ]
     );
 
     // 创建产品
@@ -179,14 +181,14 @@ beforeEach(function () {
 
         foreach ($productData['modes'] as $mode) {
             ChannelProductMode::firstOrCreate([
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ], [
-                'payment_channel_product_id' => $channelProduct->id,
-                'method_code'                => $mode['method_code'],
-                'scene_code'                 => $mode['scene_code']
-            ]);
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ], [
+                                                  'payment_channel_product_id' => $channelProduct->id,
+                                                  'method_code'                => $mode['method_code'],
+                                                  'scene_code'                 => $mode['scene_code']
+                                              ]);
         }
     }
 
@@ -211,12 +213,12 @@ beforeEach(function () {
         foreach ($this->channelProducts as $channelProduct) {
             if ($channelApp->channel_code === $channelProduct->channel_code) {
                 ChannelAppProduct::firstOrCreate([
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ], [
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'payment_channel_app_id'     => $channelApp->id,
-                ]);
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ], [
+                                                     'payment_channel_product_id' => $channelProduct->id,
+                                                     'payment_channel_app_id'     => $channelApp->id,
+                                                 ]);
             }
         }
     }
@@ -239,18 +241,18 @@ test('create a transfer', function () {
     $channelApp = $this->merchant->channelApps->first();
 
     $TransferPayee = TransferPayee::from([
-        'identity_type' => 'LOGIN_ID',
-        'identityId'    => 'sildsg4556@sandbox.com',
-        'certNo'        => '933396192809243496',
-        'certType'      => 'ID_CARD',
-        'name'          => 'sildsg4556',
-    ]);
+                                             'identity_type' => 'LOGIN_ID',
+                                             'identityId'    => 'sildsg4556@sandbox.com',
+                                             'certNo'        => '933396192809243496',
+                                             'certType'      => 'ID_CARD',
+                                             'name'          => 'sildsg4556',
+                                         ]);
 
     $command                     = new TransferCreateCommand();
     $command->merchantAppId      = $this->merchantApp->id;
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';
-    $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount             = Money::from([ 'value' => 1, 'currency' => 'CNY' ]);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
     $command->methodCode         = 'alipay';
     $command->channelAppId       = $channelApp->channel_app_id;  // 指定渠道应用
@@ -271,9 +273,38 @@ test('can executing a transfer', function (Transfer $transfer) {
     $result              = $this->transferCommandService->executing($command);
     $this->assertEquals(true, $result);
     $transfer = $this->transferRepository->findByNo($transfer->transfer_no);
-
     $this->assertEquals(TransferStatusEnum::PROCESSING->value, $transfer->transfer_status->value);
 
 
+    return $transfer;
+
 })->depends('create a transfer');
+test('can transfer fail', function (Transfer $transfer) {
+
+    $command             = new TransferFailCommand();
+    $command->transferNo = $transfer->transfer_no;
+    $result              = $this->transferCommandService->fail($command);
+    $this->assertEquals(true, $result);
+    $transfer = $this->transferRepository->findByNo($transfer->transfer_no);
+    $this->assertEquals(TransferStatusEnum::FAIL->value, $transfer->transfer_status->value);
+
+
+})->depends('can executing a transfer');
+test('can transfer success', function (Transfer $transfer) {
+
+    $command                    = new TransferSuccessCommand();
+    $command->transferNo        = $transfer->transfer_no;
+    $command->channelTransferNo = fake()->numerify('channel-transfer-no-##########');
+    $command->transferTime      = now();
+    $result                     = $this->transferCommandService->success($command);
+    $this->assertEquals(true, $result);
+    $transfer = $this->transferRepository->findByNo($transfer->transfer_no);
+    $this->assertEquals(TransferStatusEnum::SUCCESS->value, $transfer->transfer_status->value);
+    $this->assertEquals($command->channelTransferNo, $transfer->channel_transfer_no);
+    $this->assertEquals($command->transferTime->format('Y-m-d H:i:s'), $transfer->transfer_time);
+
+})->depends('can executing a transfer');
+
+
+
 
