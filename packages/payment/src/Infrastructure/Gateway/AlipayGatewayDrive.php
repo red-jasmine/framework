@@ -22,6 +22,7 @@ use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelTransferQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelTransferResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
@@ -464,6 +465,66 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             } else {
                 $result->setMessage($response->getSubMessage());
             }
+        } catch (Throwable $throwable) {
+            report($throwable);
+        }
+
+        return $result;
+    }
+
+    public function transferQuery(Transfer $transfer) : ChannelTransferQueryResult
+    {
+        // 创建网关
+        // 构建数据
+        /**
+         * @var $gateway AopPageGateway
+         */
+        $gateway = $this->gateway;
+
+        $content = [
+            'order_id' => $transfer->channel_transfer_no,
+        ];
+        $request = $gateway->transferQuery([ 'biz_content' => $content ]);
+
+        $result = new ChannelTransferQueryResult();
+        $result->setSuccessFul(false);
+        try {
+            $response = $request->send();
+            $result->setMessage($response->getSubMessage());
+            if (!$response->isSuccessful()) {
+                $result->setSuccessFul(false);
+                return $result;
+            }
+
+            $result->setSuccessFul(true);
+            $data                      = $response->getAlipayResponse();
+            $result->channelTransferNo = $data['order_id'] ?? null;
+
+            // 存储各种 资金流水信息
+            $status = ($data['status'] ?? '');
+
+            switch ($status) {
+                case 'SUCCESS':
+                    $result->status = TransferStatusEnum::SUCCESS;
+                    break;
+                case 'WAIT_PAY':
+                    $result->status = TransferStatusEnum::PROCESSING;
+                    break;
+                case 'CLOSED':
+                    $result->status = TransferStatusEnum::CLOSED;
+                    break;
+                case 'FAIL':
+                    $result->status = TransferStatusEnum::FAIL;
+                    break;
+                case 'DEALING': // 待处理
+                    $result->status = TransferStatusEnum::PROCESSING;
+                    break;
+                case 'REFUND':
+                    $result->status = TransferStatusEnum::REFUND;
+                    break;
+            }
+
+
         } catch (Throwable $throwable) {
             report($throwable);
         }

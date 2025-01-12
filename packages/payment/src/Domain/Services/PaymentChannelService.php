@@ -204,4 +204,26 @@ class PaymentChannelService
     }
 
 
+    public function transferQuery(ChannelApp     $channelApp,
+                                  ChannelProduct $channelProduct,
+                                  Transfer       $transfer) : ChannelTransferData
+    {
+        $gateway                            = ChannelGatewayDrive::create($channelApp->channel_code);
+        $paymentChannelData                 = new  PaymentChannelData;
+        $paymentChannelData->channelApp     = $channelApp;
+        $paymentChannelData->channelProduct = $channelProduct;
+
+        $result                      = $gateway->gateway($paymentChannelData)->transferQuery($transfer);
+        $channelTransferData         = new  ChannelTransferData();
+        $channelTransferData->status = TradeStatusEnum::FAIL;
+        if ($result->isSuccessFul()) {
+            $channelTransferData->status            = $result->status;
+            $channelTransferData->channelTransferNo = $result->channelTransferNo;
+            $channelTransferData->transferTime      = $result->transferTime;
+
+        }
+        return $channelTransferData;
+    }
+
+
 }

@@ -16,6 +16,7 @@ enum TransferStatusEnum: string
     case  PROCESSING = 'processing'; // // 处理中
     case  FAIL = 'fail'; // 支付失败
     // 最终态
+    case  REFUND = 'refund'; // 操时
     case  CLOSED = 'closed'; // 操时
     case  CANCEL = 'cancel'; // 取消
     case  SUCCESS = 'success'; // 支持成功
@@ -30,6 +31,7 @@ enum TransferStatusEnum: string
             self::CLOSED->value     => '操作关闭',
             self::CANCEL->value     => '取消',
             self::SUCCESS->value    => '支付成功',
+            self::REFUND->value     => '已退回',
         ];
     }
 

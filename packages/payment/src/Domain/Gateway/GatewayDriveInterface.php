@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Gateway;
 
-use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundResult;
-use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
+use RedJasmine\Payment\Domain\Gateway\Data\ChannelTransferQueryResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelTransferResult;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
 use RedJasmine\Payment\Domain\Gateway\Data\Purchase;
@@ -31,4 +31,6 @@ interface GatewayDriveInterface
     public function notifyResponse() : NotifyResponseInterface;
 
     public function transfer(Transfer $transfer) : ChannelTransferResult;
+
+    public function transferQuery(Transfer $transfer) : ChannelTransferQueryResult;
 }
