@@ -7,10 +7,14 @@ use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefun
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefundQueryCommand;
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelTradeNotifyCommandHandler;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TransferReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TransferReadRepository;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -22,11 +26,13 @@ use RedJasmine\Support\Application\ApplicationService;
 class PaymentChannelHandlerService extends ApplicationService
 {
     public function __construct(
-        public TradeRepositoryInterface       $tradeRepository,
-        public RefundRepositoryInterface      $refundRepository,
-        public ChannelAppRepositoryInterface  $channelAppRepository,
-        public MerchantAppRepositoryInterface $merchantAppRepository,
-        public PaymentChannelService          $paymentChannelService,
+        public TradeRepositoryInterface          $tradeRepository,
+        public RefundRepositoryInterface         $refundRepository,
+        public TransferRepositoryInterface       $transferRepository,
+        public ChannelAppRepositoryInterface     $channelAppRepository,
+        public ChannelProductRepositoryInterface $channelProductRepository,
+        public MerchantAppRepositoryInterface    $merchantAppRepository,
+        public PaymentChannelService             $paymentChannelService,
 
     )
     {

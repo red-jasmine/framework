@@ -7,8 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefundCreateCommand;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
 
-class ChannelTransferCreateJob implements ShouldQueue
+class ChannelTransferRequestJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -20,7 +22,13 @@ class ChannelTransferCreateJob implements ShouldQueue
     public function handle() : void
     {
         // TODO 调用渠道处理服务 调用 转账方法
+        try {
+            $command = ChannelRefundCreateCommand::from([ 'refundNo' => $this->refundNo ]);
+            app(PaymentChannelHandlerService::class)->refund($command);
 
+        } catch (Throwable $throwable) {
+            throw $throwable;
+        }
 
     }
 

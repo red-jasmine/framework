@@ -22,7 +22,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
     }
 
     /**
-     * @param  \RedJasmine\Payment\Application\Services\AsyncNotify\Commands\ChannelNotifyTradeCommand  $command
+     * @param ChannelNotifyTradeCommand $command
      *
      * @return Response
      */
@@ -50,7 +50,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
 
 
     /**
-     * @param  ChannelTradeData  $channelTradeData
+     * @param ChannelTradeData $channelTradeData
      *
      * @return true
      * @throws AbstractException
@@ -78,7 +78,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
 
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
-            Log::info('Payment-Notify', ['message' => $exception->getMessage()]);
+            Log::info('Payment-Notify', [ 'message' => $exception->getMessage() ]);
             throw $exception;
         } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
