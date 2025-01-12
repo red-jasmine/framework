@@ -143,6 +143,31 @@ class Transfer extends Model
     }
 
 
+    public function isAllowCancel() : bool
+    {
+        if ($this->transfer_status !== TransferStatusEnum::PRE) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @return void
+     * @throws PaymentException
+     */
+    public function cancel() : void
+    {
+        if (!$this->isAllowCancel()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->transfer_status = TransferStatusEnum::CANCEL;
+        $this->executing_time  = now();
+        $this->fireModelEvent('cancel', false);
+
+    }
+
+
     /**
      * @return void
      * @throws PaymentException
@@ -218,4 +243,29 @@ class Transfer extends Model
 
         $this->fireModelEvent('fail', false);
     }
+
+
+    public function isAllowClose() : bool
+    {
+        if ($this->transfer_status !== TransferStatusEnum::FAIL) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @return void
+     * @throws PaymentException
+     */
+    public function close() : void
+    {
+        if (!$this->isAllowClose()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->transfer_status = TransferStatusEnum::CLOSED;
+        $this->fireModelEvent('close', false);
+
+    }
+
 }

@@ -16,7 +16,7 @@ enum TransferStatusEnum: string
     case  PROCESSING = 'processing'; // // 处理中
     case  FAIL = 'fail'; // 支付失败
     // 最终态
-    case  CLOSED = 'closed'; // 操时关闭
+    case  CLOSED = 'closed'; // 操时
     case  CANCEL = 'cancel'; // 取消
     case  SUCCESS = 'success'; // 支持成功
 

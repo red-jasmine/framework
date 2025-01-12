@@ -2,6 +2,10 @@
 
 namespace RedJasmine\Payment\Application\Services\Transfer;
 
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCancelCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCancelCommandHandler;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCloseCommand;
+use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCloseCommandHandler;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
@@ -28,6 +32,10 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method success(TransferSuccessCommand $command)
  * @see TransferCreateCommandHandler::handle()
  * @method create(TransferCreateCommand $command)
+ * @see TransferCancelCommandHandler::handle()
+ * @method cancel(TransferCancelCommand $command)
+ * @see TransferCloseCommandHandler::handle()
+ * * @method close(TransferCloseCommand $command)
  */
 class TransferCommandService extends ApplicationCommandService
 {
@@ -52,7 +60,9 @@ class TransferCommandService extends ApplicationCommandService
     protected static $macros = [
         'create'    => TransferCreateCommandHandler::class,
         'executing' => TransferExecutingCommandHandler::class,
+        'fail'      => TransferFailCommandHandler::class,
         'success'   => TransferSuccessCommandHandler::class,
-        'fail'      => TransferFailCommandHandler::class
+        'close'     => TransferCloseCommandHandler::class,
+        'cancel'    => TransferCancelCommandHandler::class,
     ];
 }
