@@ -18,6 +18,7 @@ use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Data\PaymentTrigger;
+use RedJasmine\Payment\Domain\Exceptions\ChannelGatewayException;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
@@ -402,6 +403,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         return new   AlipayNotifyResponse();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function transfer(Transfer $transfer) : ChannelTransferResult
     {
         /**
@@ -445,34 +449,42 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             'business_params' => '',
         ];
 
-
-        $request = $gateway->transfer([ 'biz_content' => $content ]);
-
         $result = new ChannelTransferResult();
-        $result->setSuccessFul(false);
         try {
-            $response       = $request->send();
-            $result->status = TransferStatusEnum::FAIL;
-            dd($response->getData());
-            if ($response->isSuccessful()) {
-                $result->setSuccessFul(true);
-                $data                      = $response->getAlipayResponse();
-                $result->channelTransferNo = $data['order_id'] ?? null;
-                if (($data['status'] ?? '') === 'success') {
-                    $result->status = TransferStatusEnum::SUCCESS;
-                } else {
-                    $result->setMessage($response->getSubMessage());
-                }
-            } else {
-                $result->setMessage($response->getSubMessage());
-            }
+            $request  = $gateway->transfer([ 'biz_content' => $content ]);
+            $response = $request->send();
         } catch (Throwable $throwable) {
-            report($throwable);
+            throw new ChannelGatewayException($throwable->getMessage() ?? 'gateway error');
+        }
+        // 网关调用异常
+        if (!$response->isSuccessful() && is_null($response->getData())) {
+            throw new ChannelGatewayException($response->getSubMessage() ?? $response->getMessage() ?? 'gateway error');
+        }
+        // 业务失败
+        if (!$response->isSuccessful()) {
+            $result->setSuccessFul(false);
+            $result->status = TransferStatusEnum::FAIL;
+            $result->setMessage($response->getSubMessage());
+            return $result;
         }
 
+        // 业务成功
+        $result->setSuccessFul(true);
+        $result->status            = TransferStatusEnum::PROCESSING;
+        $data                      = $response->getAlipayResponse();
+        $result->channelTransferNo = $data['order_id'] ?? null;
+        // 业务成功 ，而外状态
+        if (($data['status'] ?? '') === 'SUCCESS') {
+            $result->channelTransferNo = $data['order_id'];
+            $result->transferTime      = Carbon::parse($data['trans_date']);
+            $result->status            = TransferStatusEnum::SUCCESS;
+        }
         return $result;
     }
 
+    /**
+     * @throws ChannelGatewayException
+     */
     public function transferQuery(Transfer $transfer) : ChannelTransferQueryResult
     {
         // 创建网关
@@ -481,19 +493,25 @@ class AlipayGatewayDrive implements GatewayDriveInterface
          * @var $gateway AopPageGateway
          */
         $gateway = $this->gateway;
-
         $content = [
-            'order_id' => $transfer->channel_transfer_no,
+            'out_biz_no'   => $transfer->transfer_no,
+            'product_code' => $transfer->channel_product_code,
+            'biz_scene'    => $this->transferScene($transfer->scene_code), // TODO 进行改造 需要存储
         ];
         $request = $gateway->transferQuery([ 'biz_content' => $content ]);
 
-        $result = new ChannelTransferQueryResult();
-        $result->setSuccessFul(false);
         try {
             $response = $request->send();
-            $result->setMessage($response->getSubMessage());
+            // 网关调用异常
+            if (!$response->isSuccessful() && is_null($response->getData())) {
+                throw new ChannelGatewayException($response->getSubMessage() ?? $response->getMessage() ?? 'gateway error');
+            }
+            $result = new ChannelTransferQueryResult();
+            // 业务异常
             if (!$response->isSuccessful()) {
                 $result->setSuccessFul(false);
+                $result->status = TransferStatusEnum::FAIL;
+                $result->setMessage($response->getSubMessage());
                 return $result;
             }
 
@@ -503,7 +521,9 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
             // 存储各种 资金流水信息
             $status = ($data['status'] ?? '');
-
+            if ($data['pay_date'] ?? null) {
+                $result->transferTime = Carbon::parse($data['pay_date']);
+            }
             switch ($status) {
                 case 'SUCCESS':
                     $result->status = TransferStatusEnum::SUCCESS;
@@ -525,17 +545,24 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                     break;
             }
 
+            return $result;
 
+
+        } catch (ChannelGatewayException $channelGatewayException) {
+            throw $channelGatewayException;
         } catch (Throwable $throwable) {
             report($throwable);
+            throw new ChannelGatewayException($throwable->getMessage() ?? 'gateway error');
         }
 
-        return $result;
+
     }
 
 
     protected function transferScene(TransferSceneEnum $transferScene) : string
     {
+        // 转换通过 渠道配置信息转账
+
         //单笔无密转账到支付宝，B2C现金红包: DIRECT_TRANSFER
         //C2C现金红包-领红包: PERSONAL_COLLECTION
         //CAE代扣: CAE_TRANSFER
@@ -553,7 +580,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             TransferSceneEnum::COMMISSION, TransferSceneEnum::MARKETING => 'PERSONAL_COLLECTION',
             TransferSceneEnum::CLAIMS, TransferSceneEnum::ADMINISTRATIVE => 'ENTRUST_TRANSFER',
             TransferSceneEnum::REIMBURSEMENT, TransferSceneEnum::SUBSIDY, TransferSceneEnum::REMUNERATION => 'THIRDPARTY_PERSONAL_COLLECTION',
-            TransferSceneEnum::PROCUREMENT, TransferSceneEnum::OTHER, TransferSceneEnum::SERVICE => 'UNLIMITED_PAY',
+            TransferSceneEnum::PROCUREMENT, TransferSceneEnum::SERVICE => 'UNLIMITED_PAY',
             default => 'DIRECT_TRANSFER',
         };
 

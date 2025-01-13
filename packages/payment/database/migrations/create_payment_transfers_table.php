@@ -41,6 +41,7 @@ return new class extends Migration {
                 $table->string('payee_name')->nullable()->comment('收款方类型');
 
                 $table->timestamp('executing_time')->nullable()->comment('执行时间');
+                $table->timestamp('processing_time')->nullable()->comment('处理时间');
                 $table->timestamp('transfer_time')->nullable()->comment('转账时间');
 
                 $table->string('creator_type', 32)->nullable();

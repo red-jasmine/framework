@@ -14,6 +14,7 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 class ChannelTransferData extends Data
 {
 
+    public ?string $message = null;
 
     public TransferStatusEnum $status;
 

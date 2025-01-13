@@ -17,7 +17,7 @@ class ChannelTransferCreateCommandHandler extends CommandHandler
     }
 
     /**
-     * @param  ChannelTransferCreateCommand  $command
+     * @param ChannelTransferCreateCommand $command
      *
      * @return bool
      * @throws AbstractException
@@ -34,16 +34,9 @@ class ChannelTransferCreateCommandHandler extends CommandHandler
 
             $channelApp     = $this->service->channelAppRepository->find($transfer->payment_channel_app_id);
             $channelProduct = $this->service->channelProductRepository->findByCode($transfer->channel_code,
-                $transfer->channel_product_code);
-            // 调用服务
-            try {
-                $result = $this->service->paymentChannelService->transfer($channelApp, $channelProduct, $transfer);
-                // 如果执行失败
-                // 渠道调用成功事件
-            } catch (AbstractException $exception) {
-                // 渠道调用失败事件
-                $transfer->fail();
-            }
+                                                                                   $transfer->channel_product_code);
+            $this->service->paymentChannelService->transfer($channelApp, $channelProduct, $transfer);
+
             $this->service->tradeRepository->update($transfer);
 
             $this->commitDatabaseTransaction();

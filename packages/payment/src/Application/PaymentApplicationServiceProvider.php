@@ -12,6 +12,7 @@ use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductReadRepositoryInterface;
@@ -115,9 +116,9 @@ class PaymentApplicationServiceProvider extends ServiceProvider
                       ], PaymentChannelListener::class);
 
         Event::listen([
-            TransferExecutingEvent::class,
-        ], PaymentChannelListener::class);
-
+                          TransferExecutingEvent::class,
+                          TransferProcessingEvent::class,
+                      ], PaymentChannelListener::class);
 
         // 注册通知 通知监听器
         Event::listen([

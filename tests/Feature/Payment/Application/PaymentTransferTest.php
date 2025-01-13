@@ -64,7 +64,7 @@ test('can executing a transfer', function (Transfer $transfer) {
     $result              = $this->transferCommandService->executing($command);
     $this->assertEquals(true, $result);
     $transfer = $this->transferRepository->findByNo($transfer->transfer_no);
-    $this->assertEquals(TransferStatusEnum::PROCESSING->value, $transfer->transfer_status->value);
+    $this->assertEquals(TransferStatusEnum::PENDING->value, $transfer->transfer_status->value);
 
 
     return $transfer;

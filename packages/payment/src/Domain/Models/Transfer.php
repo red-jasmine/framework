@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelTransferData;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferAbnormalEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TransferNumberGeneratorInterface;
@@ -41,7 +43,7 @@ class Transfer extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers';
     }
 
     protected function casts() : array
@@ -52,20 +54,25 @@ class Transfer extends Model
             'amount'              => MoneyCast::class,
             'payee_identity_type' => IdentityTypeEnum::class,
             'payee_cert_type'     => CertTypeEnum::class,
-            'transfer_time'       => 'datetime'
+            'transfer_time'       => 'datetime',
+            'processing_time'     => 'datetime'
         ];
     }
 
     protected $dispatchesEvents = [
-        'created'   => TransferCreatedEvent::class,
-        'success'   => TransferSuccessEvent::class,
-        'executing' => TransferExecutingEvent::class,
+        'created'    => TransferCreatedEvent::class,
+        'success'    => TransferSuccessEvent::class,
+        'executing'  => TransferExecutingEvent::class,
+        'processing' => TransferProcessingEvent::class,
+        'abnormal'   => TransferAbnormalEvent::class,
     ];
 
     protected $observables = [
         'created',
         'success',
         'executing',
+        'processing',
+        'abnormal',
     ];
 
     protected function generateNo() : void
@@ -105,12 +112,12 @@ class Transfer extends Model
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
                 return TransferPayee::from([
-                    'identityType' => $attributes['payee_identity_type'],
-                    'identityId'   => $attributes['payee_identity_id'],
-                    'name'         => $attributes['payee_name'],
-                    'certType'     => $attributes['payee_cert_type'],
-                    'certNo'       => $attributes['payee_cert_no'],
-                ]);
+                                               'identityType' => $attributes['payee_identity_type'],
+                                               'identityId'   => $attributes['payee_identity_id'],
+                                               'name'         => $attributes['payee_name'],
+                                               'certType'     => $attributes['payee_cert_type'],
+                                               'certNo'       => $attributes['payee_cert_no'],
+                                           ]);
             },
             set: static function (TransferPayee $payee) {
                 $attributes                        = [];
@@ -185,7 +192,7 @@ class Transfer extends Model
         if (!$this->isAllowExecuting()) {
             throw new PaymentException('转账不允许执行');
         }
-        $this->transfer_status = TransferStatusEnum::PROCESSING;
+        $this->transfer_status = TransferStatusEnum::PENDING;
         $this->executing_time  = now();
         $this->fireModelEvent('executing', false);
     }
@@ -196,7 +203,6 @@ class Transfer extends Model
         if (!in_array($this->transfer_status,
             [
                 TransferStatusEnum::FAIL,
-                TransferStatusEnum::PRE,
                 TransferStatusEnum::PROCESSING,
             ], true
         )) {
@@ -206,7 +212,7 @@ class Transfer extends Model
     }
 
     /**
-     * @param  ChannelTransferData  $data
+     * @param ChannelTransferData $data
      *
      * @return void
      * @throws PaymentException
@@ -229,6 +235,7 @@ class Transfer extends Model
             [
                 TransferStatusEnum::FAIL,
                 TransferStatusEnum::PRE,
+                TransferStatusEnum::PENDING,
                 TransferStatusEnum::PROCESSING,
             ], true
         )) {
@@ -238,7 +245,7 @@ class Transfer extends Model
     }
 
     /**
-     * @param  ChannelTransferData  $data
+     * @param ChannelTransferData $data
      *
      * @return void
      * @throws PaymentException
@@ -248,9 +255,10 @@ class Transfer extends Model
         if (!$this->isAllowFail()) {
             throw new PaymentException('状态不一致');
         }
-        $this->channel_transfer_no = $data->channelTransferNo ?? $this->channel_transfer_no;
-        $this->transfer_status     = TransferStatusEnum::FAIL;
-
+        $this->channel_transfer_no      = $data->channelTransferNo ?? $this->channel_transfer_no;
+        $this->transfer_status          = TransferStatusEnum::FAIL;
+        $this->extension->error_message = $data->message;
+        $this->processing_time          = now();
         $this->fireModelEvent('fail', false);
     }
 
@@ -278,4 +286,95 @@ class Transfer extends Model
 
     }
 
+    public function isAllowProcessing() : bool
+    {
+        if (!in_array($this->transfer_status,
+            [
+                TransferStatusEnum::FAIL,
+                TransferStatusEnum::PENDING,
+            ], true
+        )) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 处理中
+     * @param ChannelTransferData $data
+     * @return void
+     * @throws PaymentException
+     */
+    public function processing(ChannelTransferData $data) : void
+    {
+        if (!$this->isAllowProcessing()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->channel_transfer_no = $data->channelTransferNo;
+        $this->transfer_status     = TransferStatusEnum::PROCESSING;
+        $this->processing_time     = now();
+        $this->fireModelEvent('processing', false);
+    }
+
+    public function isAllowAbnormal() : bool
+    {
+        if (!in_array($this->transfer_status,
+            [
+                TransferStatusEnum::PENDING,
+            ], true
+        )) {
+            return false;
+        }
+        return true;
+    }
+
+    // 异常 需要经过确认
+
+    /**
+     * @param string|null $message
+     * @return void
+     * @throws PaymentException
+     */
+    public function abnormal(?string $message = null) : void
+    {
+
+        if (!$this->isAllowAbnormal()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->transfer_status          = TransferStatusEnum::ABNORMAL;
+        $this->processing_time          = now();
+        $this->extension->error_message = $message;
+        $this->fireModelEvent('abnormal', false);
+
+    }
+
+    public function isAllowRefund() : bool
+    {
+        if (!in_array($this->transfer_status,
+            [
+                TransferStatusEnum::PENDING,
+                TransferStatusEnum::PROCESSING,
+                TransferStatusEnum::FAIL,
+                TransferStatusEnum::ABNORMAL,
+            ], true
+        )) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param ChannelTransferData $data
+     * @return void
+     * @throws PaymentException
+     */
+    public function refund(ChannelTransferData $data) : void
+    {
+        if (!$this->isAllowRefund()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->transfer_status = TransferStatusEnum::REFUND;
+        // 二阶段已退款
+        $this->fireModelEvent('refund', false);
+    }
 }

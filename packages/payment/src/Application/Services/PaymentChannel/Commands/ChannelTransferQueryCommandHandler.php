@@ -29,18 +29,12 @@ class ChannelTransferQueryCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $transfer = $this->service->transferRepository->findByNo($command->transferNo);
-
+            $transfer       = $this->service->transferRepository->findByNo($command->transferNo);
             $channelApp     = $this->service->channelAppRepository->find($transfer->payment_channel_app_id);
             $channelProduct = $this->service->channelProductRepository->findByCode($transfer->channel_code, $transfer->channel_product_code);
             // 调用服务
-            try {
-                $result = $this->service->paymentChannelService->transferQuery($channelApp, $channelProduct, $transfer);
-            } catch (AbstractException $exception) {
-                $transfer->fail();
-            }
+            $this->service->paymentChannelService->transferQuery($channelApp, $channelProduct, $transfer);
             $this->service->tradeRepository->update($transfer);
-
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
