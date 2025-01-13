@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelTransferData;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferCreatedEvent;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TransferNumberGeneratorInterface;
@@ -40,7 +41,7 @@ class Transfer extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers';
     }
 
     protected function casts() : array
@@ -56,8 +57,15 @@ class Transfer extends Model
     }
 
     protected $dispatchesEvents = [
-        'created' => TransferCreatedEvent::class,
-        'success' => TransferSuccessEvent::class,
+        'created'   => TransferCreatedEvent::class,
+        'success'   => TransferSuccessEvent::class,
+        'executing' => TransferExecutingEvent::class,
+    ];
+
+    protected $observables = [
+        'created',
+        'success',
+        'executing',
     ];
 
     protected function generateNo() : void
@@ -97,12 +105,12 @@ class Transfer extends Model
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
                 return TransferPayee::from([
-                                               'identityType' => $attributes['payee_identity_type'],
-                                               'identityId'   => $attributes['payee_identity_id'],
-                                               'name'         => $attributes['payee_name'],
-                                               'certType'     => $attributes['payee_cert_type'],
-                                               'certNo'       => $attributes['payee_cert_no'],
-                                           ]);
+                    'identityType' => $attributes['payee_identity_type'],
+                    'identityId'   => $attributes['payee_identity_id'],
+                    'name'         => $attributes['payee_name'],
+                    'certType'     => $attributes['payee_cert_type'],
+                    'certNo'       => $attributes['payee_cert_no'],
+                ]);
             },
             set: static function (TransferPayee $payee) {
                 $attributes                        = [];
@@ -198,7 +206,8 @@ class Transfer extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
+     *
      * @return void
      * @throws PaymentException
      */
@@ -229,7 +238,8 @@ class Transfer extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
+     *
      * @return void
      * @throws PaymentException
      */

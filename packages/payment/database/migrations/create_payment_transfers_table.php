@@ -40,10 +40,8 @@ return new class extends Migration {
                 $table->string('payee_cert_no')->nullable()->comment('收款方证件号');
                 $table->string('payee_name')->nullable()->comment('收款方类型');
 
-
                 $table->timestamp('executing_time')->nullable()->comment('执行时间');
                 $table->timestamp('transfer_time')->nullable()->comment('转账时间');
-
 
                 $table->string('creator_type', 32)->nullable();
                 $table->string('creator_id', 64)->nullable();

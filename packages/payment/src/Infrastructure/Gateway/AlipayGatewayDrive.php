@@ -453,6 +453,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         try {
             $response       = $request->send();
             $result->status = TransferStatusEnum::FAIL;
+            dd($response->getData());
             if ($response->isSuccessful()) {
                 $result->setSuccessFul(true);
                 $data                      = $response->getAlipayResponse();

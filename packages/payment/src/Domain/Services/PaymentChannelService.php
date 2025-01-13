@@ -14,6 +14,7 @@ use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
@@ -22,7 +23,7 @@ use Throwable;
 
 /**
  * 支付渠道服务
- * 主要调度支付渠道的
+ * 主要调度支付渠道的、处理支付渠道返回的信息
  */
 class PaymentChannelService
 {
@@ -31,27 +32,28 @@ class PaymentChannelService
     /**
      * 创建交易单
      *
-     * @param ChannelApp $channelApp
-     * @param ChannelProduct $channelProduct
-     * @param Trade $trade
-     * @param Environment $environment
+     * @param  ChannelApp  $channelApp
+     * @param  ChannelProduct  $channelProduct
+     * @param  Trade  $trade
+     * @param  Environment  $environment
      *
      * @return ChannelTradeData
      * @throws PaymentException
      */
     public function purchase(
-        ChannelApp     $channelApp,
+        ChannelApp $channelApp,
         ChannelProduct $channelProduct,
-        Trade          $trade,
-        Environment    $environment
-    ) : ChannelTradeData
-    {
-        // 支付网关适配器
-        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
+        Trade $trade,
+        Environment $environment
+    ) : ChannelTradeData {
+
         // 设置支付渠道信息
         $paymentChannelData                 = new  PaymentChannelData;
         $paymentChannelData->channelApp     = $channelApp;
         $paymentChannelData->channelProduct = $channelProduct;
+
+        // 支付网关适配器
+        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
 
         try {
             $channelPurchaseResult = $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
@@ -85,39 +87,37 @@ class PaymentChannelService
     protected function getLock(Trade $trade) : Lock
     {
 
-        $name = 'red-jasmine-payment:trade:' . $trade->id;
+        $name = 'red-jasmine-payment:trade:'.$trade->id;
         return Cache::lock($name, 60);
     }
 
 
     public function completePurchase(ChannelApp $channelApp, array $data) : ChannelTradeData
     {
+        // 设置支付渠道信息
+        $paymentChannelData             = new  PaymentChannelData;
+        $paymentChannelData->channelApp = $channelApp;
         // 支付网关适配器
         $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
-        // 设置支付渠道信息
-        $paymentChannelData = new  PaymentChannelData;
-
-        $paymentChannelData->channelApp = $channelApp;
 
         return $gateway->gateway($paymentChannelData)->completePurchase($data);
     }
 
 
     /**
-     * @param ChannelApp $channelApp
-     * @param Refund $refund
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
      *
      * @return bool
      * @throws PaymentException
      */
     public function refund(ChannelApp $channelApp, Refund $refund) : bool
     {
+        $paymentChannelData             = new  PaymentChannelData;
+        $paymentChannelData->channelApp = $channelApp;
 
         // 支付网关适配器
         $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
-
-        $paymentChannelData             = new  PaymentChannelData;
-        $paymentChannelData->channelApp = $channelApp;
 
         $channelResult = $gateway->gateway($paymentChannelData)->refund($refund);
         if (!$channelResult->isSuccessFul()) {
@@ -128,8 +128,8 @@ class PaymentChannelService
     }
 
     /**
-     * @param ChannelApp $channelApp
-     * @param Refund $refund
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
      *
      * @return ChannelRefundData
      * @throws PaymentException
@@ -180,10 +180,11 @@ class PaymentChannelService
     }
 
 
-    public function transfer(ChannelApp     $channelApp,
-                             ChannelProduct $channelProduct,
-                             Transfer       $transfer) : ChannelTransferData
-    {
+    public function transfer(
+        ChannelApp $channelApp,
+        ChannelProduct $channelProduct,
+        Transfer $transfer
+    ) : ChannelTransferData {
 
         $gateway                            = ChannelGatewayDrive::create($channelApp->channel_code);
         $paymentChannelData                 = new  PaymentChannelData;
@@ -192,7 +193,7 @@ class PaymentChannelService
 
         $result                      = $gateway->gateway($paymentChannelData)->transfer($transfer);
         $channelTransferData         = new  ChannelTransferData();
-        $channelTransferData->status = TradeStatusEnum::FAIL;
+        $channelTransferData->status = TransferStatusEnum::FAIL;
         if ($result->isSuccessFul()) {
             $channelTransferData->status            = $result->status;
             $channelTransferData->channelTransferNo = $result->channelTransferNo;
@@ -204,10 +205,11 @@ class PaymentChannelService
     }
 
 
-    public function transferQuery(ChannelApp     $channelApp,
-                                  ChannelProduct $channelProduct,
-                                  Transfer       $transfer) : ChannelTransferData
-    {
+    public function transferQuery(
+        ChannelApp $channelApp,
+        ChannelProduct $channelProduct,
+        Transfer $transfer
+    ) : ChannelTransferData {
         $gateway                            = ChannelGatewayDrive::create($channelApp->channel_code);
         $paymentChannelData                 = new  PaymentChannelData;
         $paymentChannelData->channelApp     = $channelApp;

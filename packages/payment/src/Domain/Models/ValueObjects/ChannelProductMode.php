@@ -20,6 +20,7 @@ class ChannelProductMode extends Model
         'method_code', // 支付方式
         'scene_code', // 支付场景
         'status',
+        'type',
 
     ];
 
@@ -29,7 +30,7 @@ class ChannelProductMode extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_product_modes';
     }
 
 

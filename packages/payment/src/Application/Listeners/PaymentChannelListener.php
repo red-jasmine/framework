@@ -5,14 +5,14 @@ namespace RedJasmine\Payment\Application\Listeners;
 use RedJasmine\Payment\Application\Jobs\ChannelRefundQueryJob;
 use RedJasmine\Payment\Application\Jobs\ChannelRefundRequestJob;
 use RedJasmine\Payment\Application\Jobs\ChannelTransferRequestJob;
-use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
 
 class PaymentChannelListener
 {
 
-    public function handler($event)
+    public function handle($event) : void
     {
 
         $this->transferHandler($event);
@@ -20,9 +20,9 @@ class PaymentChannelListener
 
     protected function transferHandler($event) : void
     {
-        if ($event instanceof TransferExecutingCommand) {
+        if ($event instanceof TransferExecutingEvent) {
             // 调度 渠道退款请求
-            ChannelTransferRequestJob::dispatch($event->transferNo);
+            ChannelTransferRequestJob::dispatch($event->transfer->transfer_no);
         }
 
 
