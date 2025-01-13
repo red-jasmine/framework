@@ -8,29 +8,33 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefundCreateCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelTransferCreateCommand;
 use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
+use Throwable;
 
-class ChannelTransferRequestJob implements ShouldQueue
+class ChannelRefundCreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    public function __construct(private readonly string $transferNo)
+    public function __construct(private readonly string $refundNo)
     {
     }
 
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
     public function handle() : void
     {
-        // TODO 执行失败无需重试，如果执行失败了
+        // 异步请求退款
         try {
-            $command = ChannelTransferCreateCommand::from([ 'transferNo' => $this->transferNo ]);
-            app(PaymentChannelHandlerService::class)->transfer($command);
+            $command = ChannelRefundCreateCommand::from([ 'refundNo' => $this->refundNo ]);
+            app(PaymentChannelHandlerService::class)->refund($command);
+
         } catch (Throwable $throwable) {
             throw $throwable;
         }
 
     }
-
-
 }

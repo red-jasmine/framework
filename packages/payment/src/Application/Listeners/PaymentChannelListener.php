@@ -3,9 +3,9 @@
 namespace RedJasmine\Payment\Application\Listeners;
 
 use RedJasmine\Payment\Application\Jobs\ChannelRefundQueryJob;
-use RedJasmine\Payment\Application\Jobs\ChannelRefundRequestJob;
+use RedJasmine\Payment\Application\Jobs\ChannelRefundCreateJob;
 use RedJasmine\Payment\Application\Jobs\ChannelTransferQueryJob;
-use RedJasmine\Payment\Application\Jobs\ChannelTransferRequestJob;
+use RedJasmine\Payment\Application\Jobs\ChannelTransferCreateJob;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
@@ -26,7 +26,7 @@ class PaymentChannelListener
 
         if ($event instanceof RefundCreatedEvent) {
             // 调度任务
-            ChannelRefundRequestJob::dispatch($event->refund->refund_no);
+            ChannelRefundCreateJob::dispatch($event->refund->refund_no);
         }
         if ($event instanceof RefundProcessingEvent) {
             ChannelRefundQueryJob::dispatch($event->refund->refund_no)->delay(
@@ -39,7 +39,7 @@ class PaymentChannelListener
     {
         if ($event instanceof TransferExecutingEvent) {
             // 调度 渠道退款请求
-            ChannelTransferRequestJob::dispatch($event->transfer->transfer_no);
+            ChannelTransferCreateJob::dispatch($event->transfer->transfer_no);
         }
 
         if ($event instanceof TransferProcessingEvent) {
