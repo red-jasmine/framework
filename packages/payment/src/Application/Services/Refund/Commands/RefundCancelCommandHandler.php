@@ -9,7 +9,7 @@ use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
-class RefundExecutingCommandHandler extends CommandHandler
+class RefundCancelCommandHandler extends CommandHandler
 {
     public function __construct(protected RefundCommandService $service)
     {
@@ -17,14 +17,14 @@ class RefundExecutingCommandHandler extends CommandHandler
 
 
     /**
-     * @param  RefundExecutingCommand  $command
+     * @param  RefundCancelCommand  $command
      *
      * @return bool
      * @throws AbstractException
      * @throws Throwable
      * @throws PaymentException
      */
-    public function handle(RefundExecutingCommand $command) : bool
+    public function handle(RefundCancelCommand $command) : bool
     {
 
         $this->beginDatabaseTransaction();
@@ -32,7 +32,7 @@ class RefundExecutingCommandHandler extends CommandHandler
         try {
             $refund = $this->service->refundRepository->findByNo($command->refundNo);
 
-            $refund->executing();
+            $refund->cancel();
 
             $this->service->refundRepository->update($refund);
 

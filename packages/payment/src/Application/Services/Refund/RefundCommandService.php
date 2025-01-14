@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Payment\Application\Services\Refund;
 
+use RedJasmine\Payment\Application\Services\Refund\Commands\RefundCancelCommandHandler;
 use RedJasmine\Payment\Application\Services\Refund\Commands\RefundCreateCommand;
 use RedJasmine\Payment\Application\Services\Refund\Commands\RefundCreateCommandHandler;
+use RedJasmine\Payment\Application\Services\Refund\Commands\RefundExecutingCommand;
+use RedJasmine\Payment\Application\Services\Refund\Commands\RefundExecutingCommandHandler;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
@@ -11,7 +14,11 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
  * @see  RefundCreateCommandHandler::handle()
- * @method void refund(RefundCreateCommand $command)
+ * @method Refund create(RefundCreateCommand $command)
+ * @see  RefundExecutingCommandHandler::handle()
+ * @method bool executing(RefundExecutingCommand $command)
+ * @see  RefundCancelCommandHandler::handle()
+ * * @method bool cancel(RefundExecutingCommand $command)
  */
 class RefundCommandService extends ApplicationCommandService
 {
@@ -32,6 +39,8 @@ class RefundCommandService extends ApplicationCommandService
     protected static string $modelClass = Refund::class;
 
     protected static $macros = [
-        'create' => RefundCreateCommandHandler::class
+        'create'    => RefundCreateCommandHandler::class,
+        'executing' => RefundExecutingCommandHandler::class,
+        'cancel'    => RefundCancelCommandHandler::class,
     ];
 }

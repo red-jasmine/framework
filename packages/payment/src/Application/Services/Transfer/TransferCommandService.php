@@ -25,28 +25,27 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
  * @see TransferExecutingCommandHandler::handle()
- * @method executing(TransferExecutingCommand $command)
+ * @method bool executing(TransferExecutingCommand $command)
  * @see TransferFailCommandHandler::handle()
- * @method fail(TransferFailCommand $command)
+ * @method bool fail(TransferFailCommand $command)
  * @see TransferSuccessCommandHandler::handle()
- * @method success(TransferSuccessCommand $command)
+ * @method bool success(TransferSuccessCommand $command)
  * @see TransferCreateCommandHandler::handle()
- * @method create(TransferCreateCommand $command)
+ * @method Transfer create(TransferCreateCommand $command)
  * @see TransferCancelCommandHandler::handle()
- * @method cancel(TransferCancelCommand $command)
+ * @method bool cancel(TransferCancelCommand $command)
  * @see TransferCloseCommandHandler::handle()
- * * @method close(TransferCloseCommand $command)
+ * * @method bool close(TransferCloseCommand $command)
  */
 class TransferCommandService extends ApplicationCommandService
 {
     public function __construct(
-        public TransferRepositoryInterface                     $repository,
-        public ChannelAppRepositoryInterface                   $channelAppRepository,
-        public MerchantAppRepositoryInterface                  $merchantAppRepository,
-        public PaymentChannelService                           $paymentChannelService,
+        public TransferRepositoryInterface $repository,
+        public ChannelAppRepositoryInterface $channelAppRepository,
+        public MerchantAppRepositoryInterface $merchantAppRepository,
+        public PaymentChannelService $paymentChannelService,
         public MerchantChannelAppPermissionRepositoryInterface $permissionRepository
-    )
-    {
+    ) {
     }
 
     /**

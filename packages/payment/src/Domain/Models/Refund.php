@@ -301,13 +301,38 @@ class Refund extends Model
      */
     public function fail(?string $message = null) : void
     {
-        if (!$this->isAllowAbnormal()) {
+        if (!$this->isAllowFail()) {
             throw new PaymentException('状态错误');
         }
         $this->refund_status            = RefundStatusEnum::FAIL;
         $this->extension->error_message = $message;
         $this->fireModelEvent('fail', false);
     }
+
+    public function isAllowCancel() : bool
+    {
+        if (in_array($this->refund_status, [
+            RefundStatusEnum::PRE,
+            RefundStatusEnum::FAIL,
+        ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function cancel() : void
+    {
+        if (!$this->isAllowCancel()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->refund_status = RefundStatusEnum::CANCEL;
+        $this->fireModelEvent('cancel', false);
+    }
+
+
+
+
 
     public function getNotifyUlr() : ?string
     {
