@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades',
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('trade_no')->unique()->comment('交易号');
@@ -61,6 +61,8 @@ return new class extends Migration {
 
                 $table->string('status')->comment(TradeStatusEnum::comments('状态'));
                 $table->string('notify_status')->nullable()->comment(NotifyStatusEnum::comments('异步通知状态'));
+                // 分账
+                // 是否需要分账 TODO
                 // 场景信息
                 $table->string('scene_code')->nullable()->comment('支付场景');
                 $table->string('method_code')->nullable()->comment('支付方式');
@@ -88,12 +90,12 @@ return new class extends Migration {
                 $table->timestamps();
                 $table->comment('支付-支付单');
 
-                $table->unique(['merchant_app_id', 'merchant_trade_no'], 'uk_merchant_trade');
+                $table->unique([ 'merchant_app_id', 'merchant_trade_no' ], 'uk_merchant_trade');
             });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_trades');
     }
 };
