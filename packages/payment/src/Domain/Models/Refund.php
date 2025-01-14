@@ -3,18 +3,21 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
-use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\NotifyData;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundAbnormalEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundCancelEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundCloseEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundExecutingEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundFailEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
-use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
@@ -24,6 +27,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
+ * @property $status
  * @property Money $refundAmount
  */
 class Refund extends Model
@@ -42,17 +46,43 @@ class Refund extends Model
 
     }
 
+    public $incrementing = false;
+
+    use HasSnowflakeId;
+
+    use HasOperator;
+
+    protected function casts() : array
+    {
+        return [
+            'refund_status' => RefundStatusEnum::class,
+            'create_time'   => 'datetime',
+            'refund_time'   => 'datetime',
+            'refundAmount'  => MoneyCast::class,
+        ];
+    }
+
 
     protected $dispatchesEvents = [
         'created'    => RefundCreatedEvent::class,
+        'executing'  => RefundExecutingEvent::class,
         'processing' => RefundProcessingEvent::class,
+        'fail'       => RefundFailEvent::class,
         'success'    => RefundSuccessEvent::class,
+        'abnormal'   => RefundAbnormalEvent::class,
+        'close'      => RefundCloseEvent::class,
+        'cancel'     => RefundCancelEvent::class,
     ];
 
     protected $observables = [
         'created',
+        'executing',
         'processing',
-        'success'
+        'abnormal',
+        'fail',
+        'close',
+        'cancel',
+        'success',
     ];
 
     protected function generateNo() : void
@@ -73,23 +103,6 @@ class Refund extends Model
         }
 
         return $instance;
-    }
-
-
-    public $incrementing = false;
-
-    use HasSnowflakeId;
-
-    use HasOperator;
-
-    protected function casts() : array
-    {
-        return [
-            'status'       => RefundStatusEnum::class,
-            'create_time'  => 'datetime',
-            'refund_time'  => 'datetime',
-            'refundAmount' => MoneyCast::class,
-        ];
     }
 
 
@@ -117,11 +130,42 @@ class Refund extends Model
     }
 
 
+    public function isAllowExecuting() : bool
+    {
+
+        if (in_array($this->refund_status, [
+            RefundStatusEnum::PRE,
+        ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 分步执行
+     * @return void
+     * @throws PaymentException
+     */
+    public function executing() : void
+    {
+        if (!$this->isAllowExecuting()) {
+            throw new PaymentException('状态错误', PaymentException::REFUND_STATUS_ERROR);
+        }
+        $this->refund_status = RefundStatusEnum::PENDING;
+
+        $this->fireModelEvent('executing', false);
+    }
+
+
     // 是否允许渠道处理
     public function isAllowProcessing() : bool
     {
 
-        if (in_array($this->status, [RefundStatusEnum::PRE, RefundStatusEnum::ABNORMAL,], true)) {
+        if (in_array($this->refund_status, [
+            RefundStatusEnum::PRE,
+            RefundStatusEnum::ABNORMAL,
+        ], true)) {
             return true;
         }
 
@@ -130,6 +174,7 @@ class Refund extends Model
 
 
     /**
+     * 外部调用执行成功
      * @return void
      * @throws PaymentException
      */
@@ -139,7 +184,7 @@ class Refund extends Model
             throw new PaymentException('退款状态不允许处理', PaymentException::REFUND_STATUS_ERROR);
         }
         // 退款处理中
-        $this->status = RefundStatusEnum::PROCESSING;
+        $this->refund_status = RefundStatusEnum::PROCESSING;
 
         $this->fireModelEvent('processing', false);
 
@@ -148,7 +193,7 @@ class Refund extends Model
 
     public function isAllowSuccess() : bool
     {
-        if (in_array($this->status, [
+        if (in_array($this->refund_status, [
             RefundStatusEnum::PRE,
             RefundStatusEnum::ABNORMAL,
             RefundStatusEnum::PROCESSING,
@@ -174,8 +219,8 @@ class Refund extends Model
         if (!$this->isAllowSuccess()) {
             throw new PaymentException('退款状态不允许处理', PaymentException::REFUND_STATUS_ERROR);
         }
-        $this->refund_time = $refundTime ?? now();
-        $this->status      = RefundStatusEnum::SUCCESS;
+        $this->refund_time   = $refundTime ?? now();
+        $this->refund_status = RefundStatusEnum::SUCCESS;
         // 设置交易数据
         $this->trade->refundSuccess($this);
 
@@ -191,7 +236,7 @@ class Refund extends Model
     public function setChannelQueryResult(ChannelRefundData $data) : void
     {
 
-        switch ($data->status) {
+        switch ($data->refund_status) {
             case RefundStatusEnum::SUCCESS:
                 $this->success($data->refundTime);
                 break;
@@ -206,12 +251,62 @@ class Refund extends Model
 
     }
 
+    public function isAllowAbnormal() : bool
+    {
+        if (in_array($this->refund_status, [
+            RefundStatusEnum::FAIL,
+            RefundStatusEnum::ABNORMAL,
+            RefundStatusEnum::PROCESSING,
+        ], true)) {
+            return true;
+        }
 
+        return false;
+    }
+
+    /**
+     * @param  string|null  $errorMessage
+     *
+     * @return void
+     * @throws PaymentException
+     */
     public function abnormal(?string $errorMessage) : void
     {
-        $this->status                   = RefundStatusEnum::ABNORMAL;
+        if (!$this->isAllowAbnormal()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->refund_status            = RefundStatusEnum::ABNORMAL;
         $this->extension->error_message = $errorMessage;
         $this->fireModelEvent('abnormal', false);
+    }
+
+    public function isAllowFail() : bool
+    {
+        if (in_array($this->refund_status, [
+            RefundStatusEnum::FAIL,
+            RefundStatusEnum::ABNORMAL,
+            RefundStatusEnum::PROCESSING,
+        ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  string|null  $message
+     *
+     * @return void
+     * @throws PaymentException
+     */
+    public function fail(?string $message = null) : void
+    {
+        if (!$this->isAllowAbnormal()) {
+            throw new PaymentException('状态错误');
+        }
+        $this->refund_status            = RefundStatusEnum::FAIL;
+        $this->extension->error_message = $message;
+        $this->fireModelEvent('fail', false);
     }
 
     public function getNotifyUlr() : ?string
@@ -236,7 +331,7 @@ class Refund extends Model
             'merchant_app_id'        => $this->merchant_app_id,
             'refund_no'              => $this->refund_no,
             'trade_no'               => $this->trade_no,
-            'status'                 => $this->status->value,
+            'status'                 => $this->refund_status->value,
             'create_time'            => $this->create_time?->format('Y-m-d H:i:s'),
             'paid_time'              => $this->refund_time?->format('Y-m-d H:i:s'),
             'subject'                => $this->subject,

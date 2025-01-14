@@ -36,7 +36,8 @@ class TransferCreateCommandHandler extends CommandHandler
 
         try {
             $merchantApp = $this->service->merchantAppRepository->find($command->merchantAppId);
-            $transfer    = app(TransferFactory::class)->create($command);
+
+            $transfer = app(TransferFactory::class)->create($command);
             // 绑定商户应用
             $transfer->merchant_id     = $merchantApp->merchant_id;
             $transfer->merchant_app_id = $merchantApp->id;
@@ -48,6 +49,10 @@ class TransferCreateCommandHandler extends CommandHandler
             $channelProduct = $this->transferRoutingService->getChannelProduct($transfer, $channelApp);
 
             $transfer->setChannelApp($channelApp, $channelProduct);
+
+            if ($command->isAutoExecute) {
+                $transfer->executing();
+            }
 
             $this->service->repository->store($transfer);
 

@@ -43,6 +43,9 @@ class RefundCreateCommandHandler extends CommandHandler
 
             $trade->createRefund($refund);
 
+            if ($command->isAutoExecute) {
+                $refund->executing();
+            }
             $this->service->tradeRepository->update($trade);
 
             $this->commitDatabaseTransaction();

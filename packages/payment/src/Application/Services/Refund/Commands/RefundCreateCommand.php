@@ -32,4 +32,10 @@ class RefundCreateCommand extends Data
     public ?string $notifyUrl = null;
 
     public ?string $passBackParams = null;
+
+    /**
+     *
+     * @var bool
+     */
+    public bool $isAutoExecute = true;
 }

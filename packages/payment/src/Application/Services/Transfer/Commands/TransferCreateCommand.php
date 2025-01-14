@@ -10,5 +10,11 @@ use RedJasmine\Payment\Domain\Data\TransferCreateData;
 class TransferCreateCommand extends TransferCreateData
 {
 
+    /**
+     * 是否自定执行
+     * @var bool
+     */
+    public bool $isAutoExecute = true;
+
 
 }

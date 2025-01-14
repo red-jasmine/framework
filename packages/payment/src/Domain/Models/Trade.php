@@ -302,7 +302,7 @@ class Trade extends Model implements AsyncNotifyInterface
         $refund->channel_app_id          = $this->channel_app_id;
         $refund->channel_merchant_id     = $this->channel_merchant_id;
         $refund->payment_channel_app_id  = $this->payment_channel_app_id;
-        $refund->status                  = RefundStatusEnum::PRE;
+        $refund->refund_status           = RefundStatusEnum::PRE;
 
 
         $this->refunding_amount_value = (int) ($this->refunding_amount_value + $refund->refundAmount->value);

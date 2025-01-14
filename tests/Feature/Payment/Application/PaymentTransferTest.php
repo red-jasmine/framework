@@ -71,7 +71,7 @@ test('can executing a transfer', function (Transfer $transfer) {
 
 })->depends('create a transfer');
 
-return;
+
 test('can transfer fail', function (Transfer $transfer) {
 
     $command             = new TransferFailCommand();

@@ -12,7 +12,7 @@ return [
 
 
     // 退款申请后 查询间隔
-    'refund_query_interval'   => 30, // 单位m秒
+    'refund_query_interval'   => 60, // 单位m秒
     // 转账后查询间隔
-    'transfer_query_interval' => 30, // 单位m秒
+    'transfer_query_interval' => 60, // 单位m秒
 ];

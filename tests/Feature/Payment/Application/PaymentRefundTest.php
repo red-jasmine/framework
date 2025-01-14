@@ -13,6 +13,7 @@ use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
@@ -249,6 +250,7 @@ test('can create a refund', function (Trade $trade) {
      */
     $refund = $this->refundCommandService->create($command);
 
+    $this->assertEquals(TransferStatusEnum::PENDING->value, $refund->refund_status->value);
     $this->assertEquals($trade->trade_no, $refund->trade_no);
     $this->assertEquals($trade->id, $refund->trade_id);
     $this->assertEquals($trade->merchant_id, $refund->merchant_id);

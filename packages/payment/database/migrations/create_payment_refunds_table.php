@@ -30,7 +30,7 @@ return new class extends Migration {
                 $table->string('refund_amount_currency')->comment('货币');
                 $table->unsignedBigInteger('refund_amount_value')->default(0)->comment('金额');
                 $table->string('refund_reason')->comment('商户原始退款单号');
-                $table->string('status')->comment(RefundStatusEnum::comments('退款状态'));
+                $table->string('refund_status')->comment(RefundStatusEnum::comments('退款状态'));
                 $table->string('notify_status')->nullable()->comment(NotifyStatusEnum::comments('异步通知状态'));
                 $table->timestamp('create_time')->nullable()->comment('创建时间');
                 $table->timestamp('refund_time')->nullable()->comment('退款时间');

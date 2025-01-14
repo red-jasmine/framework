@@ -34,21 +34,20 @@ class PaymentChannelService
     /**
      * 创建交易单
      *
-     * @param ChannelApp $channelApp
-     * @param ChannelProduct $channelProduct
-     * @param Trade $trade
-     * @param Environment $environment
+     * @param  ChannelApp  $channelApp
+     * @param  ChannelProduct  $channelProduct
+     * @param  Trade  $trade
+     * @param  Environment  $environment
      *
      * @return ChannelTradeData
      * @throws PaymentException
      */
     public function purchase(
-        ChannelApp     $channelApp,
+        ChannelApp $channelApp,
         ChannelProduct $channelProduct,
-        Trade          $trade,
-        Environment    $environment
-    ) : ChannelTradeData
-    {
+        Trade $trade,
+        Environment $environment
+    ) : ChannelTradeData {
 
         // 设置支付渠道信息
         $paymentChannelData                 = new  PaymentChannelData;
@@ -90,7 +89,7 @@ class PaymentChannelService
     protected function getLock(Trade $trade) : Lock
     {
 
-        $name = 'red-jasmine-payment:trade:' . $trade->id;
+        $name = 'red-jasmine-payment:trade:'.$trade->id;
         return Cache::lock($name, 60);
     }
 
@@ -108,31 +107,48 @@ class PaymentChannelService
 
 
     /**
-     * @param ChannelApp $channelApp
-     * @param Refund $refund
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
      *
      * @return bool
      * @throws PaymentException
      */
     public function refund(ChannelApp $channelApp, Refund $refund) : bool
     {
-        $paymentChannelData             = new  PaymentChannelData;
-        $paymentChannelData->channelApp = $channelApp;
 
-        // 支付网关适配器
-        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
-
-        $channelResult = $gateway->gateway($paymentChannelData)->refund($refund);
-        if (!$channelResult->isSuccessFul()) {
-            // 渠道退款异常
-            throw new PaymentException($channelResult->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
+        if (!$refund->isAllowProcessing()) {
+            throw new PaymentException('不支持渠道处理退款', PaymentException::REFUND_STATUS_ERROR);
         }
-        return true;
+
+        try {
+            // 支付网关适配器
+            $paymentChannelData             = new  PaymentChannelData;
+            $paymentChannelData->channelApp = $channelApp;
+            $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
+            $channelResult                  = $gateway->gateway($paymentChannelData)->refund($refund);
+            if ($channelResult->isSuccessFul()) {
+                $refund->processing();
+                return true;
+            } else {
+                $refund->fail($channelResult->getMessage());
+                return false;
+            }
+        } catch (ChannelGatewayException $channelGatewayException) {
+            // 需要二次确认
+            $refund->abnormal($channelGatewayException->getMessage());
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
+            $refund->abnormal($throwable->getMessage());
+            return false;
+        }
+
+
     }
 
     /**
-     * @param ChannelApp $channelApp
-     * @param Refund $refund
+     * @param  ChannelApp  $channelApp
+     * @param  Refund  $refund
      *
      * @return ChannelRefundData
      * @throws PaymentException
@@ -184,25 +200,25 @@ class PaymentChannelService
 
 
     /**
-     * @param ChannelApp $channelApp
-     * @param ChannelProduct $channelProduct
-     * @param Transfer $transfer
+     * @param  ChannelApp  $channelApp
+     * @param  ChannelProduct  $channelProduct
+     * @param  Transfer  $transfer
+     *
      * @return bool
      * @throws PaymentException
      */
     public function transfer(
-        ChannelApp     $channelApp,
+        ChannelApp $channelApp,
         ChannelProduct $channelProduct,
-        Transfer       $transfer
-    ) : bool
-    {
+        Transfer $transfer
+    ) : bool {
 
         Log::withContext([
-                             'transfer_no'          => $transfer->transfer_no,
-                             'channel_code'         => $channelApp->channel_code,
-                             'channel_app_id'       => $channelApp->id,
-                             'channel_product_code' => $channelProduct->code,
-                         ]);
+            'transfer_no'          => $transfer->transfer_no,
+            'channel_code'         => $channelApp->channel_code,
+            'channel_app_id'       => $channelApp->id,
+            'channel_product_code' => $channelProduct->code,
+        ]);
 
         Log::info('payment.domain.service.channel-service.transfer:start');
 
@@ -250,24 +266,24 @@ class PaymentChannelService
 
 
     /**
-     * @param ChannelApp $channelApp
-     * @param ChannelProduct $channelProduct
-     * @param Transfer $transfer
+     * @param  ChannelApp  $channelApp
+     * @param  ChannelProduct  $channelProduct
+     * @param  Transfer  $transfer
+     *
      * @return bool
      */
     public function transferQuery(
-        ChannelApp     $channelApp,
+        ChannelApp $channelApp,
         ChannelProduct $channelProduct,
-        Transfer       $transfer
-    ) : bool
-    {
+        Transfer $transfer
+    ) : bool {
 
         Log::withContext([
-                             'transfer_no'          => $transfer->transfer_no,
-                             'channel_code'         => $channelApp->channel_code,
-                             'channel_app_id'       => $channelApp->id,
-                             'channel_product_code' => $channelProduct->code,
-                         ]);
+            'transfer_no'          => $transfer->transfer_no,
+            'channel_code'         => $channelApp->channel_code,
+            'channel_app_id'       => $channelApp->id,
+            'channel_product_code' => $channelProduct->code,
+        ]);
 
         Log::info('payment.domain.service.channel-service.transferQuery:start');
 
@@ -284,7 +300,8 @@ class PaymentChannelService
             Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:start');
             $result = $gateway->gateway($paymentChannelData)->transferQuery($transfer);
             // 网关调用是否正常
-            Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:end', $result->toArray());
+            Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:end',
+                $result->toArray());
 
 
             if (!$result->isSuccessFul()) {
@@ -315,7 +332,7 @@ class PaymentChannelService
         } catch (ChannelGatewayException $channelGatewayException) {
             //  查询是网关遗产不处理  上报异常即可
             report($channelGatewayException);
-            Log::info('payment.domain.service.channel-service.transferQuery:ChannelGatewayDrive:error:' . $channelGatewayException->getMessage());
+            Log::info('payment.domain.service.channel-service.transferQuery:ChannelGatewayDrive:error:'.$channelGatewayException->getMessage());
             return false;
         } catch (Throwable $throwable) {
             report($throwable);

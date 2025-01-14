@@ -7,7 +7,9 @@ use RedJasmine\Payment\Application\Jobs\ChannelRefundCreateJob;
 use RedJasmine\Payment\Application\Jobs\ChannelTransferQueryJob;
 use RedJasmine\Payment\Application\Jobs\ChannelTransferCreateJob;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundCreatedEvent;
+use RedJasmine\Payment\Domain\Events\Refunds\RefundExecutingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
+use RedJasmine\Payment\Domain\Events\Transfers\TransferAbnormalEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 
@@ -24,13 +26,13 @@ class PaymentChannelListener
     protected function refundHandler($event) : void
     {
 
-        if ($event instanceof RefundCreatedEvent) {
+        if ($event instanceof RefundExecutingEvent) {
             // 调度任务
             ChannelRefundCreateJob::dispatch($event->refund->refund_no);
         }
         if ($event instanceof RefundProcessingEvent) {
             ChannelRefundQueryJob::dispatch($event->refund->refund_no)->delay(
-                now()->addSeconds(config('red-jasmine.payment.refund_query_interval', 30))
+                now()->addSeconds(config('red-jasmine.payment.refund_query_interval', 60))
             );
         }
     }
@@ -41,10 +43,10 @@ class PaymentChannelListener
             // 调度 渠道退款请求
             ChannelTransferCreateJob::dispatch($event->transfer->transfer_no);
         }
-
-        if ($event instanceof TransferProcessingEvent) {
+        // 如果异常 那么需要二次查询确认
+        if ($event instanceof TransferProcessingEvent || $event instanceof TransferAbnormalEvent) {
             ChannelTransferQueryJob::dispatch($event->transfer->transfer_no)->delay(
-                now()->addSeconds(config('red-jasmine.payment.transfer_query_interval', 30))
+                now()->addSeconds(config('red-jasmine.payment.transfer_query_interval', 60))
             );
         }
 
