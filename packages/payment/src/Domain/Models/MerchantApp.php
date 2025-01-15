@@ -4,9 +4,11 @@ namespace RedJasmine\Payment\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Helpers\Signer\Signer;
@@ -54,7 +56,7 @@ class MerchantApp extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_apps';
     }
 
 
@@ -81,6 +83,18 @@ class MerchantApp extends Model
         $keys                  = (new Signer())->generateKeys();
         $this->app_public_key  = $keys['public'];
         $this->app_private_key = $keys['private'];
+    }
+
+    public function channelApps() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            ChannelApp::class,
+            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions',
+            'merchant_app_id',
+            'channel_app_id',
+        )->using(MerchantChannelAppPermission::class)
+                    ->wherePivot('status', PermissionStatusEnum::ENABLE->value)
+                    ->withTimestamps();
     }
 
 
