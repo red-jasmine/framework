@@ -40,6 +40,7 @@ test('create a transfer', function () {
     ]);
 
     $command                     = new TransferCreateCommand();
+    $command->isAutoExecute      = false;
     $command->merchantAppId      = $this->merchantApp->id;
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';

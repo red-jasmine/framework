@@ -73,9 +73,9 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
 
             'create_payment_channel_products_table',
             'create_payment_channel_product_modes_table',
+            'create_payment_channel_merchants_table',
             'create_payment_channel_apps_table',
             'create_payment_channel_apps_products_table',
-
 
             'create_payment_providers_table',
             'create_payment_merchants_table',

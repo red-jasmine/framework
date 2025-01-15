@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
-use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -41,9 +40,8 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
         'owner_type',
         'owner_id',
         'channel_app_id',
-        'channel_merchant_id',
+        'system_channel_merchant_id',
         'app_name',
-        'merchant_name',
         'is_sandbox',
         'channel_code',
         'sign_method',

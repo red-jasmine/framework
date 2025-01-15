@@ -5,6 +5,7 @@ namespace RedJasmine\Tests\Feature\Payment\Fixtures;
 use Illuminate\Support\Arr;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelMerchant;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
@@ -19,7 +20,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 class MerchantFixtures
 {
 
-    public static function init($test):void
+    public static function init($test) : void
     {
         /**
          * @var Merchant $merchant
@@ -178,7 +179,6 @@ class MerchantFixtures
                     'payment_channel_product_id' => $channelProduct->id,
                     'method_code'                => $mode['method_code'],
                     'scene_code'                 => $mode['scene_code'],
-                    'type'                       => $mode['type'] ?? 'payment',
                 ]);
             }
         }
@@ -189,12 +189,34 @@ class MerchantFixtures
         ];
         $test->channelApps = [];
         foreach ($channelAppsData as $channelAppData) {
-            $channelAppData['owner_type'] = 'user';
-            $channelAppData['owner_id']   = 1;
-            $test->channelApps[]          = $channelApp = ChannelApp::updateOrCreate(
+
+            $channelMerchantData                          = [];
+            $channelMerchantData['owner_type']            = 'user';
+            $channelMerchantData['owner_id']              = 1;
+            $channelMerchantData['type']                  = MerchantTypeEnum::GENERAL->value;
+            $channelMerchantData['channel_code']          = $channelAppData['channel_code'];
+            $channelMerchantData['channel_merchant_id']   = $channelAppData['channel_merchant_id'];
+            $channelMerchantData['channel_merchant_name'] = $channelAppData['merchant_name'];
+
+
+            $channelMerchant                              = ChannelMerchant::updateOrCreate(
+                Arr::only($channelMerchantData, [
+                    'owner_type',
+                    'owner_id',
+                    'channel_code',
+                    'channel_merchant_id'
+                ]),
+                $channelMerchantData
+            );
+            $channelAppData['system_channel_merchant_id'] = $channelMerchant->id;
+            $channelAppData['owner_type']                 = 'user';
+            $channelAppData['owner_id']                   = 1;
+
+            $test->channelApps[]                          = $channelApp = ChannelApp::updateOrCreate(
                 Arr::only($channelAppData, [
                     'owner_type',
                     'owner_id',
+                    'system_channel_merchant_id',
                     'channel_code',
                     'channel_app_id'
                 ]),

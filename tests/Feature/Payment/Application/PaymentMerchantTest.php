@@ -187,7 +187,7 @@ test('create payment channel apps', function ($products) {
 
 
     $command        = new ChannelAppCreateCommand();
-    $command->owner = $this->owner;
+  
     $apps           = [];
     foreach ($this->channelData as $channelData) {
         $channel                       = $this->ChannelRepository->findByCode($channelData['code']);

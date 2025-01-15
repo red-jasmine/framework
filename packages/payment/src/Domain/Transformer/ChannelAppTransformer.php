@@ -13,8 +13,6 @@ class ChannelAppTransformer implements TransformerInterface
     public function transform(Data|ChannelAppData $data, Model|ChannelApp|null $model = null) : ?ChannelApp
     {
         $model                          = $model ?? ChannelApp::make();
-        $model->channel_code            = $data->channelCode;
-        $model->channel_merchant_id     = $data->channelMerchantId;
         $model->channel_app_id          = $data->channelAppId;
         $model->is_sandbox              = $data->isSandbox;
         $model->sign_type               = $data->signType;
@@ -24,7 +22,6 @@ class ChannelAppTransformer implements TransformerInterface
         $model->status                  = $data->status;
         $model->remarks                 = $data->remarks;
         $model->app_name                = $data->appName;
-        $model->merchant_name           = $data->merchantName;
         $model->setRelation('products', collect($data->products));
 
         return $model;
