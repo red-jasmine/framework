@@ -90,6 +90,10 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_transfers_table',
             'create_payment_transfer_extensions_table',
 
+
+            'create_payment_settle_receivers_table',
+            'create_payment_settle_receiver_accounts_table',
+
             'create_payment_notifies_table',
 
         ];

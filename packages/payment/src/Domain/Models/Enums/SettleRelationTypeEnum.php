@@ -7,7 +7,7 @@ use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 /**
  * 结算关系类型
  */
-enum SettleRelationType: string
+enum SettleRelationTypeEnum: string
 {
     use EnumsHelper;
 

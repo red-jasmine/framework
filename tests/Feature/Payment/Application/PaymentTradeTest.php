@@ -39,7 +39,7 @@ test('pre create a payment trade', function () {
 
     $command->merchantAppId = $this->merchantApp->id;
 
-    $command->amount               = Money::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount               = Money::from(['value' => fake()->randomNumber(1, 5000), 'currency' => 'CNY']);
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';
@@ -156,6 +156,8 @@ test('can paying a trade', function (Trade $trade, $methods) {
 
     $channelTrade = $this->tradeCommandService->paying($command);
 
+
+    dd($channelTrade);
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
     $this->assertEquals($command->method, $channelTrade->methodCode, '支付方式不一致');
