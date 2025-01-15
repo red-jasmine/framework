@@ -12,7 +12,6 @@ beforeEach(function () {
     $this->repository     = app(ChannelRepositoryInterface::class);
     //
 
-    $this->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
 });
 
 

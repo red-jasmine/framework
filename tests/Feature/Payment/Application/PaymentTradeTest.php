@@ -18,13 +18,13 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Tests\Feature\Payment\Fixtures\MerchantFixtures;
+use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
     // 数据准备
 
 
-    MerchantFixtures::init($this);
+    BaseDataFixtures::init($this);
 
 
     $this->tradeCommandService = app(TradeCommandService::class);
@@ -157,7 +157,6 @@ test('can paying a trade', function (Trade $trade, $methods) {
     $channelTrade = $this->tradeCommandService->paying($command);
 
 
-    dd($channelTrade);
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
     $this->assertEquals($command->method, $channelTrade->methodCode, '支付方式不一致');

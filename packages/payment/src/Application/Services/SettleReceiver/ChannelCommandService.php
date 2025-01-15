@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Application\Services\SettleReceiver;
 
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
+use RedJasmine\Payment\Domain\Transformer\SettleReceiverTransformer;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\SettleReceiverRepository;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
@@ -12,7 +13,10 @@ use RedJasmine\Support\Data\Data;
  */
 class ChannelCommandService extends ApplicationCommandService
 {
-    public function __construct(public SettleReceiverRepository $repository)
+    public function __construct(
+        public SettleReceiverRepository  $repository,
+        public SettleReceiverTransformer $transformer,
+    )
     {
     }
 

@@ -10,7 +10,7 @@ interface MerchantChannelAppPermissionRepositoryInterface
 {
 
 
-    public function find(int $merchantId, int $channelAppId) : ?MerchantChannelAppPermission;
+    public function find(int $merchantAppId, int $channelAppId) : ?MerchantChannelAppPermission;
 
     /**
      * 存储一个模型实例到数据库。
@@ -22,10 +22,10 @@ interface MerchantChannelAppPermissionRepositoryInterface
     public function store(MerchantChannelAppPermission $model) : MerchantChannelAppPermission;
 
     /**
-     * @param  int  $merchantId
+     * @param  int  $merchantAppId
      *
      * @return Collection<MerchantChannelAppPermission>
      */
-    public function findMerchantAuthorizedChannelApps(int $merchantId) : Collection;
+    public function findMerchantAppAuthorizedChannelApps(int $merchantAppId) : Collection;
 
 }

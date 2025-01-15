@@ -11,9 +11,9 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
 
     protected static string $eloquentModelClass = MerchantChannelAppPermission::class;
 
-    public function find(int $merchantId, int $channelAppId) : ?MerchantChannelAppPermission
+    public function find(int $merchantAppId, int $channelAppId) : ?MerchantChannelAppPermission
     {
-        return static::$eloquentModelClass::where('merchant_id', $merchantId)
+        return static::$eloquentModelClass::where('merchant_app_id', $merchantAppId)
                                           ->where('channel_app_id', $channelAppId)
                                           ->first();
     }
@@ -26,10 +26,10 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
         return $model;
     }
 
-    public function findMerchantAuthorizedChannelApps(int $merchantId) : Collection
+    public function findMerchantAppAuthorizedChannelApps(int $merchantAppId) : Collection
     {
         return static::$eloquentModelClass::with(['channelApp'])
-                                          ->where('merchant_id', $merchantId)
+                                          ->where('merchant_app_id', $merchantAppId)
                                           ->get();
     }
 

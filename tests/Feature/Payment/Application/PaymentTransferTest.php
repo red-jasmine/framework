@@ -14,12 +14,12 @@ use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
-use RedJasmine\Tests\Feature\Payment\Fixtures\MerchantFixtures;
+use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
     // 数据准备
 
-    MerchantFixtures::init($this);
+    BaseDataFixtures::init($this);
     $this->tradeCommandService    = app(TradeCommandService::class);
     $this->tradeRepository        = app(TradeRepositoryInterface::class);
     $this->transferCommandService = app(TransferCommandService::class);
@@ -29,7 +29,7 @@ beforeEach(function () {
 
 
 test('create a transfer', function () {
-    $channelApp = $this->merchant->channelApps->first();
+    $channelApp = $this->merchantApp->channelApps->first();
 
     $TransferPayee = TransferPayee::from([
         'identity_type' => 'LOGIN_ID',

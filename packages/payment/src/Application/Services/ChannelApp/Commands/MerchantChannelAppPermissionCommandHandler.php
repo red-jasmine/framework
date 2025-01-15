@@ -17,7 +17,7 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
     }
 
     /**
-     * @param  MerchantChannelAppPermissionData  $command
+     * @param MerchantChannelAppPermissionData $command
      *
      * @return void
      * @throws AbstractException
@@ -29,14 +29,15 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
 
         $this->beginDatabaseTransaction();
         try {
-            $this->service->merchantRepository->find($command->merchantId);
+
+            $this->service->merchantAppRepository->find($command->merchantAppId);
             $this->service->repository->find($command->channelAppId);
-            $permission                 = $this->service
-                ->permissionRepository->find($command->merchantId, $command->channelAppId);
-            $permission                 = $permission ?? MerchantChannelAppPermission::make();
-            $permission->channel_app_id = $command->channelAppId;
-            $permission->merchant_id    = $command->merchantId;
-            $permission->status         = $command->status;
+            $permission                  = $this->service
+                ->permissionRepository->find($command->merchantAppId, $command->channelAppId);
+            $permission                  = $permission ?? MerchantChannelAppPermission::make();
+            $permission->merchant_app_id = $command->merchantAppId;
+            $permission->channel_app_id  = $command->channelAppId;
+            $permission->status          = $command->status;
             $this->service->permissionRepository->store($permission);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

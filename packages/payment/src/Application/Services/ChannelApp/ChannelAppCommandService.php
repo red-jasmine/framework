@@ -9,6 +9,7 @@ use RedJasmine\Payment\Domain\Data\ChannelAppData;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\ChannelAppTransformer;
@@ -21,11 +22,13 @@ use RedJasmine\Support\Application\ApplicationCommandService;
 class ChannelAppCommandService extends ApplicationCommandService
 {
     public function __construct(
-        public ChannelAppRepositoryInterface $repository,
-        public ChannelAppTransformer $transformer,
-        public MerchantRepositoryInterface $merchantRepository,
+        public ChannelAppRepositoryInterface                   $repository,
+        public ChannelAppTransformer                           $transformer,
+        public MerchantRepositoryInterface                     $merchantRepository,
+        public MerchantAppRepositoryInterface                  $merchantAppRepository,
         public MerchantChannelAppPermissionRepositoryInterface $permissionRepository
-    ) {
+    )
+    {
     }
 
     protected static string $modelClass = ChannelApp::class;

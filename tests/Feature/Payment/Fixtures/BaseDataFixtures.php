@@ -3,6 +3,7 @@
 namespace RedJasmine\Tests\Feature\Payment\Fixtures;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelMerchant;
@@ -17,11 +18,14 @@ use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 
-class MerchantFixtures
+class BaseDataFixtures
 {
 
     public static function init($test) : void
     {
+
+
+        $test->owner = Auth::user();
         /**
          * @var Merchant $merchant
          */
@@ -53,26 +57,26 @@ class MerchantFixtures
 
         // 支付方式
         $test->paymentMethods[] = Method::firstOrCreate(
-            ['code' => 'alipay'],
-            ['name' => '支付宝', 'code' => 'alipay']
+            [ 'code' => 'alipay' ],
+            [ 'name' => '支付宝', 'code' => 'alipay' ]
 
         );
         $test->paymentMethods[] = Method::firstOrCreate(
-            ['code' => 'wechat'],
-            ['name' => '微信', 'code' => 'wechat'],
+            [ 'code' => 'wechat' ],
+            [ 'name' => '微信', 'code' => 'wechat' ],
 
         );
 
         //  支付渠道
 
         $test->channels[] = Channel::firstOrCreate(
-            ['code' => 'alipay'],
-            ['name' => '支付宝', 'code' => 'alipay']
+            [ 'code' => 'alipay' ],
+            [ 'name' => '支付宝', 'code' => 'alipay' ]
         );
 
         $test->channels[] = Channel::firstOrCreate(
-            ['code' => 'wechat'],
-            ['name' => '微信', 'code' => 'wechat']
+            [ 'code' => 'wechat' ],
+            [ 'name' => '微信', 'code' => 'wechat' ]
         );
 
         // 创建产品
@@ -172,14 +176,14 @@ class MerchantFixtures
 
             foreach ($productData['modes'] as $mode) {
                 ChannelProductMode::firstOrCreate([
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'method_code'                => $mode['method_code'],
-                    'scene_code'                 => $mode['scene_code'],
-                ], [
-                    'payment_channel_product_id' => $channelProduct->id,
-                    'method_code'                => $mode['method_code'],
-                    'scene_code'                 => $mode['scene_code'],
-                ]);
+                                                      'payment_channel_product_id' => $channelProduct->id,
+                                                      'method_code'                => $mode['method_code'],
+                                                      'scene_code'                 => $mode['scene_code'],
+                                                  ], [
+                                                      'payment_channel_product_id' => $channelProduct->id,
+                                                      'method_code'                => $mode['method_code'],
+                                                      'scene_code'                 => $mode['scene_code'],
+                                                  ]);
             }
         }
 
@@ -212,7 +216,7 @@ class MerchantFixtures
             $channelAppData['owner_type']                 = 'user';
             $channelAppData['owner_id']                   = 1;
 
-            $test->channelApps[]                          = $channelApp = ChannelApp::updateOrCreate(
+            $test->channelApps[] = $channelApp = ChannelApp::updateOrCreate(
                 Arr::only($channelAppData, [
                     'owner_type',
                     'owner_id',
@@ -226,21 +230,19 @@ class MerchantFixtures
             foreach ($test->channelProducts as $channelProduct) {
                 if ($channelApp->channel_code === $channelProduct->channel_code) {
                     ChannelAppProduct::firstOrCreate([
-                        'payment_channel_product_id' => $channelProduct->id,
-                        'payment_channel_app_id'     => $channelApp->id,
-                    ], [
-                        'payment_channel_product_id' => $channelProduct->id,
-                        'payment_channel_app_id'     => $channelApp->id,
-                    ]);
+                                                         'payment_channel_product_id' => $channelProduct->id,
+                                                         'payment_channel_app_id'     => $channelApp->id,
+                                                     ], [
+                                                         'payment_channel_product_id' => $channelProduct->id,
+                                                         'payment_channel_app_id'     => $channelApp->id,
+                                                     ]);
                 }
             }
         }
 
 
         //  给商户授权 渠道应用
-
-
-        $test->merchant->channelApps()->sync(collect($test->channelApps)->pluck('id')->toArray());
+        $test->merchantApp->channelApps()->sync(collect($test->channelApps)->pluck('id')->toArray());
     }
 
 }

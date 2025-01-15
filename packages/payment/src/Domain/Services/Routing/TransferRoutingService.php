@@ -40,7 +40,7 @@ class TransferRoutingService
         $merchantApp = $this->merchantAppRepository->find($transfer->merchant_app_id);
 
         $availableChannelApps = $this->channelAppPermissionService
-            ->getAvailableChannelAppsByMerchantApp($merchantApp);
+            ->getAvailableChannelAppsByMerchantApp($merchantApp->id);
 
 
         // 转账环境过滤

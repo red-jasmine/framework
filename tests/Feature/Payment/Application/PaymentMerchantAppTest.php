@@ -1,19 +1,21 @@
 <?php
 
-use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantCreateCommand;
+use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
 use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppCreateCommand;
 use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppUpdateCommand;
 use RedJasmine\Payment\Application\Services\MerchantApp\MerchantAppCommandService;
+use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
-use RedJasmine\Payment\Domain\Models\Merchant;
+use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
 
+    BaseDataFixtures::init($this);
     $this->paymentMerchantRepository     = app(MerchantRepositoryInterface::class);
     $this->paymentMerchantCommandService = app(MerchantCommandService::class);
 
@@ -23,27 +25,8 @@ beforeEach(function () {
 });
 
 
-test('can create merchant', function () {
-
-    $command = new MerchantCreateCommand();
-
-
-    $command->owner = UserData::from([ 'type' => 'user', 'id' => 1 ]);
-
-    $command->name      = 'XXX有限公司';
-    $command->shortName = '测试';
-
-
-    $merchant = $this->paymentMerchantCommandService->create($command);
-
-
-    $this->assertEquals($command->name, $merchant->name, '商户名称');
-
-    return $merchant;
-});
-
-test('can create a merchant app', function (Merchant $merchant) {
-
+test('can create a merchant app', function () {
+    $merchant = $this->merchant;
 
     $command             = new MerchantAppCreateCommand();
     $command->name       = fake()->company;
@@ -59,7 +42,44 @@ test('can create a merchant app', function (Merchant $merchant) {
 
     return $model;
 
-})->depends('can create merchant');
+});
+
+
+// 授权商户应用 TODO
+test('can authorize channel app', function (MerchantApp $merchantApp) {
+
+
+    foreach ($this->channelApps as $app) {
+        $command                = new MerchantChannelAppPermissionData();
+        $command->channelAppId  = $app->id;
+        $command->merchantAppId = $merchantApp->id;
+
+        $service = app(ChannelAppCommandService::class);
+        $service->authorize($command);
+
+
+    }
+    $merchantApp = app(MerchantAppRepositoryInterface::class)->find($merchantApp->id);
+
+    $this->assertEquals(count($this->channelApps), $merchantApp->channelApps->count());
+
+
+    foreach ($this->channelApps as $app) {
+        $command                = new MerchantChannelAppPermissionData();
+        $command->channelAppId  = $app->id;
+        $command->merchantAppId = $merchantApp->id;
+        $command->status        = PermissionStatusEnum::DISABLE;
+        $service                = app(ChannelAppCommandService::class);
+        $service->authorize($command);
+
+
+    }
+    $merchantApp = app(MerchantAppRepositoryInterface::class)->find($merchantApp->id);
+
+    $this->assertEquals(0, $merchantApp->channelApps->count());
+
+
+})->depends('can create a merchant app');
 
 
 test('can update a merchant app', function (MerchantApp $merchantApp) {

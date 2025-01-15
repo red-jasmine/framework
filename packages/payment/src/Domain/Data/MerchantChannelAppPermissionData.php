@@ -8,7 +8,7 @@ use RedJasmine\Support\Data\Data;
 class MerchantChannelAppPermissionData extends Data
 {
 
-    public int $merchantId;
+    public int $merchantAppId;
 
     public int $channelAppId;
 

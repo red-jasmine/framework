@@ -44,7 +44,7 @@ class TradeRoutingService
         // 获取应用商户
         $merchant = $merchantApp->merchant;
         // 获取可用的 渠道应用
-        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp);
+        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp->id);
 
         return $this->getChannelAppsMethods($environment, $availableChannelApps);
     }
@@ -61,7 +61,7 @@ class TradeRoutingService
     {
         // 根据选择的  支付方式、支付场景
         $merchantApp          = $trade->merchantApp;
-        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp);
+        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp->id);
 
         // 过滤
         $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use (

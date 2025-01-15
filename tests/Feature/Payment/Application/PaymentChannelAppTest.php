@@ -7,20 +7,20 @@ use RedJasmine\Payment\Application\Services\ChannelApp\Commands\ChannelAppUpdate
 use RedJasmine\Payment\Application\Services\ChannelMerchant\ChannelMerchantCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
 use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
-use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelMerchantData;
-use RedJasmine\Payment\Domain\Data\ChannelProductData;
-use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
-use RedJasmine\Payment\Domain\Data\MethodData;
+use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Models\ChannelMerchant;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelMerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
+
+    BaseDataFixtures::init($this);
 
     $this->commandService = app(ChannelAppCommandService::class);
     $this->repository     = app(ChannelAppRepositoryInterface::class);
@@ -41,135 +41,7 @@ beforeEach(function () {
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
 
-    $this->owner = UserData::from(['type' => 'user', 'id' => 1]);
-
-
-    $this->methodData = [
-        ['code' => 'alipay', 'name' => '支付宝'],
-        ['code' => 'wechat', 'name' => '微信'],
-    ];
-
-    $this->channelData = [
-        ['code' => 'alipay', 'name' => '支付宝'],
-        ['code' => 'wechat', 'name' => '微信支付'],
-    ];
-
-    $this->channelMerchants = [];
-    $this->productsData     = [
-        [
-            'code'   => 'web',
-            'name'   => '电脑网站支付',
-            'models' => [
-                [
-                    'scene_code' => 'web',
-
-                ]
-            ],
-        ],
-        [
-            'code'   => 'wap',
-            'name'   => '手机网站支付',
-            'models' => [
-                [
-                    'scene_code' => 'wap',
-
-                ]
-            ],
-        ]
-
-    ];
-
-
 });
-
-// 创建支付方式
-test('can create a method', function () {
-    $command = new MethodData();
-
-    $command->icon    = fake()->imageUrl(40, 40);
-    $command->remarks = fake()->text();
-    foreach ($this->methodData as $method) {
-        $command->code = $method['code'];
-        $command->name = $method['name'];
-        try {
-
-            $model = $this->methodRepository->findByCode($command->code);
-        } catch (Throwable $throwable) {
-            $model = $this->methodCommandService->create($command);
-        }
-
-
-        $this->assertEquals($command->code, $model->code);
-    }
-
-
-});
-
-// 创建渠道
-test('can create channel', function () {
-    $command = new ChannelData();
-
-    foreach ($this->channelData as $channel) {
-        $command->code = $channel['code'];
-        $command->name = $channel['name'];
-
-        try {
-            $model = $this->ChannelRepository->findByCode($command->code);
-        } catch (Throwable $throwable) {
-            $model = $this->ChannelCommandService->create($command);
-        }
-
-
-        $this->assertEquals($command->code, $model->code);
-    }
-
-});
-
-
-test('can create channel product', function () {
-    $command  = new ChannelProductData();
-    $products = [];
-    foreach ($this->channelData as $channelData) {
-
-        $command->channelCode = $channelData['code'];
-
-
-        foreach ($this->productsData as $productData) {
-
-            $command->code = $productData['code'];
-            $command->name = $productData['name'];
-            $models        = [];
-            foreach ($productData['models'] as $modelData) {
-                $channelProductModeData = new ChannelProductModeData();
-
-                $channelProductModeData->sceneCode  = $modelData['scene_code'];
-                $channelProductModeData->methodCode = $command->channelCode;
-                $models[]                           = $channelProductModeData;
-            }
-            $command->modes = $models;
-            try {
-                $model                             = $this->productRepository->findByCode($command->channelCode,
-                    $command->code);
-                $command->id                       = $model->id;
-                $products[$command->channelCode][] = $model;
-                $this->productCommandService->update($command);
-            } catch (Throwable $throwable) {
-                $products[$command->channelCode][] = $model = $this->productCommandService->create($command);
-            }
-
-
-            $this->assertEquals($command->name, $model->name);
-            $this->assertEquals($command->code, $model->code);
-            $this->assertEquals($command->channelCode, $model->channel_code);
-
-            $this->assertEquals($command->channelCode, $model->channel->code);
-        }
-
-    }
-
-    return $products;
-
-})->depends('can create channel');
 
 
 test('create payment channel merchants', function () {
@@ -177,28 +49,34 @@ test('create payment channel merchants', function () {
     $command = new ChannelMerchantData();
 
     $channelMerchants = [];
-    foreach ($this->channelData as $channelData) {
+    // 根据渠道
+    /**
+     * @var Channel $channel
+     */
+    foreach ($this->channels as $channel) {
         $command->owner               = $this->owner;
-        $command->channelCode         = $channelData['code'];
+        $command->channelCode         = $channel->code;
         $command->channelMerchantId   = fake()->numerify('channel-merchant-id-########');
         $command->channelMerchantName = fake()->word();//
 
         $channelMerchants[] = $this->channelMerchantCommandService->create($command);
     }
 
-    $this->assertCount(count($this->channelData), $channelMerchants);
+    $this->assertCount(count($this->channels), $channelMerchants);
 
-    $this->channelMerchants = $channelMerchants;
 
     return $channelMerchants;
 });
 
-test('create payment channel apps', function ($products, $channelMerchants) {
+test('create payment channel apps', function ($channelMerchants) {
 
 
-    $command        = new ChannelAppCreateCommand();
+    $command = new ChannelAppCreateCommand();
 
-    $apps           = [];
+    $apps = [];
+    /**
+     * @var ChannelMerchant $channelMerchant
+     */
     foreach ($channelMerchants as $channelMerchant) {
         $command->systemChannelMerchantId = $channelMerchant->id;
         $command->channelAppId            = fake()->numerify('channel-app-id-########');
@@ -207,13 +85,14 @@ test('create payment channel apps', function ($products, $channelMerchants) {
         $command->channelAppPrivateKey    = fake()->text(3000);//
         $command->appName                 = fake()->word();//
 
-        // 开通的产品
+        // 开通所有产品
 
-        foreach ($products[$channelMerchant->channel_code] ?? [] as $product) {
+        foreach ($this->channelProducts as $product) {
+            if ($product->channel_code === $channelMerchant->channel_code) {
+                $command->products[] = $product->id;
+            }
 
-            $command->products[] = $product->id;
         }
-
 
         $model = $this->commandService->create($command);
 
@@ -234,13 +113,12 @@ test('create payment channel apps', function ($products, $channelMerchants) {
 
 
 })->depends(
-
-    'can create channel product', 'create payment channel merchants'
+    'create payment channel merchants'
 
 );
 
 
-test('update payment channel apps', function ($products, $channelApps) {
+test('update payment channel apps', function ($channelApps) {
 
 
     /**
@@ -254,15 +132,16 @@ test('update payment channel apps', function ($products, $channelApps) {
         $command->channelAppPublicKey     = fake()->text(3000);//
         $command->channelPublicKey        = fake()->text(3000);//
         $command->channelAppPrivateKey    = fake()->text(3000);//
+        $command->appName                 = fake()->word();//
+        $command->products                = [];
 
-        $command->appName = fake()->word();//
+        foreach ($this->channelProducts as $product) {
+            if ($product->channel_code === $channelApp->channel_code) {
+                $command->products[] = $product->id;
+                break;
+            }
 
-        foreach ($products[$channelApp->channel->code] ?? [] as $product) {
-
-            $command->products[] = $product->id;
-            break;
         }
-
 
         $model = $this->commandService->update($command);
 
@@ -275,12 +154,12 @@ test('update payment channel apps', function ($products, $channelApps) {
         $this->assertEquals($command->channelPublicKey, $model->channel_public_key);
         $this->assertEquals($command->channelAppPrivateKey, $model->channel_app_private_key);
         $this->assertEquals($command->appName, $model->app_name);
-        $this->assertEquals(1, $model->products->count());
+        $this->assertEquals(count( $command->products), $model->products->count());
 
     }
 
 
-})->depends('can create channel product', 'create payment channel apps');
+})->depends('create payment channel apps');
 
 
-// TEST 给商户授权 TODO
+

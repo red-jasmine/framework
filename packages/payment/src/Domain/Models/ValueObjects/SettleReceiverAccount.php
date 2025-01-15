@@ -14,12 +14,19 @@ class SettleReceiverAccount extends Model
 
     use HasSnowflakeId;
 
-    use HasOperator;
-
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settle_receiver_accounts';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_settle_receiver_accounts';
     }
+
+
+    protected $fillable = [
+        'settle_receiver_id',
+        'channel_code',
+        'channel_merchant_id',
+        'settle_account_type',
+        'settle_account'
+    ];
 
     protected function casts() : array
     {
