@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 
 /**
@@ -18,7 +18,8 @@ class TransferRoutingService
 {
 
     public function __construct(
-        protected ChannelAppPermissionService $channelAppPermissionService
+        protected ChannelAppPermissionService $channelAppPermissionService,
+        protected MerchantAppRepositoryInterface $merchantAppRepository,
 
     ) {
     }
@@ -36,7 +37,10 @@ class TransferRoutingService
         $environment->sceneCode    = $transfer->scene_code;
         $environment->channelAppId = $transfer->channel_app_id;
 
-        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelApps($transfer->merchant_id);
+        $merchantApp = $this->merchantAppRepository->find($transfer->merchant_app_id);
+
+        $availableChannelApps = $this->channelAppPermissionService
+            ->getAvailableChannelAppsByMerchantApp($merchantApp);
 
 
         // 转账环境过滤

@@ -2,9 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Services;
 
+use App\Console\Commands\Test;
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 
@@ -21,12 +23,27 @@ class ChannelAppPermissionService
     }
 
 
+    public function getAvailableChannelAppsByMerchantApp(MerchantApp $merchantApp) : Collection
+    {
+        // 获取商户可用的支付渠道应用
+        $channelApps = $this->getAvailableChannelAppsByMerchant($merchantApp->merchant_id);
+
+
+        // TODO
+        // 如果应用设置为 复用商户权限，那么就直接使用商户的权限
+
+        // 如果应用设置为单独，那么就获取应用的的权限
+
+
+        return $channelApps;
+    }
+
     /**
      * @param  int  $merchantId
      *
      * @return Collection<ChannelApp>
      */
-    public function getAvailableChannelApps(int $merchantId) : Collection
+    public function getAvailableChannelAppsByMerchant(int $merchantId) : Collection
     {
         // 获取商户可用的支付渠道应用
 
@@ -43,6 +60,7 @@ class ChannelAppPermissionService
 
 
     }
+
 
     /**
      * @param  int  $channelAppId

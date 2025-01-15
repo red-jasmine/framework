@@ -11,6 +11,8 @@ use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 
 /**
  * 交易 路由器
@@ -18,8 +20,14 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 class TradeRoutingService
 {
 
+    public function __construct(
+        protected ChannelAppPermissionService $channelAppPermissionService,
+        protected MerchantAppRepositoryInterface $merchantAppRepository,
 
-    public array $modes = [];
+    ) {
+    }
+
+    protected array $modes = [];
 
     /**
      * 获取支付渠道
@@ -36,7 +44,9 @@ class TradeRoutingService
         // 获取应用商户
         $merchant = $merchantApp->merchant;
         // 获取可用的 渠道应用
-        return $this->getChannelAppsMethods($environment, $merchant->getAvailableChannelApps());
+        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp);
+
+        return $this->getChannelAppsMethods($environment, $availableChannelApps);
     }
 
 
@@ -50,11 +60,9 @@ class TradeRoutingService
     public function getChannelApp(Trade $trade, Environment $environment) : ChannelApp
     {
         // 根据选择的  支付方式、支付场景
-        $merchantApp = $trade->merchantApp;
-        $merchant    = $merchantApp->merchant;
-        // 获取可选的渠道应用
-        // 可用的支付应用
-        $availableChannelApps = $merchant->getAvailableChannelApps();
+        $merchantApp          = $trade->merchantApp;
+        $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp);
+
         // 过滤
         $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use (
             $environment
@@ -176,7 +184,7 @@ class TradeRoutingService
                 $methods[$mode->method_code] = $mode->method;
             } else {
                 if (!isset($methods[$mode->method_code])) {
-                    $mode->method->status = ModeStatusEnum::DISABLED;
+                    $mode->method->status        = ModeStatusEnum::DISABLED;
                     $methods[$mode->method_code] = $mode->method;
                 }
             }

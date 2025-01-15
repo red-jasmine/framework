@@ -47,7 +47,7 @@ class Merchant extends Model implements OwnerInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchants';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchants';
     }
 
 
@@ -65,7 +65,7 @@ class Merchant extends Model implements OwnerInterface
     {
         return $this->belongsToMany(
             ChannelApp::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_channel_app_permissions',
             'merchant_id',
             'channel_app_id',
         )->using(MerchantChannelAppPermission::class)
@@ -73,15 +73,4 @@ class Merchant extends Model implements OwnerInterface
                     ->withTimestamps();
     }
 
-
-    /**
-     * @return ChannelApp[]
-     */
-    public function getAvailableChannelApps()
-    {
-        return $this->channelApps->filter(function (ChannelApp $channelApp) {
-            return $channelApp->isAvailable();
-        });
-
-    }
 }
