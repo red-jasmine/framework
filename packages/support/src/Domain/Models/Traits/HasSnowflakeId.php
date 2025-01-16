@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Domain\Models\Traits;
 
+use Exception;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 trait HasSnowflakeId
@@ -32,11 +33,13 @@ trait HasSnowflakeId
      * Generate a new SnowflakeId for the model.
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function newUniqueId() : int
     {
-        return Snowflake::buildId();
+
+        $hasUniqueShortId = property_exists($this, 'uniqueShortId') && (bool) $this->uniqueShortId;
+        return $hasUniqueShortId ? Snowflake::shortId() : Snowflake::buildId();
     }
 
 

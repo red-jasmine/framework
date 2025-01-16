@@ -140,7 +140,7 @@ class Snowflake
     public static function buildId(
         int|null $workerId = null,
         int|null $datacenterId = null,
-        string $idType = '53bit'
+        string $idType = '64bit'
     ) : int {
         // 调用getInstance方法获取Snowflake ID生成器的实例，并调用nextId方法生成并返回一个新的ID
         return static::getInstance($workerId, $datacenterId, $idType)->nextId();
