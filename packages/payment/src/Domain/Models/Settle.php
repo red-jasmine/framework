@@ -5,6 +5,7 @@ namespace RedJasmine\Payment\Domain\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Payment\Domain\Events\Settles\SettleCreatedEvent;
 use RedJasmine\Payment\Domain\Generator\SettleNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\SettleDetail;
@@ -27,6 +28,10 @@ class Settle extends Model
         });
     }
 
+
+    protected $dispatchesEvents = [
+        'created' => SettleCreatedEvent::class,
+    ];
 
     public function getTable() : string
     {
@@ -73,6 +78,18 @@ class Settle extends Model
     public function details() : HasMany
     {
         return $this->hasMany(SettleDetail::class, 'settle_no', 'settle_no');
+    }
+
+    public function setTrade(Trade $trade) : void
+    {
+        $this->trade_no              = $trade->trade_no;
+        $this->merchant_id           = $trade->merchant_id;
+        $this->merchant_app_id       = $trade->merchant_app_id;
+        $this->channel_trade_no      = $trade->channel_trade_no;
+        $this->system_channel_app_id = $trade->system_channel_app_id;
+        $this->channel_app_id        = $trade->channel_app_id;
+        $this->channel_code          = $trade->channel_code;
+        $this->channel_merchant_id   = $trade->channel_merchant_id;
     }
 
 

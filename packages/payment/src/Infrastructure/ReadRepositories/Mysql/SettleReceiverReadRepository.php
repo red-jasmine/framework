@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql;
 
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
@@ -32,6 +33,20 @@ class SettleReceiverReadRepository extends QueryBuilderReadRepository implements
                     ->where('channel_code', $channelCode)
                     ->where('channel_merchant_id', $channelMerchantId)
                     ->first();
+    }
+
+    public function findByMerchantAppReceivers(
+        int $systemMerchantAppId,
+        string $receiverType,
+        string $receiverId,
+        string $channelCode
+    ) : Collection {
+        return $this->query(null)
+                    ->where('system_merchant_app_id', $systemMerchantAppId)
+                    ->where('receiver_type', $receiverType)
+                    ->where('receiver_id', $receiverId)
+                    ->where('channel_code', $channelCode)
+                    ->get();
     }
 
 
