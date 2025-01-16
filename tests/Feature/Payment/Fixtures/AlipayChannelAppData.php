@@ -2,13 +2,16 @@
 
 namespace RedJasmine\Tests\Feature\Payment\Fixtures;
 
+use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SettleRelationTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 
 class AlipayChannelAppData
 {
 
 
-    public static function get() : array
+    public static function channelApp() : array
     {
 
         $channel_app_public_key_cert = <<<DOC
@@ -183,4 +186,23 @@ DOC;
         ];
     }
 
+
+    public static function settleReceivers() : array
+    {
+        return [
+            [
+                'receiver_type'       => 'user',
+                'receiver_id'         => '1',
+                'channel_code'        => 'alipay',
+                'channel_merchant_id' => '2088721045098969',
+                'relation_type'       => SettleRelationTypeEnum::SUPPLIER->value,
+                'name'                => 'sildsg4556',
+                'account_type'        => AccountTypeEnum::LOGIN_ID->value,
+                'account'             => 'sildsg4556@sandbox.com',
+                'cert_type'           => CertTypeEnum::ID_CARD->value,
+                'cert_no'             => '933396192809243496',
+            ],
+
+        ];
+    }
 }

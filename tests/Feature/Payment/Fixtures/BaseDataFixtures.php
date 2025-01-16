@@ -189,7 +189,7 @@ class BaseDataFixtures
 
 
         $channelAppsData   = [
-            AlipayChannelAppData::get()
+            AlipayChannelAppData::channelApp()
         ];
         $test->channelApps = [];
         foreach ($channelAppsData as $channelAppData) {
@@ -244,5 +244,14 @@ class BaseDataFixtures
         //  给商户授权 渠道应用
         $test->merchantApp->channelApps()->sync(collect($test->channelApps)->pluck('id')->toArray());
     }
+
+
+    public static function settleReceivers():array
+    {
+        return [
+            ...AlipayChannelAppData::settleReceivers()
+        ];
+    }
+
 
 }

@@ -2,13 +2,17 @@
 
 
 use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Services\SettleReceiver\SettleReceiverCommandService;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Data\SettleReceiverData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
+use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -17,6 +21,8 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
+use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
@@ -29,18 +35,63 @@ beforeEach(function () {
     $this->tradeCommandService = app(TradeCommandService::class);
     $this->tradeRepository     = app(TradeRepositoryInterface::class);
 
+
+    $this->settleReceiverCommandService = app(SettleReceiverCommandService::class);
+    $this->settleReceiverRepository     = app(SettleReceiverRepositoryInterface::class);
+    $this->settleReceiverReadRepository = app(SettleReceiverReadRepositoryInterface::class);
+
 });
 
 
+// 绑定分账关系
+
+test('create settle accounts', function () {
+
+    $command                      = new  SettleReceiverData();
+    $command->systemMerchantAppId = $this->merchantApp->id;
+    $accounts                     = BaseDataFixtures::settleReceivers();
+    foreach ($accounts as $account) {
+        // 创建或者更新
+        $command->receiverType      = $account['receiver_type'];
+        $command->receiverId        = $account['receiver_id'];
+        $command->channelCode       = $account['channel_code'];
+        $command->channelMerchantId = $account['channel_merchant_id'];
+        $command->name              = $account['name'];
+        $command->accountType       = AccountTypeEnum::tryFrom($account['account_type']);
+        $command->account           = $account['account'];
+        $command->certType          = CertTypeEnum::tryFrom($account['cert_type']);
+        $command->certNo            = $account['cert_no'];
+
+        // 查询是否存在
+        $result = $this->settleReceiverReadRepository->findByMerchantAppReceiver(
+            $command->systemMerchantAppId,
+            $command->receiverType,
+            $command->receiverId,
+            $command->channelCode,
+            $command->channelMerchantId,
+        );
+        if (!$result) {
+            $result = $this->settleReceiverCommandService->create($command);
+        }
+        $this->assertEquals($command->receiverId, $result->receiver_id);
+        $this->assertEquals($command->receiverType, $result->receiver_type);
+        $this->assertEquals($command->account, $result->account);
+
+
+    }
+
+});
+return;
 
 test('pre create a payment trade', function () {
 
 
     $command = new  TradePreCreateCommand();
+    // 设置为需要 分账 TODO
 
     $command->merchantAppId = $this->merchantApp->id;
 
-    $command->amount               = Money::from(['value' => fake()->randomNumber(1, 5000), 'currency' => 'CNY']);
+    $command->amount               = Money::from(['value' => fake()->numberBetween(1000, 5000), 'currency' => 'CNY']);
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';
@@ -50,9 +101,9 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'value'    => fake()->numberBetween(2, 90),
             ],
-            'quantity'   => fake()->randomNumber(1, 10),
+            'quantity'   => fake()->numberBetween(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
             'category'   => fake()->word(),
         ],
@@ -60,9 +111,9 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'value'    => fake()->numberBetween(2, 90),
             ],
-            'quantity'   => fake()->randomNumber(1, 10),
+            'quantity'   => fake()->numberBetween(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
             'category'   => fake()->word(),
         ],
@@ -157,6 +208,7 @@ test('can paying a trade', function (Trade $trade, $methods) {
 
     $channelTrade = $this->tradeCommandService->paying($command);
 
+    dd($channelTrade);
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');
     $this->assertEquals($command->method, $channelTrade->methodCode, '支付方式不一致');

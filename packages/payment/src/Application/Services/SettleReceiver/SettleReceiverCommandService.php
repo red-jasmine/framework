@@ -11,7 +11,7 @@ use RedJasmine\Support\Data\Data;
 /**
  * @method SettleReceiver create(Data $command)
  */
-class ChannelCommandService extends ApplicationCommandService
+class SettleReceiverCommandService extends ApplicationCommandService
 {
     public function __construct(
         public SettleReceiverRepository  $repository,

@@ -17,17 +17,17 @@ class SettleReceiverTransformer implements TransformerInterface
         $model = $model ?? SettleReceiver::make();
 
         $model->system_merchant_app_id = $data->systemMerchantAppId;
+        $model->receiver_type          = $data->receiverType;
+        $model->receiver_id            = $data->receiverId;
+        $model->channel_code           = $data->channelCode;
+        $model->channel_merchant_id    = $data->channelMerchantId;
+        $model->account                = $data->account;
+        $model->account_type           = $data->accountType;
         $model->name                   = $data->name;
         $model->relation_type          = $data->relationType;
         $model->cert_type              = $data->certType ?? null;
         $model->cert_no                = $data->certNo ?? null;
 
-        $accounts = [];
-        foreach ($data->accounts as $account) {
-            $accounts[] = SettleReceiverAccount::make($account->toArray());
-        }
-
-        $model->setRelation('accounts', Collection::make($accounts));
 
         return $model;
     }

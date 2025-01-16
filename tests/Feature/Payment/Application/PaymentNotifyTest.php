@@ -196,7 +196,7 @@ beforeEach(function () {
 
 
     $channelAppsData   = [
-        AlipayChannelAppData::get()
+        AlipayChannelAppData::channelApp()
     ];
     $this->channelApps = [];
     foreach ($channelAppsData as $channelAppData) {
