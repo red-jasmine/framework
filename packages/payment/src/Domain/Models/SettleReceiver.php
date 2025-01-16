@@ -4,6 +4,7 @@ namespace RedJasmine\Payment\Domain\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Payment\Domain\Events\SettleReceivers\SettleReceiverCreatedEvent;
 use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SettleRelationTypeEnum;
@@ -29,6 +30,10 @@ class SettleReceiver extends Model
     {
         return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settle_receivers';
     }
+
+    protected $dispatchesEvents = [
+        'created' => SettleReceiverCreatedEvent::class,
+    ];
 
     protected function casts() : array
     {

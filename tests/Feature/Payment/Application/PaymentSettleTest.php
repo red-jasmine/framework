@@ -47,6 +47,7 @@ beforeEach(function () {
 
 test('create settle accounts', function () {
 
+    // 无法知晓使用哪个同步渠道的分账关系
     $command                      = new  SettleReceiverData();
     $command->systemMerchantAppId = $this->merchantApp->id;
     $accounts                     = BaseDataFixtures::settleReceivers();
@@ -81,7 +82,7 @@ test('create settle accounts', function () {
     }
 
 });
-return;
+
 
 test('pre create a payment trade', function () {
 

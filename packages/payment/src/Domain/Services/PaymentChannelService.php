@@ -17,6 +17,7 @@ use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
+use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
@@ -271,6 +272,8 @@ class PaymentChannelService
      * @param  Transfer  $transfer
      *
      * @return bool
+     * @throws PaymentException
+     * @throws Throwable
      */
     public function transferQuery(
         ChannelApp $channelApp,
@@ -342,5 +345,154 @@ class PaymentChannelService
         }
     }
 
+
+    /**
+     * 绑定结算账户
+     *
+     * @param  ChannelApp  $channelApp
+     * @param  SettleReceiver  $settleReceiver
+     *
+     * @return bool
+     */
+    public function bindSettleReceiver(ChannelApp $channelApp, SettleReceiver $settleReceiver) : bool
+    {
+        Log::withContext([
+            'settle_receiver_id' => $settleReceiver->id,
+            'channel_code'       => $channelApp->channel_code,
+            'channel_app_id'     => $channelApp->id,
+
+        ]);
+        Log::info(__CLASS__.'@'.__METHOD__.':start');
+        try {
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
+
+            $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
+            $paymentChannelData             = new  PaymentChannelData;
+            $paymentChannelData->channelApp = $channelApp;
+            Log::info(__CLASS__.'@'.__METHOD__.':bindSettleReceiver.start');
+
+            $result = $gateway->gateway($paymentChannelData)->bindSettleReceiver($settleReceiver);
+            // 网关调用是否正常
+            Log::info(__CLASS__.'@'.__METHOD__.':bindSettleReceiver.end', $result->toArray());
+
+
+            if (!$result->isSuccessFul()) {
+                // 绑定失败
+                throw new PaymentException($result->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
+            }
+            // 绑定成功
+
+            return true;
+
+            // 如果还是在处理中 那么需要
+        } catch (ChannelGatewayException $channelGatewayException) {
+            //  查询是网关遗产不处理  上报异常即可
+            report($channelGatewayException);
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
+                ['message' => $channelGatewayException->getMessage()]);
+
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
+            // 渠道异常 则 这 查询无效
+            return false;
+        }
+    }
+
+    /**
+     * 绑定结算账户
+     *
+     * @param  ChannelApp  $channelApp
+     * @param  SettleReceiver  $settleReceiver
+     *
+     * @return bool
+     */
+    public function unbindSettleReceiver(ChannelApp $channelApp, SettleReceiver $settleReceiver) : bool
+    {
+        Log::withContext([
+            'settle_receiver_id' => $settleReceiver->id,
+            'channel_code'       => $channelApp->channel_code,
+            'channel_app_id'     => $channelApp->id,
+
+        ]);
+        Log::info(__CLASS__.'@'.__METHOD__.':start');
+        try {
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
+
+            $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
+            $paymentChannelData             = new  PaymentChannelData;
+            $paymentChannelData->channelApp = $channelApp;
+            Log::info(__CLASS__.'@'.__METHOD__.':unbindSettleReceiver.start');
+
+            $result = $gateway->gateway($paymentChannelData)->unbindSettleReceiver($settleReceiver);
+            // 网关调用是否正常
+            Log::info(__CLASS__.'@'.__METHOD__.':unbindSettleReceiver.end', $result->toArray());
+
+
+            if (!$result->isSuccessFul()) {
+                // 绑定失败
+                throw new PaymentException($result->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
+            }
+            // 绑定成功
+
+            return true;
+
+            // 如果还是在处理中 那么需要
+        } catch (ChannelGatewayException $channelGatewayException) {
+            //  查询是网关遗产不处理  上报异常即可
+            report($channelGatewayException);
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
+                ['message' => $channelGatewayException->getMessage()]);
+
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
+            // 渠道异常 则 这 查询无效
+            return false;
+        }
+    }
+
+
+    public function querySettleReceivers(ChannelApp $channelApp)
+    {
+        Log::withContext([
+            'channel_code'   => $channelApp->channel_code,
+            'channel_app_id' => $channelApp->id,
+
+        ]);
+        Log::info(__CLASS__.'@'.__METHOD__.':start');
+        try {
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
+
+            $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
+            $paymentChannelData             = new  PaymentChannelData;
+            $paymentChannelData->channelApp = $channelApp;
+            Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.start');
+
+            $result = $gateway->gateway($paymentChannelData)->querySettleReceivers();
+            // 网关调用是否正常
+
+            if (!$result->isSuccessFul()) {
+                Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.fail');
+                throw new PaymentException($result->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
+            }
+            Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.success');
+            // 绑定成功
+            return $result;
+
+            // 如果还是在处理中 那么需要
+        } catch (ChannelGatewayException $channelGatewayException) {
+            //  查询是网关遗产不处理  上报异常即可
+            report($channelGatewayException);
+            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
+                ['message' => $channelGatewayException->getMessage()]);
+
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
+            // 渠道异常 则 这 查询无效
+            return false;
+        }
+    }
 
 }
