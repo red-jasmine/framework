@@ -25,7 +25,7 @@ return new class extends Migration {
                 $table->bigInteger('amount_value')->default(0)->comment('金额值');
 
                 // 支付渠道
-                $table->unsignedBigInteger('payment_channel_app_id')->nullable()->comment('系统内渠道应用ID');
+                $table->unsignedBigInteger('system_channel_app_id')->nullable()->comment('系统内渠道应用ID');
                 $table->string('channel_code')->nullable()->comment('支付渠道');
                 $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
                 $table->string('channel_app_id')->nullable()->comment('渠道应用ID');
@@ -45,7 +45,7 @@ return new class extends Migration {
 
                 $table->integer('channel_transaction_fee_rate')->default(0)->comment('渠道手续费率');
                 $table->string('channel_transaction_fee_currency')->nullable()->comment('渠道交易费货币');
-                $table->unsignedBigInteger('channel_service_fee_value')->default(0)->comment('渠道服务费值');
+                $table->unsignedBigInteger('channel_service_fee_value')->default(0)->comment('渠道服务费金额');
 
 
                 $table->string('receipt_amount_currency')->nullable()->comment('实收金额货币');
@@ -70,10 +70,6 @@ return new class extends Migration {
                 $table->string('store_type')->nullable()->comment('门店类型');
                 $table->string('store_id')->nullable()->comment('门店ID');
                 $table->string('store_name')->nullable()->comment('门店名称');
-                // 平台手续费率
-                $table->integer('platform_transaction_fee_rate')->default(0)->comment('平台手续费率');
-                $table->string('platform_transaction_fee_currency')->nullable()->comment('平台交易费货币');
-                $table->unsignedBigInteger('platform_service_fee_value')->default(0)->comment('平台服务费值');
 
                 $table->timestamp('expired_time')->nullable()->comment('过期时间');
                 $table->timestamp('create_time')->nullable()->comment('创建时间');

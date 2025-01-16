@@ -33,8 +33,10 @@ use RedJasmine\Payment\Domain\Repositories\NotifyReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\NotifyRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\SettleReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferReadRepositoryInterface;
@@ -49,6 +51,7 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantReadReposit
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MethodReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\NotifyReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
+use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\SettleReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\SettleReceiverReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TransferReadRepository;
@@ -63,6 +66,7 @@ use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MethodRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\NotifyRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\RefundRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\SettleReceiverRepository;
+use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\SettleRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TradeRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\TransferRepository;
 
@@ -115,6 +119,8 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
         $this->app->bind(RefundReadRepositoryInterface::class, RefundReadRepository::class);
 
+        $this->app->bind(SettleRepositoryInterface::class, SettleRepository::class);
+        $this->app->bind(SettleReadRepositoryInterface::class, SettleReadRepository::class);
 
         $this->app->bind(SettleReceiverRepositoryInterface::class, SettleReceiverRepository::class);
         $this->app->bind(SettleReceiverReadRepositoryInterface::class, SettleReceiverReadRepository::class);

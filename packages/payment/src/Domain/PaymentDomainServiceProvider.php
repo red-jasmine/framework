@@ -7,6 +7,8 @@ use RedJasmine\Payment\Domain\Generator\NotifyNumberGenerator;
 use RedJasmine\Payment\Domain\Generator\NotifyNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGenerator;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
+use RedJasmine\Payment\Domain\Generator\SettleNumberGenerator;
+use RedJasmine\Payment\Domain\Generator\SettleNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGenerator;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Generator\TransferNumberGenerator;
@@ -39,6 +41,13 @@ class PaymentDomainServiceProvider extends ServiceProvider
             TransferNumberGeneratorInterface::class,
             TransferNumberGenerator::class
         );
+
+
+        $this->app->bind(
+            SettleNumberGeneratorInterface::class,
+            SettleNumberGenerator::class
+        );
+
 
     }
 

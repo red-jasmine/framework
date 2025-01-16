@@ -122,8 +122,8 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
         return $this->belongsToMany(
             ChannelProduct::class,
             config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_app_products',
-            'payment_channel_app_id',
-            'payment_channel_product_id',
+            'system_channel_app_id',
+            'system_channel_product_id',
         )->withTimestamps();
     }
 

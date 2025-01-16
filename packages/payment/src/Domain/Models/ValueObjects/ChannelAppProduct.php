@@ -11,8 +11,8 @@ class ChannelAppProduct extends Model
 {
 
     protected $fillable = [
-        'payment_channel_product_id',
-        'payment_channel_app_id'
+        'system_channel_product_id',
+        'system_channel_app_id'
     ];
 
     public function getTable() : string
@@ -22,13 +22,13 @@ class ChannelAppProduct extends Model
 
     public function channelApp() : BelongsTo
     {
-        return $this->belongsTo(ChannelApp::class, 'payment_channel_app_id', 'id');
+        return $this->belongsTo(ChannelApp::class, 'system_channel_app_id', 'id');
     }
 
 
     public function product() : BelongsTo
     {
-        return $this->belongsTo(ChannelProduct::class, 'payment_channel_product_id', 'id');
+        return $this->belongsTo(ChannelProduct::class, 'system_channel_product_id', 'id');
     }
 
 }

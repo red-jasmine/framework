@@ -136,7 +136,7 @@ class Transfer extends Model
     public function setChannelApp(ChannelApp $channelApp, ChannelProduct $channelProduct) : void
     {
 
-        $this->payment_channel_app_id = $channelApp->id;
+        $this->system_channel_app_id = $channelApp->id;
         $this->channel_code           = $channelApp->channel_code;
         $this->channel_merchant_id    = $channelApp->channel_merchant_id;
         $this->channel_app_id         = $channelApp->channel_app_id;

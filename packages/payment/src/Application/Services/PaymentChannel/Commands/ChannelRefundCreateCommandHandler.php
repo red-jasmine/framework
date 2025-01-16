@@ -33,7 +33,7 @@ class ChannelRefundCreateCommandHandler extends CommandHandler
         try {
             $refund = $this->service->refundRepository->findByNo($command->refundNo);
 
-            $channelApp = $this->service->channelAppRepository->find($refund->payment_channel_app_id);
+            $channelApp = $this->service->channelAppRepository->find($refund->system_channel_app_id);
             // 调用服务
             $this->service->paymentChannelService->refund($channelApp, $refund);
 

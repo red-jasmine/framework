@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('payment_channel_product_id')->comment('支付产品ID');
+            $table->unsignedBigInteger('system_channel_product_id')->comment('支付产品ID');
             $table->string('scene_code')->comment('支付场景');
             $table->string('method_code')->comment('支付方式');
             $table->string('status')->default(ModeStatusEnum::ENABLE->value)->comment(ModeStatusEnum::comments('状态'));
@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
-            $table->unique([ 'payment_channel_product_id', 'scene_code', 'method_code' ], 'uk_method');
+            $table->unique([ 'system_channel_product_id', 'scene_code', 'method_code' ], 'uk_method');
         });
     }
 

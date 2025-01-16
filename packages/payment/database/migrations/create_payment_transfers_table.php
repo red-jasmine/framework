@@ -26,7 +26,7 @@ return new class extends Migration {
                 $table->string('scene_code')->comment(TransferSceneEnum::comments('转账场景'));
                 $table->string('channel_batch_no')->nullable()->comment('渠道批次号');
 
-                $table->unsignedBigInteger('payment_channel_app_id')->nullable()->comment('系统内渠道应用ID');
+                $table->unsignedBigInteger('system_channel_app_id')->nullable()->comment('系统内渠道应用ID');
                 $table->string('channel_code')->nullable()->comment('支付渠道');
                 $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
                 $table->string('channel_app_id')->nullable()->comment('渠道应用ID');

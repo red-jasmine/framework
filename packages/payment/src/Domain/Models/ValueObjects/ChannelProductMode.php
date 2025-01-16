@@ -16,7 +16,7 @@ class ChannelProductMode extends Model
     use HasOperator;
 
     protected $fillable = [
-        'payment_channel_product_id',
+        'system_channel_product_id',
         'method_code', // 支付方式
         'scene_code', // 支付场景
         'status',
@@ -36,7 +36,7 @@ class ChannelProductMode extends Model
 
     public function product() : BelongsTo
     {
-        return $this->belongsTo(ChannelProduct::class, 'payment_channel_product_id', 'id');
+        return $this->belongsTo(ChannelProduct::class, 'system_channel_product_id', 'id');
     }
 
 

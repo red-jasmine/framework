@@ -176,11 +176,11 @@ class BaseDataFixtures
 
             foreach ($productData['modes'] as $mode) {
                 ChannelProductMode::firstOrCreate([
-                                                      'payment_channel_product_id' => $channelProduct->id,
+                                                      'system_channel_product_id' => $channelProduct->id,
                                                       'method_code'                => $mode['method_code'],
                                                       'scene_code'                 => $mode['scene_code'],
                                                   ], [
-                                                      'payment_channel_product_id' => $channelProduct->id,
+                                                      'system_channel_product_id' => $channelProduct->id,
                                                       'method_code'                => $mode['method_code'],
                                                       'scene_code'                 => $mode['scene_code'],
                                                   ]);
@@ -230,11 +230,11 @@ class BaseDataFixtures
             foreach ($test->channelProducts as $channelProduct) {
                 if ($channelApp->channel_code === $channelProduct->channel_code) {
                     ChannelAppProduct::firstOrCreate([
-                                                         'payment_channel_product_id' => $channelProduct->id,
-                                                         'payment_channel_app_id'     => $channelApp->id,
+                                                         'system_channel_product_id' => $channelProduct->id,
+                                                         'system_channel_app_id'     => $channelApp->id,
                                                      ], [
-                                                         'payment_channel_product_id' => $channelProduct->id,
-                                                         'payment_channel_app_id'     => $channelApp->id,
+                                                         'system_channel_product_id' => $channelProduct->id,
+                                                         'system_channel_app_id'     => $channelApp->id,
                                                      ]);
                 }
             }

@@ -23,7 +23,7 @@ class ChannelRefundQueryCommandHandler extends CommandHandler
         try {
             $refund = $this->service->refundRepository->findByNo($command->refundNo);
 
-            $channelApp = $this->service->channelAppRepository->find($refund->payment_channel_app_id);
+            $channelApp = $this->service->channelAppRepository->find($refund->system_channel_app_id);
 
             $channelRefundData = $this->service->paymentChannelService->refundQuery($channelApp, $refund);
 

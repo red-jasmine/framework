@@ -194,7 +194,7 @@ class Trade extends Model implements AsyncNotifyInterface
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
         $this->status                 = TradeStatusEnum::PAYING;
-        $this->payment_channel_app_id = $channelApp->id;
+        $this->system_channel_app_id = $channelApp->id;
         $this->channel_code           = $channelTrade->channelCode;
         $this->channel_app_id         = $channelTrade->channelAppId;
         $this->channel_merchant_id    = $channelTrade->channelMerchantId;
@@ -301,7 +301,7 @@ class Trade extends Model implements AsyncNotifyInterface
         $refund->channel_trade_no        = $this->channel_trade_no;
         $refund->channel_app_id          = $this->channel_app_id;
         $refund->channel_merchant_id     = $this->channel_merchant_id;
-        $refund->payment_channel_app_id  = $this->payment_channel_app_id;
+        $refund->system_channel_app_id  = $this->system_channel_app_id;
         $refund->refund_status           = RefundStatusEnum::PRE;
 
 

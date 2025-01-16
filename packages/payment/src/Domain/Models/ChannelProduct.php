@@ -77,7 +77,7 @@ class ChannelProduct extends Model
                                      ->first();
 
             $modeModel                             = $modeModel ?? ChannelProductMode::make();
-            $modeModel->payment_channel_product_id = $this->id;
+            $modeModel->system_channel_product_id = $this->id;
             $modeModel->method_code                = $mode->methodCode;
             $modeModel->scene_code                 = $mode->sceneCode;
             $modeModel->status                     = $mode->status;
@@ -89,7 +89,7 @@ class ChannelProduct extends Model
 
     public function modes() : HasMany
     {
-        return $this->hasMany(ChannelProductMode::class, 'payment_channel_product_id', 'id');
+        return $this->hasMany(ChannelProductMode::class, 'system_channel_product_id', 'id');
     }
 
     public function isAvailable() : bool

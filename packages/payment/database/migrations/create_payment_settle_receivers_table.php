@@ -19,10 +19,11 @@ return new class extends Migration {
                 $table->string('channel_code', 64)->comment('渠道编码');
                 $table->string('channel_merchant_id', 64)->comment('渠道商户号');
                 $table->text('name')->comment('名称');
-                $table->string('relation_type')->default(SettleRelationTypeEnum::CUSTOM)->comment(SettleRelationTypeEnum::comments('关系类型'));
                 $table->string('account_type')->comment(AccountTypeEnum::comments('账户类型'));
                 $table->string('account')->comment('账号');
                 $table->string('cert_type')->nullable()->comment(CertTypeEnum::comments('证件类型'));
+
+                $table->string('relation_type')->default(SettleRelationTypeEnum::CUSTOM)->comment(SettleRelationTypeEnum::comments('关系类型'));
                 $table->text('cert_no')->nullable()->comment('收款方证件号');
                 $table->string('creator_type', 32)->nullable();
                 $table->string('creator_id', 64)->nullable();

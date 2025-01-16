@@ -30,7 +30,7 @@ class ChannelTransferQueryCommandHandler extends CommandHandler
 
         try {
             $transfer       = $this->service->transferRepository->findByNo($command->transferNo);
-            $channelApp     = $this->service->channelAppRepository->find($transfer->payment_channel_app_id);
+            $channelApp     = $this->service->channelAppRepository->find($transfer->system_channel_app_id);
             $channelProduct = $this->service->channelProductRepository->findByCode($transfer->channel_code, $transfer->channel_product_code);
             // 调用服务
             $this->service->paymentChannelService->transferQuery($channelApp, $channelProduct, $transfer);
