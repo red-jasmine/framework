@@ -144,6 +144,8 @@ class Transfer extends Model
 
     }
 
+
+
     public function isAllowExecuting() : bool
     {
         if (!in_array($this->transfer_status,
@@ -155,6 +157,21 @@ class Transfer extends Model
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * @return void
+     * @throws PaymentException
+     */
+    public function executing() : void
+    {
+        if (!$this->isAllowExecuting()) {
+            throw new PaymentException('转账不允许执行');
+        }
+        $this->transfer_status = TransferStatusEnum::PENDING;
+        $this->executing_time  = now();
+        $this->fireModelEvent('executing', false);
     }
 
 
@@ -183,19 +200,6 @@ class Transfer extends Model
     }
 
 
-    /**
-     * @return void
-     * @throws PaymentException
-     */
-    public function executing() : void
-    {
-        if (!$this->isAllowExecuting()) {
-            throw new PaymentException('转账不允许执行');
-        }
-        $this->transfer_status = TransferStatusEnum::PENDING;
-        $this->executing_time  = now();
-        $this->fireModelEvent('executing', false);
-    }
 
 
     public function isAllowSuccess() : bool
@@ -327,8 +331,6 @@ class Transfer extends Model
         }
         return true;
     }
-
-    // 异常 需要经过确认
 
     /**
      * @param string|null $message

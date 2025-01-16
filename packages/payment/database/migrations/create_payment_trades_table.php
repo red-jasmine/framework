@@ -56,13 +56,14 @@ return new class extends Migration {
                 $table->unsignedBigInteger('refund_amount_value')->default(0)->comment('退款金额值');
                 $table->unsignedBigInteger('refunding_amount_value')->default(0)->comment('退款中金额值');
 
-                $table->string('settle_amount_currency')->nullable()->comment('结算货币');
-                $table->bigInteger('settle_amount_value')->default(0)->comment('结算金额');
 
                 $table->string('status')->comment(TradeStatusEnum::comments('状态'));
                 $table->string('notify_status')->nullable()->comment(NotifyStatusEnum::comments('异步通知状态'));
                 // 分账
                 // 是否需要分账 TODO
+                $table->boolean('is_settle_sharing')->default(false)->comment('是否结算分账');
+                $table->string('settle_amount_currency')->nullable()->comment('结算货币');
+                $table->bigInteger('settle_amount_value')->default(0)->comment('结算金额');
                 // 场景信息
                 $table->string('scene_code')->nullable()->comment('支付场景');
                 $table->string('method_code')->nullable()->comment('支付方式');
@@ -78,7 +79,7 @@ return new class extends Migration {
                 $table->timestamp('refund_time')->nullable()->comment('退款时间');
                 $table->timestamp('settle_time')->nullable()->comment('结算时间');
                 $table->timestamp('notify_time')->nullable()->comment('异步通知时间');
-
+                $table->timestamp('finish_time')->nullable()->comment('结束时间');
                 $table->string('creator_type', 32)->nullable();
                 $table->string('creator_id', 64)->nullable();
                 $table->string('updater_type', 32)->nullable();

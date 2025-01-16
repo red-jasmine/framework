@@ -9,10 +9,13 @@ use RedJasmine\Support\Data\Data;
 class ChannelAppData extends Data
 {
 
+    public UserInterface $owner;
+    public string        $channelCode;
+    public string        $channelAppId;
+    public string        $appName;
+    public ?string       $merchantName;
+    public ?string       $channelMerchantId;
 
-    public int                  $systemChannelMerchantId;
-    public string               $channelAppId;
-    public string               $appName;
     public ChannelAppStatusEnum $status = ChannelAppStatusEnum::ENABLE;
 
     public string  $signType = 'RSA2';

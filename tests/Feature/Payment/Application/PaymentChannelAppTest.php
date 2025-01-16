@@ -7,10 +7,8 @@ use RedJasmine\Payment\Application\Services\ChannelApp\Commands\ChannelAppUpdate
 use RedJasmine\Payment\Application\Services\ChannelMerchant\ChannelMerchantCommandService;
 use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
 use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
-use RedJasmine\Payment\Domain\Data\ChannelMerchantData;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
-use RedJasmine\Payment\Domain\Models\ChannelMerchant;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelMerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
@@ -30,9 +28,6 @@ beforeEach(function () {
     $this->ChannelRepository     = app(ChannelRepositoryInterface::class);
 
 
-    $this->channelMerchantCommandService      = app(ChannelMerchantCommandService::class);
-    $this->channelMerchantRepositoryInterface = app(ChannelMerchantRepositoryInterface::class);
-
     $this->methodRepository     = app(MethodRepositoryInterface::class);
     $this->methodCommandService = app(MethodCommandService::class);
 
@@ -44,51 +39,33 @@ beforeEach(function () {
 });
 
 
-test('create payment channel merchants', function () {
-
-    $command = new ChannelMerchantData();
-
-    $channelMerchants = [];
-    // 根据渠道
-    /**
-     * @var Channel $channel
-     */
-    foreach ($this->channels as $channel) {
-        $command->owner               = $this->owner;
-        $command->channelCode         = $channel->code;
-        $command->channelMerchantId   = fake()->numerify('channel-merchant-id-########');
-        $command->channelMerchantName = fake()->word();//
-
-        $channelMerchants[] = $this->channelMerchantCommandService->create($command);
-    }
-
-    $this->assertCount(count($this->channels), $channelMerchants);
-
-
-    return $channelMerchants;
-});
-
-test('create payment channel apps', function ($channelMerchants) {
+test('create payment channel apps', function () {
 
 
     $command = new ChannelAppCreateCommand();
 
+
     $apps = [];
+
     /**
-     * @var ChannelMerchant $channelMerchant
+     * @var $channel Channel
      */
-    foreach ($channelMerchants as $channelMerchant) {
-        $command->systemChannelMerchantId = $channelMerchant->id;
-        $command->channelAppId            = fake()->numerify('channel-app-id-########');
-        $command->channelAppPublicKey     = fake()->text(3000);//
-        $command->channelPublicKey        = fake()->text(3000);//
-        $command->channelAppPrivateKey    = fake()->text(3000);//
-        $command->appName                 = fake()->word();//
+    foreach ($this->channels as $channel) {
+        $command->owner       = $this->owner;
+        $command->channelCode = $channel->code;
+
+        $command->channelAppId         = fake()->numerify('channel-app-id-########');
+        $command->channelMerchantId    = fake()->numerify('channel-merchant-id-########');
+        $command->channelAppPublicKey  = fake()->text(3000);//
+        $command->channelPublicKey     = fake()->text(3000);//
+        $command->channelAppPrivateKey = fake()->text(3000);//
+        $command->appName              = fake()->word();//
+        $command->merchantName         = fake()->word();//
 
         // 开通所有产品
 
         foreach ($this->channelProducts as $product) {
-            if ($product->channel_code === $channelMerchant->channel_code) {
+            if ($product->channel_code === $channel->code) {
                 $command->products[] = $product->id;
             }
 
@@ -98,8 +75,8 @@ test('create payment channel apps', function ($channelMerchants) {
 
         $apps[] = $model = $this->repository->find($model->id);
 
-
-        $this->assertEquals($command->systemChannelMerchantId, $model->system_channel_merchant_id);
+        $this->assertEquals($command->channelMerchantId, $model->channel_merchant_id);
+        $this->assertEquals($command->merchantName, $model->merchant_name);
         $this->assertEquals($command->channelAppId, $model->channel_app_id);
         $this->assertEquals($command->channelAppPublicKey, $model->channel_app_public_key);
         $this->assertEquals($command->channelPublicKey, $model->channel_public_key);
@@ -112,10 +89,7 @@ test('create payment channel apps', function ($channelMerchants) {
     return $apps;
 
 
-})->depends(
-    'create payment channel merchants'
-
-);
+});
 
 
 test('update payment channel apps', function ($channelApps) {
@@ -125,15 +99,18 @@ test('update payment channel apps', function ($channelApps) {
      * @var $channelApp ChannelApp
      */
     foreach ($channelApps as $channelApp) {
-        $command                          = new ChannelAppUpdateCommand();
-        $command->id                      = $channelApp->id;
-        $command->systemChannelMerchantId = $channelApp->system_channel_merchant_id;
-        $command->channelAppId            = fake()->numerify('channel-app-id-########');
-        $command->channelAppPublicKey     = fake()->text(3000);//
-        $command->channelPublicKey        = fake()->text(3000);//
-        $command->channelAppPrivateKey    = fake()->text(3000);//
-        $command->appName                 = fake()->word();//
-        $command->products                = [];
+        $command                       = new ChannelAppUpdateCommand();
+        $command->id                   = $channelApp->id;
+        $command->channelCode          = $channelApp->channel_code;
+        $command->owner                = $this->owner;
+        $command->channelAppId         = fake()->numerify('channel-app-id-########');
+        $command->channelMerchantId    = fake()->numerify('channel-merchant-id-########');
+        $command->channelAppPublicKey  = fake()->text(3000);//
+        $command->channelPublicKey     = fake()->text(3000);//
+        $command->channelAppPrivateKey = fake()->text(3000);//
+        $command->appName              = fake()->word();//
+        $command->merchantName         = fake()->word();//
+        $command->products             = [];
 
         foreach ($this->channelProducts as $product) {
             if ($product->channel_code === $channelApp->channel_code) {
@@ -148,13 +125,14 @@ test('update payment channel apps', function ($channelApps) {
 
         $model = $this->repository->find($model->id);
 
-        $this->assertEquals($command->systemChannelMerchantId, $model->system_channel_merchant_id);
+        $this->assertEquals($command->channelMerchantId, $model->channel_merchant_id);
+        $this->assertEquals($command->merchantName, $model->merchant_name);
         $this->assertEquals($command->channelAppId, $model->channel_app_id);
         $this->assertEquals($command->channelAppPublicKey, $model->channel_app_public_key);
         $this->assertEquals($command->channelPublicKey, $model->channel_public_key);
         $this->assertEquals($command->channelAppPrivateKey, $model->channel_app_private_key);
         $this->assertEquals($command->appName, $model->app_name);
-        $this->assertEquals(count( $command->products), $model->products->count());
+        $this->assertEquals(count($command->products), $model->products->count());
 
     }
 

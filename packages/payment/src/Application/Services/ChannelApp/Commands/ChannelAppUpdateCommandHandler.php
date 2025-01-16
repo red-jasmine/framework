@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\ChannelApp\Commands;
 
 use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
-use RedJasmine\Payment\Domain\Repositories\ChannelMerchantRepositoryInterface;
+
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
@@ -13,9 +13,9 @@ class ChannelAppUpdateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected ChannelAppCommandService $service,
-        protected ChannelMerchantRepositoryInterface $merchantRepository,
-    ) {
+        protected ChannelAppCommandService $service
+    )
+    {
     }
 
     public function handle(ChannelAppUpdateCommand $command) : ChannelApp

@@ -9,16 +9,17 @@ use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps',
+        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->string('owner_type', 32);
                 $table->string('owner_id', 64);
-                $table->unsignedBigInteger('system_channel_merchant_id')->comment('渠道商户表ID');
                 $table->string('channel_code')->comment('渠道编码');
-                $table->boolean('is_sandbox')->default(false)->comment('是否沙箱');
                 $table->string('channel_app_id')->comment('渠道应用ID');
                 $table->string('app_name')->nullable()->comment('应用名称');
+                $table->string('channel_merchant_id')->comment('渠道商户号');
+                $table->string('merchant_name')->nullable()->comment('商户名称');
+                $table->boolean('is_sandbox')->default(false)->comment('是否沙箱');
                 $table->string('icon')->nullable()->comment('应用图标');
                 $table->string('sign_method')->nullable()->comment(SignMethodEnum::comments('加签方式'));
                 $table->string('sign_type')->nullable()->comment('接口加签算法');
@@ -39,13 +40,13 @@ return new class extends Migration {
                 $table->string('updater_id', 64)->nullable();
                 $table->timestamps();
                 $table->softDeletes();
-                $table->index(['channel_code', 'channel_app_id'], 'idx_channel_app');
+                $table->index([ 'channel_code', 'channel_app_id' ], 'idx_channel_app');
                 $table->comment('支付渠道应用');
             });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps');
+        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps');
     }
 };

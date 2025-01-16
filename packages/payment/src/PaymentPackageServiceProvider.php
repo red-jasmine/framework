@@ -73,7 +73,6 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
 
             'create_payment_channel_products_table',
             'create_payment_channel_product_modes_table',
-            'create_payment_channel_merchants_table',
             'create_payment_channel_apps_table',
             'create_payment_channel_apps_products_table',
 
@@ -89,7 +88,8 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
             'create_payment_refund_extensions_table',
             'create_payment_transfers_table',
             'create_payment_transfer_extensions_table',
-
+            'create_payment_settles_table',
+            'create_payment_settle_details_table',
 
             'create_payment_settle_receivers_table',
 

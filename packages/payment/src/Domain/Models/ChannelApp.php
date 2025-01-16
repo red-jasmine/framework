@@ -32,7 +32,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps';
     }
 
 
@@ -40,8 +40,9 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
         'owner_type',
         'owner_id',
         'channel_app_id',
-        'system_channel_merchant_id',
+        'channel_merchant_id',
         'app_name',
+        'merchant_name',
         'is_sandbox',
         'channel_code',
         'sign_method',
@@ -121,7 +122,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
     {
         return $this->belongsToMany(
             ChannelProduct::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_app_products',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_app_products',
             'system_channel_app_id',
             'system_channel_product_id',
         )->withTimestamps();

@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Payment\Domain\Services;
 
-use Illuminate\Contracts\Cache\Lock;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
@@ -12,16 +10,17 @@ use RedJasmine\Payment\Domain\Exceptions\ChannelGatewayException;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Gateway\ChannelGatewayDrive;
 use RedJasmine\Payment\Domain\Gateway\Data\PaymentChannelData;
+use RedJasmine\Payment\Domain\Gateway\GatewayDriveInterface;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
+use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
-use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 /**
@@ -35,20 +34,16 @@ class PaymentChannelService
     /**
      * 创建交易单
      *
-     * @param  ChannelApp  $channelApp
-     * @param  ChannelProduct  $channelProduct
-     * @param  Trade  $trade
-     * @param  Environment  $environment
+     * @param ChannelApp $channelApp
+     * @param ChannelProduct $channelProduct
+     * @param Trade $trade
+     * @param Environment $environment
      *
      * @return ChannelTradeData
      * @throws PaymentException
      */
-    public function purchase(
-        ChannelApp $channelApp,
-        ChannelProduct $channelProduct,
-        Trade $trade,
-        Environment $environment
-    ) : ChannelTradeData {
+    public function purchase(ChannelApp $channelApp, ChannelProduct $channelProduct, Trade $trade, Environment $environment) : ChannelTradeData
+    {
 
         // 设置支付渠道信息
         $paymentChannelData                 = new  PaymentChannelData;
@@ -87,13 +82,6 @@ class PaymentChannelService
 
     }
 
-    protected function getLock(Trade $trade) : Lock
-    {
-
-        $name = 'red-jasmine-payment:trade:'.$trade->id;
-        return Cache::lock($name, 60);
-    }
-
 
     public function completePurchase(ChannelApp $channelApp, array $data) : ChannelTradeData
     {
@@ -108,8 +96,8 @@ class PaymentChannelService
 
 
     /**
-     * @param  ChannelApp  $channelApp
-     * @param  Refund  $refund
+     * @param ChannelApp $channelApp
+     * @param Refund $refund
      *
      * @return bool
      * @throws PaymentException
@@ -148,8 +136,8 @@ class PaymentChannelService
     }
 
     /**
-     * @param  ChannelApp  $channelApp
-     * @param  Refund  $refund
+     * @param ChannelApp $channelApp
+     * @param Refund $refund
      *
      * @return ChannelRefundData
      * @throws PaymentException
@@ -201,25 +189,26 @@ class PaymentChannelService
 
 
     /**
-     * @param  ChannelApp  $channelApp
-     * @param  ChannelProduct  $channelProduct
-     * @param  Transfer  $transfer
+     * @param ChannelApp $channelApp
+     * @param ChannelProduct $channelProduct
+     * @param Transfer $transfer
      *
      * @return bool
      * @throws PaymentException
      */
     public function transfer(
-        ChannelApp $channelApp,
+        ChannelApp     $channelApp,
         ChannelProduct $channelProduct,
-        Transfer $transfer
-    ) : bool {
+        Transfer       $transfer
+    ) : bool
+    {
 
         Log::withContext([
-            'transfer_no'          => $transfer->transfer_no,
-            'channel_code'         => $channelApp->channel_code,
-            'channel_app_id'       => $channelApp->id,
-            'channel_product_code' => $channelProduct->code,
-        ]);
+                             'transfer_no'          => $transfer->transfer_no,
+                             'channel_code'         => $channelApp->channel_code,
+                             'channel_app_id'       => $channelApp->id,
+                             'channel_product_code' => $channelProduct->code,
+                         ]);
 
         Log::info('payment.domain.service.channel-service.transfer:start');
 
@@ -267,26 +256,27 @@ class PaymentChannelService
 
 
     /**
-     * @param  ChannelApp  $channelApp
-     * @param  ChannelProduct  $channelProduct
-     * @param  Transfer  $transfer
+     * @param ChannelApp $channelApp
+     * @param ChannelProduct $channelProduct
+     * @param Transfer $transfer
      *
      * @return bool
      * @throws PaymentException
      * @throws Throwable
      */
     public function transferQuery(
-        ChannelApp $channelApp,
+        ChannelApp     $channelApp,
         ChannelProduct $channelProduct,
-        Transfer $transfer
-    ) : bool {
+        Transfer       $transfer
+    ) : bool
+    {
 
         Log::withContext([
-            'transfer_no'          => $transfer->transfer_no,
-            'channel_code'         => $channelApp->channel_code,
-            'channel_app_id'       => $channelApp->id,
-            'channel_product_code' => $channelProduct->code,
-        ]);
+                             'transfer_no'          => $transfer->transfer_no,
+                             'channel_code'         => $channelApp->channel_code,
+                             'channel_app_id'       => $channelApp->id,
+                             'channel_product_code' => $channelProduct->code,
+                         ]);
 
         Log::info('payment.domain.service.channel-service.transferQuery:start');
 
@@ -304,7 +294,7 @@ class PaymentChannelService
             $result = $gateway->gateway($paymentChannelData)->transferQuery($transfer);
             // 网关调用是否正常
             Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:end',
-                $result->toArray());
+                      $result->toArray());
 
 
             if (!$result->isSuccessFul()) {
@@ -335,7 +325,7 @@ class PaymentChannelService
         } catch (ChannelGatewayException $channelGatewayException) {
             //  查询是网关遗产不处理  上报异常即可
             report($channelGatewayException);
-            Log::info('payment.domain.service.channel-service.transferQuery:ChannelGatewayDrive:error:'.$channelGatewayException->getMessage());
+            Log::info('payment.domain.service.channel-service.transferQuery:ChannelGatewayDrive:error:' . $channelGatewayException->getMessage());
             return false;
         } catch (Throwable $throwable) {
             report($throwable);
@@ -349,31 +339,31 @@ class PaymentChannelService
     /**
      * 绑定结算账户
      *
-     * @param  ChannelApp  $channelApp
-     * @param  SettleReceiver  $settleReceiver
+     * @param ChannelApp $channelApp
+     * @param SettleReceiver $settleReceiver
      *
      * @return bool
      */
     public function bindSettleReceiver(ChannelApp $channelApp, SettleReceiver $settleReceiver) : bool
     {
         Log::withContext([
-            'settle_receiver_id' => $settleReceiver->id,
-            'channel_code'       => $channelApp->channel_code,
-            'channel_app_id'     => $channelApp->id,
+                             'settle_receiver_id' => $settleReceiver->id,
+                             'channel_code'       => $channelApp->channel_code,
+                             'channel_app_id'     => $channelApp->id,
 
-        ]);
-        Log::info(__CLASS__.'@'.__METHOD__.':start');
+                         ]);
+        Log::info(__CLASS__ . '@' . __METHOD__ . ':start');
         try {
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayDrive');
 
             $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
             $paymentChannelData             = new  PaymentChannelData;
             $paymentChannelData->channelApp = $channelApp;
-            Log::info(__CLASS__.'@'.__METHOD__.':bindSettleReceiver.start');
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':bindSettleReceiver.start');
 
             $result = $gateway->gateway($paymentChannelData)->bindSettleReceiver($settleReceiver);
             // 网关调用是否正常
-            Log::info(__CLASS__.'@'.__METHOD__.':bindSettleReceiver.end', $result->toArray());
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':bindSettleReceiver.end', $result->toArray());
 
 
             if (!$result->isSuccessFul()) {
@@ -388,8 +378,8 @@ class PaymentChannelService
         } catch (ChannelGatewayException $channelGatewayException) {
             //  查询是网关遗产不处理  上报异常即可
             report($channelGatewayException);
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
-                ['message' => $channelGatewayException->getMessage()]);
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayException',
+                      [ 'message' => $channelGatewayException->getMessage() ]);
 
             return false;
         } catch (Throwable $throwable) {
@@ -399,34 +389,37 @@ class PaymentChannelService
         }
     }
 
+    protected function gateway(ChannelApp $channelApp, ?ChannelProduct $channelProduct = null) : GatewayDriveInterface
+    {
+        $gateway                            = ChannelGatewayDrive::create($channelApp->channel_code);
+        $paymentChannelData                 = new  PaymentChannelData;
+        $paymentChannelData->channelApp     = $channelApp;
+        $paymentChannelData->channelProduct = $channelProduct;
+        return $gateway->gateway($paymentChannelData);
+    }
+
     /**
      * 绑定结算账户
      *
-     * @param  ChannelApp  $channelApp
-     * @param  SettleReceiver  $settleReceiver
+     * @param ChannelApp $channelApp
+     * @param SettleReceiver $settleReceiver
      *
      * @return bool
      */
     public function unbindSettleReceiver(ChannelApp $channelApp, SettleReceiver $settleReceiver) : bool
     {
         Log::withContext([
-            'settle_receiver_id' => $settleReceiver->id,
-            'channel_code'       => $channelApp->channel_code,
-            'channel_app_id'     => $channelApp->id,
-
-        ]);
-        Log::info(__CLASS__.'@'.__METHOD__.':start');
+                             'settle_receiver_id' => $settleReceiver->id,
+                             'channel_code'       => $channelApp->channel_code,
+                             'channel_app_id'     => $channelApp->id,
+                         ]);
+        Log::info(__CLASS__ . '@' . __METHOD__ . ':start');
         try {
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
-
-            $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
-            $paymentChannelData             = new  PaymentChannelData;
-            $paymentChannelData->channelApp = $channelApp;
-            Log::info(__CLASS__.'@'.__METHOD__.':unbindSettleReceiver.start');
-
-            $result = $gateway->gateway($paymentChannelData)->unbindSettleReceiver($settleReceiver);
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':unbindSettleReceiver.start');
+            $gateway = $this->gateway($channelApp);
+            $result  = $gateway->unbindSettleReceiver($settleReceiver);
             // 网关调用是否正常
-            Log::info(__CLASS__.'@'.__METHOD__.':unbindSettleReceiver.end', $result->toArray());
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':unbindSettleReceiver.end', $result->toArray());
 
 
             if (!$result->isSuccessFul()) {
@@ -441,8 +434,9 @@ class PaymentChannelService
         } catch (ChannelGatewayException $channelGatewayException) {
             //  查询是网关遗产不处理  上报异常即可
             report($channelGatewayException);
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
-                ['message' => $channelGatewayException->getMessage()]);
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayException',
+                      [ 'message' => $channelGatewayException->getMessage() ]);
+
 
             return false;
         } catch (Throwable $throwable) {
@@ -456,27 +450,27 @@ class PaymentChannelService
     public function querySettleReceivers(ChannelApp $channelApp)
     {
         Log::withContext([
-            'channel_code'   => $channelApp->channel_code,
-            'channel_app_id' => $channelApp->id,
+                             'channel_code'   => $channelApp->channel_code,
+                             'channel_app_id' => $channelApp->id,
 
-        ]);
-        Log::info(__CLASS__.'@'.__METHOD__.':start');
+                         ]);
+        Log::info(__CLASS__ . '@' . __METHOD__ . ':start');
         try {
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayDrive');
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayDrive');
 
             $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
             $paymentChannelData             = new  PaymentChannelData;
             $paymentChannelData->channelApp = $channelApp;
-            Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.start');
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':querySettleReceivers.start');
 
             $result = $gateway->gateway($paymentChannelData)->querySettleReceivers();
             // 网关调用是否正常
 
             if (!$result->isSuccessFul()) {
-                Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.fail');
+                Log::info(__CLASS__ . '@' . __METHOD__ . ':querySettleReceivers.fail');
                 throw new PaymentException($result->getMessage(), PaymentException::CHANNEL_REFUND_ERROR);
             }
-            Log::info(__CLASS__.'@'.__METHOD__.':querySettleReceivers.success');
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':querySettleReceivers.success');
             // 绑定成功
             return $result;
 
@@ -484,13 +478,53 @@ class PaymentChannelService
         } catch (ChannelGatewayException $channelGatewayException) {
             //  查询是网关遗产不处理  上报异常即可
             report($channelGatewayException);
-            Log::info(__CLASS__.'@'.__METHOD__.':ChannelGatewayException',
-                ['message' => $channelGatewayException->getMessage()]);
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayException',
+                      [ 'message' => $channelGatewayException->getMessage() ]);
 
             return false;
         } catch (Throwable $throwable) {
             report($throwable);
             // 渠道异常 则 这 查询无效
+            return false;
+        }
+    }
+
+
+    public function settle(ChannelApp $channelApp, Settle $settle)
+    {
+        Log::withContext([
+                             'settle_no'      => $settle->settle_no,
+                             'channel_code'   => $channelApp->channel_code,
+                             'channel_app_id' => $channelApp->id,
+                         ]);
+        Log::info(__CLASS__ . '@' . __METHOD__ . ':start');
+
+        try {
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':unbindSettleReceiver.start');
+            $gateway = $this->gateway($channelApp);
+            $result  = $gateway->settle($settle);
+            // 网关调用是否正常
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':unbindSettleReceiver.end', $result->toArray());
+            if (!$result->isSuccessFul()) {
+                $settle->fail();
+                return false;
+            }
+            // 绑定成功
+            $settle->processing();
+
+            return true;
+
+            // 如果还是在处理中 那么需要
+        } catch (ChannelGatewayException $channelGatewayException) {
+            //  查询是网关遗产不处理  上报异常即可
+            report($channelGatewayException);
+            Log::info(__CLASS__ . '@' . __METHOD__ . ':ChannelGatewayException', [ 'message' => $channelGatewayException->getMessage() ]);
+            $settle->abnormal();
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
+
+            $settle->abnormal();
             return false;
         }
     }

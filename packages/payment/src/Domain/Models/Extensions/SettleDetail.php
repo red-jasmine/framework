@@ -3,6 +3,8 @@
 namespace RedJasmine\Payment\Domain\Models\Extensions;
 
 use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
 use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
@@ -17,7 +19,7 @@ class SettleDetail extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settle_details';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_settle_details';
     }
 
 
@@ -25,6 +27,8 @@ class SettleDetail extends Model
     {
         return [
             'amount'        => MoneyCast::class,
+            'account_type'  => AccountTypeEnum::class,
+            'cert_type'     => CertTypeEnum::class,
             'settle_status' => SettleStatusEnum::class,
         ];
     }

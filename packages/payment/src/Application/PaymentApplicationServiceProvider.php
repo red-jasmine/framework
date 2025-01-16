@@ -15,8 +15,6 @@ use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\ChannelMerchantReadRepositoryInterface;
-use RedJasmine\Payment\Domain\Repositories\ChannelMerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelReadRepositoryInterface;
@@ -42,7 +40,6 @@ use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelAppReadRepository;
-use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelMerchantReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelProductReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\ChannelReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\MerchantAppPermissionReadRepository;
@@ -56,7 +53,6 @@ use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\SettleReceiverReadR
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TradeReadRepository;
 use RedJasmine\Payment\Infrastructure\ReadRepositories\Mysql\TransferReadRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelAppRepository;
-use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelMerchantRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelProductRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\ChannelRepository;
 use RedJasmine\Payment\Infrastructure\Repositories\Eloquent\MerchantAppRepository;
@@ -86,8 +82,6 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ChannelRepositoryInterface::class, ChannelRepository::class);
         $this->app->bind(ChannelReadRepositoryInterface::class, ChannelReadRepository::class);
 
-        $this->app->bind(ChannelMerchantRepositoryInterface::class, ChannelMerchantRepository::class);
-        $this->app->bind(ChannelMerchantReadRepositoryInterface::class, ChannelMerchantReadRepository::class);
 
         $this->app->bind(ChannelAppRepositoryInterface::class, ChannelAppRepository::class);
         $this->app->bind(ChannelAppReadRepositoryInterface::class, ChannelAppReadRepository::class);
@@ -135,21 +129,21 @@ class PaymentApplicationServiceProvider extends ServiceProvider
     public function boot() : void
     {
         Event::listen([
-            RefundCreatedEvent::class,
-            RefundProcessingEvent::class
-        ], PaymentChannelListener::class);
+                          RefundCreatedEvent::class,
+                          RefundProcessingEvent::class
+                      ], PaymentChannelListener::class);
 
         Event::listen([
-            TransferExecutingEvent::class,
-            TransferProcessingEvent::class,
-        ], PaymentChannelListener::class);
+                          TransferExecutingEvent::class,
+                          TransferProcessingEvent::class,
+                      ], PaymentChannelListener::class);
 
         // 注册通知 通知监听器
         Event::listen([
-            TradePaidEvent::class,
-            RefundSuccessEvent::class,
-            NotifyCreateEvent::class,
-        ], AsyncNotifyListener::class);
+                          TradePaidEvent::class,
+                          RefundSuccessEvent::class,
+                          NotifyCreateEvent::class,
+                      ], AsyncNotifyListener::class);
 
 
     }

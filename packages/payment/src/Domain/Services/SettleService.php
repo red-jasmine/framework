@@ -8,6 +8,7 @@ use RedJasmine\Payment\Domain\Models\Extensions\SettleDetail;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\Trade;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
@@ -35,7 +36,7 @@ class SettleService
         $settle->merchant_settle_no = $data->merchantSettleNo;
         $settle->setTrade($trade);
 
-
+        $amount =  new Money(0, $trade->amount->currency);
         foreach ($data->details as $detailData) {
             $detail                 = SettleDetail::make();
             $detail->receiver_type  = $detailData->receiverType;
@@ -46,9 +47,11 @@ class SettleService
             $merchantSettleReceiver = $this->filterSettleReceiver($settle, $detail);
             $detail->setSettleReceiver($merchantSettleReceiver);
             $settle->details->add($detail);
+
+            $amount = $amount->add($detail->amount);
         }
 
-
+        $settle->amount = $amount;
         $this->settleRepository->store($settle);
 
         return $settle;

@@ -19,6 +19,11 @@ class TradeData extends Data
     public Money $amount;
 
     public string $subject;
+    /**
+     * 是否需要结算分账
+     * @var bool
+     */
+    public bool   $isSettleSharing = false;
 
     public ?string $description = null;
 
