@@ -13,12 +13,12 @@ use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TransferNumberGeneratorInterface;
-use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\IdentityTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TransferExtension;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 

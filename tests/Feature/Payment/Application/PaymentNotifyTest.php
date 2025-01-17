@@ -26,9 +26,9 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelAppProduct;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Payment\Fixtures\AlipayChannelAppData;
 
 beforeEach(function () {

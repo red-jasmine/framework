@@ -3,8 +3,8 @@
 namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class RefundCreateCommand extends Data
 {

@@ -18,17 +18,16 @@ use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
-use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property $status
- * @property Money $refundAmount
+ * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $refundAmount
  */
 class Refund extends Model
 {

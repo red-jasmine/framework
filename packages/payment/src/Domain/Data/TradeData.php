@@ -3,9 +3,9 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use DateTime;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class TradeData extends Data
 {

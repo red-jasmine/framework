@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Models\ValueObjects;
+namespace RedJasmine\Support\Domain\Models\ValueObjects;
 
 use Money\Currencies\ISOCurrencies;
 use Money\Currency;

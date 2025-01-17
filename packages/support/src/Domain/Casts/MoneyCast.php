@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Payment\Domain\Models\Casts;
+namespace RedJasmine\Support\Domain\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class MoneyCast implements CastsAttributes
 {

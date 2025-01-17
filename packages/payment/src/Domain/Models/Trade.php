@@ -15,20 +15,20 @@ use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
-use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
-use RedJasmine\Payment\Domain\Models\ValueObjects\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 /**
- * @property Money $amount
- * @property Money $paymentAmount
+ * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $amount
+ * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $paymentAmount
  * @property Money $refundAmount
  */
 class Trade extends Model implements AsyncNotifyInterface

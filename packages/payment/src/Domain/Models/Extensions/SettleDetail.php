@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Payment\Domain\Models\Extensions;
 
-use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
 use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class SettleDetail extends Model

@@ -10,10 +10,9 @@ use RedJasmine\Payment\Domain\Events\Settles\SettleCreatedEvent;
 use RedJasmine\Payment\Domain\Exceptions\SettleException;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelSettleResult;
 use RedJasmine\Payment\Domain\Generator\SettleNumberGeneratorInterface;
-use RedJasmine\Payment\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
-use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\SettleDetail;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
