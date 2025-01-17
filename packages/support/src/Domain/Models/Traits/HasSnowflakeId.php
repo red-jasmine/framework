@@ -5,6 +5,9 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 use Exception;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
+/**
+ * @property bool $uniqueShortId
+ */
 trait HasSnowflakeId
 {
 
