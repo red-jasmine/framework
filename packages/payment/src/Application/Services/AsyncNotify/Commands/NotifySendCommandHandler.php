@@ -30,6 +30,7 @@ class NotifySendCommandHandler extends CommandHandler
 
         // TODO 如何触发失败重试
 
+
         return $notify->status;
 
     }

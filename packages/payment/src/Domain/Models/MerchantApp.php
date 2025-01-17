@@ -18,6 +18,8 @@ class MerchantApp extends Model
 
     public $incrementing = false;
 
+    public $uniqueShortId = false;
+
     use HasSnowflakeId;
 
     use SoftDeletes;
@@ -32,7 +34,6 @@ class MerchantApp extends Model
             'app_private_key'    => 'encrypted',
             'system_public_key'  => 'encrypted',
             'system_private_key' => 'encrypted',
-
         ];
     }
 
@@ -56,7 +57,7 @@ class MerchantApp extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_apps';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps';
     }
 
 
@@ -89,7 +90,7 @@ class MerchantApp extends Model
     {
         return $this->belongsToMany(
             ChannelApp::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_merchant_channel_app_permissions',
+            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_channel_app_permissions',
             'merchant_app_id',
             'channel_app_id',
         )->using(MerchantChannelAppPermission::class)

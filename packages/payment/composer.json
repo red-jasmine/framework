@@ -15,7 +15,7 @@
         "red-jasmine/support": "1.0.x-dev",
         "league/omnipay": "^3.2",
         "moneyphp/money": "^4.6",
-        "liushoukun/omnipay-alipay": "^3.16"
+        "liushoukun/omnipay-alipay": "^3.17"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +30,8 @@
             "providers": [
               "RedJasmine\\Payment\\PaymentPackageServiceProvider",
               "RedJasmine\\Payment\\Domain\\PaymentDomainServiceProvider",
-              "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider"
+              "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider",
+              "RedJasmine\\Payment\\Ui\\PaymentUIServiceProvider"
             ],
             "aliases": {
 
@@ -50,5 +51,7 @@
         "allow-plugins": {
             "php-http/discovery": true
         }
-    }
+    },
+    "repositories": [
+    ]
 }

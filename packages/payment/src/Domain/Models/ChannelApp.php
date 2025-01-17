@@ -20,7 +20,7 @@ class ChannelApp extends Model implements OwnerInterface, OperatorInterface
 
     public $incrementing = false;
 
-
+    public $uniqueShortId = false;
     use HasOwner;
 
     use HasSnowflakeId;

@@ -18,6 +18,8 @@ class Merchant extends Model implements OwnerInterface
 
     public $incrementing = false;
 
+    public $uniqueShortId = false;
+
     use HasSnowflakeId;
 
     use HasOwner;

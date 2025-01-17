@@ -10,8 +10,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class Channel extends Model
 {
-
-    public $incrementing = false;
+    public $incrementing  = false;
+    public $uniqueShortId = false;
 
     use HasSnowflakeId;
 
@@ -39,12 +39,6 @@ class Channel extends Model
     public function products() : HasMany
     {
         return $this->hasMany(ChannelProduct::class, 'channel_code', 'code');
-    }
-
-
-    public function apps() : HasMany
-    {
-        return $this->hasMany(ChannelApp::class, 'channel_code', 'code');
     }
 
 

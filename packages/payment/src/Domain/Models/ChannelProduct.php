@@ -17,6 +17,8 @@ class ChannelProduct extends Model
 {
 
     public $incrementing = false;
+
+    public $uniqueShortId = false;
     use HasSnowflakeId;
     use SoftDeletes;
 
