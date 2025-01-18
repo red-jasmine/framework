@@ -15,6 +15,20 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class Data extends \Spatie\LaravelData\Data
 {
 
+
+    protected string $_primaryKey = 'id';
+
+    public function getKey()
+    {
+        return $this->{$this->_primaryKey} ?? null;
+    }
+
+    public function setKey($key) : void
+    {
+        $this->{$this->_primaryKey} = $key;
+    }
+
+
     public static function pipeline() : DataPipeline
     {
         $pipeline = parent::pipeline();

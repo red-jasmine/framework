@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Application\CommandHandlers;
 
+use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -10,11 +11,18 @@ use RedJasmine\Support\Data\Data;
  */
 class DeleteCommandHandler extends CommandHandler
 {
+
+    public function __construct(protected ApplicationCommandService $service)
+    {
+    }
+
+
     /**
      * 处理删除命令
      * 该方法通过数据库事务安全地删除指定的数据
      *
-     * @param Data $command 包含要删除数据的ID的数据对象
+     * @param  Data  $command  包含要删除数据的ID的数据对象
+     *
      * @throws Throwable 如果删除过程中发生错误，则抛出异常
      */
     public function handle(Data $command) : void
@@ -23,7 +31,7 @@ class DeleteCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 根据命令中的ID查找模型
-            $model = $this->getRepository()->find($command->id);
+            $model = $this->getRepository()->find($command->getKey());
             // 设置当前模型为待删除模型
             $this->setModel($model);
             // 通过仓库删除模型

@@ -20,7 +20,7 @@ class UpdateCommandHandler extends CommandHandler
     {
         $this->setCommand($command);
 
-        $this->setModel($this->service->repository->find($command->id));
+        $this->setModel($this->service->repository->find($command->getKey()));
         // 开始数据库事务
         $this->beginDatabaseTransaction();
         try {
