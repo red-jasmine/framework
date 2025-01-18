@@ -11,6 +11,7 @@ use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
 
@@ -19,6 +20,7 @@ use RedJasmine\Support\Foundation\Service\Service;
  * @method Model findById(FindQuery $query)
  * @method LengthAwarePaginator paginate(PaginateQuery $query)
  * @method Paginator simplePaginate(PaginateQuery $query)
+ * @property ReadRepositoryInterface $repository
  */
 abstract class ApplicationQueryService extends Service
 {

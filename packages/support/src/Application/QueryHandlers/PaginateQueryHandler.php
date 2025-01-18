@@ -2,24 +2,23 @@
 
 namespace RedJasmine\Support\Application\QueryHandlers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
-use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 
 class PaginateQueryHandler extends QueryHandler
 {
 
+    public function __construct(
+        protected ApplicationQueryService $service
+    ) {
+    }
 
-    public function handle(PaginateQuery $query) : \Illuminate\Pagination\LengthAwarePaginator
+
+    public function handle(PaginateQuery $query) : LengthAwarePaginator
     {
-        /**
-         * @var $readRepository ReadRepositoryInterface
-         */
-        $readRepository = $this->getService()->hook('paginate.repository', $query,
-            fn() => $this->getService()->getRepository());
 
-
-
-        return $readRepository->paginate($query);
+        return $this->service->getRepository()->paginate($query);
 
 
     }

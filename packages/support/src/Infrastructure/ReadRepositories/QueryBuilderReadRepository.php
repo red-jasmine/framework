@@ -127,12 +127,15 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
      */
     protected function buildRequest(array $requestQuery = []) : Request
     {
+
+
         // 从配置文件中获取参数名称
         $includeParameterName = config('query-builder.parameters.include', 'include');
         $appendParameterName  = config('query-builder.parameters.append', 'append');
         $fieldsParameterName  = config('query-builder.parameters.fields', 'fields');
         $sortParameterName    = config('query-builder.parameters.sort', 'sort');
         $filterParameterName  = config('query-builder.parameters.filter', 'filter');
+
 
         // 如果filter参数存在，则移除某些默认参数，以避免冲突或不必要的处理
         if (filled($filterParameterName)) {
@@ -141,6 +144,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
                 $appendParameterName,
                 $fieldsParameterName,
                 $sortParameterName,
+                'page','per_page'
             ]);
         }
 
