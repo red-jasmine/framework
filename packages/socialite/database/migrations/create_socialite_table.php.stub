@@ -1,0 +1,22 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up()
+    {
+        Schema::create('socialite_table', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('system_app', 32)->comment('系统应用');
+            $table->string('channel_code')->comment('渠道');
+            $table->string('channel_app_id')->comment('渠道应用ID');
+            $table->string('open_id')->comment('OpenId');
+            $table->string('user_type', 32)->nullable()->comment('用户类型');
+            $table->string('user_id', 32)->nullable()->comment('用户类型');
+
+            $table->timestamps();
+        });
+    }
+};
