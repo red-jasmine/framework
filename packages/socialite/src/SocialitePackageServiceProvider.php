@@ -6,9 +6,9 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use RedJasmine\Socialite\Commands\SocialiteCommand;
 
-class SocialiteServiceProvider extends PackageServiceProvider
+class SocialitePackageServiceProvider extends PackageServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         /*
          * This class is a Package Service Provider
@@ -19,7 +19,21 @@ class SocialiteServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-socialite')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_socialite_table')
+            ->runsMigrations()
             ->hasCommand(SocialiteCommand::class);
+
+
+        if (file_exists($package->basePath('/../database/migrations'))) {
+
+            $package->hasMigrations($this->getMigrations());
+        }
+    }
+
+    public function getMigrations() : array
+    {
+        return [
+            'create_socialite_users_table'
+        ];
+
     }
 }

@@ -27,6 +27,8 @@ abstract class ApplicationCommandService extends ApplicationService
     protected static string $modelClass;
 
 
+
+
     /**
      * 转换器
      * @var string|null

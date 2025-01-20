@@ -63,7 +63,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Socialite\\SocialiteServiceProvider"
+                "RedJasmine\\Socialite\\SocialitePackageServiceProvider"
             ],
             "aliases": {
                 "Socialite": "RedJasmine\\Socialite\\Facades\\Socialite"
