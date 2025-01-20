@@ -10,8 +10,8 @@ class SocialiteUserData extends Data
     public string $provider;
     public string $clientId;
     public string $identity;
-    public string $userId;
     public string $appId;
+    public string $userId;
     public string $userType;
 
 
