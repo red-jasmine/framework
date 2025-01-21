@@ -43,16 +43,18 @@ class SocialiteUser extends Model implements OwnerInterface
      * 绑定
      *
      * @param  string  $appId
-     * @param  UserInterface  $user
+     * @param  UserInterface  $owner
      *
      * @return void
      */
-    public function bind(string $appId, UserInterface $user) : void
+    public function bind(string $appId, UserInterface $owner) : void
     {
+
+        $this->isAllowBind();
         // 验证是否允许绑定
         $this->app_id     = $appId;
-        $this->owner_type = $user->getType();
-        $this->owner_id   = (string) $user->getID();
+        $this->owner_type = $owner->getType();
+        $this->owner_id   = (string) $owner->getID();
         $this->fireModelEvent('bind', false);
     }
 
@@ -63,7 +65,6 @@ class SocialiteUser extends Model implements OwnerInterface
      */
     public function unbind() : void
     {
-
         $this->owner_type = null;
         $this->owner_id   = null;
         $this->fireModelEvent('unbind', false);

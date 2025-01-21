@@ -1,30 +1,39 @@
 <?php
 
-namespace RedJasmine\Socialite\Application\Services\Login;
+namespace RedJasmine\Socialite\Application\Services\Commands;
 
 use Overtrue\LaravelSocialite\Socialite;
 use Overtrue\Socialite\Contracts\ProviderInterface;
-use RedJasmine\Socialite\Application\Services\Login\Commands\SocialiteUserLoginCommand;
+use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
-use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
+use RedJasmine\Support\Application\CommandHandler;
 
-class SocialiteUserLoginCommandService
+class SocialiteUserLoginCommandHandler extends CommandHandler
 {
-    public function __construct(
 
-        protected SocialiteUserReadRepositoryInterface $readRepository
+    public function __construct(
+        protected SocialiteUserCommandService $service,
+
     ) {
     }
 
-
-    public function login(SocialiteUserLoginCommand $command)
+    /**
+     * 返回绑定信息
+     *
+     * @param  SocialiteUserLoginCommand  $command
+     *
+     * @return SocialiteUser
+     */
+    public function handle(SocialiteUserLoginCommand $command) : SocialiteUser
     {
         /**
          * @var ProviderInterface $provider
          */
 
-        // 创建驱动
+        // 根据
+        $command->provider;
+        $command->appId;
         $provider = Socialite::create('qq');
         // 获取用户信息
         $user = $provider->userFromCode($command->code);
@@ -37,14 +46,14 @@ class SocialiteUserLoginCommandService
             'app_id'    => $command->appId,
 
         ]);
-        return $this->readRepository->findUser($query)
+        return $this->service->readRepository->findUser($query)
                ?? SocialiteUser::make([
                 'provider'  => $command->provider,
                 'client_id' => $command->clientId,
                 'identity'  => $user->getId(),
                 'app_id'    => $command->appId,
             ]);
-
     }
+
 
 }
