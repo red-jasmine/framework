@@ -9420,7 +9420,7 @@
         },
         {
             "name": "red-jasmine/ecommerce",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/ecommerce",
@@ -9475,7 +9475,7 @@
         },
         {
             "name": "red-jasmine/filament-core",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/filament-core",
@@ -9562,7 +9562,7 @@
         },
         {
             "name": "red-jasmine/order",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/order",
@@ -9621,7 +9621,7 @@
         },
         {
             "name": "red-jasmine/payment",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/payment",
@@ -9682,11 +9682,11 @@
         },
         {
             "name": "red-jasmine/socialite",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/socialite",
-                "reference": "74044c49d0d848f217b70c22d9605073ac914db0"
+                "reference": "debdc0b13a97067cba8a4b62eb6f294358d98580"
             },
             "require": {
                 "illuminate/contracts": "^10.0||^11.0",
@@ -9711,7 +9711,8 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "RedJasmine\\Socialite\\SocialitePackageServiceProvider"
+                        "RedJasmine\\Socialite\\SocialitePackageServiceProvider",
+                        "RedJasmine\\Socialite\\Application\\SocialiteApplicationServiceProvider"
                     ],
                     "aliases": {
                         "Socialite": "RedJasmine\\Socialite\\Facades\\Socialite"
@@ -9777,7 +9778,7 @@
         },
         {
             "name": "red-jasmine/support",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/support",
