@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('owner_type',64)->nullable();
             $table->string('owner_id',64)->nullable();
             $table->timestamps();
-            $table->unique(['provider_code', 'identity', 'client_id', 'app_id'], 'uk_app_provider_user');
+            $table->unique(['provider', 'identity', 'client_id', 'app_id'], 'uk_app_provider_user');
             $table->comment('第三方用户表');
         });
     }
