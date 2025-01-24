@@ -7,5 +7,5 @@ use RedJasmine\Support\Data\Data;
 
 class UserLoginCommand extends Data
 {
-
+    public string $provider;
 }
