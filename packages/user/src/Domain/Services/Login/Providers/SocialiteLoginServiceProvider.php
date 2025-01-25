@@ -19,7 +19,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
     {
         // 验证参数
 
-        // 根据Code 转换用户信息
+        // 根据Code 转换用户信
 
         // 根据用户信息 查询 社交账号的 绑定的信息
 

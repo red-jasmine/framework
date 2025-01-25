@@ -15,5 +15,6 @@ class UserLoginData extends Data
     public ?string $ua;
 
     public ?string $version;
+    
 
 }
