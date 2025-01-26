@@ -16,5 +16,13 @@ class UserReadRepository extends QueryBuilderReadRepository implements UserReadR
         return $this->query(null)->where('name', $name)->first();
     }
 
+    public function findByAccount(string $account) : ?User
+    {
+        // 手机号
+        // 用户名称
+        // 邮箱
+        return $this->query(null)->where('name', $account)->first();
+    }
+
 
 }
