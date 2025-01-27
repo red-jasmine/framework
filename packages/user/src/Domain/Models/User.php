@@ -34,12 +34,21 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims():array
+    public function getJWTCustomClaims() : array
     {
         return [
             'username' => $this->username,
             'nickname' => $this->nickname
         ];
+    }
+
+    public function checkPassword(string $password) : bool
+    {
+
+        // TODO  验证密码
+
+
+        return true;
     }
 
 
