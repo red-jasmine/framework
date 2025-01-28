@@ -12,18 +12,20 @@ class UserLoginService
 {
 
 
-    public function login(Data\UserLoginData $data)
+    public function login(Data\UserLoginData $data) : UserTokenData
     {
         // 使用服务提供者的登陆方法 进行登陆
-        $user = UserLoginServiceProvider::create($data->provider)->login($data->toArray());
+        $user = UserLoginServiceProvider::create($data->provider)
+                                        ->login($data);
 
-
+        // 返回 token
         return $this->token($user);
 
     }
 
     public function token(User $user) : UserTokenData
     {
+
         // 动态 guard TODO
         $token                   = Auth::guard('api')->login($user);
         $userToken               = new UserTokenData();
