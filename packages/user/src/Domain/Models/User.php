@@ -7,6 +7,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
+use RedJasmine\User\Domain\Events\UserLoginEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
@@ -28,6 +29,10 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+
+    protected $dispatchesEvents = [
+        'login'=>UserLoginEvent::class
+    ];
 
     public function getJWTIdentifier()
     {
@@ -51,5 +56,10 @@ class User extends Authenticatable implements JWTSubject
         return true;
     }
 
+
+    public function login()
+    {
+        $this->fireModelEvent('login',false);
+    }
 
 }

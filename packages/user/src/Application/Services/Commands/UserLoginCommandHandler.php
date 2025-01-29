@@ -15,9 +15,11 @@ class UserLoginCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(UserLoginCommand $command) : User
+    public function handle(UserLoginCommand $command)
     {
-        $this->loginService->login();
+        $userToken = $this->loginService->login($command);
+
+        return $userToken;
     }
 
 }
