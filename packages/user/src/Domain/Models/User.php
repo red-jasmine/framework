@@ -8,6 +8,7 @@ use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
 use RedJasmine\User\Domain\Events\UserLoginEvent;
+use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
@@ -31,7 +32,8 @@ class User extends Authenticatable implements JWTSubject
     }
 
     protected $dispatchesEvents = [
-        'login'=>UserLoginEvent::class
+        'login'=>UserLoginEvent::class,
+        'register'=>UserRegisteredEvent::class
     ];
 
     public function getJWTIdentifier()
