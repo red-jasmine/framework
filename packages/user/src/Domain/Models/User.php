@@ -59,7 +59,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    public function login()
+    public function login():void
     {
         $this->fireModelEvent('login',false);
     }
