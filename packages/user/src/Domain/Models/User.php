@@ -3,6 +3,7 @@
 namespace RedJasmine\User\Domain\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
@@ -32,8 +33,8 @@ class User extends Authenticatable implements JWTSubject
     }
 
     protected $dispatchesEvents = [
-        'login'=>UserLoginEvent::class,
-        'register'=>UserRegisteredEvent::class
+        'login'    => UserLoginEvent::class,
+        'register' => UserRegisteredEvent::class
     ];
 
     public function getJWTIdentifier()
@@ -51,7 +52,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function checkPassword(string $password) : bool
     {
-
         // TODO  验证密码
 
 
@@ -59,9 +59,9 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    public function login():void
+    public function login() : void
     {
-        $this->fireModelEvent('login',false);
+        $this->fireModelEvent('login', false);
     }
 
 }
