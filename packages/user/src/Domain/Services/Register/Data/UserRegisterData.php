@@ -2,11 +2,10 @@
 
 namespace RedJasmine\User\Domain\Services\Register\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\User\Domain\Data\UserData;
 
-class UserRegisterData extends Data
+class UserRegisterData extends UserData
 {
 
-    public string $username;
 
 }
