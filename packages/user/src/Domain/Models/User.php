@@ -4,6 +4,7 @@ namespace RedJasmine\User\Domain\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,7 @@ use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, UserInterface
 {
     public $incrementing = false;
 
@@ -63,5 +64,26 @@ class User extends Authenticatable implements JWTSubject
     {
         $this->fireModelEvent('login', false);
     }
+
+    public function getType() : string
+    {
+        return 'user';
+    }
+
+    public function getID() : int
+    {
+        return $this->getKey();
+    }
+
+    public function getNickname() : ?string
+    {
+        return $this->nickname;
+    }
+
+    public function getAvatar() : ?string
+    {
+        return $this->avatar;
+    }
+
 
 }

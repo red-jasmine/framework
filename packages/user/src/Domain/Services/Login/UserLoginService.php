@@ -16,8 +16,7 @@ class UserLoginService
     {
 
         // 使用服务提供者的登陆方法 进行登陆
-        $user = UserLoginServiceProvider::create($data->provider)
-                                        ->login($data);
+        $user = UserLoginServiceProvider::create($data->provider)->login($data);
 
         // 返回 token
         return $this->token($user);
@@ -26,13 +25,10 @@ class UserLoginService
 
     public function token(User $user) : UserTokenData
     {
-
-        // 动态 guard TODO
-        $token                   = Auth::guard('api')->login($user);
-        $userToken               = new UserTokenData();
-        $userToken->access_token = $token;
-        $userToken->token_type   = 'bearer';
-        $userToken->expire       = config('jwt.ttl') * 60;
+        $token                  = Auth::guard('api')->login($user);
+        $userToken              = new UserTokenData();
+        $userToken->accessToken = (string) $token;
+        $userToken->expire      = (int) (config('jwt.ttl') * 60);
         return $userToken;
 
 

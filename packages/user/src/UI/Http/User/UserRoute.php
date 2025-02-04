@@ -12,7 +12,16 @@ class UserRoute
     public static function api() : void
     {
 
-        Route::post('login', [LoginController::class, 'login'])->name('user.user.api.login');
+        Route::group([
+            'middleware' => 'auth:api'
+        ], function () {
+            Route::any('info', [LoginController::class, 'info'])->name('user.user.api.info');
+        });
+        Route::group([
 
+        ], function () {
+            Route::post('login', [LoginController::class, 'login'])->name('user.user.api.login');
+        });
     }
+
 }

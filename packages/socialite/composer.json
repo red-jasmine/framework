@@ -64,7 +64,8 @@
         "laravel": {
             "providers": [
                 "RedJasmine\\Socialite\\SocialitePackageServiceProvider",
-                "RedJasmine\\Socialite\\Application\\SocialiteApplicationServiceProvider"
+                "RedJasmine\\Socialite\\Application\\SocialiteApplicationServiceProvider",
+                "RedJasmine\\Socialite\\Infrastructure\\SocialiteInfrastructureServiceProvider"
             ],
             "aliases": {
                 "Socialite": "RedJasmine\\Socialite\\Facades\\Socialite"

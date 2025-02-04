@@ -5,6 +5,8 @@ namespace RedJasmine\User\Application\Services;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
+use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
 use RedJasmine\User\Domain\Models\User;
@@ -16,6 +18,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method User register(UserRegisterCommand $command)
  * @see UserLoginCommandHandler::handle()
  * @method UserTokenData login(UserLoginCommand $command)
+ * @method UserTokenData loginOrRegister(UserLoginOrRegisterCommand $command)
  *
  */
 class UserCommandService extends ApplicationCommandService
@@ -34,8 +37,9 @@ class UserCommandService extends ApplicationCommandService
 
 
     protected static $macros = [
-        'register' => UserRegisterCommandHandler::class,
-        'login'    => UserLoginCommandHandler::class
+        'register'        => UserRegisterCommandHandler::class,
+        'login'           => UserLoginCommandHandler::class,
+        'loginOrRegister' => UserLoginOrRegisterCommandHandler::class
     ];
 
 
