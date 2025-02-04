@@ -11,16 +11,11 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
 {
     public const NAME = 'password';
 
-    public function __construct(
-        protected UserReadRepositoryInterface $userReadRepository
-
-    ) {
-    }
 
     public function login(UserLoginData $data) : User
     {
         // 按用户名称查询 用户
-        $user = $this->userReadRepository->findByName($data->data['account']);
+        $user = app(UserReadRepositoryInterface::class)->findByName($data->data['account']);
 
         // 验证密码
         $user->checkPassword($data->data['password']);

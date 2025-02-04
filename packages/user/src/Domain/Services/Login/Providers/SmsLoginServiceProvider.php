@@ -10,11 +10,6 @@ use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
-    public function __construct(
-        protected UserReadRepositoryInterface $userReadRepository
-
-    ) {
-    }
 
     public const NAME = 'sms';
 
@@ -28,7 +23,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         // 验证验证码 TODO 调度 验证码服务
 
         // 查询用户信息
-        $user = $this->userReadRepository->findByAccount($account);
+        $user = app(UserReadRepositoryInterface::class)->findByAccount($account);
 
         // 返回用户信息
 

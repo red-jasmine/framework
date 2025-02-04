@@ -9,12 +9,13 @@ use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 
 /**
  * @see UserRegisterCommandHandler::handle()
  * @method User register(UserRegisterCommand $command)
  * @see UserLoginCommandHandler::handle()
- * @method login(UserLoginCommand $command)
+ * @method UserTokenData login(UserLoginCommand $command)
  *
  */
 class UserCommandService extends ApplicationCommandService

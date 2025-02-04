@@ -5,6 +5,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\User\Application\Services\UserCommandService;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
 
 class UserLoginCommandHandler extends CommandHandler
@@ -15,11 +16,9 @@ class UserLoginCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(UserLoginCommand $command)
+    public function handle(UserLoginCommand $command) : UserTokenData
     {
-        $userToken = $this->loginService->login($command);
-
-        return $userToken;
+        return $this->loginService->login($command);
     }
 
 }

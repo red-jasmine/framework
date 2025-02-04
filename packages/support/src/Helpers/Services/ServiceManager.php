@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Helpers\Services;
 use Closure;
 use Illuminate\Support\Arr;
 use function strtolower;
+use InvalidArgumentException;
 
 abstract class ServiceManager
 {
@@ -13,8 +14,9 @@ abstract class ServiceManager
     protected array $resolved = [];
     protected const PROVIDERS = [];
 
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
+        $this->config = $config;
     }
 
     public function getConfig() : array
@@ -41,6 +43,7 @@ abstract class ServiceManager
     {
         $name = strtolower($name);
 
+
         if (!isset($this->resolved[$name])) {
             $this->resolved[$name] = $this->createProvider($name);
         }
@@ -58,7 +61,7 @@ abstract class ServiceManager
         }
 
         if (!$this->isValidProvider($provider)) {
-            throw new Exceptions\InvalidArgumentException("Provider [{$name}] not supported.");
+            throw new InvalidArgumentException("Provider [{$name}] not supported.");
         }
 
         return $this->buildProvider(static::PROVIDERS[$provider] ?? $provider, $config);

@@ -12,36 +12,23 @@ use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
-    public function __construct(
-        protected SocialiteUserCommandService $socialiteUserCommandService,
-        protected UserRepositoryInterface $userRepository
-    ) {
-    }
 
     public const NAME = 'socialite';
 
     public function login(UserLoginData $data) : User
     {
-        // 验证参数
+        // 验证参数 TODO
+        $data->data;
+        $data->data['appId'] = 'UserCenter';
 
-        // 根据用户信息 查询 社交账号的 绑定的信息
-        // 查询配置信息 TODO
-        $command           = new SocialiteUserLoginCommand();
-        $command->provider = $data->data['provider'];
-        $command->clientId = $data->data['client_id'];
-        $command->appId    = 'UserCenter'; // TODO
-        $command->code     = $data->data['code'];
+        $command = SocialiteUserLoginCommand::from($data->data);
 
-
-        $socialiteUser = $this->socialiteUserCommandService->login($command);
-
+        $socialiteUser = app(SocialiteUserCommandService::class)->login($command);
+        dd($command);
         // 根据社交账号绑定的信息 查询用户信息
-
-        $user = $this->userRepository->find($socialiteUser->owner_id);
-
+        $user = app(UserRepositoryInterface::class)->find($socialiteUser->owner_id);
 
         // 返回用户信息
-
         return $user;
     }
 

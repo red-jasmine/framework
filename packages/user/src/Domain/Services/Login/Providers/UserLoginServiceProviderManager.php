@@ -13,7 +13,8 @@ class UserLoginServiceProviderManager extends ServiceManager
 {
 
     protected const PROVIDERS = [
-        SmsLoginServiceProvider::NAME => SmsLoginServiceProvider::class,
+        SmsLoginServiceProvider::NAME       => SmsLoginServiceProvider::class,
+        SocialiteLoginServiceProvider::NAME => SocialiteLoginServiceProvider::class,
     ];
 
 }
