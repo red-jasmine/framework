@@ -2,9 +2,11 @@
 
 namespace RedJasmine\Socialite\Infrastructure\ReadRepositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
 class SocialiteUserReadRepository extends QueryBuilderReadRepository implements SocialiteUserReadRepositoryInterface
@@ -27,6 +29,13 @@ class SocialiteUserReadRepository extends QueryBuilderReadRepository implements 
                 'app_id'    => $query->appId,
             ]
         )->first();
+    }
+
+    public function queryUsers(UserInterface $owner, string $provider) : Collection
+    {
+        return $this->query(null)->onlyOwner($owner)
+                    ->where(['provider' => $provider])
+                    ->get();
     }
 
 
