@@ -5,26 +5,29 @@ namespace RedJasmine\User\Application\Services\Commands;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\UserCommandService;
-use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Services\Register\UserRegisterService;
 use Throwable;
 
-class UserRegisterCommandHandler extends CommandHandler
+class UserUpdateBaseInfoCommandHandler extends CommandHandler
 {
+
     public function __construct(
-        public UserCommandService $service,
-        public UserRegisterService $userRegisterService
+        protected UserCommandService $service
     ) {
     }
 
-    public function handle(UserRegisterCommand $command) : User
+
+    public function handle(UserUpdateBaseInfoCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
 
         try {
-            $user = $this->userRegisterService->register($command);
 
-            $this->service->repository->store($user);
+            $user = $this->service->repository->find($command->id);
+
+            $user->setUserBaseInfo($command);
+
+            $this->service->repository->update($user);
+
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
@@ -33,9 +36,8 @@ class UserRegisterCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
-        return $user;
 
+        return true;
 
     }
-
 }

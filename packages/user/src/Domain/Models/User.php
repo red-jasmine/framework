@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
@@ -85,5 +86,15 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         return $this->avatar;
     }
 
+
+    public function setUserBaseInfo(UserBaseInfoData $data) : void
+    {
+        isset($data->nickname) ? $this->nickname = $data->nickname : null;
+        isset($data->avatar) ? $this->avatar = $data->avatar : null;
+        isset($data->gender) ? $this->gender = $data->gender : null;
+        isset($data->birthday) ? $this->birthday = $data->birthday : null;
+        isset($data->biography) ? $this->biography = $data->biography : null;
+
+    }
 
 }

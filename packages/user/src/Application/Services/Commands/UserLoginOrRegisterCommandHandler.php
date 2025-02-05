@@ -11,7 +11,7 @@ use RedJasmine\User\Application\Services\UserCommandService;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
-use RedJasmine\User\Domain\Services\UserRegisterServiceManager;
+use RedJasmine\User\Domain\Services\Register\UserRegisterService;
 use Throwable;
 
 class UserLoginOrRegisterCommandHandler extends CommandHandler
@@ -19,7 +19,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
     public function __construct(
         public UserCommandService $service,
         public UserLoginService $loginService,
-        public UserRegisterServiceManager $userRegisterService
+        public UserRegisterService $userRegisterService
     ) {
     }
 

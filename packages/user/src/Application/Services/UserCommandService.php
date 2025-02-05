@@ -9,6 +9,10 @@ use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
+use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
+use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommandHandler;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
@@ -19,6 +23,8 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @see UserLoginCommandHandler::handle()
  * @method UserTokenData login(UserLoginCommand $command)
  * @method UserTokenData loginOrRegister(UserLoginOrRegisterCommand $command)
+ * @method bool updateBaseInfo(UserUpdateBaseInfoCommand $command)
+ * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
  *
  */
 class UserCommandService extends ApplicationCommandService
@@ -39,7 +45,9 @@ class UserCommandService extends ApplicationCommandService
     protected static $macros = [
         'register'        => UserRegisterCommandHandler::class,
         'login'           => UserLoginCommandHandler::class,
-        'loginOrRegister' => UserLoginOrRegisterCommandHandler::class
+        'loginOrRegister' => UserLoginOrRegisterCommandHandler::class,
+        'updateBaseInfo'  => UserUpdateBaseInfoCommandHandler::class,
+        'unbindSocialite' => UserUnbindSocialiteCommandHandler::class,
     ];
 
 

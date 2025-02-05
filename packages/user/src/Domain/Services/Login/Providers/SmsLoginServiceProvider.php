@@ -11,7 +11,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
 
-    public const NAME = 'sms';
+    public const string NAME = 'sms';
 
     public function login(UserLoginData $data) : User
     {

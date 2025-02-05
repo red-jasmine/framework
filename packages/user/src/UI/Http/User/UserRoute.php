@@ -25,11 +25,19 @@ class UserRoute
             Route::group([
                 'middleware' => 'auth:'.$guard
             ], function () {
-                Route::any('info', [UserController::class, 'info'])->name('user.user.api.info');
+                Route::get('info', [UserController::class, 'info'])->name('user.user.api.info');
             });
 
         });
 
+        Route::group([
+            'prefix'     => 'user',
+            'middleware' => 'auth:'.$guard
+        ], function () {
+            Route::put('base-info', [UserController::class, 'updateBaseInfo'])->name('user.user.api.update-base-info');
+            Route::post('unbind-socialite', [UserController::class, 'unbindSocialite'])->name('user.user.api.unbind-socialite');
+
+        });
 
     }
 

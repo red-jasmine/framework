@@ -25,6 +25,7 @@ class UserLoginService
 
     public function token(User $user) : UserTokenData
     {
+
         $token                  = Auth::guard('api')->login($user);
         $userToken              = new UserTokenData();
         $userToken->accessToken = (string) $token;

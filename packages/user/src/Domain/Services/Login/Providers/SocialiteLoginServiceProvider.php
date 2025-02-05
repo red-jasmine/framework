@@ -15,7 +15,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
 
-    public const NAME = 'socialite';
+    public const string NAME = 'socialite';
 
     /**
      * @param  UserLoginData  $data
