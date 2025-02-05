@@ -13,9 +13,11 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 /**
  * @property string $resourceClass
  * @property string $modelClass
+ * @property string $paginateQueryClass
+ * @property string $commandClass
+ * @property string $createCommandClass
+ * @property string $updateCommandClass
  * @property string $dataClass
- * @property string $createDataClass
- * @property string $updateDataClass
  */
 trait RestControllerActions
 {
@@ -26,8 +28,9 @@ trait RestControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('viewAny', static::$modelClass);
         }
+        $queryClass = static::$paginateQueryClass ?? PaginateQuery::class;
 
-        $result = $this->queryService->paginate(PaginateQuery::from($request->query()));
+        $result = $this->queryService->paginate($queryClass::from($request->query()));
         return static::$resourceClass::collection($result->appends($request->query()));
     }
 
@@ -40,7 +43,7 @@ trait RestControllerActions
             $this->authorize('create', static::$modelClass);
         }
         $request->offsetSet('owner', $this->getOwner());
-        $dataClass = static::$createDataClass ?? static::$dataClass;
+        $dataClass = static::$createCommandClass ?? static::$dataClass;
         $command   = $dataClass::from($request);
 
         $result = $this->commandService->create($command);
@@ -69,7 +72,7 @@ trait RestControllerActions
             $this->authorize('update', $model);
         }
         $request->offsetSet('owner', $this->getOwner());
-        $dataClass = static::$updateDataClass ?? static::$dataClass;
+        $dataClass = static::$updateCommandClass ?? static::$dataClass;
         $command   = $dataClass::from($request);
         $command->setKey($id);
         $result = $this->commandService->update($command);
