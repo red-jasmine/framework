@@ -14,6 +14,8 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
  * @property string $resourceClass
  * @property string $modelClass
  * @property string $dataClass
+ * @property string $createDataClass
+ * @property string $updateDataClass
  */
 trait RestControllerActions
 {
@@ -38,8 +40,10 @@ trait RestControllerActions
             $this->authorize('create', static::$modelClass);
         }
         $request->offsetSet('owner', $this->getOwner());
-        $command = static::$dataClass::from($request);
-        $result  = $this->commandService->create($command);
+        $dataClass = static::$createDataClass ?? static::$dataClass;
+        $command   = $dataClass::from($request);
+
+        $result = $this->commandService->create($command);
         return new static::$resourceClass($result);
     }
 
@@ -65,7 +69,8 @@ trait RestControllerActions
             $this->authorize('update', $model);
         }
         $request->offsetSet('owner', $this->getOwner());
-        $command = static::$dataClass::from($request);
+        $dataClass = static::$updateDataClass ?? static::$dataClass;
+        $command   = $dataClass::from($request);
         $command->setKey($id);
         $result = $this->commandService->update($command);
         return new static::$resourceClass($result);

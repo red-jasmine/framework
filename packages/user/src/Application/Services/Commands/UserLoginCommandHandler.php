@@ -4,7 +4,6 @@ namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\User\Application\Services\UserCommandService;
-use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
 
