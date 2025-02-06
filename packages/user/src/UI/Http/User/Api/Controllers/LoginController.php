@@ -22,7 +22,7 @@ class LoginController extends Controller
 
     public function login(Request $request) : JsonResponse|JsonResource
     {
-        if ($request->input('fallback_register', false)) {
+        if (!$request->input('fallback_register', false)) {
             $command       = UserLoginCommand::from($request);
             $userTokenData = $this->commandService->login($command);
         } else {

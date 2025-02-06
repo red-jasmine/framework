@@ -32,21 +32,21 @@ class UserRoute
             'prefix'     => 'user',
             'middleware' => 'auth:'.$guard
         ], function () {
-
+            Route::get('info', [UserController::class, 'info'])->name('user.api.user.info');
             // 查询
-            Route::get('socialites', [UserController::class, 'socialites'])->name('user.user.api.socialites');
+            Route::get('socialites', [UserController::class, 'socialites'])->name('user.api.user.socialites');
 
 
-            Route::put('base-info', [UserController::class, 'updateBaseInfo'])->name('user.user.api.update-base-info');
+            Route::put('base-info', [UserController::class, 'updateBaseInfo'])->name('user.api.user.update-base-info');
 
 
             Route::post('unbind-socialite', [UserController::class, 'unbindSocialite'])
-                 ->name('user.user.api.unbind-socialite');
+                 ->name('user.api.user.unbind-socialite');
 
             Route::group(['prefix' => 'safety'], function () {
 
                 // 设置密码
-                Route::put('password', [UserController::class, 'password'])->name('user.user.api.password');
+                Route::put('password', [UserController::class, 'password'])->name('user.api.user.password');
             });
 
 

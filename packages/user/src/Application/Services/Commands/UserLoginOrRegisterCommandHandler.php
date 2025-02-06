@@ -40,10 +40,8 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
                 }
 
                 // 注册用户
-                $userRegisterCommand           = new UserRegisterCommand();
-                $userRegisterCommand->username = Str::uuid();
-
-                $user = $this->userRegisterService->register($userRegisterCommand);
+                $userRegisterCommand = new UserRegisterCommand();
+                $user                = $this->userRegisterService->register($userRegisterCommand);
 
                 $this->service->repository->store($user);
 
@@ -56,6 +54,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
                 $socialiteUserBindCommand->appId    = 'UserCenter';
 
                 app(SocialiteUserCommandService::class)->bind($socialiteUserBindCommand);
+
                 $userTokenData = $this->loginService->token($user);
 
             }

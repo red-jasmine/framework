@@ -38,13 +38,13 @@ class UserRegisterService
     protected function buildUserName() : string
     {
 
-        return Str::uuid();
+        return Str::random(16);
 
     }
 
     protected function buildNickname() : string
     {
-        return Str::uuid();
+        return Str::random(6);
     }
 
 }
