@@ -13,6 +13,7 @@ interface SocialiteUserReadRepositoryInterface extends ReadRepositoryInterface
 
     public function findUser(SocialiteUserFindUserQuery $query) : ?SocialiteUser;
 
+    public function getUsersByOwner(UserInterface $owner, string $appId, ?string $provider = null) : Collection;
 
-    public function queryUsers(UserInterface $owner, string $provider) : Collection;
+
 }

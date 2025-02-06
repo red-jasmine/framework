@@ -31,10 +31,14 @@ class SocialiteUserReadRepository extends QueryBuilderReadRepository implements 
         )->first();
     }
 
-    public function queryUsers(UserInterface $owner, string $provider) : Collection
+    public function getUsersByOwner(UserInterface $owner, string $appId, ?string $provider = null) : Collection
     {
-        return $this->query(null)->onlyOwner($owner)
-                    ->where(['provider' => $provider])
+        return $this->query()
+                    ->onlyOwner($owner)
+                    ->where(['app_id' => $appId])
+                    ->when($provider, function ($query, $provider) {
+                        $query->where(['provider' => $provider]);
+                    })
                     ->get();
     }
 

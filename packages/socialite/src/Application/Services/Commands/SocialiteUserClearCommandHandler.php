@@ -32,7 +32,10 @@ class SocialiteUserClearCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $socialiteUsers = $this->service->readRepository->queryUsers($command->owner, $command->provider);
+            $socialiteUsers = $this->service
+                ->readRepository
+                ->getUsersByOwner($command->owner, $command->appId, $command->provider);
+
             foreach ($socialiteUsers as $socialiteUser) {
                 $socialiteUser->unbind();
                 $this->service->repository->update($socialiteUser);
