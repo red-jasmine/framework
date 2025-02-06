@@ -2,6 +2,7 @@
 
 namespace RedJasmine\User\Domain\Services\Login\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
@@ -24,6 +25,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 
         // 查询用户信息
         $user = app(UserReadRepositoryInterface::class)->findByAccount($account);
+
 
         // 返回用户信息
 

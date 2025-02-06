@@ -53,13 +53,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         ];
     }
 
-    public function checkPassword(string $password) : bool
-    {
-        // TODO  验证密码
-
-
-        return true;
-    }
 
 
     public function login() : void

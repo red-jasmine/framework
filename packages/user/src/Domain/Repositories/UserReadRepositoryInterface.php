@@ -7,6 +7,9 @@ use RedJasmine\User\Domain\Models\User;
 
 interface UserReadRepositoryInterface extends ReadRepositoryInterface
 {
+
+
+
     public function findByName(string $name) : ?User;
 
     /**
