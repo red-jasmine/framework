@@ -23,12 +23,16 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
     public function login(UserLoginData $data) : User
     {
         // 按用户名称查询 用户
-        $user = app(UserReadRepositoryInterface::class)->findByAccount($data->data['account']);
-        if (!Auth::validate(['id' => $user->id, 'password' => $data->data['password']])) {
-            throw new LoginException('账号或者密码错误');
+        if ($user = app(UserReadRepositoryInterface::class)->findByAccount($data->data['account'])) {
+            if (!Auth::validate(['id' => $user->id, 'password' => $data->data['password']])) {
+                throw new LoginException('账号或者密码错误');
+            }
+            // 返回用户信息
+            return $user;
         }
-        // 返回用户信息
-        return $user;
+
+        throw new LoginException('账号或者密码错误');
+
     }
 
 
