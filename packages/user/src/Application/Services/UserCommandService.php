@@ -9,6 +9,8 @@ use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
+use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
@@ -25,6 +27,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method UserTokenData loginOrRegister(UserLoginOrRegisterCommand $command)
  * @method bool updateBaseInfo(UserUpdateBaseInfoCommand $command)
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
+ * @method bool setPassword(UserSetPasswordCommand $command)
  *
  */
 class UserCommandService extends ApplicationCommandService
@@ -48,6 +51,7 @@ class UserCommandService extends ApplicationCommandService
         'loginOrRegister' => UserLoginOrRegisterCommandHandler::class,
         'updateBaseInfo'  => UserUpdateBaseInfoCommandHandler::class,
         'unbindSocialite' => UserUnbindSocialiteCommandHandler::class,
+        'setPassword'     => UserSetPasswordCommandHandler::class
     ];
 
 

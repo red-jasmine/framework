@@ -4,6 +4,7 @@ namespace RedJasmine\User\Domain\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
@@ -94,7 +95,12 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         isset($data->gender) ? $this->gender = $data->gender : null;
         isset($data->birthday) ? $this->birthday = $data->birthday : null;
         isset($data->biography) ? $this->biography = $data->biography : null;
+    }
 
+
+    public function setPassword(string $password) : void
+    {
+        $this->password = $password;
     }
 
 }

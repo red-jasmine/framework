@@ -17,9 +17,7 @@ class UserRoute
         ], function () use ($guard) {
 
             // 无需登录
-            Route::group([], function () {
-                Route::post('login', [LoginController::class, 'login'])->name('user.user.api.login');
-            });
+            Route::post('login', [LoginController::class, 'login'])->name('user.user.api.login');
 
             // 需要登录
             Route::group([
@@ -34,8 +32,23 @@ class UserRoute
             'prefix'     => 'user',
             'middleware' => 'auth:'.$guard
         ], function () {
+
+            // 查询
+            Route::get('socialites', [UserController::class, 'socialites'])->name('user.user.api.socialites');
+
+
             Route::put('base-info', [UserController::class, 'updateBaseInfo'])->name('user.user.api.update-base-info');
-            Route::post('unbind-socialite', [UserController::class, 'unbindSocialite'])->name('user.user.api.unbind-socialite');
+
+
+            Route::post('unbind-socialite', [UserController::class, 'unbindSocialite'])
+                 ->name('user.user.api.unbind-socialite');
+
+            Route::group(['prefix' => 'safety'], function () {
+
+                // 设置密码
+                Route::put('password', [UserController::class, 'password'])->name('user.user.api.password');
+            });
+
 
         });
 
