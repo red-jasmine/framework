@@ -17,12 +17,26 @@ trait EnumsHelper
         return self::labels();
     }
 
+    public static function lists() : array
+    {
+        $lists = [];
+        foreach (self::options() as $value => $label) {
+            $lists[] = [
+                'label' => $label,
+                'value' => $value,
+                'icon'  => null,
+                'color' => self::colors()[$value]
+            ];
+        }
+        return $lists;
+    }
+
     public static function comments(string $title = '') : string
     {
         $enums = array_map(function ($key, $value) {
-            return $key . '(' . $value . ')';
+            return $key.'('.$value.')';
         }, array_keys(static::labels()), static::labels());
-        return $title . ': ' . implode(',', $enums);
+        return $title.': '.implode(',', $enums);
 
     }
 
