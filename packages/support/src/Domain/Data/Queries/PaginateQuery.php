@@ -32,4 +32,7 @@ class PaginateQuery extends Query
      */
     public mixed $sort;
 
+
+    public ?string $keyword;
+
 }
