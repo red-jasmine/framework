@@ -98,7 +98,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
         $queryBuilder = QueryBuilder::for($this->modelQuery(), $this->buildRequest($query?->toArray() ?? []));
 
-        $queryBuilder->defaultSort($this->defaultSort);
+
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
         // 只有当相应的允许列表不为空时，才应用相应的限制
@@ -165,11 +165,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {
-        return $this->query($query)->paginate($query?->perPage);
+        return $this->query($query)->defaultSort($this->defaultSort)
+                    ->paginate($query?->perPage);
     }
 
     public function simplePaginate(?PaginateQuery $query = null) : Paginator
     {
-        return $this->query($query)->simplePaginate($query?->perPage);
+        return $this->query($query)->defaultSort($this->defaultSort)->simplePaginate($query?->perPage);
     }
 }
