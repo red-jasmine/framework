@@ -5,17 +5,32 @@ namespace RedJasmine\User\Domain\Services\Register;
 use Illuminate\Support\Str;
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
+use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
+use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider;
 
 /**
  * 注册服务
  */
 class UserRegisterService
 {
-
-    public function register(UserData $data) : User
+    public function register(UserRegisterData $data) : User
     {
-        // 用户注册功能呢
+        $provider = UserRegisterServiceProvider::create($data->provider);
+
+        $userData = $provider->register($data);
+
+       return $this->makeUser($userData);
+    }
+
+
+    public function makeUser(UserData $data) : User
+    {
         $user = User::make();
+
+        // 用户注册功能呢
+
+        // 验证是否允许注册
 
         $user->type         = $data->type;
         $user->username     = $data->username ?? $this->buildUserName();
@@ -34,6 +49,11 @@ class UserRegisterService
         return $user;
     }
 
+
+    public function user()
+    {
+
+    }
 
     protected function buildUserName() : string
     {

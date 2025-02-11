@@ -41,7 +41,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
 
                 // 注册用户
                 $userRegisterCommand = new UserRegisterCommand();
-                $user                = $this->userRegisterService->register($userRegisterCommand);
+                $user                = $this->userRegisterService->makeUser($userRegisterCommand);
 
                 $this->service->repository->store($user);
 

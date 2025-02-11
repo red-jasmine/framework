@@ -3,14 +3,12 @@
 namespace RedJasmine\User\Domain\Services\Login\Providers;
 
 use RedJasmine\User\Domain\Data\UserData;
-use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 
-class SocialiteRegisterServiceProvider implements UserRegisterServiceProviderInterface
+class AccountPasswordRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {
-
 
     public function __construct(
         protected UserReadRepositoryInterface $userReadRepository
@@ -18,19 +16,17 @@ class SocialiteRegisterServiceProvider implements UserRegisterServiceProviderInt
     ) {
     }
 
-    public const string NAME = 'socialite';
-
+    public const string NAME = 'account-password';
 
     public function preCheck(UserRegisterData $data) : UserData
     {
-        // 获取第三方用户
         // TODO: Implement preCheck() method.
     }
 
 
     public function register(UserRegisterData $data) : UserData
     {
-
+        // 验证邮箱是否已经注册
     }
 
 

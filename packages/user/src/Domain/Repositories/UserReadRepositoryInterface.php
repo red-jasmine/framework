@@ -9,7 +9,6 @@ interface UserReadRepositoryInterface extends ReadRepositoryInterface
 {
 
 
-
     public function findByName(string $name) : ?User;
 
     /**
@@ -20,4 +19,7 @@ interface UserReadRepositoryInterface extends ReadRepositoryInterface
      * @return User|null
      */
     public function findByAccount(string $account) : ?User;
+
+
+    public function findByConditions($credentials) : ?User;
 }

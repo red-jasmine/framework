@@ -2,12 +2,12 @@
 
 namespace RedJasmine\User\Domain\Services\Login\Providers;
 
-use RedJasmine\User\Domain\Models\User;
+use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 
-class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
+class EmailRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {
 
     public function __construct(
@@ -16,12 +16,17 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
     ) {
     }
 
-    public const NAME = 'sms';
+    public const string NAME = 'email';
 
-
-    public function register(UserRegisterData $data) : User
+    public function preCheck(UserRegisterData $data) : UserData
     {
-        // TODO: Implement register() method.
+        // TODO: Implement preCheck() method.
+    }
+
+
+    public function register(UserRegisterData $data) : UserData
+    {
+        // 验证邮箱是否已经注册
     }
 
 
