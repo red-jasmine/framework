@@ -23,13 +23,27 @@ class ResourceUsageDomainService
     // 使用
     public function use(UseResourceData $data)
     {
-        // 消费模式
-        if ($data->mode === ResourceUsageModeEnum::CONSUME) {
-            // 查询资源使用模式
 
+        switch ($data->mode) {
+            case ResourceUsageModeEnum::CONSUME:
+                $this->consume($data);
+                break;
+            case ResourceUsageModeEnum::SETTLE:
+                // 查询资源使用模式
+                $this->settle($data);
+                break;
         }
 
-        // 查询有效资源包
-        // 扣资源量
+    }
+
+    protected function consume(UseResourceData $data)
+    {
+        // 查询可用资源
+
+    }
+
+    protected function settle(UseResourceData $data)
+    {
+
     }
 }
