@@ -4,10 +4,17 @@ namespace RedJasmine\ResourceUsage\Domain\Services;
 
 use RedJasmine\ResourceUsage\Domain\Data\UseResourceData;
 use RedJasmine\ResourceUsage\Domain\Models\Enums\ResourceUsageModeEnum;
+use RedJasmine\ResourceUsage\Domain\Repositories\ResourceUsageReadRepositoryInterface;
 
 class ResourceUsageDomainService
 {
 
+
+    public function __construct(
+        protected ResourceUsageReadRepositoryInterface $readRepository
+    )
+    {
+    }
 
     public function allowUse()
     {
