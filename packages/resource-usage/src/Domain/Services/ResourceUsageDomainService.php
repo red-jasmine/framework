@@ -43,6 +43,12 @@ class ResourceUsageDomainService
 
     }
 
+
+    protected function checkAvailableResources()
+    {
+
+    }
+
     protected function consume(UseResourceData $data)
     {
         // 查询可用资源
