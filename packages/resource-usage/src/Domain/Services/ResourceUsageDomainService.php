@@ -55,6 +55,9 @@ class ResourceUsageDomainService
         $resource = $this->readRepository->findById();
         // 扣减资源
         $resource->deduction();
+
+        // 添加记录
+
     }
 
     protected function settle(UseResourceData $data)
