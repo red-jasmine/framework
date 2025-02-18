@@ -19,6 +19,7 @@ class UserPackageServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-user')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_user_table');
+            ->hasMigrations(['create_user_table'])
+            ->runsMigrations();
     }
 }
