@@ -20,8 +20,9 @@ class VipPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigrations([
-                'user_vips',
-                'vips'
-            ]);
+                'create_user_vips_table',
+                'create_vips_table',
+            ])
+            ->runsMigrations();
     }
 }
