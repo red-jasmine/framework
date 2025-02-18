@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('owner_id', 64);
             $table->string('app_id', 32)->comment('应用ID');
             $table->string('type', 32)->comment('类型');
-            $table->tinyInteger('level')->default(0)->comment('等级');
+            $table->tinyInteger('level')->default(1)->comment('等级');
             $table->timestamp('start_time')->comment('生效时间');
             $table->timestamp('end_time')->comment('失效时间');
             $table->boolean('is_forever')->default(false)->comment('是否永久');
