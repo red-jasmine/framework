@@ -29,6 +29,9 @@ use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRemarksCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReturnGoodsCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundStarCommand;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundUrgeCommand;
+use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
@@ -50,6 +53,14 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class RefundCommandService extends ApplicationCommandService
 {
+
+    public function __construct(
+        public RefundRepositoryInterface $repository,
+        public RefundReadRepositoryInterface $readRepository,
+        public OrderRepositoryInterface $orderRepository,
+    ) {
+    }
+
     protected static $macros = [
         'create'              => RefundCreateCommandHandler::class,
         'reject'              => RefundRejectCommandHandler::class,
@@ -64,7 +75,7 @@ class RefundCommandService extends ApplicationCommandService
         'sellerRemarks'       => RefundSellerRemarksCommandHandler::class,
         'buyerRemarks'        => RefundBuyerRemarksCommandHandler::class,
         'star'                => RefundStarCommandHandler::class,
-        'urge'               => RefundUrgeCommandHandler::class,
+        'urge'                => RefundUrgeCommandHandler::class,
     ];
 
 }

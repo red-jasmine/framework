@@ -4,12 +4,15 @@ namespace RedJasmine\Order\Application\Services\Handlers\Refund;
 
 use Exception;
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
+use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
 use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use Throwable;
 
-class RefundCreateCommandHandler extends AbstractOrderCommandHandler
+class RefundCreateCommandHandler extends AbstractRefundCommandHandler
 {
+
 
     /**
      * @param RefundCreateCommand $command
@@ -22,7 +25,7 @@ class RefundCreateCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->service->orderRepository->find($command->id);
             $order->products;
 
             $orderProduct = $order->products->where('id', $command->orderProductId)->first();
@@ -36,7 +39,7 @@ class RefundCreateCommandHandler extends AbstractOrderCommandHandler
             $orderRefund->info->description = $command->description;
             $orderRefund->info->images      = $command->images;
             $order->createRefund($orderRefund);
-            $this->orderRepository->store($order);
+            $this->service->orderRepository->store($order);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

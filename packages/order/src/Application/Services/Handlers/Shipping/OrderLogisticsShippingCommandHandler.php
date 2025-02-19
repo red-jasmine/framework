@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Handlers\Shipping;
 
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
+use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
@@ -14,14 +15,6 @@ use Throwable;
 
 class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
 {
-
-    public function __construct(
-        protected OrderRepositoryInterface $orderRepository,
-        protected OrderShippingService     $orderShippingService
-    )
-    {
-        parent::__construct($orderRepository);
-    }
 
 
     public function handle(OrderLogisticsShippingCommand $command) : void
@@ -39,9 +32,11 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
             $orderLogistics->logistics_no           = $command->logisticsNo;
             $orderLogistics->status                 = $command->status;
             $orderLogistics->shipping_time          = now();
-            $this->orderShippingService->logistics($order, $command->isSplit, $orderLogistics, $command->isFinished);
+            $this->service->orderShippingService
+                ->logistics($order, $command->isSplit, $orderLogistics,
+                    $command->isFinished);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

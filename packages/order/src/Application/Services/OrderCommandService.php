@@ -40,6 +40,8 @@ use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShipp
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
+use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use RedJasmine\Order\Domain\Services\OrderShippingService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 
@@ -87,6 +89,12 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  */
 class OrderCommandService extends ApplicationCommandService
 {
+
+    public function __construct(
+        public OrderRepositoryInterface $repository,
+        public OrderShippingService $orderShippingService
+    ) {
+    }
 
     /**
      * 钩子前缀

@@ -3,6 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Handlers\Shipping;
 
 use RedJasmine\Order\Application\Services\Handlers\AbstractOrderCommandHandler;
+use RedJasmine\Order\Application\Services\OrderCommandService;
 use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
@@ -13,13 +14,14 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
 {
 
     public function __construct(
-        protected OrderRepositoryInterface $orderRepository,
+        OrderCommandService $service,
+        OrderRepositoryInterface $orderRepository,
         protected OrderShippingService     $orderShippingService
     )
     {
-
-        parent::__construct($orderRepository);
+        parent::__construct($service, $orderRepository);
     }
+
 
 
     public function handle(OrderDummyShippingCommand $command) : void

@@ -14,14 +14,6 @@ use Throwable;
 class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
 {
 
-    public function __construct(
-        protected OrderRepositoryInterface $orderRepository,
-        protected OrderShippingService     $orderShippingService
-    )
-    {
-
-        parent::__construct($orderRepository);
-    }
 
 
     public function handle(OrderCardKeyShippingCommand $command) : void
@@ -40,9 +32,9 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
             $orderProductCardKey->source_type      = $command->sourceType;
             $orderProductCardKey->source_id        = $command->sourceId;
 
-            $this->orderShippingService->cardKey($order, $orderProductCardKey);
+            $this->service->orderShippingService->cardKey($order, $orderProductCardKey);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

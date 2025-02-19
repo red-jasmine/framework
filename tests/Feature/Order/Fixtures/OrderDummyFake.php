@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Tests\Feature\Order\Fixtures;
 
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
@@ -54,7 +55,7 @@ class OrderDummyFake
 
     public function fakeOrderArray(array $order = []) : array
     {
-        $user = User::find(1);
+        $user = Auth::user();
 
 
         $fake = [
