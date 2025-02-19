@@ -30,13 +30,7 @@ class OrderLogistics extends Model
 
     use SoftDeletes;
 
-    public static function newModel() : static
-    {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
 
-        return $model;
-    }
 
     public function getTable() : string
     {

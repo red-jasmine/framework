@@ -8,7 +8,8 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('订单ID');
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('order_no',64)->comment('订单号');
             $table->string('contacts', 300)->nullable()->comment('联系人');
             $table->string('mobile')->nullable()->comment('手机');
             $table->string('country')->nullable()->comment('国家');

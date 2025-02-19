@@ -1,12 +1,12 @@
 <?php
 
-namespace RedJasmine\Order\Domain\Models;
+namespace RedJasmine\Order\Domain\Models\Extensions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 
-class OrderProductInfo extends Model
+class OrderProductExtension extends Model
 {
     use HasDateTimeFormatter;
 
@@ -17,7 +17,7 @@ class OrderProductInfo extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_product_infos';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_product_extensions';
     }
 
     protected $casts = [

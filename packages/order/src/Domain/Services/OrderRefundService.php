@@ -16,8 +16,8 @@ class OrderRefundService
 {
 
     /**
-     * @param Order $order
-     * @param OrderRefund $orderRefund
+     * @param  Order  $order
+     * @param  OrderRefund  $orderRefund
      *
      * @return OrderRefund
      * @throws RefundException
@@ -37,6 +37,8 @@ class OrderRefundService
 
 
         // 填充 子商品单
+        $orderRefund->app_id                 = $order->app_id;
+        $orderRefund->order_no               = $order->order_no;
         $orderRefund->seller                 = $order->seller;
         $orderRefund->buyer                  = $order->buyer;
         $orderRefund->shipping_type          = $orderProduct->shipping_type;
@@ -71,8 +73,8 @@ class OrderRefundService
         if (in_array($orderRefund->refund_type, [
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND,
-        ],           true)) {
-            $refundAmount = (string)($orderRefund->refund_amount ?? 0);
+        ], true)) {
+            $refundAmount = (string) ($orderRefund->refund_amount ?? 0);
 
             $maxRefundAmount = $orderProduct->maxRefundAmount();
 
@@ -121,7 +123,7 @@ class OrderRefundService
     /**
      * 获取退款售后单阶段
      *
-     * @param OrderProduct $orderProduct
+     * @param  OrderProduct  $orderProduct
      *
      * @return RefundPhaseEnum
      */

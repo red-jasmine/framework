@@ -13,4 +13,6 @@ interface OrderRepositoryInterface extends RepositoryInterface
 {
 
 
+    public function findByNo(string $no) : Order;
+
 }

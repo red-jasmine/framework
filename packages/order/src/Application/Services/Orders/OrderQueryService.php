@@ -20,8 +20,8 @@ class OrderQueryService extends ApplicationQueryService
         return [
             'products',
             'payments',
-            'info',
-            'products.info',
+            'extension',
+            'products.extension',
             'logistics',
             'address'
         ];

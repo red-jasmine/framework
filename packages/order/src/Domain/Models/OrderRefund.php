@@ -22,6 +22,8 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
+use RedJasmine\Order\Domain\Generator\OrderNoGenerator;
+use RedJasmine\Order\Domain\Generator\RefundNoGenerator;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
@@ -30,6 +32,8 @@ use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
+use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
+use RedJasmine\Order\Domain\Models\Extensions\OrderRefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -60,26 +64,43 @@ class OrderRefund extends Model
 
     public $incrementing = false;
 
-    public static function newModel() : static
+    public function newInstance($attributes = [], $exists = false) : OrderRefund
     {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
-        $info      = new OrderRefundInfo();
-        $info->id  = $model->id;
-        $model->setRelation('info', $info);
 
-        return $model;
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setUniqueIds();
+            $instance->generateNo();
+            $extension     = OrderRefundExtension::make();
+            $extension->id = $instance->id;
+            $instance->setRelation('extension', $extension);
+        }
+        return $instance;
     }
 
-
-    public function info() : HasOne
+    protected function generateNo() : void
     {
-        return $this->hasOne(OrderRefundInfo::class, 'id', 'id');
+        if (!$this->refund_no && isset($this->app_id)) {
+            $this->refund_no = app(RefundNoGenerator::class)->generator(
+                [
+                    'app_id'    => $this->app_id,
+                    'seller_id' => $this->seller_id,
+                    'buyer_id'  => $this->buyer_id,
+                ]
+            );
+        }
+
+    }
+
+    public function extension() : HasOne
+    {
+        return $this->hasOne(OrderRefundExtension::class, 'id', 'id');
     }
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_refunds';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_refunds';
     }
 
     protected $casts = [
@@ -127,10 +148,16 @@ class OrderRefund extends Model
         'urge',
     ];
 
+    protected $fillable = [
+        'app_id',
+        'seller_id',
+        'buyer_id',
+    ];
+
 
     public function order() : BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class, 'order_no', 'order_no');
     }
 
     public function product() : BelongsTo
@@ -175,7 +202,7 @@ class OrderRefund extends Model
     /**
      * 拒绝
      *
-     * @param string $reason
+     * @param  string  $reason
      *
      * @return void
      * @throws RefundException
@@ -187,9 +214,9 @@ class OrderRefund extends Model
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
 
-        $this->info->reject_reason    = $reason;
-        $this->refund_status          = RefundStatusEnum::SELLER_REJECT_BUYER;
-        $this->product->refund_status = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->extension->reject_reason = $reason;
+        $this->refund_status            = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->product->refund_status   = RefundStatusEnum::SELLER_REJECT_BUYER;
         $this->fireModelEvent('rejected', false);
     }
 
@@ -199,7 +226,7 @@ class OrderRefund extends Model
             RefundStatusEnum::WAIT_SELLER_AGREE,
             RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
             RefundStatusEnum::WAIT_SELLER_CONFIRM,
-        ],            true)) {
+        ], true)) {
             return false;
         }
 
@@ -243,7 +270,7 @@ class OrderRefund extends Model
     /**
      * 同意退款
      *
-     * @param Amount|null $amount
+     * @param  Amount|null  $amount
      *
      * @return void
      * @throws RefundException
@@ -294,8 +321,9 @@ class OrderRefund extends Model
 
 
         // 设置退款单
-        $payment                 = OrderPayment::newModel();
-        $payment->order_id       = $this->order_id;
+        $payment                 = OrderPayment::make();
+        $payment->order_no       = $this->order_no;
+        $payment->app_id         = $this->app_id;
         $payment->seller         = $this->seller;
         $payment->buyer          = $this->buyer;
         $payment->entity_type    = EntityTypeEnum::REFUND;
@@ -316,11 +344,11 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND
-        ],            true)) {
+        ], true)) {
             return false;
         }
         if (!in_array($this->refund_status,
-                      [ RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM, ], true)) {
+            [RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM,], true)) {
             return false;
         }
         return true;
@@ -337,7 +365,7 @@ class OrderRefund extends Model
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
             RefundTypeEnum::WARRANTY,
-        ],            true)) {
+        ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE_RETURN) {
@@ -372,7 +400,7 @@ class OrderRefund extends Model
     {
         if (!in_array($this->refund_type, [
             RefundTypeEnum::RESHIPMENT,
-        ],            true)) {
+        ], true)) {
             return false;
         }
 
@@ -394,7 +422,7 @@ class OrderRefund extends Model
         if (!in_array($this->refund_type, [
             RefundTypeEnum::WARRANTY,
             RefundTypeEnum::EXCHANGE,
-        ],            true)) {
+        ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
         if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_CONFIRM) {
@@ -417,7 +445,7 @@ class OrderRefund extends Model
             RefundTypeEnum::RETURN_GOODS_REFUND,
             RefundTypeEnum::EXCHANGE,
             RefundTypeEnum::WARRANTY,
-        ],            true)) {
+        ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
@@ -435,7 +463,8 @@ class OrderRefund extends Model
         $orderLogistics->seller_id   = $this->seller_id;
         $orderLogistics->buyer_type  = $this->buyer_type;
         $orderLogistics->buyer_id    = $this->buyer_id;
-        $orderLogistics->order_id    = $this->order_id;
+        $orderLogistics->order_no    = $this->order_no;
+        $orderLogistics->app_id      = $this->app_id;
 
 
         $this->logistics->add($orderLogistics);
@@ -449,7 +478,7 @@ class OrderRefund extends Model
      * 再次发货
      * // 换货、维修、补发
      *
-     * @param OrderLogistics $orderLogistics
+     * @param  OrderLogistics  $orderLogistics
      *
      * @return void
      * @throws RefundException
@@ -466,12 +495,11 @@ class OrderRefund extends Model
 
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
         $orderLogistics->entity_id   = $this->id;
-        $orderLogistics->order_id    = $this->order_id;
+        $orderLogistics->order_no    = $this->order_no;
         $orderLogistics->seller_type = $this->seller_type;
         $orderLogistics->seller_id   = $this->seller_id;
         $orderLogistics->buyer_type  = $this->buyer_type;
         $orderLogistics->buyer_id    = $this->buyer_id;
-        $orderLogistics->order_id    = $this->order_id;
 
         $this->logistics->add($orderLogistics);
 
@@ -480,7 +508,8 @@ class OrderRefund extends Model
     }
 
     /**
-     * @param OrderCardKey $cardKey
+     * @param  OrderCardKey  $cardKey
+     *
      * @return void
      * @throws RefundException
      */
@@ -495,13 +524,14 @@ class OrderRefund extends Model
 
         $cardKey->entity_type      = EntityTypeEnum::REFUND;
         $cardKey->entity_id        = $this->id;
-        $cardKey->order_id         = $this->order_id;
+        $cardKey->app_id           = $this->app_id;
+        $cardKey->order_no         = $this->order_no;
         $cardKey->order_product_id = $this->order_product_id;
         $cardKey->seller_type      = $this->seller_type;
         $cardKey->seller_id        = $this->seller_id;
         $cardKey->buyer_type       = $this->buyer_type;
         $cardKey->buyer_id         = $this->buyer_id;
-        $cardKey->order_id         = $this->order_id;
+
 
         $this->cardKeys->add($cardKey);
 
@@ -519,17 +549,17 @@ class OrderRefund extends Model
     public function remarks(TradePartyEnums $tradeParty, string $remarks = null, bool $isAppend = false) : void
     {
         // 根据交易双方类型动态确定备注信息字段名
-        $field = $tradeParty->value . '_remarks';
+        $field = $tradeParty->value.'_remarks';
 
         $model = $this;
         // 在确定的对象上添加或更新备注信息
-        if ($isAppend && blank($model->info->{$field})) {
+        if ($isAppend && blank($model->extension->{$field})) {
             $isAppend = false;
         }
         if ($isAppend) {
-            $model->info->{$field} .= "\n\r" . $remarks;
+            $model->extension->{$field} .= "\n\r".$remarks;
         } else {
-            $model->info->{$field} = $remarks;
+            $model->extension->{$field} = $remarks;
         }
 
     }
@@ -576,7 +606,7 @@ class OrderRefund extends Model
 
     public function scopeOnCancelClosed(Builder $builder) : Builder
     {
-        return $builder->whereIn('order_status', [ RefundStatusEnum::CLOSED, RefundStatusEnum::CANCEL ]);
+        return $builder->whereIn('order_status', [RefundStatusEnum::CLOSED, RefundStatusEnum::CANCEL]);
     }
 
 }

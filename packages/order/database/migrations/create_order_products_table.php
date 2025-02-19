@@ -16,8 +16,9 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_products', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('商品单号');
-            $table->unsignedBigInteger('order_id')->comment('订单ID');
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('order_no',64)->comment('订单号');
+            $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
@@ -91,9 +92,9 @@ return new class extends Migration {
             $table->nullableMorphs('updater');
             $table->timestamps();
             $table->softDeletes();
-            $table->index('order_id', 'idx_order_id');
-            $table->index([ 'seller_id', 'seller_type', 'order_id' ], 'idx_seller');
-            $table->index([ 'buyer_id', 'buyer_type', 'order_id' ], 'idx_buyer');
+            $table->index('order_no', 'idx_order');
+            $table->index([ 'seller_id', 'seller_type', 'order_no' ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'order_no' ], 'idx_buyer');
             $table->comment('订单-商品表');
         });
     }

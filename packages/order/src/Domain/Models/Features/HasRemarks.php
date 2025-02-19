@@ -13,13 +13,13 @@ trait HasRemarks
 
         $model = $this;
         // 在确定的对象上添加或更新备注信息
-        if ($isAppend && blank($model->info->{$field})) {
+        if ($isAppend && blank($model->extension->{$field})) {
             $isAppend = false;
         }
         if ($isAppend) {
-            $model->info->{$field} .= "\n\r" . $remarks;
+            $model->extension->{$field} .= "\n\r" . $remarks;
         } else {
-            $model->info->{$field} = $remarks;
+            $model->extension->{$field} = $remarks;
         }
 
     }

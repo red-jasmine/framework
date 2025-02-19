@@ -15,10 +15,10 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('订单编号');
-            $table->unsignedBigInteger('parent_id')->default(0)->comment('父订单编号');
-            //$table->string('serial_number')->nullable()->comment('流水号');
+        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'orders', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('order_no', 64)->unique()->comment('订单号');
+            $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');
@@ -109,13 +109,13 @@ return new class extends Migration {
             $table->softDeletes();
             $table->comment('订单表');
 
-            $table->index([ 'buyer_type', 'buyer_id', 'order_status' ], 'idx_buyer');
-            $table->index([ 'seller_type', 'seller_id', 'order_status' ], 'idx_seller');
+            $table->index(['buyer_type', 'buyer_id', 'order_status'], 'idx_buyer');
+            $table->index(['seller_type', 'seller_id', 'order_status'], 'idx_seller');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'orders');
+        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'orders');
     }
 };

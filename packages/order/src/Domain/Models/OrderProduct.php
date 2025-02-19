@@ -17,6 +17,7 @@ use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
+use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -45,7 +46,7 @@ class OrderProduct extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_products';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_products';
     }
 
     protected $casts = [
@@ -88,27 +89,31 @@ class OrderProduct extends Model
     ];
 
 
-    public static function newModel() : static
+    public function newInstance($attributes = [], $exists = false) : OrderProduct
     {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
 
-        $info     = new OrderProductInfo();
-        $info->id = $model->id;
-        $model->setRelation('info', $info);
-        return $model;
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setUniqueIds();
+            $extension     = OrderProductExtension::make();
+            $extension->id = $instance->id;
+            $instance->setRelation('extension', $extension);
+
+        }
+        return $instance;
     }
 
 
     public function order() : BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class, 'order_no', 'order_no');
     }
 
 
-    public function info() : HasOne
+    public function extension() : HasOne
     {
-        return $this->hasOne(OrderProductInfo::class, 'id', 'id');
+        return $this->hasOne(OrderProductExtension::class, 'id', 'id');
     }
 
 
@@ -173,24 +178,24 @@ class OrderProduct extends Model
         // 退款
         if ($this->isAllowAfterSaleService(RefundTypeEnum::REFUND)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::REFUND;
-            if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ],
-                         true)) {
+            if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED],
+                true)) {
                 $allowApplyRefundTypes[] = RefundTypeEnum::RETURN_GOODS_REFUND;
             }
         }
         // 换货 只有物流发货才支持换货 TODO
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowAfterSaleService(RefundTypeEnum::EXCHANGE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::EXCHANGE;
         }
         // 保修
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowAfterSaleService(RefundTypeEnum::WARRANTY)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::WARRANTY;
         }
 
         // TODO 最长时间
-        if (in_array($this->shipping_status, [ ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED ], true)) {
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::RESHIPMENT;
         }
 
@@ -202,7 +207,7 @@ class OrderProduct extends Model
     public function isAllowAfterSaleService(RefundTypeEnum $refundType) : bool
     {
         // 获取售后服务
-        $afterSalesServices = AfterSalesService::collect($this->info->after_sales_services);
+        $afterSalesServices = AfterSalesService::collect($this->extension->after_sales_services);
         /**
          * @var AfterSalesService $afterSalesService
          */

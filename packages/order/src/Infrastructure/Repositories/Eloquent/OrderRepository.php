@@ -14,5 +14,11 @@ class OrderRepository extends EloquentRepository implements OrderRepositoryInter
 
     protected static string $eloquentModelClass = Order::class;
 
+    public function findByNo(string $no) : Order
+    {
+        return static::$eloquentModelClass::where('order_no')->firstOrFail();
+
+    }
+
 
 }

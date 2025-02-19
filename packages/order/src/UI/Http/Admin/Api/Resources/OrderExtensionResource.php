@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \RedJasmine\Order\Domain\Models\OrderInfo
+ * @mixin \RedJasmine\Order\Domain\Models\Extensions\OrderExtension
  */
-class OrderInfoResource extends JsonResource
+class OrderExtensionResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {

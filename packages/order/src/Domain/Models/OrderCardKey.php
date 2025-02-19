@@ -29,19 +29,9 @@ class OrderCardKey extends Model
     use SoftDeletes;
 
 
-
-
-    public static function newModel() : static
-    {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
-
-        return $model;
-    }
-
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_card_keys';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_card_keys';
     }
 
     protected $casts = [

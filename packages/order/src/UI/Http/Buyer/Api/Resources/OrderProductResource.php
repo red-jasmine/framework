@@ -66,7 +66,7 @@ class OrderProductResource extends JsonResource
             'creator_id'           => $this->creator_id,
             'updater_type'         => $this->updater_type,
             'updater_id'           => $this->updater_id,
-            'info'                 => new OrderProductInfoResource($this->whenLoaded('info')),
+            'extension'                 => new OrderProductExtensionResource($this->whenLoaded('extension')),
         ];
     }
 }

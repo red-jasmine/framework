@@ -19,7 +19,7 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
         try {
             $order = $this->find($command->id);
 
-            $orderPayment                 = OrderPayment::newModel();
+            $orderPayment                 = OrderPayment::make();
             $orderPayment->payment_amount = $command->amount;
             $orderPayment->amount_type    = $command->amountType;
 

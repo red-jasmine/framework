@@ -12,11 +12,12 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_logistics', function (Blueprint $table) {
             $table->id();
+            $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->unsignedBigInteger('seller_id')->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->unsignedBigInteger('buyer_id')->comment('买家ID');
-            $table->unsignedBigInteger('order_id')->comment('订单ID');
+            $table->string('order_no',64)->comment('订单号');
             $table->string('entity_type')->comment(EntityTypeEnum::comments('对象类型'));
             $table->unsignedBigInteger('entity_id')->comment('对象单号');
 
@@ -39,8 +40,8 @@ return new class extends Migration {
             $table->comment('订单-物流表');
 
             $table->index([ 'entity_id', 'entity_type' ], 'idx_entity');
-            $table->index([ 'seller_id', 'seller_type', 'order_id', ], 'idx_seller');
-            $table->index([ 'buyer_id', 'buyer_type', 'order_id', ], 'idx_buyer');
+            $table->index([ 'seller_id', 'seller_type', 'order_no', ], 'idx_seller');
+            $table->index([ 'buyer_id', 'buyer_type', 'order_no', ], 'idx_buyer');
             $table->index([ 'logistics_company_code', 'logistics_no' ], 'idx_logistics');
         });
     }

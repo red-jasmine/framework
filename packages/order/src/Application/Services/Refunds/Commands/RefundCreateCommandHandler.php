@@ -12,7 +12,7 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
 
 
     /**
-     * @param RefundCreateCommand $command
+     * @param  RefundCreateCommand  $command
      *
      * @return int
      * @throws Exception|Throwable
@@ -26,15 +26,19 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
             $order->products;
 
             $orderProduct = $order->products->where('id', $command->orderProductId)->first();
-            $orderRefund  = OrderRefund::newModel();
+            $orderRefund  = OrderRefund::make([
+                'app_id'    => $order->app_id,
+                'seller_id' => $order->seller_id,
+                'buyer_id'  => $order->buyer_id,
+            ]);
             $orderRefund->setRelation('product', $orderProduct);
-            $orderRefund->order_id          = $order->id;
-            $orderRefund->order_product_id  = $command->orderProductId;
-            $orderRefund->refund_type       = $command->refundType;
-            $orderRefund->refund_amount     = $command->refundAmount;
-            $orderRefund->reason            = $command->reason;
-            $orderRefund->info->description = $command->description;
-            $orderRefund->info->images      = $command->images;
+            $orderRefund->order_no               = $order->order_no;
+            $orderRefund->order_product_id       = $command->orderProductId;
+            $orderRefund->refund_type            = $command->refundType;
+            $orderRefund->refund_amount          = $command->refundAmount;
+            $orderRefund->reason                 = $command->reason;
+            $orderRefund->extension->description = $command->description;
+            $orderRefund->extension->images      = $command->images;
             $order->createRefund($orderRefund);
             $this->service->orderRepository->store($order);
             $this->commitDatabaseTransaction();

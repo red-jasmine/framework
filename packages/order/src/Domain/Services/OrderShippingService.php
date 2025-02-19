@@ -104,7 +104,7 @@ class OrderShippingService
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
 
-        $orderProductCardKey->order_id    = $order->id;
+        $orderProductCardKey->order_no    = $order->order_no;
         $orderProductCardKey->entity_type = EntityTypeEnum::ORDER;
         $orderProductCardKey->entity_id   = $order->id;
         $orderProductCardKey->seller_type = $order->seller_type;

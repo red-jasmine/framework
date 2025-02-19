@@ -15,6 +15,9 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class OrderData extends Data
 {
+
+    public string $appId = 'system';
+
     /**
      * 卖家
      * @var UserInterface
@@ -111,7 +114,7 @@ class OrderData extends Data
     /**
      * @var int
      */
-    public int $acceptWaitMaxTime  = -1;
+    public int $acceptWaitMaxTime = -1;
     /**
      * @var int
      */
@@ -119,7 +122,7 @@ class OrderData extends Data
     /**
      * @var int
      */
-    public int $rateWaitMaxTime    = -1;
+    public int $rateWaitMaxTime = -1;
 
 
     public function __construct()

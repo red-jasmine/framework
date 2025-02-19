@@ -14,9 +14,18 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
     protected ?Order $aggregate = null;
 
     public function __construct(
-        protected OrderCommandService $service)
-    {
+        protected OrderCommandService $service
+    ) {
 
+    }
+
+
+    public function findByNo(string $no) : Order
+    {
+        $order = $this->service->repository->findByNo($no);
+
+        $this->setModel($order);
+        return $order;
     }
 
 

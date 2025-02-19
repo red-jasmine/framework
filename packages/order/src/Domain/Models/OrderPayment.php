@@ -33,17 +33,11 @@ class OrderPayment extends Model
         'status'      => PaymentStatusEnum::class,
     ];
 
-    public static function newModel() : static
-    {
-        $model     = new static();
-        $model->id = $model->newUniqueId();
 
-        return $model;
-    }
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_payments';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_payments';
     }
 
 
@@ -92,7 +86,7 @@ class OrderPayment extends Model
 
     public function isAllowFail() : bool
     {
-        if (in_array($this->status, [ PaymentStatusEnum::PAYING, PaymentStatusEnum::WAIT_PAY ], true)) {
+        if (in_array($this->status, [PaymentStatusEnum::PAYING, PaymentStatusEnum::WAIT_PAY], true)) {
             return true;
         }
         return false;

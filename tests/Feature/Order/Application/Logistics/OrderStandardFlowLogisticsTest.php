@@ -251,14 +251,14 @@ test('can remarks a order', function (Order $order) {
 
     $order = $this->orderRepository->find($order->id);
 
-    $actualCount  = \Illuminate\Support\Str::substrCount($order->info->seller_remarks, $remarks);
-    $actualCount1 = \Illuminate\Support\Str::substrCount($order->info->buyer_remarks, $remarks);
+    $actualCount  = \Illuminate\Support\Str::substrCount($order->extension->seller_remarks, $remarks);
+    $actualCount1 = \Illuminate\Support\Str::substrCount($order->extension->buyer_remarks, $remarks);
     $this->assertEquals($actualCount, 2);
     $this->assertEquals($actualCount1, 2);
 
     foreach ($order->products as $product) {
-        $this->assertEquals($product->info->seller_remarks, $remarks, '订单商品项目备注不匹配');
-        $this->assertEquals($product->info->buyer_remarks, $remarks, '订单商品项目备注不匹配');
+        $this->assertEquals($product->extension->seller_remarks, $remarks, '订单商品项目备注不匹配');
+        $this->assertEquals($product->extension->buyer_remarks, $remarks, '订单商品项目备注不匹配');
     }
 
 })->depends('can create a new order');
@@ -302,14 +302,14 @@ test('can message a order', function (Order $order) {
 
     $order = $this->orderRepository->find($order->id);
 
-    $actualCount  = \Illuminate\Support\Str::substrCount($order->info->seller_message, $message);
-    $actualCount1 = \Illuminate\Support\Str::substrCount($order->info->buyer_message, $message);
+    $actualCount  = \Illuminate\Support\Str::substrCount($order->extension->seller_message, $message);
+    $actualCount1 = \Illuminate\Support\Str::substrCount($order->extension->buyer_message, $message);
     $this->assertEquals($actualCount, 2);
     $this->assertEquals($actualCount1, 2);
 
     foreach ($order->products as $product) {
-        $this->assertEquals($product->info->seller_message, $message, '订单商品项目留言不匹配');
-        $this->assertEquals($product->info->buyer_message, $message, '订单商品项目留言不匹配');
+        $this->assertEquals($product->extension->seller_message, $message, '订单商品项目留言不匹配');
+        $this->assertEquals($product->extension->buyer_message, $message, '订单商品项目留言不匹配');
     }
 
 })->depends('can create a new order');
