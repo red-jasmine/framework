@@ -2,11 +2,13 @@
 
 namespace RedJasmine\Vip\Domain\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use RedJasmine\Vip\Domain\Data\OpenUserVipData;
 use RedJasmine\Vip\Domain\Exceptions\VipException;
 use RedJasmine\Vip\Domain\Models\UserVip;
+use RedJasmine\Vip\Domain\Models\UserVipOrder;
 use RedJasmine\Vip\Domain\Repositories\UserVipReadRepositoryInterface;
-use RedJasmine\Vip\Domain\VipDomainService;
 
 class UserVipDomainService
 {
@@ -15,6 +17,8 @@ class UserVipDomainService
         protected UserVipReadRepositoryInterface $readRepository,
         protected VipDomainService $vipDomainService,
     ) {
+
+        $this->orders = Collection::make([]);
     }
 
 
@@ -29,25 +33,62 @@ class UserVipDomainService
     public function open(OpenUserVipData $data) : UserVip
     {
         // 验证VIP 是否有效
-        $this->vipDomainService->validate($data->appID, $data->type);
+        $this->vipDomainService->validate($data->appId, $data->type);
 
-        $userVip = $this->readRepository->findVipByOwner($data->owner, $data->appID, $data->type);
-
-        $userVip         = $userVip ?? UserVip::make();
-        $userVip->owner  = $data->owner;
-        $userVip->app_id = $data->appID;
-        $userVip->type   = $data->type;
-        $userVip->level  = $userVip->level ?? $userVip->defaultLevel();
-
-        $userVip->start_time = $userVip->start_time ?? now();
-
-        $data->isForever ? $userVip->setForever() : $userVip->addEndTime($data->timeUnit->value, $data->timeValue);
-
+        $userVip        = $this->findUserVip($data);
+        $currentEndTime = $userVip->getCurrentEndTime();
+        // 设置结束时间
+        $userVip->addEndTime($data->timeValue, $data->timeUnit);
 
         // 添加开通记录
+        $this->addOrder($userVip, $data, $currentEndTime);
 
         return $userVip;
     }
 
+    protected function findUserVip(OpenUserVipData $data) : UserVip
+    {
+        // 查询用户VIP
+        $userVip             = $this->readRepository->findVipByOwner($data->owner, $data->appId, $data->type);
+        $userVip             = $userVip ?? UserVip::make();
+        $userVip->owner      = $data->owner;
+        $userVip->app_id     = $data->appId;
+        $userVip->type       = $data->type;
+        $userVip->level      = $userVip->level ?? $userVip->defaultLevel();
+        $userVip->start_time = $userVip->start_time ?? now();
+        return $userVip;
+    }
+
+
+    protected Collection $orders;
+
+    public function getOrders() : Collection
+    {
+        return $this->orders;
+    }
+
+    public function flushOrders() : void
+    {
+        $this->orders = Collection::make([]);
+    }
+
+
+    protected function addOrder(UserVip $userVip, OpenUserVipData $data, Carbon $endTime) : void
+    {
+        $userVipOrder = UserVipOrder::make();
+
+        $userVipOrder->start_time = $endTime;
+        $userVipOrder->end_time   = $userVip->getCurrentEndTime();
+        $userVipOrder->order_time = Carbon::now();
+        $userVipOrder->owner      = $data->owner;
+        $userVipOrder->app_id     = $data->appId;
+        $userVipOrder->type       = $data->type;
+        $userVipOrder->time_unit  = $data->timeUnit;
+        $userVipOrder->time_value = $data->timeValue;
+
+
+        $this->orders->push($userVipOrder);
+
+    }
 
 }

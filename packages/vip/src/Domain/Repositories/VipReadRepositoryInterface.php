@@ -9,6 +9,6 @@ interface VipReadRepositoryInterface extends ReadRepositoryInterface
 {
 
 
-    public function findVipType(string $appID, string $type) : ?Vip;
+    public function findVipType(string $appId, string $type) : ?Vip;
 
 }

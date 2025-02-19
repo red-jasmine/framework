@@ -14,12 +14,11 @@ class OpenUserVipData extends Data
 {
 
     public UserInterface $owner;
-    public string        $appID;
+    public string        $appId;
     public string        $type;
-    public bool          $isForever = false;
-    public int           $timeValue = 1;
     #[WithCast(EnumCast::class, TimeUnitEnum::class)]
     public TimeUnitEnum  $timeUnit  = TimeUnitEnum::MONTH; // 时间单位
+    public int           $timeValue = 1;
 
 
 }

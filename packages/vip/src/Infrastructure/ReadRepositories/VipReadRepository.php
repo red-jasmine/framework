@@ -15,10 +15,10 @@ class VipReadRepository extends QueryBuilderReadRepository implements VipReadRep
      */
     protected static string $modelClass = Vip::class;
 
-    public function findVipType(string $appID, string $type) : ?Vip
+    public function findVipType(string $appId, string $type) : ?Vip
     {
 
-        return $this->query()->where('app_id', $appID)->where('type', $type)->first();
+        return $this->query()->where('app_id', $appId)->where('type', $type)->first();
 
     }
 

@@ -3,7 +3,6 @@
 namespace RedJasmine\Vip\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -14,8 +13,6 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class UserVip extends Model implements OwnerInterface, OperatorInterface
 {
-    use SoftDeletes;
-
     public $incrementing = false;
     use HasSnowflakeId;
     use HasOperator;
@@ -39,7 +36,7 @@ class UserVip extends Model implements OwnerInterface, OperatorInterface
 
     public function maxEndTime() : Carbon
     {
-        return Carbon::parse('9999-12-31 00:00:00');
+        return Carbon::parse('9999-12-31 23:59:59');
     }
 
 
@@ -49,8 +46,44 @@ class UserVip extends Model implements OwnerInterface, OperatorInterface
         $this->end_time   = $this->maxEndTime();
     }
 
+    public function getCurrentEndTime() : Carbon
+    {
+        // 获取
+        if ($this->isExpired()) {
+            return Carbon::now();
+        } else {
+            return Carbon::parse($this->end_time->toDateTimeString());
+        }
+
+    }
+
     public function addEndTime(int $timeValue, TimeUnitEnum $timeUnit) : void
     {
-        $this->end_time->add($timeUnit->value, $timeValue);
+        // 判断是否已经过期 如果已经过期了 则开始时间和结束时间从现在开始
+        if ($this->isExpired()) {
+            $this->start_time = now();
+            $this->end_time   = now();
+        }
+
+        // 如果为永久
+        if ($timeUnit === TimeUnitEnum::FOREVER) {
+            $this->setForever();
+        } else {
+            $this->end_time = $this->end_time ?? now();
+            $this->end_time = $this->end_time->add($timeUnit->value, $timeValue);
+        }
+    }
+
+
+    public function isExpired() : bool
+    {
+        if ($this->is_forever === true) {
+            return false;
+        }
+        if ($this->end_time && $this->end_time->gt(now())) {
+            return false;
+        }
+        return true;
+
     }
 }
