@@ -20,5 +20,9 @@ class OpenUserVipData extends Data
     public TimeUnitEnum  $timeUnit  = TimeUnitEnum::MONTH; // 时间单位
     public int           $timeValue = 1;
 
+    // 购买支付类型
+    public ?string $paymentType;
+    public ?string $paymentId;
+
 
 }

@@ -77,14 +77,16 @@ class UserVipDomainService
     {
         $userVipOrder = UserVipOrder::make();
 
-        $userVipOrder->start_time = $endTime;
-        $userVipOrder->end_time   = $userVip->getCurrentEndTime();
-        $userVipOrder->order_time = Carbon::now();
-        $userVipOrder->owner      = $data->owner;
-        $userVipOrder->app_id     = $data->appId;
-        $userVipOrder->type       = $data->type;
-        $userVipOrder->time_unit  = $data->timeUnit;
-        $userVipOrder->time_value = $data->timeValue;
+        $userVipOrder->start_time   = $endTime;
+        $userVipOrder->end_time     = $userVip->getCurrentEndTime();
+        $userVipOrder->order_time   = Carbon::now();
+        $userVipOrder->owner        = $data->owner;
+        $userVipOrder->app_id       = $data->appId;
+        $userVipOrder->payment_type = $data->paymentType;
+        $userVipOrder->payment_id   = $data->paymentId;
+        $userVipOrder->type         = $data->type;
+        $userVipOrder->time_unit    = $data->timeUnit;
+        $userVipOrder->time_value   = $data->timeValue;
 
 
         $this->orders->push($userVipOrder);

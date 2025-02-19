@@ -3,9 +3,7 @@
 namespace RedJasmine\Vip\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
-use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
-use RedJasmine\Support\Application\CommandHandlers\DeleteCommandHandler;
-use RedJasmine\Support\Application\CommandHandlers\UpdateCommandHandler;
+use RedJasmine\Vip\Application\Services\Commands\UserVipOpenCommand;
 use RedJasmine\Vip\Application\Services\Commands\UserVipOpenCommandHandler;
 use RedJasmine\Vip\Domain\Models\UserVip;
 use RedJasmine\Vip\Domain\Repositories\UserVipOrderRepositoryInterface;
@@ -13,6 +11,10 @@ use RedJasmine\Vip\Domain\Repositories\UserVipReadRepositoryInterface;
 use RedJasmine\Vip\Domain\Repositories\UserVipRepositoryInterface;
 use RedJasmine\Vip\Domain\Services\UserVipDomainService;
 
+/**
+ * @see UserVipOpenCommandHandler::handle()
+ * @method bool open(UserVipOpenCommand $command)
+ */
 class UserVipCommandService extends ApplicationCommandService
 {
 

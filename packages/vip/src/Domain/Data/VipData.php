@@ -9,7 +9,7 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class VipData extends Data
 {
-    public string $appID;
+    public string $appId;
 
     public string $type;
 

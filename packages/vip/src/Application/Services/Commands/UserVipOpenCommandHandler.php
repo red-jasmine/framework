@@ -5,6 +5,7 @@ namespace RedJasmine\Vip\Application\Services\Commands;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Vip\Application\Services\UserVipCommandService;
+use RedJasmine\Vip\Domain\Exceptions\VipException;
 use Throwable;
 
 class UserVipOpenCommandHandler extends CommandHandler
@@ -15,7 +16,15 @@ class UserVipOpenCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(UserVipOpenCommand $command)
+    /**
+     * @param  UserVipOpenCommand  $command
+     *
+     * @return bool
+     * @throws AbstractException
+     * @throws Throwable
+     * @throws VipException
+     */
+    public function handle(UserVipOpenCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
 
@@ -38,6 +47,9 @@ class UserVipOpenCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
+
+
+        return true;
 
     }
 
