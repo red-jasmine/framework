@@ -40,7 +40,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
 
             $order->create();
 
-            $this->orderRepository->store($order);
+            $this->service->repository->store($order);
 
 
             $this->commitDatabaseTransaction();

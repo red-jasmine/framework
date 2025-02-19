@@ -42,7 +42,7 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
 
             $order->remarks($this->tradeParty, $command->remarks, $command->orderProductId, $command->isAppend);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

@@ -43,7 +43,7 @@ abstract class AbstractOrderHiddenCommandHandler extends AbstractOrderCommandHan
 
             $order->hiddenOrder($this->getTradeParty(), $command->isHidden);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

@@ -38,7 +38,7 @@ class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
 
             $refund->returnGoods($orderLogistics);
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

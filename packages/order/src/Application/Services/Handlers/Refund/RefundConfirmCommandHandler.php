@@ -17,7 +17,7 @@ class RefundConfirmCommandHandler extends AbstractRefundCommandHandler
             $refund = $this->find($command->id);
             $refund->confirm();
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

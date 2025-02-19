@@ -22,7 +22,7 @@ abstract class AbstractRefundCommandHandler extends CommandHandler
 
     protected function find(int $id) : OrderRefund
     {
-        return $this->refundRepository->find($id);
+        return $this->service->repository->find($id);
     }
 
 

@@ -28,7 +28,7 @@ class OrderProgressCommandHandler extends AbstractOrderCommandHandler
         try {
             $order    = $this->find($command->id);
             $progress = $order->setProductProgress($command->orderProductId, $command->progress, $command->isAppend, $command->isAllowLess);
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

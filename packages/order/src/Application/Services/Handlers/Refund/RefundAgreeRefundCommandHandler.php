@@ -20,7 +20,7 @@ class RefundAgreeRefundCommandHandler extends AbstractRefundCommandHandler
 
             $refund->agreeRefund($command->amount);
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

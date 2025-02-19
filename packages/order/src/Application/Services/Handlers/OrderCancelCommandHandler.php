@@ -26,7 +26,7 @@ class OrderCancelCommandHandler extends AbstractOrderCommandHandler
 
             $order = $this->find($command->id);
             $order->cancel($command->cancelReason);
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

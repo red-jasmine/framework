@@ -21,7 +21,7 @@ class RefundRejectCommandHandler extends AbstractRefundCommandHandler
             $refund->reject($command->reason);
 
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

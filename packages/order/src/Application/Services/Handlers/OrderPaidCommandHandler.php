@@ -30,7 +30,7 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
             $orderPayment->payment_method     = $command->paymentMethod;
             $order->paid($orderPayment);
 
-            $this->orderRepository->store($order);
+            $this->service->repository->store($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

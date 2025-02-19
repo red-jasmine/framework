@@ -27,7 +27,7 @@ class OrderSellerCustomStatusCommandHandler extends AbstractOrderCommandHandler
 
             $order->setSellerCustomStatus($command->sellerCustomStatus, $command->orderProductId);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

@@ -37,7 +37,7 @@ class RefundLogisticsReshipmentCommandHandler extends AbstractRefundCommandHandl
             $orderLogistics->status               = $command->status;
             $orderLogistics->shipping_time        = now();
             $refund->logisticsReshipment($orderLogistics);
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

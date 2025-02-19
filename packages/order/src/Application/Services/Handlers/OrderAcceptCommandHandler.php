@@ -27,7 +27,7 @@ class OrderAcceptCommandHandler extends AbstractOrderCommandHandler
 
             $order->accept();
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

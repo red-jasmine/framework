@@ -39,7 +39,7 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
 
             $refund->cardKeyReshipment($orderProductCardKey);
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

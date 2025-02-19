@@ -19,7 +19,7 @@ class RefundAgreeReturnGoodsCommandHandler extends AbstractRefundCommandHandler
         try {
             $refund = $this->find($command->id);
             $refund->agreeReturnGoods();
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

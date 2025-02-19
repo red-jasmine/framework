@@ -45,7 +45,7 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
                 $this->orderShippingService->dummy($order, $orderProductId, $command->isFinished);
             }
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

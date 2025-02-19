@@ -29,7 +29,7 @@ class OrderConfirmCommandHandler extends AbstractOrderCommandHandler
 
             $order->confirm();
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

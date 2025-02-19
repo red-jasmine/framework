@@ -18,7 +18,7 @@ class RefundCancelCommandHandler extends AbstractRefundCommandHandler
             $refund = $this->find($command->id);
 
             $refund->cancel();
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

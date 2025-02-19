@@ -19,7 +19,7 @@ class RefundUrgeCommandHandler extends AbstractRefundCommandHandler
 
             $refund->urge();
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
 
             $this->commitDatabaseTransaction();

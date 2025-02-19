@@ -32,7 +32,7 @@ class AbstractRefundRemarksCommandHandler extends AbstractRefundCommandHandler
 
             $refund->remarks($this->getTradeParty(), $command->remarks, $command->isAppend);
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
 
             $this->commitDatabaseTransaction();

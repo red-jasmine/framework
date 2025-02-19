@@ -27,7 +27,7 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
             $order->paying($orderPayment);
 
 
-            $this->orderRepository->store($order);
+            $this->service->repository->store($order);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

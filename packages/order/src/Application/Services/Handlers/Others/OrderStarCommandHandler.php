@@ -24,7 +24,7 @@ class OrderStarCommandHandler extends AbstractOrderCommandHandler
 
             $order->star($command->star);
 
-            $this->orderRepository->update($order);
+            $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

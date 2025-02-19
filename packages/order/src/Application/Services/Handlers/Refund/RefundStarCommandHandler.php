@@ -19,7 +19,7 @@ class RefundStarCommandHandler extends AbstractRefundCommandHandler
 
             $refund->star($command->star);
 
-            $this->refundRepository->update($refund);
+            $this->service->repository->update($refund);
 
 
             $this->commitDatabaseTransaction();
