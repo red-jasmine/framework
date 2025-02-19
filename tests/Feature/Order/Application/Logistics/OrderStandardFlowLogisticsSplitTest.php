@@ -2,13 +2,13 @@
 
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderLogisticsCommandService;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Logistics\LogisticsChangeStatusCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Logistics\Commands\LogisticsChangeStatusCommand;
+use RedJasmine\Order\Application\Services\Logistics\OrderLogisticsCommandService;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderConfirmCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;

@@ -3,11 +3,9 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
 use Filament\Forms;
-use RedJasmine\Order\Application\Services\RefundCommandService;
-
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRejectCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Models\OrderRefund;
-
 use Throwable;
 
 trait RefundReject

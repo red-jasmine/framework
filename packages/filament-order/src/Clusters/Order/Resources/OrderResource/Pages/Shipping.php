@@ -11,13 +11,11 @@ use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
 use RedJasmine\Support\Exceptions\AbstractException;
-use Throwable;
 
 /**
  * @property Form $dummy

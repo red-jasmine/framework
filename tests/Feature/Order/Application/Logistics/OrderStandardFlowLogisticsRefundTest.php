@@ -3,15 +3,15 @@
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeRefundCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeReturnGoodsCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundReturnGoodsCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeReturnGoodsCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundReturnGoodsCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;

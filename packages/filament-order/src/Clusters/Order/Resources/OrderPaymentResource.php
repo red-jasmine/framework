@@ -2,6 +2,11 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Columns\UserAbleColumn;
 use RedJasmine\FilamentCore\Filters\DateRangeFilter;
 use RedJasmine\FilamentCore\Filters\InputFilter;
@@ -9,20 +14,11 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderPaymentResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderPaymentResource\RelationManagers;
-use RedJasmine\Order\Application\Services\OrderLogisticsCommandService;
-use RedJasmine\Order\Application\Services\OrderLogisticsQueryService;
-use RedJasmine\Order\Application\Services\OrderPaymentCommandService;
-use RedJasmine\Order\Application\Services\OrderPaymentQueryService;
+use RedJasmine\Order\Application\Services\Payments\OrderPaymentCommandService;
+use RedJasmine\Order\Application\Services\Payments\OrderPaymentQueryService;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class OrderPaymentResource extends Resource
 {

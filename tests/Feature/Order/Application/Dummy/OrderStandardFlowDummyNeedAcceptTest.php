@@ -2,18 +2,13 @@
 
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderHiddenCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderSellerCustomStatusCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderStarCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderAcceptCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderConfirmCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;

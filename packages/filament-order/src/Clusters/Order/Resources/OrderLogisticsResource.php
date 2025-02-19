@@ -14,9 +14,8 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderLogisticsResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderLogisticsResource\RelationManagers;
-use RedJasmine\Order\Application\Services\OrderLogisticsCommandService;
-use RedJasmine\Order\Application\Services\OrderLogisticsQueryService;
-use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
+use RedJasmine\Order\Application\Services\Logistics\OrderLogisticsCommandService;
+use RedJasmine\Order\Application\Services\Logistics\OrderLogisticsQueryService;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
 

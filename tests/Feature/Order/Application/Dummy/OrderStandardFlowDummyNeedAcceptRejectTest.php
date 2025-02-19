@@ -2,19 +2,17 @@
 
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderConfirmCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderRejectCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderRejectCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;

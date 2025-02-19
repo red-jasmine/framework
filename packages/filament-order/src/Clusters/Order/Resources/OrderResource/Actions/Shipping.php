@@ -5,10 +5,10 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 

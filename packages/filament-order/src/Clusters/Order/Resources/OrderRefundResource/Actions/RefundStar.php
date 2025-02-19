@@ -3,8 +3,8 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
 use Mokhosh\FilamentRating\Components\Rating;
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundStarCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundStarCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 
 trait RefundStar
 {

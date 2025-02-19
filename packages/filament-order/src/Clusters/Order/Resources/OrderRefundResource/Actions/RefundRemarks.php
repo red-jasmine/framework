@@ -2,9 +2,9 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRemarksCommand;
 use Filament\Forms;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRemarksCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 
 trait RefundRemarks
 {

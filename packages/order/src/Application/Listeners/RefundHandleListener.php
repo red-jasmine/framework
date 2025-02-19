@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Order\Application\Listeners;
 
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundRejectCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Events\AbstractOrderEvent;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;

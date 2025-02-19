@@ -3,9 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Orders;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use RedJasmine\Order\Application\Services\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
@@ -17,7 +15,6 @@ use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderTranslateHook;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderTranslateOrderDomainCommandHook;
 use RedJasmine\Shopping\Domain\Orders\Pipelines\OrderCreateProductStockPipeline;
 use RedJasmine\Shopping\Domain\Orders\Transformers\OrderCreateCommandTransformer;
-use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Service;
 use Throwable;
 

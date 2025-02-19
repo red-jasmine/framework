@@ -3,8 +3,8 @@
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
 use Filament\Forms\Components\TextInput;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait OrderProductProgress

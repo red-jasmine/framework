@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Domain\Orders\Hooks;
 
-use RedJasmine\Order\Application\UserCases\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Support\Foundation\Hook\Hookable;
 
 /**

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderAcceptCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderRejectCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderAcceptCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderRejectCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 

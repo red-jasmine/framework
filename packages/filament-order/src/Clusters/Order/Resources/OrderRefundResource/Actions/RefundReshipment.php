@@ -5,10 +5,10 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCardKeyReshipmentCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCardKeyReshipmentCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 use RedJasmine\Support\Exceptions\AbstractException;

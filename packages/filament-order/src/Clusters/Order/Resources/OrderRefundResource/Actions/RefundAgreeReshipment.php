@@ -2,8 +2,8 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
-use RedJasmine\Order\Application\Services\RefundCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundAgreeReshipmentCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeReshipmentCommand;
+use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 use RedJasmine\Support\Exceptions\AbstractException;
 

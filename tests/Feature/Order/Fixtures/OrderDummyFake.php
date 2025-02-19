@@ -9,15 +9,14 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
-use RedJasmine\Order\Application\UserCases\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\UserCases\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Refund\RefundCreateCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderCardKeyShippingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderLogisticsShippingCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Shipping\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCardKeyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
+use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
 use RedJasmine\Order\Domain\Data\OrderPaymentData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use Workbench\App\Models\User;
 
 
 class OrderDummyFake

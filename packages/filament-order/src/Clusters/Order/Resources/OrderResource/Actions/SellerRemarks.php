@@ -2,10 +2,10 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
-use RedJasmine\Order\Application\Services\OrderCommandService;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderMessageCommand;
-use RedJasmine\Order\Application\UserCases\Commands\Others\OrderRemarksCommand;
 use Filament\Forms;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderMessageCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
 
 trait SellerRemarks
 {
