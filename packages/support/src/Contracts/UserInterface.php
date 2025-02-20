@@ -18,9 +18,9 @@ interface UserInterface
 
     /**
      * ID
-     * @return int
+     * @return string
      */
-    public function getID() : int;
+    public function getID() : string;
 
 
     /**

@@ -46,9 +46,9 @@ class UserData extends Data implements UserInterface
 
     /**
      * 获取用户ID
-     * @return int
+     * @return string
      */
-    public function getID() : int
+    public function getID() : string
     {
         return $this->id;
     }
