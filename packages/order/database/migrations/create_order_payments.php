@@ -16,9 +16,11 @@ return new class extends Migration {
                 $table->string('app_id', 64)->comment('应用ID');
                 $table->string('order_no', 64)->comment('订单号');
                 $table->string('seller_type', 32)->comment('卖家类型');
-                $table->unsignedBigInteger('seller_id')->comment('卖家ID');
+                $table->string('seller_id',64)->comment('卖家ID');
                 $table->string('buyer_type', 32)->comment('买家类型');
-                $table->unsignedBigInteger('buyer_id')->comment('买家ID');
+                $table->string('buyer_id',64)->comment('买家类型');
+
+
                 $table->string('entity_type')->comment(EntityTypeEnum::comments('对象类型'));
                 $table->unsignedBigInteger('entity_id')->comment('对象单号');
 
@@ -41,8 +43,10 @@ return new class extends Migration {
                 $table->string('message')->nullable()->comment('其他信息');
 
                 $table->unsignedBigInteger('version')->default(0)->comment('版本');
-                $table->nullableMorphs('creator'); // 创建人
-                $table->nullableMorphs('updater'); // 更新人
+                $table->string('creator_type', 32)->nullable();
+                $table->string('creator_id', 64)->nullable();
+                $table->string('updater_type', 32)->nullable();
+                $table->string('updater_id', 64)->nullable();
                 $table->timestamps();
                 $table->comment('订单-支付单');
 

@@ -133,7 +133,8 @@ class OrderProduct extends Model
         $cardKey->seller = $this->seller;
         $cardKey->buyer  = $this->buyer;
 
-        $cardKey->order_id = $this->order_id;
+        $cardKey->order_no = $this->order_no;
+        $cardKey->app_id   = $this->app_id;
         $this->progress    += $cardKey->quantity;
         $this->cardKeys->add($cardKey);
     }

@@ -22,10 +22,10 @@ return new class extends Migration {
                 $table->string('order_no', 64)->comment('订单号');
                 $table->unsignedBigInteger('order_product_id')->comment('订单商品项ID');
                 $table->string('seller_type', 32)->comment('卖家类型');
-                $table->unsignedBigInteger('seller_id')->comment('卖家ID');
-                $table->string('seller_nickname')->nullable()->comment('卖家昵称');
+                $table->string('seller_id',64)->comment('卖家ID');
                 $table->string('buyer_type', 32)->comment('买家类型');
-                $table->unsignedBigInteger('buyer_id')->comment('买家类型');
+                $table->string('buyer_id',64)->comment('买家类型');
+                $table->string('seller_nickname')->nullable()->comment('卖家昵称');
                 $table->string('buyer_nickname')->nullable()->comment('买家昵称');
 
                 // 商品数据
@@ -74,8 +74,10 @@ return new class extends Migration {
                 $table->unsignedTinyInteger('urge')->nullable()->comment('催单');
                 $table->timestamp('urge_time')->nullable()->comment('催单时间');
                 $table->unsignedBigInteger('version')->default(0)->comment('版本');
-                $table->nullableMorphs('creator'); // 创建人
-                $table->nullableMorphs('updater'); // 更新人
+                $table->string('creator_type', 32)->nullable();
+                $table->string('creator_id', 64)->nullable();
+                $table->string('updater_type', 32)->nullable();
+                $table->string('updater_id', 64)->nullable();
                 $table->timestamps();
                 $table->softDeletes();
                 $table->comment('订单-退款表');

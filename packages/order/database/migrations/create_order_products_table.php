@@ -20,9 +20,11 @@ return new class extends Migration {
             $table->string('order_no',64)->comment('订单号');
             $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
-            $table->unsignedBigInteger('seller_id')->comment('卖家ID');
+            $table->string('seller_id',64)->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
-            $table->unsignedBigInteger('buyer_id')->comment('买家类型');
+            $table->string('buyer_id',64)->comment('买家类型');
+
+
 
             $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
@@ -88,8 +90,10 @@ return new class extends Migration {
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('order_no', 'idx_order');

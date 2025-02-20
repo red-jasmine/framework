@@ -20,11 +20,10 @@ return new class extends Migration {
             $table->string('order_no', 64)->unique()->comment('订单号');
             $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
-            $table->unsignedBigInteger('seller_id')->comment('卖家ID');
-            $table->string('seller_nickname')->nullable()->comment('卖家昵称');
-
+            $table->string('seller_id',64)->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
-            $table->unsignedBigInteger('buyer_id')->comment('买家类型');
+            $table->string('buyer_id',64)->comment('买家类型');
+            $table->string('seller_nickname')->nullable()->comment('卖家昵称');
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
 
             $table->string('title')->nullable()->comment('标题');
@@ -101,9 +100,12 @@ return new class extends Migration {
             $table->boolean('is_buyer_delete')->default(false)->comment('买家删除');
             $table->string('outer_order_id', 64)->nullable()->comment('外部订单号');
             $table->string('cancel_reason')->nullable()->comment('取消原因');
+
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->nullableMorphs('creator'); // 创建人
-            $table->nullableMorphs('updater'); // 更新人
+            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单表');

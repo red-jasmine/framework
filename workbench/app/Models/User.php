@@ -47,7 +47,7 @@ class User extends Authenticatable implements UserInterface
         return 'user';
     }
 
-    public function getID() : int
+    public function getID() : string
     {
         return $this->getKey();
     }
