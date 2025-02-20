@@ -27,9 +27,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('district_id')->nullable()->comment('区县ID');
             $table->unsignedBigInteger('street_id')->nullable()->comment('乡镇街道ID');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
