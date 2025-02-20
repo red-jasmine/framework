@@ -75,15 +75,15 @@ class OrderPackageServiceProvider extends PackageServiceProvider
         return [
 
             'create_orders_table',
-            'create_order_extensions_table',
+            'create_orders_extension_table',
             'create_order_products_table',
-            'create_order_product_extensions_table',
+            'create_order_products_extension_table',
+            'create_order_refunds_table',
+            'create_order_refunds_extension_table',
 
             'create_order_addresses_table',
             'create_order_logistics_table',
             'create_order_payments',
-            'create_order_refunds_table',
-            'create_order_refund_extensions_table',
             'create_order_card_keys_table',
 
         ];

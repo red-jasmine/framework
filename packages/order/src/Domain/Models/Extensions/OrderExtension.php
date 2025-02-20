@@ -16,7 +16,7 @@ class OrderExtension extends Model
     public $incrementing = false;
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_extensions';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'orders_extension';
     }
     protected $casts = [
         'buyer_expands'       => 'array',

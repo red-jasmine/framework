@@ -16,7 +16,7 @@ class OrderRefundExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_refund_extensions';
+        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_refunds_extension';
     }
 
     protected $fillable = [];
