@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         return 'user';
     }
 
-    public function getID() : int
+    public function getID() : string
     {
         return $this->getKey();
     }
