@@ -16,7 +16,10 @@ use Spatie\LaravelData\Casts\EnumCast;
 class OrderData extends Data
 {
 
-    public string $appId = 'system';
+    public string $appId    = 'system';
+
+
+    public string $currency = 'CNY';
 
     /**
      * 卖家

@@ -11,7 +11,7 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
 {
 
 
-    protected ?Order $aggregate = null;
+
 
     public function __construct(
         protected OrderCommandService $service

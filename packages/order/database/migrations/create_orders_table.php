@@ -39,9 +39,7 @@ return new class extends Migration {
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             $table->string('invoice_status', 32)->nullable()->comment('发票状态');
-
-            // TODO 货币
-            $table->string('currency', 32)->nullable()->comment('货币');
+            $table->string('currency', 32)->default('CNY')->comment('货币');
             $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
             $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
             $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');

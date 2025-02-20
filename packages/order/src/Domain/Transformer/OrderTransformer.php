@@ -14,13 +14,14 @@ class OrderTransformer
 {
     public function transform(OrderData $orderData, ?Order $order = null) : Order
     {
-        $order = $order ?? Order::make(
+        $order                            = $order ?? Order::make(
             [
                 'app_id'    => $orderData->appId,
                 'seller_id' => $orderData->seller->getID(),
                 'buyer_id'  => $orderData->buyer->getID(),
             ]
         );
+        $order->currency                  = $orderData->currency;
         $order->app_id                    = $orderData->appId;
         $order->seller                    = $orderData->seller;
         $order->buyer                     = $orderData->buyer;
