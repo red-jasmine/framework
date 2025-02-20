@@ -113,7 +113,7 @@ class OrderRefund extends Model
         'has_good_return'        => 'boolean',
         'end_time'               => 'datetime',
         'images'                 => 'array',
-        'expands'                => 'array',
+        'extras'                => 'array',
         'price'                  => AmountCastTransformer::class,
         'cost_price'             => AmountCastTransformer::class,
         'product_amount'         => AmountCastTransformer::class,

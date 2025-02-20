@@ -76,9 +76,9 @@ class OrderData extends Data
     public ?string $sellerMessage      = null;
     public ?string $buyerRemarks       = null;
     public ?string $buyerMessage       = null;
-    public ?array  $sellerExpands      = null;
-    public ?array  $buyerExpands       = null;
-    public ?array  $otherExpands       = null;
+    public ?array  $sellerExtras      = null;
+    public ?array  $buyerExtras       = null;
+    public ?array  $otherExtras       = null;
     public ?array  $form               = null;
     public ?array  $tools              = null;
     public ?Amount $freightAmount      = null;

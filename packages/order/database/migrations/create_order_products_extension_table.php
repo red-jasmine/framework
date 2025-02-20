@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->string('buyer_message')->nullable()->comment('买家留言');
             $table->json('form')->nullable()->comment('表单');
             $table->json('tools')->nullable()->comment('商品工具');
-            $table->json('seller_expands')->nullable()->comment('卖家扩展信息');
-            $table->json('buyer_expands')->nullable()->comment('买家扩展信息');
-            $table->json('other_expands')->nullable()->comment('其他扩展信息');
+            $table->json('seller_extras')->nullable()->comment('卖家扩展信息');
+            $table->json('buyer_extras')->nullable()->comment('买家扩展信息');
+            $table->json('other_extras')->nullable()->comment('其他扩展信息');
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单商品-附加信息表');

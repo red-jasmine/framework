@@ -32,7 +32,7 @@ class OrderAddressResource extends JsonResource
             'zip_code'    => $this->zip_code,
             'lon'         => $this->lon,
             'lat'         => $this->lat,
-            'expands'     => $this->expands,
+            'extras'     => $this->extras,
         ];
     }
 }

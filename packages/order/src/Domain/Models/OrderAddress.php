@@ -51,7 +51,7 @@ class OrderAddress extends Model
     ];
 
     protected $casts = [
-        'expands'  => 'array',
+        'extras'  => 'array',
         'contacts' => 'encrypted',
         'mobile'   => 'encrypted',
         'address'  => 'encrypted',

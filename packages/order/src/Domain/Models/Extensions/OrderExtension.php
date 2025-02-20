@@ -19,9 +19,9 @@ class OrderExtension extends Model
         return config('red-jasmine-order.tables.prefix','jasmine_') . 'orders_extension';
     }
     protected $casts = [
-        'buyer_expands'       => 'array',
-        'seller_expands'      => 'array',
-        'other_expands'       => 'array',
+        'buyer_extras'       => 'array',
+        'seller_extras'      => 'array',
+        'other_extras'       => 'array',
         'form'                => 'array',
         'tools'               => 'array',
     ];
