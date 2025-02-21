@@ -77,8 +77,8 @@ abstract class StockCommandHandler extends CommandHandler
         $log->sku_id        = $command->skuId;
         $log->change_type   = $command->changeType;
         $log->change_detail = $command->changeDetail;
-        $log->channel_type  = $command->channelType;
-        $log->channel_id    = $command->channelId;
+        //$log->channel_type  = $command->channelType;
+        //$log->channel_id    = $command->channelId;
         $log->action_type   = $command->actionType;
         $log->creator       = ServiceContext::getOperator();
 

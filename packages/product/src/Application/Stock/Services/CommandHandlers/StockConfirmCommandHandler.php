@@ -16,7 +16,7 @@ class StockConfirmCommandHandler extends StockCommandHandler
      */
     public function handle(StockCommand $command) : void
     {
-
+        $command->actionType = ProductStockActionTypeEnum::CONFIRM;
         $this->setCommand($command);
 
         $this->validate($command);

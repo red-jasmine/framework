@@ -17,6 +17,7 @@ class StockSubCommandHandler extends StockCommandHandler
     public function handle(StockCommand $command) : void
     {
 
+        $command->actionType = ProductStockActionTypeEnum::SUB;
         $this->setCommand($command);
         $this->validate($command);
 

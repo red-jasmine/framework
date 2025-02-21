@@ -10,6 +10,7 @@ class ProductData extends Data
 {
 
     public int $productId;
+
     public int $skuId;
     /**
      * 购物车ID
@@ -34,7 +35,7 @@ class ProductData extends Data
      */
     public ?string $buyerRemarks;
     public ?string $buyerMessage;
-    public ?array  $buyerExpands;
+    public ?array  $buyerExtras;
     public ?array  $tools;
 
 

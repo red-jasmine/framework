@@ -12,10 +12,14 @@ class Money extends Data
 
 
     public function __construct(
-        public int    $value = 0,
+        public int $value = 0,
         public string $currency = 'CNY',
-    )
+    ) {
+    }
+
+    public static function make(int $value = 0, string $currency = 'CNY') : Money
     {
+        return new static($value, $currency);
     }
 
 
@@ -47,7 +51,20 @@ class Money extends Data
 
     public function add(self $money) : static
     {
-        $value = bcadd($money->value, $this->value, 0);
-        return new static($value, $this->currency);
+        $this->value = bcadd($money->value, $this->value, 0);
+        return $this;
     }
+
+    public function sub(self $money) : static
+    {
+        $this->value = bcsub($this->value, $money->value, 0);
+        return $this;
+    }
+
+    public function mul($value) : static
+    {
+        $this->value = bcmul($this->value, $value, 0);
+        return $this;
+    }
+
 }

@@ -16,7 +16,7 @@ class StockLockCommandHandler extends StockCommandHandler
      */
     public function handle(StockCommand $command) : void
     {
-
+        $command->actionType = ProductStockActionTypeEnum::LOCK;
         $this->setCommand($command);
         $this->validate($command);
 

@@ -53,6 +53,7 @@ class VipProductRepository implements VipProductRepositoryInterface
             'shippingType' => ShippingTypeEnum::DUMMY,
             'unit'         => $model->time_unit->value,
             'unitQuantity' => $model->time_value,
+            'stock'        => 999999999,
         ]);
 
         $product = $this->productCommandService->create($command);

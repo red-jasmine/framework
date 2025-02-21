@@ -17,11 +17,7 @@ class OrderBuyCommandHandler extends CommandHandler
     public function __construct(
         protected OrderDomainService $orderDomainService,
     ) {
-        // 调用父类的构造方法进行初始化
-        parent::__construct();
 
-        // 开始数据库事务，确保数据的一致性
-        $this->databaseTransaction();
     }
 
 

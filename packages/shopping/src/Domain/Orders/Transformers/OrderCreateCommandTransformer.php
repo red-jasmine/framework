@@ -53,8 +53,8 @@ class OrderCreateCommandTransformer
             $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
             $product->buyerMessage     = $productData->buyerMessage ?? null;
             $product->buyerRemarks     = $productData->buyerRemarks ?? null;
-            $product->buyerExpands     = $productData->buyerExpands ?? null;
-            $product->otherExpands     = null; // TODO
+            $product->buyerExtras     = $productData->buyerExtras ?? null;
+            $product->otherExtras     = null; // TODO
             $product->tools            = $productData->tools ?? null;
 
 

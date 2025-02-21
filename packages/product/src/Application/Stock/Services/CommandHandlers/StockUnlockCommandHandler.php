@@ -16,7 +16,7 @@ class StockUnlockCommandHandler extends StockCommandHandler
      */
     public function handle(StockCommand $command) : void
     {
-
+        $command->actionType = ProductStockActionTypeEnum::UNLOCK;
         $this->setCommand($command);
 
         $this->validate($command);

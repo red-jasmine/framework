@@ -17,6 +17,7 @@
     ],
     "require": {
         "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/shopping": "1.0.x-dev",
         "red-jasmine/product": "1.0.x-dev"
     },
     "require-dev": {
