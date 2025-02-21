@@ -10,21 +10,25 @@ use RedJasmine\Support\Data\Data;
 class Money extends Data
 {
 
+    public const string DEFAULT_CURRENCY = 'CNY';
+
 
     public function __construct(
-        public int $value = 0,
+        public string $value = '0',
         public string $currency = 'CNY',
     ) {
     }
 
-    public static function make(int $value = 0, string $currency = 'CNY') : Money
+    public static function make(string $value = '0', string $currency = self::DEFAULT_CURRENCY) : Money
     {
-        return new static($value, $currency);
+
+        return new static($value, $currency ?? self::DEFAULT_CURRENCY);
     }
 
 
     public function format() : string
     {
+        // TODO
         $money          = new \Money\Money($this->value, new Currency($this->currency));
         $currencies     = new ISOCurrencies();
         $moneyFormatter = new DecimalMoneyFormatter($currencies);
@@ -65,6 +69,18 @@ class Money extends Data
     {
         $this->value = bcmul($this->value, $value, 0);
         return $this;
+    }
+
+
+    public function value() : string
+    {
+        return $this->value;
+    }
+
+
+    public function __toString() : string
+    {
+        return $this->value;
     }
 
 }
