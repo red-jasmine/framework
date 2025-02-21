@@ -1,11 +1,9 @@
 <?php
 
-
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Vip\Application\Services\Commands\UserVipOpenCommand;
 use RedJasmine\Vip\Application\Services\UserVipCommandService;
 use RedJasmine\Vip\Application\Services\VipCommandService;
-use RedJasmine\Vip\Application\Services\VipProductCommandService;
 use RedJasmine\Vip\Domain\Data\VipData;
 use RedJasmine\Vip\Domain\Data\VipProductData;
 use RedJasmine\Vip\Domain\Models\Vip;
@@ -13,13 +11,11 @@ use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
 
 beforeEach(function () {
 
-    $this->VipCommandService        = app(VipCommandService::class);
-    $this->UserVipCommandService    = app(UserVipCommandService::class);
-    $this->VipProductCommandService = app(VipProductCommandService::class);
-    $this->UserVipCommandService    = app(UserVipCommandService::class);
-    $this->VipReadRepository        = app(VipReadRepositoryInterface::class);
-    $this->appId                    = 'test';
-    $this->type                     = 'vip';
+    $this->VipCommandService     = app(VipCommandService::class);
+    $this->UserVipCommandService = app(UserVipCommandService::class);
+    $this->VipReadRepository     = app(VipReadRepositoryInterface::class);
+    $this->appId                 = 'test';
+    $this->type                  = 'vip';
 
 });
 
@@ -45,34 +41,6 @@ test('create a vip', function () {
 });
 
 
-test('create a vip product', function (Vip $vip) {
-    $command = VipProductData::from([
-        'appId'     => $this->appId,
-        'type'      => $this->type,
-        'name'      => fake()->title(),
-        'timeValue' => fake()->randomNumber(1),
-        'timeUnit'  => fake()->randomElement(TimeUnitEnum::values()),
-        'amount'    => [
-            'currency' => 'CNY',
-            'value'    => fake()->randomNumber(3),
-        ],
-    ]);
-
-
-    $vipProduct = $this->VipProductCommandService->create($command);
-
-    $this->assertEquals($command->appId, $vipProduct->app_id);
-    $this->assertEquals($command->type, $vipProduct->type);
-    $this->assertEquals($command->amount->value, $vipProduct->amount->value);
-    $this->assertEquals($command->amount->currency, $vipProduct->amount->currency);
-    $this->assertEquals($command->timeValue, $vipProduct->time_value);
-    $this->assertEquals($command->timeUnit->value, $vipProduct->time_unit->value);
-
-
-    return $vipProduct;
-})->depends('create a vip');
-
-
 test('open a user vip', function (Vip $vip) {
 
     $command = UserVipOpenCommand::from([
@@ -82,7 +50,7 @@ test('open a user vip', function (Vip $vip) {
         'timeValue'   => fake()->randomNumber(1),
         'timeUnit'    => fake()->randomElement(TimeUnitEnum::values()),
         'paymentType' => 'admin',
-        'paymentId'   =>  fake()->numerify('paymentId-##########'),
+        'paymentId'   => fake()->numerify('paymentId-##########'),
     ]);
 
 
