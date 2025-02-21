@@ -35,14 +35,14 @@ class OrderCreateCommandTransformer
             $product                   = new OrderProductData();
             $product->quantity         = $productData->quantity;
             $product->orderProductType = $productData->getProduct()->product_type;
-            $product->shippingType     = $productData->getProduct()->shipping_type;
+            $order->shippingType       = $product->shippingType = $productData->getProduct()->shipping_type;
             $product->title            = $productData->getProduct()->title;
             $product->skuName          = $productData->getSku()->properties_name;
             $product->productType      = 'product';
             $product->productId        = $productData->getProduct()->id;
             $product->skuId            = $productData->getSku()->id;
             $product->price            = $price;
-            $product->costPrice        = new Money($productData->getSku()->cost_price);
+            $product->costPrice        = new Money($productData->getSku()->cost_price ?? 0);
             $product->categoryId       = $productData->getProduct()->category_id;
             $product->brandId          = $productData->getProduct()->brand_id;
             $product->productGroupId   = $productData->getProduct()->product_group_id;

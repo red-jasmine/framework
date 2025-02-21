@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Shopping\Domain\Orders;
 
+use Illuminate\Support\Collection;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
@@ -14,6 +15,7 @@ use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
 use RedJasmine\Shopping\Domain\Orders\Data\OrdersData;
 use RedJasmine\Shopping\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
+use Throwable;
 
 class OrderDomainService extends Service
 {
@@ -32,13 +34,19 @@ class OrderDomainService extends Service
 
     }
 
-    public function buy(OrderData $orderData) : \Illuminate\Support\Collection
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return Collection
+     * @throws Throwable
+     */
+    public function buy(OrderData $orderData) : Collection
     {
         $this->init($orderData);
-        $orders      = $this->split($orderData);
-        $orders      = $this->orderCalculationService->calculates($orders);
-        $orderModels = $this->orderBuyService->buy($orders);
-        return $orderModels;
+        $orders = $this->split($orderData);
+        $orders = $this->orderCalculationService->calculates($orders);
+        return $this->orderBuyService->buy($orders);
+
     }
 
     protected function init(OrderData $orderData) : void

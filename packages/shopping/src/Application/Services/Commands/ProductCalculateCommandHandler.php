@@ -6,7 +6,7 @@ use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Domain\Orders\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandler;
 
-class OrderCalculateCommandHandler extends CommandHandler
+class ProductCalculateCommandHandler extends CommandHandler
 {
     public function __construct(
         protected OrderDomainService $orderDomainService,

@@ -10,6 +10,7 @@ use RedJasmine\Order\Domain\Exceptions\OrderPaymentException;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -28,11 +29,11 @@ class OrderPayment extends Model
     use HasTradeParties;
 
     protected $casts = [
-        'entity_type' => EntityTypeEnum::class,
-        'amount_type' => AmountTypeEnum::class,
-        'status'      => PaymentStatusEnum::class,
+        'entity_type'    => EntityTypeEnum::class,
+        'amount_type'    => AmountTypeEnum::class,
+        'status'         => PaymentStatusEnum::class,
+        'payment_amount' => MoneyCast::class.':payment_amount,currency'
     ];
-
 
 
     public function getTable() : string
