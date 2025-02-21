@@ -83,11 +83,11 @@ class PaymentPackageServiceProvider extends PackageServiceProvider
 
 
             'create_payment_trades_table',
-            'create_payment_trade_extensions_table',
+            'create_payment_trades_extension_table',
             'create_payment_refunds_table',
-            'create_payment_refund_extensions_table',
+            'create_payment_refunds_extension_table',
             'create_payment_transfers_table',
-            'create_payment_transfer_extensions_table',
+            'create_payment_transfers_extension_table',
             'create_payment_settles_table',
             'create_payment_settle_details_table',
 

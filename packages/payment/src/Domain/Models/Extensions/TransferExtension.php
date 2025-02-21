@@ -23,7 +23,7 @@ class TransferExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfer_extensions';
+        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfers_extension';
     }
 
     public function trade() : BelongsTo

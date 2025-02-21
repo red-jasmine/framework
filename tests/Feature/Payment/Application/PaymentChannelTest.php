@@ -18,7 +18,7 @@ beforeEach(function () {
 test('can create channel', function () {
     $command       = new ChannelData();
     $command->name = fake()->password();
-    $command->code = fake()->word();
+    $command->code = fake()->password();
 
 
     $model = $this->commandService->create($command);
