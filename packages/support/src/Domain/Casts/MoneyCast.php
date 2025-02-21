@@ -9,11 +9,33 @@ use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class MoneyCast implements CastsAttributes
 {
+
+    protected ?string $valueKey    = null;
+    protected ?string $currencyKey = null;
+
+    protected function getValueKey(string $key)
+    {
+        return $this->valueKey ?? $key.'_value';
+    }
+
+    protected function getCurrencyKey(string $key)
+    {
+        return $this->currencyKey ?? $key.'_value';
+    }
+
+    public function __construct(...$args)
+    {
+
+        $this->valueKey    = $args[0] ?? null;
+        $this->currencyKey = $args[1] ?? null;
+
+    }
+
     public function get(Model $model, string $key, mixed $value, array $attributes) : ?Money
     {
         $key        = Str::snake($key);
-        $moneyValue = $attributes[$key . '_value'] ?? 0;
-        $currency   = $attributes[$key . '_currency'] ?? null;
+        $moneyValue = $attributes[$this->getValueKey($key)] ?? 0;
+        $currency   = $attributes[$this->getCurrencyKey($key)] ?? null;
         if (blank($currency)) {
             return null;
         }
@@ -26,13 +48,13 @@ class MoneyCast implements CastsAttributes
         $key = Str::snake($key);
         if (blank($value)) {
             return [
-                $key . '_value'    => 0,
-                $key . '_currency' => null,
+                $this->getValueKey($key)    => 0,
+                $this->getCurrencyKey($key) => null,
             ];
         }
         return [
-            $key . '_value'    => $value->value,
-            $key . '_currency' => $value->currency,
+            $this->getValueKey($key)    => $value->value,
+            $this->getCurrencyKey($key) => $value->currency,
         ];
     }
 
