@@ -46,15 +46,16 @@ return new class extends Migration {
                 $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
                 $table->string('unit')->nullable()->comment('单位');
                 $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
+                // 金额
                 $table->string('currency', 10)->default('CNY')->comment('货币');
-                $table->bigInteger('price')->default(0)->comment('价格');
-                $table->bigInteger('cost_price')->default(0)->comment('成本价格');
-                $table->bigInteger('product_amount')->default(0)->comment('商品金额');
-                $table->bigInteger('tax_amount')->default(0)->comment('税费');
-                $table->bigInteger('discount_amount')->default(0)->comment('商品优惠');
-                $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
-                $table->bigInteger('payment_amount')->default(0)->comment('实付金额');
-                $table->bigInteger('divided_payment_amount')->default(0)->comment('分摊后实际付款金额');
+                $table->decimal('price',12)->default(0)->comment('价格');
+                $table->decimal('cost_price',12)->default(0)->comment('成本价格');
+                $table->decimal('product_amount',12)->default(0)->comment('商品金额');
+                $table->decimal('tax_amount',12)->default(0)->comment('税费');
+                $table->decimal('discount_amount',12)->default(0)->comment('商品优惠');
+                $table->decimal('payable_amount',12)->default(0)->comment('应付金额');
+                $table->decimal('payment_amount',12)->default(0)->comment('实付金额');
+                $table->decimal('divided_payment_amount',12)->default(0)->comment('分摊后实际付款金额');
 
                 $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
                 $table->string('refund_type', 32)->comment(RefundTypeEnum::comments('售后类型'));
@@ -65,9 +66,9 @@ return new class extends Migration {
                 $table->string('outer_refund_id', 64)->nullable()->comment('外部退款单号');
 
 
-                $table->bigInteger('freight_amount')->default(0)->comment('运费');
-                $table->bigInteger('refund_amount')->default(0)->comment('退款金额');
-                $table->bigInteger('total_refund_amount')->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
+                $table->decimal('freight_amount',12)->default(0)->comment('运费');
+                $table->decimal('refund_amount',12)->default(0)->comment('退款金额');
+                $table->decimal('total_refund_amount',12)->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
 
                 $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
                 $table->timestamp('created_time')->nullable()->comment('创建时间');

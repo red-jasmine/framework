@@ -45,18 +45,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             // 金额类
             $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->bigInteger('price')->default(0)->comment('价格');
-            $table->bigInteger('cost_price')->default(0)->comment('成本价格');
-            $table->bigInteger('cost_amount')->default(0)->comment('成本金额');
-            $table->bigInteger('product_amount')->default(0)->comment('商品金额'); // =  price * num
-            $table->bigInteger('tax_amount')->default(0)->comment('税费金额');
-            $table->bigInteger('discount_amount')->default(0)->comment('优惠金额');
-            $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
-            $table->bigInteger('payment_amount')->default(0)->comment('实付金额');
-            $table->bigInteger('divided_discount_amount')->default(0)->comment('分摊优惠金额');
-            $table->bigInteger('divided_payment_amount')->default(0)->comment('分摊后实付金额');
-            $table->bigInteger('refund_amount')->default(0)->comment('退款金额');
-            $table->bigInteger('commission_amount')->default(0)->comment('佣金');
+            $table->decimal('price',12)->default(0)->comment('价格');
+            $table->decimal('cost_price',12)->default(0)->comment('成本价格');
+            $table->decimal('cost_amount',12)->default(0)->comment('成本金额');
+            $table->decimal('product_amount',12)->default(0)->comment('商品金额'); // =  price * num
+            $table->decimal('tax_amount',12)->default(0)->comment('税费金额');
+            $table->decimal('discount_amount',12)->default(0)->comment('优惠金额');
+            $table->decimal('payable_amount',12)->default(0)->comment('应付金额');
+            $table->decimal('payment_amount',12)->default(0)->comment('实付金额');
+            $table->decimal('divided_discount_amount',12)->default(0)->comment('分摊优惠金额');
+            $table->decimal('divided_payment_amount',12)->default(0)->comment('分摊后实付金额');
+            $table->decimal('refund_amount',12)->default(0)->comment('退款金额');
+            $table->decimal('commission_amount',12)->default(0)->comment('佣金');
             // 状态
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));

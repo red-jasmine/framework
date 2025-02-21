@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
@@ -67,17 +66,18 @@ class OrderProduct extends Model
         'confirm_time'            => 'datetime',
         'refund_time'             => 'datetime',
         'rate_time'               => 'datetime',
-        'price'                   => MoneyCast::class,
-        'cost_price'              => MoneyCast::class,
-        'tax_amount'              => MoneyCast::class,
-        'product_amount'          => MoneyCast::class,
-        'payable_amount'          => MoneyCast::class,
-        'payment_amount'          => MoneyCast::class,
-        'refund_amount'           => MoneyCast::class,
-        'discount_amount'         => MoneyCast::class,
-        'commission_amount'       => MoneyCast::class,
-        'divided_discount_amount' => MoneyCast::class,
-        'divided_payment_amount'  => MoneyCast::class,
+        'price'                   => MoneyCast::class.':'.'price,currency',
+        'cost_price'              => MoneyCast::class.':'.'cost_price,currency',
+        'cost_amount'             => MoneyCast::class.':'.'cost_amount,currency',
+        'tax_amount'              => MoneyCast::class.':'.'tax_amount,currency',
+        'product_amount'          => MoneyCast::class.':'.'product_amount,currency',
+        'payable_amount'          => MoneyCast::class.':'.'payable_amount,currency',
+        'payment_amount'          => MoneyCast::class.':'.'payment_amount,currency',
+        'refund_amount'           => MoneyCast::class.':'.'refund_amount,currency',
+        'discount_amount'         => MoneyCast::class.':'.'discount_amount,currency',
+        'commission_amount'       => MoneyCast::class.':'.'commission_amount,currency',
+        'divided_discount_amount' => MoneyCast::class.':'.'divided_discount_amount,currency',
+        'divided_payment_amount'  => MoneyCast::class.':'.'divided_payment_amount,currency',
     ];
 
     protected $fillable = [

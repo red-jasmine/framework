@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Shopping\Domain\Orders\Transformers;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class OrderCreateCommandTransformer
 {
@@ -31,9 +31,9 @@ class OrderCreateCommandTransformer
         foreach ($orderData->products as $productData) {
             // 获取价格
             $additionalData            = $productData->getAdditionalData();
-            $price                     = Amount::make($additionalData['price']);
+            $price                     = Money::make($additionalData['price']);
             $product                   = new OrderProductData();
-            $product->quantity              = $productData->quantity;
+            $product->quantity         = $productData->quantity;
             $product->orderProductType = $productData->getProduct()->product_type;
             $product->shippingType     = $productData->getProduct()->shipping_type;
             $product->title            = $productData->getProduct()->title;
@@ -42,7 +42,7 @@ class OrderCreateCommandTransformer
             $product->productId        = $productData->getProduct()->id;
             $product->skuId            = $productData->getSku()->id;
             $product->price            = $price;
-            $product->costPrice        = new Amount($productData->getSku()->cost_price);
+            $product->costPrice        = new Money($productData->getSku()->cost_price);
             $product->categoryId       = $productData->getProduct()->category_id;
             $product->brandId          = $productData->getProduct()->brand_id;
             $product->productGroupId   = $productData->getProduct()->product_group_id;
@@ -53,16 +53,16 @@ class OrderCreateCommandTransformer
             $product->promiseServices  = $productData->getProduct()->promise_services ?? null;
             $product->buyerMessage     = $productData->buyerMessage ?? null;
             $product->buyerRemarks     = $productData->buyerRemarks ?? null;
-            $product->buyerExtras     = $productData->buyerExtras ?? null;
-            $product->otherExtras     = null; // TODO
+            $product->buyerExtras      = $productData->buyerExtras ?? null;
+            $product->otherExtras      = null; // TODO
             $product->tools            = $productData->tools ?? null;
 
 
             $product->additional([
-                                     'sku'     => $productData->getSku(),
-                                     'product' => $productData->getProduct(),
+                'sku'     => $productData->getSku(),
+                'product' => $productData->getProduct(),
 
-                                 ]);
+            ]);
             $order->products->push($product);
 
         }

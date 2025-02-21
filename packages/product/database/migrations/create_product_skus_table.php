@@ -18,9 +18,9 @@ return new class extends Migration {
 
             // SKU 信息
             $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->bigInteger('price')->default(0)->comment('销售价');
-            $table->bigInteger('market_price')->nullable()->comment('市场价');
-            $table->bigInteger('cost_price')->nullable()->comment('成本价');
+            $table->decimal('price',12)->default(0)->comment('销售价');
+            $table->decimal('market_price',12)->nullable()->comment('市场价');
+            $table->decimal('cost_price',12)->nullable()->comment('成本价');
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');

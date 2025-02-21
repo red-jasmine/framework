@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\ValueObjects\Money;

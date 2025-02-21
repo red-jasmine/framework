@@ -50,7 +50,6 @@ beforeEach(function () {
 
 test('can create a new order', function () {
 
-
     $command = OrderCreateCommand::from($this->orderFake->order());
     $result  = $this->orderCommandService->create($command);
 
@@ -62,6 +61,7 @@ test('can create a new order', function () {
 
 
 test('cna paying a order', function (Order $order) {
+
 
 
     //Event::fake();
@@ -107,12 +107,13 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $order = $this->orderRepository->find($order->id);
 
+
+
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
     $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
-
 
 test('can urge a order', function (Order $order, OrderPayment $orderPayment) {
 
@@ -144,6 +145,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
     $refunds = [];
     foreach ($order->products as $product) {
         $command                 = new RefundCreateCommand;
+
         $command->id             = $order->id;
         $command->orderProductId = $product->id;
         $command->refundType     = RefundTypeEnum::REFUND;

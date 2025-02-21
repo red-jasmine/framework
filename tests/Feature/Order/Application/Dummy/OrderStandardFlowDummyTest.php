@@ -42,6 +42,7 @@ test('can create a new order', function () {
 
 
     $command = OrderCreateCommand::from($this->orderFake->order());
+
     $result  = $this->orderCommandService->create($command);
 
 

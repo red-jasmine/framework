@@ -4,24 +4,22 @@ namespace RedJasmine\Order\Application;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Application\Listeners\RefundHandleListener;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
 use RedJasmine\Order\Domain\Models\Casts\PromiseServiceValueCastTransformer;
+use RedJasmine\Order\Domain\Repositories\OrderCardKeyReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderPaymentReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
-use RedJasmine\Order\Domain\Repositories\OrderCardKeyReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderCardKeyReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderLogisticsReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderPaymentReadRepository;
-use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderCardKeyReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\OrderReadRepository;
 use RedJasmine\Order\Infrastructure\ReadRepositories\Mysql\RefundReadRepository;
 use RedJasmine\Order\Infrastructure\Repositories\Eloquent\OrderLogisticsRepository;
@@ -56,12 +54,6 @@ class OrderApplicationServiceProvider extends ServiceProvider
 
 
         $this->app->bind(OrderCardKeyReadRepositoryInterface::class, OrderCardKeyReadRepository::class);
-
-
-        $config = $this->app->make('config');
-
-        $config->set('data.casts.' . Amount::class, AmountCastTransformer::class);
-        $config->set('data.transformers.' . Amount::class, AmountCastTransformer::class);
 
 
     }

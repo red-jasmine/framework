@@ -24,6 +24,7 @@ use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 
@@ -121,7 +122,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
                 'id'             => $order->id,
                 'orderProductId' => $product->id,
                 'content'        => fake()->sentence(),
-                'quantity'            => 1
+                'quantity'       => 1
             ]
         );
 
@@ -151,7 +152,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 test('can confirm a order', function (Order $order) {
 
-    $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
+    $command = OrderConfirmCommand::from(['id' => $order->id]);
 
     $this->orderCommandService->confirm($command);
 
@@ -175,11 +176,11 @@ test('can refund a order', function (Order $order) {
         $command->id             = $order->id;
         $command->orderProductId = $product->id;
         $command->refundType     = RefundTypeEnum::RESHIPMENT;
-        $command->refundAmount   = 0;
+        $command->refundAmount   = Money::make(0);
         $command->reason         = '补发';
         $command->description    = fake()->sentence;
         $command->outerRefundId  = fake()->numerify('######');
-        $command->images         = [ fake()->imageUrl, fake()->imageUrl, fake()->imageUrl, ];
+        $command->images         = [fake()->imageUrl, fake()->imageUrl, fake()->imageUrl,];
 
         $commands [] = $command;
 
@@ -191,7 +192,8 @@ test('can refund a order', function (Order $order) {
 
     foreach ($order->products as $product) {
 
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $product->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $product->refund_status->value,
+            '退款状态不正确');
     }
 
     return $refunds;
@@ -206,7 +208,7 @@ test('can agree refund reshipment', function ($refunds) {
 
     foreach ($refunds as $refund) {
 
-        $command      = new RefundAgreeReshipmentCommand();
+        $command     = new RefundAgreeReshipmentCommand();
         $command->id = $refund;
         $this->refundCommandService->agreeReshipment($command);
         $refund = $this->refundRepository->find($command->id);
@@ -222,7 +224,7 @@ test('can reshipment', function ($refunds) {
     foreach ($refunds as $refund) {
 
         $command          = new RefundCardKeyReshipmentCommand();
-        $command->id     = $refund;
+        $command->id      = $refund;
         $command->content = fake()->sentence;
         $this->refundCommandService->cardKeyReshipment($command);
         $refund = $this->refundRepository->find($command->id);

@@ -57,7 +57,7 @@ test('can create a vip product', function () {
         'timeValue' => 1,
         'price'     => [
             'currency' => 'CNY',
-            'value'    => 100
+            'value'    => 10
         ],
         'name'      => '商品'
     ]);
@@ -77,7 +77,7 @@ test('can find a vip product', function (VipProduct $product) {
     $result = $this->VipProductRepository->find($product->id);
 
 
-    $this->assertEquals($product->id,$result->id);
+    $this->assertEquals($product->id, $result->id);
 
 
 })->depends('can create a vip product');
@@ -91,7 +91,7 @@ test('can update a vip product', function (VipProduct $product) {
         'timeValue' => 3,
         'price'     => [
             'currency' => 'CNY',
-            'value'    => 80000
+            'value'    => '300'
         ],
         'name'      => '3年'
     ]);

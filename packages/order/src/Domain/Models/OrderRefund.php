@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Events\RefundAgreedEvent;
 use RedJasmine\Order\Domain\Events\RefundAgreedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundCanceledEvent;
@@ -22,7 +20,6 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
-use RedJasmine\Order\Domain\Generator\OrderNoGenerator;
 use RedJasmine\Order\Domain\Generator\RefundNoGenerator;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
@@ -32,7 +29,6 @@ use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
-use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
 use RedJasmine\Order\Domain\Models\Extensions\OrderRefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
@@ -40,6 +36,7 @@ use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 
 class OrderRefund extends Model
@@ -114,16 +111,16 @@ class OrderRefund extends Model
         'has_good_return'        => 'boolean',
         'end_time'               => 'datetime',
         'images'                 => 'array',
-        'extras'                => 'array',
-        'price'                  => MoneyCast::class,
-        'cost_price'             => MoneyCast::class,
-        'product_amount'         => MoneyCast::class,
-        'payable_amount'         => MoneyCast::class,
-        'payment_amount'         => MoneyCast::class,
-        'divided_payment_amount' => MoneyCast::class,
-        'refund_amount'          => MoneyCast::class,
-        'freight_amount'         => MoneyCast::class,
-        'total_refund_amount'    => MoneyCast::class,
+        'extras'                 => 'array',
+        'price'                  => MoneyCast::class.':'.'price,currency',
+        'cost_price'             => MoneyCast::class.':'.'cost_price,currency',
+        'product_amount'         => MoneyCast::class.':'.'product_amount,currency',
+        'payable_amount'         => MoneyCast::class.':'.'payable_amount,currency',
+        'payment_amount'         => MoneyCast::class.':'.'payment_amount,currency',
+        'divided_payment_amount' => MoneyCast::class.':'.'divided_payment_amount,currency',
+        'refund_amount'          => MoneyCast::class.':'.'refund_amount,currency',
+        'freight_amount'         => MoneyCast::class.':'.'freight_amount,currency',
+        'total_refund_amount'    => MoneyCast::class.':'.'total_refund_amount,currency',
 
     ];
 
@@ -271,12 +268,12 @@ class OrderRefund extends Model
     /**
      * 同意退款
      *
-     * @param  Amount|null  $amount
+     * @param  Money|null  $amount
      *
      * @return void
      * @throws RefundException
      */
-    public function agreeRefund(?Amount $amount = null) : void
+    public function agreeRefund(?Money $amount = null) : void
     {
         if (!$this->isAllowAgreeRefund()) {
             throw new RefundException();

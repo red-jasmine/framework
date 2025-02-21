@@ -3,7 +3,6 @@
 namespace RedJasmine\Order\Domain\Services;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
@@ -11,6 +10,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class OrderRefundService
 {
@@ -74,7 +74,8 @@ class OrderRefundService
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND,
         ], true)) {
-            $refundAmount = (string) ($orderRefund->refund_amount ?? 0);
+
+            $refundAmount = (string) ($orderRefund->refund_amount->value() ?? 0);
 
             $maxRefundAmount = $orderProduct->maxRefundAmount();
 
@@ -86,12 +87,12 @@ class OrderRefundService
             }
         }
 
-        $orderRefund->freight_amount = new Amount(0);
-        $orderRefund->refund_amount  = new Amount($refundAmount);
+        $orderRefund->freight_amount = new Money(0);
+        $orderRefund->refund_amount  = new Money($refundAmount);
 
         $orderRefund->total_refund_amount = bcadd(
-            $orderRefund->refund_amount->value(),
-            $orderRefund->freight_amount->value(),
+            $orderRefund->refund_amount,
+            $orderRefund->freight_amount,
             2);
 
 

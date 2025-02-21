@@ -43,15 +43,17 @@ return new class extends Migration {
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->string('unit')->nullable()->comment('单位');
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
-            $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->bigInteger('price')->default(0)->comment('价格');
-            $table->bigInteger('cost_price')->default(0)->comment('成本价格');
-            $table->bigInteger('product_amount')->default(0)->comment('商品金额');
-            $table->bigInteger('tax_amount')->default(0)->comment('税费');
-            $table->bigInteger('discount_amount')->default(0)->comment('商品优惠');
-            $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
-            $table->bigInteger('payment_amount')->default(0)->comment('实付金额');
-            $table->bigInteger('divided_payment_amount')->default(0)->comment('分摊后实际付款金额');
+            // 金额
+            $table->string('currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('price',12)->default(0)->comment('价格');
+            $table->decimal('cost_price',12)->default(0)->comment('成本价格');
+            $table->decimal('product_amount',12)->default(0)->comment('商品金额');
+            $table->decimal('tax_amount',12)->default(0)->comment('税费');
+            $table->decimal('discount_amount',12)->default(0)->comment('商品优惠');
+            $table->decimal('payable_amount',12)->default(0)->comment('应付金额');
+            $table->decimal('payment_amount',12)->default(0)->comment('实付金额');
+            $table->decimal('divided_payment_amount',12)->default(0)->comment('分摊后实际付款金额');
+
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Events\OrderAcceptEvent;
 use RedJasmine\Order\Domain\Events\OrderCanceledEvent;
@@ -166,17 +165,16 @@ class Order extends Model implements OperatorInterface
             'contact'                => AesEncrypted::class,
             'is_seller_delete'       => 'boolean',
             'is_buyer_delete'        => 'boolean',
-            'freight_amount'         => MoneyCast::class,
-            'discount_amount'        => MoneyCast::class,
-            'product_payable_amount' => MoneyCast::class,
-            'payable_amount'         => MoneyCast::class,
-            'payment_amount'         => MoneyCast::class,
-            'refund_amount'          => MoneyCast::class,
-            'commission_amount'      => MoneyCast::class,
-            'cost_amount'            => MoneyCast::class,
-            'tax_amount'             => MoneyCast::class,
-            'product_amount'         => MoneyCast::class,
-
+            'freight_amount'         => MoneyCast::class.':'.'freight_amount,currency',
+            'discount_amount'        => MoneyCast::class.':'.'discount_amount,currency',
+            'product_payable_amount' => MoneyCast::class.':'.'product_payable_amount,currency',
+            'payable_amount'         => MoneyCast::class.':'.'payable_amount,currency',
+            'payment_amount'         => MoneyCast::class.':'.'payment_amount,currency',
+            'refund_amount'          => MoneyCast::class.':'.'refund_amount,currency',
+            'commission_amount'      => MoneyCast::class.':'.'commission_amount,currency',
+            'cost_amount'            => MoneyCast::class.':'.'cost_amount,currency',
+            'tax_amount'             => MoneyCast::class.':'.'tax_amount,currency',
+            'product_amount'         => MoneyCast::class.':'.'product_amount,currency',
         ];
     }
 
@@ -646,10 +644,10 @@ class Order extends Model implements OperatorInterface
     {
         foreach ($this->products as $product) {
             // 成本金额
-            $product->cost_amount = bcmul($product->quantity, $product->cost_price->value(), 2);
+            $product->cost_amount = bcmul($product->quantity, $product->cost_price, 2);
 
             // 商品总金额   < 0 TODO 验证金额
-            $product->product_amount = bcmul($product->quantity, $product->price->value(), 2);
+            $product->product_amount = bcmul($product->quantity, $product->price, 2);
             // 计算税费
             $product->tax_amount;
             // 单品优惠
@@ -663,7 +661,9 @@ class Order extends Model implements OperatorInterface
 
             // 单商品应付金额  = 商品金额 - 单品优惠 + 税费
             $product->payable_amount = bcsub(
-                bcadd($product->product_amount, $product->tax_amount, 2), $product->discount_amount, 2
+                bcadd($product->product_amount
+
+                    , $product->tax_amount, 2), $product->discount_amount, 2
             );
         }
     }

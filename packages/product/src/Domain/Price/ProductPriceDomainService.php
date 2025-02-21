@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Product\Domain\Price;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Domain\Models\ValueObjects\Money;
@@ -18,6 +17,7 @@ class ProductPriceDomainService extends Service
 
     /**
      * 获取商品价格
+     *
      * @param  ProductPriceData  $data
      *
      * @return Money
