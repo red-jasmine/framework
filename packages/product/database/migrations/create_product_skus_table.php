@@ -9,23 +9,25 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'product_skus', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
-            $table->morphs('owner');
+            $table->string('app_id',64);
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
             $table->string('properties_name')->nullable()->comment('规格名称');
             $table->string('properties_sequence')->nullable()->comment('规格属性序列');
 
             // SKU 信息
-            $table->string('image')->nullable()->comment('主图');
-            $table->decimal('price', 10)->default(0)->comment('销售价');
-            $table->decimal('market_price', 10)->nullable()->comment('市场价');
-            $table->decimal('cost_price', 10)->nullable()->comment('成本价');
+            $table->string('currency', 10)->default('CNY')->comment('货币');
+            $table->bigInteger('price')->default(0)->comment('销售价');
+            $table->bigInteger('market_price')->nullable()->comment('市场价');
+            $table->bigInteger('cost_price')->nullable()->comment('成本价');
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             // 信息
-
+            $table->string('image')->nullable()->comment('主图');
             $table->string('outer_id')->nullable()->comment('规格编码');
             $table->string('barcode', 32)->nullable()->comment('规格条码');
             $table->string('weight')->nullable()->comment('重量:kg');
@@ -40,10 +42,13 @@ return new class extends Migration {
             // 供应商
             $table->unsignedBigInteger('supplier_sku_id')->nullable()->comment('供应商 SKU ID');
             // 操作
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+
             $table->timestamp('modified_time')->nullable()->comment('修改时间');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品-SKU表');

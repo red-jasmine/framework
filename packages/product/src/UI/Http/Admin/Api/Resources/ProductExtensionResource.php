@@ -1,12 +1,12 @@
 <?php
 
-namespace RedJasmine\Product\UI\Http\Buyer\Api\Resources;
+namespace RedJasmine\Product\UI\Http\Admin\Api\Resources;
 
 use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Product\Domain\Product\Models\ProductInfo */
-class ProductInfoResource extends JsonResource
+/** @mixin \RedJasmine\Product\Domain\Product\Models\Extensions\ProductExtension */
+class ProductExtensionResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {
@@ -24,8 +24,9 @@ class ProductInfoResource extends JsonResource
             'height'           => $this->height,
             'length'           => $this->length,
             'size'             => $this->size,
+            'remarks'          => $this->remarks,
             'tools'            => $this->tools,
-            'expands'          => $this->expands,
+            'extras'          => $this->extras,
 
         ];
     }

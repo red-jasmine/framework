@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tags', function (Blueprint $table) {
             $table->id();
-            $table->morphs('owner', 'idx_owner');
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
             $table->string('name')->comment('标签');
             $table->string('description')->nullable()->comment('描述');
             $table->string('icon')->nullable()->comment('图标');
@@ -19,8 +20,11 @@ return new class extends Migration {
             $table->boolean('is_show')->default(false)->comment('是否展示');
             $table->boolean('is_public')->default(false)->comment('是否公共的');
             $table->string('status', 32)->comment('状态');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品标签');

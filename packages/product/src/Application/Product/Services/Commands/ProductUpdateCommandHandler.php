@@ -1,17 +1,14 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
+namespace RedJasmine\Product\Application\Product\Services\Commands;
 
-use Illuminate\Support\Facades\DB;
 use JsonException;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Product\Exceptions\StockException;
 use Throwable;
-use function Symfony\Component\String\u;
 
 /**
  * @method  ProductCommandService getService()

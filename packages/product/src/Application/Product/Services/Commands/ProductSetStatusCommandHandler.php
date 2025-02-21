@@ -1,14 +1,12 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
+namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use JsonException;
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupQueryService;
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductSetStatusCommand;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Domain\Product\Models\Product;

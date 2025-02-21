@@ -32,7 +32,7 @@ class BrandCreateCommand extends Data
             'sort'         => '排序',
             'is_show'      => '是否展示',
             'status'       => '状态',
-            'expands'      => '扩展信息',
+            'extras'      => '扩展信息',
         ];
     }
 
@@ -50,7 +50,7 @@ class BrandCreateCommand extends Data
             'sort'         => [ 'integer' ],
             'is_show'      => [ 'boolean' ],
             'status'       => [ new Enum(BrandStatusEnum::class) ],
-            'expands'      => [ 'sometimes', 'nullable', 'array' ],
+            'extras'      => [ 'sometimes', 'nullable', 'array' ],
 
         ];
 

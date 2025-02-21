@@ -2,11 +2,16 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 
+/**
+ * @method Product findById(FindQuery $query)
+ */
 class ProductQueryService extends ApplicationQueryService
 {
 
@@ -19,8 +24,7 @@ class ProductQueryService extends ApplicationQueryService
 
     public function __construct(
         protected ProductReadRepositoryInterface $repository
-    )
-    {
+    ) {
 
 
     }
@@ -61,7 +65,7 @@ class ProductQueryService extends ApplicationQueryService
     public function allowedIncludes() : array
     {
         return [
-            'info',
+            'extension',
             'skus',
             'brand',
             'category',

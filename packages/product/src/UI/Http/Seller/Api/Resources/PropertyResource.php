@@ -17,7 +17,7 @@ class PropertyResource extends JsonResource
             'unit'     => $this->unit,
             'sort'     => $this->sort,
             'status'   => $this->status,
-            'expands'  => $this->expands,
+            'extras'  => $this->extras,
             'group_id' => $this->group_id,
             'group'    => new PropertyGroupResource($this->whenLoaded('group')),
         ];

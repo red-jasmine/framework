@@ -17,7 +17,7 @@ class PropertyValueResource extends JsonResource
             'name'     => $this->name,
             'sort'     => $this->sort,
             'status'   => $this->status,
-            'expands'  => $this->expands,
+            'extras'  => $this->extras,
             'property' => new PropertyResource($this->whenLoaded('property')),
             'group'    => new PropertyGroupResource($this->whenLoaded('group')),
 

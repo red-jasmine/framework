@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Application\UserCases\Commands;
+namespace RedJasmine\Shopping\Application\Services\Commands;
 
 
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;

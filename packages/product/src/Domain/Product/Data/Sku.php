@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class Sku extends Data
 {
@@ -17,11 +18,15 @@ class Sku extends Data
     public ?string $barcode       = null;
     public ?string $outerId       = null;
     public ?int    $supplierSkuId = null;
-    public Amount  $price;
-    public ?Amount $marketPrice   = null;
-    public ?Amount $costPrice     = null;
-    public int     $stock         = 0;
-    public int     $safetyStock   = 0;
+
+    public Money $price;
+    // 市场价格
+    public ?Money $marketPrice;
+    // 成本价格
+    public ?Money $costPrice;
+
+    public int $stock       = 0;
+    public int $safetyStock = 0;
     // 重量（可选）
     public ?string $weight;
     // 宽度（可选）

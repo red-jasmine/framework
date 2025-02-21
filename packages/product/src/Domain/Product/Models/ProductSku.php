@@ -5,9 +5,8 @@ namespace RedJasmine\Product\Domain\Product\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use RedJasmine\Ecommerce\Domain\Models\Casts\AmountCastTransformer;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -29,22 +28,25 @@ class ProductSku extends Model implements OperatorInterface
     use HasOwner;
 
     public $incrementing = false;
+
     /**
      * @return string
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_skus';
+        return config('red-jasmine-product.tables.prefix', 'jasmine_').'product_skus';
     }
-
 
 
     protected $casts = [
         'status'        => ProductStatusEnum::class,// 状态
         'modified_time' => 'datetime',
-        'price'         => AmountCastTransformer::class,
-        'market_price'  => AmountCastTransformer::class,
-        'cost_price'    => AmountCastTransformer::class,
+        'price'         => MoneyCast::class.':price,currency',
+        'market_price'  => MoneyCast::class.':price,market_price',
+        'cost_price'    => MoneyCast::class.':price,cost_price',
+        //'price'         => AmountCastTransformer::class,
+        //'market_price'  => AmountCastTransformer::class,
+        //'cost_price'    => AmountCastTransformer::class,
     ];
 
     public function product() : BelongsTo

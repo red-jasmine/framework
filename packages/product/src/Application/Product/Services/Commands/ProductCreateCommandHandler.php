@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
+namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateCommand;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use Throwable;
 
@@ -32,29 +31,22 @@ class ProductCreateCommandHandler extends ProductCommandHandler
         /**
          * @var $product Product
          */
-        $product = $this->getService()->newModel($command);
+        $product = Product::make([]);
 
         // 开始数据库事务
         $this->beginDatabaseTransaction();
 
         try {
-
-            if ($product->usesUniqueIds()) {
-                $product->setUniqueIds();
-            }
-
             // 设置当前处理的产品模型
-
-
             // 执行核心处理逻辑
 
-            $this->getService()->hook('create.validate',$command, fn() => $this->validate($command));
+            $this->service->hook('create.validate',$command, fn() => $this->validate($command));
 
-            $product =  $this->getService()->hook('create.fill',$command, fn() => $this->productTransformer->transform($product, $command));
+            $product =  $this->service->hook('create.fill',$command, fn() => $this->productTransformer->transform($product, $command));
 
 
             // 保存产品到数据库
-            $this->getService()->getRepository()->store($product);
+            $this->service->repository->store($product);
 
             // 设置库存
             $this->handleStock($product, $command);

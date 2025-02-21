@@ -18,7 +18,7 @@ class ProductGroupUpdateCommand extends Data
     public bool            $isShow   = false;
     public ?string         $cluster  = null;
     public ?string         $image    = null;
-    public ?array          $expands  = null;
+    public ?array          $extras  = null;
 
 
     public static function attributes() : array
@@ -31,7 +31,7 @@ class ProductGroupUpdateCommand extends Data
             'is_leaf'    => __('red-jasmine/product::product-category.fields.is_leaf'),
             'is_show'    => __('red-jasmine/product::product-category.fields.is_show'),
             'status'     => __('red-jasmine/product::product-category.fields.status'),
-            'expands'    => __('red-jasmine/product::product-category.fields.extends'),
+            'extras'    => __('red-jasmine/product::product-category.fields.extends'),
         ];
     }
 
@@ -49,7 +49,7 @@ class ProductGroupUpdateCommand extends Data
             'is_leaf'    => [ 'required', 'boolean' ],
             'is_show'    => [ 'required', 'boolean' ],
             'status'     => [],
-            'expands'    => [ 'sometimes', 'nullable', 'array' ],
+            'extras'    => [ 'sometimes', 'nullable', 'array' ],
         ];
 
     }

@@ -51,7 +51,7 @@ class ProductPropertyValue extends Model implements OperatorInterface
 
 
     protected $casts = [
-        'expands' => 'array',
+        'extras' => 'array',
         'status'  => PropertyStatusEnum::class,
     ];
 

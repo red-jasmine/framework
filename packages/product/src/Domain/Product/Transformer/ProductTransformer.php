@@ -18,14 +18,13 @@ class ProductTransformer
     public function __construct(
         protected PropertyValidateService $propertyValidateService,
 
-    )
-    {
+    ) {
     }
 
 
     /**
-     * @param Product $product
-     * @param Command $command
+     * @param  Product  $product
+     * @param  Command  $command
      *
      * @return Product
      * @throws JsonException
@@ -43,68 +42,69 @@ class ProductTransformer
     }
 
     /**
-     * @param Product $product
-     * @param Command $command
+     * @param  Product  $product
+     * @param  Command  $command
      *
      * @return void
      * @throws ProductPropertyException
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
-        $product->owner                      = $command->owner;
-        $product->supplier                   = $command->supplier;
-        $product->product_type               = $command->productType;
-        $product->shipping_type              = $command->shippingType;
-        $product->is_alone_order             = $command->isAloneOrder;
-        $product->is_pre_sale                = $command->isPreSale;
-        $product->title                      = $command->title;
-        $product->slogan                     = $command->slogan;
-        $product->image                      = $command->image;
-        $product->barcode                    = $command->barcode;
-        $product->outer_id                   = $command->outerId;
-        $product->is_customized              = $command->isCustomized;
-        $product->is_multiple_spec           = $command->isMultipleSpec;
-        $product->is_brand_new               = $command->isBrandNew;
-        $product->sort                       = $command->sort;
-        $product->unit                       = $command->unit;
-        $product->unit_quantity              = $command->unitQuantity;
-        $product->spu_id                     = $command->spuId;
-        $product->category_id                = $command->categoryId;
-        $product->brand_id                   = $command->brandId;
-        $product->product_model              = $command->productModel;
-        $product->product_group_id           = $command->productGroupId;
-        $product->freight_payer              = $command->freightPayer;
-        $product->postage_id                 = $command->postageId;
-        $product->min_limit                  = $command->minLimit;
-        $product->max_limit                  = $command->maxLimit;
-        $product->step_limit                 = $command->stepLimit;
-        $product->sub_stock                  = $command->subStock;
-        $product->delivery_time              = $command->deliveryTime;
-        $product->order_quantity_limit_type  = $command->orderQuantityLimitType;
-        $product->order_quantity_limit_num   = $command->orderQuantityLimitNum;
-        $product->vip                        = $command->vip;
-        $product->gift_point                     = $command->giftPoint;
-        $product->is_hot                     = $command->isHot;
-        $product->is_new                     = $command->isNew;
-        $product->is_best                    = $command->isBest;
-        $product->is_benefit                 = $command->isBenefit;
-        $product->supplier_product_id        = $command->supplierProductId;
-        $product->start_sale_time            = $command->startSaleTime;
-        $product->end_sale_time              = $command->endSaleTime;
-        $product->info->id                   = $product->id;
-        $product->info->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
-        $product->info->videos               = $command->videos;
-        $product->info->images               = $command->images;
-        $product->info->keywords             = $command->keywords;
-        $product->info->description          = $command->description;
-        $product->info->tips                 = $command->tips;
-        $product->info->detail               = $command->detail;
-        $product->info->remarks              = $command->remarks;
-        $product->info->tools                = $command->tools;
-        $product->info->expands              = $command->expands;
-        $product->info->form                 = $command->form;
-        $product->info->basic_props          = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
-        $product->info->customize_props      = $command->customizeProps?->toArray() ?? [];
+        $product->app_id                          = $command->appId;
+        $product->owner                           = $command->owner;
+        $product->supplier                        = $command->supplier;
+        $product->product_type                    = $command->productType;
+        $product->shipping_type                   = $command->shippingType;
+        $product->is_alone_order                  = $command->isAloneOrder;
+        $product->is_pre_sale                     = $command->isPreSale;
+        $product->title                           = $command->title;
+        $product->slogan                          = $command->slogan;
+        $product->image                           = $command->image;
+        $product->barcode                         = $command->barcode;
+        $product->outer_id                        = $command->outerId;
+        $product->is_customized                   = $command->isCustomized;
+        $product->is_multiple_spec                = $command->isMultipleSpec;
+        $product->is_brand_new                    = $command->isBrandNew;
+        $product->sort                            = $command->sort;
+        $product->unit                            = $command->unit;
+        $product->unit_quantity                   = $command->unitQuantity;
+        $product->spu_id                          = $command->spuId;
+        $product->category_id                     = $command->categoryId;
+        $product->brand_id                        = $command->brandId;
+        $product->product_model                   = $command->productModel;
+        $product->product_group_id                = $command->productGroupId;
+        $product->freight_payer                   = $command->freightPayer;
+        $product->postage_id                      = $command->postageId;
+        $product->min_limit                       = $command->minLimit;
+        $product->max_limit                       = $command->maxLimit;
+        $product->step_limit                      = $command->stepLimit;
+        $product->sub_stock                       = $command->subStock;
+        $product->delivery_time                   = $command->deliveryTime;
+        $product->order_quantity_limit_type       = $command->orderQuantityLimitType;
+        $product->order_quantity_limit_num        = $command->orderQuantityLimitNum;
+        $product->vip                             = $command->vip;
+        $product->gift_point                      = $command->giftPoint;
+        $product->is_hot                          = $command->isHot;
+        $product->is_new                          = $command->isNew;
+        $product->is_best                         = $command->isBest;
+        $product->is_benefit                      = $command->isBenefit;
+        $product->supplier_product_id             = $command->supplierProductId;
+        $product->start_sale_time                 = $command->startSaleTime;
+        $product->end_sale_time                   = $command->endSaleTime;
+        $product->extension->id                   = $product->id;
+        $product->extension->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
+        $product->extension->videos               = $command->videos;
+        $product->extension->images               = $command->images;
+        $product->extension->keywords             = $command->keywords;
+        $product->extension->description          = $command->description;
+        $product->extension->tips                 = $command->tips;
+        $product->extension->detail               = $command->detail;
+        $product->extension->remarks              = $command->remarks;
+        $product->extension->tools                = $command->tools;
+        $product->extension->extras               = $command->extras;
+        $product->extension->form                 = $command->form;
+        $product->extension->basic_props          = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
+        $product->extension->customize_props      = $command->customizeProps?->toArray() ?? [];
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
@@ -118,8 +118,8 @@ class ProductTransformer
 
 
     /**
-     * @param Product $product
-     * @param Command $command
+     * @param  Product  $product
+     * @param  Command  $command
      *
      * @return void
      * @throws JsonException
@@ -131,8 +131,8 @@ class ProductTransformer
         switch ($command->isMultipleSpec) {
             case true: // 多规格
 
-                $saleProps                 = $this->propertyValidateService->saleProps($command->saleProps->toArray());
-                $product->info->sale_props = $saleProps->toArray();
+                $saleProps                      = $this->propertyValidateService->saleProps($command->saleProps->toArray());
+                $product->extension->sale_props = $saleProps->toArray();
                 // 验证规格
 
 
@@ -140,7 +140,7 @@ class ProductTransformer
                 $command->skus?->each(function (Sku $skuData) use ($product) {
                     $sku = $product->skus
                                ->where('properties_sequence', $skuData->propertiesSequence)
-                               ->first() ?? new ProductSku();
+                               ->first() ?? ProductSku::make();
                     if (!$sku?->id) {
                         $sku->setUniqueIds();
                     }
@@ -151,25 +151,31 @@ class ProductTransformer
 
                 // 统计项
 
-                $product->price        = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('price');
-                $product->market_price = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('market_price');
-                $product->cost_price   = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->min('cost_price');
-                $product->safety_stock = $product->skus->where('properties_sequence', '<>', $product::$defaultPropertiesSequence)->sum('safety_stock');
+                $product->price        = $product->skus->where('properties_sequence', '<>',
+                    $product::$defaultPropertiesSequence)->min('price');
+                $product->market_price = $product->skus->where('properties_sequence', '<>',
+                    $product::$defaultPropertiesSequence)->min('market_price');
+                $product->cost_price   = $product->skus->where('properties_sequence', '<>',
+                    $product::$defaultPropertiesSequence)->min('cost_price');
+                $product->safety_stock = $product->skus->where('properties_sequence', '<>',
+                    $product::$defaultPropertiesSequence)->sum('safety_stock');
 
 
                 // 加入默认规格
-                $defaultSku = $product->skus->where('properties_sequence', $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
+                $defaultSku = $product->skus->where('properties_sequence',
+                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
                 $defaultSku->setDeleted();
                 $product->addSku($defaultSku);
 
                 break;
             case false: // 单规格
-                $product->price            = $command->price;
-                $product->cost_price       = $command->costPrice;
-                $product->market_price     = $command->marketPrice;
-                $product->safety_stock     = $command->safetyStock;
-                $product->info->sale_props = [];
-                $defaultSku                = $product->skus->where('properties_sequence', $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
+                $product->price                 = $command->price;
+                $product->cost_price            = $command->costPrice;
+                $product->market_price          = $command->marketPrice;
+                $product->safety_stock          = $command->safetyStock;
+                $product->extension->sale_props = [];
+                $defaultSku                     = $product->skus->where('properties_sequence',
+                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;

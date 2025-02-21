@@ -2,17 +2,14 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Product\Services\CommandHandlers\ProductCreateCommandHandler;
-use RedJasmine\Product\Application\Product\Services\CommandHandlers\ProductDeleteCommandHandler;
-use RedJasmine\Product\Application\Product\Services\CommandHandlers\ProductSetStatusCommandHandler;
-use RedJasmine\Product\Application\Product\Services\CommandHandlers\ProductUpdateCommandHandler;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductCreateCommand;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductSetStatusCommand;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductUpdateCommand;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommandHandler;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommandHandler;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCommand;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCommandHandler;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
+use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommandHandler;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Product\Models\ProductInfo;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
@@ -43,7 +40,7 @@ class ProductCommandService extends ApplicationCommandService
     ];
 
     public function __construct(
-        protected ProductRepositoryInterface $repository
+        public ProductRepositoryInterface $repository
     )
     {
 

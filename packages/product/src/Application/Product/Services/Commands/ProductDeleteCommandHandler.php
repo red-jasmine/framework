@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
+namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\UserCases\Commands\ProductDeleteCommand;
 use RedJasmine\Support\Application\CommandHandler;
 
 

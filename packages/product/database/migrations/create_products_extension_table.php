@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'product_infos', function (Blueprint $table) {
+        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'products_extension', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             //
             $table->string('tips')->nullable()->comment('提示');
@@ -27,7 +27,7 @@ return new class extends Migration {
 
             $table->json('form')->nullable()->comment('表单');
             $table->json('tools')->nullable()->comment('工具');
-            $table->json('expands')->nullable()->comment('扩展');
+            $table->json('extras')->nullable()->comment('扩展');
             $table->string('remarks')->nullable()->comment('备注');
 
             $table->timestamps();
@@ -38,6 +38,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') .'product_infos');
+        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') .'products_extension');
     }
 };

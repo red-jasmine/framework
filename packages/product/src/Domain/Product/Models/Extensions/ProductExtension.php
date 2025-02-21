@@ -1,15 +1,14 @@
 <?php
 
-namespace RedJasmine\Product\Domain\Product\Models;
+namespace RedJasmine\Product\Domain\Product\Models\Extensions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use RedJasmine\Ecommerce\Domain\Models\Casts\PromiseServicesCastTransformer;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Traits\Models\HasOperator;
 
-class ProductInfo extends Model
+class ProductExtension extends Model
 {
     use HasDateTimeFormatter;
 
@@ -20,7 +19,7 @@ class ProductInfo extends Model
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));;
+        return config('red-jasmine-product.tables.prefix','jasmine_') .'products_extension';
     }
 
 
@@ -34,7 +33,7 @@ class ProductInfo extends Model
         'images'           => 'array',
         'videos'           => 'array',
         'tools'            => 'array',
-        'expands'          => 'array',
+        'extras'          => 'array',
         'form'             => 'array',
     ];
 

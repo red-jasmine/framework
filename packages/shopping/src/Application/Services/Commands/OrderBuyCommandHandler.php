@@ -1,11 +1,9 @@
 <?php
 
-namespace RedJasmine\Shopping\Application\Services\CommandHandlers;
+namespace RedJasmine\Shopping\Application\Services\Commands;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
-use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
 use RedJasmine\Shopping\Domain\Orders\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;

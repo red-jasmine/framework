@@ -52,7 +52,7 @@ class ProductGroupCreateCommand extends Data
             'is_leaf'     => [ 'required', 'boolean' ],
             'is_show'     => [ 'required', 'boolean' ],
             'status'      => [],
-            'expands'     => [ 'sometimes', 'nullable', 'array' ],
+            'extras'     => [ 'sometimes', 'nullable', 'array' ],
         ];
 
     }

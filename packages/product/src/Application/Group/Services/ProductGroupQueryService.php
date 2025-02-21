@@ -36,7 +36,7 @@ class ProductGroupQueryService extends ApplicationQueryService
             'is_leaf',
             'is_show',
             'status',
-            'expands',
+            'extras',
         ];
 
     }

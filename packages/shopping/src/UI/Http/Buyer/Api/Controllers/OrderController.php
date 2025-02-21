@@ -4,9 +4,9 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 
 use Illuminate\Http\Request;
-use RedJasmine\Shopping\Application\Services\OrderCommandService;
-use RedJasmine\Shopping\Application\UserCases\Commands\ProductBuyCommand;
-use RedJasmine\Shopping\Application\UserCases\Commands\ProductCalculateCommand;
+use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Application\Services\Commands\ProductCalculateCommand;
+use RedJasmine\Shopping\Application\Services\ShoppingOrderCommandService;
 use RedJasmine\Support\Http\Controllers\Controller;
 
 class OrderController extends Controller
@@ -14,7 +14,7 @@ class OrderController extends Controller
 
     public function __construct(
 
-        protected OrderCommandService $commandService,
+        protected ShoppingOrderCommandService $commandService,
 
 
     ) {

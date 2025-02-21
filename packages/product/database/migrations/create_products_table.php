@@ -16,15 +16,20 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-product.tables.prefix', 'jasmine_') . 'products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
+
+            $table->string('app_id',64);
             // 卖家信息
-            $table->morphs('owner', 'idx_owner');
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
+
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+            $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
             $table->boolean('is_pre_sale')->default(false)->comment('是否预售');
-            $table->boolean('is_brand_new')->default(true)->comment('是否全新');
+
             // 基础信息
             $table->string('image')->nullable()->comment('主图');
             $table->boolean('is_customized')->default(false)->comment('是否定制');
@@ -46,13 +51,16 @@ return new class extends Migration {
             $table->unsignedBigInteger('order_quantity_limit_num')->nullable()->comment('下单数量限制数量');
 
             // 价格
-            $table->decimal('price', 10)->default(0)->comment('销售价');
-            $table->decimal('market_price', 10)->nullable()->comment('市场价');
-            $table->decimal('cost_price', 10)->nullable()->comment('成本价');
+            $table->string('currency', 10)->default('CNY')->comment('货币');
+            $table->bigInteger('price')->default(0)->comment('销售价');
+            $table->bigInteger('market_price')->nullable()->comment('市场价');
+            $table->bigInteger('cost_price')->nullable()->comment('成本价');
+
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+
             $table->string('outer_id')->nullable()->comment('商品编码');
             $table->string('barcode', 32)->nullable()->comment('商品条码');
             // 运营类
@@ -66,7 +74,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
 
             // 供应商
-            $table->unsignedTinyInteger('is_from_supplier')->default(0)->comment('是否来自供应商');
+            $table->boolean('is_from_supplier')->default(false)->comment('是否来自供应商');
             $table->string('supplier_type')->nullable()->comment('供应商类型');
             $table->unsignedBigInteger('supplier_id')->nullable()->comment('供应商ID');
             $table->unsignedBigInteger('supplier_product_id')->nullable()->comment('供应商 商品ID');
@@ -94,8 +102,10 @@ return new class extends Migration {
             // 操作
             $table->timestamp('modified_time')->nullable()->comment('修改时间');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

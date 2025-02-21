@@ -21,7 +21,7 @@ class GroupResource extends JsonResource
             'is_leaf'      => $this->is_leaf,
             'is_show'      => $this->is_show,
             'status'       => $this->status,
-            'expands'      => $this->expands,
+            'extras'      => $this->extras,
             'creator_id'   => $this->creator_id,
             'creator_type' => $this->creator_type,
             'updater_id'   => $this->updater_id,

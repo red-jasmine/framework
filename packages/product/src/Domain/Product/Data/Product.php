@@ -19,6 +19,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
@@ -28,6 +29,8 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
  */
 class Product extends Data
 {
+
+    public string $appId = 'default';
     // 产品类型
     public ProductTypeEnum $productType;
     // 运输类型
@@ -173,7 +176,7 @@ class Product extends Data
      * 扩展属性
      * @var array|null
      */
-    public ?array $expands;
+    public ?array $extras;
 
 
     /**
@@ -234,11 +237,11 @@ class Product extends Data
     // 尺寸（可选）
     public ?string $size;
     // 产品价格
-    public Amount $price;
+    public Money $price;
     // 市场价格
-    public ?Amount $marketPrice;
+    public ?Money $marketPrice;
     // 成本价格
-    public ?Amount $costPrice;
+    public ?Money $costPrice;
 
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $startSaleTime = null;
@@ -257,7 +260,7 @@ class Product extends Data
     {
         $services = [];
         foreach (RefundTypeEnum::baseTypes() as $type) {
-            $services[] = AfterSalesService::from([ 'refundType' => $type ]);
+            $services[] = AfterSalesService::from(['refundType' => $type]);
         }
         return $services;
     }

@@ -11,7 +11,8 @@ return new class extends Migration {
     {
         Schema::create( config('red-jasmine-product.tables.prefix','jasmine_') .'product_stock_logs', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->morphs('owner');
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
             $table->unsignedBigInteger('product_id')->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->comment('SKU ID');
             $table->string('action_type', 32)->comment(ProductStockActionTypeEnum::comments('操作类型'));
@@ -19,8 +20,11 @@ return new class extends Migration {
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->string('change_type', 32)->comment(ProductStockChangeTypeEnum::comments('变更类型'));
             $table->string('change_detail')->nullable()->comment('变更明细');
-            $table->nullableMorphs('channel');
-            $table->nullableMorphs('creator');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->comment('商品-库存-记录');
             $table->index([ 'product_id', ], 'idx_product');

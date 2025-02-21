@@ -34,6 +34,8 @@ class VipApplicationServiceProvider extends ServiceProvider
         $this->app->bind(UserVipRepositoryInterface::class, UserVipRepository::class);
         $this->app->bind(UserVipReadRepositoryInterface::class, UserVipReadRepository::class);
 
+        $this->app->bind(VipProductRepositoryInterface::class, VipProductRepository::class);
+        $this->app->bind(VipProductReadRepositoryInterface::class, VipProductReadRepository::class);
 
     }
 

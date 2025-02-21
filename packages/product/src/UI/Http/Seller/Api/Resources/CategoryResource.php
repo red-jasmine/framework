@@ -20,7 +20,7 @@ class CategoryResource extends JsonResource
             'is_leaf'    => $this->is_leaf,
             'is_show'    => $this->is_show,
             'status'     => $this->status,
-            'expands'    => $this->expands,
+            'extras'    => $this->extras,
             'children'   => static::collection(collect($this->children)),
             'parent'     => new static($this->whenLoaded('parent')),
         ];

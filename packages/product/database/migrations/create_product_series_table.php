@@ -9,11 +9,15 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') .'product_series', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->morphs('owner');
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
             $table->string('name')->comment('系列名称');
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->comment('商品-系列表');
         });

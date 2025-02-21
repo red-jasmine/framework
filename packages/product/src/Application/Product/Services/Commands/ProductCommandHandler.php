@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Application\Product\Services\CommandHandlers;
+namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
@@ -17,31 +17,32 @@ use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use Throwable;
 
 /**
  * @method  ProductCommandService getService()
  */
-class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandlers\CommandHandler
+class ProductCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected BrandQueryService           $brandQueryService,
-        protected StockCommandService         $stockCommandService,
-        protected PropertyFormatter           $propertyFormatter,
-        protected PropertyValidateService     $propertyValidateService,
+        public ProductCommandService $service,
+        protected BrandQueryService $brandQueryService,
+        protected StockCommandService $stockCommandService,
+        protected PropertyFormatter $propertyFormatter,
+        protected PropertyValidateService $propertyValidateService,
         protected ProductCategoryQueryService $categoryQueryService,
-        protected ProductGroupQueryService    $groupQueryService,
-        protected ProductTransformer          $productTransformer
-    )
-    {
+        protected ProductGroupQueryService $groupQueryService,
+        protected ProductTransformer $productTransformer
+    ) {
 
 
     }
 
     /**
-     * @param Product $product
-     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @param  Product  $product
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
      * @throws StockException
@@ -64,7 +65,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
 
             $stockCommand              = new StockCommand();
             $stockCommand->productId   = $sku->product_id;
-            $stockCommand->actionType = ProductStockActionTypeEnum::RESET;
+            $stockCommand->actionType  = ProductStockActionTypeEnum::RESET;
             $stockCommand->skuId       = $sku->id;
             $stockCommand->actionStock = $stock;
             $stockCommand->changeType  = ProductStockChangeTypeEnum::SELLER;
@@ -75,7 +76,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
     }
 
     /**
-     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
      * @throws ProductException
@@ -92,7 +93,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
     }
 
     /**
-     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
      * @throws ProductException
@@ -109,7 +110,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
     }
 
     /**
-     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
      * @throws ProductException
@@ -127,7 +128,7 @@ class ProductCommandHandler extends \RedJasmine\Support\Application\CommandHandl
     }
 
     /**
-     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
      * @throws ProductException
