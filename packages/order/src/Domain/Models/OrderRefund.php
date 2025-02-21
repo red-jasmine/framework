@@ -36,6 +36,7 @@ use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
 use RedJasmine\Order\Domain\Models\Extensions\OrderRefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -114,15 +115,15 @@ class OrderRefund extends Model
         'end_time'               => 'datetime',
         'images'                 => 'array',
         'extras'                => 'array',
-        'price'                  => AmountCastTransformer::class,
-        'cost_price'             => AmountCastTransformer::class,
-        'product_amount'         => AmountCastTransformer::class,
-        'payable_amount'         => AmountCastTransformer::class,
-        'payment_amount'         => AmountCastTransformer::class,
-        'divided_payment_amount' => AmountCastTransformer::class,
-        'refund_amount'          => AmountCastTransformer::class,
-        'freight_amount'         => AmountCastTransformer::class,
-        'total_refund_amount'    => AmountCastTransformer::class,
+        'price'                  => MoneyCast::class,
+        'cost_price'             => MoneyCast::class,
+        'product_amount'         => MoneyCast::class,
+        'payable_amount'         => MoneyCast::class,
+        'payment_amount'         => MoneyCast::class,
+        'divided_payment_amount' => MoneyCast::class,
+        'refund_amount'          => MoneyCast::class,
+        'freight_amount'         => MoneyCast::class,
+        'total_refund_amount'    => MoneyCast::class,
 
     ];
 

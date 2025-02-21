@@ -6,8 +6,8 @@ namespace RedJasmine\Order\Domain\Data;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -50,10 +50,10 @@ class OrderProductData extends Data
     // 单位（可选）
     public ?string $unit = null;
 
-    public Amount  $price;
-    public Amount  $costPrice;
-    public Amount  $taxAmount;
-    public Amount  $discountAmount;
+    public Money   $price;
+    public Money   $costPrice;
+    public Money   $taxAmount;
+    public Money   $discountAmount;
     public int     $brandId             = 0;
     public int     $categoryId          = 0;
     public int     $productGroupId      = 0;
@@ -78,17 +78,17 @@ class OrderProductData extends Data
     public ?string $sellerMessage = null;
     public ?string $buyerRemarks  = null;
     public ?string $buyerMessage  = null;
-    public ?array  $buyerExtras  = null;
-    public ?array  $sellerExtras = null;
-    public ?array  $otherExtras  = null;
+    public ?array  $buyerExtras   = null;
+    public ?array  $sellerExtras  = null;
+    public ?array  $otherExtras   = null;
     public ?array  $tools         = null;
     public ?array  $form          = null;
 
     public function __construct()
     {
-        $this->taxAmount      = new Amount(0);
-        $this->discountAmount = new Amount(0);
-        $this->costPrice      = new Amount(0);
+        $this->taxAmount      = new Money(0);
+        $this->discountAmount = new Money(0);
+        $this->costPrice      = new Money(0);
 
     }
 }

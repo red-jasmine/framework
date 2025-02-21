@@ -18,6 +18,7 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -66,17 +67,17 @@ class OrderProduct extends Model
         'confirm_time'            => 'datetime',
         'refund_time'             => 'datetime',
         'rate_time'               => 'datetime',
-        'price'                   => AmountCastTransformer::class,
-        'cost_price'              => AmountCastTransformer::class,
-        'tax_amount'              => AmountCastTransformer::class,
-        'product_amount'          => AmountCastTransformer::class,
-        'payable_amount'          => AmountCastTransformer::class,
-        'payment_amount'          => AmountCastTransformer::class,
-        'refund_amount'           => AmountCastTransformer::class,
-        'discount_amount'         => AmountCastTransformer::class,
-        'commission_amount'       => AmountCastTransformer::class,
-        'divided_discount_amount' => AmountCastTransformer::class,
-        'divided_payment_amount'  => AmountCastTransformer::class,
+        'price'                   => MoneyCast::class,
+        'cost_price'              => MoneyCast::class,
+        'tax_amount'              => MoneyCast::class,
+        'product_amount'          => MoneyCast::class,
+        'payable_amount'          => MoneyCast::class,
+        'payment_amount'          => MoneyCast::class,
+        'refund_amount'           => MoneyCast::class,
+        'discount_amount'         => MoneyCast::class,
+        'commission_amount'       => MoneyCast::class,
+        'divided_discount_amount' => MoneyCast::class,
+        'divided_payment_amount'  => MoneyCast::class,
     ];
 
     protected $fillable = [

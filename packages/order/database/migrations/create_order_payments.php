@@ -26,7 +26,8 @@ return new class extends Migration {
 
 
                 $table->string('amount_type', 32)->comment(AmountTypeEnum::comments('金额类型'));
-                $table->decimal('payment_amount', 12)->comment('支付金额');
+                $table->string('currency', 10)->default('CNY')->comment('货币');
+                $table->bigInteger('payment_amount')->comment('支付金额');
                 $table->string('status', 32)->comment(PaymentStatusEnum::comments('支付状态'));
                 $table->timestamp('payment_time')->nullable()->comment('支付时间');
 

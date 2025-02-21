@@ -4,19 +4,17 @@ namespace RedJasmine\Order\Domain\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Min;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
 class OrderData extends Data
 {
 
-    public string $appId    = 'system';
+    public string $appId = 'system';
 
 
     public string $currency = 'CNY';
@@ -76,13 +74,13 @@ class OrderData extends Data
     public ?string $sellerMessage      = null;
     public ?string $buyerRemarks       = null;
     public ?string $buyerMessage       = null;
-    public ?array  $sellerExtras      = null;
-    public ?array  $buyerExtras       = null;
-    public ?array  $otherExtras       = null;
+    public ?array  $sellerExtras       = null;
+    public ?array  $buyerExtras        = null;
+    public ?array  $otherExtras        = null;
     public ?array  $form               = null;
     public ?array  $tools              = null;
-    public ?Amount $freightAmount      = null;
-    public ?Amount $discountAmount     = null;
+    public ?Money  $freightAmount      = null;
+    public ?Money  $discountAmount     = null;
     public ?string $clientType         = null;
     public ?string $clientVersion      = null;
     public ?string $clientIp           = null;
@@ -130,8 +128,8 @@ class OrderData extends Data
 
     public function __construct()
     {
-        $this->discountAmount = new Amount(0);
-        $this->freightAmount  = new Amount(0);
+        $this->discountAmount = Money::make();
+        $this->freightAmount  = Money::make();
     }
 
 

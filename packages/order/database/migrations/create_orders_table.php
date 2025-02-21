@@ -38,17 +38,18 @@ return new class extends Migration {
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             $table->string('invoice_status', 32)->nullable()->comment('发票状态');
-            $table->string('currency', 32)->default('CNY')->comment('货币');
-            $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
-            $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
-            $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');
-            $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
-            $table->decimal('product_payable_amount', 12)->default(0)->comment('商品应付金额');
-            $table->decimal('freight_amount', 12)->default(0)->comment('运费');
-            $table->decimal('discount_amount', 12)->default(0)->comment('订单优惠');
-            $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
-            $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
-            $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
+
+            $table->string('currency', 10)->default('CNY')->comment('货币');
+            $table->bigInteger('product_amount')->default(0)->comment('商品金额');
+            $table->bigInteger('cost_amount')->default(0)->comment('成本金额');
+            $table->bigInteger('tax_amount')->default(0)->comment('税费金额');
+            $table->bigInteger('commission_amount')->default(0)->comment('佣金');
+            $table->bigInteger('product_payable_amount')->default(0)->comment('商品应付金额');
+            $table->bigInteger('freight_amount')->default(0)->comment('运费');
+            $table->bigInteger('discount_amount')->default(0)->comment('订单优惠');
+            $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
+            $table->bigInteger('payment_amount')->default(0)->comment('实付金额');
+            $table->bigInteger('refund_amount')->default(0)->comment('退款金额');
 
 
             $table->timestamp('created_time')->nullable()->comment('创建时间');
