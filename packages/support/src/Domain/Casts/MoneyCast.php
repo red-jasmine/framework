@@ -25,7 +25,7 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
     protected function getCurrencyKey(string $key)
     {
-        return $this->currencyKey ?? $key.'_value';
+        return $this->currencyKey ?? $key.'_currency';
     }
 
     public function __construct(...$args)

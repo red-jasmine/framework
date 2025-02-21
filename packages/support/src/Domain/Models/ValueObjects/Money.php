@@ -28,8 +28,8 @@ class Money extends Data
 
     public function format() : string
     {
-        // TODO
-        $money          = new \Money\Money($this->value, new Currency($this->currency));
+
+        $money          = new \Money\Money(bcmul($this->value,100,0), new Currency($this->currency));
         $currencies     = new ISOCurrencies();
         $moneyFormatter = new DecimalMoneyFormatter($currencies);
         return $moneyFormatter->format($money);

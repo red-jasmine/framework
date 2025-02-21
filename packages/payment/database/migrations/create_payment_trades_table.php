@@ -22,7 +22,7 @@ return new class extends Migration {
                 $table->string('subject')->nullable()->comment('交易标题');
                 $table->string('description')->nullable()->comment('说明');
                 $table->string('amount_currency')->comment('金额货币');
-                $table->bigInteger('amount_value')->default(0)->comment('金额值');
+                $table->decimal('amount_value')->default(0)->comment('金额值');
 
                 // 支付渠道
                 $table->unsignedBigInteger('system_channel_app_id')->nullable()->comment('系统内渠道应用ID');
@@ -40,21 +40,21 @@ return new class extends Migration {
                 $table->string('payer_open_id', 64)->nullable()->comment('支付者OpenId');
                 $table->string('payer_name', 64)->nullable()->comment('支付者名称');
                 $table->string('payer_account', 64)->nullable()->comment('支付者账号');
-                $table->string('payment_amount_currency')->nullable()->comment('支付金额货币');
-                $table->bigInteger('payment_amount_value')->default(0)->comment('支付金额值');
+                $table->string('payment_amount_currency',3)->nullable()->comment('支付金额货币');
+                $table->decimal('payment_amount_value')->default(0)->comment('支付金额值');
 
                 $table->integer('channel_transaction_fee_rate')->default(0)->comment('渠道手续费率');
-                $table->string('channel_transaction_fee_currency')->nullable()->comment('渠道交易费货币');
-                $table->unsignedBigInteger('channel_service_fee_value')->default(0)->comment('渠道服务费金额');
+                $table->string('channel_transaction_fee_currency',3)->nullable()->comment('渠道交易费货币');
+                $table->decimal('channel_service_fee_value')->default(0)->comment('渠道服务费金额');
 
 
-                $table->string('receipt_amount_currency')->nullable()->comment('实收金额货币');
-                $table->bigInteger('receipt_amount_value')->default(0)->comment('实收金额值');
+                $table->string('receipt_amount_currency',3)->nullable()->comment('实收金额货币');
+                $table->decimal('receipt_amount_value')->default(0)->comment('实收金额值');
 
                 $table->unsignedTinyInteger('refunds_count')->default(0)->comment('退款次数');
-                $table->string('refund_amount_currency')->nullable()->comment('实收金额货币');
-                $table->unsignedBigInteger('refund_amount_value')->default(0)->comment('退款金额值');
-                $table->unsignedBigInteger('refunding_amount_value')->default(0)->comment('退款中金额值');
+                $table->string('refund_amount_currency',3)->nullable()->comment('实收金额货币');
+                $table->decimal('refund_amount_value')->default(0)->comment('退款金额值');
+                $table->decimal('refunding_amount_value')->default(0)->comment('退款中金额值');
 
 
                 $table->string('status')->comment(TradeStatusEnum::comments('状态'));
@@ -62,8 +62,8 @@ return new class extends Migration {
                 // 分账
                 // 是否需要分账 TODO
                 $table->boolean('is_settle_sharing')->default(false)->comment('是否结算分账');
-                $table->string('settle_amount_currency')->nullable()->comment('结算货币');
-                $table->bigInteger('settle_amount_value')->default(0)->comment('结算金额');
+                $table->string('settle_amount_currency',3)->nullable()->comment('结算货币');
+                $table->decimal('settle_amount_value')->default(0)->comment('结算金额');
                 // 场景信息
                 $table->string('scene_code')->nullable()->comment('支付场景');
                 $table->string('method_code')->nullable()->comment('支付方式');
