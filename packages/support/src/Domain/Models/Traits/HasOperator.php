@@ -11,9 +11,9 @@ use RedJasmine\Support\Facades\ServiceContext;
 
 /**
  * @property  string $creator_type
- * @property  int $creator_id
+ * @property  string $creator_id
  * @property  string $updater_type
- * @property  int $updater_id
+ * @property  string $updater_id
  */
 trait HasOperator
 {
@@ -36,43 +36,60 @@ trait HasOperator
     }
 
 
+    protected function withOperatorNickname() : bool
+    {
+        return property_exists($this, 'withOperatorNickname') ? $this->withOperatorNickname : false;
+    }
+
+
     public function scopeOnlyCreator(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('creator_type', $owner->getType())->where('creator_id', $owner->getID());
+        return $query->where('creator_type', $owner->getType())
+                     ->where('creator_id', $owner->getID());
 
     }
 
 
     public function scopeOnlyUpdater(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where('updater_type', $owner->getType())->where('updater_id', $owner->getID());
+        return $query->where('updater_type', $owner->getType())
+                     ->where('updater_id', $owner->getID());
 
     }
 
 
-    public function setCreatorAttribute(?UserInterface $owner) : static
+    public function creator() : Attribute
     {
-        $this->setAttribute('creator_type', $owner?->getType());
-        $this->setAttribute('creator_id', $owner?->getID());
-
-        return $this;
+        return Attribute::make(
+            get: fn() => UserData::from([
+                'type'     => $this->creator_type,
+                'id'       => $this->creator_id,
+                'nickname' => $this->withOperatorNickname() ? ($this->creator_nickname ?? null) : null
+            ]),
+            set: fn(?UserInterface $creator = null) => array_merge([
+                'creator_type' => $creator?->getType(),
+                'creator_id'   => $creator?->getID(),
+            ], $this->withOperatorNickname() ? [
+                'creator_nickname' => $creator?->getNickname(),
+            ] : []),
+        );
     }
 
-    public function setUpdaterAttribute(?UserInterface $owner) : static
+    public function updater() : Attribute
     {
-        $this->setAttribute('updater_type', $owner?->getType());
-        $this->setAttribute('updater_id', $owner?->getID());
-        return $this;
-    }
-
-    public function creator() : MorphTo
-    {
-        return $this->morphTo(__FUNCTION__, __FUNCTION__ . '_type', __FUNCTION__ . '_id');
-    }
-
-    public function updater() : MorphTo
-    {
-        return $this->morphTo(__FUNCTION__, __FUNCTION__ . '_type', __FUNCTION__ . '_id');
+        return Attribute::make(
+            get: fn() => UserData::from([
+                'type'     => $this->updater_type,
+                'id'       => $this->updater_id,
+                'nickname' => $this->withOperatorNickname() ? ($this->updater_nickname ?? null) : null
+            ]),
+            set: fn(?UserInterface $creator = null) => array_merge([
+                'updater_type' => $creator?->getType(),
+                'updater_id'   => $creator?->getID(),
+            ], $this->withOperatorNickname() ? [
+                'updater_nickname' => $creator?->getNickname(),
+            ] : []),
+        );
     }
 
 

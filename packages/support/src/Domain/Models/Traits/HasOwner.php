@@ -3,8 +3,9 @@
 namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\UserData;
 
 /**
  * @property string $owner_type
@@ -13,27 +14,35 @@ use RedJasmine\Support\Contracts\UserInterface;
 trait HasOwner
 {
 
-
-    protected string $ownerColumn = 'owner';
-
-    public function owner() : MorphTo
+    protected function getOwnerColumn() : string
     {
-        return $this->morphTo($this->ownerColumn, $this->ownerColumn . '_type', $this->ownerColumn . '_id');
+        return property_exists($this, 'ownerColumn') ? $this->ownerColumn : 'owner';
     }
 
-
-    public function setOwnerAttribute(UserInterface $owner) : static
+    public function owner() : Attribute
     {
-        $this->setAttribute($this->ownerColumn . '_type', $owner->getType());
-        $this->setAttribute($this->ownerColumn . '_id', $owner->getID());
-        return $this;
+        return Attribute::make(
+            get: fn() => UserData::from([
+                'type' => $this->{$this->getOwnerKey('type')},
+                'id'   => $this->{$this->getOwnerKey('id')},
+            ]),
+            set:  fn(?UserInterface $creator = null) => [
+                $this->getOwnerKey('type') => $creator?->getType(),
+                $this->getOwnerKey('id')   => $creator?->getID(),
+            ],
+        );
+    }
+
+    protected function getOwnerKey(string $key) : string
+    {
+        return $this->getOwnerColumn().'_'.$key;
     }
 
 
     public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
     {
-        return $query->where($this->ownerColumn . '_type', $owner->getType())
-                     ->where($this->ownerColumn . '_id', $owner->getID());
+        return $query->where($this->getOwnerColumn().'_type', $owner->getType())
+                     ->where($this->getOwnerColumn().'_id', $owner->getID());
     }
 
 }
