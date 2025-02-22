@@ -12,24 +12,23 @@ class Money extends Data
 
     public const string DEFAULT_CURRENCY = 'CNY';
 
-
     public function __construct(
-        public string $value = '0',
-        public string $currency = 'CNY',
+        public float|int $value = 0,
+        public string $currency = 'CNY'
     ) {
     }
 
-    public static function make(string $value = '0', string $currency = self::DEFAULT_CURRENCY) : Money
+    public static function make(string|int|float $value = 0, string $currency = self::DEFAULT_CURRENCY) : Money
     {
 
-        return new static($value, $currency ?? self::DEFAULT_CURRENCY);
+        return new static((float)(string) $value, $currency ?? self::DEFAULT_CURRENCY);
     }
 
 
     public function format() : string
     {
 
-        $money          = new \Money\Money(bcmul($this->value,100,0), new Currency($this->currency));
+        $money          = new \Money\Money(bcmul($this->value, 100, 0), new Currency($this->currency));
         $currencies     = new ISOCurrencies();
         $moneyFormatter = new DecimalMoneyFormatter($currencies);
         return $moneyFormatter->format($money);
