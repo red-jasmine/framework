@@ -33,6 +33,11 @@ class UserVipQueryService extends ApplicationQueryService
     ];
 
 
+    public function allowedIncludes() : array
+    {
+        return  ['vip'];
+    }
+
     public function allowedFilters() : array
     {
         return [
@@ -41,6 +46,7 @@ class UserVipQueryService extends ApplicationQueryService
             AllowedFilter::exact('app_id'),
             AllowedFilter::exact('type'),
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('keyword'),
 
         ];
     }

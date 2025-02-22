@@ -78,6 +78,7 @@ test('can find a vip product', function (VipProduct $product) {
 
 
     $this->assertEquals($product->id, $result->id);
+    $this->assertEquals($product->app_id, $result->app_id);
 
 
 })->depends('can create a vip product');

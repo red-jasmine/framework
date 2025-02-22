@@ -47,6 +47,7 @@ class ProductQueryService extends ApplicationQueryService
     {
 
         return [
+            AllowedFilter::partial('keyword'),
             AllowedFilter::partial('title'),
             AllowedFilter::exact('id'),
             AllowedFilter::exact('owner_type'),

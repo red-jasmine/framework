@@ -2,19 +2,82 @@
 
 namespace RedJasmine\Shopping\Application\Services\Commands;
 
+use Illuminate\Support\Facades\Config;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
+use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Domain\Models\OrderProduct;
+use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
+use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Support\Application\CommandHandler;
 
 class OrderPayCommandHandler extends CommandHandler
 {
+    public function __construct(
+        public OrderRepositoryInterface $orderRepository,
+        public OrderCommandService $orderCommandService,
+
+        public TradeCommandService $tradeCommandService,
+
+    ) {
+    }
 
     public function handle(OrderPayCommand $command)
     {
-        // TODO
-        // 订单发起支付，获取订单支付单
-        // 调用 支付领域 服务  创建支付单
-        // 返回 支付单 个客户端
-        // 客户端  调用直接调用支付领域 创建支付单
 
+
+        $order = $this->orderRepository->find($command->id);
+
+
+        $goodDetails = GoodDetailData::collect($order->products->map(fn($orderProduct
+        ) => $this->orderProductToGoodDetailData($orderProduct)
+        )->toArray());
+
+
+        // 订单发起支付，获取订单支付单
+        $orderPayingCommand = OrderPayingCommand::from([
+            'id' => $command->id,
+        ]);
+        // 订单发起支付
+        $orderPayment = $this->orderCommandService->paying($orderPayingCommand);
+        // 调用 支付领域 服务  创建支付单
+        $tradeCreateCommand                       = new TradeCreateCommand;
+        $tradeCreateCommand->amount               = $orderPayment->payment_amount;
+        $tradeCreateCommand->subject              = $order->title;
+        $tradeCreateCommand->goodDetails          = [];
+        $tradeCreateCommand->merchantTradeNo      = $orderPayment->id;
+        $tradeCreateCommand->merchantTradeOrderNo = $orderPayment->order_no;
+        $tradeCreateCommand->description          = '';
+        $tradeCreateCommand->goodDetails          = $goodDetails;
+        // 配置的商户应用ID
+        $tradeCreateCommand->merchantAppId  = $this->getMerchantAppId();
+        $tradeCreateCommand->notifyUrl      = '';
+        $tradeCreateCommand->passBackParams = null;
+
+        $paymentTrade = $this->tradeCommandService->create($tradeCreateCommand);
+
+       return $this->tradeCommandService->getSdkResult($paymentTrade);
+
+    }
+
+    protected function orderProductToGoodDetailData(OrderProduct $orderProduct) : GoodDetailData
+    {
+        $goodDetailData = new GoodDetailData;
+
+        $goodDetailData->goodsId   = $orderProduct->product_id;
+        $goodDetailData->goodsName = $orderProduct->title;
+        $goodDetailData->price     = $orderProduct->price;
+        $goodDetailData->quantity  = $orderProduct->quantity;
+
+
+        return $goodDetailData;
+    }
+
+
+    protected function getMerchantAppId() : int
+    {
+        return Config::get('red-jasmine-shopping.payment.merchant_app_id');
     }
 
 }

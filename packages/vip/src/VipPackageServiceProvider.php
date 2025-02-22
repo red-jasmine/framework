@@ -19,6 +19,7 @@ class VipPackageServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-vip')
             ->hasConfigFile()
             ->hasViews()
+            ->hasRoute('api')
             ->hasMigrations([
                 'create_user_vips_table',
                 'create_vips_table',

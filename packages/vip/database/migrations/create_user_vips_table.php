@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary();
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
+            $table->unsignedBigInteger('vip_id')->comment('VIP id');
             $table->string('app_id', 32)->comment('应用ID');
             $table->string('type', 32)->comment('类型');
             $table->tinyInteger('level')->default(1)->comment('等级');
@@ -27,6 +28,7 @@ return new class extends Migration {
             $table->comment('用户 VIP表');
         });
     }
+
     public function down()
     {
         Schema::dropIfExists('user_vips');

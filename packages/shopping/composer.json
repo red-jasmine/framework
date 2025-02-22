@@ -6,6 +6,7 @@
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/order": "1.0.x-dev",
         "red-jasmine/product": "1.0.x-dev",
+        "red-jasmine/payment": "1.0.x-dev",
         "ext-bcmath": "*"
     },
     "extra": {
@@ -18,6 +19,17 @@
     "autoload": {
         "psr-4": {
             "RedJasmine\\Shopping\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Shopping\\ShoppingPackageServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     },
     "minimum-stability": "dev"

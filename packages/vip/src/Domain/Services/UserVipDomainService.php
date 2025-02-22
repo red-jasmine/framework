@@ -33,10 +33,11 @@ class UserVipDomainService
     public function open(OpenUserVipData $data) : UserVip
     {
         // 验证VIP 是否有效
-        $this->vipDomainService->validate($data->appId, $data->type);
+        $vip = $this->vipDomainService->validate($data->appId, $data->type);
 
-        $userVip        = $this->findUserVip($data);
-        $currentEndTime = $userVip->getCurrentEndTime();
+        $userVip         = $this->findUserVip($data);
+        $userVip->vip_id = $vip->id;
+        $currentEndTime  = $userVip->getCurrentEndTime();
         // 设置结束时间
         $userVip->addEndTime($data->timeValue, $data->timeUnit);
 

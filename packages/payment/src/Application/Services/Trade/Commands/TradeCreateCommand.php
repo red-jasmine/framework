@@ -7,7 +7,7 @@ use RedJasmine\Payment\Domain\Data\TradeData;
 /**
  * 预创建
  */
-class TradePreCreateCommand extends TradeData
+class TradeCreateCommand extends TradeData
 {
 
 }

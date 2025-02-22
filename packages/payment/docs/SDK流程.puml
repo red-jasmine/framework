@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor 客户端 #FFCCCC
+participant SDK #FFCCCC
+participant 商户系统 #FFCC99
+participant 支付中心 #CCFFCC
+participant 支付渠道 #CCCCFF
+
+
+
+
+
+autonumber 1.1
+
+客户端->商户系统: 1.1 创建订单
+商户系统->支付中心: 1.2 创建支付订单
+支付中心->商户系统: 返回 SDK 参数
+商户系统-> 客户端: 返回 SDK 参数
+客户端-> SDK : 调用SDK,
+SDK-> SDK: 数据初始化，环境建立支付环境
+SDK -> 支付中心: 传入环境参数、请求准备支付
+支付中心-> SDK : 返回可选支付信息
+SDK --> SDK: 用户选择支付方式
+SDK-> 支付中心: 传入支付渠道参数、请求支付
+支付中心 -> SDK: 返回第三个支付参数
+SDK-> SDK : 调用 支付渠道SDK  发起支付
+SDK -> 支付渠道: 发起支付
+
+
+
+
+@enduml

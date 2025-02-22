@@ -3,6 +3,7 @@
 namespace RedJasmine\Vip\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -39,6 +40,11 @@ class UserVip extends Model implements OwnerInterface, OperatorInterface
         return Carbon::parse('9999-12-31 23:59:59');
     }
 
+
+    public function vip() : BelongsTo
+    {
+        return $this->belongsTo(Vip::class, 'vip_id', 'id');
+    }
 
     public function setForever() : void
     {

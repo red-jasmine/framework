@@ -7,11 +7,17 @@ use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 
 class TradeController extends Controller
 {
+    // TODO
     // 订单支付页
     // 支付返回页
     // 支付收单页
     // 商户收银台
 
+    // 订单支付页面
+
+    // 网页返回页面
+
+    // 网页发起支付
 
     public function show($id, string $time, string $signature, Request $request)
     {
@@ -22,9 +28,17 @@ class TradeController extends Controller
         //  展示 订单信息
         // 查询 支付结果状态
         // 进行 重定向 回调
-        dd($request->all());
+        dd($id, $time, $signature);
 
 
     }
+
+
+    public function pay($id)
+    {
+
+    }
+
+
 
 }

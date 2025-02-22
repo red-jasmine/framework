@@ -15,7 +15,11 @@ use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 
 /**
  * @property int $id;
+ * @property string $app_id;
+ * @property string $type;
  * @property string $name
+ * @property VipProductStatusEnum $status
+ * @property int $stock
  * @property Money $price
  * @property TimeUnitEnum $time_unit
  * @property int $time_value
@@ -45,6 +49,7 @@ class VipProduct extends Model implements OwnerInterface, OperatorInterface
         'status',
         'time_value',
         'time_unit',
-        'price'
+        'price',
+        'stock'
     ];
 }

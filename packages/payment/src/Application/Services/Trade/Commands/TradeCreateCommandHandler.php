@@ -8,16 +8,16 @@ use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 
-class TradePreCreateCommandHandler extends AbstractTradeCommandHandler
+class TradeCreateCommandHandler extends AbstractTradeCommandHandler
 {
     /**
-     * @param  TradePreCreateCommand  $command
+     * @param  TradeCreateCommand  $command
      *
      * @return Trade
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(TradePreCreateCommand $command) : Trade
+    public function handle(TradeCreateCommand $command) : Trade
     {
 
         $this->beginDatabaseTransaction();

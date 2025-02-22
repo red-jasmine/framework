@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Vip\UI\Http\Owner\Api\Controllers;
+namespace RedJasmine\Vip\UI\Http\User\Api\Controllers;
 
 class Controller extends \RedJasmine\Support\Http\Controllers\Controller
 {

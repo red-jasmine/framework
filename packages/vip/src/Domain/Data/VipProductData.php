@@ -17,10 +17,12 @@ class VipProductData extends Data
 
     public string $name;
 
+    public int    $stock = 10000000;
+
     public Money $price;
 
     #[WithCast(EnumCast::class, VipProductStatusEnum::class)]
-    public VipProductStatusEnum $status = VipProductStatusEnum::ENABLE;
+    public VipProductStatusEnum $status = VipProductStatusEnum::ON_SALE;
 
     #[WithCast(EnumCast::class, TimeUnitEnum::class)]
     public TimeUnitEnum $timeUnit  = TimeUnitEnum::MONTH; // 时间单位

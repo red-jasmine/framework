@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Vip\Application\Services;
 
-use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Shopping\Application\Services\Commands\OrderPayCommand;
 use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingOrderCommandService;
 use RedJasmine\Support\Application\ApplicationCommandService;
@@ -37,18 +37,17 @@ class VipPurchaseCommandService extends ApplicationCommandService
             ],
         ]);
 
+        // 下单
         $orders = $this->shoppingOrderCommandService->buy($productBuyCommand);
 
-        $orderPayingCommand = OrderPayingCommand::from([
+        $orderPayCommand = OrderPayCommand::from([
             'id' => $orders->first()->id,
         ]);
 
+
+        // 调用支付
         // 订单发起支付
-        $orderPayingResult = $this->orderCommandService->paying($orderPayingCommand);
-
-        // 需要一个组合的组件 把 订单 和 支付组件联系在一起 TODO
-
-        dd($orderPayingResult);
+        return $this->shoppingOrderCommandService->pay($orderPayCommand);
     }
 
 

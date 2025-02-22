@@ -2,12 +2,14 @@
 
 namespace RedJasmine\Payment\Application\Services\Trade;
 
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommandHandler;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommandHandler;
-use RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommandHandler;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommandHandler;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
+use RedJasmine\Payment\Domain\Data\PaymentSdkTradeResult;
+use RedJasmine\Payment\Domain\Facades\PaymentSDK;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
@@ -16,8 +18,8 @@ use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 
 /**
- * @see  TradePreCreateCommandHandler::handle
- * @method Trade preCreate(Commands\TradePreCreateCommand $command)
+ * @see  TradeCreateCommandHandler::handle
+ * @method Trade create(Commands\TradeCreateCommand $command)
  * @see  TradeReadyCommandHandler::handle
  * @method Trade ready(TradeReadyCommand $command)
  * @see  TradePayingCommandHandler::handle
@@ -29,12 +31,11 @@ class TradeCommandService extends ApplicationCommandService
 {
 
     public function __construct(
-        public TradeRepositoryInterface       $repository,
+        public TradeRepositoryInterface $repository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
-        public TradeRoutingService            $tradeRoutingService,
-        public PaymentChannelService          $paymentChannelService,
-    )
-    {
+        public TradeRoutingService $tradeRoutingService,
+        public PaymentChannelService $paymentChannelService,
+    ) {
     }
 
     /**
@@ -47,10 +48,15 @@ class TradeCommandService extends ApplicationCommandService
 
 
     protected static $macros = [
-        'preCreate' => TradePreCreateCommandHandler::class,
-        'ready'     => TradeReadyCommandHandler::class,
-        'paying'    => TradePayingCommandHandler::class,
-        'paid'      => TradePaidCommandHandler::class,
+        'create' => TradeCreateCommandHandler::class,
+        'ready'  => TradeReadyCommandHandler::class,
+        'paying' => TradePayingCommandHandler::class,
+        'paid'   => TradePaidCommandHandler::class,
     ];
 
+
+    public function getSdkResult(Trade $trade) : PaymentSdkTradeResult
+    {
+        return PaymentSDK::init($trade);
+    }
 }

@@ -53,7 +53,11 @@ class VipProductRepository implements VipProductRepositoryInterface
             'shippingType' => ShippingTypeEnum::DUMMY,
             'unit'         => $model->time_unit->value,
             'unitQuantity' => $model->time_value,
-            'stock'        => 999999999,
+            'stock'        => $model->stock,
+            'extras'       => [
+                'app_id' => $model->app_id,
+                'type'   => $model->type,
+            ],
         ]);
 
         $product = $this->productCommandService->create($command);
@@ -79,6 +83,11 @@ class VipProductRepository implements VipProductRepositoryInterface
             'shippingType' => ShippingTypeEnum::DUMMY,
             'unit'         => $model->time_unit->value,
             'unitQuantity' => $model->time_value,
+            'stock'        => $model->stock,
+            'extras'       => [
+                'app_id' => $model->app_id,
+                'type'   => $model->type,
+            ],
         ]);
         $command->setKey($model->id);
         $product = $this->productCommandService->update($command);
@@ -104,6 +113,9 @@ class VipProductRepository implements VipProductRepositoryInterface
         $model->price      = $product->price;
         $model->name       = $product->title;
         $model->time_value = $product->unit_quantity;
+        $model->stock      = $product->stock;
+        $model->app_id     = $product->extension->extras['app_id'];
+        $model->type       = $product->extension->extras['type'];
         $model->time_unit  = TimeUnitEnum::from($product->unit);
         return $model;
     }

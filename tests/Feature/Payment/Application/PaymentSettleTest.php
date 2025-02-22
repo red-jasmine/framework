@@ -5,7 +5,7 @@ use Illuminate\Support\Collection;
 use RedJasmine\Payment\Application\Services\SettleReceiver\SettleReceiverCommandService;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
-use RedJasmine\Payment\Application\Services\Trade\Commands\TradePreCreateCommand;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
@@ -87,7 +87,7 @@ test('create settle accounts', function () {
 test('pre create a payment trade', function () {
 
 
-    $command = new  TradePreCreateCommand();
+    $command = new  TradeCreateCommand();
     // 设置为需要 分账
     $command->isSettleSharing = true;
     $command->merchantAppId   = $this->merchantApp->id;
@@ -121,7 +121,7 @@ test('pre create a payment trade', function () {
                                                              ]);
 
 
-    $trade = $this->tradeCommandService->preCreate($command);
+    $trade = $this->tradeCommandService->create($command);
 
 
     $this->assertEquals($command->merchantAppId, $trade->merchant_app_id, '商户应用id不一致');

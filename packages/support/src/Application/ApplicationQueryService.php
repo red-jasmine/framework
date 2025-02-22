@@ -13,6 +13,7 @@ use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
 
 /**
@@ -46,10 +47,13 @@ abstract class ApplicationQueryService extends Service
 
     protected function initReadRepository() : void
     {
-        $this->repository->setAllowedFilters($this->allowedFilters());
-        $this->repository->setAllowedFields($this->allowedFields());
-        $this->repository->setAllowedIncludes($this->allowedIncludes());
-        $this->repository->setAllowedSorts($this->allowedSorts());
+        if( $this->repository instanceof  QueryBuilderReadRepository){
+            $this->repository->setAllowedFilters($this->allowedFilters());
+            $this->repository->setAllowedFields($this->allowedFields());
+            $this->repository->setAllowedIncludes($this->allowedIncludes());
+            $this->repository->setAllowedSorts($this->allowedSorts());
+        }
+
     }
 
     public function allowedFilters() : array

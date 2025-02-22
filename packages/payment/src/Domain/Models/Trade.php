@@ -27,8 +27,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 /**
- * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $amount
- * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $paymentAmount
+ * @property Money $amount
+ * @property Money $paymentAmount
  * @property Money $refundAmount
  */
 class Trade extends Model implements AsyncNotifyInterface
