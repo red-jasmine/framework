@@ -22,7 +22,7 @@ class VipPackageServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_user_vips_table',
                 'create_vips_table',
-                'user_vip_orders_table'
+                'create_user_vip_orders_table'
             ])
             ->runsMigrations();
     }
