@@ -28,6 +28,7 @@ class VipPurchaseCommandService extends ApplicationCommandService
 
         $productBuyCommand = ProductBuyCommand::from([
             'buyer'    => $command->owner,
+            'title'    => '购买会员',
             'products' => [
                 [
                     'product_id' => $command->id,

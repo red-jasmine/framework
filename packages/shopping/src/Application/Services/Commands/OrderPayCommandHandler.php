@@ -44,7 +44,7 @@ class OrderPayCommandHandler extends CommandHandler
         // 调用 支付领域 服务  创建支付单
         $tradeCreateCommand                       = new TradeCreateCommand;
         $tradeCreateCommand->amount               = $orderPayment->payment_amount;
-        $tradeCreateCommand->subject              = $order->title;
+        $tradeCreateCommand->subject              = filled($order->title) ? $order->title : '支付订单：'.$order->order_no;
         $tradeCreateCommand->goodDetails          = [];
         $tradeCreateCommand->merchantTradeNo      = $orderPayment->id;
         $tradeCreateCommand->merchantTradeOrderNo = $orderPayment->order_no;
@@ -55,9 +55,10 @@ class OrderPayCommandHandler extends CommandHandler
         $tradeCreateCommand->notifyUrl      = '';
         $tradeCreateCommand->passBackParams = null;
 
+
         $paymentTrade = $this->tradeCommandService->create($tradeCreateCommand);
 
-       return $this->tradeCommandService->getSdkResult($paymentTrade);
+        return $this->tradeCommandService->getSdkResult($paymentTrade);
 
     }
 
