@@ -1,13 +1,13 @@
 <?php
 
 
-use Illuminate\Support\Collection;
+use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
-use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
@@ -121,9 +121,9 @@ test('can get trade pay methods', function (Trade $trade) {
 
     $methods = $this->tradeCommandService->ready($command);
 
-    $this->assertEquals($methods instanceof Collection, true, '返回值类型错误');
+    $this->assertEquals($methods instanceof PaymentTradeResult, true, '返回值类型错误');
 
-    return $methods;
+    return $methods->methods;
 })->depends('pre create a payment trade');
 
 // 测试发起支付

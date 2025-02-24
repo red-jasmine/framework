@@ -12,9 +12,14 @@ class PaymentPayerRoute
     public static function route() : void
     {
         Route::group([
-                         'prefix' => 'payer',
-                     ], function () {
-            Route::get('trades/{id}/{time}/{signature}', [ TradeController::class, 'show' ])->name('payment.payer.trades.show');
+            'prefix' => 'payer',
+        ], function () {
+
+            Route::any('trades/pay', [TradeController::class, 'pay'])
+                 ->name('payment.payer.trades.pay');
+            Route::get('trades/{id}/{time}/{signature}',
+                [TradeController::class, 'show'])->name('payment.payer.trades.show');
+
         });
 
     }

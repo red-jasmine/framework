@@ -122,9 +122,10 @@ test('can get trade pay methods', function (Trade $trade) {
 
     $methods = $this->tradeCommandService->ready($command);
 
-    $this->assertEquals($methods instanceof Collection, true, '返回值类型错误');
+    $this->assertEquals($methods instanceof \RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult, true,
+        '返回值类型错误');
 
-    return $methods;
+    return $methods->methods;
 })->depends('pre create a payment trade');
 
 // 测试发起支付

@@ -8,7 +8,7 @@ use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommandHan
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommandHandler;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
-use RedJasmine\Payment\Domain\Data\PaymentSdkTradeResult;
+use RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult;
 use RedJasmine\Payment\Domain\Facades\PaymentSDK;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
@@ -21,7 +21,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see  TradeCreateCommandHandler::handle
  * @method Trade create(Commands\TradeCreateCommand $command)
  * @see  TradeReadyCommandHandler::handle
- * @method Trade ready(TradeReadyCommand $command)
+ * @method PaymentTradeResult ready(TradeReadyCommand $command)
  * @see  TradePayingCommandHandler::handle
  * @method ChannelTradeData paying(Commands\TradePayingCommand $command)
  * @see  TradePaidCommandHandler::handle()
@@ -55,7 +55,7 @@ class TradeCommandService extends ApplicationCommandService
     ];
 
 
-    public function getSdkResult(Trade $trade) : PaymentSdkTradeResult
+    public function getSdkResult(Trade $trade) : PaymentTradeResult
     {
         return PaymentSDK::init($trade);
     }

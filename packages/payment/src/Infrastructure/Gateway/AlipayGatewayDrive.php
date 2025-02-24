@@ -159,21 +159,22 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         if (method_exists($gateway, 'setReturnUrl')) {
             $gateway->setReturnUrl(PaymentUrl::returnUrl($trade));
         }
-
         // TODO 更多参数
+        $bizContent = [
+
+            'out_trade_no'      => $trade->trade_no,
+            'total_amount'      => $trade->amount->format(),
+            'subject'           => $trade->subject,
+            'product_code'      => $this->channelProduct->code,
+            'merchant_order_no' => $trade->merchant_order_no,
+            'extend_params'     => [
+                'royalty_freeze' => $trade->is_settle_sharing
+            ],
+        ];
+
         $request = $gateway->purchase(
             [
-                'biz_content' => [
-
-                    'out_trade_no'      => $trade->trade_no,
-                    'total_amount'      => $trade->amount->format(),
-                    'subject'           => $trade->subject,
-                    'product_code'      => $this->channelProduct->code,
-                    'merchant_order_no' => $trade->merchant_order_no,
-                    'extend_params'     => [
-                        'royalty_freeze' => $trade->is_settle_sharing
-                    ],
-                ]
+                'biz_content' =>$bizContent
             ]
         );
 
