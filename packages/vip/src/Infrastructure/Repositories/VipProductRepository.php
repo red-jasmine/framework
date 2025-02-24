@@ -15,12 +15,15 @@ use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductRepositoryInterface;
+use RedJasmine\Vip\Infrastructure\ProductDomainConverter;
 
 class VipProductRepository implements VipProductRepositoryInterface
 {
+
     public function __construct(
         public ProductCommandService $productCommandService,
         public ProductQueryService $productQueryService,
+        public ProductDomainConverter $productDomainConverter,
     ) {
     }
 
@@ -32,7 +35,7 @@ class VipProductRepository implements VipProductRepositoryInterface
         // 调用商品领域 进行查询
         $productModel = $this->productQueryService->findById(FindQuery::from(['id' => $id]));
 
-        return $this->converter($productModel);
+        return $this->productDomainConverter->converter($productModel);
 
     }
 
@@ -45,16 +48,17 @@ class VipProductRepository implements VipProductRepositoryInterface
     {
 
         $command = ProductCreateCommand::from([
-            'appId'        => 'vip',
-            'owner'        => UserData::from(['type' => 'user', 'id' => '1']),
-            'title'        => $model->name,
-            'price'        => $model->price->toArray(),
-            'productType'  => ProductTypeEnum::VIRTUAL,
-            'shippingType' => ShippingTypeEnum::DUMMY,
-            'unit'         => $model->time_unit->value,
-            'unitQuantity' => $model->time_value,
-            'stock'        => $model->stock,
-            'extras'       => [
+            'owner'         => $this->productDomainConverter->seller(),
+            'title'         => $model->name,
+            'price'         => $model->price->toArray(),
+            'productType'   => ProductTypeEnum::VIRTUAL,
+            'shippingType'  => ShippingTypeEnum::DUMMY,
+            'unit'          => $model->time_unit->value,
+            'unitQuantity'  => $model->time_value,
+            'stock'         => $model->stock,
+            'appId'         => $model->app_id,
+            'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
+            'extras'        => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],
@@ -75,8 +79,7 @@ class VipProductRepository implements VipProductRepositoryInterface
     public function update(Model $model)
     {
         $command = ProductUpdateCommand::from([
-            'appId'        => 'vip',
-            'owner'        => UserData::from(['type' => 'user', 'id' => '1']),
+            'owner'        => $this->productDomainConverter->seller(),
             'title'        => $model->name,
             'price'        => $model->price->toArray(),
             'productType'  => ProductTypeEnum::VIRTUAL,
@@ -84,7 +87,9 @@ class VipProductRepository implements VipProductRepositoryInterface
             'unit'         => $model->time_unit->value,
             'unitQuantity' => $model->time_value,
             'stock'        => $model->stock,
-            'extras'       => [
+            'appId'         => $model->app_id,
+            'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
+            'extras'        => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],
@@ -102,21 +107,4 @@ class VipProductRepository implements VipProductRepositoryInterface
     }
 
 
-    protected function converter(Product $product) : VipProduct
-    {
-        /**
-         * @var VipProduct $model
-         */
-        $model = VipProduct::make();
-
-        $model->id         = $product->id;
-        $model->price      = $product->price;
-        $model->name       = $product->title;
-        $model->time_value = $product->unit_quantity;
-        $model->stock      = $product->stock;
-        $model->app_id     = $product->extension->extras['app_id'];
-        $model->type       = $product->extension->extras['type'];
-        $model->time_unit  = TimeUnitEnum::from($product->unit);
-        return $model;
-    }
 }

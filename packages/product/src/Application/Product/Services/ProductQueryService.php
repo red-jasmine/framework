@@ -50,6 +50,7 @@ class ProductQueryService extends ApplicationQueryService
             AllowedFilter::partial('keyword'),
             AllowedFilter::partial('title'),
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('app_id'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
             AllowedFilter::exact('product_type'),
@@ -60,6 +61,8 @@ class ProductQueryService extends ApplicationQueryService
             AllowedFilter::exact('brand_id'),
             AllowedFilter::exact('category_id'),
             AllowedFilter::exact('product_group_id'),
+            AllowedFilter::exact('barcode'),
+            AllowedFilter::exact('product_model'),
         ];
     }
 

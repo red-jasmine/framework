@@ -12,7 +12,7 @@ class VipController extends Controller
 
     public function __construct(
 
-        public  $queryService
+        public VipQueryService $queryService
     ) {
     }
 

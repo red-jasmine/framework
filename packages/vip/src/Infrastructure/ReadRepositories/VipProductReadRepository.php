@@ -19,17 +19,19 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
+use RedJasmine\Vip\Infrastructure\ProductDomainConverter;
 
 class VipProductReadRepository implements VipProductReadRepositoryInterface
 {
 
     public function __construct(
         public ProductQueryService $queryService,
+        public ProductDomainConverter $productDomainConverter
     ) {
 
-        $this->queryService->getRepository()->withQuery(function ($query) {
-            return $query->where('app_id', 'vip');
-        });
+        // $this->queryService->getRepository()->withQuery(function ($query) {
+        //     return $query->where('app_id', 'vip');
+        // });
     }
 
     /**
@@ -58,18 +60,21 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
     {
         $product = $this->queryService->getRepository()->findById($query);
 
-        return $this->converter($product);
+        return $this->productDomainConverter->converter($product);
     }
 
     public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator
     {
 
+        //dd($query);
+        $query->additional(['product_model'=>$query->type]);
+        unset($query->type);
 
         $lengthAwarePaginator = $this->queryService->getRepository()->paginate($query);
 
         return $lengthAwarePaginator->setCollection(
             $lengthAwarePaginator->getCollection()->map(fn($item
-            ) => $this->converter($item)));
+            ) => $this->productDomainConverter->converter($item)));
 
     }
 
@@ -82,23 +87,6 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
             ) => $this->converter($item)));
     }
 
-    protected function converter(Product $product) : VipProduct
-    {
-        /**
-         * @var VipProduct $model
-         */
-        $model = VipProduct::make();
 
-        $model->id         = $product->id;
-        $model->price      = $product->price;
-        $model->name       = $product->title;
-        $model->stock      = $product->stock;
-        $model->status     = VipProductStatusEnum::from($product->status->value);
-        $model->time_value = $product->unit_quantity;
-        $model->app_id     = $product->extension->extras['app_id'];
-        $model->type       = $product->extension->extras['type'];
-        $model->time_unit  = TimeUnitEnum::from($product->unit);
-        return $model;
-    }
 
 }

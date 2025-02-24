@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Vip\Application\Services\Commands\UserPurchaseVipCommand;
-use RedJasmine\Vip\Application\Services\Queries\Products\PaginateQuery;
+use RedJasmine\Vip\Application\Services\Queries\Products\VipProductPaginateQuery;
 use RedJasmine\Vip\Application\Services\VipProductQueryService;
 use RedJasmine\Vip\Application\Services\VipPurchaseCommandService;
 use RedJasmine\Vip\UI\Http\User\Api\Resources\VipProductResource;
@@ -24,7 +24,8 @@ class VipProductController extends Controller
 
     public function index(Request $request) : AnonymousResourceCollection
     {
-        $query         = PaginateQuery::from($request);
+
+        $query         = VipProductPaginateQuery::from($request);
         $query->status = 'on_sale,sold_out';
 
         $result = $this->queryService->paginate($query);
