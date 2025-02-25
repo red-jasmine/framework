@@ -16,7 +16,14 @@ class FindUserVipQueryHandle extends QueryHandler
 
     public function handle(FindUserVipQuery $query) : ?UserVip
     {
-        return $this->service->getRepository()->findVipByOwner($query->owner, $query->appId, $query->type);
+        return $this->service->getRepository()->findVipByOwner($query->owner, $query->appId, $query->type)
+
+               ?? UserVip::make([
+                'app_id'     => $query->appId,
+                'type' => $query->type,
+                'is_forever' => false,
+                'level'      => 0
+            ]);
     }
 
 }

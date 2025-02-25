@@ -22,6 +22,7 @@ class UserVipResource extends JsonResource
             'end_time'   => $this->end_time?->format('Y-m-d'),
             'is_forever' => $this->is_forever,
             'version'    => $this->version,
+            'is_expired' => $this->isExpired(),
             'vip'        => new VipResource($this->whenLoaded('vip')),
         ];
     }

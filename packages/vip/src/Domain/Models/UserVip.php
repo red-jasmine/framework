@@ -20,6 +20,13 @@ class UserVip extends Model implements OwnerInterface, OperatorInterface
     use HasOwner;
 
 
+    protected $fillable = [
+        'app_id',
+        'type',
+        'level',
+        'is_forever',
+    ];
+
     protected function casts() : array
     {
         return [

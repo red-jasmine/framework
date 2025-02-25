@@ -25,7 +25,7 @@ class UserVipController extends Controller
 
     public function vips(Request $request) : AnonymousResourceCollection
     {
-        $query =  PaginateQuery::from($request);
+        $query = PaginateQuery::from($request);
 
         $result = $this->queryService->paginate($query);
         return UserVipResource::collection($result);
@@ -34,12 +34,14 @@ class UserVipController extends Controller
     public function vip(string $appId, string $type) : UserVipResource
     {
         $query = FindUserVipQuery::from([
-            'appId'   => $appId,
-            'type'    => $type,
-            'owner'   => $this->getOwner(),
+            'appId' => $appId,
+            'type'  => $type,
+            'owner' => $this->getOwner(),
         ]);
-        $vip   = $this->queryService->findUserVip($query);
 
-        return UserVipResource::make($vip);
+        $vip = $this->queryService->findUserVip($query);
+
+        return new  UserVipResource($vip);
+
     }
 }
