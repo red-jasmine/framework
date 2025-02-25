@@ -77,6 +77,8 @@ class TradeController extends Controller
         if($paymentTradeResult->paymentTrigger->type  === PaymentTriggerTypeEnum::REDIRECT){
             return redirect($paymentTradeResult->paymentTrigger->content);
         }
+        // TODO 前端 JS 发起
+
 
     }
 
