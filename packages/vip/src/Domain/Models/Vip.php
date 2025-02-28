@@ -23,6 +23,7 @@ class Vip extends Model implements OwnerInterface, OperatorInterface
     {
         return [
             'status' => VipStatusEnum::class,
+            'extras' => 'array'
         ];
     }
 
@@ -33,6 +34,7 @@ class Vip extends Model implements OwnerInterface, OperatorInterface
         'name',
         'icon',
         'description',
-        'status'
+        'status',
+        'extras'
     ];
 }
