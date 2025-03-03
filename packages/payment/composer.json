@@ -15,7 +15,8 @@
         "red-jasmine/support": "1.0.x-dev",
         "league/omnipay": "^3.2",
         "moneyphp/money": "^4.6",
-        "liushoukun/omnipay-alipay": "^3.17"
+        "liushoukun/omnipay-alipay": "^3.17",
+        "liushoukun/omnipay-wechatpay": "^3.17"
     },
     "autoload": {
         "psr-4": {

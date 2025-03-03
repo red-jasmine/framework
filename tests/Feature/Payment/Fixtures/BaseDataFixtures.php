@@ -75,8 +75,8 @@ class BaseDataFixtures
         );
 
         $test->channels[] = Channel::firstOrCreate(
-            [ 'code' => 'wechat' ],
-            [ 'name' => '微信', 'code' => 'wechat' ]
+            [ 'code' => 'wechatpay' ],
+            [ 'name' => '微信支付', 'code' => 'wechatpay' ]
         );
 
         // 创建产品

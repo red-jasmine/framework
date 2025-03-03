@@ -7,7 +7,18 @@ use RedJasmine\Payment\UI\Http\Payer\Web\TradeController;
 
 class PaymentPayerRoute
 {
+    public static function api() : void
+    {
+        Route::group([
+            'prefix' => 'payer',
+        ], function () {
 
+            Route::post('trades/ready', [Api\Controllers\TradeController::class, 'ready'])
+                 ->name('payment.payer.api.trades.ready');
+
+
+        });
+    }
 
     public static function route() : void
     {
@@ -21,6 +32,7 @@ class PaymentPayerRoute
                 [TradeController::class, 'show'])->name('payment.payer.trades.show');
 
         });
+
 
     }
 }

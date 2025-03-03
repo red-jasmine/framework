@@ -7,5 +7,9 @@ use RedJasmine\Payment\UI\Http\Payer\PaymentPayerRoute;
     PaymentPayerRoute::route();
 });
 
+\Illuminate\Support\Facades\Route::group([ 'prefix' => 'api/payment' ], function () {
+    PaymentPayerRoute::api();
+});
+
 
 

@@ -14,6 +14,6 @@ enum ClientTypeEnum: string
 
     case  WAP = 'wap';
 
-    case  APPLET = 'applet';
+    case  APPLET = 'applet'; // 小程序
 
 }

@@ -11,6 +11,8 @@ class Payer extends Data
 
     public ?string $userId;
 
+    public ?string $appId;
+
     public ?string $openId;
 
     public ?string $name;

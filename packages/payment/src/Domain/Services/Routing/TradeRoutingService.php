@@ -156,6 +156,7 @@ class TradeRoutingService
          * @var $modes ChannelProductMode[]
          */
         $modes = Collection::make();
+
         foreach ($availableChannelApps as $availableChannelApp) {
             // 获取应用签约的产品、
             // 获取产品支持的支付方式和渠道
@@ -169,6 +170,8 @@ class TradeRoutingService
         // 根据场景查询可用的 支付模式
 
         $modes = $modes->where('scene_code', $environment->scene->value)->all();
+
+        // TODO 根据 客户端 数据是什么环境、什么平台
 
         // TODO 根据自定义策略 callback
         // 根据 设备、客户端、SDK 更加明细地筛选出 可用的支付方式
@@ -184,7 +187,7 @@ class TradeRoutingService
                 $methods[$mode->method_code] = $mode->method;
             } else {
                 if (!isset($methods[$mode->method_code])) {
-                    $mode->method->status        = ModeStatusEnum::DISABLED;
+                    $mode->method->status        = ModeStatusEnum::DISABLE;
                     $methods[$mode->method_code] = $mode->method;
                 }
             }

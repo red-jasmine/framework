@@ -39,11 +39,20 @@ class Environment extends Data
 
 
     /**
+     * 付款人信息
+     * @var Payer|null
+     */
+    public ?Payer $payer = null;
+
+
+    /**
+     * 客户端信息
      * @var ?Client
      */
     public ?Client $client;
 
     /**
+     * SDK信息
      * @var Sdk|null
      */
     public ?Sdk $sdk;
