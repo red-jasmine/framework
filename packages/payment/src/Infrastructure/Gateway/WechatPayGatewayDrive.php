@@ -154,7 +154,7 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
 
         $request = $gateway->purchase($data);
 
-        dd($request->getData());
+
         try {
 
             /**
