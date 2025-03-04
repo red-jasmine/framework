@@ -42,6 +42,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
             $this->handleTradePaid($channelTradeData);
         } catch (Throwable $throwable) {
             report($throwable);
+            throw $throwable;
             return $response->fail();
         }
         return $response->success();

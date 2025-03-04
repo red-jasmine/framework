@@ -24,7 +24,7 @@ return new class extends Migration {
                 $table->string('sign_method')->nullable()->comment(SignMethodEnum::comments('加签方式'));
                 $table->string('sign_type')->nullable()->comment('接口加签算法');
                 $table->string('encrypt_type')->nullable()->comment('内容加密算法');
-                $table->string('encrypt_key')->nullable()->comment('内容加密密钥');
+                $table->text('encrypt_key')->nullable()->comment('内容加密密钥');
                 $table->text('channel_public_key')->nullable()->comment('渠道公钥');
                 $table->text('channel_app_public_key')->nullable()->comment('应用公钥');
                 $table->text('channel_app_private_key')->nullable()->comment('应用私钥');

@@ -14,4 +14,7 @@ class ChannelNotifyTradeCommand extends Data
 
     public array $content;
 
+    public array $headers;
+
+
 }

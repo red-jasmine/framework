@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Infrastructure\Gateway;
 
+use Illuminate\Support\Carbon;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
@@ -26,12 +27,15 @@ use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\Enums\PaymentTriggerTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
+use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
+use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use Throwable;
 
 class WechatPayGatewayDrive implements GatewayDriveInterface
@@ -221,7 +225,67 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
 
     public function completePurchase(array $parameters = []) : ChannelTradeData
     {
-        // TODO: Implement completePurchase() method.
+        /**
+         * @var $gateway Gateway
+         */
+
+        $gateway = $this->gateway;
+
+        $request = $gateway->completePurchase(['request_params' => $parameters]);
+        try {
+
+            $response = $request->send();
+
+
+            if ($response->isPaid()) {
+                $data = $response->getData();
+
+
+                // 调用查询接口
+                $queryResponse = $gateway->query([
+                    'biz_content' => [
+                        'trade_no'      => $data['trade_no'],
+                        'query_options' => [
+                            'buyer_user_type',
+                            'buyer_open_id'
+                        ],
+                    ]
+                ])->send();
+
+
+                if ($queryResponse->isSuccessful()) {
+                    // 合并参数
+                    //$data = array_merge($data, $queryResponse->getAlipayResponse());
+                }
+
+                // TODO 转换查询对象
+                $channelTradeData                     = new  ChannelTradeData;
+                $channelTradeData->originalParameters = $data;
+                $channelTradeData->channelCode        = $this->channelApp->channel_code;
+                $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
+                $channelTradeData->channelAppId       = (string) $data['app_id'];
+                $channelTradeData->tradeNo            = (string) $data['out_trade_no'];
+                $channelTradeData->channelTradeNo     = (string) $data['trade_no'];
+                $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->status             = TradeStatusEnum::SUCCESS;
+                $channelTradeData->payer              = Payer::from([
+                    'type'    => $data['buyer_user_type'] ?? null,
+                    'userId'  => $data['buyer_id'] ?? null,
+                    'account' => $data['buyer_logon_id'] ?? null,
+                    'openId'  => $data['buyer_open_id'] ?? null,
+                    'name'    => null,
+                ]);
+                $channelTradeData->paidTime           = Carbon::make($data['gmt_payment']);
+
+                return $channelTradeData;
+            }
+        } catch (Exception $e) {
+            throw $e;
+
+        }
+
+
     }
 
     public function notifyResponse() : NotifyResponseInterface

@@ -301,10 +301,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             }
         } catch (Exception $e) {
             throw $e;
-            /**
-             * Payment is not successful
-             */
-            //die('fail'); //The notify response
+
         }
     }
 
