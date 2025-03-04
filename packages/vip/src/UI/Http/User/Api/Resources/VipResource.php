@@ -21,6 +21,7 @@ class VipResource extends JsonResource
             'description' => $this->description,
             'status'      => $this->status,
             'version'     => $this->version,
+            'extras'      => $this->extras,
         ];
     }
 }

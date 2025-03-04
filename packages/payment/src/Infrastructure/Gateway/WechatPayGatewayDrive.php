@@ -2,13 +2,10 @@
 
 namespace RedJasmine\Payment\Infrastructure\Gateway;
 
-use Exception;
-use Illuminate\Support\Carbon;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 use Omnipay\WechatPay\Gateway;
-use Omnipay\WechatPay\Message\BaseAbstractResponse;
 use Omnipay\WechatPay\Message\CreateOrderResponse;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Data\PaymentTrigger;
@@ -145,7 +142,7 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
             'out_trade_no' => $trade->trade_no,
             'time_expire'  => $trade->expired_time?->toIso8601String(),
             'attach'       => '', // 商户数据包
-            'amount'       => bcmul($trade->amount->value, 100, 2),
+            'amount'       => bcmul($trade->amount->value, 100, 0),
             'currency'     => $trade->amount->currency,
             'payer'        => [
                 'openid' => $environment->payer?->openId,

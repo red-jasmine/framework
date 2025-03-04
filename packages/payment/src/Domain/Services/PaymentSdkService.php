@@ -10,9 +10,8 @@ class PaymentSdkService
 
 
     public function __construct(
-        protected  PaymentUrlService $paymentUrlService,
-    )
-    {
+        protected PaymentUrlService $paymentUrlService,
+    ) {
     }
 
     // 生成调用SDK 的 参数
@@ -23,7 +22,9 @@ class PaymentSdkService
 
         $paymentSdkTradeResult = new  PaymentTradeResult;
 
-        $paymentSdkTradeResult->tradeNo = $trade->trade_no;
+        $paymentSdkTradeResult->merchantAppId = (string)$trade->merchant_app_id;
+
+        $paymentSdkTradeResult->tradeNo       = $trade->trade_no;
         // 支付网关
         // 订单号
         // 调用字符串

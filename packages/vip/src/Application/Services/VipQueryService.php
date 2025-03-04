@@ -3,6 +3,7 @@
 namespace RedJasmine\Vip\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Vip\Domain\Models\Vip;
 use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -23,6 +24,11 @@ class VipQueryService extends ApplicationQueryService
             AllowedFilter::exact('keyword'),
 
         ];
+    }
+
+    public function findVipType(string $appId, string $type) : ?Vip
+    {
+        return $this->repository->findVipType($appId, $type);
     }
 
 }

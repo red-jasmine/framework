@@ -22,4 +22,14 @@ class VipController extends Controller
 
         return VipResource::collection($result);
     }
+
+    public function show(string $appId, string $type)
+    {
+        $result = $this->queryService->findVipType(
+            $appId,
+            $type,
+           );
+
+        return   VipResource::make($result);
+    }
 }

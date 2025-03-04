@@ -181,7 +181,7 @@ class TradeRoutingService
         // TODO 过滤器
         // 根据 设备、客户端、SDK 更加明细地筛选出 可用的支付方式
 
-        if ($environment->client->type === ClientTypeEnum::APPLET) {
+        if ($environment->client?->type === ClientTypeEnum::APPLET) {
             $modes = $modes->filter(function (ChannelProductMode $mode)use($environment) {
                 return $environment->client->platform === $mode->method_code;
             });

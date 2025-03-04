@@ -15,7 +15,9 @@ Route::group([
         'namespace' => "\\RedJasmine\\Vip\\UI\\Http\\User\\Api\\Controllers"
     ], function () {
 
+        Route::get('vips/{app_id}/{type}', [VipController::class, 'show']);
         Route::get('vips', [VipController::class, 'index']);
+
 
 
         Route::post('vip-products/buy', [VipProductController::class,'buy']);
