@@ -23,6 +23,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
      */
     public function handle(TradePayingCommand $command) : ChannelTradeData
     {
+
         $this->beginDatabaseTransaction();
         try {
             // 获取支付单

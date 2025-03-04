@@ -7,7 +7,9 @@ use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
+use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
+use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\ChannelProductMode;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
@@ -64,11 +66,12 @@ class TradeRoutingService
         $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp->id);
 
         // 过滤
-        $availableChannelApps = collect($availableChannelApps)->filter(function (ChannelApp $channelApp) use (
-            $environment
-        ) {
-            return $this->channelAppEnvironmentFilter($environment, $channelApp) && $channelApp->isAvailable();
-        })->all();
+        $availableChannelApps = collect($availableChannelApps)
+            ->filter(function (ChannelApp $channelApp) use ($environment) {
+                return $channelApp->isAvailable() && $this->channelAppEnvironmentFilter($environment, $channelApp);
+            })
+            ->all();
+
         $availableChannelApps = collect($availableChannelApps);
         if ($availableChannelApps->count() <= 0) {
             throw PaymentException::newFromCodes(PaymentException::CHANNEL_ROUTE);
@@ -113,6 +116,7 @@ class TradeRoutingService
         }
 
         foreach ($channelProduct->modes as $channelProductMode) {
+
             if ($this->isModeAvailable($channelProductMode, $environment)) {
                 $isAvailable = true;
             }
@@ -122,12 +126,15 @@ class TradeRoutingService
 
     protected function channelAppEnvironmentFilter(Environment $environment, ChannelApp $channelApp) : bool
     {
+
         // 签约的产品
         $channelProducts = $channelApp
             ->products
             ->filter(function (ChannelProduct $channelProduct) use ($environment) {
                 return $this->channelProductEnvironmentFilter($channelProduct, $environment);
-            })->all();
+            })
+            ->all();
+
         return collect($channelProducts)->count() > 0;
     }
 
@@ -169,12 +176,16 @@ class TradeRoutingService
         }
         // 根据场景查询可用的 支付模式
 
-        $modes = $modes->where('scene_code', $environment->scene->value)->all();
+        $modes = $modes->where('scene_code', $environment->scene->value);
 
-        // TODO 根据 客户端 数据是什么环境、什么平台
-
-        // TODO 根据自定义策略 callback
+        // TODO 过滤器
         // 根据 设备、客户端、SDK 更加明细地筛选出 可用的支付方式
+
+        if ($environment->client->type === ClientTypeEnum::APPLET) {
+            $modes = $modes->filter(function (ChannelProductMode $mode)use($environment) {
+                return $environment->client->platform === $mode->method_code;
+            });
+        }
 
         // 返回所有的支付方式
         $methods = [];

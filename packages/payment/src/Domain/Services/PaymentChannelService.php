@@ -51,10 +51,13 @@ class PaymentChannelService
         $paymentChannelData->channelProduct = $channelProduct;
 
         // 支付网关适配器
-        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
+        $gatewayDrive = ChannelGatewayDrive::create($channelApp->channel_code);
 
         try {
-            $channelPurchaseResult = $gateway->gateway($paymentChannelData)->purchase($trade, $environment);
+            $gateway = $gatewayDrive->gateway($paymentChannelData);
+
+
+            $channelPurchaseResult = $gateway->purchase($trade, $environment);
 
             if ($channelPurchaseResult->isSuccessFul() === false) {
                 throw new PaymentException($channelPurchaseResult->getMessage(), PaymentException::TRADE_PAYING);

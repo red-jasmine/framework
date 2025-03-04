@@ -13,8 +13,8 @@ class PaymentPayerRoute
             'prefix' => 'payer',
         ], function () {
 
-            Route::post('trades/ready', [Api\Controllers\TradeController::class, 'ready'])
-                 ->name('payment.payer.api.trades.ready');
+            Route::post('trades/ready', [Api\Controllers\TradeController::class, 'ready'])->name('payment.payer.api.trades.ready');
+            Route::post('trades/paying', [Api\Controllers\TradeController::class, 'paying'])->name('payment.payer.api.trades.paying');
 
 
         });

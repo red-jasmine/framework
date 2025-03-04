@@ -25,27 +25,26 @@ class ChannelAppPermissionService
 
 
     /**
-     * @param int $merchantAppId
+     * @param  int  $merchantAppId
+     *
      * @return Collection<ChannelApp>
      */
     public function getAvailableChannelAppsByMerchantApp(int $merchantAppId) : Collection
     {
         $permissions = $this->repository->findMerchantAppAuthorizedChannelApps($merchantAppId);
 
-        return $permissions->map(function (MerchantChannelAppPermission $permission) {
-            if ($permission->isAvailable() && $permission->channelApp->isAvailable()) {
-                return $permission->channelApp;
-            }
-        })->filter(function ($channelApp) {
-            return $channelApp;
-
+        return $permissions->filter(function (MerchantChannelAppPermission $permission) {
+           return $permission->isAvailable() && $permission->channelApp->isAvailable();
+        })->map(function (MerchantChannelAppPermission $permission) {
+            return $permission->channelApp;
         });
+
     }
 
 
     /**
-     * @param int $channelAppId
-     * @param int $merchantId
+     * @param  int  $channelAppId
+     * @param  int  $merchantId
      *
      * @return void
      * @throws PaymentException

@@ -9,10 +9,9 @@ class PaymentTrigger extends Data
 {
     // 支付展示方式
 
-
     public PaymentTriggerTypeEnum $type;
 
-    public ?string $content = null;
+    public mixed $content = null;
 
 
 }

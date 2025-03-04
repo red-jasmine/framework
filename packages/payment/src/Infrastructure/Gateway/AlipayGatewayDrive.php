@@ -412,7 +412,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 
     public function notifyResponse() : NotifyResponseInterface
     {
-        return new   AlipayNotifyResponse();
+        return new   NotifyResponse();
     }
 
     /**

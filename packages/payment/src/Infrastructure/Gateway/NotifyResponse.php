@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Infrastructure\Gateway;
 use Illuminate\Http\Response;
 use RedJasmine\Payment\Domain\Gateway\NotifyResponseInterface;
 
-class AlipayNotifyResponse implements NotifyResponseInterface
+class NotifyResponse implements NotifyResponseInterface
 {
     public function success() : Response
     {
