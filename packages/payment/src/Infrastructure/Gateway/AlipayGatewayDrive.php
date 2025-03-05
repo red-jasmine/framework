@@ -63,15 +63,8 @@ class AlipayGatewayDrive implements GatewayDriveInterface
 {
 
 
-    /**
-     * @var GatewayInterface
-     */
-    protected GatewayInterface    $gateway;
-    protected ChannelApp          $channelApp;
-    protected ?ChannelProduct     $channelProduct;
-    protected ?PaymentChannelData $paymentChannelData;
 
-    public function gateway(PaymentChannelData $paymentChannelData) : static
+    public function initGateway(PaymentChannelData $paymentChannelData) : static
     {
         $this->paymentChannelData = $paymentChannelData;
         $this->channelProduct     = $paymentChannelData->channelProduct;
@@ -247,7 +240,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $gateway = $this->gateway;
 
 
-        $request = $gateway->completePurchase()->setParams($parameters);
+        $request = $gateway->completePurchase()->setParams($parameters['data']??[]);
 
         try {
             /**

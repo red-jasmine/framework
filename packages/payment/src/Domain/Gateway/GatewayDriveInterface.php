@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Gateway;
 
+use Omnipay\Common\GatewayInterface;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelPurchaseResult;
 use RedJasmine\Payment\Domain\Gateway\Data\ChannelRefundQueryResult;
@@ -21,11 +22,15 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 
+/**
+ * @property GatewayInterface $gateway
+ */
 interface GatewayDriveInterface
 {
     // TODO 这里传输给网关的 应该是 DTO 不支持修改 操作
 
-    public function gateway(PaymentChannelData $paymentChannelData) : static;
+
+    public function initGateway(PaymentChannelData $paymentChannelData) : static;
 
     public function purchase(Trade $trade, Environment $environment) : ChannelPurchaseResult;
 

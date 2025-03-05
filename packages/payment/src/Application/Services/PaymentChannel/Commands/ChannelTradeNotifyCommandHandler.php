@@ -22,9 +22,12 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
     }
 
     /**
-     * @param ChannelNotifyTradeCommand $command
+     * @param  ChannelNotifyTradeCommand  $command
      *
      * @return Response
+     * @throws AbstractException
+     * @throws PaymentException
+     * @throws Throwable
      */
     public function handle(ChannelNotifyTradeCommand $command) : Response
     {

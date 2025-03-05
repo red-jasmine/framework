@@ -54,7 +54,7 @@ class PaymentChannelService
         $gatewayDrive = ChannelGatewayDrive::create($channelApp->channel_code);
 
         try {
-            $gateway = $gatewayDrive->gateway($paymentChannelData);
+            $gateway = $gatewayDrive->initGateway($paymentChannelData);
 
 
             $channelPurchaseResult = $gateway->purchase($trade, $environment);
@@ -92,9 +92,9 @@ class PaymentChannelService
         $paymentChannelData             = new  PaymentChannelData;
         $paymentChannelData->channelApp = $channelApp;
         // 支付网关适配器
-        $gateway = ChannelGatewayDrive::create($channelApp->channel_code);
-
-        return $gateway->gateway($paymentChannelData)->completePurchase($data);
+        $gatewayDrive = ChannelGatewayDrive::create($channelApp->channel_code);
+        $gatewayDrive->initGateway($paymentChannelData);
+        return $gatewayDrive->completePurchase($data);
     }
 
 
@@ -117,7 +117,7 @@ class PaymentChannelService
             $paymentChannelData             = new  PaymentChannelData;
             $paymentChannelData->channelApp = $channelApp;
             $gateway                        = ChannelGatewayDrive::create($channelApp->channel_code);
-            $channelResult                  = $gateway->gateway($paymentChannelData)->refund($refund);
+            $channelResult                  = $gateway->initGateway($paymentChannelData)->refund($refund);
             if ($channelResult->isSuccessFul()) {
                 $refund->processing();
                 return true;
@@ -153,7 +153,7 @@ class PaymentChannelService
         $paymentChannelData             = new  PaymentChannelData;
         $paymentChannelData->channelApp = $channelApp;
 
-        $channelRefundQueryResult = $gateway->gateway($paymentChannelData)->refundQuery($refund);
+        $channelRefundQueryResult = $gateway->initGateway($paymentChannelData)->refundQuery($refund);
 
         // 查询失败
         if ($channelRefundQueryResult->isSuccessFul() === false) {
@@ -186,7 +186,7 @@ class PaymentChannelService
 
         $paymentChannelData->channelApp = $channelApp;
 
-        return $gateway->gateway($paymentChannelData)->notifyResponse();
+        return $gateway->initGateway($paymentChannelData)->notifyResponse();
 
     }
 
@@ -226,7 +226,7 @@ class PaymentChannelService
             $paymentChannelData->channelApp     = $channelApp;
             $paymentChannelData->channelProduct = $channelProduct;
             $gateway                            = ChannelGatewayDrive::create($channelApp->channel_code);
-            $result                             = $gateway->gateway($paymentChannelData)->transfer($transfer);
+            $result                             = $gateway->initGateway($paymentChannelData)->transfer($transfer);
             // 渠道调用失败 和 业务都正常
             $channelTransferData = new  ChannelTransferData();
             if (!$result->isSuccessFul()) {
@@ -294,7 +294,7 @@ class PaymentChannelService
             $paymentChannelData->channelApp     = $channelApp;
             $paymentChannelData->channelProduct = $channelProduct;
             Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:start');
-            $result = $gateway->gateway($paymentChannelData)->transferQuery($transfer);
+            $result = $gateway->initGateway($paymentChannelData)->transferQuery($transfer);
             // 网关调用是否正常
             Log::info('payment.domain.service.channel-service.transferQuery:gateway@transferQuery:end',
                       $result->toArray());
@@ -364,7 +364,7 @@ class PaymentChannelService
             $paymentChannelData->channelApp = $channelApp;
             Log::info(__CLASS__ . '@' . __METHOD__ . ':bindSettleReceiver.start');
 
-            $result = $gateway->gateway($paymentChannelData)->bindSettleReceiver($settleReceiver);
+            $result = $gateway->initGateway($paymentChannelData)->bindSettleReceiver($settleReceiver);
             // 网关调用是否正常
             Log::info(__CLASS__ . '@' . __METHOD__ . ':bindSettleReceiver.end', $result->toArray());
 
@@ -398,7 +398,7 @@ class PaymentChannelService
         $paymentChannelData                 = new  PaymentChannelData;
         $paymentChannelData->channelApp     = $channelApp;
         $paymentChannelData->channelProduct = $channelProduct;
-        return $gateway->gateway($paymentChannelData);
+        return $gateway->initGateway($paymentChannelData);
     }
 
     /**
@@ -466,7 +466,7 @@ class PaymentChannelService
             $paymentChannelData->channelApp = $channelApp;
             Log::info(__CLASS__ . '@' . __METHOD__ . ':querySettleReceivers.start');
 
-            $result = $gateway->gateway($paymentChannelData)->querySettleReceivers();
+            $result = $gateway->initGateway($paymentChannelData)->querySettleReceivers();
             // 网关调用是否正常
 
             if (!$result->isSuccessFul()) {

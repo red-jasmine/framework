@@ -40,7 +40,10 @@ use Throwable;
 
 class WechatPayGatewayDrive implements GatewayDriveInterface
 {
-    public function gateway(PaymentChannelData $paymentChannelData) : static
+
+    public $gateway;
+
+    public function initGateway(PaymentChannelData $paymentChannelData) : static
     {
         $this->paymentChannelData = $paymentChannelData;
         $this->channelProduct     = $paymentChannelData->channelProduct;
@@ -86,6 +89,9 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
                     throw new RuntimeException('应用证书不存在');
                 }
                 $gateway->setAppCert($channelApp->channel_app_public_key_cert);
+
+                $gateway->setChannelCert($channelApp->channel_public_key_cert);
+                $gateway->setChannelPublicKey($channelApp->channel_public_key);
 
                 break;
             default:
@@ -239,18 +245,15 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
 
             if ($response->isPaid()) {
                 $data = $response->getData();
-
+                $data['data']['out_trade_no'];
+                $data['data']['transaction_id'];
+                $data['data']['trade_state'];
+                $data['data']['attach'];
+                $data['data']['success_time'];
+                $data['data']['amount'];
 
                 // 调用查询接口
-                $queryResponse = $gateway->query([
-                    'biz_content' => [
-                        'trade_no'      => $data['trade_no'],
-                        'query_options' => [
-                            'buyer_user_type',
-                            'buyer_open_id'
-                        ],
-                    ]
-                ])->send();
+                $queryResponse = $gateway->query(['out_trade_no'=>$data['data']['out_trade_no']])->send();
 
 
                 if ($queryResponse->isSuccessful()) {

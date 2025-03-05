@@ -7,14 +7,14 @@ use RedJasmine\Support\Data\Data;
 class ChannelNotifyTradeCommand extends Data
 {
 
+    public string $channelCode; // 渠道
 
-    public int $appId;
+    public int $appId; // 应用
 
-    public string $channelCode;
 
-    public array $content;
+    public array $content; // 通知内容
 
-    public array $headers;
+    public array $request; // 请求
 
 
 }

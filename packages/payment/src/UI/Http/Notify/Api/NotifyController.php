@@ -38,14 +38,23 @@ class NotifyController extends Controller
 
         // 验证 回调 url 签名
         PaymentUrl::validSignature(compact('app', 'channel', 'time', 'signature'));
+        $headers = [];
 
+        foreach ($request->headers as $key => $values) {
+            $headers[$key] = is_array($values) ? implode(', ', $values) : $values;
+        }
 
         // 调用渠道支付回调方法
         $command              = new ChannelNotifyTradeCommand();
         $command->channelCode = $channel;
         $command->appId       = $app;
-        $command->content     = $request->all();
-        $command->headers     = $request->headers->all();
+
+        $command->content = [
+            'headers' => $headers,
+            'body'    => (string) $request->getContent(),
+            'data'    => $request->all(),
+        ];
+
 
         return app(PaymentChannelHandlerService::class)->tradeNotify($command);
 
