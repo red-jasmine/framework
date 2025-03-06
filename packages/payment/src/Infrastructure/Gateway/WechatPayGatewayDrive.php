@@ -49,10 +49,7 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
         $this->channelProduct     = $paymentChannelData->channelProduct;
         $this->channelApp         = $paymentChannelData->channelApp;
         $gatewayName              = $this->channelProduct->gateway ?? 'WechatPay';
-
-
-        $this->gateway = $this->initChannelApp(Omnipay::create($gatewayName), $this->channelApp);
-
+        $this->gateway            = $this->initChannelApp(Omnipay::create($gatewayName), $this->channelApp);
         return $this;
 
     }
@@ -106,6 +103,10 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
         return $gateway;
     }
 
+    public function notifyResponse() : NotifyResponseInterface
+    {
+        return new   NotifyResponse();
+    }
 
     /**
      * @param  Trade  $trade
@@ -219,16 +220,6 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
         }
     }
 
-    public function refund(Refund $refund) : ChannelRefundResult
-    {
-        // TODO: Implement refund() method.
-    }
-
-    public function refundQuery(Refund $refund) : ChannelRefundQueryResult
-    {
-        // TODO: Implement refundQuery() method.
-    }
-
     public function completePurchase(array $parameters = []) : ChannelTradeData
     {
         /**
@@ -253,34 +244,34 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
                 $data['data']['amount'];
 
                 // 调用查询接口
-                $queryResponse = $gateway->query(['out_trade_no'=>$data['data']['out_trade_no']])->send();
+                $queryRequest = $gateway->query(['out_trade_no' => $data['data']['out_trade_no']]);
 
-
+                $queryResponse = $queryRequest->send();
                 if ($queryResponse->isSuccessful()) {
                     // 合并参数
-                    //$data = array_merge($data, $queryResponse->getAlipayResponse());
+                    $data = array_merge($data, $queryResponse->getData());
                 }
+                $data = $data['data'] ?? [];
 
                 // TODO 转换查询对象
                 $channelTradeData                     = new  ChannelTradeData;
                 $channelTradeData->originalParameters = $data;
                 $channelTradeData->channelCode        = $this->channelApp->channel_code;
                 $channelTradeData->channelMerchantId  = $this->channelApp->channel_merchant_id;
-                $channelTradeData->channelAppId       = (string) $data['app_id'];
+                $channelTradeData->channelAppId       = (string) $data['appid'];
                 $channelTradeData->tradeNo            = (string) $data['out_trade_no'];
-                $channelTradeData->channelTradeNo     = (string) $data['trade_no'];
-                $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
-                $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->channelTradeNo     = (string) $data['transaction_id'];
+                $channelTradeData->amount             = new Money(bcdiv($data['amount']['total'], 100, 2));
+                $channelTradeData->paymentAmount      = new Money(bcdiv($data['amount']['payer_total'], 100, 2));
                 $channelTradeData->status             = TradeStatusEnum::SUCCESS;
                 $channelTradeData->payer              = Payer::from([
-                    'type'    => $data['buyer_user_type'] ?? null,
-                    'userId'  => $data['buyer_id'] ?? null,
-                    'account' => $data['buyer_logon_id'] ?? null,
-                    'openId'  => $data['buyer_open_id'] ?? null,
+                    'type'    => $data['payer']['buyer_user_type'] ?? null,
+                    'userId'  => $data['payer']['buyer_id'] ?? null,
+                    'account' => $data['payer']['buyer_logon_id'] ?? null,
+                    'openId'  => $data['payer']['openid'] ?? null,
                     'name'    => null,
                 ]);
-                $channelTradeData->paidTime           = Carbon::make($data['gmt_payment']);
-
+                $channelTradeData->paidTime           = Carbon::parse($data['success_time'], 'Asia/Shanghai');
                 return $channelTradeData;
             }
         } catch (Exception $e) {
@@ -291,10 +282,17 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
 
     }
 
-    public function notifyResponse() : NotifyResponseInterface
+
+    public function refund(Refund $refund) : ChannelRefundResult
     {
-        return new   NotifyResponse();
+        // TODO: Implement refund() method.
     }
+
+    public function refundQuery(Refund $refund) : ChannelRefundQueryResult
+    {
+        // TODO: Implement refundQuery() method.
+    }
+
 
     public function transfer(Transfer $transfer) : ChannelTransferResult
     {
