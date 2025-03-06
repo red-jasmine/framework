@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('gender', 64)->nullable()->comment('性别');
             $table->string('avatar')->nullable()->comment('头像');
             $table->date('birthday')->nullable()->comment('生日');
-            $table->date('biography')->nullable()->comment('个人介绍');
+            $table->string('biography')->nullable()->comment('个人介绍');
             $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
             $table->string('status')->default(UserStatusEnum::NORMAL)->comment(UserStatusEnum::comments('状态'));
             $table->timestamp('email_verified_at')->nullable();
