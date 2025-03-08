@@ -12,6 +12,10 @@ class PaymentTradeResult extends Data
 
     public string $merchantAppId;
 
+    public ?string $subject;
+
+    public ?string $description;
+
     /**
      * 支付ID
      * @var string
