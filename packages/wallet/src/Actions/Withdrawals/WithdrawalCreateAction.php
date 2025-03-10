@@ -7,10 +7,10 @@ use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Wallet\DataTransferObjects\WalletActionDTO;
 use RedJasmine\Wallet\DataTransferObjects\Withdrawals\WalletWithdrawalDTO;
-use RedJasmine\Wallet\Enums\Withdrawals\WithdrawalStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\Withdrawals\WithdrawalStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Wallet;
+use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 use RedJasmine\Wallet\Exceptions\WalletException;
-use RedJasmine\Wallet\Models\Wallet;
-use RedJasmine\Wallet\Models\WalletWithdrawal;
 use RedJasmine\Wallet\WalletWithdrawalService;
 use Throwable;
 

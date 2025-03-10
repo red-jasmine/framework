@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet;
 
 use Exception;
-use RedJasmine\Wallet\Models\Wallet;
+use RedJasmine\Wallet\Domain\Models\Wallet;
 
 trait HasWallet
 {

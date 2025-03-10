@@ -7,9 +7,9 @@ use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\RechargePaymentDTO;
 use RedJasmine\Wallet\DataTransferObjects\WalletActionDTO;
-use RedJasmine\Wallet\Enums\Recharges\RechargeStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
+use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use RedJasmine\Wallet\Exceptions\WalletException;
-use RedJasmine\Wallet\Models\WalletRecharge;
 use RedJasmine\Wallet\WalletRechargeService;
 use Throwable;
 

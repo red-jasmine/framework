@@ -2,12 +2,10 @@
 
 namespace RedJasmine\Wallet;
 
-use Exception;
 use RedJasmine\Support\Foundation\Service\Service;
-use RedJasmine\Support\Helpers\ID\Snowflake;
 use RedJasmine\Wallet\Actions\Withdrawals\WithdrawalCreateAction;
 use RedJasmine\Wallet\DataTransferObjects\Withdrawals\WalletWithdrawalDTO;
-use RedJasmine\Wallet\Models\WalletWithdrawal;
+use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 
 /**
  * @see WithdrawalCreateAction::execute()

@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('type', 30)->comment('账户类型');
             $table->decimal('balance', 12, 2)->default(0)->comment('余额');
             $table->decimal('freeze', 12, 2)->default(0)->comment('冻结');
-            $table->unsignedTinyInteger('status')->default(1)->comment('状态');
+            $table->string('status')->default(1)->comment('状态');
             $table->timestamps();
             $table->comment('钱包表');
         });

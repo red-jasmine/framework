@@ -1,13 +1,13 @@
 <?php
 
-namespace RedJasmine\Wallet\Models;
+namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Traits\Models\HasOwner;
 use RedJasmine\Support\Traits\Models\WithDTO;
-use RedJasmine\Wallet\Enums\WalletStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
 
 class Wallet extends Model
 {

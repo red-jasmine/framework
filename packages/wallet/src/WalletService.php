@@ -5,19 +5,17 @@ namespace RedJasmine\Wallet;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use LaravelIdea\Helper\RedJasmine\Wallet\Models\_IH_Wallet_C;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Service;
-use RedJasmine\Support\Helpers\ID\Snowflake;
 use RedJasmine\Wallet\DataTransferObjects\WalletActionDTO;
-use RedJasmine\Wallet\Enums\AmountDirection;
-use RedJasmine\Wallet\Enums\TransactionStatusEnum;
-use RedJasmine\Wallet\Enums\TransactionTypeEnum;
-use RedJasmine\Wallet\Enums\WalletStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\AmountDirection;
+use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Wallet;
+use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Exceptions\WalletException;
-use RedJasmine\Wallet\Models\Wallet;
-use RedJasmine\Wallet\Models\WalletTransaction;
 use Throwable;
 
 

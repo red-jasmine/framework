@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Models;
+namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -8,11 +8,10 @@ use RedJasmine\Support\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Traits\Models\HasOperator;
 use RedJasmine\Support\Traits\Models\HasOwner;
 use RedJasmine\Support\Traits\Models\WithDTO;
-use RedJasmine\Wallet\Enums\Withdrawals\WithdrawalStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
 
-class WalletWithdrawal extends Model
+class WalletRecharge extends Model
 {
-
     use WithDTO;
 
     use HasOwner;
@@ -24,8 +23,7 @@ class WalletWithdrawal extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'status'                     => WithdrawalStatusEnum::class,
-        'transfer_account_real_name' => 'encrypted'
+        'status' => RechargeStatusEnum::class
     ];
 
 

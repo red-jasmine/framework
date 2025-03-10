@@ -2,14 +2,12 @@
 
 namespace RedJasmine\Wallet;
 
-use Exception;
 use RedJasmine\Support\Foundation\Service\Service;
-use RedJasmine\Support\Helpers\ID\Snowflake;
 use RedJasmine\Wallet\Actions\Recharges\RechargeCreateAction;
 use RedJasmine\Wallet\Actions\Recharges\RechargePaidAction;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\RechargePaymentDTO;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\WalletRechargeDTO;
-use RedJasmine\Wallet\Models\WalletRecharge;
+use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 
 /**
  * @see RechargeCreateAction::execute()

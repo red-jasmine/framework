@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Enums\Withdrawals;
+namespace RedJasmine\Wallet\Domain\Models\Enums\Withdrawals;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

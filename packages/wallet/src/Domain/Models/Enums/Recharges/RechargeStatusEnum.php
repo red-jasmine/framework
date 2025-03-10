@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Enums\Recharges;
+namespace RedJasmine\Wallet\Domain\Models\Enums\Recharges;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

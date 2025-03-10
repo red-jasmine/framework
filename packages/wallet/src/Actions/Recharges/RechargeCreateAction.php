@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\DB;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Action;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\WalletRechargeDTO;
-use RedJasmine\Wallet\Enums\Recharges\RechargeStatusEnum;
-use RedJasmine\Wallet\Models\WalletRecharge;
+use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
+use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use RedJasmine\Wallet\WalletRechargeService;
 use Throwable;
 

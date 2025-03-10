@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\DataTransferObjects;
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Wallet\Enums\TransactionTypeEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 
 class WalletActionDTO extends Data
 {

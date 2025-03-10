@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Actions\Recharges;
 
 use RedJasmine\Support\Foundation\Service\Action;
-use RedJasmine\Wallet\Models\WalletRecharge;
+use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use RedJasmine\Wallet\WalletRechargeService;
 
 class RechargePayingAction extends Action
