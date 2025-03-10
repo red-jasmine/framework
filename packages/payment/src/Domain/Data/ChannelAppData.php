@@ -19,6 +19,7 @@ class ChannelAppData extends Data
     public ChannelAppStatusEnum $status = ChannelAppStatusEnum::ENABLE;
 
     public string  $signType = 'RSA2';
+    public ?string $channelAppSecret;
     public ?string $channelPublicKey;
     public ?string $channelAppPublicKey;
     public ?string $channelAppPrivateKey;
