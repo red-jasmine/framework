@@ -16,7 +16,7 @@ use const Overtrue\Socialite\Contracts;
 
 class WechatMiniAppProvider extends WeChat
 {
-    public const NAME = 'wechat_mini';
+    public const string NAME = 'wechat_mini';
 
     /**
      * @throws Exceptions\AuthorizeFailedException
@@ -43,7 +43,7 @@ class WechatMiniAppProvider extends WeChat
         return $response;
     }
 
-    protected function getJscodeUrl() : string
+    protected function getJsCodeUrl() : string
     {
         return $this->baseUrl . '/jscode2session';
     }
@@ -67,7 +67,7 @@ class WechatMiniAppProvider extends WeChat
 
     protected function getUserFromJsCode(string $code) : ResponseInterface
     {
-        return $this->getHttpClient()->get($this->getJscodeUrl(), [
+        return $this->getHttpClient()->get($this->getJsCodeUrl(), [
             'headers' => [ 'Accept' => 'application/json' ],
             'query'   => $this->getJsCodeFields($code),
         ]);
