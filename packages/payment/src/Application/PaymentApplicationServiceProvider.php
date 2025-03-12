@@ -76,7 +76,7 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         $this->app->bind(MerchantReadRepositoryInterface::class, MerchantReadRepository::class);
 
         $this->app->bind(MerchantAppRepositoryInterface::class, MerchantAppRepository::class);
-        $this->app->bind(MerchantAppReadRepositoryInterface::class, MerchantAppPermissionReadRepository::class);
+        $this->app->bind(MerchantAppReadRepositoryInterface::class, MerchantChannelAppReadRepository::class);
 
 
         $this->app->bind(ChannelRepositoryInterface::class, ChannelRepository::class);
@@ -100,7 +100,7 @@ class PaymentApplicationServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             MerchantChannelAppPermissionReadRepositoryInterface::class,
-            MerchantChannelAppReadRepository::class
+            MerchantAppPermissionReadRepository::class
         );
 
 
@@ -129,21 +129,21 @@ class PaymentApplicationServiceProvider extends ServiceProvider
     public function boot() : void
     {
         Event::listen([
-                          RefundCreatedEvent::class,
-                          RefundProcessingEvent::class
-                      ], PaymentChannelListener::class);
+            RefundCreatedEvent::class,
+            RefundProcessingEvent::class
+        ], PaymentChannelListener::class);
 
         Event::listen([
-                          TransferExecutingEvent::class,
-                          TransferProcessingEvent::class,
-                      ], PaymentChannelListener::class);
+            TransferExecutingEvent::class,
+            TransferProcessingEvent::class,
+        ], PaymentChannelListener::class);
 
         // 注册通知 通知监听器
         Event::listen([
-                          TradePaidEvent::class,
-                          RefundSuccessEvent::class,
-                          NotifyCreateEvent::class,
-                      ], AsyncNotifyListener::class);
+            TradePaidEvent::class,
+            RefundSuccessEvent::class,
+            NotifyCreateEvent::class,
+        ], AsyncNotifyListener::class);
 
 
     }

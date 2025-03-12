@@ -2,14 +2,14 @@
 
 namespace RedJasmine\Payment\Application\Services\Payer\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Payment\Domain\Data\PaymentEnvironmentData;
 use Spatie\LaravelData\Attributes\Validation\Required;
 
-class PayerLoginCommand extends Data
+class PayerLoginCommand extends PaymentEnvironmentData
 {
     public string $merchantAppId;
 
-    //
+    #[Required]
     public string $channelAppId;
     #[Required]
     public string $code;
