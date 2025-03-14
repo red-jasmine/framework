@@ -24,7 +24,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Shopping\\ShoppingPackageServiceProvider"
+                "RedJasmine\\Shopping\\ShoppingPackageServiceProvider",
+                "RedJasmine\\Shopping\\Application\\ShoppingApplicationServiceProvider"
             ]
         },
         "branch-alias": {

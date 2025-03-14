@@ -78,6 +78,7 @@ class OrderPayCommandHandler extends CommandHandler
 
     protected function getMerchantAppId() : int
     {
+        // TODO 根据 商家ID 获取对应的支付中心的 商户以及应用ID
         return Config::get('red-jasmine-shopping.payment.merchant_app_id');
     }
 

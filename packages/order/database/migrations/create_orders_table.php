@@ -20,9 +20,9 @@ return new class extends Migration {
             $table->string('order_no', 64)->unique()->comment('订单号');
             $table->string('app_id', 64)->comment('应用ID');
             $table->string('seller_type', 32)->comment('卖家类型');
-            $table->string('seller_id',64)->comment('卖家ID');
+            $table->string('seller_id', 64)->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');
-            $table->string('buyer_id',64)->comment('买家类型');
+            $table->string('buyer_id', 64)->comment('买家类型');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
 
@@ -40,16 +40,16 @@ return new class extends Migration {
             $table->string('invoice_status', 32)->nullable()->comment('发票状态');
 
             $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->decimal('product_amount',12)->default(0)->comment('商品金额');
-            $table->decimal('cost_amount',12)->default(0)->comment('成本金额');
-            $table->decimal('tax_amount',12)->default(0)->comment('税费金额');
-            $table->decimal('commission_amount',12)->default(0)->comment('佣金');
-            $table->decimal('product_payable_amount',12)->default(0)->comment('商品应付金额');
-            $table->decimal('freight_amount',12)->default(0)->comment('运费');
-            $table->decimal('discount_amount',12)->default(0)->comment('订单优惠');
-            $table->decimal('payable_amount',12)->default(0)->comment('应付金额');
-            $table->decimal('payment_amount',12)->default(0)->comment('实付金额');
-            $table->decimal('refund_amount',12)->default(0)->comment('退款金额');
+            $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
+            $table->decimal('cost_amount', 12)->default(0)->comment('成本金额');
+            $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');
+            $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
+            $table->decimal('product_payable_amount', 12)->default(0)->comment('商品应付金额');
+            $table->decimal('freight_amount', 12)->default(0)->comment('运费');
+            $table->decimal('discount_amount', 12)->default(0)->comment('订单优惠');
+            $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
+            $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
+            $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
 
 
             $table->timestamp('created_time')->nullable()->comment('创建时间');
