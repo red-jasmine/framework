@@ -13,8 +13,7 @@ class PaymentTradeListener
     {
         // 如果订单是 支付成功的
         if ($event instanceof TradePaidEvent) {
-            // 判断是否为 商城 生成的订单
-
+            // TODO 判断是否 为商城订单
 
             if ($event->trade) {
 
@@ -22,7 +21,16 @@ class PaymentTradeListener
 
                 $command = new OrderPaidCommand();
 
-                $command->id = $event->trade->trade_no;
+                $command->id = $event->trade->merchant_trade_order_no;
+                $command->orderPaymentId = null;
+
+                $command->amount;
+                $command->paymentChannel;
+                $command->paymentChannelNo;
+                $command->paymentMethod;
+                $command->paymentTime;
+
+
 
                 app(OrderCommandService::class)->paid($command);
 
