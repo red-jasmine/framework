@@ -8,6 +8,7 @@ use RedJasmine\Wallet\Actions\Recharges\RechargePaidAction;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\RechargePaymentDTO;
 use RedJasmine\Wallet\DataTransferObjects\Recharges\WalletRechargeDTO;
 use RedJasmine\Wallet\Domain\Models\WalletRecharge;
+use RedJasmine\Wallet\Domain\Services\WalletService;
 
 /**
  * @see RechargeCreateAction::execute()

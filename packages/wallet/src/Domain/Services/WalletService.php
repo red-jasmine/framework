@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet;
+namespace RedJasmine\Wallet\Domain\Services;
 
 use Exception;
 use Illuminate\Support\Collection;

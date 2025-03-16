@@ -2,16 +2,47 @@
 
 namespace RedJasmine\Wallet;
 
-use Illuminate\Support\ServiceProvider;
+use RedJasmine\Wallet\Domain\Services\WalletService;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class WalletServiceProvider extends ServiceProvider
+class WalletServicePackageProvider extends PackageServiceProvider
 {
+    public function configurePackage(Package $package) : void
+    {
+        /*
+    * This class is a Package Service Provider
+    *
+    * More info: https://github.com/spatie/laravel-package-tools
+    */
+        $package
+            ->name('red-jasmine-socialite')
+            ->hasConfigFile()
+            ->hasViews()
+            ->runsMigrations();
+
+
+        if (file_exists($package->basePath('/../database/migrations'))) {
+
+            $package->hasMigrations($this->getMigrations());
+        }
+    }
+
+    public function getMigrations() : array
+    {
+        return [
+            'create_wallets_table'
+        ];
+
+    }
+
+
     /**
      * Perform post-registration booting of services.
      *
      * @return void
      */
-    public function boot(): void
+    public function boots() : void
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
@@ -29,7 +60,7 @@ class WalletServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(): void
+    public function register() : void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/wallet.php', 'red-jasmine.wallet');
 
@@ -54,7 +85,7 @@ class WalletServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function bootForConsole(): void
+    protected function bootForConsole() : void
     {
         // Publishing the configuration file.
         $this->publishes([

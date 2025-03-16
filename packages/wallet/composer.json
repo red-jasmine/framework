@@ -30,7 +30,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Wallet\\WalletServiceProvider"
+                "WalletServicePackageProvider"
             ],
             "aliases": {
                 "WalletService": "RedJasmine\\Wallet\\Facades\\WalletService"

@@ -6,6 +6,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Wallet\Actions\Withdrawals\WithdrawalCreateAction;
 use RedJasmine\Wallet\DataTransferObjects\Withdrawals\WalletWithdrawalDTO;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
+use RedJasmine\Wallet\Domain\Services\WalletService;
 
 /**
  * @see WithdrawalCreateAction::execute()
