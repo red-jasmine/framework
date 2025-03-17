@@ -2,6 +2,9 @@
 
 return [
 
+    'tables' => [
+        'prefix' => 'jasmine_', // 表前缀
+    ],
     // UserInterface type
     'user_type' => [
         'admin'    => 'Admin',

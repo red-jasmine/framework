@@ -56,6 +56,13 @@ class CreateCommandHandler extends CommandHandler
         return $this->model;
     }
 
+    /**
+     * @deprecated
+     * @param  Data  $command
+     *
+     * @return Model
+     * @throws \Exception
+     */
     protected function createModel(Data $command) : Model
     {
 

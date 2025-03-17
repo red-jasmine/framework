@@ -58,6 +58,7 @@ abstract class ApplicationCommandService extends ApplicationService
     }
 
     /**
+     * @deprecated
      * @param  null  $command
      *
      * @return Model
