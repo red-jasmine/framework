@@ -17,9 +17,8 @@ return new class extends Migration {
             $table->string('icon')->nullable()->comment('图标');
             $table->string('description')->nullable()->comment('描述');
             $table->string('status')->default(VipStatusEnum::ENABLE)->comment(VipStatusEnum::comments('状态'));
-            $table->json('extras')->nullable()->comment('扩展信息');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->json('extras')->nullable()->comment('扩展参数');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 32)->nullable();
             $table->string('creator_id', 64)->nullable();
             $table->string('updater_type', 32)->nullable();
