@@ -4,11 +4,11 @@ namespace RedJasmine\Wallet\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum AmountDirection: int
+enum AmountDirection: string
 {
-    case INCOME = 1;
+    case INCOME = 'income';
 
-    case EXPENDITURE = 0;
+    case EXPENDITURE = 'expenditure';
 
     use EnumsHelper;
 

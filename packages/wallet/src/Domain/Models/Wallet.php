@@ -4,27 +4,36 @@ namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Traits\Models\HasOwner;
-use RedJasmine\Support\Traits\Models\WithDTO;
 use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
 
-class Wallet extends Model
+
+class Wallet extends Model implements OperatorInterface, OwnerInterface
 {
 
-    use WithDTO;
+    public $incrementing = false;
+
+    public $uniqueShortId = true;
+
+    use HasSnowflakeId;
+
+
+    use HasOperator;
 
     use HasOwner;
 
     use HasDateTimeFormatter;
 
-    public $incrementing = false;
 
     protected $fillable = [
         'owner_type',
         'owner_id',
         'type',
-        'id'
     ];
     protected $casts    = [
         'status' => WalletStatusEnum::class

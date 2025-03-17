@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Domain\Repository;
+namespace RedJasmine\Wallet\Domain\Repositories;
 
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
