@@ -3,14 +3,9 @@
 namespace RedJasmine\Support\Foundation\Service;
 
 
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Routing\ResolvesRouteDependencies;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionException;
-use Illuminate\Pipeline\Pipeline;
 
 /**
  * 服务基础
@@ -50,9 +45,7 @@ abstract class Service
         if ($macro instanceof MacroAwareService) {
             $macro->setService($this);
         }
-        if ($macro instanceof MacroAwareArguments) {
-            $macro->setArguments($parameters);
-        }
+
 
         return $macro;
     }
