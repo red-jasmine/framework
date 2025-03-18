@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Domain\Orders\OrderDomainService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 

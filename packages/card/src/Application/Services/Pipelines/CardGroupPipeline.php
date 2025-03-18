@@ -3,7 +3,7 @@
 namespace RedJasmine\Card\Application\Services\Pipelines;
 
 use RedJasmine\Card\Application\Services\CardGroupQueryService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 

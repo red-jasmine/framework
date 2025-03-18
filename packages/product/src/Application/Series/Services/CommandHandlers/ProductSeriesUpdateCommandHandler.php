@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesProduc
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Facades\ServiceContext;
 use Throwable;

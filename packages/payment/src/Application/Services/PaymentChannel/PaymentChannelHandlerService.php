@@ -15,7 +15,7 @@ use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Foundation\Service\Service;
 
 /**
  * @see ChannelTradeNotifyCommandHandler::handle()
@@ -25,19 +25,18 @@ use RedJasmine\Support\Application\ApplicationService;
  * @method transfer(ChannelTransferCreateCommand $command)
  * @method transferQuery(ChannelTransferQueryCommand $command)
  */
-class PaymentChannelHandlerService extends ApplicationService
+class PaymentChannelHandlerService extends Service
 {
     public function __construct(
-        public TradeRepositoryInterface          $tradeRepository,
-        public RefundRepositoryInterface         $refundRepository,
-        public TransferRepositoryInterface       $transferRepository,
-        public ChannelAppRepositoryInterface     $channelAppRepository,
+        public TradeRepositoryInterface $tradeRepository,
+        public RefundRepositoryInterface $refundRepository,
+        public TransferRepositoryInterface $transferRepository,
+        public ChannelAppRepositoryInterface $channelAppRepository,
         public ChannelProductRepositoryInterface $channelProductRepository,
-        public MerchantAppRepositoryInterface    $merchantAppRepository,
-        public PaymentChannelService             $paymentChannelService,
+        public MerchantAppRepositoryInterface $merchantAppRepository,
+        public PaymentChannelService $paymentChannelService,
 
-    )
-    {
+    ) {
     }
 
 

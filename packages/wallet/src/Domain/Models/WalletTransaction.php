@@ -4,7 +4,7 @@ namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Traits\HasDateTimeFormatter;
-use RedJasmine\Wallet\Domain\Models\Enums\AmountDirection;
+use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 
@@ -17,7 +17,7 @@ class WalletTransaction extends Model
 
     protected $casts = [
         'status'           => TransactionStatusEnum::class,
-        'direction'        => AmountDirection::class,
+        'direction'        => AmountDirectionEnum::class,
         'transaction_type' => TransactionTypeEnum::class
     ];
 

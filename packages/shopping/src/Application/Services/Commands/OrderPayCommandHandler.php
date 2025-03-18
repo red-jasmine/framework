@@ -10,7 +10,7 @@ use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 class OrderPayCommandHandler extends CommandHandler
 {

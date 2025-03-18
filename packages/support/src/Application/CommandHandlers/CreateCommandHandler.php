@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Application\CommandHandlers;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
@@ -28,6 +29,17 @@ class CreateCommandHandler extends CommandHandler
      */
     public function handle(Data $command) : ?Model
     {
+        // TODO
+        // 创建模型
+        // 构建处理上下文
+        $handleContext = new HandleContext();
+        $handleContext->setCommand($command);
+
+        // 开启事务
+        // 验证命令
+        // 填充模型
+        // 存储模型到仓库
+        // 提交事务
 
         // 设置命令对象
         $this->setCommand($command);
@@ -57,11 +69,11 @@ class CreateCommandHandler extends CommandHandler
     }
 
     /**
-     * @deprecated
      * @param  Data  $command
      *
      * @return Model
      * @throws \Exception
+     * @deprecated
      */
     protected function createModel(Data $command) : Model
     {
@@ -93,7 +105,6 @@ class CreateCommandHandler extends CommandHandler
      */
     protected function fill(Data $command) : Model
     {
-
 
 
         if (property_exists($this->service, 'transformer')) {

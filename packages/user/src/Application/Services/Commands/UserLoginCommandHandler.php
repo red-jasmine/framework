@@ -2,7 +2,7 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\User\Application\Services\UserCommandService;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;

@@ -18,6 +18,10 @@ class WalletData extends Data
     #[Max(32)]
     public string $type;
 
+
+    #[Max(3)]
+    public string $currency = 'CNY';
+
     /**
      * @var WalletStatusEnum
      */

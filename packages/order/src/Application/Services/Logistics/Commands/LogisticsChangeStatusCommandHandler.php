@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\Services\Logistics\Commands;
 use RedJasmine\Order\Application\Services\Handlers\Logistics\AbstractException;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsRepositoryInterface;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use Throwable;
 
 class LogisticsChangeStatusCommandHandler extends CommandHandler

@@ -3,9 +3,9 @@
 namespace RedJasmine\Payment\Application\Services\Payer;
 
 use RedJasmine\Payment\Application\Services\Payer\Commands\PayerLoginCommandHandler;
-use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Foundation\Service\Service;
 
-class PayerCommandService extends ApplicationService
+class PayerCommandService extends Service
 {
 
     protected static $macros = [

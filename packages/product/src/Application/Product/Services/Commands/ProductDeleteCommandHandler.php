@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 
 /**

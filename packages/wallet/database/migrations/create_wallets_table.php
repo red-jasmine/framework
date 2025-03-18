@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('type', 32)->comment('账户类型');
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
+            $table->string('currency', 3)->default('CNY')->comment('货币');
             $table->decimal('balance', 12)->default(0)->comment('余额');
             $table->decimal('freeze', 12)->default(0)->comment('冻结');
             $table->string('status', 32)->default(WalletStatusEnum::ENABLE)->comment(WalletStatusEnum::comments('状态'));

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RedJasmine\Product\Application\Product\Services\ProductQueryService;
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
 

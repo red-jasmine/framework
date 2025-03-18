@@ -4,7 +4,7 @@ namespace RedJasmine\Card\Application\Services\CommandHandlers\CardGroupBindProd
 
 use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 /**
  * @method  CardGroupBindProductCommandService getService()

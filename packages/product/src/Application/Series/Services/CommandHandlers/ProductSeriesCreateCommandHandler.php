@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesProduc
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 class ProductSeriesCreateCommandHandler extends CommandHandler

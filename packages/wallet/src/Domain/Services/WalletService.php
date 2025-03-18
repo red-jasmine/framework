@@ -9,7 +9,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Wallet\DataTransferObjects\WalletActionDTO;
-use RedJasmine\Wallet\Domain\Models\Enums\AmountDirection;
+use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
@@ -121,7 +121,7 @@ class WalletService extends Service
                 throw new WalletException('当前操作不支持转账');
                 break;
         }
-        $direction = bccomp($DTO->amount, 0, 2) > 0 ? AmountDirection::INCOME : AmountDirection::EXPENDITURE;
+        $direction = bccomp($DTO->amount, 0, 2) > 0 ? AmountDirectionEnum::INCOME : AmountDirectionEnum::EXPENDITURE;
         try {
             DB::beginTransaction();
             $wallet = $this->findLock($id);
@@ -270,7 +270,7 @@ class WalletService extends Service
             $transaction                   = new WalletTransaction();
             $transaction->id               = $this->buildID();
             $transaction->amount           = -$DTO->amount;
-            $transaction->direction        = AmountDirection::EXPENDITURE;
+            $transaction->direction        = AmountDirectionEnum::EXPENDITURE;
             $transaction->status           = TransactionStatusEnum::SUCCESS;
             $transaction->transaction_type = $DTO->type;
             $transaction->title            = $DTO->title;
@@ -335,7 +335,7 @@ class WalletService extends Service
             $transaction                   = new WalletTransaction();
             $transaction->id               = $this->buildID();
             $transaction->amount           = $DTO->amount;
-            $transaction->direction        = AmountDirection::INCOME;
+            $transaction->direction        = AmountDirectionEnum::INCOME;
             $transaction->status           = TransactionStatusEnum::SUCCESS;
             $transaction->transaction_type = $DTO->type;
             $transaction->title            = $DTO->title;
@@ -387,7 +387,7 @@ class WalletService extends Service
             $outTransaction                   = new WalletTransaction();
             $outTransaction->id               = $this->buildID();
             $outTransaction->amount           = -$DTO->amount;
-            $outTransaction->direction        = AmountDirection::EXPENDITURE;
+            $outTransaction->direction        = AmountDirectionEnum::EXPENDITURE;
             $outTransaction->status           = TransactionStatusEnum::SUCCESS;
             $outTransaction->transaction_type = $DTO->type;
             $outTransaction->title            = $DTO->title;
@@ -399,7 +399,7 @@ class WalletService extends Service
             $intoTransaction                   = new WalletTransaction();
             $intoTransaction->id               = $this->buildID();
             $intoTransaction->amount           = $DTO->amount;
-            $intoTransaction->direction        = AmountDirection::INCOME;
+            $intoTransaction->direction        = AmountDirectionEnum::INCOME;
             $intoTransaction->status           = TransactionStatusEnum::SUCCESS;
             $intoTransaction->transaction_type = $DTO->type;
             $intoTransaction->title            = $DTO->title;

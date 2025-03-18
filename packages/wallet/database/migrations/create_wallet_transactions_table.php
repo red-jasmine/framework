@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Wallet\Domain\Models\Enums\AmountDirection;
+use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 
@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create(config('red-jasmine-support.tables.prefix', 'jasmine_').'wallet_transactions', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
+            $table->string('currency', 3)->comment('货币');
             $table->decimal('amount', 12)->comment('金额');
-            $table->string('direction')->comment(AmountDirection::comments('金额方向'));
+            $table->string('direction')->comment(AmountDirectionEnum::comments('金额方向'));
             $table->string('transaction_type')->comment(TransactionTypeEnum::comments('交易类型'));
             $table->string('status')->nullable()->comment(TransactionStatusEnum::comments('状态'));
             $table->string('title', 30)->nullable()->comment('标题');

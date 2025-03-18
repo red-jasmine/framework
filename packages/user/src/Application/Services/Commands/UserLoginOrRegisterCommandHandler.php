@@ -5,7 +5,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 use Illuminate\Support\Str;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserBindCommand;
 use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\UserCommandService;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;

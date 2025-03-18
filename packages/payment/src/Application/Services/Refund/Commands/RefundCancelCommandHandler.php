@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 use RedJasmine\Payment\Application\Services\Refund\RefundCommandService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Refund;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 

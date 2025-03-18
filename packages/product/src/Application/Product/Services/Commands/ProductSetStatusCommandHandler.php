@@ -15,7 +15,7 @@ use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Product\Exceptions\StockException;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use Throwable;
 
 /**

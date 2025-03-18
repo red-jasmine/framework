@@ -2,7 +2,7 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\UserCommandService;
 use RedJasmine\User\Domain\Services\UserSocialiteService;

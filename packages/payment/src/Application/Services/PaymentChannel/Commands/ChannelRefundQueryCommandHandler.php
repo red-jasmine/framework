@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 
 use RedJasmine\Payment\Application\Services\CommandHandlers\PaymentChannel\Throwable;
 use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 class ChannelRefundQueryCommandHandler extends CommandHandler

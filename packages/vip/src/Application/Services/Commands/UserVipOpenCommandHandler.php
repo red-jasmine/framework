@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Application\Services\Commands;
 
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Vip\Application\Services\UserVipCommandService;
 use RedJasmine\Vip\Domain\Exceptions\VipException;

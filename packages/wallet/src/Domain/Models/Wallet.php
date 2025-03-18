@@ -29,11 +29,17 @@ class Wallet extends Model implements OperatorInterface, OwnerInterface
 
     use HasDateTimeFormatter;
 
+    public function getTable() : string
+    {
+        return config('red-jasmine-support.tables.prefix', 'jasmine_').'wallets';
+    }
+
 
     protected $fillable = [
         'owner_type',
         'owner_id',
         'type',
+        'currency',
     ];
     protected $casts    = [
         'status' => WalletStatusEnum::class

@@ -6,7 +6,7 @@ use RedJasmine\Payment\Application\Services\Settle\SettleCommandService;
 use RedJasmine\Payment\Domain\Data\SettleData;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Services\SettleService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 

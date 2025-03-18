@@ -19,7 +19,7 @@ use RedJasmine\Support\Foundation\Service\Service;
  * @method void  delete(Data $command)
  * @property RepositoryInterface $repository
  */
-abstract class ApplicationCommandService extends ApplicationService
+abstract class ApplicationCommandService extends Service
 {
     /**
      * @var string

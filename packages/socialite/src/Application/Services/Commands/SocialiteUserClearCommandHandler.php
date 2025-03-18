@@ -4,7 +4,7 @@ namespace RedJasmine\Socialite\Application\Services\Commands;
 
 use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 

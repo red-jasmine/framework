@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\Application\Services\Commands;
 
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Domain\Orders\OrderDomainService;
-use RedJasmine\Support\Application\CommandHandler;
+use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 class ProductCalculateCommandHandler extends CommandHandler
 {

@@ -1,6 +1,5 @@
 <?php
 
-
 use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\WalletCommandService;
 
@@ -17,7 +16,11 @@ test('can create a wallet', function () {
     $command->type = 'points';
 
 
-    $this->wallCommandService->create($command);
+    $result  = $this->wallCommandService->create($command);
+
+
+    $this->assertEquals($command->type, $result->type);
+    $this->assertEquals(0, bccomp($result->balance,0,0));
 
 
 });
