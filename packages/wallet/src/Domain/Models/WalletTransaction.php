@@ -4,6 +4,8 @@ namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Casts\AmountCast;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -14,8 +16,10 @@ use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 /**
  * @property Amount $amount
  */
-class WalletTransaction extends Model
+class WalletTransaction extends Model implements OperatorInterface
 {
+
+    use HasOperator;
 
     use HasDateTimeFormatter;
 
