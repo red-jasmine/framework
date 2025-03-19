@@ -17,9 +17,6 @@ return new class extends Migration {
             $table->decimal('amount_total', 12)->comment('金额');
             $table->decimal('fee', 12)->default(0)->comment('费用');
             $table->decimal('actual_amount', 12)->default(0)->comment('实际');
-
-
-
             $table->string('status')->comment(WithdrawalStatusEnum::comments('提现状态'));
 
             // 收款方

@@ -61,6 +61,11 @@ class WalletService
             case TransactionTypeEnum::PAYMENT:
             case TransactionTypeEnum::TRANSFER:
             case TransactionTypeEnum::WITHDRAWAL:
+                // 判断是否需要验证余额
+                if (($data->isAllowNegative === false) && bccomp($wallet->balance, $data->amount->total(), 2) <= 0) {
+                    throw new WalletException('余额不足');
+                }
+
                 $transaction->direction = AmountDirectionEnum::EXPENSE;
                 $wallet->balance        = bcsub($wallet->balance, $data->amount->total(), 2);
                 $transaction->amount    = bcmul($data->amount->total(), -1, 2);
