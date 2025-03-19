@@ -27,6 +27,7 @@ class HandleContext
 
     public function setModel(Model $model) : HandleContext
     {
+
         $this->model = $model;
         return $this;
     }

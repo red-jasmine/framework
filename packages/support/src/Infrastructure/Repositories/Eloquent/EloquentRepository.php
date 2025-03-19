@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Throwable;
 
+
 class EloquentRepository implements RepositoryInterface
 {
 
     /**
-     * @var $eloquentModelClass class-string
+     * @var $eloquentModelClass class-string<TClass>
      */
     protected static string $eloquentModelClass = Model::class;
 
