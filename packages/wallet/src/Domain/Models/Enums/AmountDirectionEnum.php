@@ -7,16 +7,17 @@ use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 enum AmountDirectionEnum: string
 {
     case INCOME = 'income';
-
-    case EXPENDITURE = 'expenditure';
+    case EXPENSE = 'expense';
+    case OTHER = 'other';
 
     use EnumsHelper;
 
     public static function labels() : array
     {
         return [
-            self::INCOME->value      => '收入',
-            self::EXPENDITURE->value => '支出',
+            self::INCOME->value  => '收入',
+            self::EXPENSE->value => '支出',
+            self::OTHER->value   => '其他',
         ];
 
     }

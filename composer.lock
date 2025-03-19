@@ -7908,13 +7908,10 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/wallet",
-                "reference": "e03c9ff683731edaaba92045f2e25a22c64e1612"
+                "reference": "d2874caf7b3880154c5e7d8f9cb82653a07bd54e"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^8.0"
             },
             "type": "library",
             "extra": {
@@ -7922,10 +7919,7 @@
                     "providers": [
                         "RedJasmine\\Wallet\\WalletServicePackageProvider",
                         "RedJasmine\\Wallet\\Application\\WalletApplicationServiceProvider"
-                    ],
-                    "aliases": {
-                        "WalletService": "RedJasmine\\Wallet\\Facades\\WalletService"
-                    }
+                    ]
                 },
                 "branch-alias": {
                     "dev-master": "1.0.x-dev",

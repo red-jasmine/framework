@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -25,14 +26,9 @@ class Wallet extends Model implements OperatorInterface, OwnerInterface
 
     use HasOperator;
 
-    use HasOwner;
-
     use HasDateTimeFormatter;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-support.tables.prefix', 'jasmine_').'wallets';
-    }
+    use HasOwner;
 
 
     protected $fillable = [
@@ -48,5 +44,16 @@ class Wallet extends Model implements OperatorInterface, OwnerInterface
     public function transactions() : HasMany
     {
         return $this->hasMany(WalletTransaction::class, 'wallet_id', 'id');
+    }
+
+    public function transaction(WalletTransaction $walletTransaction) : bool
+    {
+        if (!$this->relationLoaded('transactions')) {
+            $this->setRelation('transactions', Collection::make());
+        }
+
+        $this->transactions->add($walletTransaction);
+
+        return true;
     }
 }

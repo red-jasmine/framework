@@ -2,13 +2,10 @@
 
 namespace RedJasmine\Wallet\Domain\Services;
 
-use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Wallet\DataTransferObjects\WalletActionDTO;
+use RedJasmine\Wallet\Domain\Data\WalletTransactionData;
 use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
@@ -19,68 +16,85 @@ use RedJasmine\Wallet\Exceptions\WalletException;
 use Throwable;
 
 
-class WalletService extends Service
+class WalletService
 {
-    protected static ?string $actionsConfigKey = 'red-jasmine.wallet.actions';
 
 
-    public function find(int $id) : Wallet
-    {
-        return Wallet::findOrFail($id);
-    }
-
-    public function findLock(int $id) : Wallet
-    {
-        return Wallet::lockForUpdate()->findOrFail($id);
-    }
-
-
-    public function findByOwner(UserInterface $owner, string $walletType) : Wallet
-    {
-        return Wallet::onlyOwner($owner)->where('type', $walletType)->findOrFail();
-    }
+    // 收入：
+    // 支出：
+    // 冻结:
+    // 解冻:
 
     /**
-     * @param UserInterface $owner
-     * @param string        $walletType
-     *
-     * @return Wallet
-     * @throws Exception
-     */
-    public function wallet(UserInterface $owner, string $walletType) : Wallet
-    {
-        return $this->create($owner, $walletType);
-
-    }
-
-    /**
-     * @param UserInterface $owner
-     *
-     * @return Collection|array|Wallet[]
-     */
-    public function walletsByOwner(UserInterface $owner) : Collection
-    {
-        return Wallet::onlyOwner($owner)->get();
-    }
-
-    /**
-     * @param WalletActionDTO $DTO
-     *
-     * @return void
      * @throws WalletException
      */
-    public function validate(WalletActionDTO $DTO) : void
+    public function transaction(Wallet $wallet, WalletTransactionData $walletTransactionData) : Wallet
     {
-
-        if (bccomp($DTO->amount, 0, 2) <= 0) {
-            throw new WalletException('充值必须大于0');
+        // 验证钱包状态 TODO
+        //  操作金额必须大于 0
+        if (bccomp($walletTransactionData->amount->total(), 0, 2) < 0) {
+            throw new WalletException('操作金额必须大于 0');
         }
+
+        $transaction                   = WalletTransaction::make();
+        $transaction->wallet_id        = $wallet->id;
+        $transaction->amount           = $walletTransactionData->amount;
+        $transaction->transaction_type = $walletTransactionData->transactionType;
+        $transaction->status           = TransactionStatusEnum::SUCCESS;
+        $transaction->title            = $walletTransactionData->title;
+        $transaction->description      = $walletTransactionData->description;
+        $transaction->bill_type        = $walletTransactionData->billType;
+        $transaction->order_no         = $walletTransactionData->orderNo;
+        $transaction->tags             = $walletTransactionData->tags;
+        $transaction->remarks          = $walletTransactionData->remarks;
+
+
+        switch ($walletTransactionData->transactionType) {
+            case TransactionTypeEnum::REFUND:
+            case TransactionTypeEnum::RECHARGE:
+                $transaction->direction = AmountDirectionEnum::INCOME;
+                $wallet->balance        = bcadd($wallet->balance, $walletTransactionData->amount->total(), 2);
+
+                break;
+            case TransactionTypeEnum::PAYMENT:
+            case TransactionTypeEnum::WITHDRAWAL:
+                $transaction->direction = AmountDirectionEnum::EXPENSE;
+                $wallet->balance        = bcsub($wallet->balance, $walletTransactionData->amount->total(), 2);
+                break;
+            case TransactionTypeEnum::FROZEN:
+                $transaction->direction = AmountDirectionEnum::OTHER;
+                $wallet->balance        = bcsub($wallet->balance, $walletTransactionData->amount->total(), 2);
+                $wallet->freeze         = bcadd($wallet->freeze, $walletTransactionData->amount->total(), 2);
+
+                break;
+            case TransactionTypeEnum::UNFROZEN:
+                $transaction->direction = AmountDirectionEnum::OTHER;
+                $wallet->balance        = bcadd($wallet->balance, $walletTransactionData->amount->total(), 2);
+                $wallet->freeze         = bcsub($wallet->freeze, $walletTransactionData->amount->total(), 2);
+                break;
+            case TransactionTypeEnum::TRANSFER:
+                // 如果转出 算 支出、 如果 转入算 收入
+                throw new WalletException('当前操作不支持转账');
+                break;
+            default:
+                throw new WalletException('当前操作不支持转账');
+                break;
+        }
+
+        // 记录余额
+        $transaction->balance = $wallet->balance;
+        $transaction->freeze  = $wallet->freeze;
+
+        $wallet->transaction($transaction);
+
+        return $wallet;
+
 
     }
 
     /**
-     * @param int             $id
-     * @param WalletActionDTO $DTO
+     * @param  int  $id
+     * @param  WalletActionDTO  $DTO
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -93,9 +107,9 @@ class WalletService extends Service
     }
 
     /**
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     * @param bool            $balanceAllowNegative
+     * @param  int  $id
+     * @param  WalletActionDTO  $DTO
+     * @param  bool  $balanceAllowNegative
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -115,13 +129,11 @@ class WalletService extends Service
             case TransactionTypeEnum::WITHDRAWAL:
                 $DTO->amount = bcmul($DTO->amount, -1, 2);
                 break;
-            case TransactionTypeEnum::FROZEN:
-            case TransactionTypeEnum::UNFROZEN:
             case TransactionTypeEnum::TRANSFER:
                 throw new WalletException('当前操作不支持转账');
                 break;
         }
-        $direction = bccomp($DTO->amount, 0, 2) > 0 ? AmountDirectionEnum::INCOME : AmountDirectionEnum::EXPENDITURE;
+        $direction = bccomp($DTO->amount, 0, 2) > 0 ? AmountDirectionEnum::INCOME : AmountDirectionEnum::EXPENSE;
         try {
             DB::beginTransaction();
             $wallet = $this->findLock($id);
@@ -156,57 +168,8 @@ class WalletService extends Service
 
 
     /**
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     *
-     * @return WalletTransaction
-     * @throws AbstractException
-     * @throws Throwable
-     */
-    public function refund(int $id, WalletActionDTO $DTO) : WalletTransaction
-    {
-        $DTO->type = TransactionTypeEnum::REFUND;
-        return $this->doAction($id, $DTO);
-    }
-
-    /**
-     * 支付
-     *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     *
-     * @return WalletTransaction
-     * @throws AbstractException
-     * @throws Throwable
-     */
-    public function payment(int $id, WalletActionDTO $DTO) : WalletTransaction
-    {
-        $DTO->type = TransactionTypeEnum::PAYMENT;
-        return $this->doAction($id, $DTO);
-    }
-
-
-    /**
-     * 扣费
-     *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     *
-     * @return WalletTransaction
-     * @throws AbstractException
-     * @throws Throwable
-     * @throws WalletException
-     */
-    public function charge(int $id, WalletActionDTO $DTO) : WalletTransaction
-    {
-        $DTO->type = TransactionTypeEnum::PAYMENT;
-        return $this->doAction($id, $DTO, true);
-    }
-
-
-    /**
-     * @param Wallet              $wallet
-     * @param TransactionTypeEnum $transactionType
+     * @param  Wallet  $wallet
+     * @param  TransactionTypeEnum  $transactionType
      *
      * @return bool
      * @throws WalletException
@@ -216,7 +179,7 @@ class WalletService extends Service
         if ($wallet->status === WalletStatusEnum::DISABLE && !in_array($transactionType, [
                 TransactionTypeEnum::PAYMENT,
                 TransactionTypeEnum::TRANSFER,
-            ],                                                         true)) {
+            ], true)) {
             throw new WalletException('使用受限');
         }
         return true;
@@ -241,9 +204,9 @@ class WalletService extends Service
     /**
      * 冻结金额
      *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     * @param bool            $forceFreeze
+     * @param  int  $id
+     * @param  WalletActionDTO  $DTO
+     * @param  bool  $forceFreeze
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -292,8 +255,8 @@ class WalletService extends Service
     /**
      * 强制冻结
      *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
+     * @param  int  $id
+     * @param  WalletActionDTO  $DTO
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -308,8 +271,8 @@ class WalletService extends Service
     /**
      * 解冻
      *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
+     * @param  int  $id
+     * @param  WalletActionDTO  $DTO
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -356,9 +319,9 @@ class WalletService extends Service
 
 
     /**
-     * @param int             $outWalletId
-     * @param int             $intoWalletId
-     * @param WalletActionDTO $DTO
+     * @param  int  $outWalletId
+     * @param  int  $intoWalletId
+     * @param  WalletActionDTO  $DTO
      *
      * @return WalletTransaction
      * @throws AbstractException
@@ -387,7 +350,7 @@ class WalletService extends Service
             $outTransaction                   = new WalletTransaction();
             $outTransaction->id               = $this->buildID();
             $outTransaction->amount           = -$DTO->amount;
-            $outTransaction->direction        = AmountDirectionEnum::EXPENDITURE;
+            $outTransaction->direction        = AmountDirectionEnum::EXPENSE;
             $outTransaction->status           = TransactionStatusEnum::SUCCESS;
             $outTransaction->transaction_type = $DTO->type;
             $outTransaction->title            = $DTO->title;
@@ -417,45 +380,6 @@ class WalletService extends Service
         }
         return $outTransaction;
     }
-
-    /**
-     * 提现
-     *
-     * @param int             $id
-     * @param WalletActionDTO $DTO
-     *
-     * @return WalletTransaction
-     * @throws AbstractException
-     * @throws Throwable
-     */
-    public function withdraw(int $id, WalletActionDTO $DTO) : WalletTransaction
-    {
-        $DTO->type = TransactionTypeEnum::WITHDRAWAL;
-        return $this->doAction($id, $DTO);
-    }
-
-    /**
-     * 创建
-     *
-     * @param UserInterface $owner
-     * @param string        $walletType
-     *
-     * @return Wallet
-     * @throws Exception
-     */
-    public function create(UserInterface $owner, string $walletType) : Wallet
-    {
-        $attributes = [
-            'owner_type' => $owner->getType(),
-            'owner_id'   => $owner->getID(),
-            'type'       => $walletType
-        ];
-        return Wallet::firstOrCreate($attributes, [
-            'id'     => $this->buildID(),
-            'status' => WalletStatusEnum::ENABLE
-        ]);
-    }
-
 
 
 }

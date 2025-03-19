@@ -8,7 +8,7 @@ use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-support.tables.prefix', 'jasmine_').'wallets', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('type', 32)->comment('账户类型');
             $table->string('owner_type', 32)->comment('所属者类型');
@@ -30,6 +30,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-support.tables.prefix', 'jasmine_').'wallets');
+        Schema::dropIfExists('wallets');
     }
 };

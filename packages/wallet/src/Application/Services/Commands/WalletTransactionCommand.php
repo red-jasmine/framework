@@ -7,7 +7,9 @@ use RedJasmine\Wallet\Domain\Data\WalletTransactionData;
 /**
  * 交易创建流程
  */
-class WalletTransactionCreateCommand extends WalletTransactionData
+class WalletTransactionCommand extends WalletTransactionData
 {
+
+    public int $id;
 
 }
