@@ -32,9 +32,15 @@ return new class extends Migration {
             $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单ID');
             $table->string('payment_channel_trade_no', '64')->nullable()->comment('支付渠道单号');
             $table->timestamp('payment_time')->nullable()->comment('支付时间');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
-            $table->json('extends')->nullable()->comment('扩展字段');
+
+            $table->json('extras')->nullable()->comment('扩展字段');
+
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('updater_type', 32)->nullable();
+            $table->string('updater_id', 64)->nullable();
+
             $table->timestamps();
             $table->comment('钱包-提现单');
         });

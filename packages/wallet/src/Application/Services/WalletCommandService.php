@@ -10,11 +10,12 @@ use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommandHandler;
 use RedJasmine\Wallet\Application\Services\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Commands\WalletTransactionCommandHandler;
 use RedJasmine\Wallet\Domain\Models\Wallet;
+use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 
 /**
  * @method Wallet create(WalletCreateCommand $command)
- * @method  transaction(WalletTransactionCommand $command)
+ * @method WalletTransaction  transaction(WalletTransactionCommand $command)
  */
 class WalletCommandService extends ApplicationCommandService
 {

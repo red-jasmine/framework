@@ -28,53 +28,57 @@ class WalletService
     /**
      * @throws WalletException
      */
-    public function transaction(Wallet $wallet, WalletTransactionData $walletTransactionData) : Wallet
+    public function transaction(Wallet $wallet, WalletTransactionData $data) : Wallet
     {
         // 验证钱包状态 TODO
         //  操作金额必须大于 0
-        if (bccomp($walletTransactionData->amount->total(), 0, 2) < 0) {
+        if (bccomp($data->amount->total(), 0, 2) < 0) {
             throw new WalletException('操作金额必须大于 0');
         }
 
         $transaction                   = WalletTransaction::make();
         $transaction->wallet_id        = $wallet->id;
-        $transaction->amount           = $walletTransactionData->amount;
-        $transaction->transaction_type = $walletTransactionData->transactionType;
+        $transaction->transaction_type = $data->transactionType;
         $transaction->status           = TransactionStatusEnum::SUCCESS;
-        $transaction->title            = $walletTransactionData->title;
-        $transaction->description      = $walletTransactionData->description;
-        $transaction->bill_type        = $walletTransactionData->billType;
-        $transaction->order_no         = $walletTransactionData->orderNo;
-        $transaction->tags             = $walletTransactionData->tags;
-        $transaction->remarks          = $walletTransactionData->remarks;
+        $transaction->title            = $data->title;
+        $transaction->description      = $data->description;
+        $transaction->bill_type        = $data->billType;
+        $transaction->order_no         = $data->orderNo;
+        $transaction->tags             = $data->tags;
+        $transaction->remarks          = $data->remarks;
 
-
-        switch ($walletTransactionData->transactionType) {
+        switch ($data->transactionType) {
+            // 收入部分
             case TransactionTypeEnum::REFUND:
+            case TransactionTypeEnum::RECEIVE:
             case TransactionTypeEnum::RECHARGE:
                 $transaction->direction = AmountDirectionEnum::INCOME;
-                $wallet->balance        = bcadd($wallet->balance, $walletTransactionData->amount->total(), 2);
+                $wallet->balance        = bcadd($wallet->balance, $data->amount->total(), 2);
+                $transaction->amount    = $data->amount->total();
 
                 break;
+            // 支出部分
             case TransactionTypeEnum::PAYMENT:
+            case TransactionTypeEnum::TRANSFER:
             case TransactionTypeEnum::WITHDRAWAL:
                 $transaction->direction = AmountDirectionEnum::EXPENSE;
-                $wallet->balance        = bcsub($wallet->balance, $walletTransactionData->amount->total(), 2);
+                $wallet->balance        = bcsub($wallet->balance, $data->amount->total(), 2);
+                $transaction->amount    = bcmul($data->amount->total(), -1, 2);
                 break;
+
+
             case TransactionTypeEnum::FROZEN:
                 $transaction->direction = AmountDirectionEnum::OTHER;
-                $wallet->balance        = bcsub($wallet->balance, $walletTransactionData->amount->total(), 2);
-                $wallet->freeze         = bcadd($wallet->freeze, $walletTransactionData->amount->total(), 2);
+                $wallet->balance        = bcsub($wallet->balance, $data->amount->total(), 2);
+                $wallet->freeze         = bcadd($wallet->freeze, $data->amount->total(), 2);
+                $transaction->amount    = bcmul($data->amount->total(), -1, 2);
 
                 break;
             case TransactionTypeEnum::UNFROZEN:
                 $transaction->direction = AmountDirectionEnum::OTHER;
-                $wallet->balance        = bcadd($wallet->balance, $walletTransactionData->amount->total(), 2);
-                $wallet->freeze         = bcsub($wallet->freeze, $walletTransactionData->amount->total(), 2);
-                break;
-            case TransactionTypeEnum::TRANSFER:
-                // 如果转出 算 支出、 如果 转入算 收入
-                throw new WalletException('当前操作不支持转账');
+                $wallet->balance        = bcadd($wallet->balance, $data->amount->total(), 2);
+                $wallet->freeze         = bcsub($wallet->freeze, $data->amount->total(), 2);
+                $transaction->amount    = $data->amount->total();
                 break;
             default:
                 throw new WalletException('当前操作不支持转账');

@@ -4,8 +4,10 @@ namespace RedJasmine\Wallet\Application\Services\Commands;
 
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletService;
+use Throwable;
 
 class WalletTransactionCommandHandler extends CommandHandler
 {
@@ -18,7 +20,7 @@ class WalletTransactionCommandHandler extends CommandHandler
     }
 
 
-    public function handle(WalletTransactionCommand $command)
+    public function handle(WalletTransactionCommand $command) : WalletTransaction
     {
 
         $this->beginDatabaseTransaction();
@@ -36,10 +38,11 @@ class WalletTransactionCommandHandler extends CommandHandler
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
+        return $wallet->transactions->first();
 
 
     }

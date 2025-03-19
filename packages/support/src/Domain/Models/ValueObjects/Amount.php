@@ -54,7 +54,8 @@ class Amount extends Data
 
     public function add(self $money) : static
     {
-        $this->total = bcadd($money->total, $this->total, 0);
+        $that =  clone $this;
+        $that->total = bcadd($money->total, $this->total, 0);
         return $this;
     }
 
@@ -67,6 +68,15 @@ class Amount extends Data
     public function mul($value) : static
     {
         $this->total = bcmul($this->total, $value, 0);
+        return $this;
+    }
+
+    public function abs() : static
+    {
+        // 取绝对值
+        if (bccomp($this->total, 0, 2) < 0) {
+            $this->total = bcmul($this->total, -1, 2);
+        }
         return $this;
     }
 
