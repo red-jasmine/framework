@@ -5,7 +5,7 @@ namespace RedJasmine\Wallet\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasGenerateNo;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
@@ -26,7 +26,7 @@ class WalletTransaction extends Model implements OperatorInterface
 
     public $incrementing = false;
 
-    use HasGenerateNo;
+    use HasUniqueNo;
 
     use HasSnowflakeId;
 
@@ -42,17 +42,19 @@ class WalletTransaction extends Model implements OperatorInterface
     }
 
 
-    protected string $generateNoKey = 'transaction_no';
+    protected string $uniqueNoKey = 'transaction_no';
 
-    public function generateNoFactors() : array
+
+    public function newUniqueNo() : string
     {
-        // 24位 + 2位 收支类型 + 2位 应用 + 2位 钱包ID
-        return [
+        return implode('', [
+            $this->generateDatetimeId(),
             '01',
             $this->factorRemainder($this->direction->value),
             $this->factorRemainder($this->app_id),
             $this->factorRemainder($this->wallet_id),
-        ];
+        ]);
     }
+
 
 }

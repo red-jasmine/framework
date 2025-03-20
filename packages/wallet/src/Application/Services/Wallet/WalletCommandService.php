@@ -1,14 +1,13 @@
 <?php
 
-namespace RedJasmine\Wallet\Application\Services;
+namespace RedJasmine\Wallet\Application\Services\Wallet;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommandHandler;
-use RedJasmine\Wallet\Application\Services\Commands\WalletTransactionCommand;
-use RedJasmine\Wallet\Application\Services\Commands\WalletTransactionCommandHandler;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommandHandler;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;

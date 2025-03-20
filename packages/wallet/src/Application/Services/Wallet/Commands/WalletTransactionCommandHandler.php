@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Application\Services\Commands;
+namespace RedJasmine\Wallet\Application\Services\Wallet\Commands;
 
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;

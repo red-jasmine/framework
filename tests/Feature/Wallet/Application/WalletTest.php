@@ -1,9 +1,9 @@
 <?php
 
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommand;
-use RedJasmine\Wallet\Application\Services\Commands\WalletTransactionCommand;
-use RedJasmine\Wallet\Application\Services\WalletCommandService;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
+use RedJasmine\Wallet\Application\Services\Wallet\WalletCommandService;
 use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 use RedJasmine\Wallet\Domain\Models\Wallet;
