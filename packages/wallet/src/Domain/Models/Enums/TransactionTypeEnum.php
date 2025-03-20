@@ -30,7 +30,7 @@ enum TransactionTypeEnum: string
             self::FROZEN->value     => '冻结',
             self::UNFROZEN->value   => '解冻',
             self::TRANSFER->value   => '转账',
-            self::RECEIVE->value    => '收账',
+
         ];
     }
 
