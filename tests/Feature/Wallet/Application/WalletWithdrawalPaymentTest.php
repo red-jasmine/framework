@@ -69,7 +69,7 @@ test('cna wallet add income', function (Wallet $wallet) {
 })->depends('can create a wallet');
 
 
-test('can create withdrawal', function (Wallet $wallet) {
+test('can create withdrawal1', function (Wallet $wallet) {
 
     $payee              = new Payee();
     $payee->channel     = 'alipay';
@@ -95,7 +95,7 @@ test('can create withdrawal', function (Wallet $wallet) {
     return $withdrawal;
 })->depends('cna wallet add income');
 
-test('can approval pass a withdrawal', function (WalletWithdrawal $withdrawal) {
+test('can approval pass a withdrawal1', function (WalletWithdrawal $withdrawal) {
 
     $command = new WalletWithdrawalApprovalCommand();
 
@@ -113,7 +113,29 @@ test('can approval pass a withdrawal', function (WalletWithdrawal $withdrawal) {
     $this->assertEquals(WithdrawalStatusEnum::PROCESSING, $withdrawal->status);
 
     return $withdrawal;
-})->depends('can create withdrawal');
+})->depends('can create withdrawal1');
+test('can payment paying a withdrawal', function (WalletWithdrawal $withdrawal) {
+
+    $command = new WalletWithdrawalPaymentCommand();
+
+    $command->withdrawalNo = $withdrawal->withdrawal_no;
+
+    $command->paymentStatus         = WithdrawalPaymentStatusEnum::PAYING;
+    $command->paymentType           = 'payment';
+    $command->paymentId             = fake()->numerify('############');
+    $command->paymentChannelTradeNo = fake()->numerify('############');
+
+    $result = $this->WalletWithdrawalCommandService->payment($command);
+    $this->assertEquals(true, $result);
+
+
+    $withdrawal = $this->WalletWithdrawalRepository->findByNo($withdrawal->withdrawal_no);
+    $this->assertEquals(ApprovalStatusEnum::PASS, $withdrawal->approval_status);
+    $this->assertEquals(WithdrawalStatusEnum::PROCESSING, $withdrawal->status);
+    $this->assertEquals(WithdrawalPaymentStatusEnum::PAYING, $withdrawal->payment_status);
+
+
+})->depends('can approval pass a withdrawal1');
 
 test('can payment success a withdrawal', function (WalletWithdrawal $withdrawal) {
 
@@ -137,7 +159,7 @@ test('can payment success a withdrawal', function (WalletWithdrawal $withdrawal)
     $this->assertEquals(WithdrawalPaymentStatusEnum::SUCCESS, $withdrawal->payment_status);
 
 
-})->depends('can approval pass a withdrawal');
+})->depends('can approval pass a withdrawal1');
 
 
 test('can create withdrawal2', function (Wallet $wallet) {
@@ -166,67 +188,46 @@ test('can create withdrawal2', function (Wallet $wallet) {
     return $withdrawal;
 })->depends('cna wallet add income');
 
-test('can approval reject a withdrawal', function (WalletWithdrawal $withdrawal) {
+test('can approval pass a withdrawal2', function (WalletWithdrawal $withdrawal) {
 
     $command = new WalletWithdrawalApprovalCommand();
 
     $command->withdrawalNo = $withdrawal->withdrawal_no;
 
-    $command->status  = ApprovalStatusEnum::REJECT;
-    $command->message = fake()->text();
-    $result           = $this->WalletWithdrawalCommandService->approval($command);
-    $this->assertEquals(true, $result);
-
-    $withdrawal = $this->WalletWithdrawalRepository->findByNo($withdrawal->withdrawal_no);
-    $this->assertEquals(ApprovalStatusEnum::REJECT, $withdrawal->approval_status);
-    $this->assertEquals($command->message, $withdrawal->approval_message);
-    $this->assertEquals(WithdrawalStatusEnum::FAIL, $withdrawal->status);
-
-
-})->depends('can create withdrawal2');
-
-test('can create withdrawal3', function (Wallet $wallet) {
-
-    $payee              = new Payee();
-    $payee->channel     = 'alipay';
-    $payee->accountType = 'account';
-    $payee->accountNo   = 'xxxx@qq.com';
-    $payee->name        = fake()->name();
-    $payee->certType    = 'id';
-    $payee->certNo      = fake()->numerify('#########');
-
-    $command         = new WalletWithdrawalCreateCommand();
-    $command->id     = $wallet->id;
-    $command->amount = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
-
-    $command->payee = $payee;
-    $withdrawal     = $this->WalletWithdrawalCommandService->create($command);
-    $this->assertEquals(WithdrawalStatusEnum::PROCESSING, $withdrawal->status);
-    $this->assertEquals($wallet->id, $withdrawal->wallet_id);
-    $this->assertEquals($wallet->owner_type, $withdrawal->owner_type);
-    $this->assertEquals($wallet->owner_id, $withdrawal->owner_id);
-    $this->assertEquals($command->amount->total(), $withdrawal->amount->total());
-
-
-    return $withdrawal;
-})->depends('cna wallet add income');
-
-test('can approval revoke a withdrawal', function (WalletWithdrawal $withdrawal) {
-
-    $command = new WalletWithdrawalApprovalCommand();
-
-    $command->withdrawalNo = $withdrawal->withdrawal_no;
-
-    $command->status  = ApprovalStatusEnum::REVOKE;
+    $command->status  = ApprovalStatusEnum::PASS;
     $command->message = fake()->text();
 
     $result = $this->WalletWithdrawalCommandService->approval($command);
     $this->assertEquals(true, $result);
 
     $withdrawal = $this->WalletWithdrawalRepository->findByNo($withdrawal->withdrawal_no);
-    $this->assertEquals(ApprovalStatusEnum::REVOKE, $withdrawal->approval_status);
+    $this->assertEquals(ApprovalStatusEnum::PASS, $withdrawal->approval_status);
     $this->assertEquals($command->message, $withdrawal->approval_message);
+    $this->assertEquals(WithdrawalStatusEnum::PROCESSING, $withdrawal->status);
+
+    return $withdrawal;
+})->depends('can create withdrawal2');
+
+test('can payment fail a withdrawal', function (WalletWithdrawal $withdrawal) {
+
+    $command = new WalletWithdrawalPaymentCommand();
+
+    $command->withdrawalNo = $withdrawal->withdrawal_no;
+
+    $command->paymentStatus         = WithdrawalPaymentStatusEnum::FAIL;
+    $command->paymentType           = 'payment';
+    $command->paymentId             = fake()->numerify('############');
+    $command->paymentChannelTradeNo = fake()->numerify('############');
+
+    $result = $this->WalletWithdrawalCommandService->payment($command);
+    $this->assertEquals(true, $result);
+
+
+    $withdrawal = $this->WalletWithdrawalRepository->findByNo($withdrawal->withdrawal_no);
+    $this->assertEquals(ApprovalStatusEnum::PASS, $withdrawal->approval_status);
+
     $this->assertEquals(WithdrawalStatusEnum::FAIL, $withdrawal->status);
+    $this->assertEquals(WithdrawalPaymentStatusEnum::FAIL, $withdrawal->payment_status);
 
 
-})->depends('can create withdrawal3');
+})->depends('can approval pass a withdrawal2');

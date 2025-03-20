@@ -10,6 +10,7 @@ return new class extends Migration {
     {
         Schema::create('wallet_recharges', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
+            $table->string('recharge_no', 64)->unique()->comment('充值单号');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
@@ -18,7 +19,6 @@ return new class extends Migration {
             $table->decimal('fee', 12)->default(0)->comment('费用');
             $table->string('status')->comment(RechargeStatusEnum::comments('状态'));
             $table->decimal('pay_amount', 12)->default(0)->comment('支付金额');
-
             // 支付类型
             $table->string('payment_type')->nullable()->comment('支付单类型');
             $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单ID');

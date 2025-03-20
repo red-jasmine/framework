@@ -31,7 +31,7 @@ return new class extends Migration {
             $table->string('out_trade_no')->nullable()->comment('业务单号');
             $table->string('tags')->nullable()->comment('标签');
             $table->string('remarks')->nullable()->comment('备注');
-
+            $table->json('extras')->nullable()->comment('扩展字段');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 32)->nullable();
             $table->string('creator_id', 64)->nullable();

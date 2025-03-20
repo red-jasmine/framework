@@ -12,7 +12,8 @@ enum WithdrawalPaymentStatusEnum: string
 
     use EnumsHelper;
 
-    case PROCESSING = 'processing';
+    case PREPARE = 'prepare';
+    case PAYING = 'paying';
     case SUCCESS = 'success';
     case FAIL = 'fail';
 
@@ -20,9 +21,10 @@ enum WithdrawalPaymentStatusEnum: string
     {
 
         return [
-            self::PROCESSING->value => '处理中',
-            self::SUCCESS->value    => '成功',
-            self::FAIL->value       => '失败',
+            self::PREPARE->value => '准备',
+            self::PAYING->value  => '处理中',
+            self::SUCCESS->value => '成功',
+            self::FAIL->value    => '失败',
         ];
     }
 

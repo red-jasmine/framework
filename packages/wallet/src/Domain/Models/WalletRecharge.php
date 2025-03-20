@@ -23,7 +23,8 @@ class WalletRecharge extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'status' => RechargeStatusEnum::class
+        'status' => RechargeStatusEnum::class,
+        'extras' => 'array',
     ];
 
 
