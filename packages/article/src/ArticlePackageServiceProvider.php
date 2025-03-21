@@ -6,7 +6,7 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use RedJasmine\Article\Commands\ArticleCommand;
 
-class ArticleServiceProvider extends PackageServiceProvider
+class ArticlePackageServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {

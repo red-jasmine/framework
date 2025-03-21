@@ -63,11 +63,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Article\\ArticleServiceProvider"
-            ],
-            "aliases": {
-                "Article": "RedJasmine\\Article\\Facades\\Article"
-            }
+                "RedJasmine\\Article\\ArticlePackageServiceProvider"
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",
