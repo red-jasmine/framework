@@ -1,0 +1,123 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor 买家
+
+participant 下单核心
+
+participant 购物车
+
+participant  商品域
+
+participant 库存
+
+participant 营销中心
+
+participant 地址库
+
+participant 物流
+
+participant 订单领域
+
+participant 卡密仓库
+
+participant 支付中心
+
+
+
+group 下单流程
+
+买家 --> 下单核心: 商品下单
+
+group 初始化
+
+下单核心 -> 商品域: 查询商品信息
+商品域 --> 下单核心: 返回商品信息
+下单核心 -> 下单核心: 拆分订单
+
+end
+
+group  订单校验[TODO]
+
+下单核心 --> 商品域:商品校验
+
+下单核心 --> 商品域:参数验证
+
+下单核心 --> 商品域:库存校验
+
+
+
+end
+
+
+group 金额计算
+
+group 获取价格
+
+下单核心-> 商品域: 获取商品价格（数量、买家、渠道、导购、门店、）」
+商品域 --> 下单核心: 返回商品价格
+end
+
+group 优惠计算
+
+下单核心 -> 营销中心: 获取优惠（商品基本、订单级别）
+
+营销中心 --> 下单核心: 返回优惠
+
+end 计算优惠
+
+
+group 计算运费
+
+下单核心 -> 物流 : 计算邮费
+
+物流 --> 下单核心: 返回订单邮费
+
+end
+
+group 计算税费
+
+下单核心 -> 物流 : 计算税额
+
+物流 --> 下单核心: 返回税额
+end
+
+
+下单核心 -> 下单核心: 计算订单金额
+
+end
+
+
+
+
+group 下单
+下单核心-> 订单领域: 生成订单
+订单领域 --> 下单核心: 订单信息
+下单核心-> 库存: 减库存
+下单核心-> 营销中心: 核销优惠券
+end
+
+
+group 支付
+
+下单核心 -> 支付中心: 创建合单支付
+
+支付中心 -> 下单核心: 返回支付单
+
+end group
+
+下单核心-> 买家: 返回支付信息
+
+end group
+
+
+
+
+
+
+
+
+
+@enduml

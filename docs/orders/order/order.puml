@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+class 订单{
+卖家
+卖家
+订单类型
+
+}
+
+class  订单商品{
+商品源【商品ID，SKU ID】
+商品类型
+发货类型
+单价
+优惠
+}
+
+class  订单支付打单 {
+}
+
+
+@enduml
