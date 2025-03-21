@@ -5,25 +5,29 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up()
+    public function up() : void
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
             $table->string('title')->comment('标题');
+            $table->string('image')->nullable()->comment('图片');
+            $table->string('description')->nullable()->comment('描述');
+            $table->string('keywords')->nullable()->comment('关键字');
             $table->string('status')->comment('状态');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
+            $table->unsignedBigInteger('series_id')->nullable()->comment('系列ID');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('approval_status')->nullable()->comment('审批状态');
-            $table->longText('content')->comment('内容');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 32)->nullable();
             $table->string('creator_id', 64)->nullable();
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
-            $table->timestamps();
             $table->softDeletes();
+            $table->comment('文章表');
         });
     }
 

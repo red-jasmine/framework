@@ -25,6 +25,8 @@ order: 3
 class Article<<文章>> {
 + id:Int
 + title-标题:String 
++ image-图片:String 
++ content-type-内容类型: String
 + content-内容: String
 + tags-标签: Array<String>
 + status-状态: Enum
