@@ -31,11 +31,12 @@ class WalletService
             throw new WalletException('操作金额必须大于 0');
         }
 
-        $transaction             = WalletTransaction::make();
-        $transaction->wallet_id  = $wallet->id;
-        $transaction->direction  = $data->direction;
-        $transaction->trade_time = Carbon::now();
-        $transaction->status     = TransactionStatusEnum::SUCCESS;
+        $transaction              = WalletTransaction::make();
+        $transaction->wallet_id   = $wallet->id;
+        $transaction->wallet_type = $wallet->type;
+        $transaction->direction   = $data->direction;
+        $transaction->trade_time  = Carbon::now();
+        $transaction->status      = TransactionStatusEnum::SUCCESS;
 
 
         switch ($data->direction) {

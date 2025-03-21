@@ -42,6 +42,7 @@ class WalletWithdrawalService
         // 构建 提现模型
         $withdrawal                     = WalletWithdrawal::make(['wallet_id' => $wallet->id]);
         $withdrawal->wallet_id          = $wallet->id;
+        $withdrawal->wallet_type        = $wallet->type;
         $withdrawal->owner              = $wallet->owner;
         $withdrawal->amount             = $data->amount;
         $withdrawal->withdrawal_time    = Carbon::now();

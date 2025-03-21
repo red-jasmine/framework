@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
+            $table->string('wallet_type')->comment('钱包类型');
             $table->string('amount_currency', 3)->comment('货币');
             $table->decimal('amount_total', 12)->comment('金额');
             $table->decimal('fee', 12)->default(0)->comment('费用');

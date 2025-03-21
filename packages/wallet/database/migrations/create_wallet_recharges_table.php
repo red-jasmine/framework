@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('recharge_no', 64)->unique()->comment('充值单号');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
+            $table->string('wallet_type')->comment('钱包类型');
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
             $table->string('amount_currency', 3)->comment('货币');

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('transaction_no', 64)->unique()->comment('交易号');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
+            $table->string('wallet_type')->comment('钱包类型');
             $table->string('direction')->comment(AmountDirectionEnum::comments('金额方向'));
             $table->string('amount_currency', 3)->comment('货币');
             $table->decimal('amount_total', 12)->comment('金额');
