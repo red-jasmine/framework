@@ -2,10 +2,10 @@
 
 
 use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
-use RedJasmine\Article\Application\Services\Article\Commands\ArticleCreateCommand;
 use RedJasmine\Article\Application\Services\Article\Commands\ArticleUpdateCommand;
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
+use RedJasmine\Article\Domain\Data\ArticleData;
 
 beforeEach(function () {
 
@@ -17,7 +17,7 @@ beforeEach(function () {
 test('can create a article', function () {
 
 
-    $command              = new ArticleCreateCommand();
+    $command              = new ArticleData();
     $command->owner       = \Illuminate\Support\Facades\Auth::user();
     $command->title       = fake()->text();
     $command->image       = fake()->imageUrl();
@@ -41,7 +41,7 @@ test('can create a article', function () {
 });
 
 test('can update a article', function (Article $article) {
-    $command = new ArticleUpdateCommand();
+    $command = new ArticleData();
     $command->setKey($article->id);
     $command->owner       = \Illuminate\Support\Facades\Auth::user();
     $command->title       = fake()->text();
