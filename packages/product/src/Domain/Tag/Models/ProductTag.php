@@ -52,7 +52,7 @@ class ProductTag extends Model implements OperatorInterface, OwnerInterface
 
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', ServiceStatusEnum::ENABLE);
+        return $query->where('status', TagStatusEnum::ENABLE);
     }
     public function scopeShow(Builder $query) : Builder
     {
