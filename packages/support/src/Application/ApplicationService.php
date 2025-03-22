@@ -3,11 +3,20 @@
 namespace RedJasmine\Support\Application;
 
 
+use BadMethodCallException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
+use RedJasmine\Support\Application\Commands\CreateCommandHandler;
+use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
+use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
+use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
+use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
+use ReflectionClass;
 
 /**
  * @property RepositoryInterface $repository
@@ -20,57 +29,47 @@ class ApplicationService
 
     use Macroable {
         __call as macroCall;
+        Macroable::hasMacro as macroHasMacro;
         __callStatic as macroCallStatic;
+    }
+
+
+    protected static array $handlers = [
+        'create'         => CreateCommandHandler::class,
+        'update'         => UpdateCommandHandler::class,
+        'delete'         => DeleteCommandHandler::class,
+        'find'           => FindQueryHandler::class,
+        'paginate'       => PaginateQueryHandler::class,
+        'simplePaginate' => SimplePaginateQueryHandler::class,
+    ];
+
+    public static function getMacros() : array
+    {
+        return array_merge(static::$handlers, static::$macros);
     }
 
 
     public function __call($method, $parameters)
     {
 
-        if (! static::hasMacro($method) && static::hasHandler($method)) {
+        if (!isset(static::getMacros()[$method])) {
             throw new BadMethodCallException(sprintf(
                 'Method %s::%s does not exist.', static::class, $method
             ));
         }
 
-        $macro = static::$macros[$method]??null;
+        $macro = static::getMacros()[$method];
 
-        if($macro === null){
-            // 处理器处理流程
-
-
-        }
 
         if ($macro instanceof Closure) {
             $macro = $macro->bindTo($this, static::class);
         }
-
+        $macro = $this->makeHandler($macro);
+        if (method_exists($macro, 'handle')) {
+            return $macro->handle(...$parameters);
+        }
         return $macro(...$parameters);
 
-        try {
-            static::macroCall($method, $parameters);
-        } catch (\BadMethodCallException $badMethodCallException) {
-            if (static::hasHandler($method)) {
-                $handler = $this->makeHandler($method);
-            }
-        }
-
-    }
-
-    public static function hasHandler($name) : bool
-    {
-        return isset(static::$handlers[$name]);
-    }
-
-    public function makeHandler($name)
-    {
-        $handler = static::$handlers[$name];
-
-        if (is_string($handler) && class_exists($handler)) {
-            app($handler, ['service' => $this]);
-        }
-
-        return $handler;
     }
 
 
@@ -80,40 +79,25 @@ class ApplicationService
     protected static string $modelClass = Model::class;
 
 
-    protected static array $handlers = [];
-
-    public static function getHandlers() : array
-    {
-        return static::$handlers;
-    }
-
-    public static function setHandlers(array $handlers) : void
-    {
-        static::$handlers = $handlers;
-    }
-
-
-    protected static array $commands = [];
-
-
-    public static function setCommand($command, $handler) : void
-    {
-        static::$commands[$command] = $handler;
-    }
-
-
-    protected static array $queries = [];
-
-
-    public static function setQuery($query, $handler) : void
-    {
-        static::$queries[$query] = $handler;
-    }
-
-
     public function model() : string
     {
         return static::$modelClass;
     }
 
+    public function newModel(?Data $data = null) : Model
+    {
+        return static::$modelClass::make();
+    }
+
+
+    protected function makeHandler($macro)
+    {
+        if (is_string($macro) && class_exists($macro)) {
+            // 反射类  获取 构造函数参数
+            $reflection = new ReflectionClass($macro);
+            //$parameters = $reflection->getConstructor()->getParameters();
+            return app($macro, ['service' => $this]);
+        }
+        return $macro;
+    }
 }

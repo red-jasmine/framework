@@ -18,7 +18,8 @@
         "red-jasmine/payment": "1.0.x-dev",
         "red-jasmine/socialite": "1.0.x-dev",
         "red-jasmine/vip": "1.0.x-dev",
-        "red-jasmine/wallet": "1.0.x-dev"
+        "red-jasmine/wallet": "1.0.x-dev",
+        "red-jasmine/article": "1.0.x-dev"
 
     },
     "require-dev": {

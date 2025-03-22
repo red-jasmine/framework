@@ -14,6 +14,13 @@ class HandleContext
      */
     protected Data $command;
 
+
+    /**
+     * 领域模型
+     * @var Model
+     */
+    public Model $model;
+
     public function getCommand() : Data
     {
         return $this->command;
@@ -33,11 +40,6 @@ class HandleContext
     }
 
 
-    /**
-     * 领域模型
-     * @var Model
-     */
-    protected Model $model;
 
     public function getModel() : Model
     {

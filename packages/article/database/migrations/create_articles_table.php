@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -15,7 +16,7 @@ return new class extends Migration {
             $table->string('image')->nullable()->comment('图片');
             $table->string('description')->nullable()->comment('描述');
             $table->string('keywords')->nullable()->comment('关键字');
-            $table->string('status')->comment('状态');
+            $table->string('status')->comment(ArticleStatusEnum::comments('状态'));
             $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
             $table->unsignedBigInteger('series_id')->nullable()->comment('系列ID');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');

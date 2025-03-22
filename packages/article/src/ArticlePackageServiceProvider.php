@@ -8,7 +8,7 @@ use RedJasmine\Article\Commands\ArticleCommand;
 
 class ArticlePackageServiceProvider extends PackageServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         /*
          * This class is a Package Service Provider
@@ -20,9 +20,11 @@ class ArticlePackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigrations([
-
+                'create_articles_table',
+                'create_article_contents_table',
+                'create_article_categories_table',
+                'create_article_tags_table',
             ])
-            ->runsMigrations()
-        ;
+            ->runsMigrations();
     }
 }

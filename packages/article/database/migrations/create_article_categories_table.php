@@ -3,9 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Article\Domain\Models\Enums\CategoryStatusEnum;
 
-class CreateArticleCategories extends Migration
-{
+return new class extends Migration {
+
     public function up() : void
     {
         Schema::create('article_categories', function (Blueprint $table) {
@@ -37,4 +38,4 @@ class CreateArticleCategories extends Migration
     {
         Schema::dropIfExists('article_categories');
     }
-}
+};
