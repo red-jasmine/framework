@@ -23,14 +23,17 @@ class ArticleTransformer implements TransformerInterface
          */
         $model = $model ?? Article::make();
 
-        $model->title                 = $data->title;
-        $model->image                 = $data->image;
-        $model->description           = $data->description;
-        $model->keywords              = $data->keywords;
-        $model->category_id           = $data->categoryId;
-        $model->sort                  = $data->sort;
+        $model->title       = $data->title;
+        $model->image       = $data->image;
+        $model->description = $data->description;
+        $model->keywords    = $data->keywords;
+        $model->category_id = $data->categoryId ?? $model->category_id;
+        $model->sort        = $data->sort;
+
         $model->content->content_type = $data->contentType;
         $model->content->content      = $data->content;
+
+        $model->setRelation('tags', collect($data->tags));
         return $model;
 
     }

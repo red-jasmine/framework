@@ -24,6 +24,7 @@ class ArticlePackageServiceProvider extends PackageServiceProvider
                 'create_article_contents_table',
                 'create_article_categories_table',
                 'create_article_tags_table',
+                'create_article_tag_pivots_table',
             ])
             ->runsMigrations();
     }

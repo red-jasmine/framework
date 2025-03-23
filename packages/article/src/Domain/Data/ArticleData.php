@@ -14,7 +14,7 @@ class ArticleData extends Data
 
     public UserInterface $owner;
 
-    public string        $title;
+    public string $title;
 
     /**
      * @var ArticleContentTypeEnum
@@ -34,5 +34,5 @@ class ArticleData extends Data
 
     public int $sort = 0;
 
-
+    public array $tags = [];
 }
