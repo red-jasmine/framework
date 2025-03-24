@@ -5,7 +5,6 @@ namespace RedJasmine\Vip\Application\Services;
 use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQuery;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQueryHandle;
 use RedJasmine\Vip\Domain\Models\UserVip;
@@ -26,16 +25,15 @@ class UserVipQueryService extends ApplicationQueryService
     }
 
     protected static $macros = [
-        'findById'       => FindQueryHandler::class,
-        'paginate'       => PaginateQueryHandler::class,
-        'simplePaginate' => SimplePaginateQueryHandler::class,
-        'findUserVip'    => FindUserVipQueryHandle::class
+        'findById'    => FindQueryHandler::class,
+        'paginate'    => PaginateQueryHandler::class,
+        'findUserVip' => FindUserVipQueryHandle::class
     ];
 
 
     public function allowedIncludes() : array
     {
-        return  ['vip'];
+        return ['vip'];
     }
 
     public function allowedFilters() : array

@@ -1,0 +1,40 @@
+<?php
+
+namespace RedJasmine\Article\UI\Http\User\Api\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use RedJasmine\Article\Domain\Models\Article;
+
+/** @mixin Article */
+class ArticleResource extends JsonResource
+{
+    public function toArray(Request $request) : array
+    {
+        return [
+            'id'              => $this->id,
+            'owner_type'      => $this->owner_type,
+            'owner_id'        => $this->owner_id,
+            'title'           => $this->title,
+            'image'           => $this->image,
+            'description'     => $this->description,
+            'keywords'        => $this->keywords,
+            'status'          => $this->status,
+            'sort'            => $this->sort,
+            'approval_status' => $this->approval_status,
+
+            $this->mergeWhen($this->whenLoaded('content'),$this->whenLoaded('content')
+            ),
+            'version'         => $this->version,
+            'creator_type'    => $this->creator_type,
+            'creator_id'      => $this->creator_id,
+            'updater_type'    => $this->updater_type,
+            'updater_id'      => $this->updater_id,
+            'created_at'      => $this->created_at,
+            'updated_at'      => $this->updated_at,
+            'owner'           => $this->owner,
+            'updater'         => $this->updater,
+            'category_id'     => $this->category_id,
+        ];
+    }
+}

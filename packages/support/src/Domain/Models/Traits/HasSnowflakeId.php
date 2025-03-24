@@ -6,10 +6,11 @@ use Exception;
 use RedJasmine\Support\Helpers\ID\Snowflake;
 
 /**
- * @property bool $uniqueShortId
+ * @property-read  bool $uniqueShortId
  */
 trait HasSnowflakeId
 {
+
 
 
     /**

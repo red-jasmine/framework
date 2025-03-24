@@ -56,21 +56,11 @@ interface ReadRepositoryInterface
     /**
      * 分页查询实体列表
      *
-     * @param  PaginateQuery|null  $query  可选的分页查询对象，包含分页及排序等信息
+     * @param  PaginateQuery  $query  可选的分页查询对象，包含分页及排序等信息
      *
-     * @return LengthAwarePaginator 分页后的实体列表，包含总记录数信息
+     * @return LengthAwarePaginator|Paginator 分页后的实体列表，包含总记录数信息
      */
-    public function paginate(?PaginateQuery $query = null) : LengthAwarePaginator;
+    public function paginate(PaginateQuery $query) : LengthAwarePaginator|Paginator;
 
-    /**
-     * 简单分页查询实体列表
-     *
-     * 与paginate方法的区别在于，simplePaginate只提供基本的分页功能，不包括总记录数
-     *
-     * @param  PaginateQuery|null  $query  可选的分页查询对象，包含分页信息
-     *
-     * @return Paginator 分页后的实体列表，不包含总记录数信息
-     */
-    public function simplePaginate(?PaginateQuery $query = null) : Paginator;
 
 }

@@ -8,7 +8,6 @@ use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterfac
 use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 
 /**
  * @method getUsersByOwner(GetUsersByOwnerQuery $query)
@@ -17,7 +16,7 @@ class SocialiteUserQueryService extends ApplicationQueryService
 {
 
     public function __construct(
-        public  SocialiteUserReadRepositoryInterface $repository
+        public SocialiteUserReadRepositoryInterface $repository
 
     ) {
     }
@@ -25,7 +24,6 @@ class SocialiteUserQueryService extends ApplicationQueryService
     protected static $macros = [
         'findById'        => FindQueryHandler::class,
         'paginate'        => PaginateQueryHandler::class,
-        'simplePaginate'  => SimplePaginateQueryHandler::class,
         'getUsersByOwner' => GetUsersByOwnerQueryHandler::class
     ];
 

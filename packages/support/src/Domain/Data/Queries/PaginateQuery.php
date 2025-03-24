@@ -8,6 +8,12 @@ namespace RedJasmine\Support\Domain\Data\Queries;
  */
 class PaginateQuery extends Query
 {
+
+    /**
+     * 是否需要统计总数
+     * @var bool
+     */
+    public bool $isWithCount = true;
     /**
      * 当前页码
      * @var int|null
@@ -18,7 +24,7 @@ class PaginateQuery extends Query
      * 每页显示数量
      * @var int|null
      */
-    public ?int $perPage = null;
+    public ?int $perPage = 15;
 
     /**
      * 附加字段，用于指定查询结果中需要附加的额外字段

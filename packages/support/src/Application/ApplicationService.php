@@ -11,14 +11,15 @@ use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
 use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionClass;
 
 /**
+ * @method paginate(PaginateQuery $query)
  * @property RepositoryInterface $repository
  * @property ReadRepositoryInterface $readRepository
  */
@@ -35,12 +36,11 @@ class ApplicationService
 
 
     protected static array $handlers = [
-        'create'         => CreateCommandHandler::class,
-        'update'         => UpdateCommandHandler::class,
-        'delete'         => DeleteCommandHandler::class,
-        'find'           => FindQueryHandler::class,
-        'paginate'       => PaginateQueryHandler::class,
-        'simplePaginate' => SimplePaginateQueryHandler::class,
+        'create'   => CreateCommandHandler::class,
+        'update'   => UpdateCommandHandler::class,
+        'delete'   => DeleteCommandHandler::class,
+        'find'     => FindQueryHandler::class,
+        'paginate' => PaginateQueryHandler::class
     ];
 
     public static function getMacros() : array

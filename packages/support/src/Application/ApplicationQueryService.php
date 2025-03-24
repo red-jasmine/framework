@@ -2,16 +2,13 @@
 
 namespace RedJasmine\Support\Application;
 
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\SimplePaginateQueryHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
@@ -20,7 +17,6 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
  *
  * @method Model findById(FindQuery $query)
  * @method LengthAwarePaginator paginate(PaginateQuery $query)
- * @method Paginator simplePaginate(PaginateQuery $query)
  * @property ReadRepositoryInterface $repository
  */
 abstract class ApplicationQueryService extends Service
@@ -28,9 +24,8 @@ abstract class ApplicationQueryService extends Service
 
 
     protected static $macros = [
-        'findById'       => FindQueryHandler::class,
-        'paginate'       => PaginateQueryHandler::class,
-        'simplePaginate' => SimplePaginateQueryHandler::class,
+        'findById' => FindQueryHandler::class,
+        'paginate' => PaginateQueryHandler::class,
     ];
 
 
@@ -47,7 +42,7 @@ abstract class ApplicationQueryService extends Service
 
     protected function initReadRepository() : void
     {
-        if( $this->repository instanceof  QueryBuilderReadRepository){
+        if ($this->repository instanceof QueryBuilderReadRepository) {
             $this->repository->setAllowedFilters($this->allowedFilters());
             $this->repository->setAllowedFields($this->allowedFields());
             $this->repository->setAllowedIncludes($this->allowedIncludes());
