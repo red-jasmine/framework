@@ -10,17 +10,14 @@ class PaginateQueryHandler extends QueryHandler
 {
 
     public function __construct(
-        protected ApplicationQueryService $service
+        protected $service
     ) {
     }
 
 
     public function handle(PaginateQuery $query) : LengthAwarePaginator
     {
-
-        return $this->service->getRepository()->paginate($query);
-
-
+        return $this->service->readRepository->paginate($query);
     }
 
 }

@@ -19,4 +19,10 @@ class ArticleReadRepository extends QueryBuilderReadRepository implements Articl
     protected static string $modelClass = Article::class;
 
 
+
+    protected ?array $allowedIncludes = [
+        'content'
+    ];
+
+
 }

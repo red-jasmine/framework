@@ -11,6 +11,7 @@ class ArticleResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {
+
         return [
             'id'              => $this->id,
             'owner_type'      => $this->owner_type,
@@ -22,9 +23,6 @@ class ArticleResource extends JsonResource
             'status'          => $this->status,
             'sort'            => $this->sort,
             'approval_status' => $this->approval_status,
-
-            $this->mergeWhen($this->whenLoaded('content'),$this->whenLoaded('content')
-            ),
             'version'         => $this->version,
             'creator_type'    => $this->creator_type,
             'creator_id'      => $this->creator_id,
@@ -32,9 +30,9 @@ class ArticleResource extends JsonResource
             'updater_id'      => $this->updater_id,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
-            'owner'           => $this->owner,
-            'updater'         => $this->updater,
             'category_id'     => $this->category_id,
+            $this->mergeWhen($this->relationLoaded('content'),
+                $this->relationLoaded('content') ? new ArticleContentResource($this->whenLoaded('content')) : null),
         ];
     }
 }

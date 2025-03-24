@@ -11,23 +11,23 @@ class ArticleController extends Controller
 {
 
 
-    protected $resourceClass = ArticleResource::class;
+    protected static string $resourceClass = ArticleResource::class;
 
     public function __construct(
         protected ArticleApplicationService $service
     ) {
+        $this->service->readRepository->withQuery(function ($query) {
+            $query->onlyOwner($this->getOwner());
+        });
 
     }
 
     public function index(Request $request)
     {
         $result = $this->service->paginate(PaginateQuery::from($request));
-
+        return static::$resourceClass::collection($result);
     }
 
-    public function create()
-    {
-    }
 
     public function store(Request $request)
     {
@@ -37,9 +37,6 @@ class ArticleController extends Controller
     {
     }
 
-    public function edit($id)
-    {
-    }
 
     public function update(Request $request, $id)
     {

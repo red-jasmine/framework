@@ -72,7 +72,7 @@ class OrderResource extends JsonResource
             'creator_id'             => $this->creator_id,
             'updater_type'           => $this->updater_type,
             'updater_id'             => $this->updater_id,
-            'extension'                   => new OrderExtensionResource($this->whenLoaded('extension')),
+            'extension'              => new OrderExtensionResource($this->whenLoaded('extension')),
             'address'                => new OrderAddressResource($this->whenLoaded('address')),
             'products'               => OrderProductResource::collection($this->whenLoaded('products')),
             'payments'               => OrderPaymentResource::collection($this->whenLoaded('payments')),

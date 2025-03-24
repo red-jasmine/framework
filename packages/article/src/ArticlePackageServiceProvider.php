@@ -26,6 +26,7 @@ class ArticlePackageServiceProvider extends PackageServiceProvider
                 'create_article_tags_table',
                 'create_article_tag_pivots_table',
             ])
+            ->hasRoutes(['api'])
             ->runsMigrations();
     }
 }
