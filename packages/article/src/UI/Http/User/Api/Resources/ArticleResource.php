@@ -12,6 +12,7 @@ class ArticleResource extends JsonResource
     public function toArray(Request $request) : array
     {
 
+
         return [
             'id'              => $this->id,
             'owner_type'      => $this->owner_type,
@@ -31,6 +32,8 @@ class ArticleResource extends JsonResource
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
             'category_id'     => $this->category_id,
+            'category'        => new ArticleCategoryResource($this->whenLoaded('category')),
+            'tags'            => ArticleTagResource::collection($this->whenLoaded('tags')),
             $this->mergeWhen($this->relationLoaded('content'),
                 $this->relationLoaded('content') ? new ArticleContentResource($this->whenLoaded('content')) : null),
         ];

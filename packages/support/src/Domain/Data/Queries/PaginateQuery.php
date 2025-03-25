@@ -13,7 +13,20 @@ class PaginateQuery extends Query
      * 是否需要统计总数
      * @var bool
      */
-    public bool $isWithCount = true;
+    protected bool $isWithCount = true;
+
+    public function isWithCount() : bool
+    {
+        return $this->isWithCount;
+    }
+
+    public function setIsWithCount(bool $isWithCount) : void
+    {
+        $this->isWithCount = $isWithCount;
+    }
+
+
+
     /**
      * 当前页码
      * @var int|null
@@ -37,6 +50,8 @@ class PaginateQuery extends Query
      * @var mixed
      */
     public mixed $sort;
+
+
 
 
     public ?string $keyword;

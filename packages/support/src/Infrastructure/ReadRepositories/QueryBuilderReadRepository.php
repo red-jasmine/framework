@@ -88,6 +88,27 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     }
 
 
+    protected function allowedFilters() : ?array
+    {
+        return null;
+    }
+
+    protected function allowedFields() : ?array
+    {
+        return null;
+    }
+
+    protected function allowedIncludes() : ?array
+    {
+        return null;
+    }
+
+    protected function allowedSorts() : ?array
+    {
+        return null;
+    }
+
+
     /**
      * @param  Query|null  $query
      *
@@ -101,10 +122,18 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
         // 只有当相应的允许列表不为空时，才应用相应的限制
-        $this->allowedFilters ? $queryBuilder->allowedFilters($this->allowedFilters) : null;
-        $this->allowedFields ? $queryBuilder->allowedFields($this->allowedFields) : null;
-        $this->allowedIncludes ? $queryBuilder->allowedIncludes($this->allowedIncludes) : null;
-        $this->allowedSorts ? $queryBuilder->allowedSorts($this->allowedSorts) : null;
+        if ($this->allowedFilters()) {
+            $queryBuilder->allowedFilters($this->allowedFilters());
+        }
+        if ($this->allowedFields()) {
+            $queryBuilder->allowedFields($this->allowedFields());
+        }
+        if ($this->allowedIncludes()) {
+            $queryBuilder->allowedIncludes($this->allowedIncludes());
+        }
+        if ($this->allowedSorts()) {
+            $queryBuilder->allowedSorts($this->allowedSorts());
+        }
 
         // 调用查询回调函数，进一步自定义查询逻辑
         $this->queryCallbacks($queryBuilder);
@@ -147,6 +176,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
             ]);
         }
 
+
         // 创建一个新的Request对象，并用处理后的查询参数初始化它
         $request = (new Request());
         $request->initialize($requestQuery);
@@ -164,9 +194,10 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function paginate(PaginateQuery $query) : LengthAwarePaginator|Paginator
     {
+
         $queryBuilder = $this->query($query)->defaultSort($this->defaultSort);
+    ;
 
-
-        return $query->isWithCount ? $queryBuilder->paginate($query->perPage) : $queryBuilder->simplePaginate($query->perPage);
+        return $query->isWithCount() ? $queryBuilder->paginate($query->perPage) : $queryBuilder->simplePaginate($query->perPage);
     }
 }
