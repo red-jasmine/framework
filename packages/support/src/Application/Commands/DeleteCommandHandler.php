@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Application\Commands;
 
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\CommandHandlers\Throwable;
+use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -15,6 +16,7 @@ class DeleteCommandHandler extends CommandHandler
 
     public function __construct(protected ApplicationService $service)
     {
+        $this->context = new HandleContext();
     }
 
 
@@ -28,16 +30,17 @@ class DeleteCommandHandler extends CommandHandler
      */
     public function handle(Data $command) : void
     {
+        $this->context->setCommand($command);
         // 启动数据库事务以确保数据的一致性
         $this->beginDatabaseTransaction();
         try {
             // 根据命令中的ID查找模型
             $model = $this->service->repository->find($command->getKey());
-            // 设置当前模型为待删除模型
-            $this->setModel($model);
             // 通过仓库删除模型
-            $this->service->repository->delete($this->model);
+            $this->context->setModel($model);
 
+            // 删除模型
+            $this->service->repository->delete($this->context->getModel());
             // 提交数据库事务
             $this->commitDatabaseTransaction();
         } catch (Throwable $throwable) {

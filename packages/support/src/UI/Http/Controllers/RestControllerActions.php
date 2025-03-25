@@ -2,17 +2,20 @@
 
 namespace RedJasmine\Support\UI\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
- * @property string $resourceClass
- * @property string $modelClass
+ * @property ApplicationService $service
+ * @property JsonResource $resourceClass
+ * @property string|class-string<Model> $modelClass
  * @property string $paginateQueryClass
  * @property string $commandClass
  * @property string $createCommandClass
@@ -25,12 +28,12 @@ trait RestControllerActions
 
     public function index(Request $request) : AnonymousResourceCollection
     {
+
         if (method_exists($this, 'authorize')) {
             $this->authorize('viewAny', static::$modelClass);
         }
         $queryClass = static::$paginateQueryClass ?? PaginateQuery::class;
-
-        $result = $this->queryService->paginate($queryClass::from($request->query()));
+        $result     = $this->service->paginate($queryClass::from($request));
         return static::$resourceClass::collection($result->appends($request->query()));
     }
 
@@ -44,21 +47,22 @@ trait RestControllerActions
         }
         $request->offsetSet('owner', $this->getOwner());
         $dataClass = static::$createCommandClass ?? static::$dataClass;
-        $command   = $dataClass::from($request);
 
-        $result = $this->commandService->create($command);
+        $command = $dataClass::from($request);
+
+        $result = $this->service->create($command);
         return new static::$resourceClass($result);
     }
 
     public function show($id, Request $request) : JsonResource
     {
 
-        $model = $this->queryService->findById(FindQuery::from(['id' => $id]));
+        $model = $this->service->find(FindQuery::from(['id' => $id]));
 
         if (method_exists($this, 'authorize')) {
             $this->authorize('view', $model);
         }
-        return new static::$resourceClass($model);
+        return new (static::$resourceClass)($model);
     }
 
     public function update($id, Request $request) : JsonResource
@@ -66,7 +70,7 @@ trait RestControllerActions
         if ($request instanceof FormRequest) {
             $request->validated();
         }
-        $model = $this->queryService->findById(FindQuery::from(['id' => $id]));
+        $model = $this->service->find(FindQuery::from(['id' => $id]));
 
         if (method_exists($this, 'authorize')) {
             $this->authorize('update', $model);
@@ -75,20 +79,20 @@ trait RestControllerActions
         $dataClass = static::$updateCommandClass ?? static::$dataClass;
         $command   = $dataClass::from($request);
         $command->setKey($id);
-        $result = $this->commandService->update($command);
-        return new static::$resourceClass($result);
+        $result = $this->service->update($command);
+        return new (static::$resourceClass)($result);
 
     }
 
     public function destroy($id)
     {
-        $model = $this->queryService->findById(FindQuery::from(['id' => $id]));
+        $model = $this->service->find(FindQuery::from(['id' => $id]));
         if (method_exists($this, 'authorize')) {
             $this->authorize('delete', $model);
         }
         $command = new Data();
         $command->setKey($id);
-        $this->commandService->delete($command);
-        return $this::success();
+        $this->service->delete($command);
+        return static::success();
     }
 }

@@ -2,6 +2,66 @@
 
 
 use Illuminate\Testing\TestResponse;
+use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
+
+
+test('can create a article', function () {
+    /**
+     * @var $response TestResponse
+     */
+    $response = $this->post('api/article/articles', [
+        'title'       => fake()->text(),
+        'image'       => fake()->imageUrl(),
+        'description' => fake()->text(),
+        'keywords'    => fake()->words(5, true),
+        'contentType' => ArticleContentTypeEnum::RICH->value,
+        'content'     => fake()->randomHtml(),
+    ]);
+
+    $response->assertSuccessful();
+
+    return $response->json('data.id');
+
+    // TODO 验证
+});
+test('can show a article', function ($id) {
+    /**
+     * @var $response TestResponse
+     */
+    $response = $this->get("api/article/articles/$id");
+
+    $response->assertSuccessful();
+
+    return $response->json('data.id');
+})->depends('can create a article');
+
+
+test('can update a article', function ($id) {
+    /**
+     * @var $response TestResponse
+     */
+    $response = $this->put("api/article/articles/$id", [
+        'title'       =>fake()->text(),
+        'image'       => fake()->imageUrl(),
+        'description' => fake()->text(),
+        'keywords'    => fake()->words(5, true),
+        'contentType' => ArticleContentTypeEnum::RICH->value,
+        'content'     => fake()->randomHtml(),
+    ]);
+
+    $response->assertSuccessful();
+
+    return $response->json('data.id');
+})->depends('can create a article');
+test('can delete a article', function ($id) {
+    /**
+     * @var $response TestResponse
+     */
+    $response = $this->delete("api/article/articles/$id");
+
+    $response->assertSuccessful();
+
+})->depends('can create a article');
 
 test('can query article', function () {
 
@@ -15,8 +75,6 @@ test('can query article', function () {
         ]));
 
     $response->assertSuccessful();
-    $response->ddJson();
-    // TODO 验证
 
 
 });

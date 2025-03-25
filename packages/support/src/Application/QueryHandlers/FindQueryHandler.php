@@ -9,16 +9,12 @@ class FindQueryHandler extends QueryHandler
 {
 
     public function __construct(
-        protected ApplicationQueryService $service
+        protected $service
     ) {
     }
 
     public function handle(FindQuery $query) : mixed
     {
-        $readRepository = $this->getService()->hook('find.repository',
-            $query,
-            fn() => $this->getService()->getRepository());
-        return $readRepository->findById($query);
-
+        return $this->service->readRepository->findById($query);
     }
 }

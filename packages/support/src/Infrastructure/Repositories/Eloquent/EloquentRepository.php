@@ -7,6 +7,9 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Throwable;
 
 
+/**
+ * @template TClass of Model
+ */
 class EloquentRepository implements RepositoryInterface
 {
 
@@ -15,6 +18,7 @@ class EloquentRepository implements RepositoryInterface
      */
     protected static string $eloquentModelClass = Model::class;
 
+
     public function find($id)
     {
         return static::$eloquentModelClass::findOrFail($id);
@@ -22,7 +26,7 @@ class EloquentRepository implements RepositoryInterface
 
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      *
      * @return mixed
      * @throws Throwable
@@ -34,7 +38,7 @@ class EloquentRepository implements RepositoryInterface
     }
 
     /**
-     * @param Model $model
+     * @param  Model  $model
      *
      * @return void
      * @throws Throwable

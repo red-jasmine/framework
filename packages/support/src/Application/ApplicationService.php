@@ -12,6 +12,7 @@ use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
 use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
 use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
@@ -19,6 +20,10 @@ use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionClass;
 
 /**
+ * @method Model crate(Data $command)
+ * @method Model update(Data $command)
+ * @method bool delete(Data $command)
+ * @method Model find(FindQuery $query)
  * @method paginate(PaginateQuery $query)
  * @property RepositoryInterface $repository
  * @property ReadRepositoryInterface $readRepository
