@@ -43,15 +43,9 @@ interface ReadRepositoryInterface
      * @return $this
      */
     public function withQuery(Closure $queryCallback) : static;
+    
 
-    /**
-     * 根据ID查找实体
-     *
-     * @param  FindQuery  $query  可选的查找查询对象，用于定制查找条件
-     *
-     * @return Model|null 查找到的实体数据，如果未找到则返回null
-     */
-    public function findById(FindQuery $query) : ?Model;
+    public function find(FindQuery $query) : ?Model;
 
     /**
      * 分页查询实体列表
