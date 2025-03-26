@@ -4,11 +4,11 @@ use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
-use RedJasmine\Wallet\Application\Services\Wallet\WalletCommandService;
+use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalApprovalCommand;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalCreateCommand;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalPaymentCommand;
-use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalCommandService;
+use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicationService;
 use RedJasmine\Wallet\Domain\Data\Payee;
 use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
@@ -20,9 +20,9 @@ use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
 
 beforeEach(function () {
-    $this->WalletCommandService           = app(WalletCommandService::class);
+    $this->WalletCommandService           = app(WalletApplicationService::class);
     $this->WalletRepository               = app(WalletRepositoryInterface::class);
-    $this->WalletWithdrawalCommandService = app(WalletWithdrawalCommandService::class);
+    $this->WalletWithdrawalCommandService = app(WalletWithdrawalApplicationService::class);
     $this->WalletWithdrawalRepository     = app(WalletWithdrawalRepositoryInterface::class);
     $this->type                           = 'point';
     $this->currency                       = 'CNY';

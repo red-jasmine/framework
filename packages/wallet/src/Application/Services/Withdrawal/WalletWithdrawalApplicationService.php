@@ -17,7 +17,7 @@ use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
  * @method bool approval(WalletWithdrawalApprovalCommand $command)
  * @method bool payment(WalletWithdrawalPaymentCommand $command)
  */
-class WalletWithdrawalCommandService extends ApplicationCommandService
+class WalletWithdrawalApplicationService extends ApplicationCommandService
 {
     public static string $hookNamePrefix = 'wallet.application.withdrawal.command';
 
@@ -32,6 +32,8 @@ class WalletWithdrawalCommandService extends ApplicationCommandService
 
     protected static $macros = [
         'create'   => WalletWithdrawalCreateCommandHandler::class,
+        'update'   => null,
+        'delete'   => null,
         'approval' => WalletWithdrawalApprovalCommandHandler::class,
         'payment'  => WalletWithdrawalPaymentCommandHandler::class,
     ];

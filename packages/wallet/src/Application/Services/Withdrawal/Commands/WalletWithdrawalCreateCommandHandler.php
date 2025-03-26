@@ -4,20 +4,20 @@ namespace RedJasmine\Wallet\Application\Services\Withdrawal\Commands;
 
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalCommandService;
+use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicationService;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletWithdrawalService;
 use Throwable;
 
 /**
- * @method WalletWithdrawalCommandService getService()
+ * @method WalletWithdrawalApplicationService getService()
  */
 class WalletWithdrawalCreateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected WalletWithdrawalCommandService $service,
+        protected WalletWithdrawalApplicationService $service,
         protected WalletRepositoryInterface $walletRepository,
         protected WalletWithdrawalService $walletWithdrawalService,
 

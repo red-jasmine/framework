@@ -2,25 +2,28 @@
 
 namespace RedJasmine\Wallet\Application\Services\Wallet;
 
-use RedJasmine\Support\Application\ApplicationCommandService;
-use RedJasmine\Support\Application\CommandHandlers\CreateCommandHandler;
+
+use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Application\Commands\CreateCommandHandler;
 use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommandHandler;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommandHandler;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
+use RedJasmine\Wallet\Domain\Repositories\WalletReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 
 /**
  * @method Wallet create(WalletCreateCommand $command)
  * @method WalletTransaction  transaction(WalletTransactionCommand $command)
  */
-class WalletCommandService extends ApplicationCommandService
+class WalletApplicationService extends ApplicationService
 {
 
     public function __construct(
-        public WalletRepositoryInterface $repository
+        public WalletRepositoryInterface $repository,
+        public WalletReadRepositoryInterface $readRepository,
     ) {
     }
 
@@ -31,7 +34,9 @@ class WalletCommandService extends ApplicationCommandService
 
     protected static $macros = [
         'create'      => CreateCommandHandler::class,
-        'transaction' => WalletTransactionCommandHandler::class
+        'update'      => null,
+        'delete'      => null,
+        'transaction' => WalletTransactionCommandHandler::class,
     ];
 
 
