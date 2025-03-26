@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Support\Application\QueryHandlers;
+namespace RedJasmine\Support\Application\Queries;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class PaginateQueryHandler extends QueryHandler

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Application\Services\Queries;
 
-use RedJasmine\Support\Application\QueryHandlers\QueryHandler;
+use RedJasmine\Support\Application\Queries\QueryHandler;
 use RedJasmine\Vip\Application\Services\UserVipQueryService;
 use RedJasmine\Vip\Domain\Models\UserVip;
 

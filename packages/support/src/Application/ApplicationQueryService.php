@@ -4,8 +4,8 @@ namespace RedJasmine\Support\Application;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\Queries\FindQueryHandler;
+use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
@@ -15,7 +15,7 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 
 /**
  *
- * @method Model findById(FindQuery $query)
+ * @method Model find(FindQuery $query)
  * @method LengthAwarePaginator paginate(PaginateQuery $query)
  * @property ReadRepositoryInterface $repository
  */
@@ -24,7 +24,7 @@ abstract class ApplicationQueryService extends Service
 
 
     protected static $macros = [
-        'findById' => FindQueryHandler::class,
+        'find'     => FindQueryHandler::class,
         'paginate' => PaginateQueryHandler::class,
     ];
 

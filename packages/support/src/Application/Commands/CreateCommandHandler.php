@@ -20,6 +20,12 @@ class CreateCommandHandler extends CommandHandler
     }
 
 
+    protected function newModel() : Model
+    {
+        return $this->service->newModel();
+    }
+
+
     /**
      * 处理命令对象
      *
@@ -33,7 +39,7 @@ class CreateCommandHandler extends CommandHandler
 
 
         $this->context->setCommand($command);
-        $this->context->setModel($this->service->newModel());
+        $this->context->setModel($this->newModel());
         // 开始数据库事务
         $this->beginDatabaseTransaction();
         try {

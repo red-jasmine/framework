@@ -53,7 +53,7 @@ class GroupController extends Controller
     public function show($id, Request $request) : GroupResource
     {
 
-        $result = $this->queryService->findById(FindQuery::make($id,$request));;
+        $result = $this->queryService->find(FindQuery::make($id,$request));;
 
         return GroupResource::make($result);
     }

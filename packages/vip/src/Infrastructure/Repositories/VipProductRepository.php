@@ -33,7 +33,7 @@ class VipProductRepository implements VipProductRepositoryInterface
     public function find($id) : VipProduct
     {
         // 调用商品领域 进行查询
-        $productModel = $this->productQueryService->findById(FindQuery::from(['id' => $id]));
+        $productModel = $this->productQueryService->find(FindQuery::from(['id' => $id]));
 
         return $this->productDomainConverter->converter($productModel);
 

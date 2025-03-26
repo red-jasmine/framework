@@ -52,9 +52,7 @@ class ResourceUsageDomainService
     protected function consume(UseResourceData $data)
     {
         // 查询可用资源
-        $resource = $this->readRepository->findById();
-        // 扣减资源
-        $resource->deduction();
+
 
         // 添加记录
 

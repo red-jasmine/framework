@@ -130,7 +130,7 @@ trait ResourcePageHelper
         if ($resource::onlyOwner()) {
             $queryService->getRepository()->withQuery(fn($query) => $query->onlyOwner(auth()->user()));
         }
-        $model = $queryService->findById($resource::callFindQuery(FindQuery::make($key)));
+        $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
         return $resource::callResolveRecord($model);
 
     }

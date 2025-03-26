@@ -27,25 +27,6 @@ abstract class ApplicationCommandService extends Service
     protected static string $modelClass;
 
 
-
-
-    /**
-     * 转换器
-     * @var string|null
-     */
-    protected static ?string $transformerClass = null;
-
-    public static function getTransformerClass() : ?string
-    {
-        return static::$transformerClass;
-    }
-
-    public static function setTransformerClass(?string $transformerClass) : void
-    {
-        static::$transformerClass = $transformerClass;
-    }
-
-
     protected static $macros = [
         'create' => CreateCommandHandler::class,
         'update' => UpdateCommandHandler::class,
@@ -58,22 +39,18 @@ abstract class ApplicationCommandService extends Service
     }
 
     /**
-     * @deprecated
      * @param  null  $command
      *
      * @return Model
      * @throws Exception
+     * @deprecated
      */
     public function newModel($command = null) : Model
     {
-        if (method_exists(static::getModelClass(), 'newModel')) {
-            return static::getModelClass()::newModel();
-        }
         /**
          * @var $model Model
          */
-        return (static::getModelClass())::make();
-
+        return static::$modelClass::make();
     }
 
     public static function getModelClass() : string

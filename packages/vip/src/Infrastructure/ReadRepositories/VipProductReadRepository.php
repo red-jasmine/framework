@@ -50,12 +50,15 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
         return $this;
     }
 
-    public function findById(FindQuery $query) : ?Model
+
+
+    public function find(FindQuery $query) : ?Model
     {
-        $product = $this->queryService->getRepository()->findById($query);
+        $product = $this->queryService->getRepository()->find($query);
 
         return $this->productDomainConverter->converter($product);
     }
+
 
     public function paginate(PaginateQuery $query) : LengthAwarePaginator|Paginator
     {

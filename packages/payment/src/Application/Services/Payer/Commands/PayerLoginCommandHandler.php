@@ -25,7 +25,7 @@ class PayerLoginCommandHandler extends CommandHandler
     {
 
         // 查询应用
-        $merchantApp = $this->merchantAppReadRepository->findById(FindQuery::from(['id' => $command->merchantAppId]));
+        $merchantApp = $this->merchantAppReadRepository->find(FindQuery::from(['id' => $command->merchantAppId]));
 
         // 根据应用查询授权
         $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp->id);

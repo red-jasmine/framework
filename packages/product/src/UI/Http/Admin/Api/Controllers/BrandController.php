@@ -35,7 +35,7 @@ class BrandController extends Controller
 
     public function show(Request $request, $id) : BrandResource
     {
-        $result = $this->queryService->findById(FindQuery::make($id,$request));;
+        $result = $this->queryService->find(FindQuery::make($id,$request));;
 
         return BrandResource::make($result);
     }

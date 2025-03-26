@@ -6,8 +6,8 @@ use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQuery;
 use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQueryHandler;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
-use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\Queries\FindQueryHandler;
+use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
 
 /**
  * @method getUsersByOwner(GetUsersByOwnerQuery $query)

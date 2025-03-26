@@ -25,7 +25,7 @@ class ProductPropertyGroupRulePipeline
         $groupId = $command->{$attributeName};
         if ($groupId) {
             try {
-                $this->repository->findById(FindQuery::make($groupId));
+                $this->repository->find(FindQuery::from(['id'=>$groupId]));
             } catch (ModelNotFoundException) {
                 throw new ProductPropertyException('属性组不存在:'.$groupId);
             }

@@ -70,14 +70,6 @@ abstract class CommandHandler
     }
 
 
-    public function getModelClass() : ?string
-    {
-        if (property_exists($this, 'modelClass')) {
-            return static::$modelClass;
-        } else {
-            return $this->getService()::getModelClass();
-        }
-    }
 
 
 }

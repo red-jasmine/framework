@@ -37,7 +37,7 @@ class PropertyController extends Controller
 
     public function show($id, Request $request) : PropertyResource
     {
-        $result = $this->queryService->findById(FindQuery::make($id,$request));;
+        $result = $this->queryService->find(FindQuery::make($id,$request));;
 
         return PropertyResource::make($result);
     }

@@ -19,7 +19,7 @@ class ProductPropertyRulePipeline
     public function handle(Data $command, Closure $next) : mixed
     {
         $command = $command;
-        $this->repository->findById(FindQuery::make($command->pid));
+        $this->repository->find(FindQuery::from(['id' => $command->pid]));
         return $next($command);
     }
 }

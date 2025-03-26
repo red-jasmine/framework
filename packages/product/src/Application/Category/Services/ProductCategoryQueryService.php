@@ -70,7 +70,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->findById(FindQuery::make($id))?->isAllowUse());
+        return (bool)($this->find(FindQuery::make($id))?->isAllowUse());
     }
 
 

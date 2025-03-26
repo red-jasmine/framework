@@ -5,7 +5,7 @@ namespace RedJasmine\Socialite\Application\Services\Queries;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Socialite\Application\Services\SocialiteUserQueryService;
-use RedJasmine\Support\Application\QueryHandlers\QueryHandler;
+use RedJasmine\Support\Application\Queries\QueryHandler;
 
 class GetUsersByOwnerQueryHandler extends QueryHandler
 {

@@ -39,7 +39,7 @@ class CardGroupController extends Controller
 
     public function show($id, Request $request) : CardGroupResource
     {
-        $result = $this->queryService->findById(FindQuery::make($id,$request));;
+        $result = $this->queryService->find(FindQuery::make($id,$request));;
 
         return CardGroupResource::make($result);
     }
@@ -65,7 +65,7 @@ class CardGroupController extends Controller
         $request->offsetSet('owner_id', $this->getOwner()->getID());
         $request->offsetSet('id', $id);
 
-        $this->queryService->findById(FindQuery::make($id));
+        $this->queryService->find(FindQuery::make($id));
 
 
         $command = CardGroupUpdateCommand::from($request);
@@ -78,7 +78,7 @@ class CardGroupController extends Controller
 
     public function destroy(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
-        $this->queryService->findById(FindQuery::make($id));
+        $this->queryService->find(FindQuery::make($id));
         $request->offsetSet('id', $id);
         $command = CardGroupDeleteCommand::from($request);
 

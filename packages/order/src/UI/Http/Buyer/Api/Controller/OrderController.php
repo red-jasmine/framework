@@ -41,7 +41,7 @@ class OrderController extends Controller
 
     public function show(Request $request, int $id) : OrderResource
     {
-        $result = $this->queryService->findById(FindQuery::make($id,$request));
+        $result = $this->queryService->find(FindQuery::make($id,$request));
 
         return OrderResource::make($result);
     }
@@ -59,7 +59,7 @@ class OrderController extends Controller
 
     public function paying(Request $request) : JsonResponse
     {
-        $order = $this->queryService->findById(FindQuery::from($request));
+        $order = $this->queryService->find(FindQuery::from($request));
 
         $command = OrderPayingCommand::from([ 'id' => $order->id, 'amount' => $order->payable_amount ]);
         $payment = $this->commandService->paying($command);
@@ -70,7 +70,7 @@ class OrderController extends Controller
 
     public function confirm(Request $request) : JsonResponse
     {
-        $order = $this->queryService->findById(FindQuery::from($request));
+        $order = $this->queryService->find(FindQuery::from($request));
 
         $command = OrderConfirmCommand::from($request->all());
         $this->commandService->confirm($command);
@@ -81,7 +81,7 @@ class OrderController extends Controller
     public function cancel(Request $request) : JsonResponse
     {
         $command = OrderCancelCommand::from($request->all());
-        $this->queryService->findById(FindQuery::from($request));
+        $this->queryService->find(FindQuery::from($request));
         $this->commandService->cancel($command);
 
         return static::success();
@@ -91,7 +91,7 @@ class OrderController extends Controller
     public function destroy($id) : JsonResponse
     {
         $command = OrderHiddenCommand::from([ 'id' => $id ]);
-        $this->queryService->findById(FindQuery::make($command->id));
+        $this->queryService->find(FindQuery::make($command->id));
         $this->commandService->buyerHidden($command);
 
         return static::success();
@@ -100,7 +100,7 @@ class OrderController extends Controller
 
     public function remarks(Request $request) : JsonResponse
     {
-        $this->queryService->findById(FindQuery::from($request));
+        $this->queryService->find(FindQuery::from($request));
         $command = OrderRemarksCommand::from($request->all());
 
         $this->commandService->buyerRemarks($command);

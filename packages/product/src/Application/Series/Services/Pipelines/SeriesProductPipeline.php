@@ -40,7 +40,7 @@ class SeriesProductPipeline
         try {
             if ($command->products) {
                 foreach ($command->products as $product) {
-                    $this->queryService->findById(FindQuery::make($product->productId));
+                    $this->queryService->find(FindQuery::make($product->productId));
                 }
             }
         } catch (ModelNotFoundException $modelNotFoundException) {

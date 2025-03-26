@@ -75,7 +75,7 @@ class ProductGroupQueryService extends ApplicationQueryService
 
         return (bool) ($this->getRepository()->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
-        })->findById(FindQuery::make($id))?->isAllowUse());
+        })->find(FindQuery::make($id))?->isAllowUse());
     }
 
 

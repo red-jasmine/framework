@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Article\UI\Http\User\Api\Controllers;
+namespace RedJasmine\Article\UI\Http\Admin\Api\Controllers;
 
 
 use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;

@@ -3,8 +3,8 @@
 namespace RedJasmine\Vip\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationQueryService;
-use RedJasmine\Support\Application\QueryHandlers\FindQueryHandler;
-use RedJasmine\Support\Application\QueryHandlers\PaginateQueryHandler;
+use RedJasmine\Support\Application\Queries\FindQueryHandler;
+use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQuery;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQueryHandle;
 use RedJasmine\Vip\Domain\Models\UserVip;

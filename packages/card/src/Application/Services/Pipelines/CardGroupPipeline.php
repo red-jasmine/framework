@@ -26,7 +26,7 @@ class CardGroupPipeline
                 $query->onlyOwner($command->owner);
             });
 
-            $this->groupQueryService->findById(FindQuery::make($command->groupId));
+            $this->groupQueryService->find(FindQuery::make($command->groupId));
         }
 
         return $next($command);

@@ -36,7 +36,7 @@ class VipProductController extends Controller
     {
         $query = FindQuery::from($request);
         $query->setKey($id);
-        $result = $this->queryService->findById($query);
+        $result = $this->queryService->find($query);
         return VipProductResource::make($result);
     }
 

@@ -1,8 +1,7 @@
 <?php
 
-namespace RedJasmine\Support\Application\QueryHandlers;
+namespace RedJasmine\Support\Application\Queries;
 
-use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class FindQueryHandler extends QueryHandler
@@ -15,6 +14,6 @@ class FindQueryHandler extends QueryHandler
 
     public function handle(FindQuery $query) : mixed
     {
-        return $this->service->readRepository->findById($query);
+        return $this->service->readRepository->find($query);
     }
 }
