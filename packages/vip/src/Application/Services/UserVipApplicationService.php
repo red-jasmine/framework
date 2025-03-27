@@ -36,9 +36,12 @@ class UserVipApplicationService extends ApplicationService
     public static string $hookNamePrefix = 'vip.application.user-vip';
 
     // 置空
-    protected static array $handlers = [];
+
 
     protected static $macros = [
+        'create'      => null,
+        'update'      => null,
+        'delete'      => null,
         'open'        => UserVipOpenCommandHandler::class, // 开通
         'findUserVip' => FindUserVipQueryHandle::class
     ];
