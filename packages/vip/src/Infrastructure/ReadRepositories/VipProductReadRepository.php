@@ -14,9 +14,11 @@ use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
 use RedJasmine\Vip\Infrastructure\ProductDomainConverter;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class VipProductReadRepository implements VipProductReadRepositoryInterface
 {
+
 
     public function __construct(
         public ProductQueryService $queryService,
@@ -49,7 +51,6 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
         $this->queryService->getRepository()->withQuery($queryCallback);
         return $this;
     }
-
 
 
     public function find(FindQuery $query) : ?Model

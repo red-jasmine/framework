@@ -4,7 +4,7 @@ namespace RedJasmine\Vip\Application\Services\Commands;
 
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\Vip\Application\Services\UserVipCommandService;
+use RedJasmine\Vip\Application\Services\UserVipApplicationService;
 use RedJasmine\Vip\Domain\Exceptions\VipException;
 use Throwable;
 
@@ -12,7 +12,7 @@ class UserVipOpenCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        public UserVipCommandService $service
+        public UserVipApplicationService $service
     ) {
     }
 

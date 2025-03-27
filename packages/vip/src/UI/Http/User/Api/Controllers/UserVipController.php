@@ -3,19 +3,19 @@
 namespace RedJasmine\Vip\UI\Http\User\Api\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQuery;
-use RedJasmine\Vip\Application\Services\UserVipQueryService;
+use RedJasmine\Vip\Application\Services\UserVipApplicationService;
 use RedJasmine\Vip\UI\Http\User\Api\Resources\UserVipResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserVipController extends Controller
 {
     public function __construct(
-        protected UserVipQueryService $queryService,
+        protected UserVipApplicationService $service,
     ) {
 
-        $this->queryService->getRepository()->withQuery(function ($query) {
+        $this->service->readRepository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }
@@ -27,7 +27,7 @@ class UserVipController extends Controller
     {
         $query = PaginateQuery::from($request);
 
-        $result = $this->queryService->paginate($query);
+        $result = $this->service->paginate($query);
         return UserVipResource::collection($result);
     }
 
@@ -39,7 +39,7 @@ class UserVipController extends Controller
             'owner' => $this->getOwner(),
         ]);
 
-        $vip = $this->queryService->findUserVip($query);
+        $vip = $this->service->findUserVip($query);
 
         return new  UserVipResource($vip);
 

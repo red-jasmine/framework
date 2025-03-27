@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Application\Services;
 
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Vip\Domain\Data\VipProductData;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
@@ -11,7 +11,7 @@ use RedJasmine\Vip\Domain\Repositories\VipProductRepositoryInterface;
 /**
  * @method VipProduct create(VipProductData $command)
  */
-class VipProductCommandService extends ApplicationCommandService
+class VipProductApplicationService extends ApplicationService
 {
 
 
@@ -23,7 +23,7 @@ class VipProductCommandService extends ApplicationCommandService
 
     protected static string $modelClass = VipProduct::class;
 
-    public static string $hookNamePrefix = 'vip.application.command.vip-product';
+    public static string $hookNamePrefix = 'vip.application.vip-product';
 
 
 }

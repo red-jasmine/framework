@@ -5,9 +5,22 @@ namespace RedJasmine\Vip\Infrastructure\ReadRepositories;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use RedJasmine\Vip\Domain\Models\Vip;
 use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class VipReadRepository extends QueryBuilderReadRepository implements VipReadRepositoryInterface
 {
+
+    public function allowedFilters() : array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::exact('app_id'),
+            AllowedFilter::exact('type'),
+            AllowedFilter::exact('keyword'),
+
+        ];
+    }
+
 
     /**
      *

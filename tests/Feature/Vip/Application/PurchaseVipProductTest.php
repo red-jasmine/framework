@@ -2,9 +2,9 @@
 
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Vip\Application\Services\Commands\UserPurchaseVipCommand;
-use RedJasmine\Vip\Application\Services\UserVipCommandService;
-use RedJasmine\Vip\Application\Services\VipCommandService;
-use RedJasmine\Vip\Application\Services\VipProductCommandService;
+use RedJasmine\Vip\Application\Services\UserVipApplicationService;
+use RedJasmine\Vip\Application\Services\VipApplicationService;
+use RedJasmine\Vip\Application\Services\VipProductApplicationService;
 use RedJasmine\Vip\Application\Services\VipPurchaseCommandService;
 use RedJasmine\Vip\Domain\Data\VipData;
 use RedJasmine\Vip\Domain\Data\VipProductData;
@@ -15,15 +15,15 @@ use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
 
 beforeEach(function () {
 
-    $this->VipCommandService = app(VipCommandService::class);
+    $this->VipCommandService = app(VipApplicationService::class);
 
-    $this->UserVipCommandService = app(UserVipCommandService::class);
+    $this->UserVipCommandService = app(UserVipApplicationService::class);
     $this->VipReadRepository     = app(VipReadRepositoryInterface::class);
     $this->appId                 = 'test';
     $this->type                  = 'vip';
 
 
-    $this->VipProductCommandService  = app(VipProductCommandService::class);
+    $this->VipProductCommandService  = app(VipProductApplicationService::class);
     $this->VipProductReadRepository  = app(VipProductReadRepositoryInterface::class);
     $this->VipProductRepository      = app(VipProductRepositoryInterface::class);
     $this->VipPurchaseCommandService = app(VipPurchaseCommandService::class);

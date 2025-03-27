@@ -4,20 +4,19 @@ namespace RedJasmine\Vip\UI\Http\User\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Vip\Application\Services\Commands\UserPurchaseVipCommand;
 use RedJasmine\Vip\Application\Services\Queries\Products\VipProductPaginateQuery;
-use RedJasmine\Vip\Application\Services\VipProductQueryService;
+use RedJasmine\Vip\Application\Services\VipProductApplicationService;
 use RedJasmine\Vip\Application\Services\VipPurchaseCommandService;
 use RedJasmine\Vip\UI\Http\User\Api\Resources\VipProductResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class VipProductController extends Controller
 {
 
     public function __construct(
-
-        public VipProductQueryService $queryService,
+        public VipProductApplicationService $service,
         public VipPurchaseCommandService $vipPurchaseCommand
     ) {
     }
@@ -28,7 +27,7 @@ class VipProductController extends Controller
         $query         = VipProductPaginateQuery::from($request);
         $query->status = 'on_sale,sold_out';
 
-        $result = $this->queryService->paginate($query);
+        $result = $this->service->paginate($query);
         return VipProductResource::collection($result);
     }
 
@@ -36,7 +35,7 @@ class VipProductController extends Controller
     {
         $query = FindQuery::from($request);
         $query->setKey($id);
-        $result = $this->queryService->find($query);
+        $result = $this->service->find($query);
         return VipProductResource::make($result);
     }
 
