@@ -5,8 +5,8 @@ namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
-use RedJasmine\Product\Application\Group\Services\ProductGroupQueryService;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
+use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
@@ -17,23 +17,23 @@ use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
 /**
- * @method  ProductCommandService getService()
+ * @method  ProductApplicationService getService()
  */
 class ProductCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        public ProductCommandService $service,
+        public ProductApplicationService $service,
         protected BrandQueryService $brandQueryService,
         protected StockCommandService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
         protected PropertyValidateService $propertyValidateService,
         protected ProductCategoryQueryService $categoryQueryService,
-        protected ProductGroupQueryService $groupQueryService,
+        protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer
     ) {
 

@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use JsonException;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
@@ -11,7 +11,7 @@ use RedJasmine\Product\Exceptions\StockException;
 use Throwable;
 
 /**
- * @method  ProductCommandService getService()
+ * @method  ProductApplicationService getService()
  */
 class ProductUpdateCommandHandler extends ProductCommandHandler
 {
@@ -31,29 +31,29 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
     {
 
 
-        /**
-         * @var $product Product
-         */
-        $product = $this->getService()->getRepository()->find($command->id);
+
 
 
         $this->beginDatabaseTransaction();
         try {
-
+            /**
+             * @var $product Product
+             */
+            $product = $this->service->repository->find($command->id);
             $product->setRelation('skus', $product->skus()->withTrashed()->get());
 
             $product->skus->each(function ($sku) {
                 $sku->setDeleted();
             });
 
-            $this->getService()->hook('update.validate', $command, fn() => $this->validate($command));
+            $this->service->hook('update.validate', $command, fn() => $this->validate($command));
 
-            $product = $this->getService()->hook('update.fill', $command,
+            $product = $this->service->hook('update.fill', $command,
                 fn() => $this->productTransformer->transform($product, $command));
 
             $product->modified_time = now();
 
-            $this->getRepository()->update($product);
+            $this->service->repository->update($product);
 
             $this->handleStock($product, $command);
 

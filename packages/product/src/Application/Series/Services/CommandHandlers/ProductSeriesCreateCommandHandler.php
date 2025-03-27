@@ -7,16 +7,24 @@ use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesProduc
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Exceptions\AbstractException;
+use Throwable;
 
 class ProductSeriesCreateCommandHandler extends CommandHandler
 {
 
+    public function __construct(protected ApplicationService $service)
+    {
+        $this->context = new HandleContext();
+    }
+
 
     /**
      * @throws AbstractException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handle(ProductSeriesCreateCommand $command) : ProductSeries
     {
@@ -27,7 +35,7 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
             /**
              * @var $model ProductSeries
              */
-            $model          = $this->getService()->newModel();
+            $model          = $this->service->newModel();
             $model->owner   = $command->owner;
             $model->remarks = $command->remarks;
             $model->name    = $command->name;
@@ -48,14 +56,14 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
             }
 
 
-            $this->getService()->getRepository()->store($model);
+            $this->service->repository->store($model);
 
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $this->rollBackDatabaseTransaction();
             throw $throwable;
 

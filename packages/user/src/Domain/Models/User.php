@@ -89,7 +89,11 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         isset($data->birthday) ? $this->birthday = $data->birthday : null;
         isset($data->biography) ? $this->biography = $data->biography : null;
     }
+    public function isAdmin()
+    {
+        return true;
 
+    }
 
     public function setPassword(string $password) : void
     {

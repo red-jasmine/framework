@@ -7,11 +7,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\Services\ProductQueryService;
-use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Support\Data\UserData;
-use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductRepositoryInterface;
@@ -21,8 +17,7 @@ class VipProductRepository implements VipProductRepositoryInterface
 {
 
     public function __construct(
-        public ProductCommandService $productCommandService,
-        public ProductQueryService $productQueryService,
+        public ProductApplicationService $productCommandService,
         public ProductDomainConverter $productDomainConverter,
     ) {
     }
@@ -33,7 +28,7 @@ class VipProductRepository implements VipProductRepositoryInterface
     public function find($id) : VipProduct
     {
         // 调用商品领域 进行查询
-        $productModel = $this->productQueryService->find(FindQuery::from(['id' => $id]));
+        $productModel = $this->productCommandService->find(FindQuery::from(['id' => $id]));
 
         return $this->productDomainConverter->converter($productModel);
 
@@ -79,14 +74,14 @@ class VipProductRepository implements VipProductRepositoryInterface
     public function update(Model $model)
     {
         $command = ProductUpdateCommand::from([
-            'owner'        => $this->productDomainConverter->seller(),
-            'title'        => $model->name,
-            'price'        => $model->price->toArray(),
-            'productType'  => ProductTypeEnum::VIRTUAL,
-            'shippingType' => ShippingTypeEnum::DUMMY,
-            'unit'         => $model->time_unit->value,
-            'unitQuantity' => $model->time_value,
-            'stock'        => $model->stock,
+            'owner'         => $this->productDomainConverter->seller(),
+            'title'         => $model->name,
+            'price'         => $model->price->toArray(),
+            'productType'   => ProductTypeEnum::VIRTUAL,
+            'shippingType'  => ShippingTypeEnum::DUMMY,
+            'unit'          => $model->time_unit->value,
+            'unitQuantity'  => $model->time_value,
+            'stock'         => $model->stock,
             'appId'         => $model->app_id,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
             'extras'        => [

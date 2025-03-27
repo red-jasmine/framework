@@ -28,7 +28,8 @@ trait ResourcePageHelper
     public static function getEloquentQuery() : Builder
     {
 
-        $query = app(static::$queryService)->getRepository()->modelQuery();
+
+        $query = app(static::$service)->readRepository->modelQuery();
 
 //        $query->withoutGlobalScopes([
 //                                  SoftDeletingScope::class,
@@ -113,7 +114,7 @@ trait ResourcePageHelper
 
     public static function getCommandService() : ?string
     {
-        return static::$commandService;
+        return static::$service;
     }
 
 
@@ -128,7 +129,7 @@ trait ResourcePageHelper
         $queryService = app($resource::getQueryService());
 
         if ($resource::onlyOwner()) {
-            $queryService->getRepository()->withQuery(fn($query) => $query->onlyOwner(auth()->user()));
+            $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner(auth()->user()));
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
         return $resource::callResolveRecord($model);
@@ -137,7 +138,7 @@ trait ResourcePageHelper
 
     public static function getQueryService() : ?string
     {
-        return static::$queryService;
+        return static::$service;
     }
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
@@ -180,8 +181,17 @@ trait ResourcePageHelper
     }
 
 
+    public static function makeUser()
+    {
+
+    }
+
     public static function operateFormSchemas() : array
     {
+        return  [
+            ...static::ownerFormSchemas('creator'),
+            ...static::ownerFormSchemas('updater'),
+        ];
         return [
 
             Forms\Components\MorphToSelect::make('creator')
@@ -254,34 +264,34 @@ trait ResourcePageHelper
 
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
+
         return [
 
-            Forms\Components\MorphToSelect::make($name)
-                                          ->label(__('red-jasmine-support::support.owner'))
-                                          ->types([
-                                                      // TODO 更具当前 model 动态
-                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
-                                                  ])
-                                          ->live()
-                                          ->columns(2)
-                                          ->default([ $name . '_type' => auth()->user()->getType(), $name . '_id' => auth()->user()->getID() ])
-                                          ->hidden(!auth()->user()->isAdmin())
-            ,
+            // Forms\Components\MorphToSelect::make($name)
+            //                               ->label(__('red-jasmine-support::support.owner'))
+            //                               ->types([
+            //                                           // TODO 更具当前 model 动态
+            //                                           Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('nickname')
+            //                                       ])
+            //                               ->live()
+            //                               ->columns(2)
+            //                               ->default([ $name . '_type' => auth()->user()->getType(), $name . '_id' => auth()->user()->getID() ])
+            //                               ->hidden(!auth()->user()->isAdmin())
+            // ,
 
-            //            Forms\Components\TextInput::make($name . '_type')
-            //                                      ->label(__('red-jasmine-support::support.owner_type'))
-            //                                      ->hidden(!auth()->user()->isAdmin())
-            //                                      ->default(auth()->user()->getType())
-            //                                      ->required()
-            //                                      ->maxLength(64)
-            //                                      ->live(),
-            //            Forms\Components\TextInput::make($name . '_id')
-            //                                      ->label(__('red-jasmine-support::support.owner_id'))
-            //                                      ->required()
-            //                                      ->numeric()
-            //                                      ->hidden(!auth()->user()->isAdmin())
-            //                                      ->default(auth()->user()->getID())
-            //                                      ->live(),
+                       Forms\Components\TextInput::make($name . '_type')
+                                                 ->label(__('red-jasmine-support::support.owner_type'))
+                                                 ->hidden(!auth()->user()->isAdmin())
+                                                 ->default(auth()->user()->getType())
+                                                 ->required()
+                                                 ->maxLength(64)
+                                                 ->live(),
+                       Forms\Components\TextInput::make($name . '_id')
+                                                 ->label(__('red-jasmine-support::support.owner_id'))
+                                                 ->required()
+                                                 ->hidden(!auth()->user()->isAdmin())
+                                                 ->default(auth()->user()->getID())
+                                                 ->live(),
 
         ];
 

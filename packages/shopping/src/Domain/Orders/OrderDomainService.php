@@ -3,8 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Orders;
 
 use Illuminate\Support\Collection;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\Services\ProductQueryService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
@@ -22,8 +21,7 @@ class OrderDomainService extends Service
 
 
     public function __construct(
-        protected ProductCommandService $productCommandService,
-        protected ProductQueryService $productQueryService,
+        protected ProductApplicationService $productCommandService,
         protected StockQueryService $stockQueryService,
         protected StockCommandService $stockCommandService,
         protected ShoppingOrderCommandService $orderCommandService,
@@ -69,7 +67,7 @@ class OrderDomainService extends Service
 
         // 验证商品
         $productIdList = $orderData->products->pluck('productId')->unique()->toArray();
-        $products      = $this->productQueryService->getRepository()->findList($productIdList);
+        $products      = $this->productCommandService->readRepository->findList($productIdList);
 
         if (count($productIdList) !== count($products)) {
             throw  ShoppingException::newFromCodes(ShoppingException::PRODUCT_ERROR);

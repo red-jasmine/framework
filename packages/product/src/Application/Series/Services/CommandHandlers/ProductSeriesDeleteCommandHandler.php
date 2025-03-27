@@ -2,13 +2,9 @@
 
 namespace RedJasmine\Product\Application\Series\Services\CommandHandlers;
 
-use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesDeleteCommand;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesProductData;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
-use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
 class ProductSeriesDeleteCommandHandler extends CommandHandler

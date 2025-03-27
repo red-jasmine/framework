@@ -5,8 +5,8 @@ namespace RedJasmine\Product\Application\Product\Services\Commands;
 use JsonException;
 use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
-use RedJasmine\Product\Application\Group\Services\ProductGroupQueryService;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
+use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Product\Domain\Product\Models\Product;
@@ -19,29 +19,28 @@ use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use Throwable;
 
 /**
- * @method  ProductCommandService getService()
+ * @method  ProductApplicationService getService()
  */
 class ProductSetStatusCommandHandler extends CommandHandler
 {
 
 
     public function __construct(
-        protected BrandQueryService           $brandQueryService,
-        protected StockCommandService         $stockCommandService,
-        protected PropertyFormatter           $propertyFormatter,
-        protected PropertyValidateService     $propertyValidateService,
+        protected BrandQueryService $brandQueryService,
+        protected StockCommandService $stockCommandService,
+        protected PropertyFormatter $propertyFormatter,
+        protected PropertyValidateService $propertyValidateService,
         protected ProductCategoryQueryService $categoryQueryService,
-        protected ProductGroupQueryService    $groupQueryService,
-        protected ProductTransformer          $productTransformer
-    )
-    {
+        protected ProductGroupApplicationService $groupQueryService,
+        protected ProductTransformer $productTransformer
+    ) {
 
 
     }
 
 
     /**
-     * @param ProductSetStatusCommand $command
+     * @param  ProductSetStatusCommand  $command
      *
      * @return Product|null
      * @throws Throwable

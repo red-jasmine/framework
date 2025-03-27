@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use Throwable;
 
 /**
- * @method  ProductCommandService getService()
+ * @method  ProductApplicationService getService()
  */
 class ProductCreateCommandHandler extends ProductCommandHandler
 {

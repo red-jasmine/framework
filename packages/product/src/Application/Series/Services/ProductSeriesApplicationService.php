@@ -7,10 +7,11 @@ use RedJasmine\Product\Application\Series\Services\CommandHandlers\ProductSeries
 use RedJasmine\Product\Application\Series\Services\CommandHandlers\ProductSeriesUpdateCommandHandler;
 use RedJasmine\Product\Application\Series\Services\Pipelines\SeriesProductPipeline;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
+use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
-class ProductSeriesCommandService extends ApplicationCommandService
+class ProductSeriesApplicationService extends ApplicationService
 {
 
 
@@ -18,7 +19,7 @@ class ProductSeriesCommandService extends ApplicationCommandService
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix  = 'product.application.series.command';
+    public static string $hookNamePrefix = 'product.application.series.command';
 
     protected static string $modelClass = ProductSeries::class;
 
@@ -29,9 +30,9 @@ class ProductSeriesCommandService extends ApplicationCommandService
     ];
 
     public function __construct(
-        protected ProductSeriesRepositoryInterface $repository
-    )
-    {
+        public ProductSeriesRepositoryInterface $repository,
+        public ProductSeriesReadRepositoryInterface $readRepository,
+    ) {
 
     }
 

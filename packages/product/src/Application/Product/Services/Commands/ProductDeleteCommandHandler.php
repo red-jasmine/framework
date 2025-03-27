@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 
 /**
- * @method  ProductCommandService getService()
+ * @method  ProductApplicationService getService()
  */
 class ProductDeleteCommandHandler extends CommandHandler
 {

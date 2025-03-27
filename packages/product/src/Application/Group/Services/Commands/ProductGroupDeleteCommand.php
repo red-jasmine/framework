@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Application\Group\UserCases\Commands;
+namespace RedJasmine\Product\Application\Group\Services\Commands;
 
 use RedJasmine\Support\Data\Data;
 

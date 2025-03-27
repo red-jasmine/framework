@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Application\Group\UserCases\Queries;
+namespace RedJasmine\Product\Application\Group\Services\Queries;
 
 use RedJasmine\Support\Domain\Data\Queries\Query;
 

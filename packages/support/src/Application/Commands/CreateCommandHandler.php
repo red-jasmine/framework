@@ -20,9 +20,9 @@ class CreateCommandHandler extends CommandHandler
     }
 
 
-    protected function newModel() : Model
+    protected function newModel(?Data $command = null) : Model
     {
-        return $this->service->newModel();
+        return $this->service->newModel($command);
     }
 
 
@@ -39,7 +39,7 @@ class CreateCommandHandler extends CommandHandler
 
 
         $this->context->setCommand($command);
-        $this->context->setModel($this->newModel());
+        $this->context->setModel($this->newModel($command));
         // 开始数据库事务
         $this->beginDatabaseTransaction();
         try {

@@ -7,21 +7,21 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use RedJasmine\Product\Application\Product\Services\ProductQueryService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
 use RedJasmine\Vip\Infrastructure\ProductDomainConverter;
-use Spatie\QueryBuilder\AllowedFilter;
+
 
 class VipProductReadRepository implements VipProductReadRepositoryInterface
 {
 
 
     public function __construct(
-        public ProductQueryService $queryService,
+        public ProductApplicationService $queryService,
         public ProductDomainConverter $productDomainConverter
     ) {
 
@@ -43,19 +43,19 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
 
     public function query(?Query $query = null)
     {
-        return $this->queryService->getRepository()->query($query);
+        return $this->queryService->readRepository->query($query);
     }
 
     public function withQuery(Closure $queryCallback) : static
     {
-        $this->queryService->getRepository()->withQuery($queryCallback);
+        $this->queryService->readRepository->withQuery($queryCallback);
         return $this;
     }
 
 
     public function find(FindQuery $query) : ?Model
     {
-        $product = $this->queryService->getRepository()->find($query);
+        $product = $this->queryService->readRepository->find($query);
 
         return $this->productDomainConverter->converter($product);
     }
@@ -68,7 +68,7 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
         $query->additional(['product_model' => $query->type]);
         unset($query->type);
 
-        $lengthAwarePaginator = $this->queryService->getRepository()->paginate($query);
+        $lengthAwarePaginator = $this->queryService->readRepository->paginate($query);
 
         return $lengthAwarePaginator->setCollection(
             $lengthAwarePaginator->getCollection()->map(fn($item

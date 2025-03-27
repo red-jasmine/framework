@@ -8,8 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
-use RedJasmine\Product\Application\Product\Services\ProductCommandService;
-use RedJasmine\Product\Application\Product\Services\ProductQueryService;
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\ProductResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
@@ -18,12 +17,11 @@ class ProductController extends Controller
 {
 
     public function __construct(
-        protected ProductCommandService $commandService,
-        protected ProductQueryService   $queryService,
+        protected ProductApplicationService $service,
 
-    )
-    {
-        $this->queryService->getRepository()->withQuery(function ($query) {
+
+    ) {
+        $this->service->readRepository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }
@@ -32,14 +30,14 @@ class ProductController extends Controller
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(PaginateQuery::from($request->all()));
+        $result = $this->service->paginate(PaginateQuery::from($request->all()));
 
         return ProductResource::collection($result->appends($request->query()));
     }
 
     public function show($id, Request $request) : ProductResource
     {
-        $result = $this->queryService->find(FindQuery::make($id, $request));
+        $result = $this->service->find(FindQuery::make($id, $request));
         return ProductResource::make($result);
     }
 
@@ -51,7 +49,7 @@ class ProductController extends Controller
 
         $command = ProductCreateCommand::from($request);
 
-        $result = $this->commandService->create($command);
+        $result = $this->service->create($command);
 
         return ProductResource::make($result);
     }
@@ -67,7 +65,7 @@ class ProductController extends Controller
 
         $command = ProductUpdateCommand::from($request);
 
-        $this->commandService->update($command);
+        $this->service->update($command);
 
         return static::success();
 
@@ -83,7 +81,7 @@ class ProductController extends Controller
 
         $command = ProductDeleteCommand::from($request);
 
-        $this->commandService->delete($command);
+        $this->service->delete($command);
 
         return static::success();
     }

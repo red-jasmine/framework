@@ -10,8 +10,10 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCom
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommandHandler;
 use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 
 /**
@@ -21,14 +23,14 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method void update(ProductUpdateCommand $command)
  * @method void setStatus(ProductSetStatusCommand $command)
  */
-class ProductCommandService extends ApplicationCommandService
+class ProductApplicationService extends ApplicationService
 {
 
     /**
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix = 'product.application.product.command';
+    public static string $hookNamePrefix = 'product.application.product';
 
 
     protected static string $modelClass = Product::class;
@@ -40,7 +42,9 @@ class ProductCommandService extends ApplicationCommandService
     ];
 
     public function __construct(
-        public ProductRepositoryInterface $repository
+        public ProductRepositoryInterface $repository,
+        public ProductReadRepositoryInterface $readRepository
+
     )
     {
 
