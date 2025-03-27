@@ -71,13 +71,21 @@ class ApplicationService
         }
         $macro = $this->makeHandler($macro);
         if (method_exists($macro, 'handle')) {
-            return $macro->handle(...$parameters);
+            return $this->callHandler($macro, $method, $parameters);
         }
         return $macro(...$parameters);
 
     }
 
+    public function callHandler($macro, $method, $parameters) : mixed
+    {
 
+        return $this->hook(
+            $method,
+            count($parameters) === 1 ? $parameters[0] : $parameters,
+            fn() => $macro->handle(...$parameters));
+
+    }
     /**
      * @var string
      */
@@ -99,8 +107,6 @@ class ApplicationService
     {
         if (is_string($macro) && class_exists($macro)) {
             // 反射类  获取 构造函数参数
-            $reflection = new ReflectionClass($macro);
-            //$parameters = $reflection->getConstructor()->getParameters();
             return app($macro, ['service' => $this]);
         }
         return $macro;
