@@ -20,13 +20,6 @@ class ProductService extends Model implements OperatorInterface
 
     use SoftDeletes;
 
-    /**
-     * @return string
-     */
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));
-    }
 
 
     protected $casts = [

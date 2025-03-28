@@ -26,10 +26,6 @@ class ProductCategory extends Model implements OperatorInterface
 
     use SoftDeletes;
 
-    public function getTable()
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_categories';
-    }
 
 
     public $incrementing = false;

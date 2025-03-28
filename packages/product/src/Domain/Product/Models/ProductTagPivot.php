@@ -15,13 +15,6 @@ class ProductTagPivot extends Pivot
 
     use HasDateTimeFormatter;
 
-    /**
-     * @return string
-     */
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tag_pivots';
-    }
 
 
     public function productGroup() : BelongsTo

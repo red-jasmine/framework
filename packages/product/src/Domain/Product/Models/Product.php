@@ -60,10 +60,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public static string $defaultPropertiesSequence = '';
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix', 'jasmine_').'products';
-    }
 
 
     protected static function boot() : void

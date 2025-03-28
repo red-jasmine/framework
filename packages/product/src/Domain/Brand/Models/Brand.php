@@ -28,11 +28,6 @@ class Brand extends Model implements OperatorInterface
 
     use ModelTree;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_brands';
-    }
-
 
     // 父级ID字段名称，默认值为 parent_id
     protected string $parentColumn = 'parent_id';

@@ -27,14 +27,7 @@ class ProductSku extends Model implements OperatorInterface
     use HasOperator;
 
     use HasOwner;
-    /**
-     * @return string
-     */
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));;
-    }
 
     protected $casts = [
         'status' => ProductStatusEnum::class,

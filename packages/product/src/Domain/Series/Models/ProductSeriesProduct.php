@@ -16,13 +16,6 @@ class ProductSeriesProduct extends Model
         'series_id', 'product_id', 'name'
     ];
 
-    /**
-     * @return string
-     */
-    public function getTable()
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));;
-    }
 
     public function series() : BelongsTo
     {

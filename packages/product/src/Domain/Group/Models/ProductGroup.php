@@ -31,11 +31,6 @@ class ProductGroup extends Model implements OperatorInterface, OwnerInterface
 
     use SoftDeletes;
 
-    public function getTable():string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') .'product_groups';
-    }
-
 
     public $incrementing = false;
 

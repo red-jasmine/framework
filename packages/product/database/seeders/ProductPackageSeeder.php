@@ -19,7 +19,7 @@ class ProductPackageSeeder extends Seeder
     protected function brand() : void
     {
         // 添加 品牌
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_brands')->insert([
+        DB::table('brands')->insert([
             'id'           => 1,
             'name'         => '测试',
             'status'       => 'enable',
@@ -34,7 +34,7 @@ class ProductPackageSeeder extends Seeder
     protected function category() : void
     {
 
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_categories')->insert([
+        DB::table('product_categories')->insert([
             'id'        => 1,
             'name'      => '服装',
             'is_show'   => true,
@@ -43,7 +43,7 @@ class ProductPackageSeeder extends Seeder
             'image'     => fake()->imageUrl(360, 360)
         ]);
 
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_categories')->insert([
+        DB::table('product_categories')->insert([
             'id'        => 2,
             'name'      => '男装',
             'parent_id' => 1,
@@ -52,7 +52,7 @@ class ProductPackageSeeder extends Seeder
             'image'     => fake()->imageUrl(360, 360)
         ]);
 
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_categories')->insert([
+        DB::table('product_categories')->insert([
             'id'        => 3,
             'name'      => '短袖',
             'parent_id' => 2,
@@ -80,7 +80,7 @@ class ProductPackageSeeder extends Seeder
 
         foreach ($groups as $group) {
             $group['status'] = 'enable';
-            DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_property_groups')->insert($group);
+            DB::table('product_property_groups')->insert($group);
         }
 
         $properties = [
@@ -118,7 +118,7 @@ class ProductPackageSeeder extends Seeder
         ];
 
         foreach ($properties as $property) {
-            DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_properties')->insert($property);
+            DB::table('product_properties')->insert($property);
         }
 
 
@@ -323,7 +323,7 @@ class ProductPackageSeeder extends Seeder
 
         foreach ([...$colors, ...$sizes, ...$styles, ...$years] as $value) {
             $value['status'] = 'enable';
-            DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_property_values')->insert($value);
+            DB::table('product_property_values')->insert($value);
         }
 
 
@@ -332,7 +332,7 @@ class ProductPackageSeeder extends Seeder
 
     protected function groups() : void
     {
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_groups')->insert([
+        DB::table('product_groups')->insert([
             'id'         => 1,
             'owner_type' => 'user',
             'owner_id'   => 1,
@@ -344,7 +344,7 @@ class ProductPackageSeeder extends Seeder
         ]);
 
 
-        DB::table(config('red-jasmine-product.tables.prefix','jasmine_') .'product_groups')->insert([
+        DB::table('product_groups')->insert([
             'id'         => 2,
             'owner_type' => 'user',
             'owner_id'   => 1,

@@ -26,10 +26,7 @@ class ProductTag extends Model implements OperatorInterface, OwnerInterface
 
     use HasOperator;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tags';
-    }
+
 
     protected $casts = [
         'is_public' => 'boolean',

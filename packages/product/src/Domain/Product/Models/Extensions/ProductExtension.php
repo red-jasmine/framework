@@ -19,7 +19,7 @@ class ProductExtension extends Model
      */
     public function getTable() : string
     {
-        return config('red-jasmine-product.tables.prefix','jasmine_') .'products_extension';
+        return 'products_extension';
     }
 
 

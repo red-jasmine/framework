@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tags', function (Blueprint $table) {
+        Schema::create( 'product_tags', function (Blueprint $table) {
             $table->id();
             $table->string('owner_type',64);
             $table->string('owner_id',64);
@@ -33,6 +33,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') . 'product_tags');
+        Schema::dropIfExists( 'product_tags');
     }
 };

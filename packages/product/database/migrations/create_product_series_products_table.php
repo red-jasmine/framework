@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-product.tables.prefix','jasmine_') . 'product_series_products', function (Blueprint $table) {
+        Schema::create( 'product_series_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('series_id')->comment('系列ID');
             $table->unsignedBigInteger('product_id')->comment('商品ID');
@@ -22,6 +22,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-product.tables.prefix','jasmine_') . 'product_series_products');
+        Schema::dropIfExists( 'product_series_products');
     }
 };

@@ -25,13 +25,7 @@ class ProductPropertyGroup extends Model implements OperatorInterface
 
     use SoftDeletes;
 
-    /**
-     * @return string
-     */
-    public function getTable()
-    {
-        return config('red-jasmine-product.tables.prefix','jasmine_') . Str::snake(Str::pluralStudly(class_basename($this)));;
-    }
+
 
     protected $fillable = [
         'id',
