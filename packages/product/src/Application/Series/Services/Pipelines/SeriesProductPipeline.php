@@ -5,7 +5,7 @@ namespace RedJasmine\Product\Application\Series\Services\Pipelines;
 use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateCommand;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;

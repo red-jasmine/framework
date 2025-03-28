@@ -11,11 +11,10 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\Pages;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\RelationManagers;
-use RedJasmine\Product\Application\Service\Services\ProductServiceCommandService;
-use RedJasmine\Product\Application\Service\Services\ProductServiceQueryService;
-use RedJasmine\Product\Application\Service\UserCases\Commands\ProductServiceCreateCommand;
-use RedJasmine\Product\Application\Service\UserCases\Commands\ProductServiceDeleteCommand;
-use RedJasmine\Product\Application\Service\UserCases\Commands\ProductServiceUpdateCommand;
+use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceCreateCommand;
+use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceDeleteCommand;
+use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceUpdateCommand;
+use RedJasmine\Product\Application\Service\Services\ProductServiceApplicationService;
 use RedJasmine\Product\Domain\Service\Models\Enums\ServiceStatusEnum;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 
@@ -32,8 +31,8 @@ class ProductServiceResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $commandService = ProductServiceCommandService::class;
-    protected static ?string $queryService   = ProductServiceQueryService::class;
+    protected static ?string $service        = ProductServiceApplicationService::class;
+    protected static ?string $commandService = ProductServiceApplicationService::class;
     protected static ?string $createCommand  = ProductServiceCreateCommand::class;
     protected static ?string $updateCommand  = ProductServiceUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductServiceDeleteCommand::class;
@@ -43,6 +42,7 @@ class ProductServiceResource extends Resource
     {
         return __('red-jasmine-product::product-service.labels.service');
     }
+
     public static function getNavigationGroup() : ?string
     {
         return __('red-jasmine-product::product.labels.brand-category-service');
@@ -52,89 +52,89 @@ class ProductServiceResource extends Resource
     {
         return $form
             ->schema([
-                         Forms\Components\TextInput::make('name')
-                                                   ->label(__('red-jasmine-product::product-service.fields.name'))
-                                                   ->required()
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('description')
-                                                   ->label(__('red-jasmine-product::product-service.fields.description'))
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('icon')
-                                                   ->label(__('red-jasmine-product::product-service.fields.icon'))
-                                                   ->maxLength(255),
-                         Forms\Components\ColorPicker::make('color')
-                                                     ->label(__('red-jasmine-product::product-service.fields.color'))
-                         ,
-                         Forms\Components\TextInput::make('cluster')
-                                                   ->label(__('red-jasmine-product::product-service.fields.cluster'))
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('sort')
-                                                   ->label(__('red-jasmine-product::product-service.fields.sort'))
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\Radio::make('is_show')
-                                               ->label(__('red-jasmine-product::product-service.fields.is_show'))
-                                               ->required()
-                                               ->boolean()->inline()
-                                               ->default(1),
-                         Forms\Components\ToggleButtons::make('status')
-                                                       ->label(__('red-jasmine-product::product-service.fields.status'))
-                                                       ->required()
-                                                       ->grouped()
-                                                       ->default(32)
-                                                       ->default(ServiceStatusEnum::ENABLE)
-                                                       ->useEnum(ServiceStatusEnum::class),
-                         ...static::operateFormSchemas()
-                     ]);
+                Forms\Components\TextInput::make('name')
+                                          ->label(__('red-jasmine-product::product-service.fields.name'))
+                                          ->required()
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                                          ->label(__('red-jasmine-product::product-service.fields.description'))
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('icon')
+                                          ->label(__('red-jasmine-product::product-service.fields.icon'))
+                                          ->maxLength(255),
+                Forms\Components\ColorPicker::make('color')
+                                            ->label(__('red-jasmine-product::product-service.fields.color'))
+                ,
+                Forms\Components\TextInput::make('cluster')
+                                          ->label(__('red-jasmine-product::product-service.fields.cluster'))
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('sort')
+                                          ->label(__('red-jasmine-product::product-service.fields.sort'))
+                                          ->required()
+                                          ->numeric()
+                                          ->default(0),
+                Forms\Components\Radio::make('is_show')
+                                      ->label(__('red-jasmine-product::product-service.fields.is_show'))
+                                      ->required()
+                                      ->boolean()->inline()
+                                      ->default(1),
+                Forms\Components\ToggleButtons::make('status')
+                                              ->label(__('red-jasmine-product::product-service.fields.status'))
+                                              ->required()
+                                              ->grouped()
+                                              ->default(32)
+                                              ->default(ServiceStatusEnum::ENABLE)
+                                              ->useEnum(ServiceStatusEnum::class),
+                ...static::operateFormSchemas()
+            ]);
     }
 
     public static function table(Table $table) : Table
     {
         return $table
             ->columns([
-                          Tables\Columns\TextColumn::make('name')
-                                                   ->label(__('red-jasmine-product::product-service.fields.name'))
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('description')
-                                                   ->label(__('red-jasmine-product::product-service.fields.description'))
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('icon')
-                                                   ->label(__('red-jasmine-product::product-service.fields.icon'))
-                          ,
-                          Tables\Columns\ColorColumn::make('color')
-                                                    ->label(__('red-jasmine-product::product-service.fields.color'))
-                          ,
-                          Tables\Columns\TextColumn::make('cluster')
-                                                   ->label(__('red-jasmine-product::product-service.fields.cluster'))
-                                                   ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                                         ->label(__('red-jasmine-product::product-service.fields.name'))
+                                         ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                                         ->label(__('red-jasmine-product::product-service.fields.description'))
+                                         ->searchable(),
+                Tables\Columns\TextColumn::make('icon')
+                                         ->label(__('red-jasmine-product::product-service.fields.icon'))
+                ,
+                Tables\Columns\ColorColumn::make('color')
+                                          ->label(__('red-jasmine-product::product-service.fields.color'))
+                ,
+                Tables\Columns\TextColumn::make('cluster')
+                                         ->label(__('red-jasmine-product::product-service.fields.cluster'))
+                                         ->searchable(),
 
-                          Tables\Columns\IconColumn::make('is_show')
-                                                   ->label(__('red-jasmine-product::product-service.fields.is_show'))
-                                                   ->boolean()
-                          ,
-                          Tables\Columns\TextColumn::make('sort')
-                                                   ->label(__('red-jasmine-product::product-service.fields.sort'))
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('status')
-                                                   ->label(__('red-jasmine-product::product-service.fields.status'))
-                                                   ->useEnum(),
-                          ...static::operateTableColumns(),
-                      ])
+                Tables\Columns\IconColumn::make('is_show')
+                                         ->label(__('red-jasmine-product::product-service.fields.is_show'))
+                                         ->boolean()
+                ,
+                Tables\Columns\TextColumn::make('sort')
+                                         ->label(__('red-jasmine-product::product-service.fields.sort'))
+                                         ->numeric()
+                                         ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                                         ->label(__('red-jasmine-product::product-service.fields.status'))
+                                         ->useEnum(),
+                ...static::operateTableColumns(),
+            ])
             ->filters([
-                          Tables\Filters\TrashedFilter::make(),
-                      ])
+                Tables\Filters\TrashedFilter::make(),
+            ])
             ->actions([
-                          Tables\Actions\EditAction::make(),
-                      ])
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
-                              Tables\Actions\BulkActionGroup::make([
-                                                                       Tables\Actions\DeleteBulkAction::make(),
-                                                                       Tables\Actions\ForceDeleteBulkAction::make(),
-                                                                       Tables\Actions\RestoreBulkAction::make(),
-                                                                   ]),
-                          ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations() : array

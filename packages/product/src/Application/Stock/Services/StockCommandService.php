@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Product\Application\Stock\Services;
 
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\BulkStockCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockAddCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockConfirmCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockLockCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockResetCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockSubCommandHandler;
-use RedJasmine\Product\Application\Stock\Services\CommandHandlers\StockUnlockCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\BulkStockCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockAddCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockConfirmCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockLockCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockResetCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockSubCommandHandler;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockUnlockCommandHandler;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
 use RedJasmine\Support\Application\ApplicationCommandService;

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Application\Series\Services;
 
-use RedJasmine\Product\Application\Series\Services\CommandHandlers\ProductSeriesCreateCommandHandler;
-use RedJasmine\Product\Application\Series\Services\CommandHandlers\ProductSeriesDeleteCommandHandler;
-use RedJasmine\Product\Application\Series\Services\CommandHandlers\ProductSeriesUpdateCommandHandler;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateCommandHandler;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesDeleteCommandHandler;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesUpdateCommandHandler;
 use RedJasmine\Product\Application\Series\Services\Pipelines\SeriesProductPipeline;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;

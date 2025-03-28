@@ -4,18 +4,16 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Stock;
 
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
+use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Product\Application\Stock\Services\Commands\BulkStockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
-use RedJasmine\Product\Application\Stock\UserCases\BulkStockCommand;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Support\Exceptions\AbstractException;
-use Filament\Forms;
 
 class StockTableAction extends Action
 {

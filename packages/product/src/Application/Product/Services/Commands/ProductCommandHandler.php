@@ -3,13 +3,13 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 
-use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
-use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
+use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
+use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
-use RedJasmine\Product\Application\Stock\UserCases\StockCommand;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
@@ -28,11 +28,11 @@ class ProductCommandHandler extends CommandHandler
 
     public function __construct(
         public ProductApplicationService $service,
-        protected BrandQueryService $brandQueryService,
+        protected BrandApplicationService $brandQueryService,
         protected StockCommandService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
         protected PropertyValidateService $propertyValidateService,
-        protected ProductCategoryQueryService $categoryQueryService,
+        protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer
     ) {

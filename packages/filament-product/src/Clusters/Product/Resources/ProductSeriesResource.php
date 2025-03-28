@@ -15,10 +15,10 @@ use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\RelationManagers;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateCommand;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesDeleteCommand;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Application\Series\Services\ProductSeriesApplicationService;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesDeleteCommand;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 

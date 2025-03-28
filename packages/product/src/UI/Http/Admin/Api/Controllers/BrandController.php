@@ -5,37 +5,33 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Brand\Services\BrandCommandService;
-use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
-use RedJasmine\Product\Application\Brand\UserCases\Commands\BrandCreateCommand;
-use RedJasmine\Product\Application\Brand\UserCases\Commands\BrandDeleteCommand;
-use RedJasmine\Product\Application\Brand\UserCases\Commands\BrandUpdateCommand;
-use RedJasmine\Product\Application\Brand\UserCases\Queries\BrandPaginateQuery;
+use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
+use RedJasmine\Product\Application\Brand\Services\Commands\BrandCreateCommand;
+use RedJasmine\Product\Application\Brand\Services\Commands\BrandDeleteCommand;
+use RedJasmine\Product\Application\Brand\Services\Commands\BrandUpdateCommand;
+use RedJasmine\Product\Application\Brand\Services\Queries\BrandPaginateQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\BrandResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class BrandController extends Controller
 {
     public function __construct(
-
-        protected BrandQueryService   $queryService,
-        protected BrandCommandService $commandService,
-    )
-    {
+        protected BrandApplicationService $service,
+    ) {
     }
 
 
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(BrandPaginateQuery::from($request));
+        $result = $this->service->paginate(BrandPaginateQuery::from($request));
 
         return BrandResource::collection($result->appends($request->query()));
     }
 
     public function show(Request $request, $id) : BrandResource
     {
-        $result = $this->queryService->find(FindQuery::make($id,$request));;
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return BrandResource::make($result);
     }
@@ -43,7 +39,7 @@ class BrandController extends Controller
     public function store(Request $request) : BrandResource
     {
         $command = BrandCreateCommand::from($request);
-        $result = $this->commandService->create($command);
+        $result  = $this->service->create($command);
 
         return BrandResource::make($result);
     }
@@ -53,7 +49,7 @@ class BrandController extends Controller
         $request->offsetSet('id', $id);
 
         $command = BrandUpdateCommand::from($request);
-        $this->commandService->update($command);
+        $this->service->update($command);
 
         return static::success();
 
@@ -64,7 +60,7 @@ class BrandController extends Controller
         $request->offsetSet('id', $id);
 
         $command = BrandDeleteCommand::from($request);
-        $this->commandService->delete($command);
+        $this->service->delete($command);
 
         return static::success();
     }

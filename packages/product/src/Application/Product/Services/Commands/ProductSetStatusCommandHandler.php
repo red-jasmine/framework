@@ -3,8 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use JsonException;
-use RedJasmine\Product\Application\Brand\Services\BrandQueryService;
-use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
+use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
@@ -26,11 +25,10 @@ class ProductSetStatusCommandHandler extends CommandHandler
 
 
     public function __construct(
-        protected BrandQueryService $brandQueryService,
         protected StockCommandService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
         protected PropertyValidateService $propertyValidateService,
-        protected ProductCategoryQueryService $categoryQueryService,
+        protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer
     ) {

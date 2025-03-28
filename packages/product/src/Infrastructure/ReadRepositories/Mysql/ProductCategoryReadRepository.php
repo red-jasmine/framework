@@ -6,6 +6,7 @@ use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class ProductCategoryReadRepository extends QueryBuilderReadRepository implements ProductCategoryReadRepositoryInterface
 {
@@ -18,4 +19,35 @@ class ProductCategoryReadRepository extends QueryBuilderReadRepository implement
     protected static string $modelClass = ProductCategory::class;
 
 
+    public function allowedFilters() : array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::exact('parent_id'),
+            AllowedFilter::exact('name'),
+            AllowedFilter::exact('group_name'),
+            AllowedFilter::exact('is_show'),
+            AllowedFilter::exact('is_leaf'),
+            AllowedFilter::exact('status'),
+
+        ];
+    }
+
+
+    public function allowedFields() : array
+    {
+        return [
+            'id',
+            'parent_id',
+            'name',
+            'image',
+            'group_name',
+            'sort',
+            'is_leaf',
+            'is_show',
+            'status',
+            'extras',
+        ];
+
+    }
 }

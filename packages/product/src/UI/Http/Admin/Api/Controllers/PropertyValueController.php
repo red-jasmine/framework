@@ -5,30 +5,28 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyValueCommandService;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyValueQueryService;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueCreateCommand;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueDeleteCommand;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyValueUpdateCommand;
-use RedJasmine\Product\Application\Property\UserCases\Queries\PropertyValuePaginateQuery;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueCreateCommand;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueDeleteCommand;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueUpdateCommand;
+use RedJasmine\Product\Application\Property\Services\ProductPropertyValueApplicationService;
+use RedJasmine\Product\Application\Property\Services\Queries\PropertyValuePaginateQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\PropertyValueResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class PropertyValueController extends Controller
 {
     public function __construct(
-        protected ProductPropertyValueCommandService $commandService,
-        protected ProductPropertyValueQueryService   $queryService,
+        protected ProductPropertyValueApplicationService $service,
 
-    )
-    {
+
+    ) {
     }
 
 
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(PropertyValuePaginateQuery::from($request));
+        $result = $this->service->paginate(PropertyValuePaginateQuery::from($request));
 
         return PropertyValueResource::collection($result);
 
@@ -37,14 +35,14 @@ class PropertyValueController extends Controller
     public function store(Request $request) : PropertyValueResource
     {
 
-        $result = $this->commandService->create(ProductPropertyValueCreateCommand::from($request));
+        $result = $this->service->create(ProductPropertyValueCreateCommand::from($request));
 
         return PropertyValueResource::make($result);
     }
 
     public function show($id, Request $request) : PropertyValueResource
     {
-        $result = $this->queryService->find(FindQuery::make($id,$request));;
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return PropertyValueResource::make($result);
     }
@@ -52,7 +50,7 @@ class PropertyValueController extends Controller
     public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->commandService->update(ProductPropertyValueUpdateCommand::from($request));
+        $this->service->update(ProductPropertyValueUpdateCommand::from($request));
         return static::success();
     }
 
@@ -60,7 +58,7 @@ class PropertyValueController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->commandService->delete(ProductPropertyValueDeleteCommand::from($request));
+        $this->service->delete(ProductPropertyValueDeleteCommand::from($request));
 
         return static::success();
     }

@@ -2,11 +2,10 @@
 
 namespace RedJasmine\Product\Application\Category\Services;
 
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
+use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationQueryService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use Spatie\QueryBuilder\AllowedFilter;
 
 

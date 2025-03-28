@@ -4,26 +4,12 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
 use App\Filament\Clusters\Product\Resources\ProductStockResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductStockResource\RelationManagers;
-use Awcodes\TableRepeater\Components\TableRepeater;
-use Awcodes\TableRepeater\Header;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
-use RedJasmine\Product\Application\Stock\UserCases\BulkStockCommand;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductStock;
-use RedJasmine\Support\Exceptions\AbstractException;
 
 class ProductStockResource extends Resource
 {

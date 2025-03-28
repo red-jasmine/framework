@@ -2,23 +2,22 @@
 
 namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Category\Services\ProductCategoryCommandService;
-use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryCreateCommand;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryDeleteCommand;
-use RedJasmine\Product\Application\Category\UserCases\Commands\ProductCategoryUpdateCommand;
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryPaginateQuery;
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
+use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryCreateCommand;
+use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryDeleteCommand;
+use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryUpdateCommand;
+use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
+use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryPaginateQuery;
+use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\CategoryResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CategoryController extends Controller
 {
     public function __construct(
-        protected ProductCategoryQueryService $queryService,
-        protected ProductCategoryCommandService $commandService,
+        protected ProductCategoryApplicationService $service,
     ) {
 
     }
@@ -26,7 +25,7 @@ class CategoryController extends Controller
 
     public function tree(Request $request) : AnonymousResourceCollection
     {
-        $tree = $this->queryService->tree(ProductCategoryTreeQuery::from($request));
+        $tree = $this->service->tree(ProductCategoryTreeQuery::from($request));
 
         return CategoryResource::collection($tree);
     }
@@ -34,7 +33,7 @@ class CategoryController extends Controller
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(ProductCategoryPaginateQuery::from($request));
+        $result = $this->service->paginate(ProductCategoryPaginateQuery::from($request));
 
         return CategoryResource::collection($result);
     }
@@ -42,7 +41,7 @@ class CategoryController extends Controller
     public function store(Request $request) : CategoryResource
     {
         $command = ProductCategoryCreateCommand::from($request);
-        $result  = $this->commandService->create($command);
+        $result  = $this->service->create($command);
 
         return CategoryResource::make($result);
     }
@@ -50,27 +49,27 @@ class CategoryController extends Controller
     public function show(Request $request, $id) : CategoryResource
     {
 
-        $result = $this->queryService->find(FindQuery::make($id,$request));
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return CategoryResource::make($result);
     }
 
-    public function update(Request $request, $id) : \Illuminate\Http\JsonResponse
+    public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
 
         $command = ProductCategoryUpdateCommand::from($request);
-        $this->commandService->update($command);
+        $this->service->update($command);
 
         return static::success();
     }
 
-    public function destroy($id, Request $request) : \Illuminate\Http\JsonResponse
+    public function destroy($id, Request $request) : JsonResponse
     {
         $request->offsetSet('id', $id);
 
         $command = ProductCategoryDeleteCommand::from($request);
-        $this->commandService->delete($command);
+        $this->service->delete($command);
 
         return static::success();
     }

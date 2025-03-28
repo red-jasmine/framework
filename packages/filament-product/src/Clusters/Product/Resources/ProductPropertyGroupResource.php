@@ -9,15 +9,15 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyGroupCommandService;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyGroupQueryService;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupCreateCommand;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupDeleteCommand;
-use RedJasmine\Product\Application\Property\UserCases\Commands\ProductPropertyGroupUpdateCommand;
+use RedJasmine\FilamentProduct\Clusters\Product;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\EditProductPropertyGroup;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\ListProductPropertyGroups;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\ViewProductPropertyGroup;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyGroupCreateCommand;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyGroupDeleteCommand;
+use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyGroupUpdateCommand;
+use RedJasmine\Product\Application\Property\Services\ProductPropertyGroupApplicationService;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyGroup;
 
@@ -31,8 +31,8 @@ class ProductPropertyGroupResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $commandService = ProductPropertyGroupCommandService::class;
-    protected static ?string $queryService   = ProductPropertyGroupQueryService::class;
+    protected static ?string $service        = ProductPropertyGroupApplicationService::class;
+    protected static ?string $commandService = ProductPropertyGroupApplicationService::class;
     protected static ?string $createCommand  = ProductPropertyGroupCreateCommand::class;
     protected static ?string $updateCommand  = ProductPropertyGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductPropertyGroupDeleteCommand::class;
@@ -52,66 +52,66 @@ class ProductPropertyGroupResource extends Resource
     {
         return $form
             ->schema([
-                         Forms\Components\TextInput::make('name')
-                                                   ->label(__('red-jasmine-product::product-property-group.fields.name'))
-                                                   ->required()->maxLength(255),
-                         Forms\Components\TextInput::make('description')
-                                                   ->label(__('red-jasmine-product::product-property-group.fields.description'))
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('sort')->label(__('red-jasmine-product::product-property-group.fields.sort'))
-                                                   ->required()
-                                                   ->integer()
-                                                   ->default(0),
-                         Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
-                                                       ->inline()
-                                                       ->required()
-                                                       ->default(PropertyStatusEnum::ENABLE)
-                                                       ->useEnum(PropertyStatusEnum::class)
-                         ,
+                Forms\Components\TextInput::make('name')
+                                          ->label(__('red-jasmine-product::product-property-group.fields.name'))
+                                          ->required()->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                                          ->label(__('red-jasmine-product::product-property-group.fields.description'))
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('sort')->label(__('red-jasmine-product::product-property-group.fields.sort'))
+                                          ->required()
+                                          ->integer()
+                                          ->default(0),
+                Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
+                                              ->inline()
+                                              ->required()
+                                              ->default(PropertyStatusEnum::ENABLE)
+                                              ->useEnum(PropertyStatusEnum::class)
+                ,
 
-                         ...static::operateFormSchemas()
-                     ])->columns(1);
+                ...static::operateFormSchemas()
+            ])->columns(1);
     }
 
     public static function table(Table $table) : Table
     {
         return $table
             ->columns([
-                          Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-product::product-property-group.fields.id'))
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property-group.fields.name'))
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property-group.fields.sort'))
-                                                   ->numeric()
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
-                              ->useEnum(),
+                Tables\Columns\TextColumn::make('id')
+                                         ->label(__('red-jasmine-product::product-property-group.fields.id'))
+                                         ->numeric()
+                                         ->sortable(),
+                Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property-group.fields.name'))
+                                         ->searchable(),
+                Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-property-group.fields.sort'))
+                                         ->numeric()
+                                         ->sortable(),
+                Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-property-group.fields.status'))
+                                         ->useEnum(),
 
 
-                          ...static::operateTableColumns()
-                      ])
+                ...static::operateTableColumns()
+            ])
             ->filters([
-                          Tables\Filters\SelectFilter::make('status')
-                                                     ->label(__('red-jasmine-product::product-property-value.fields.status'))
-                                                     ->options(PropertyStatusEnum::options()),
-                          Tables\Filters\TrashedFilter::make(),
-                      ])
+                Tables\Filters\SelectFilter::make('status')
+                                           ->label(__('red-jasmine-product::product-property-value.fields.status'))
+                                           ->options(PropertyStatusEnum::options()),
+                Tables\Filters\TrashedFilter::make(),
+            ])
             ->deferFilters()
             ->actions([
-                          Tables\Actions\ViewAction::make(),
-                          Tables\Actions\EditAction::make(),
-                          Tables\Actions\RestoreAction::make(),
-                          Tables\Actions\ForceDeleteAction::make(),
-                      ])
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+            ])
             ->bulkActions([
-                              Tables\Actions\BulkActionGroup::make([
-                                                                       Tables\Actions\DeleteBulkAction::make(),
-                                                                       Tables\Actions\ForceDeleteBulkAction::make(),
-                                                                       Tables\Actions\RestoreBulkAction::make(),
-                                                                   ]),
-                          ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations() : array
@@ -124,10 +124,10 @@ class ProductPropertyGroupResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => \RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\ListProductPropertyGroups::route('/'),
+            'index'  => ListProductPropertyGroups::route('/'),
             'create' => Product\Resources\ProductPropertyGroupResource\Pages\CreateProductPropertyGroup::route('/create'),
-            'view'   => \RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\ViewProductPropertyGroup::route('/{record}'),
-            'edit'   => \RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyGroupResource\Pages\EditProductPropertyGroup::route('/{record}/edit'),
+            'view'   => ViewProductPropertyGroup::route('/{record}'),
+            'edit'   => EditProductPropertyGroup::route('/{record}/edit'),
         ];
     }
 

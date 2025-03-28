@@ -4,9 +4,9 @@ namespace RedJasmine\Product\UI\Http\Seller\Api\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Category\Services\ProductCategoryQueryService;
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryPaginateQuery;
-use RedJasmine\Product\Application\Category\UserCases\Queries\ProductCategoryTreeQuery;
+use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
+use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryPaginateQuery;
+use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\UI\Http\Seller\Api\Resources\CategoryResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
@@ -14,21 +14,23 @@ class CategoryController extends Controller
 {
 
     public function __construct(
-        protected ProductCategoryQueryService $queryService,
+        protected ProductCategoryApplicationService $service,
 
     ) {
-        $this->queryService->onlyShow();
+        $this->service->readRepository->withQuery(function ($query) {
+            $query->onlyOwner($this->getOwner());
+        });
     }
 
     public function tree(Request $request) : AnonymousResourceCollection
     {
-        $tree = $this->queryService->tree(ProductCategoryTreeQuery::from($request));
+        $tree = $this->service->tree(ProductCategoryTreeQuery::from($request));
         return CategoryResource::collection($tree);
     }
 
     public function index(Request $request) : AnonymousResourceCollection
     {
-        $result = $this->queryService->paginate(ProductCategoryPaginateQuery::from($request));
+        $result = $this->service->paginate(ProductCategoryPaginateQuery::from($request));
 
         return CategoryResource::collection($result);
 
@@ -37,7 +39,7 @@ class CategoryController extends Controller
     public function show(Request $request, $id) : CategoryResource
     {
 
-        $result = $this->queryService->find(FindQuery::make($id, $request));
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return CategoryResource::make($result);
 

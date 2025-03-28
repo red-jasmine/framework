@@ -5,11 +5,11 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateCommand;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesDeleteCommand;
+use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesUpdateCommand;
 use RedJasmine\Product\Application\Series\Services\ProductSeriesApplicationService;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesCreateCommand;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesDeleteCommand;
-use RedJasmine\Product\Application\Series\UserCases\Commands\ProductSeriesUpdateCommand;
-use RedJasmine\Product\Application\Series\UserCases\Queries\SeriesPaginateQuery;
+use RedJasmine\Product\Application\Series\Services\Queries\SeriesPaginateQuery;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\SeriesResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
