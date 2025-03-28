@@ -79,7 +79,6 @@ class ProductPropertyGroupResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-product::product-property-group.fields.id'))
-                                         ->numeric()
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('name')->label(__('red-jasmine-product::product-property-group.fields.name'))
                                          ->searchable(),

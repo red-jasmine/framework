@@ -29,7 +29,7 @@ class ProductTagResource extends Resource
     use ResourcePageHelper;
 
     protected static ?string $service        = ProductTagApplicationService::class;
-    protected static ?string $commandService = ProductTagApplicationService::class;
+
     protected static ?string $createCommand  = ProductTagCreateCommand::class;
     protected static ?string $updateCommand  = ProductTagUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductTagDeleteCommand::class;

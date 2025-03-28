@@ -45,7 +45,7 @@ class ProductSeriesResource extends Resource
 
 
     protected static ?string $service        = ProductSeriesApplicationService::class;
-    protected static ?string $commandService = ProductSeriesApplicationService::class;
+  
 
     protected static ?string $productQueryService = ProductApplicationService::class;
     protected static ?string $createCommand       = ProductSeriesCreateCommand::class;

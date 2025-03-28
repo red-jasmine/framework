@@ -32,7 +32,7 @@ class ProductServiceResource extends Resource
     use ResourcePageHelper;
 
     protected static ?string $service        = ProductServiceApplicationService::class;
-    protected static ?string $commandService = ProductServiceApplicationService::class;
+
     protected static ?string $createCommand  = ProductServiceCreateCommand::class;
     protected static ?string $updateCommand  = ProductServiceUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductServiceDeleteCommand::class;
