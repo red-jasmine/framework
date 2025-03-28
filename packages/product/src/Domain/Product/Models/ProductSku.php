@@ -29,13 +29,6 @@ class ProductSku extends Model implements OperatorInterface
 
     public $incrementing = false;
 
-    /**
-     * @return string
-     */
-    public function getTable() : string
-    {
-        return config('red-jasmine-product.tables.prefix', 'jasmine_').'product_skus';
-    }
 
 
     protected $casts = [

@@ -154,7 +154,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
 
         return $this->belongsToMany(ProductGroup::class,
-            config('red-jasmine-product.tables.prefix', 'jasmine_').'product_extend_group_pivots',
+            (new ProductExtendGroupPivot())->getTable(),
             'product_id',
             'product_group_id')
                     ->using(ProductExtendGroupPivot::class)
