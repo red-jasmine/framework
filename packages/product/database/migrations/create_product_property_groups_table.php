@@ -10,7 +10,7 @@ return new class extends Migration {
     {
 
         Schema::create('product_property_groups', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('属性组ID');
+            $table->unsignedBigInteger('id')->primary()->comment('属性分组ID');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
             $table->bigInteger('sort')->default(0)->comment('排序');

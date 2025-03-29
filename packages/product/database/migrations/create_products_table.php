@@ -13,14 +13,14 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create( 'products', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
 
-            $table->string('app_id',64);
+            $table->string('app_id', 64);
             // 卖家信息
-            $table->string('owner_type',64);
-            $table->string('owner_id',64);
+            $table->string('owner_type', 64);
+            $table->string('owner_id', 64);
 
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
@@ -47,14 +47,14 @@ return new class extends Migration {
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');
-            $table->string('order_quantity_limit_type')->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
-            $table->unsignedBigInteger('order_quantity_limit_num')->nullable()->comment('下单数量限制数量');
+            $table->string('order_quantity_limit_type')->default(OrderQuantityLimitTypeEnum::UNLIMITED)->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
+            $table->unsignedBigInteger('order_quantity_limit_num')->default(0)->nullable()->comment('下单数量限制数量');
 
             // 价格
             $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->decimal('price',12)->default(0)->comment('销售价');
-            $table->decimal('market_price',12)->nullable()->comment('市场价');
-            $table->decimal('cost_price',12)->nullable()->comment('成本价');
+            $table->decimal('price', 12)->default(0)->comment('销售价');
+            $table->decimal('market_price', 12)->nullable()->comment('市场价');
+            $table->decimal('cost_price', 12)->nullable()->comment('成本价');
 
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
@@ -127,6 +127,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists( 'products');
+        Schema::dropIfExists('products');
     }
 };

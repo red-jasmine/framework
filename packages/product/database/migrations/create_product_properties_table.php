@@ -10,7 +10,7 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create( 'product_properties', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('属性ID');
+            $table->unsignedBigInteger('id')->primary()->comment('属性项ID');
             $table->unsignedBigInteger('group_id')->default(0)->comment('属性组ID');
             $table->string('type', 32)->comment(PropertyTypeEnum::comments('类型'));
             $table->string('name')->comment('名称');
@@ -28,8 +28,9 @@ return new class extends Migration {
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->comment('商品-属性表');
+
             $table->index('group_id', 'idx_group');
+            $table->comment('商品-属性项表');
         });
     }
 
