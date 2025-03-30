@@ -42,9 +42,9 @@ class AmountCast implements CastsAttributes, Cast, Transformer
     public function get(Model $model, string $key, mixed $value, array $attributes) : ?Amount
     {
         $key        = Str::snake($key);
-        $moneyValue = $attributes[$this->getValueKey($key)] ?? 0;
+        $moneyValue = $attributes[$this->getValueKey($key)] ?? null;
         $currency   = $attributes[$this->getCurrencyKey($key)] ?? null;
-        if (blank($currency)) {
+        if (blank($currency) && blank($moneyValue)) {
             return null;
         }
 
@@ -55,7 +55,7 @@ class AmountCast implements CastsAttributes, Cast, Transformer
     {
         $key = Str::snake($key);
         if (blank($value)) {
-            return null;
+            return [];
         }
         if (is_string($value) || is_numeric($value)) {
             $value = new Amount($value);
@@ -67,7 +67,7 @@ class AmountCast implements CastsAttributes, Cast, Transformer
 
     }
 
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Money
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Amount
     {
         if (blank($value)) {
             return null;
@@ -78,10 +78,10 @@ class AmountCast implements CastsAttributes, Cast, Transformer
         } elseif (is_string($value) || is_numeric($value)) {
             $data[$this->valueSuffix] = $value;
         }
-        if ($value instanceof Money) {
+        if ($value instanceof Amount) {
             return $value;
         }
-        return new Amount($data[$this->valueSuffix], $data[$this->currencySuffix] ?? Money::DEFAULT_CURRENCY);
+        return new Amount($data[$this->valueSuffix], $data[$this->currencySuffix] ?? Amount::DEFAULT_CURRENCY);
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array
