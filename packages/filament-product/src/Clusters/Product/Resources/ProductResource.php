@@ -1155,7 +1155,8 @@ class ProductResource extends Resource
 
                                                  $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::ON_SALE;
                                                  $command = ProductSetStatusCommand::from(['id' => $record->id, 'status' => $status]);
-                                                 $service = static::getService();
+                                                 $service = app(static::getService());
+
                                                  $service->setStatus($command);
                                                  $action->success();
 

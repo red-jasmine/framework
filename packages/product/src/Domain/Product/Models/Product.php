@@ -147,19 +147,19 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
         });
         static::deleting(callback: static function (Product $product) {
-            $product->info()->delete();
+            $product->extension()->delete();
             $product->skus()->delete();
 
         });
 
         static::restoring(callback: static function (Product $product) {
             $product->skus()->withTrashed()->whereNot('status', ProductStatusEnum::DELETED)->restore();
-            $product->info()->withTrashed()->restore();
+            $product->extension()->withTrashed()->restore();
         });
 
         static::forceDeleting(callback: static function (Product $product) {
             $product->skus()->forceDelete();
-            $product->info()->forceDelete();
+            $product->extension()->forceDelete();
             $product->extendProductGroups()->detach();
             $product->tags()->detach();
         });

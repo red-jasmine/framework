@@ -25,6 +25,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
 
 
     public function __construct(
+        protected ProductApplicationService $service,
         protected StockCommandService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
         protected PropertyValidateService $propertyValidateService,
@@ -54,7 +55,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
         /**
          * @var $product Product
          */
-        $product = $this->getService()->getRepository()->find($command->id);
+        $product = $this->service->repository->find($command->id);
 
 
         $this->beginDatabaseTransaction();
@@ -63,12 +64,12 @@ class ProductSetStatusCommandHandler extends CommandHandler
 
             $product->status = $command->status;
 
-            $this->getService()->hook('update.validate', $command, fn() => $this->validate($command));
+            $this->service->hook('update.validate', $command, fn() => $this->validate($command));
 
 
             $product->modified_time = now();
 
-            $this->getService()->getRepository()->update($product);
+            $this->service->repository->update($product);
 
             $this->commitDatabaseTransaction();
 

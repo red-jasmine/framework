@@ -34,12 +34,7 @@ class ProductApplicationService extends ApplicationService
 
 
     protected static string $modelClass = Product::class;
-    protected static        $macros     = [
-        'create'    => ProductCreateCommandHandler::class,
-        'update'    => ProductUpdateCommandHandler::class,
-        'delete'    => ProductDeleteCommandHandler::class,
-        'setStatus' => ProductSetStatusCommandHandler::class,
-    ];
+
 
     public function __construct(
         public ProductRepositoryInterface $repository,
@@ -49,6 +44,13 @@ class ProductApplicationService extends ApplicationService
     {
 
     }
+
+    protected static        $macros     = [
+        'create'    => ProductCreateCommandHandler::class,
+        'update'    => ProductUpdateCommandHandler::class,
+        'delete'    => ProductDeleteCommandHandler::class,
+        'setStatus' => ProductSetStatusCommandHandler::class,
+    ];
 
 
 
