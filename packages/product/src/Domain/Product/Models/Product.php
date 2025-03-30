@@ -28,6 +28,7 @@ use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
+use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -60,8 +61,39 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public static string $defaultPropertiesSequence = '';
 
+    public function casts() : array
+    {
+        return [
+            'product_type'              => ProductTypeEnum::class,  // 商品类型
+            'shipping_type'             => ShippingTypeEnum::class,// 发货类型
+            'status'                    => ProductStatusEnum::class,// 状态
+            'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
+            'freight_payer'             => FreightPayerEnum::class,// 运费承担方
+            'is_multiple_spec'          => 'boolean',
+            'is_brand_new'              => 'boolean',
+            'stop_sale_time'            => 'datetime',
+            'on_sale_time'              => 'datetime',
+            'sold_out_time'             => 'datetime',
+            'modified_time'             => 'datetime',
+            'start_sale_time'           => 'datetime',
+            'end_sale_time'             => 'datetime',
+            'is_hot'                    => 'boolean',
+            'is_new'                    => 'boolean',
+            'is_best'                   => 'boolean',
+            'is_benefit'                => 'boolean',
+            'is_customized'             => 'boolean',
+            'is_alone_order'            => 'boolean',
+            'is_pre_sale'               => 'boolean',
+            'is_from_supplier'          => 'boolean',
+            'price'                     => AmountCast::class,
+            'market_price'              => AmountCast::class,
+            'cost_price'                => AmountCast::class,
+            'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
+        ];
+    }
 
 
+    protected $appends  = ['price','market_price','cost_price'];
     protected static function boot() : void
     {
         parent::boot();
@@ -205,39 +237,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(ProductSku::class, 'product_id', 'id');
     }
 
-    public function casts() : array
-    {
-        return [
-            'product_type'              => ProductTypeEnum::class,  // 商品类型
-            'shipping_type'             => ShippingTypeEnum::class,// 发货类型
-            'status'                    => ProductStatusEnum::class,// 状态
-            'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
-            'freight_payer'             => FreightPayerEnum::class,// 运费承担方
-            'is_multiple_spec'          => 'boolean',
-            'is_brand_new'              => 'boolean',
-            'stop_sale_time'            => 'datetime',
-            'on_sale_time'              => 'datetime',
-            'sold_out_time'             => 'datetime',
-            'modified_time'             => 'datetime',
-            'start_sale_time'           => 'datetime',
-            'end_sale_time'             => 'datetime',
-            'is_hot'                    => 'boolean',
-            'is_new'                    => 'boolean',
-            'is_best'                   => 'boolean',
-            'is_benefit'                => 'boolean',
-            'is_customized'             => 'boolean',
-            'is_alone_order'            => 'boolean',
-            'is_pre_sale'               => 'boolean',
-            'is_from_supplier'          => 'boolean',
-            'price'                     => MoneyCast::class.':price,currency',
-            'market_price'              => MoneyCast::class.':price,market_price',
-            'cost_price'                => MoneyCast::class.':price,cost_price',
-            //'price'                     => AmountCastTransformer::class,
-            //'market_price'              => AmountCastTransformer::class,
-            //'cost_price'                => AmountCastTransformer::class,
-            'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
-        ];
-    }
 
     /**
      * 类目
@@ -260,7 +259,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function addSku(ProductSku $sku) : static
     {
-        $sku->app_id     = $this->app_id;
+        $sku->market     = $this->market;
         $sku->owner      = $this->owner;
         $sku->product_id = $this->id;
         if (!$this->skus->where('id', $sku->id)->first()) {

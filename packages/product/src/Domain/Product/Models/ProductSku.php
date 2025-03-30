@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -30,17 +31,15 @@ class ProductSku extends Model implements OperatorInterface
     public $incrementing = false;
 
 
-
     protected $casts = [
         'status'        => ProductStatusEnum::class,// 状态
         'modified_time' => 'datetime',
-        'price'         => MoneyCast::class.':price,currency',
-        'market_price'  => MoneyCast::class.':price,market_price',
-        'cost_price'    => MoneyCast::class.':price,cost_price',
-        //'price'         => AmountCastTransformer::class,
-        //'market_price'  => AmountCastTransformer::class,
-        //'cost_price'    => AmountCastTransformer::class,
+        'price'         => AmountCast::class,
+        'market_price'  => AmountCast::class,
+        'cost_price'    => AmountCast::class,
     ];
+
+    protected $appends  = ['price','market_price','cost_price'];
 
     public function product() : BelongsTo
     {

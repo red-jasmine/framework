@@ -50,7 +50,7 @@ class ProductTransformer
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
-        $product->app_id                          = $command->appId;
+        $product->market                          = $command->market;
         $product->owner                           = $command->owner;
         $product->supplier                        = $command->supplier;
         $product->product_type                    = $command->productType;

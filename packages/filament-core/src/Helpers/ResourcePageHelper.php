@@ -57,7 +57,8 @@ trait ResourcePageHelper
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
+     *
      * @return array<string, mixed>
      */
     protected function mutateFormDataBeforeCreate(array $data) : array
@@ -90,10 +91,13 @@ trait ResourcePageHelper
      */
     protected function handleRecordCreation(array $data) : Model
     {
+
 //        dd($data);
         $resource = static::getResource();
+
         try {
-            $commandService = app($resource::getCommandService());
+            $commandService = app($resource::getService());
+
             return $commandService->create(($resource::getCreateCommand())::from($data));
         } catch (ValidationException $exception) {
 
@@ -112,7 +116,7 @@ trait ResourcePageHelper
         }
     }
 
-    public static function getCommandService() : ?string
+    public static function getService() : ?string
     {
         return static::$service;
     }
@@ -126,12 +130,14 @@ trait ResourcePageHelper
     protected function resolveRecord(int|string $key) : Model
     {
         $resource     = static::getResource();
-        $queryService = app($resource::getQueryService());
+        $queryService = app($resource::getService());
+
 
         if ($resource::onlyOwner()) {
             $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner(auth()->user()));
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
+
         return $resource::callResolveRecord($model);
 
     }
@@ -155,7 +161,7 @@ trait ResourcePageHelper
 
         try {
             $resource       = static::getResource();
-            $commandService = app($resource::getCommandService());
+            $commandService = app($resource::getService());
             $data['id']     = $record->getKey();
             return $commandService->update(($resource::getUpdateCommand())::from($data));
         } catch (ValidationException $exception) {
@@ -188,27 +194,41 @@ trait ResourcePageHelper
 
     public static function operateFormSchemas() : array
     {
-        return  [
-            ...static::ownerFormSchemas('creator'),
-            ...static::ownerFormSchemas('updater'),
+        return [
+            Forms\Components\TextInput::make('creator_type')
+                                      ->label(__('red-jasmine-support::support.creator_type'))
+                                      ->maxLength(64)
+                                      ->visibleOn('view'),
+            Forms\Components\TextInput::make('creator_id')
+                                      ->label(__('red-jasmine-support::support.creator_id'))
+                                      ->required()
+                                      ->visibleOn('view'),
+            Forms\Components\TextInput::make('updater_type')
+                                      ->label(__('red-jasmine-support::support.updater_type'))
+                                      ->maxLength(64)
+                                      ->visibleOn('view'),
+
+            Forms\Components\TextInput::make('updater_id')
+                                      ->label(__('red-jasmine-support::support.updater_id'))
+                                      ->visibleOn('view'),
         ];
         return [
 
             Forms\Components\MorphToSelect::make('creator')
                                           ->label(__('red-jasmine-support::support.creator'))
                                           ->types([
-                                                      // TODO 更具当前 model 动态
-                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
-                                                  ])
+                                              // TODO 更具当前 model 动态
+                                              Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
+                                          ])
                                           ->columns(2)
                                           ->visibleOn('view'),
 
             Forms\Components\MorphToSelect::make('updater')
                                           ->label(__('red-jasmine-support::support.updater'))
                                           ->types([
-                                                      // TODO 更具当前 model 动态
-                                                      Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
-                                                  ])
+                                              // TODO 更具当前 model 动态
+                                              Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('name')
+                                          ])
                                           ->columns(2)
                                           ->visibleOn('view'),
 
@@ -259,7 +279,9 @@ trait ResourcePageHelper
 
     public static function ownerQueryUsing(string $name = 'owner') : callable
     {
-        return static fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ]));
+        return static fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([
+            'type' => $get('owner_type'), 'id' => $get('owner_id')
+        ]));
     }
 
     public static function ownerFormSchemas(string $name = 'owner') : array
@@ -279,19 +301,19 @@ trait ResourcePageHelper
             //                               ->hidden(!auth()->user()->isAdmin())
             // ,
 
-                       Forms\Components\TextInput::make($name . '_type')
-                                                 ->label(__('red-jasmine-support::support.owner_type'))
-                                                 ->hidden(!auth()->user()->isAdmin())
-                                                 ->default(auth()->user()->getType())
-                                                 ->required()
-                                                 ->maxLength(64)
-                                                 ->live(),
-                       Forms\Components\TextInput::make($name . '_id')
-                                                 ->label(__('red-jasmine-support::support.owner_id'))
-                                                 ->required()
-                                                 ->hidden(!auth()->user()->isAdmin())
-                                                 ->default(auth()->user()->getID())
-                                                 ->live(),
+            Forms\Components\TextInput::make($name.'_type')
+                                      ->label(__('red-jasmine-support::support.owner_type'))
+                                      ->hidden(!auth()->user()->isAdmin())
+                                      ->default(auth()->user()->getType())
+                                      ->required()
+                                      ->maxLength(64)
+                                      ->live(),
+            Forms\Components\TextInput::make($name.'_id')
+                                      ->label(__('red-jasmine-support::support.owner_id'))
+                                      ->required()
+                                      ->hidden(!auth()->user()->isAdmin())
+                                      ->default(auth()->user()->getID())
+                                      ->live(),
 
         ];
 
@@ -308,18 +330,17 @@ trait ResourcePageHelper
                                      ->label(__('red-jasmine-support::support.owner'))
                                      ->toggleable(isToggledHiddenByDefault: true),
 
-            Tables\Columns\TextColumn::make($name . '_type')->label(__('red-jasmine-support::support.owner_type'))->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make($name . '_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name.'_type')->label(__('red-jasmine-support::support.owner_type'))->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name.'_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()->toggleable(isToggledHiddenByDefault: true),
         ];
     }
 
 
-
     public static function translationLabels(ViewComponent $component) : ViewComponent
     {
-        if (property_exists($component,'label') && !$component->isSetLabel()) {
+        if (property_exists($component, 'label') && !$component->isSetLabel()) {
             $component->label(static function (ViewComponent $component) {
-                return __(static::$translationNamespace . '.fields.' . $component->getName());
+                return __(static::$translationNamespace.'.fields.'.$component->getName());
             });
         }
 
@@ -352,7 +373,7 @@ trait ResourcePageHelper
 
                 if (!$column->isSetLabel()) {
                     $column->label(static function (Tables\Columns\Column $column) {
-                        return __(static::$translationNamespace . '.fields.' . $column->getName());
+                        return __(static::$translationNamespace.'.fields.'.$column->getName());
                     });
                 }
             }
@@ -367,7 +388,7 @@ trait ResourcePageHelper
 
                 if (!$filter->isSetLabel()) {
                     $filter->label(static function (Tables\Filters\BaseFilter $filter) {
-                        return __(static::$translationNamespace . '.fields.' . $filter->getName());
+                        return __(static::$translationNamespace.'.fields.'.$filter->getName());
                     });
                 }
 
@@ -385,9 +406,6 @@ trait ResourcePageHelper
 //            }
 
         }
-
-
-
 
 
         return $component;

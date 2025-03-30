@@ -9,18 +9,21 @@ return new class extends Migration {
     {
         Schema::create('product_skus', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
-            $table->string('app_id',64);
+            $table->string('market', 64)->default('default')->comment('市场'); // 市场
             $table->string('owner_type',64);
             $table->string('owner_id',64);
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
             $table->string('properties_name')->nullable()->comment('规格名称');
             $table->string('properties_sequence')->nullable()->comment('规格属性序列');
 
-            // SKU 信息
-            $table->string('currency', 10)->default('CNY')->comment('货币');
-            $table->decimal('price',12)->default(0)->comment('销售价');
-            $table->decimal('market_price',12)->nullable()->comment('市场价');
-            $table->decimal('cost_price',12)->nullable()->comment('成本价');
+            // 价格
+            $table->string('price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('price_total', 12)->default(0)->comment('销售价');
+            $table->string('market_price_currency', 3)->nullable()->comment('货币');
+            $table->decimal('market_price_total', 12)->nullable()->comment('市场价');
+            $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');
+            $table->decimal('cost_price_total', 12)->nullable()->comment('成本价');
+
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');

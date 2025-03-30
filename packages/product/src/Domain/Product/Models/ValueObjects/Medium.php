@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Product\Domain\Product\Models\ValueObjects;
 
-use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
+use RedJasmine\Support\Data\Data;
 
 /**
  * 媒体
  */
-class Medium extends ValueObject
+class Medium extends Data
 {
 
     /**

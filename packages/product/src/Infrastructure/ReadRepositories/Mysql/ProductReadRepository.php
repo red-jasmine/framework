@@ -45,7 +45,7 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
             AllowedFilter::partial('keyword'),
             AllowedFilter::partial('title'),
             AllowedFilter::exact('id'),
-            AllowedFilter::exact('app_id'),
+            AllowedFilter::exact('market'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
             AllowedFilter::exact('product_type'),

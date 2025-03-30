@@ -53,9 +53,7 @@ class ProductResource extends Resource
     /**
      * @var class-string<ProductApplicationService::class>
      */
-    protected static ?string $service        = ProductApplicationService::class;
-
-
+    protected static ?string $service = ProductApplicationService::class;
 
     protected static ?string $createCommand = ProductCreateCommand::class;
     protected static ?string $updateCommand = ProductUpdateCommand::class;
@@ -73,6 +71,17 @@ class ProductResource extends Resource
     protected static bool $onlyOwner = true;
 
 
+    public static function getPages() : array
+    {
+        return [
+            'index'  => ListProducts::route('/'),
+            'create' => CreateProduct::route('/create'),
+            'view'   => ViewProduct::route('/{record}'),
+            'edit'   => EditProduct::route('/{record}/edit'),
+
+        ];
+    }
+
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
         $findQuery->include = ['skus', 'extension', 'extendProductGroups', 'tags'];
@@ -86,6 +95,7 @@ class ProductResource extends Resource
         foreach ($model->extension->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->extension->{$key});
         }
+
         $model->setAttribute('skus', $model->skus->toArray());
         $model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
         $model->setAttribute('tags', $model->tags?->pluck('id')->toArray());
@@ -566,27 +576,29 @@ class ProductResource extends Resource
                                           ->label(__('red-jasmine-product::product.fields.price'))
                                           ->required()
                                           ->numeric()
+
                                           ->formatStateUsing(fn($state
-                                          ) => is_object($state) ? $state->value() : $state)
+                                          ) => is_array($state) ? $state['total'] : $state)
+
                 ,
                 Forms\Components\TextInput::make('stock')
                                           ->label(__('red-jasmine-product::product.fields.stock'))
                                           ->required()
-                                          ->numeric()
+                                          ->integer()
                 ,
 
                 Forms\Components\TextInput::make('market_price')
                                           ->label(__('red-jasmine-product::product.fields.market_price'))
                                           ->numeric()
                                           ->formatStateUsing(fn($state
-                                          ) => is_object($state) ? $state->value() : $state)
+                                          ) => is_array($state) ? $state['total'] : $state)
 
                 ,
                 Forms\Components\TextInput::make('cost_price')
                                           ->label(__('red-jasmine-product::product.fields.cost_price'))
                                           ->numeric()
                                           ->formatStateUsing(fn($state
-                                          ) => is_object($state) ? $state->value() : $state)
+                                          ) => is_array($state) ? $state['total'] : $state)
                 ,
                 Forms\Components\TextInput::make('safety_stock')
                                           ->label(__('red-jasmine-product::product.fields.safety_stock'))
@@ -706,7 +718,7 @@ class ProductResource extends Resource
                                 ,
                                 Forms\Components\TextInput::make('price')->minValue(0)->required()->numeric()->formatStateUsing(fn($state
                                 ) => is_object($state) ? $state->value() : $state),
-                                Forms\Components\TextInput::make('stock')->minValue(0)->numeric()->required(),
+                                Forms\Components\TextInput::make('stock')->minValue(0)->integer()->required(),
                                 Forms\Components\TextInput::make('market_price')->minValue(0)->numeric()->formatStateUsing(fn($state
                                 ) => is_object($state) ? $state->value() : $state),
                                 Forms\Components\TextInput::make('cost_price')->minValue(0)->numeric()->formatStateUsing(fn($state
@@ -1040,6 +1052,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                                          ->label(__('red-jasmine-product::product.fields.price'))
                                          ->money()
+
                 ,
 
                 Tables\Columns\TextColumn::make('cost_price')
@@ -1142,7 +1155,7 @@ class ProductResource extends Resource
 
                                                  $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::ON_SALE;
                                                  $command = ProductSetStatusCommand::from(['id' => $record->id, 'status' => $status]);
-                                                 $service = static::getCommandService();
+                                                 $service = static::getService();
                                                  $service->setStatus($command);
                                                  $action->success();
 
@@ -1167,14 +1180,5 @@ class ProductResource extends Resource
             ]);
     }
 
-    public static function getPages() : array
-    {
-        return [
-            'index'  => ListProducts::route('/'),
-            'create' => CreateProduct::route('/create'),
-            'view'   => ViewProduct::route('/{record}'),
-            'edit'   => EditProduct::route('/{record}/edit'),
 
-        ];
-    }
 }

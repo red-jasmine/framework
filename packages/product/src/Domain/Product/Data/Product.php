@@ -18,7 +18,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
@@ -29,7 +29,7 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 class Product extends Data
 {
 
-    public string $appId = 'default';
+    public string $market = 'default';
     // 产品类型
     public ProductTypeEnum $productType;
     // 运输类型
@@ -214,7 +214,6 @@ class Product extends Data
      */
     public ?Collection $skus = null;
 
-
     /**
      * @var Form|null
      */
@@ -236,11 +235,11 @@ class Product extends Data
     // 尺寸（可选）
     public ?string $size;
     // 产品价格
-    public Money $price;
+    public Amount $price;
     // 市场价格
-    public ?Money $marketPrice;
+    public ?Amount $marketPrice;
     // 成本价格
-    public ?Money $costPrice;
+    public ?Amount $costPrice;
 
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $startSaleTime = null;
