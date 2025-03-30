@@ -253,15 +253,14 @@ class ProductResource extends Resource
                                           ->default(ShippingTypeEnum::LOGISTICS)
                                           ->useEnum(ShippingTypeEnum::class),
 
-
-            Forms\Components\Radio::make('is_pre_sale')
+            Forms\Components\ToggleButtons::make('is_pre_sale')
                                   ->label(__('red-jasmine-product::product.fields.is_pre_sale'))
                                   ->required()
                                   ->inline()
                                   ->boolean()
                                   ->default(false),
 
-            Forms\Components\Radio::make('is_brand_new')
+            Forms\Components\ToggleButtons::make('is_brand_new')
                                   ->label(__('red-jasmine-product::product.fields.is_brand_new'))
                                   ->required()
                                   ->inline()
