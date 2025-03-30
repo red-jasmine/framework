@@ -21,7 +21,7 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
 
 
     public function __construct(
-        public ProductApplicationService $queryService,
+        public ProductApplicationService $productApplicationService,
         public ProductDomainConverter $productDomainConverter
     ) {
 
@@ -38,24 +38,24 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
 
     public function modelQuery() : Builder
     {
-        return $this->queryService->getRepository()->modelQuery();
+        return $this->productApplicationService->readRepository->modelQuery();
     }
 
     public function query(?Query $query = null)
     {
-        return $this->queryService->readRepository->query($query);
+        return $this->productApplicationService->readRepository->query($query);
     }
 
     public function withQuery(Closure $queryCallback) : static
     {
-        $this->queryService->readRepository->withQuery($queryCallback);
+        $this->productApplicationService->readRepository->withQuery($queryCallback);
         return $this;
     }
 
 
     public function find(FindQuery $query) : ?Model
     {
-        $product = $this->queryService->readRepository->find($query);
+        $product = $this->productApplicationService->readRepository->find($query);
 
         return $this->productDomainConverter->converter($product);
     }
@@ -68,7 +68,7 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
         $query->additional(['product_model' => $query->type]);
         unset($query->type);
 
-        $lengthAwarePaginator = $this->queryService->readRepository->paginate($query);
+        $lengthAwarePaginator = $this->productApplicationService->readRepository->paginate($query);
 
         return $lengthAwarePaginator->setCollection(
             $lengthAwarePaginator->getCollection()->map(fn($item
