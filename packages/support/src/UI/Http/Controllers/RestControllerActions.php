@@ -57,8 +57,9 @@ trait RestControllerActions
     public function show($id, Request $request) : JsonResource
     {
 
-        $model = $this->service->find(FindQuery::from(['id' => $id]));
-
+        $query = FindQuery::from($request);
+        $query->setKey($id);
+        $model = $this->service->find($query);
         if (method_exists($this, 'authorize')) {
             $this->authorize('view', $model);
         }

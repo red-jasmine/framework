@@ -26,7 +26,7 @@ trait HasOwner
                 'type' => $this->{$this->getOwnerKey('type')},
                 'id'   => $this->{$this->getOwnerKey('id')},
             ]),
-            set:  fn(?UserInterface $creator = null) => [
+            set: fn(?UserInterface $creator = null) => [
                 $this->getOwnerKey('type') => $creator?->getType(),
                 $this->getOwnerKey('id')   => $creator?->getID(),
             ],
@@ -39,10 +39,13 @@ trait HasOwner
     }
 
 
-    public function scopeOnlyOwner(Builder $query, UserInterface $owner) : Builder
+    public function scopeOnlyOwner(Builder $query, ?UserInterface $owner = null) : Builder
     {
-        return $query->where($this->getOwnerColumn().'_type', $owner->getType())
-                     ->where($this->getOwnerColumn().'_id', $owner->getID());
+        if ($owner) {
+            return $query->where($this->getOwnerColumn().'_type', $owner->getType())
+                         ->where($this->getOwnerColumn().'_id', $owner->getID());
+        }
+        return $query;
     }
 
 }
