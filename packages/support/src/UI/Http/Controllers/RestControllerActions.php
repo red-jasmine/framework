@@ -25,6 +25,7 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 trait RestControllerActions
 {
 
+    // TODO 仅查看权限
 
     public function index(Request $request) : AnonymousResourceCollection
     {

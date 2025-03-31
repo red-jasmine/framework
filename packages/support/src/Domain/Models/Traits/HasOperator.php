@@ -41,6 +41,10 @@ trait HasOperator
         return property_exists($this, 'withOperatorNickname') ? $this->withOperatorNickname : false;
     }
 
+    protected function withOperatorAvatar() : bool
+    {
+        return property_exists($this, 'withOperatorAvatar') ? $this->withOperatorAvatar : false;
+    }
 
     public function scopeOnlyCreator(Builder $query, UserInterface $owner) : Builder
     {
@@ -64,13 +68,16 @@ trait HasOperator
             get: fn() => UserData::from([
                 'type'     => $this->creator_type,
                 'id'       => $this->creator_id,
-                'nickname' => $this->withOperatorNickname() ? ($this->creator_nickname ?? null) : null
+                'nickname' => $this->withOperatorNickname() ? ($this->creator_nickname ?? null) : null,
+                'avatar'   => $this->withOperatorAvatar() ? ($this->creator_avatar ?? null) : null,
             ]),
-            set: fn(?UserInterface $creator = null) => array_merge([
-                'creator_type' => $creator?->getType(),
-                'creator_id'   => $creator?->getID(),
+            set: fn(?UserInterface $user = null) => array_merge([
+                'creator_type' => $user?->getType(),
+                'creator_id'   => $user?->getID(),
             ], $this->withOperatorNickname() ? [
-                'creator_nickname' => $creator?->getNickname(),
+                'creator_nickname' => $user?->getNickname(),
+            ] : [], $this->withOperatorAvatar() ? [
+                'creator_avatar' => $user?->getAvatar(),
             ] : []),
         );
     }
@@ -81,13 +88,16 @@ trait HasOperator
             get: fn() => UserData::from([
                 'type'     => $this->updater_type,
                 'id'       => $this->updater_id,
-                'nickname' => $this->withOperatorNickname() ? ($this->updater_nickname ?? null) : null
+                'nickname' => $this->withOperatorNickname() ? ($this->updater_nickname ?? null) : null,
+                'avatar'   => $this->withOperatorAvatar() ? ($this->updater_avatar ?? null) : null,
             ]),
-            set: fn(?UserInterface $creator = null) => array_merge([
-                'updater_type' => $creator?->getType(),
-                'updater_id'   => $creator?->getID(),
+            set: fn(?UserInterface $user = null) => array_merge([
+                'updater_type' => $user?->getType(),
+                'updater_id'   => $user?->getID(),
             ], $this->withOperatorNickname() ? [
-                'updater_nickname' => $creator?->getNickname(),
+                'updater_nickname' => $user?->getNickname(),
+            ] : [], $this->withOperatorAvatar() ? [
+                'updater_avatar' => $user?->getAvatar(),
             ] : []),
         );
     }

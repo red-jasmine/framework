@@ -16,6 +16,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionClass;
 
@@ -27,6 +28,7 @@ use ReflectionClass;
  * @method paginate(PaginateQuery $query)
  * @property RepositoryInterface $repository
  * @property ReadRepositoryInterface $readRepository
+ * @property TransformerInterface $transformer
  */
 class ApplicationService
 {
