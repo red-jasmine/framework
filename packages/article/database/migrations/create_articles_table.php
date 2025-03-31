@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('keywords')->nullable()->comment('关键字');
             $table->string('status')->comment(ArticleStatusEnum::comments('状态'));
             $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
+            $table->boolean('is_top')->default(false)->comment('是否置顶');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('approval_status')->nullable()->comment('审批状态');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
