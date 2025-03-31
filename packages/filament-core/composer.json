@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "filament/filament": "^3.2",
+        "filament/filament": "^3",
         "mokhosh/filament-rating": "^1.0",
         "icetalker/filament-table-repeatable-entry": "*",
         "guava/filament-clusters": "*",
