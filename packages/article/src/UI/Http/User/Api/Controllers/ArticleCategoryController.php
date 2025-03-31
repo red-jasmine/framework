@@ -2,18 +2,16 @@
 
 namespace RedJasmine\Article\UI\Http\User\Api\Controllers;
 
-
-use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
+use RedJasmine\Article\Application\Services\ArticleCategory\ArticleCategoryApplicationService as Service;
 use RedJasmine\Article\Application\Services\Article\Queries\PaginateQuery;
-use RedJasmine\Article\Domain\Data\ArticleData as Data;
-use RedJasmine\Article\Domain\Models\Article as Model;
-use RedJasmine\Article\UI\Http\User\Api\Resources\ArticleResource as Resource;
+use RedJasmine\Article\Domain\Data\ArticleCategoryData as Data;
+use RedJasmine\Article\Domain\Models\ArticleCategory as Model;
+use RedJasmine\Article\UI\Http\User\Api\Resources\ArticleCategoryResource as Resource;
+use RedJasmine\Support\UI\Http\Controllers\HasTreeAction;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 
-class ArticleController extends Controller
+class ArticleCategoryController extends Controller
 {
-
-
     protected static string $resourceClass      = Resource::class;
     protected static string $paginateQueryClass = PaginateQuery::class;
     protected static string $modelClass         = Model::class;
@@ -21,8 +19,10 @@ class ArticleController extends Controller
 
     use RestControllerActions;
 
+
+
     public function __construct(
-        protected ArticleApplicationService $service,
+        protected Service $service,
     ) {
         $this->service->readRepository->withQuery(function ($query) {
             $query->show();
@@ -34,4 +34,6 @@ class ArticleController extends Controller
     {
         return true;
     }
+
+    use HasTreeAction;
 }

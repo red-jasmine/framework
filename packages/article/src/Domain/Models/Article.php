@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Article\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
 use RedJasmine\Article\Domain\Models\Extensions\ArticleContent;
+use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -35,7 +37,7 @@ class Article extends Model implements OwnerInterface, OperatorInterface
 
     use SoftDeletes;
 
-    protected static function boot()
+    protected static function boot() : void
     {
         parent::boot();
 
@@ -69,6 +71,13 @@ class Article extends Model implements OwnerInterface, OperatorInterface
         return $instance;
     }
 
+    protected function casts() : array
+    {
+        return [
+            'status'          => ArticleStatusEnum::class,
+            'approval_status' => ApprovalStatusEnum::class,
+        ];
+    }
 
     public function tags() : BelongsToMany
     {
@@ -89,5 +98,12 @@ class Article extends Model implements OwnerInterface, OperatorInterface
     public function content() : HasOne
     {
         return $this->hasOne(ArticleContent::class, 'article_id', 'id');
+    }
+
+    public function scopeShow(Builder $builder) : Builder
+    {
+        $builder->where('status', ArticleStatusEnum::PUBLISHED);
+
+        return $builder;
     }
 }

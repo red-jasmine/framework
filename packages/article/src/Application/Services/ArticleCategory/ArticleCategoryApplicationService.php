@@ -7,6 +7,7 @@ use RedJasmine\Article\Domain\Repositories\ArticleCategoryReadRepositoryInterfac
 use RedJasmine\Article\Domain\Repositories\ArticleCategoryRepositoryInterface;
 use RedJasmine\Article\Domain\Transformer\ArticleCategoryTransformer;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
 class ArticleCategoryApplicationService extends ApplicationService
 {
@@ -20,5 +21,12 @@ class ArticleCategoryApplicationService extends ApplicationService
     }
 
     protected static string $modelClass = ArticleCategory::class;
+
+
+    public function tree(Query $query) : array
+    {
+
+        return $this->readRepository->tree($query);
+    }
 
 }
