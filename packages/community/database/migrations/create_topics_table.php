@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('community_topics', function (Blueprint $table) {
+        Schema::create('topics', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
@@ -23,13 +23,22 @@ return new class extends Migration {
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 32)->nullable();
             $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('creator_avatar', 64)->nullable();
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('creator_avatar', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->comment('文章表');
+            $table->comment('话题表');
 
             $table->timestamps();
         });
+    }
+
+    public function down() : void
+    {
+        Schema::dropIfExists('topics');
     }
 };

@@ -50,7 +50,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Community\\CommunityPackageServiceProvider"
+                "RedJasmine\\Community\\CommunityPackageServiceProvider",
+                "RedJasmine\\Community\\Application\\CommunityApplicationServiceProvider"
             ]
         },
         "branch-alias": {
