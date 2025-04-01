@@ -36,10 +36,5 @@ class ArticleController extends Controller
         return true;
     }
 
-    public function interactive($id, Request $request)
-    {
 
-
-
-    }
 }

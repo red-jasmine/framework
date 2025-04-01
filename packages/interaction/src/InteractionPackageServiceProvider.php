@@ -18,7 +18,13 @@ class InteractionPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-interaction')
             ->hasConfigFile()
+            ->hasRoutes(['api'])
             ->hasViews()
-            ->hasMigrations([]);
+            ->hasMigrations([
+                'create_interaction_records_table',
+                'create_interaction_statistics_table',
+            ])
+            ->runsMigrations()
+        ;
     }
 }

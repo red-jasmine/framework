@@ -3,6 +3,7 @@
 namespace RedJasmine\Article\Domain\Interaction;
 
 use RedJasmine\Interaction\Domain\Contracts\InteractionResourceStrategyInterface;
+use RedJasmine\Interaction\Domain\Data\InteractionData;
 use RedJasmine\Interaction\Domain\Models\Enums\InteractionTypeEnum;
 
 class ArticleInteractionStrategy implements InteractionResourceStrategyInterface
@@ -27,5 +28,11 @@ class ArticleInteractionStrategy implements InteractionResourceStrategyInterface
 
         ];
     }
+
+    public function validate(InteractionData $data) : bool
+    {
+        return true;
+    }
+
 
 }

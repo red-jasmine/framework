@@ -12,7 +12,6 @@ class ArticleUserRoute
     public static function api() : void
     {
         Route::group(['prefix' => 'article'], function () {
-            Route::post('articles/{id}/interactive', [ArticleController::class, 'interactive'])->middleware(['auth:api']);
             Route::apiResource('articles', ArticleController::class);
             Route::get('categories/tree', [ArticleCategoryController::class, 'tree']);
             Route::apiResource('categories', ArticleCategoryController::class);

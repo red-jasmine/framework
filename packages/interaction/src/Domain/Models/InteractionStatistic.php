@@ -3,6 +3,7 @@
 namespace RedJasmine\Interaction\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -19,6 +20,14 @@ class InteractionStatistic extends Model
 {
 
     public $incrementing = false;
+
+
+    protected $fillable = [
+        'resource_type',
+        'resource_id',
+        'interaction_type',
+        'quantity'
+    ];
 
     use HasSnowflakeId;
 

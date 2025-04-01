@@ -4,6 +4,7 @@ namespace RedJasmine\Interaction\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
@@ -20,6 +21,13 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  */
 class InteractionRecord extends Model
 {
+
+
+    use HasOwner;
+
+    public $ownerColumn = 'user';
+
+
     public $incrementing = false;
 
     use HasSnowflakeId;
