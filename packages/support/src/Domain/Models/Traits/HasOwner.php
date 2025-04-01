@@ -10,6 +10,9 @@ use RedJasmine\Support\Data\UserData;
 /**
  * @property string $owner_type
  * @property int $owner_id
+ * @property string $ownerColumn
+ * @property bool $withOwnerNickname
+ * @property bool $withOwnerAvatar
  */
 trait HasOwner
 {
@@ -19,17 +22,34 @@ trait HasOwner
         return property_exists($this, 'ownerColumn') ? $this->ownerColumn : 'owner';
     }
 
+    protected function withOwnerNickname() : bool
+    {
+        return property_exists($this, 'withOwnerNickname') ? $this->withOwnerNickname : false;
+    }
+
+    protected function withOwnerAvatar() : bool
+    {
+        return property_exists($this, 'withOwnerAvatar') ? $this->withOwnerAvatar : false;
+    }
+
     public function owner() : Attribute
     {
         return Attribute::make(
             get: fn() => UserData::from([
-                'type' => $this->{$this->getOwnerKey('type')},
-                'id'   => $this->{$this->getOwnerKey('id')},
+                'type'     => $this->{$this->getOwnerKey('type')},
+                'id'       => $this->{$this->getOwnerKey('id')},
+                'nickname' => $this->withOwnerNickname() ? ($this->{$this->getOwnerKey('nickname')} ?? null) : null,
+                'avatar'   => $this->withOwnerAvatar() ? ($this->{$this->getOwnerKey('avatar')} ?? null) : null,
+
             ]),
-            set: fn(?UserInterface $creator = null) => [
-                $this->getOwnerKey('type') => $creator?->getType(),
-                $this->getOwnerKey('id')   => $creator?->getID(),
-            ],
+            set: fn(?UserInterface $user = null) => array_merge([
+                $this->getOwnerKey('type') => $user?->getType(),
+                $this->getOwnerKey('id')   => $user?->getID(),
+            ], $this->withOwnerNickname() ? [
+                $this->getOwnerKey('nickname') => $user?->getNickname(),
+            ] : [], $this->withOwnerAvatar() ? [
+                $this->getOwnerKey('avatar') => $user?->getAvatar(),
+            ] : []),
         );
     }
 
