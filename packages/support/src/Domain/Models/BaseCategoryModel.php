@@ -3,7 +3,9 @@
 namespace RedJasmine\Support\Domain\Models;
 
 
-use RedJasmine\Order\Domain\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -34,7 +36,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
     use SoftDeletes;
 
 
-    public bool $incrementing = false;
+    public  $incrementing = false;
 
     // 父级ID字段名称，默认值为 parent_id
     protected string $parentColumn = 'parent_id';
@@ -46,7 +48,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
     protected string $titleColumn = 'name';
 
 
-    protected array $fillable = [
+    protected  $fillable = [
         'parent_id',
         'name',
         'cluster',

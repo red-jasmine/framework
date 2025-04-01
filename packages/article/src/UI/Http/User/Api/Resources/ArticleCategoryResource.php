@@ -3,8 +3,9 @@
 namespace RedJasmine\Article\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+
 use RedJasmine\Article\Domain\Models\ArticleCategory;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /** @mixin ArticleCategory */
 class ArticleCategoryResource extends JsonResource

@@ -58,10 +58,9 @@ echo $interaction->echoPhrase('Hello, RedJasmine!');
 
 ## 功能
 - 评论
-- 点赞
 - 收藏
-- 分享
-- 浏览
+- 点赞、反对
+- 记录:分享、浏览
 
 ## Testing
 

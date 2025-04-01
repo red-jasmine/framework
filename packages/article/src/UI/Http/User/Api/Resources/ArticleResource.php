@@ -3,7 +3,6 @@
 namespace RedJasmine\Article\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
-
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 

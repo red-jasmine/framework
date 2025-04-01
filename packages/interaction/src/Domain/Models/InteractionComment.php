@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property $target_type
- * @property $target_id
+ * @property-read string $resource_type
+ * @property-read string $resource_id
  * @property $content
  * @property $root_id
  * @property $parent_id
