@@ -9,6 +9,13 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 /**
  * @property string $resource_type
  * @property string $resource_id
+ * @property string $interaction_type
+ * @property string $interaction_time
+ * @property int $quantity
+ * @property string $user_type
+ * @property string $user_id
+ * @property string $user_nickname
+ * @property string $user_avatar
  *
  */
 class InteractionRecord extends Model
