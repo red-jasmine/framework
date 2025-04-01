@@ -33,7 +33,7 @@ class UserRegisterService
         // 验证是否允许注册
 
         $user->type         = $data->type;
-        $user->username     = $data->username ?? $this->buildUserName();
+        $user->name     = $data->name ?? $this->buildUserName();
         $user->nickname     = $data->nickname ?? $this->buildNickname();
         $user->email        = $data->email ?? null;
         $user->phone_number = $data->phoneNumber ?? null;

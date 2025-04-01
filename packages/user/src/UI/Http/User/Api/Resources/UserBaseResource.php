@@ -13,7 +13,7 @@ class UserBaseResource extends JsonResource
     {
         return [
             'id'           => $this->id,
-            'username'     => $this->username,
+            'name'     => $this->name,
             'phone_number' => $this->phone_number, // TODO 掩码
             'email'        => $this->email, // TODO 掩码
             'nickname'     => $this->nickname,

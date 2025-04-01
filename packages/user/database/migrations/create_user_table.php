@@ -11,7 +11,7 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->comment('用户ID');
-            $table->string('username', 64)->comment('账号');
+            $table->string('name', 64)->comment('账号');
             $table->string('phone_number', 64)->nullable()->comment('手机号');
             $table->string('email')->nullable();
             $table->string('password')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->rememberToken();
             $table->timestamps();
             // 邀请人
-            $table->index(['username'], 'idx_username');
+            $table->index(['name'], 'idx_name');
             $table->index(['phone_number'], 'idx_phone_number');
             $table->index(['email'], 'idx_email');
             $table->comment('用户表');

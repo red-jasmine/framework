@@ -16,7 +16,7 @@ class UserData extends Data
 
     public ?string $email;
     public ?string $phoneNumber;
-    public ?string $username;
+    public ?string $name;
     public ?string $password;
 
     // 个人资料

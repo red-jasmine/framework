@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     public function getJWTCustomClaims() : array
     {
         return [
-            'username' => $this->username,
+            'name' => $this->name,
             'nickname' => $this->nickname
         ];
     }
