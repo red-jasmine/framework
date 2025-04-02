@@ -3,8 +3,8 @@
 namespace RedJasmine\Article\Domain;
 
 use Illuminate\Support\ServiceProvider;
-use RedJasmine\Article\Domain\Interaction\ArticleInteractionStrategy;
-use RedJasmine\Interaction\Domain\Facades\Interaction;
+use RedJasmine\Article\Domain\Interaction\ArticleInteraction;
+use RedJasmine\Interaction\Domain\Facades\InteractionResource;
 
 class ArticleDomainServiceProvider extends ServiceProvider
 {
@@ -15,8 +15,9 @@ class ArticleDomainServiceProvider extends ServiceProvider
 
     public function boot() : void
     {
-        Interaction::extend('article', function ($config) {
-            return new ArticleInteractionStrategy();
+        InteractionResource::extend('article', function ($config) {
+
+            return new ArticleInteraction();
         });
     }
 }

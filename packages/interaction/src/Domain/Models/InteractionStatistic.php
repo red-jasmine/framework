@@ -10,10 +10,10 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 /**
  * 互动统计
  * @property-read int $id
- * @property-read string $resource_type
- * @property-read string $resource_id
- * @property-read string $interaction_type
- * @property-read int $quantity
+ * @property string $resource_type
+ * @property string $resource_id
+ * @property string $interaction_type
+ * @property int $quantity
  *
  */
 class InteractionStatistic extends Model
@@ -30,6 +30,4 @@ class InteractionStatistic extends Model
     ];
 
     use HasSnowflakeId;
-
-    use SoftDeletes;
 }

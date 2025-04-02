@@ -3,13 +3,13 @@
 namespace RedJasmine\Interaction\Domain\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use RedJasmine\Interaction\Domain\InteractionManager;
+use RedJasmine\Interaction\Domain\Types\InteractionTypeManager;
 
-class Interaction extends Facade
+class InteractionType extends Facade
 {
     protected static function getFacadeAccessor() : string
     {
-        return InteractionManager::class;
+        return InteractionTypeManager::class;
     }
 
 }

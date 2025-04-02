@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Interaction\Domain\Data;
 
-use RedJasmine\Interaction\Domain\Models\Enums\InteractionTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
@@ -11,7 +10,7 @@ class InteractionData extends Data
 
     public UserInterface $user;
 
-    public InteractionTypeEnum $interactionType;
+    public string $interactionType;
 
     public string $resourceId;
 
@@ -23,5 +22,9 @@ class InteractionData extends Data
      */
     public int $quantity = 1;
 
+    /**
+     * @var array 扩展字段 由互动类型确认
+     */
+    public array $extras = [];
 
 }

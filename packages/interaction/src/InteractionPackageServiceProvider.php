@@ -21,8 +21,9 @@ class InteractionPackageServiceProvider extends PackageServiceProvider
             ->hasRoutes(['api'])
             ->hasViews()
             ->hasMigrations([
-                'create_interaction_records_table',
                 'create_interaction_statistics_table',
+                'create_interaction_records_table',
+                'create_interaction_record_comments_table',
             ])
             ->runsMigrations()
         ;

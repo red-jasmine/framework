@@ -15,8 +15,8 @@ use RedJasmine\Article\Infrastructure\ReadRepositories\Mysql\ArticleTagReadRepos
 use RedJasmine\Article\Infrastructure\Repositories\Eloquent\ArticleCategoryRepository;
 use RedJasmine\Article\Infrastructure\Repositories\Eloquent\ArticleRepository;
 use RedJasmine\Article\Infrastructure\Repositories\Eloquent\ArticleTagRepository;
-use RedJasmine\Interaction\Domain\Facades\Interaction;
-use RedJasmine\Interaction\Domain\InteractionManager;
+use RedJasmine\Interaction\Domain\Facades\InteractionResource;
+use RedJasmine\Interaction\Domain\InteractionResourceManager;
 
 class ArticleApplicationServiceProvider extends ServiceProvider
 {

@@ -3,17 +3,16 @@
 namespace RedJasmine\Interaction\Domain\Contracts;
 
 use RedJasmine\Interaction\Domain\Data\InteractionData;
-use RedJasmine\Interaction\Domain\Models\Enums\InteractionTypeEnum;
 
 /**
  * 资源策略
  */
-interface InteractionResourceStrategyInterface
+interface InteractionResourceInterface
 {
 
     /**
      * 支持的互动策略
-     * @return array|InteractionTypeEnum[]
+     * @return array
      */
     public function allowInteractionType() : array;
 

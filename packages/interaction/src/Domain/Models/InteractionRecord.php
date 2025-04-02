@@ -22,13 +22,11 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 class InteractionRecord extends Model
 {
 
+    public $incrementing = false;
 
     use HasOwner;
 
     public $ownerColumn = 'user';
-
-
-    public $incrementing = false;
 
     use HasSnowflakeId;
 

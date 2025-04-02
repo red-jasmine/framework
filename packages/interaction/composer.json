@@ -50,7 +50,9 @@
     "extra": {
         "laravel": {
             "providers": [
-              "RedJasmine\\Interaction\\InteractionPackageServiceProvider"
+              "RedJasmine\\Interaction\\InteractionPackageServiceProvider",
+              "RedJasmine\\Interaction\\Domain\\InteractionDomainServiceProvider",
+              "RedJasmine\\Interaction\\Application\\InteractionApplicationServiceProvider"
             ]
         },
         "branch-alias": {
