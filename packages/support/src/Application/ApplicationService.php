@@ -21,7 +21,7 @@ use RedJasmine\Support\Foundation\Hook\HasHooks;
 use ReflectionClass;
 
 /**
- * @method Model crate(Data $command)
+ * @method Model create(Data $command)
  * @method Model update(Data $command)
  * @method bool delete(Data $command)
  * @method Model find(FindQuery $query)
