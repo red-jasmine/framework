@@ -17,23 +17,36 @@ class InteractionController extends Controller
     }
 
 
+    /**
+     * @param  Request  $request
+     *
+     * @return JsonResponse|JsonResource
+     */
     public function interactive(Request $request) : JsonResponse|JsonResource
     {
 
         $request->offsetSet('user', $this->getOwner());
+
         $command = InteractionCreateCommand::from($request);
 
-        $result = $this->service->create($command);
+        $this->service->create($command);
 
 
-        return static::success(['record' => $result->id]);
+        return static::success();
 
     }
 
     // 取消互动
-    public function cancel()
+    public function cancel(Request $request) : JsonResponse|JsonResource
     {
+        $request->offsetSet('user', $this->getOwner());
 
+        $command = InteractionCreateCommand::from($request);
+
+        $this->service->create($command);
+
+
+        return static::success();
     }
 
 }

@@ -28,4 +28,7 @@ interface InteractionResourceInterface
      * @return bool
      */
     public function validate(InteractionData $data) : bool;
+
+
+    public function getInteractionTypeLimiterConfig(InteractionData $data) : InteractionTypeLimiterConfigInterface;
 }

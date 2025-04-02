@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Interaction\Application\Services;
 
-use phpDocumentor\Reflection\Php\Function_;
 use RedJasmine\Interaction\Application\Services\Commands\InteractionCreateCommandHandler;
 use RedJasmine\Interaction\Domain\Repositories\InteractionRecordReadRepositoryInterface;
 use RedJasmine\Interaction\Domain\Repositories\InteractionRecordRepositoryInterface;
