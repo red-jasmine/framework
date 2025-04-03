@@ -10,8 +10,16 @@ use RedJasmine\Interaction\Domain\Models\InteractionRecord;
  */
 interface InteractionTypeInterface
 {
+
+    /**
+     * @return string|class-string<InteractionRecord>
+     */
+    public function getModelClass() : string;
+
     public function validate(InteractionData $data);
 
-
     public function makeRecord(InteractionData $data) : InteractionRecord;
+
+
+    public function allowedFields() : array;
 }

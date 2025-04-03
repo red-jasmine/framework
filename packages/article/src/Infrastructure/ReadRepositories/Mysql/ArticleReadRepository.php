@@ -5,6 +5,7 @@ namespace RedJasmine\Article\Infrastructure\ReadRepositories\Mysql;
 
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Repositories\ArticleReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -22,7 +23,7 @@ class ArticleReadRepository extends QueryBuilderReadRepository implements Articl
      * 过滤器
      * @return array
      */
-    protected function allowedFilters() : array
+    protected function allowedFilters(?Query $query = null) : array
     {
         return [
             AllowedFilter::exact('category_id'),
@@ -31,7 +32,7 @@ class ArticleReadRepository extends QueryBuilderReadRepository implements Articl
 
     }
 
-    protected function allowedIncludes() : ?array
+    protected function allowedIncludes(?Query $query = null) : ?array
     {
         return ['content', 'tags', 'category'];
     }

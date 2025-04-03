@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
 
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -19,7 +20,7 @@ class ProductCategoryReadRepository extends QueryBuilderReadRepository implement
     protected static string $modelClass = ProductCategory::class;
 
 
-    public function allowedFilters() : array
+    public function allowedFilters(?Query $query = null) : array
     {
         return [
             AllowedFilter::exact('id'),
@@ -34,7 +35,7 @@ class ProductCategoryReadRepository extends QueryBuilderReadRepository implement
     }
 
 
-    public function allowedFields() : array
+    public function allowedFields(?Query $query = null) : array
     {
         return [
             'id',

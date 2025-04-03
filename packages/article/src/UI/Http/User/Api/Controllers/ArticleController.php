@@ -3,7 +3,6 @@
 namespace RedJasmine\Article\UI\Http\User\Api\Controllers;
 
 
-use Illuminate\Http\Request;
 use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
 use RedJasmine\Article\Application\Services\Article\Queries\PaginateQuery;
 use RedJasmine\Article\Domain\Data\ArticleData as Data;

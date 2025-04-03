@@ -26,9 +26,15 @@ class InteractionRecord extends Model
 
     use HasOwner;
 
-    public $ownerColumn = 'user';
+    protected $ownerColumn = 'user';
 
     use HasSnowflakeId;
 
     use SoftDeletes;
+
+
+    public function getExtras() : array
+    {
+        return [];
+    }
 }

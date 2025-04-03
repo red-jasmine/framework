@@ -16,7 +16,6 @@ class InteractionController extends Controller
     ) {
     }
 
-
     /**
      * @param  Request  $request
      *
@@ -47,6 +46,12 @@ class InteractionController extends Controller
 
 
         return static::success();
+    }
+
+
+    public function records(Request $request)
+    {
+
     }
 
 }

@@ -9,8 +9,17 @@ use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 
 abstract class BaseInteractionType implements InteractionTypeInterface
 {
+    public function getModelClass() : string
+    {
+        return InteractionRecord::class;
+    }
 
-    
+    public function allowedFields() : array
+    {
+        return [];
+    }
+
+
     public function validate(InteractionData $data)
     {
         $data->quantity = 1;

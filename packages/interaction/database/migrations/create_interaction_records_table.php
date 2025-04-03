@@ -16,6 +16,9 @@ return new class extends Migration {
             $table->string('interaction_type', 64)->comment('互动类型');
             $table->unsignedBigInteger('quantity')->default(1)->comment('数量');
             $table->timestamp('interaction_time')->comment('互动时间');
+
+
+
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->timestamps();
             $table->softDeletes();

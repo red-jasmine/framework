@@ -24,7 +24,9 @@ class InteractionApplicationService extends ApplicationService
     // 删除互动
 
     protected static $macros = [
-        'create' => InteractionCreateCommandHandler::class
+        'create' => InteractionCreateCommandHandler::class,
+
+
     ];
 
 

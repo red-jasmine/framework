@@ -3,10 +3,9 @@
 namespace RedJasmine\Community\Infrastructure\ReadRepositories\Mysql;
 
 
-use RedJasmine\Article\Domain\Models\Article;
-use RedJasmine\Article\Domain\Repositories\ArticleReadRepositoryInterface;
 use RedJasmine\Community\Domain\Models\Topic;
 use RedJasmine\Comnunity\Domain\Repositories\TopicReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -22,9 +21,12 @@ class TopicReadRepository extends QueryBuilderReadRepository implements TopicRea
 
     /**
      * 过滤器
+     *
+     * @param  Query|null  $query
+     *
      * @return array
      */
-    protected function allowedFilters() : array
+    protected function allowedFilters(?Query $query = null) : array
     {
         return [
             AllowedFilter::exact('category_id'),
@@ -33,7 +35,7 @@ class TopicReadRepository extends QueryBuilderReadRepository implements TopicRea
 
     }
 
-    protected function allowedIncludes() : ?array
+    protected function allowedIncludes(?Query $query = null) : ?array
     {
         return ['content', 'category'];
     }
