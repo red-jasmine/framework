@@ -12,7 +12,6 @@ class InteractionTypeManager extends ServiceManager
 {
     protected const array PROVIDERS = [
         'like'    => LikeInteractionType::class,
-        'dislike' => LikeInteractionType::class,
         'comment' => CommentInteractionType::class,
     ];
 }

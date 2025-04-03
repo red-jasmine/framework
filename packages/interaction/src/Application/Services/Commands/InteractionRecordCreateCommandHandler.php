@@ -2,32 +2,33 @@
 
 namespace RedJasmine\Interaction\Application\Services\Commands;
 
-use RedJasmine\Interaction\Application\Services\InteractionApplicationService;
+use RedJasmine\Interaction\Application\Services\InteractionRecordApplicationService;
+use RedJasmine\Interaction\Domain\Data\InteractionData;
 use RedJasmine\Interaction\Domain\Facades\InteractionResource;
 use RedJasmine\Interaction\Domain\Facades\InteractionType;
+use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 use RedJasmine\Interaction\Domain\Services\InteractionDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
-use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 
-class InteractionCreateCommandHandler extends CommandHandler
+class InteractionRecordCreateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected InteractionApplicationService $service
+        protected InteractionRecordApplicationService $service
     ) {
     }
 
 
     /**
-     * @param  InteractionCreateCommand  $command
+     * @param  InteractionData  $command
      *
      * @return InteractionRecord
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(InteractionCreateCommand $command) : InteractionRecord
+    public function handle(InteractionData $command) : InteractionRecord
     {
 
         $resource        = InteractionResource::create($command->resourceType);
@@ -38,14 +39,14 @@ class InteractionCreateCommandHandler extends CommandHandler
             $interactionDomainService = new InteractionDomainService(
                 $resource,
                 $interactionType,
-                $this->service->repository,
+                $this->service->statisticRepository,
             );
 
             $model = $interactionDomainService->interactive($command);
 
-            $this->service->recordRepository->store($model);
+            $this->service->repository->store($model);
 
-            $this->service->repository->increment(
+            $this->service->statisticRepository->increment(
                 $command->resourceType,
                 $command->resourceId,
                 $command->interactionType,

@@ -37,4 +37,10 @@ class InteractionRecord extends Model
     {
         return [];
     }
+
+    public function setExtras(array $extras = []) : void
+    {
+
+    }
+
 }

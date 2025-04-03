@@ -31,4 +31,14 @@ class InteractionRecordComment extends InteractionRecord implements OperatorInte
     }
 
 
+    public function setExtras(array $extras = []) : void
+    {
+
+        $this->content   = $extras['content'] ?? null;
+        $this->parent_id = $extras['parent_id'] ?? 0;
+        $this->root_id   = $extras['root_id'] ?? 0;
+
+    }
+
+
 }

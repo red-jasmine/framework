@@ -3,8 +3,8 @@
 namespace RedJasmine\Interaction\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /** @mixin InteractionRecord */
 class InteractionRecordResource extends JsonResource
@@ -20,7 +20,6 @@ class InteractionRecordResource extends JsonResource
             'quantity'         => $this->quantity,
             'user_type'        => $this->user_type,
             'user_id'          => $this->user_id,
-
 
             $this->merge($this->getExtras())
 

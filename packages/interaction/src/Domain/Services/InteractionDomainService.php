@@ -43,6 +43,12 @@ class InteractionDomainService
     }
 
 
+    public function cancel(InteractionData $data)
+    {
+
+    }
+
+
     // 初始化
     protected function validate(InteractionData $data) : void
     {

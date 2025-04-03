@@ -17,6 +17,7 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
  * @property JsonResource $resourceClass
  * @property string|class-string<Model> $modelClass
  * @property string $paginateQueryClass
+ * @property string $findQueryClass
  * @property string $commandClass
  * @property string $createCommandClass
  * @property string $updateCommandClass
@@ -24,8 +25,10 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
  */
 trait RestControllerActions
 {
-
-    // TODO 仅查看权限
+    protected function getOwnerKey() : string
+    {
+        return property_exists($this, 'ownerKey') ? $this->ownerKey : 'owner';
+    }
 
     public function index(Request $request) : AnonymousResourceCollection
     {
@@ -46,7 +49,9 @@ trait RestControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('create', static::$modelClass);
         }
-        $request->offsetSet('owner', $this->getOwner());
+
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner());
+
         $dataClass = static::$createCommandClass ?? static::$dataClass;
 
         $command = $dataClass::from($request);
@@ -58,7 +63,7 @@ trait RestControllerActions
     public function show($id, Request $request) : JsonResource
     {
 
-        $query = FindQuery::from($request);
+        $query = property_exists($this, 'findQueryClass') ? ($this->findQueryClass)::from($request) : FindQuery::from($request);
         $query->setKey($id);
         $model = $this->service->find($query);
         if (method_exists($this, 'authorize')) {
@@ -77,7 +82,7 @@ trait RestControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('update', $model);
         }
-        $request->offsetSet('owner', $this->getOwner());
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner());
         $dataClass = static::$updateCommandClass ?? static::$dataClass;
         $command   = $dataClass::from($request);
         $command->setKey($id);

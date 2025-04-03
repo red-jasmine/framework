@@ -13,9 +13,10 @@ class InteractionUserRoute
     public static function api() : void
     {
         Route::group(['prefix' => 'interaction'], function () {
-            Route::post('interactive', [InteractionController::class, 'interactive'])->middleware(['auth:api']);
-
-            Route::apiResource('records', InteractionRecordController::class);
+            Route::get('records/statistic', [InteractionRecordController::class, 'statistic'])->middleware(['auth:api']);
+            Route::post('records/cancel', [InteractionRecordController::class, 'cancel'])->middleware(['auth:api']);
+            Route::apiResource('records', InteractionRecordController::class)
+                 ->middleware(['auth:api']);
         });
 
     }

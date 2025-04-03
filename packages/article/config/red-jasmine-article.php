@@ -3,6 +3,7 @@
 // config for RedJasmine/Article
 return [
     'interaction' => [
+
         'types' => [
             'comment',
             'like',

@@ -20,10 +20,9 @@ abstract class BaseInteractionType implements InteractionTypeInterface
     }
 
 
-    public function validate(InteractionData $data)
+    public function validate(InteractionData $data) : void
     {
-        $data->quantity = 1;
-        // TODO: Implement validate() method.
+
     }
 
     public function makeRecord(InteractionData $data) : InteractionRecord

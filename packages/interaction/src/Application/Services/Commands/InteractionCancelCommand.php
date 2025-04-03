@@ -7,4 +7,5 @@ use RedJasmine\Interaction\Domain\Data\InteractionData;
 class InteractionCancelCommand extends InteractionData
 {
 
+
 }

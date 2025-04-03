@@ -4,6 +4,7 @@ namespace RedJasmine\Interaction\Infrastructure\ReadRepositories\Mysql;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use RedJasmine\Interaction\Application\Services\Queries\FindQuery;
 use RedJasmine\Interaction\Domain\Facades\InteractionType;
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 use RedJasmine\Interaction\Domain\Repositories\InteractionRecordReadRepositoryInterface;
@@ -46,4 +47,11 @@ class InteractionRecordReadRepository extends QueryBuilderReadRepository
             AllowedFilter::exact('user_type'),
         ];
     }
+
+    public function findByResourceUserLast(\RedJasmine\Support\Domain\Data\Queries\FindQuery $query) : InteractionRecord
+    {
+        return $this->query($query)->firstOrFail();
+    }
+
+
 }

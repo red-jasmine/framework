@@ -5,7 +5,7 @@ namespace RedJasmine\Interaction\UI\Http\User\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use RedJasmine\Interaction\Application\Services\Commands\InteractionCreateCommand;
+use RedJasmine\Interaction\Application\Services\Commands\InteractionRecordCreateCommand;
 use RedJasmine\Interaction\Application\Services\InteractionApplicationService;
 
 class InteractionController extends Controller
@@ -26,7 +26,7 @@ class InteractionController extends Controller
 
         $request->offsetSet('user', $this->getOwner());
 
-        $command = InteractionCreateCommand::from($request);
+        $command = InteractionRecordCreateCommand::from($request);
 
         $this->service->create($command);
 
@@ -40,7 +40,7 @@ class InteractionController extends Controller
     {
         $request->offsetSet('user', $this->getOwner());
 
-        $command = InteractionCreateCommand::from($request);
+        $command = InteractionRecordCreateCommand::from($request);
 
         $this->service->create($command);
 

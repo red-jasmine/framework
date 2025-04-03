@@ -3,16 +3,32 @@
 namespace RedJasmine\Interaction\Domain\Types;
 
 use Illuminate\Support\Carbon;
+use phpDocumentor\Reflection\Types\This;
 use RedJasmine\Interaction\Domain\Data\InteractionData;
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 use RedJasmine\Interaction\Domain\Models\Records\InteractionRecordComment;
+use RedJasmine\Interaction\Domain\Repositories\InteractionRecordReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class CommentInteractionType extends BaseInteractionType
 {
+
+
+    protected InteractionRecordReadRepositoryInterface $recordReadRepository;
+
+    public function __construct($config)
+    {
+        $this->recordReadRepository = app(InteractionRecordReadRepositoryInterface::class);
+    }
+
     public function allowedFields() : array
     {
         return [
+            AllowedFilter::exact('is_good'),
+            AllowedFilter::exact('is_hot'),
+            AllowedFilter::exact('is_top'),
             AllowedFilter::exact('root_id'),
             AllowedFilter::exact('parent_id'),
         ];
@@ -24,6 +40,27 @@ class CommentInteractionType extends BaseInteractionType
         return InteractionRecordComment::class;
     }
 
+    public function validate(InteractionData $data) : void
+    {
+        $data->quantity = 1;
+        $parentId       = (int) ($data->extras['parent_id'] ?? 0);
+
+        if ($parentId) {
+            $query                  = FindQuery::from([]);
+            $query->resourceType    = $data->resourceType;
+            $query->resourceId      = $data->resourceId;
+            $query->interactionType = $data->interactionType;
+            $query->setKey($parentId);
+            $parent                    = $this->recordReadRepository->find($query);
+            $data->extras['root_id']   = ($parent->root_id === 0) ? $parent->id : $parent->root_id;
+            $data->extras['parent_id'] = $parent->id;
+        }
+
+        // TODO 内容过滤
+        parent::validate($data);
+    }
+
+
     public function makeRecord(InteractionData $data) : InteractionRecordComment
     {
 
@@ -34,7 +71,7 @@ class CommentInteractionType extends BaseInteractionType
         $interactionRecord->quantity         = $data->quantity;
         $interactionRecord->owner            = $data->user;
         $interactionRecord->interaction_time = Carbon::now();
-        $interactionRecord->content          = $data->extras['content'] ?? '';
+        $interactionRecord->setExtras($data->extras);
         return $interactionRecord;
     }
 
