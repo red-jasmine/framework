@@ -77,37 +77,15 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     }
 
 
-
     public function find(FindQuery $query) : ?Model
     {
         $id = $query->id;
         return $this->query($query->except('id'))->findOrFail($id);
     }
 
-    public function modelQuery() : Builder
+    public function modelQuery(?Query $query = null) : Builder
     {
         return static::$modelClass::query();
-    }
-
-
-    protected function allowedFilters() : ?array
-    {
-        return null;
-    }
-
-    protected function allowedFields() : ?array
-    {
-        return null;
-    }
-
-    protected function allowedIncludes() : ?array
-    {
-        return null;
-    }
-
-    protected function allowedSorts() : ?array
-    {
-        return null;
     }
 
 
@@ -119,22 +97,21 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function query(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
     {
 
-        $queryBuilder = QueryBuilder::for($this->modelQuery(), $this->buildRequest($query?->toArray() ?? []));
-
+        $queryBuilder = QueryBuilder::for($this->modelQuery($query), $this->buildRequest($query?->toArray() ?? []));
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
         // 只有当相应的允许列表不为空时，才应用相应的限制
-        if ($this->allowedFilters()) {
-            $queryBuilder->allowedFilters($this->allowedFilters());
+        if (method_exists($this, 'allowedFilters') && $allowedFilters = $this->allowedFilters($query)) {
+            $queryBuilder->allowedFilters($allowedFilters);
         }
-        if ($this->allowedFields()) {
-            $queryBuilder->allowedFields($this->allowedFields());
+        if (method_exists($this, 'allowedFields') && $allowedFields = $this->allowedFields($query)) {
+            $queryBuilder->allowedFields($allowedFields);
         }
-        if ($this->allowedIncludes()) {
-            $queryBuilder->allowedIncludes($this->allowedIncludes());
+        if (method_exists($this, 'allowedIncludes') && $allowedIncludes = $this->allowedIncludes($query)) {
+            $queryBuilder->allowedIncludes($allowedIncludes);
         }
-        if ($this->allowedSorts()) {
-            $queryBuilder->allowedSorts($this->allowedSorts());
+        if (method_exists($this, 'allowedSorts') && $allowedSorts = $this->allowedSorts($query)) {
+            $queryBuilder->allowedSorts($allowedSorts);
         }
 
         // 调用查询回调函数，进一步自定义查询逻辑
@@ -157,6 +134,8 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
      */
     protected function buildRequest(array $requestQuery = []) : Request
     {
+
+        $requestQuery = array_filter($requestQuery, fn($value) => !is_null($value));
 
 
         // 从配置文件中获取参数名称
@@ -198,7 +177,6 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     {
 
         $queryBuilder = $this->query($query)->defaultSort($this->defaultSort);
-    ;
 
         return $query->isWithCount() ? $queryBuilder->paginate($query->perPage) : $queryBuilder->simplePaginate($query->perPage);
     }

@@ -24,9 +24,11 @@ interface ReadRepositoryInterface
 
 
     /**
+     * @param  Query|null  $query
+     *
      * @return Builder
      */
-    public function modelQuery() : Builder;
+    public function modelQuery(?Query $query = null) : Builder;
 
     /**
      * @param  Query|null  $query
@@ -43,7 +45,7 @@ interface ReadRepositoryInterface
      * @return $this
      */
     public function withQuery(Closure $queryCallback) : static;
-    
+
 
     public function find(FindQuery $query) : ?Model;
 
