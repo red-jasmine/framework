@@ -37,7 +37,7 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
 
         // 查询互动记录
 
-        $this->service->repository->find();
+        $record = $this->service->repository->find($command->getKey());
 
         $this->beginDatabaseTransaction();
         try {
@@ -47,16 +47,9 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
                 $this->service->statisticRepository,
             );
 
-            $model = $interactionDomainService->cancel($command);
+            $model = $interactionDomainService->cancel($record);
 
-            $this->service->repository->store($model);
-
-            $this->service->statisticRepository->increment(
-                $command->resourceType,
-                $command->resourceId,
-                $command->interactionType,
-                $command->quantity,
-            );
+            $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
 

@@ -37,14 +37,28 @@ class InteractionDomainService
         $this->limiter($data);
 
 
-        return $this->interactionType->makeRecord($data);
+        $record = $this->interactionType->makeRecord($data);
+
+
+        $this->repository->increment($record->resource_type, $record->resource_id, $record->interaction_type, $record->quantity);
+
+
+        return $record;
 
 
     }
 
 
-    public function cancel(InteractionData $data)
+    /**
+     * @param  InteractionRecord  $record
+     *
+     * @return void
+     */
+    public function cancel(InteractionRecord $record) : void
     {
+        $record->delete();
+
+        $this->repository->decrement($record->resource_type, $record->resource_id, $record->interaction_type, $record->quantity);
 
     }
 

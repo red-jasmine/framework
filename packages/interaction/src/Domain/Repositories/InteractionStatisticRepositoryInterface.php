@@ -7,7 +7,9 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 interface InteractionStatisticRepositoryInterface extends RepositoryInterface
 {
-    public function increment(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1);
+    public function increment(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1) : int;
+
+    public function decrement(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1) : int;
 
     public function findByResource(string $resourceType, string $resourceId, string $interactionType) : ?InteractionStatistic;
 

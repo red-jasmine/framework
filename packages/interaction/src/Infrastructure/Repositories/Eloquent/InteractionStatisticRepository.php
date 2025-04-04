@@ -22,8 +22,6 @@ class InteractionStatisticRepository extends EloquentRepository implements Inter
 
     public function increment(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1) : int
     {
-
-
         $result = InteractionStatistic::where([
             'resource_type'    => $resourceType,
             'resource_id'      => $resourceId,
@@ -39,6 +37,15 @@ class InteractionStatisticRepository extends EloquentRepository implements Inter
         }
 
         return 1;
+    }
+
+    public function decrement(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1) : int
+    {
+        return InteractionStatistic::where([
+            'resource_type'    => $resourceType,
+            'resource_id'      => $resourceId,
+            'interaction_type' => $interactionType
+        ])->decrement('quantity', $quantity);
     }
 
 

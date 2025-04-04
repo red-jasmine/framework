@@ -46,13 +46,6 @@ class InteractionRecordCreateCommandHandler extends CommandHandler
 
             $this->service->repository->store($model);
 
-            $this->service->statisticRepository->increment(
-                $command->resourceType,
-                $command->resourceId,
-                $command->interactionType,
-                $command->quantity,
-            );
-
             $this->commitDatabaseTransaction();
 
         } catch (AbstractException $exception) {
