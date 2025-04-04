@@ -18,8 +18,13 @@ class CommunityPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-community')
             ->hasConfigFile()
+            ->hasRoutes(['api'])
             ->hasViews()
-            ->hasMigrations([])
+            ->hasMigrations([
+                'create_topics_table',
+                'create_topic_contents_table',
+                'create_topic_categories_table',
+            ])
             ->runsMigrations()
           ;
     }

@@ -3,8 +3,11 @@
 namespace RedJasmine\Community\Domain\Models\Extensions;
 
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Community\Domain\Models\Topic;
-use RedJasmine\Order\Domain\Models\Model;
+
 
 class TopicContent extends Model
 {
@@ -17,7 +20,7 @@ class TopicContent extends Model
     ];
 
 
-    public function article() : BelongsTo
+    public function topic() : BelongsTo
     {
         return $this->belongsTo(Topic::class, 'topic_id', 'id');
     }

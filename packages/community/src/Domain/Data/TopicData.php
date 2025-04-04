@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Community\Domain\Data;
 
+use RedJasmine\Community\Domain\Models\Enums\ContentTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class TopicData extends Data
 {
@@ -12,6 +15,9 @@ class TopicData extends Data
     public UserInterface $owner;
 
     public string $title;
+
+    #[WithCast(EnumCast::class, ContentTypeEnum::class)]
+    public ContentTypeEnum $contentType = ContentTypeEnum::TEXT;
 
     public string $content;
 

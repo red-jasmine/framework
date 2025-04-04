@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "red-jasmine/support": "^1.0"
+        "red-jasmine/support": "^1.0.x-dev",
+        "red-jasmine/interaction": "^1.0.x-dev"
     },
     "require-dev": {
 
@@ -51,6 +52,7 @@
         "laravel": {
             "providers": [
                 "RedJasmine\\Community\\CommunityPackageServiceProvider",
+                "RedJasmine\\Community\\Domain\\CommunityDomainServiceProvider",
                 "RedJasmine\\Community\\Application\\CommunityApplicationServiceProvider"
             ]
         },

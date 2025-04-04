@@ -1,7 +1,7 @@
 <?php
 
 
-use RedJasmine\Article\UI\Http\User\CommunityUserRoute;
+use RedJasmine\Community\UI\Http\User\CommunityUserRoute;
 
 \Illuminate\Support\Facades\Route::group([
     'prefix'     => 'api',

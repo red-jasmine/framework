@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Article\UI\Http\User\Api\Controllers;
+namespace RedJasmine\Community\UI\Http\User\Api\Controllers;
 
 use RedJasmine\Community\Application\Services\Category\TopicCategoryApplicationService as Service;
 use RedJasmine\Community\Domain\Data\TopicCategoryData as Data;

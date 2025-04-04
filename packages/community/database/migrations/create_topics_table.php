@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Community\Domain\Models\Enums\TopicStatusEnum;
 
 return new class extends Migration {
     public function up()
@@ -15,7 +16,7 @@ return new class extends Migration {
             $table->string('image')->nullable()->comment('图片');
             $table->string('description')->nullable()->comment('描述');
             $table->string('keywords')->nullable()->comment('关键字');
-            $table->string('status')->comment(ArticleStatusEnum::comments('状态'));
+            $table->string('status')->comment(TopicStatusEnum::comments('状态'));
             $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
             $table->boolean('is_top')->default(false)->comment('是否置顶');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
@@ -27,13 +28,11 @@ return new class extends Migration {
             $table->string('creator_avatar', 64)->nullable();
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('creator_avatar', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
+            $table->string('updater_avatar', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('话题表');
-
-            $table->timestamps();
         });
     }
 

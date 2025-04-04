@@ -2,18 +2,18 @@
 
 namespace RedJasmine\Community\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Article\Domain\Models\Article;
-use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
-use RedJasmine\Article\Domain\Models\Extensions\ArticleContent;
 use RedJasmine\Community\Domain\Models\Enums\TopicStatusEnum;
 use RedJasmine\Community\Domain\Models\Extensions\TopicContent;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
@@ -28,7 +28,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property $version
  *
  */
-class Topic extends Model implements OperatorInterface
+class Topic extends Model implements OwnerInterface, OperatorInterface
 {
 
     public $incrementing = false;
@@ -36,6 +36,8 @@ class Topic extends Model implements OperatorInterface
     public $uniqueShortId = true;
 
     use HasSnowflakeId;
+
+    use HasOwner;
 
     use HasOperator;
 
@@ -71,6 +73,14 @@ class Topic extends Model implements OperatorInterface
             $instance->setRelation('content', TopicContent::make(['topic_id' => $instance->id]));
         }
         return $instance;
+    }
+
+
+    public function scopeShow(Builder $builder) : Builder
+    {
+        $builder->where('status', TopicStatusEnum::PUBLISH);
+
+        return $builder;
     }
 
 
