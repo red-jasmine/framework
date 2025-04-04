@@ -56,8 +56,6 @@ class InteractionDomainService
      */
     public function cancel(InteractionRecord $record) : void
     {
-        $record->delete();
-
         $this->repository->decrement($record->resource_type, $record->resource_id, $record->interaction_type, $record->quantity);
 
     }

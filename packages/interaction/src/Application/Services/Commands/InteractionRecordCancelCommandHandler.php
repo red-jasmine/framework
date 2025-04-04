@@ -24,11 +24,11 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
     /**
      * @param  InteractionData  $command
      *
-     * @return InteractionRecord
+     * @return bool
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(InteractionData $command) : InteractionRecord
+    public function handle(InteractionData $command) : bool
     {
 
         $resource        = InteractionResource::create($command->resourceType);
@@ -37,7 +37,7 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
 
         // 查询互动记录
 
-        $record = $this->service->repository->find($command->getKey());
+        $record = $this->service->repository->findByInteractionType($command->interactionType, $command->getKey());
 
         $this->beginDatabaseTransaction();
         try {
@@ -47,9 +47,10 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
                 $this->service->statisticRepository,
             );
 
-            $model = $interactionDomainService->cancel($record);
+            $interactionDomainService->cancel($record);
 
-            $this->service->repository->update($model);
+
+            $this->service->repository->delete($record);
 
             $this->commitDatabaseTransaction();
 
@@ -61,7 +62,7 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
             throw  $throwable;
         }
 
-        return $model;
+        return true;
     }
 
 }

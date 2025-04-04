@@ -71,14 +71,13 @@ class InteractionRecordController extends Controller
 
         $request->offsetSet($this->getOwnerKey(), $this->getOwner());
 
-        $query = ResourceUserFindQuery::from($request);
-
-        $lastInteraction = $this->service->readRepository->findByResourceUserLast($query);
-
-
         $command = InteractionCancelCommand::from($request);
-        $command->setKey($lastInteraction->id);
 
+        if (!$command->getKey()) {
+            $query           = ResourceUserFindQuery::from($request);
+            $lastInteraction = $this->service->readRepository->findByResourceUserLast($query);
+            $command->setKey($lastInteraction->id);
+        }
 
         $result = $this->service->cancel($command);
         return static::success($result);
