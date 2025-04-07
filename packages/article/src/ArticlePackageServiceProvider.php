@@ -22,7 +22,7 @@ class ArticlePackageServiceProvider extends PackageServiceProvider
             ->hasTranslations()
             ->hasMigrations([
                 'create_articles_table',
-                'create_article_contents_table',
+                'create_articles_extension_table',
                 'create_article_categories_table',
                 'create_article_tags_table',
                 'create_article_tag_pivots_table',

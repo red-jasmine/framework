@@ -4,10 +4,10 @@ namespace RedJasmine\Article\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
-use RedJasmine\Article\Domain\Models\Extensions\ArticleContent;
+use RedJasmine\Article\Domain\Models\Extensions\ArticleExtension;
 
-/** @mixin ArticleContent */
-class ArticleContentResource extends JsonResource
+/** @mixin ArticleExtension */
+class ArticleExtensionResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {

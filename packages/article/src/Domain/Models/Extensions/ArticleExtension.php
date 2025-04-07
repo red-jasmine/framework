@@ -7,19 +7,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Article\Domain\Models\Article;
 
-class ArticleContent extends Model
+class ArticleExtension extends Model
 {
+
+    public $incrementing = false;
 
     use SoftDeletes;
 
+    public function getTable() : string
+    {
+        return 'articles_extension';
+    }
+
+
     protected $fillable = [
-        'article_id'
+        'id'
     ];
 
 
     public function article() : BelongsTo
     {
-        return $this->belongsTo(Article::class, 'article_id', 'id');
+        return $this->belongsTo(Article::class, 'id', 'id');
     }
 
 

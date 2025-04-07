@@ -34,7 +34,7 @@ class ArticleReadRepository extends QueryBuilderReadRepository implements Articl
 
     protected function allowedIncludes(?Query $query = null) : ?array
     {
-        return ['content', 'tags', 'category'];
+        return ['extension', 'tags', 'category'];
     }
 
 

@@ -20,6 +20,7 @@ return [
         'category'        => '分类',
         'category_id'     => '分类',
         'is_top'          => '是否置顶',
+        'is_show'         => '是否展示',
         'sort'            => '排序',
         'approval_status' => '审批状态',
         'version'         => '版本',

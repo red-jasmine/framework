@@ -34,5 +34,7 @@ class ArticleData extends Data
 
     public int $sort = 0;
 
+    public bool $isShow = false;
+
     public array $tags = [];
 }

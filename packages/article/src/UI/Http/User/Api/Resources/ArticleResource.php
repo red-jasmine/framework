@@ -34,8 +34,8 @@ class ArticleResource extends JsonResource
             'category_id'     => $this->category_id,
             'category'        => new ArticleCategoryResource($this->whenLoaded('category')),
             'tags'            => ArticleTagResource::collection($this->whenLoaded('tags')),
-            $this->mergeWhen($this->relationLoaded('content'),
-                $this->relationLoaded('content') ? new ArticleContentResource($this->whenLoaded('content')) : null),
+            $this->mergeWhen($this->relationLoaded('extension'),
+                $this->relationLoaded('extension') ? new ArticleExtensionResource($this->whenLoaded('extension')) : null),
         ];
     }
 }

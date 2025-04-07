@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
-use RedJasmine\Article\Domain\Models\Extensions\ArticleContent;
+use RedJasmine\Article\Domain\Models\Extensions\ArticleExtension;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -64,7 +64,7 @@ class Article extends Model implements OwnerInterface, OperatorInterface
         if (!$instance->exists) {
             $instance->status = ArticleStatusEnum::DRAFT;
             $instance->setUniqueIds();
-            $instance->setRelation('content', ArticleContent::make(['article_id' => $instance->id]));
+            $instance->setRelation('extension', ArticleExtension::make(['id' => $instance->id]));
             $instance->setRelation('tags', Collection::make([]));
         }
         return $instance;
@@ -73,6 +73,8 @@ class Article extends Model implements OwnerInterface, OperatorInterface
     protected function casts() : array
     {
         return [
+            'is_top'          => 'boolean',
+            'is_show'         => 'boolean',
             'status'          => ArticleStatusEnum::class,
             'approval_status' => ApprovalStatusEnum::class,
         ];
@@ -94,15 +96,25 @@ class Article extends Model implements OwnerInterface, OperatorInterface
         return $this->belongsTo(ArticleCategory::class, 'category_id', 'id');
     }
 
-    public function content() : HasOne
+
+    public function extension() : HasOne
     {
-        return $this->hasOne(ArticleContent::class, 'article_id', 'id');
+        return $this->hasOne(ArticleExtension::class, 'id', 'id');
     }
+
 
     public function scopeShow(Builder $builder) : Builder
     {
-        $builder->where('status', ArticleStatusEnum::PUBLISHED);
+        $builder->where('status', ArticleStatusEnum::PUBLISHED)
+                ->where('is_show', true);
 
         return $builder;
+    }
+
+
+    public function publish() : void
+    {
+        $this->status = ArticleStatusEnum::PUBLISHED;
+
     }
 }

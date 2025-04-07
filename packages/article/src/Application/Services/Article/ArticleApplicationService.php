@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Article\Application\Services\Article;
 
+use RedJasmine\Article\Application\Services\Article\Commands\ArticlePublishCommandHandler;
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Repositories\ArticleReadRepositoryInterface;
 use RedJasmine\Article\Domain\Repositories\ArticleRepositoryInterface;
@@ -18,6 +19,11 @@ class ArticleApplicationService extends ApplicationService
     }
 
     protected static string $modelClass = Article::class;
+
+
+    protected static $macros = [
+        'publish' => ArticlePublishCommandHandler::class,
+    ];
 
 
 }

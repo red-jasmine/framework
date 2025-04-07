@@ -3,12 +3,9 @@
 namespace RedJasmine\FilamentArticle;
 
 use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
 use RedJasmine\FilamentArticle\Commands\FilamentArticleCommand;
 use RedJasmine\FilamentArticle\Testing\TestsFilamentArticle;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -88,7 +85,7 @@ class FilamentArticleServiceProvider extends PackageServiceProvider
         }
 
         // Testing
-        Testable::mixin(new TestsFilamentArticle);
+        //Testable::mixin(new TestsFilamentArticle);
     }
 
     protected function getAssetPackageName() : ?string

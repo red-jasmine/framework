@@ -19,10 +19,10 @@ enum ApprovalStatusEnum: string
     {
 
         return [
-            self::PROCESSING->value => '审批中',
-            self::PASS->value       => '通过',
-            self::REJECT->value     => '驳回',
-            self::REVOKE->value     => '撤销',
+            self::PROCESSING->value => __('red-jasmine-support::support.enums.approval_status.processing'),
+            self::PASS->value       => __('red-jasmine-support::support.enums.approval_status.pass'),
+            self::REJECT->value     => __('red-jasmine-support::support.enums.approval_status.reject'),
+            self::REVOKE->value     => __('red-jasmine-support::support.enums.approval_status.revoke'),
         ];
     }
 
