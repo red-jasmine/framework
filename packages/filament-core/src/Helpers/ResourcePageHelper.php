@@ -163,7 +163,9 @@ trait ResourcePageHelper
             $resource       = static::getResource();
             $commandService = app($resource::getService());
             $data['id']     = $record->getKey();
-            return $commandService->update(($resource::getUpdateCommand())::from($data));
+            $command = ($resource::getUpdateCommand())::from($data);
+            $command->setKey($record->getKey());
+            return $commandService->update($command);
         } catch (ValidationException $exception) {
 
             Notification::make()

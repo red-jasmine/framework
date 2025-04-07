@@ -38,6 +38,8 @@ class ArticleTag extends Model implements OwnerInterface, OperatorInterface
     ];
 
     protected $fillable = [
+        'owner_type',
+        'owner_id',
         'name',
         'description',
         'cluster',

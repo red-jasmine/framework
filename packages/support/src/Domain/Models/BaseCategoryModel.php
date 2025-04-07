@@ -27,6 +27,8 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
 {
     use HasSnowflakeId;
 
+    public $uniqueShortId = true;
+
     use HasDateTimeFormatter;
 
     use HasOperator;

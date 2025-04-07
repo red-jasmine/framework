@@ -1,15 +1,15 @@
 {
-    "name": "red-jasmine/filament-product",
-    "description": "This is my package filament-product",
+    "name": "red-jasmine/filament-article",
+    "description": "This is my package filament-article",
     "keywords": [
         "red-jasmine",
         "laravel",
-        "filament-product"
+        "filament-article"
     ],
-    "homepage": "https://github.com/red-jasmine/filament-product",
+    "homepage": "https://github.com/red-jasmine/filament-article",
     "support": {
-        "issues": "https://github.com/red-jasmine/filament-product/issues",
-        "source": "https://github.com/red-jasmine/filament-product"
+        "issues": "https://github.com/red-jasmine/filament-article/issues",
+        "source": "https://github.com/red-jasmine/filament-article"
     },
     "license": "MIT",
     "authors": [
@@ -21,31 +21,27 @@
     ],
     "require": {
         "red-jasmine/filament-core": "1.0.x-dev",
-        "red-jasmine/product": "1.0.x-dev"
+        "red-jasmine/article": "1.0.x-dev"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.9",
-        "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.1",
-        "pestphp/pest-plugin-arch": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
         "psr-4": {
-            "Redjasmine\\FilamentProduct\\": "src/",
-            "Redjasmine\\FilamentProduct\\Database\\Factories\\": "database/factories/"
+            "RedJasmine\\FilamentArticle\\": "src/",
+            "RedJasmine\\FilamentArticle\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Redjasmine\\FilamentProduct\\Tests\\": "tests/"
+            "RedJasmine\\FilamentArticle\\Tests\\": "tests/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
@@ -57,13 +53,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\FilamentProduct\\FilamentProductServiceProvider"
+                "RedJasmine\\FilamentArticle\\FilamentArticleServiceProvider"
             ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",
-            "dev-main": "1.0.x-dev",
-            "dev-develop": "1.0.x-dev"
+            "dev-main": "1.0.x-dev"
         }
     },
     "minimum-stability": "dev",

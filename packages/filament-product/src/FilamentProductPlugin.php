@@ -22,7 +22,7 @@ class FilamentProductPlugin implements Plugin
 
     public function getId() : string
     {
-        return 'filament-product';
+        return 'red-jasmine-filament-product';
     }
 
     public function register(Panel $panel) : void
