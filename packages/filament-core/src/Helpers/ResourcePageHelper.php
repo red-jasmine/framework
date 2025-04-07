@@ -3,7 +3,9 @@
 namespace RedJasmine\FilamentCore\Helpers;
 
 use App\Models\User;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
@@ -14,13 +16,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\ValidationException;
+use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 use function Filament\Support\get_model_label;
 
 /**
  * @property string $translationNamespace
+ * @property string $service
+ * @property string $createCommand
+ * @property string $updateCommand
+ * @property string $deleteCommand
+ * @property string $dataClass
  */
 trait ResourcePageHelper
 {
@@ -419,6 +428,121 @@ trait ResourcePageHelper
 
 
         return $component;
+    }
+
+
+
+    public static function categoryForm(Form $form) : Form
+    {
+        return $form
+            ->columns(1)
+            ->schema([
+
+                SelectTree::make('parent_id')
+                          ->label(__('red-jasmine-support::category.fields.parent_id'))
+                          ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
+                              modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
+                                  fn($query, $value) => $query->where('id', '<>', $value)),
+                              modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
+                                  fn($query, $value) => $query->where('id', '<>', $value)),
+                          )
+                          ->searchable()
+                          ->default(0)
+                          ->enableBranchNode()
+                          ->parentNullValue(0)
+                          ->dehydrateStateUsing(fn($state) => (int) $state),
+
+                Forms\Components\TextInput::make('name')
+                                          ->label(__('red-jasmine-support::category.fields.name'))
+                                          ->required()
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                                          ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
+                Forms\Components\FileUpload::make('image')
+                                           ->label(__('red-jasmine-support::category.fields.image'))
+                                           ->image(),
+                Forms\Components\TextInput::make('cluster')
+                                          ->label(__('red-jasmine-support::category.fields.cluster'))
+                                          ->maxLength(255),
+                Forms\Components\TextInput::make('sort')
+                                          ->label(__('red-jasmine-support::category.fields.sort'))
+                                          ->required()
+                                          ->default(0),
+                Forms\Components\Radio::make('is_leaf')
+                                      ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                                      ->required()
+                                      ->boolean()
+                                      ->inline()
+                                      ->default(false),
+                Forms\Components\Radio::make('is_show')
+                                      ->label(__('red-jasmine-support::category.fields.is_show'))
+                                      ->required()
+                                      ->boolean()
+                                      ->inline()
+                                      ->default(true),
+                Forms\Components\ToggleButtons::make('status')
+                                              ->label(__('red-jasmine-support::category.fields.status'))
+                                              ->required()
+                                              ->inline()
+
+                                              ->default(CategoryStatusEnum::ENABLE)
+                                              ->useEnum(CategoryStatusEnum::class),
+            ]);
+    }
+
+    public static function categoryTable(Table $table) : Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('id')
+                                         ->label(__('red-jasmine-support::category.fields.id'))
+                                         ->sortable()->copyable(),
+                Tables\Columns\TextColumn::make('parent.name')
+                                         ->label(__('red-jasmine-support::category.fields.parent_id'))
+                                         ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                                         ->label(__('red-jasmine-support::category.fields.name'))
+                                         ->searchable()->copyable(),
+                Tables\Columns\ImageColumn::make('image')
+                                          ->label(__('red-jasmine-support::category.fields.image'))
+                ,
+                Tables\Columns\TextColumn::make('cluster')
+                                         ->label(__('red-jasmine-support::category.fields.cluster'))
+                                         ->searchable(),
+                Tables\Columns\IconColumn::make('is_leaf')
+                                         ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                                         ->boolean(),
+
+                Tables\Columns\TextColumn::make('sort')
+                                         ->label(__('red-jasmine-support::category.fields.sort'))
+                                         ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                                         ->label(__('red-jasmine-support::category.fields.status'))
+                                         ->useEnum(),
+                Tables\Columns\IconColumn::make('is_show')
+                                         ->label(__('red-jasmine-support::category.fields.is_show'))
+                                         ->boolean(),
+
+                ... static::operateTableColumns(),
+            ])
+            ->filters([
+                TreeParent::make('tree')->label(__('red-jasmine-support::category.fields.parent_id')),
+                Tables\Filters\SelectFilter::make('status')
+                                           ->label(__('red-jasmine-support::category.fields.status'))
+                                           ->options(CategoryStatusEnum::options()),
+                Tables\Filters\TernaryFilter::make('is_show')
+                                            ->label(__('red-jasmine-support::category.fields.is_show'))
+                ,
+
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
 
