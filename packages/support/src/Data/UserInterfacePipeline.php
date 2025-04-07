@@ -13,7 +13,9 @@ class UserInterfacePipeline implements DataPipe
     {
 
         foreach ($class->properties as $property) {
+
             if ($property->type->type->acceptsType(UserInterface::class) || $property->type->type->findAcceptedTypeForBaseType(UserInterface::class)) {
+
                 $idKey   = $property->name . '_id';
                 $typeKey = $property->name . '_type';
 
@@ -22,13 +24,12 @@ class UserInterfacePipeline implements DataPipe
 
                     && filled($payload[$idKey]) && filled($payload[$typeKey])
                 ) {
-                    $properties[$property->name] = [
+                    $properties[$property->name] = UserData::from([
                         'id'       => $payload[$idKey],
                         'type'     => $payload[$typeKey],
                         'avatar'   => $payload[$property->name . '_avatar'] ?? null,
                         'nickname' => $payload[$property->name . '_nickname'] ?? null,
-                    ];
-
+                    ]);
                 }
 
             }

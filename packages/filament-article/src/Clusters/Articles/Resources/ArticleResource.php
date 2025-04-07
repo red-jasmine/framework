@@ -7,14 +7,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
 use RedJasmine\Article\Domain\Data\ArticleData;
 use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
 use RedJasmine\FilamentArticle\Clusters\Articles;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class ArticleResource extends Resource
 {
@@ -24,10 +27,10 @@ class ArticleResource extends Resource
     /**
      * @var class-string<ProductApplicationService::class>
      */
-    protected static ?string $service = ArticleApplicationService::class;
-
+    protected static ?string $service       = ArticleApplicationService::class;
     protected static ?string $createCommand = ArticleData::class;
     protected static ?string $updateCommand = ArticleData::class;
+    protected static bool    $onlyOwner     = true;
 
 
     protected static ?string $model = Article::class;
@@ -36,54 +39,72 @@ class ArticleResource extends Resource
 
     protected static ?string $cluster = Articles::class;
 
+    public static function getModelLabel() : string
+    {
+        return __('red-jasmine-article::article.labels.article');
+    }
+
+    public static function callFindQuery(FindQuery $findQuery) : FindQuery
+    {
+        $findQuery->include = ['content'];
+        return  $findQuery;
+    }
+
+
+
+
     public static function form(Form $form) : Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('owner_type')
-                                          ->required()
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('owner_id')
-                                          ->required()
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('title')
-                                          ->required()
-                                          ->maxLength(255),
 
-                Forms\Components\Textarea::make('content')
+                Forms\Components\Split::make([
+                    Forms\Components\Section::make([
+                        Forms\Components\TextInput::make('title')
+                                                  ->label(__('red-jasmine-article::article.fields.title'))
+                                                  ->required()
+                                                  ->maxLength(255),
 
-                                          ,
-                Forms\Components\FileUpload::make('image')
-                                           ->image(),
-                Forms\Components\TextInput::make('description')
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('keywords')
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('status')
-                                          ->required()
-                                          ->maxLength(255),
-                Forms\Components\Select::make('category_id')
-                                       ->relationship('category', 'name'),
-                Forms\Components\Toggle::make('is_top')
-                                       ->required(),
-                Forms\Components\TextInput::make('sort')
-                                          ->required()
-                                          ->numeric()
-                                          ->default(0),
-                Forms\Components\TextInput::make('approval_status')
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('version')
-                                          ->required()
-                                          ->numeric()
-                                          ->default(0),
-                Forms\Components\TextInput::make('creator_type')
-                                          ->maxLength(32),
-                Forms\Components\TextInput::make('creator_id')
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('updater_type')
-                                          ->maxLength(32),
-                Forms\Components\TextInput::make('updater_id')
-                                          ->maxLength(64),
+                        Forms\Components\FileUpload::make('image')
+                                                   ->label(__('red-jasmine-article::article.fields.image'))
+                                                   ->image(),
+                        Forms\Components\TextInput::make('description')
+                                                  ->label(__('red-jasmine-article::article.fields.description'))
+                                                  ->maxLength(255),
+                        Forms\Components\TextInput::make('keywords')
+                                                  ->label(__('red-jasmine-article::article.fields.keywords'))
+                                                  ->maxLength(255),
+                        Forms\Components\Textarea::make('content')
+                            ->required()
+                                                 ->label(__('red-jasmine-article::article.fields.content'))
+                    ]),
+                    Forms\Components\Section::make([
+                        ...static::ownerFormSchemas(),
+                        Forms\Components\ToggleButtons::make('status')
+                                                      ->label(__('red-jasmine-article::article.fields.status'))
+                                                      ->required()
+                                                      ->inline()
+                                                      ->default(ArticleStatusEnum::DRAFT)
+                                                      ->useEnum(ArticleStatusEnum::class)
+                        ,
+                        Forms\Components\Select::make('category_id')
+                                               ->label(__('red-jasmine-article::article.fields.category_id'))
+                                               ->relationship('category', 'name'),
+                        Forms\Components\Toggle::make('is_top')
+                                               ->label(__('red-jasmine-article::article.fields.is_top'))
+                                               ->required(),
+                        Forms\Components\TextInput::make('sort')
+                                                  ->label(__('red-jasmine-article::article.fields.sort'))
+                                                  ->required()
+                                                  ->numeric()
+                                                  ->default(0)
+                                                  ->maxLength(255),
+
+                    ])->grow(false),
+                ])->columnSpanFull(),
+
+
+                ...static::operateFormSchemas()
             ]);
     }
 
@@ -92,55 +113,39 @@ class ArticleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                                         ->label('ID')
-                                         ->numeric()
+                                         ->label(__('red-jasmine-article::article.fields.id'))
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('owner_type')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('owner_id')
-                                         ->searchable(),
+                ...static::ownerTableColumns(),
                 Tables\Columns\TextColumn::make('title')
-                                         ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                                         ->searchable()
+                                         ->label(__('red-jasmine-article::article.fields.title')),
+                Tables\Columns\ImageColumn::make('image')
+                                          ->label(__('red-jasmine-article::article.fields.image')),
                 Tables\Columns\TextColumn::make('description')
+                                         ->label(__('red-jasmine-article::article.fields.description'))
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('keywords')
+                                         ->label(__('red-jasmine-article::article.fields.keywords'))
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                                         ->searchable(),
+                                         ->label(__('red-jasmine-article::article.fields.status'))
+                                         ->useEnum(),
                 Tables\Columns\TextColumn::make('category.name')
+                                         ->label(__('red-jasmine-article::article.fields.category'))
                                          ->numeric()
                                          ->sortable(),
                 Tables\Columns\IconColumn::make('is_top')
+                                         ->label(__('red-jasmine-article::article.fields.is_top'))
                                          ->boolean(),
                 Tables\Columns\TextColumn::make('sort')
+                                         ->label(__('red-jasmine-article::article.fields.sort'))
                                          ->numeric()
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('approval_status')
+                                         ->label(__('red-jasmine-article::article.fields.approval_status'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('version')
-                                         ->numeric()
-                                         ->sortable(),
-                Tables\Columns\TextColumn::make('creator_type')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('creator_id')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('updater_type')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('updater_id')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
+                ...static::operateTableColumns()
+
             ])
             ->filters([
                 //

@@ -20,8 +20,8 @@ enum TagStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::ENABLE->value  => '启用',
-            self::DISABLE->value => '禁用',
+            self::ENABLE->value  => __('red-jasmine-article::article-tag.enums.status.disable'),
+            self::DISABLE->value => __('red-jasmine-article::article-tag.enums.status.enable'),
         ];
 
     }
@@ -35,9 +35,10 @@ enum TagStatusEnum: string
         ];
 
     }
+
     public static function icons() : array
     {
-        return  [
+        return [
             self::ENABLE->value  => 'heroicon-o-check-circle',
             self::DISABLE->value => 'heroicon-o-no-symbol',
         ];

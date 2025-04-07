@@ -19,6 +19,7 @@ class ArticlePackageServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-article')
             ->hasConfigFile()
             ->hasViews()
+            ->hasTranslations()
             ->hasMigrations([
                 'create_articles_table',
                 'create_article_contents_table',

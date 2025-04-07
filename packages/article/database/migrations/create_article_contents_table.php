@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
+        // TODO 修改为扩展字段表
         Schema::create('article_contents', function (Blueprint $table) {
             $table->id()->comment('ID');
             $table->unsignedBigInteger('article_id')->comment('文章ID');

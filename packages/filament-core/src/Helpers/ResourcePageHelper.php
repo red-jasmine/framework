@@ -53,6 +53,11 @@ trait ResourcePageHelper
 
     public static function callResolveRecord(Model $model) : Model
     {
+        if ($model->relationLoaded('extension')) {
+            foreach ($model->extension->getAttributes() as $key => $value) {
+                $model->setAttribute($key, $model->extension->{$key});
+            }
+        }
         return $model;
     }
 
@@ -97,8 +102,9 @@ trait ResourcePageHelper
 
         try {
             $commandService = app($resource::getService());
+            $command        = ($resource::getCreateCommand())::from($data);
 
-            return $commandService->create(($resource::getCreateCommand())::from($data));
+            return $commandService->create($command);
         } catch (ValidationException $exception) {
 
             Notification::make()
@@ -163,7 +169,9 @@ trait ResourcePageHelper
             $resource       = static::getResource();
             $commandService = app($resource::getService());
             $data['id']     = $record->getKey();
+
             $command = ($resource::getUpdateCommand())::from($data);
+
             $command->setKey($record->getKey());
             return $commandService->update($command);
         } catch (ValidationException $exception) {

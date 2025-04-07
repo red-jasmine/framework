@@ -15,9 +15,9 @@ enum ArticleStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::DRAFT->value     => '草稿',
-            self::PUBLISHED->value => '发布',
-            self::DELETED->value   => '删除',
+            self::DRAFT->value     => __('red-jasmine-article::article.enums.status.draft'),
+            self::PUBLISHED->value => __('red-jasmine-article::article.enums.status.published'),
+            self::DELETED->value   => __('red-jasmine-article::article.enums.status.deleted'),
         ];
     }
 }

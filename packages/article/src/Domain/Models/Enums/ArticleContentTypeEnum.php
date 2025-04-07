@@ -17,10 +17,9 @@ enum ArticleContentTypeEnum: string
     {
 
         return [
-            self::MARKDOWN->value => 'Markdown',
-            self::RICH->value     => '富文本',
-
-            self::TEXT->value => '文本',
+            self::MARKDOWN->value => __('red-jasmine-article::article.enums.content_type.markdown'),
+            self::RICH->value     => __('red-jasmine-article::article.enums.content_type.rich'),
+            self::TEXT->value     => __('red-jasmine-article::article.enums.content_type.text'),
         ];
     }
 
