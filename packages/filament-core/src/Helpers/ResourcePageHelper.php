@@ -67,6 +67,9 @@ trait ResourcePageHelper
                 $model->setAttribute($key, $model->extension->{$key});
             }
         }
+        if($model->isRelation('tags')){
+            $model->setAttribute('tags', $model->tags?->pluck('id')->toArray());
+        }
         return $model;
     }
 

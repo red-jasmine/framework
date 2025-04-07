@@ -26,6 +26,7 @@ return [
         'version'         => '版本',
         'content_type'    => '内容类型',
         'content'         => '内容',
+        'tags'            => '标签',
     ],
     'enums'   => [
         'content_type' => [

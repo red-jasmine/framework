@@ -12,7 +12,7 @@ class ArticleTransformer implements TransformerInterface
 {
     /**
      * @param  Data|ArticleData  $data
-     * @param  Model|null  $model
+     * @param  Model|Article  $model
      *
      * @return Model|null
      */
@@ -32,7 +32,6 @@ class ArticleTransformer implements TransformerInterface
         $model->is_show                 = $data->isShow;
         $model->extension->content_type = $data->contentType;
         $model->extension->content      = $data->content;
-
         $model->setRelation('tags', collect($data->tags));
         return $model;
 

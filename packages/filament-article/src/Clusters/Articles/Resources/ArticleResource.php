@@ -48,7 +48,7 @@ class ArticleResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = ['extension'];
+        $findQuery->include = ['extension', 'tags'];
         return $findQuery;
     }
 
@@ -109,6 +109,22 @@ class ArticleResource extends Resource
                         Forms\Components\Select::make('category_id')
                                                ->label(__('red-jasmine-article::article.fields.category_id'))
                                                ->relationship('category', 'name'),
+                        // TODO 没有生效？
+                        Forms\Components\Select::make('tags')
+                                               ->multiple()
+                                               ->label(__('red-jasmine-article::article.fields.tags'))
+                                               ->relationship(
+                                                   name: 'tags',
+                                                   titleAttribute: 'name',
+                                                   modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('is_show', true),
+                                               )
+                                               ->dehydrated()
+                                               ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                                               ->saveRelationshipsUsing(null) // 不进行自动保存
+                                               ->preload()
+
+                        ,
+
                         Forms\Components\Toggle::make('is_top')
                                                ->label(__('red-jasmine-article::article.fields.is_top'))
                                                ->required()

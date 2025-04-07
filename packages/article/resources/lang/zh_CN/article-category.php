@@ -15,6 +15,8 @@ return [
         'is_leaf'     => '是否叶子类目',
         'is_show'     => '是否显示',
         'status'      => '状态',
+
+
     ],
     'enums'   => [
         'status' => [

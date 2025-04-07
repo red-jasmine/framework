@@ -34,7 +34,7 @@ class ArticleCategoryResource extends Resource
 
     protected static ?string $model = ArticleCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static ?string $cluster = Articles::class;
 
