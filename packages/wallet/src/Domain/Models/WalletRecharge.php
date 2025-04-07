@@ -4,15 +4,16 @@ namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Traits\Models\HasOperator;
-use RedJasmine\Support\Traits\Models\HasOwner;
-use RedJasmine\Support\Traits\Models\WithDTO;
+
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
 
-class WalletRecharge extends Model
+class WalletRecharge extends Model implements OwnerInterface, OperatorInterface
 {
-    use WithDTO;
 
     use HasOwner;
 
