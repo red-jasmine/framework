@@ -37,8 +37,6 @@ class ProductCategoryResource extends Resource
     }
 
     protected static ?string $service        = ProductCategoryApplicationService::class;
-    protected static ?string $commandService = ProductCategoryApplicationService::class;
-
     protected static ?string $createCommand  = ProductCategoryCreateCommand::class;
     protected static ?string $updateCommand  = ProductCategoryUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductCategoryDeleteCommand::class;

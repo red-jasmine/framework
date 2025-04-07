@@ -1,0 +1,67 @@
+{
+    "name": "red-jasmine/filament-community",
+    "description": "This is my package filament-community",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament-community"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-community",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-community/issues",
+        "source": "https://github.com/red-jasmine/filament-community"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/community": "1.0.x-dev"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentCommunity\\": "src/",
+            "RedJasmine\\FilamentCommunity\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentCommunity\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentCommunity\\FilamentCommunityServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
