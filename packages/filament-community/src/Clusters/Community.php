@@ -10,7 +10,7 @@ class Community extends Cluster
 
 
 
-    protected static ?string $navigationIcon = 'heroicon-c-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
 
     public static function getNavigationLabel() : string

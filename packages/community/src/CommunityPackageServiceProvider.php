@@ -20,9 +20,12 @@ class CommunityPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasRoutes(['api'])
             ->hasViews()
+            ->hasTranslations()
             ->hasMigrations([
                 'create_topics_table',
-                'create_topic_contents_table',
+                'create_topics_extension_table',
+                'create_topic_tags_table',
+                'create_topic_tag_pivots_table',
                 'create_topic_categories_table',
             ])
             ->runsMigrations()

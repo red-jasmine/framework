@@ -1,29 +1,25 @@
 <?php
 
-namespace RedJasmine\Article\Domain\Models\Extensions;
+namespace RedJasmine\Community\Domain\Models\Extensions;
+
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Community\Domain\Models\Topic;
 use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 
-class ArticleExtension extends Model
+
+class TopicExtension extends Model
 {
 
-    public $incrementing = false;
 
     use SoftDeletes;
-
-    public function getTable() : string
-    {
-        return 'articles_extension';
-    }
-
 
     protected $fillable = [
         'id'
     ];
+
     protected function casts() : array
     {
         return [
@@ -31,10 +27,15 @@ class ArticleExtension extends Model
         ];
     }
 
-    public function article() : BelongsTo
+
+    public function getTable() : string
     {
-        return $this->belongsTo(Article::class, 'id', 'id');
+        return 'topics_extension';
     }
 
+    public function topic() : BelongsTo
+    {
+        return $this->belongsTo(Topic::class, 'id', 'id');
+    }
 
 }

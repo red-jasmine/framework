@@ -2,9 +2,10 @@
 
 namespace RedJasmine\Community\Domain\Data;
 
-use RedJasmine\Community\Domain\Models\Enums\ContentTypeEnum;
+
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

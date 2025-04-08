@@ -1,35 +1,35 @@
 <?php
 
-namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
+namespace RedJasmine\FilamentCommunity\Clusters\Community\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use RedJasmine\Article\Application\Services\ArticleTag\ArticleTagApplicationService;
-use RedJasmine\Article\Domain\Data\ArticleTagData;
-use RedJasmine\Article\Domain\Models\ArticleTag;
-use RedJasmine\Article\Domain\Models\Enums\TagStatusEnum;
-use RedJasmine\FilamentArticle\Clusters\Articles;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\RelationManagers;
+use RedJasmine\Community\Application\Services\Tag\TopicTagApplicationService;
+use RedJasmine\Community\Domain\Data\TopicTagData;
+use RedJasmine\Community\Domain\Models\Enums\TagStatusEnum;
+use RedJasmine\Community\Domain\Models\TopicTag;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicTagResource\Pages;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicTagResource\RelationManagers;
+use RedJasmine\FilamentCommunity\Clusters\Community;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 
-class ArticleTagResource extends Resource
+class TopicTagResource extends Resource
 {
 
     use ResourcePageHelper;
 
-    public static string $service       = ArticleTagApplicationService::class;
-    public static string $createCommand = ArticleTagData::class;
-    public static string $updateCommand = ArticleTagData::class;
+    public static string $service       = TopicTagApplicationService::class;
+    public static string $createCommand = TopicTagData::class;
+    public static string $updateCommand = TopicTagData::class;
 
-    protected static ?string $model = ArticleTag::class;
+    protected static ?string $model = TopicTag::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $cluster = Articles::class;
+    protected static ?string $cluster = Community::class;
 
     public static function getModelLabel() : string
     {
@@ -82,9 +82,7 @@ class ArticleTagResource extends Resource
                                                       ->default(TagStatusEnum::ENABLE)
                                                       ->useEnum(TagStatusEnum::class),
                     ])->grow(false),
-            ])->columnSpanFull(),
-
-
+                ])->columnSpanFull(),
 
 
                 ...static::operateFormSchemas(),
@@ -154,9 +152,9 @@ class ArticleTagResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListArticleTags::route('/'),
-            'create' => Pages\CreateArticleTag::route('/create'),
-            'edit'   => Pages\EditArticleTag::route('/{record}/edit'),
+            'index'  => Pages\ListTags::route('/'),
+            'create' => Pages\CreateTag::route('/create'),
+            'edit'   => Pages\EditTag::route('/{record}/edit'),
         ];
     }
 }

@@ -33,8 +33,8 @@ class TopicResource extends JsonResource
             //'updated_at'      => $this->updated_at,
             'category_id'     => $this->category_id,
             'category'        => new TopicCategoryResource($this->whenLoaded('category')),
-            $this->mergeWhen($this->relationLoaded('content'),
-                $this->relationLoaded('content') ? new TopicContentResource($this->whenLoaded('content')) : null),
+            $this->mergeWhen($this->relationLoaded('extension'),
+                $this->relationLoaded('extension') ? new TopicExtensionResource($this->whenLoaded('extension')) : null),
         ];
     }
 }

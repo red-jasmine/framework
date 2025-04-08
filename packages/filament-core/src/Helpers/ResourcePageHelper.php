@@ -63,8 +63,10 @@ trait ResourcePageHelper
     public static function callResolveRecord(Model $model) : Model
     {
         if ($model->relationLoaded('extension')) {
+
             foreach ($model->extension->getAttributes() as $key => $value) {
                 $model->setAttribute($key, $model->extension->{$key});
+
             }
         }
         return $model;
@@ -481,10 +483,9 @@ trait ResourcePageHelper
                                                   ->required()
                                                   ->default(0),
 
-                        Forms\Components\Radio::make('is_show')
+                        Forms\Components\Toggle::make('is_show')
                                               ->label(__('red-jasmine-support::category.fields.is_show'))
                                               ->required()
-                                              ->boolean()
                                               ->inline()
                                               ->default(true),
                         Forms\Components\ToggleButtons::make('status')

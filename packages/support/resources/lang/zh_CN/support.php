@@ -28,6 +28,11 @@ return [
             'reject'     => '审批拒绝',
             'revoke'     => '审批撤销',
         ],
+        'content_type'    => [
+            'markdown' => 'markdown',
+            'rich'     => '富文本',
+            'text'     => '文字',
+        ],
     ],
 
     'fields' => [

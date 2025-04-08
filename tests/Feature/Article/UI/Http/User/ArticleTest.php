@@ -2,7 +2,7 @@
 
 
 use Illuminate\Testing\TestResponse;
-use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 
 
 test('can create a article', function () {
@@ -14,7 +14,7 @@ test('can create a article', function () {
         'image'       => fake()->imageUrl(),
         'description' => fake()->text(),
         'keywords'    => fake()->words(5, true),
-        'contentType' => ArticleContentTypeEnum::RICH->value,
+        'contentType' => ContentTypeEnum::RICH->value,
         'content'     => fake()->randomHtml(),
     ]);
 
@@ -45,7 +45,7 @@ test('can update a article', function ($id) {
         'image'       => fake()->imageUrl(),
         'description' => fake()->text(),
         'keywords'    => fake()->words(5, true),
-        'contentType' => ArticleContentTypeEnum::RICH->value,
+        'contentType' => ContentTypeEnum::RICH->value,
         'content'     => fake()->randomHtml(),
     ]);
 

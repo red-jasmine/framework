@@ -10,9 +10,9 @@ use RedJasmine\Article\Domain\Data\ArticleTagData;
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Models\ArticleCategory;
 use RedJasmine\Article\Domain\Models\ArticleTag;
-use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
 use RedJasmine\Article\Domain\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Article\Domain\Models\Enums\TagStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 
 beforeEach(function () {
 
@@ -101,7 +101,7 @@ test('can create a article', function (ArticleCategory $articleCategory, Article
     $command->image       = fake()->imageUrl();
     $command->description = fake()->text();
     $command->keywords    = fake()->words(5, true);
-    $command->contentType = ArticleContentTypeEnum::RICH;
+    $command->contentType = ContentTypeEnum::RICH;
     $command->content     = fake()->randomHtml();
     $command->categoryId  = $articleCategory->id;
     $command->tags        = [$articleTag->id];
@@ -128,7 +128,7 @@ test('can update a article', function (Article $article) {
     $command->image       = fake()->imageUrl();
     $command->description = fake()->text();
     $command->keywords    = fake()->words(5, true);
-    $command->contentType = ArticleContentTypeEnum::RICH;
+    $command->contentType = ContentTypeEnum::RICH;
     $command->content     = fake()->randomHtml();
 
     $command->tags = $article->tags->pluck('id')->toArray();

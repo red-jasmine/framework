@@ -37,7 +37,7 @@ class TopicReadRepository extends QueryBuilderReadRepository implements TopicRea
 
     protected function allowedIncludes(?Query $query = null) : ?array
     {
-        return ['content', 'category'];
+        return ['extension', 'category'];
     }
 
 

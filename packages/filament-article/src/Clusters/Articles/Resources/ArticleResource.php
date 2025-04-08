@@ -14,7 +14,6 @@ use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
 use RedJasmine\Article\Application\Services\Article\Commands\ArticlePublishCommand;
 use RedJasmine\Article\Domain\Data\ArticleData;
 use RedJasmine\Article\Domain\Models\Article;
-use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
 use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
 use RedJasmine\FilamentArticle\Clusters\Articles;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages;
@@ -23,6 +22,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 
 class ArticleResource extends Resource
 {
@@ -87,22 +87,22 @@ class ArticleResource extends Resource
                                                       ->required()
                                                       ->inline()
                                                       ->live()
-                                                      ->default(ArticleContentTypeEnum::RICH->value)
-                                                      ->useEnum(ArticleContentTypeEnum::class),
+                                                      ->default(ContentTypeEnum::RICH)
+                                                      ->useEnum(ContentTypeEnum::class),
 
 
                         Forms\Components\RichEditor::make('content')
                                                    ->visible(fn(Forms\Get $get
-                                                   ) : bool => $get('content_type') === ArticleContentTypeEnum::RICH->value)
+                                                   ) : bool => $get('content_type') === ContentTypeEnum::RICH)
                                                    ->required()->label(__('red-jasmine-article::article.fields.content')),
                         Forms\Components\MarkdownEditor::make('content')
                                                        ->visible(fn(Forms\Get $get
-                                                       ) : bool => $get('content_type') === ArticleContentTypeEnum::MARKDOWN->value)
+                                                       ) : bool => $get('content_type') === ContentTypeEnum::MARKDOWN)
                                                        ->required()->label(__('red-jasmine-article::article.fields.content')),
 
                         Forms\Components\Textarea::make('content')
                                                  ->visible(fn(Forms\Get $get
-                                                 ) : bool => $get('content_type') === ArticleContentTypeEnum::TEXT->value)
+                                                 ) : bool => $get('content_type') === ContentTypeEnum::TEXT)
                                                  ->required()->label(__('red-jasmine-article::article.fields.content')),
 
 
@@ -150,7 +150,7 @@ class ArticleResource extends Resource
                         Forms\Components\Toggle::make('is_show')
                                                ->label(__('red-jasmine-article::article.fields.is_show'))
                                                ->required()
-                                               ->default(false),
+                                               ->default(true),
                         Forms\Components\TextInput::make('sort')
                                                   ->label(__('red-jasmine-article::article.fields.sort'))
                                                   ->required()

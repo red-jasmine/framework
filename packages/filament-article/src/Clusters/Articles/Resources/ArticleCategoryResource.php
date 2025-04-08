@@ -2,22 +2,16 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Article\Application\Services\ArticleCategory\ArticleCategoryApplicationService;
 use RedJasmine\Article\Domain\Models\ArticleCategory;
 use RedJasmine\FilamentArticle\Clusters\Articles;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\RelationManagers;
-use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Support\Domain\Data\BaseCategoryData;
-use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
 
 
 class ArticleCategoryResource extends Resource

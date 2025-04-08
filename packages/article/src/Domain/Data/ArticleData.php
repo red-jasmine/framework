@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Article\Domain\Data;
 
-use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -17,10 +17,10 @@ class ArticleData extends Data
     public string $title;
 
     /**
-     * @var ArticleContentTypeEnum
+     * @var ContentTypeEnum
      */
-    #[WithCast(EnumCast::class, ArticleContentTypeEnum::class)]
-    public ArticleContentTypeEnum $contentType = ArticleContentTypeEnum::RICH;
+    #[WithCast(EnumCast::class, ContentTypeEnum::class)]
+    public ContentTypeEnum $contentType = ContentTypeEnum::RICH;
 
     public string $content;
 
