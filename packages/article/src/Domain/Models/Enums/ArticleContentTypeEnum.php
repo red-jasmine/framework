@@ -8,8 +8,8 @@ enum ArticleContentTypeEnum: string
 {
     use EnumsHelper;
 
-    case  MARKDOWN = 'markdown';
     case  RICH = 'rich';
+    case  MARKDOWN = 'markdown';
     case  TEXT = 'text';
 
 
@@ -17,8 +17,8 @@ enum ArticleContentTypeEnum: string
     {
 
         return [
-            self::MARKDOWN->value => __('red-jasmine-article::article.enums.content_type.markdown'),
             self::RICH->value     => __('red-jasmine-article::article.enums.content_type.rich'),
+            self::MARKDOWN->value => __('red-jasmine-article::article.enums.content_type.markdown'),
             self::TEXT->value     => __('red-jasmine-article::article.enums.content_type.text'),
         ];
     }

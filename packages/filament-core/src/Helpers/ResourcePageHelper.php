@@ -67,9 +67,6 @@ trait ResourcePageHelper
                 $model->setAttribute($key, $model->extension->{$key});
             }
         }
-        if($model->isRelation('tags')){
-            $model->setAttribute('tags', $model->tags?->pluck('id')->toArray());
-        }
         return $model;
     }
 
@@ -180,10 +177,7 @@ trait ResourcePageHelper
         try {
             $resource       = static::getResource();
             $commandService = app($resource::getService());
-            $data['id']     = $record->getKey();
-
-            $command = ($resource::getUpdateCommand())::from($data);
-
+            $command        = ($resource::getUpdateCommand())::from($data);
             $command->setKey($record->getKey());
             return $commandService->update($command);
         } catch (ValidationException $exception) {
@@ -434,62 +428,77 @@ trait ResourcePageHelper
     }
 
 
-
     public static function categoryForm(Form $form) : Form
     {
         return $form
             ->columns(1)
             ->schema([
+                Forms\Components\Split::make([
 
-                SelectTree::make('parent_id')
-                          ->label(__('red-jasmine-support::category.fields.parent_id'))
-                          ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
-                              modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                  fn($query, $value) => $query->where('id', '<>', $value)),
-                              modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                  fn($query, $value) => $query->where('id', '<>', $value)),
-                          )
-                          ->searchable()
-                          ->default(0)
-                          ->enableBranchNode()
-                          ->parentNullValue(0)
-                          ->dehydrateStateUsing(fn($state) => (int) $state),
+                    Forms\Components\Section::make([
+                        SelectTree::make('parent_id')
+                                  ->label(__('red-jasmine-support::category.fields.parent_id'))
+                                  ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
+                                      modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
+                                          fn($query, $value) => $query->where('id', '<>', $value)),
+                                      modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
+                                          fn($query, $value) => $query->where('id', '<>', $value)),
+                                  )
+                                  ->searchable()
+                                  ->default(0)
+                                  ->enableBranchNode()
+                                  ->parentNullValue(0)
+                                  ->dehydrateStateUsing(fn($state) => (int) $state),
 
-                Forms\Components\TextInput::make('name')
-                                          ->label(__('red-jasmine-support::category.fields.name'))
-                                          ->required()
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                                          ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
-                Forms\Components\FileUpload::make('image')
-                                           ->label(__('red-jasmine-support::category.fields.image'))
-                                           ->image(),
-                Forms\Components\TextInput::make('cluster')
-                                          ->label(__('red-jasmine-support::category.fields.cluster'))
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('sort')
-                                          ->label(__('red-jasmine-support::category.fields.sort'))
-                                          ->required()
-                                          ->default(0),
-                Forms\Components\Radio::make('is_leaf')
-                                      ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                      ->required()
-                                      ->boolean()
-                                      ->inline()
-                                      ->default(false),
-                Forms\Components\Radio::make('is_show')
-                                      ->label(__('red-jasmine-support::category.fields.is_show'))
-                                      ->required()
-                                      ->boolean()
-                                      ->inline()
-                                      ->default(true),
-                Forms\Components\ToggleButtons::make('status')
-                                              ->label(__('red-jasmine-support::category.fields.status'))
+                        Forms\Components\TextInput::make('name')
+                                                  ->label(__('red-jasmine-support::category.fields.name'))
+                                                  ->required()
+                                                  ->maxLength(255),
+
+                        Forms\Components\ToggleButtons::make('is_leaf')
+                                              ->label(__('red-jasmine-support::category.fields.is_leaf'))
                                               ->required()
+                                              ->boolean()
                                               ->inline()
+                            ->inlineLabel()
+                                              ->default(false),
 
-                                              ->default(CategoryStatusEnum::ENABLE)
-                                              ->useEnum(CategoryStatusEnum::class),
+                        Forms\Components\TextInput::make('description')
+                                                  ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
+                        Forms\Components\FileUpload::make('image')
+                                                   ->label(__('red-jasmine-support::category.fields.image'))
+                                                   ->image(),
+                        Forms\Components\TextInput::make('cluster')
+                                                  ->label(__('red-jasmine-support::category.fields.cluster'))
+                                                  ->maxLength(255),
+
+                    ]),
+                    Forms\Components\Section::make([
+
+
+                        Forms\Components\TextInput::make('sort')
+                                                  ->label(__('red-jasmine-support::category.fields.sort'))
+                                                  ->required()
+                                                  ->default(0),
+
+                        Forms\Components\Radio::make('is_show')
+                                              ->label(__('red-jasmine-support::category.fields.is_show'))
+                                              ->required()
+                                              ->boolean()
+                                              ->inline()
+                                              ->default(true),
+                        Forms\Components\ToggleButtons::make('status')
+                                                      ->label(__('red-jasmine-support::category.fields.status'))
+                                                      ->required()
+                                                      ->inline()
+                                                      ->default(CategoryStatusEnum::ENABLE)
+                                                      ->useEnum(CategoryStatusEnum::class),
+
+                    ])->grow(false),
+
+
+                ])->columnSpanFull(),
+
             ]);
     }
 

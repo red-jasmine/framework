@@ -9,7 +9,7 @@ enum ApprovalStatusEnum: string
 
     use EnumsHelper;
 
-    case PROCESSING = 'processing';
+    case PROCESSING = 'processing'; //
     case PASS = 'pass';
     case REJECT = 'reject';
     case REVOKE = 'revoke';
@@ -26,4 +26,13 @@ enum ApprovalStatusEnum: string
         ];
     }
 
+    public static function colors() : array
+    {
+        return [
+            self::PROCESSING->value => 'primary',
+            self::PASS->value       => 'success',
+            self::REJECT->value     => 'warning',
+            self::REVOKE->value     => 'info',
+        ];
+    }
 }

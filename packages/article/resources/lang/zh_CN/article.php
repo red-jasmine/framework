@@ -2,12 +2,12 @@
 
 return [
 
-    'labels'  => [
+    'labels'   => [
 
         'article' => '文章'
 
     ],
-    'fields'  => [
+    'fields'   => [
         'id'              => '文章ID',
         'owner'           => '所属者',
         'owner_type'      => '所属者类型',
@@ -22,13 +22,14 @@ return [
         'is_top'          => '是否置顶',
         'is_show'         => '是否展示',
         'sort'            => '排序',
+        'publish_time'    => '发布时间',
         'approval_status' => '审批状态',
         'version'         => '版本',
         'content_type'    => '内容类型',
         'content'         => '内容',
         'tags'            => '标签',
     ],
-    'enums'   => [
+    'enums'    => [
         'content_type' => [
             'markdown' => 'markdown',
             'rich'     => '富文本',
@@ -41,8 +42,8 @@ return [
         ],
 
     ],
-    'options' => [
-
+    'commands' => [
+        'publish' => '发布'
 
     ],
 

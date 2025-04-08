@@ -9,15 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use RedJasmine\Article\Domain\Models\Enums\ArticleStatusEnum;
 use RedJasmine\Article\Domain\Models\Extensions\ArticleExtension;
+use RedJasmine\Article\Exceptions\ArticleException;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasApproval;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasTags;
 
 class Article extends Model implements OwnerInterface, OperatorInterface
 {
@@ -36,26 +40,10 @@ class Article extends Model implements OwnerInterface, OperatorInterface
 
     use SoftDeletes;
 
-    protected static function boot() : void
-    {
-        parent::boot();
+    use HasTags;
 
-        static::saving(callback: function (Article $article) {
-            if ($article->relationLoaded('tags')) {
-                if ($article->tags?->count() > 0) {
-                    if (!is_array($article->tags->first())) {
-                        $article->tags()->sync($article->tags);
-                    } else {
-                        $article->tags()->sync($article->tags->pluck('id')->toArray());
-                    }
+    use HasApproval;
 
-                } else {
-                    $article->tags()->sync([]);
-                }
-                $article->load('tags');
-            }
-        });
-    }
 
     public function newInstance($attributes = [], $exists = false) : Article
     {
@@ -75,6 +63,7 @@ class Article extends Model implements OwnerInterface, OperatorInterface
         return [
             'is_top'          => 'boolean',
             'is_show'         => 'boolean',
+            'publish_time'    => 'datetime',
             'status'          => ArticleStatusEnum::class,
             'approval_status' => ApprovalStatusEnum::class,
         ];
@@ -112,9 +101,27 @@ class Article extends Model implements OwnerInterface, OperatorInterface
     }
 
 
-    public function publish() : void
+    public function isAllowPublish() : bool
     {
-        $this->status = ArticleStatusEnum::PUBLISHED;
+        if ($this->approval_status !== ApprovalStatusEnum::PASS) {
+            return false;
+        }
+
+        if ($this->status === ArticleStatusEnum::PUBLISHED) {
+            return false;
+        }
+
+        return true;
 
     }
+
+    public function publish() : void
+    {
+        if (!$this->isAllowPublish()) {
+            throw new ArticleException();
+        }
+        $this->status       = ArticleStatusEnum::PUBLISHED;
+        $this->publish_time = Carbon::now();
+    }
 }
+

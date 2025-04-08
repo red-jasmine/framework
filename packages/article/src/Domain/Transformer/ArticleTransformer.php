@@ -33,6 +33,7 @@ class ArticleTransformer implements TransformerInterface
         $model->extension->content_type = $data->contentType;
         $model->extension->content      = $data->content;
         $model->setRelation('tags', collect($data->tags));
+
         return $model;
 
     }

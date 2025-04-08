@@ -2,13 +2,16 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
+use RedJasmine\Article\Application\Services\Article\Commands\ArticlePublishCommand;
 use RedJasmine\Article\Domain\Data\ArticleData;
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Models\Enums\ArticleContentTypeEnum;
@@ -92,37 +95,52 @@ class ArticleResource extends Resource
                                                    ->visible(fn(Forms\Get $get
                                                    ) : bool => $get('content_type') === ArticleContentTypeEnum::RICH->value)
                                                    ->required()->label(__('red-jasmine-article::article.fields.content')),
-                        Forms\Components\Textarea::make('content')
-                                                 ->visible(fn(Forms\Get $get
-                                                 ) : bool => $get('content_type') === ArticleContentTypeEnum::TEXT->value)
-                                                 ->required()->label(__('red-jasmine-article::article.fields.content')),
                         Forms\Components\MarkdownEditor::make('content')
                                                        ->visible(fn(Forms\Get $get
                                                        ) : bool => $get('content_type') === ArticleContentTypeEnum::MARKDOWN->value)
                                                        ->required()->label(__('red-jasmine-article::article.fields.content')),
+
+                        Forms\Components\Textarea::make('content')
+                                                 ->visible(fn(Forms\Get $get
+                                                 ) : bool => $get('content_type') === ArticleContentTypeEnum::TEXT->value)
+                                                 ->required()->label(__('red-jasmine-article::article.fields.content')),
 
 
                     ]),
                     Forms\Components\Section::make([
                         ...static::ownerFormSchemas(),
 
-                        Forms\Components\Select::make('category_id')
-                                               ->label(__('red-jasmine-article::article.fields.category_id'))
-                                               ->relationship('category', 'name'),
-                        // TODO 没有生效？
+
+                        SelectTree::make('category_id')
+                                  ->label(__('red-jasmine-article::article.fields.category_id'))
+                                  ->relationship(relationship: 'category', titleAttribute: 'name', parentAttribute: 'parent_id',
+                                  )
+                                  ->searchable()
+                                  ->default(null)
+                                  ->enableBranchNode()
+                                  ->parentNullValue(0)
+                                  ->dehydrateStateUsing(fn($state) => (int) $state),
+
                         Forms\Components\Select::make('tags')
                                                ->multiple()
                                                ->label(__('red-jasmine-article::article.fields.tags'))
                                                ->relationship(
                                                    name: 'tags',
                                                    titleAttribute: 'name',
-                                                   modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('is_show', true),
                                                )
-                                               ->dehydrated()
                                                ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                                               ->afterStateHydrated(function (?Model $record, Component $component, $state) {
+                                if ($record) {
+                                    $component->state($record->tags?->pluck('id')
+                                                                   ->map(static fn($key) : string => (string) $key)
+                                                                   ->toArray());
+                                }
+
+                            })
                                                ->saveRelationshipsUsing(null) // 不进行自动保存
                                                ->preload()
-
+                                               ->dehydrated()
+                                               ->default([])
                         ,
 
                         Forms\Components\Toggle::make('is_top')
@@ -197,8 +215,9 @@ class ArticleResource extends Resource
                                          ->label(__('red-jasmine-article::article.fields.status'))
                                          ->useEnum(),
                 Tables\Columns\TextColumn::make('approval_status')
+                                         ->useEnum()
                                          ->label(__('red-jasmine-article::article.fields.approval_status'))
-                                         ->searchable(),
+                ,
                 ...static::operateTableColumns()
 
             ])
@@ -207,6 +226,19 @@ class ArticleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                \RedJasmine\FilamentCore\Resources\Actions\Tables\ApprovalAction::make('approval')
+                                                                         ->service(static::$service),
+                \RedJasmine\FilamentCore\Resources\Actions\Tables\SubmitApprovalAction::make('submit-approval')
+                                                                                ->service(static::$service),
+                Tables\Actions\Action::make('publish')
+                                    ->label(__('red-jasmine-article::article.commands.publish'))
+                                     ->action(function ($record) {
+
+                    $command = new ArticlePublishCommand();
+                    $command->setKey($record->getKey());
+                    app(static::$service)->publish($command);
+
+                })->visible(fn ($record)=>$record->isAllowPublish()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -8,6 +8,8 @@ use RedJasmine\Article\Domain\Repositories\ArticleReadRepositoryInterface;
 use RedJasmine\Article\Domain\Repositories\ArticleRepositoryInterface;
 use RedJasmine\Article\Domain\Transformer\ArticleTransformer;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Application\Commands\ApprovalCommandHandler;
+use RedJasmine\Support\Application\Commands\SubmitApprovalCommandHandler;
 
 class ArticleApplicationService extends ApplicationService
 {
@@ -22,7 +24,9 @@ class ArticleApplicationService extends ApplicationService
 
 
     protected static $macros = [
-        'publish' => ArticlePublishCommandHandler::class,
+        'approval'       => ApprovalCommandHandler::class,
+        'submitApproval' => SubmitApprovalCommandHandler::class,
+        'publish'        => ArticlePublishCommandHandler::class,
     ];
 
 

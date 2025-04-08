@@ -20,4 +20,14 @@ enum ArticleStatusEnum: string
             self::DELETED->value   => __('red-jasmine-article::article.enums.status.deleted'),
         ];
     }
+
+    public static function colors() : array
+    {
+        return [
+            self::DRAFT->value     => 'info',
+            self::PUBLISHED->value => 'success',
+            self::DELETED->value   => 'danger',
+        ];
+
+    }
 }
