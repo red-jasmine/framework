@@ -31,6 +31,7 @@ class TopicResource extends JsonResource
             //'updater_id'      => $this->updater_id,
             //'created_at'      => $this->created_at,
             //'updated_at'      => $this->updated_at,
+            'tags'            => TopicTagResource::collection($this->whenLoaded('tags')),
             'category_id'     => $this->category_id,
             'category'        => new TopicCategoryResource($this->whenLoaded('category')),
             $this->mergeWhen($this->relationLoaded('extension'),
