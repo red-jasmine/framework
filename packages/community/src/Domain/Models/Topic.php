@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use RedJasmine\Community\Domain\Models\Enums\TopicStatusEnum;
 use RedJasmine\Community\Domain\Models\Extensions\TopicExtension;
+use RedJasmine\Community\Exceptions\TopicException;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -100,6 +102,33 @@ class Topic extends Model implements OwnerInterface, OperatorInterface
             'topic_id',
             'topic_tag_id'
         )->withTimestamps();
+    }
+
+    public function isAllowPublish() : bool
+    {
+        if ($this->approval_status !== ApprovalStatusEnum::PASS) {
+            return false;
+        }
+
+        if ($this->status === TopicStatusEnum::PUBLISH) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * @return void
+     * @throws TopicException
+     */
+    public function publish() : void
+    {
+        if (!$this->isAllowPublish()) {
+            throw new TopicException();
+        }
+        $this->status       = TopicStatusEnum::PUBLISH;
+        $this->publish_time = Carbon::now();
     }
 
 

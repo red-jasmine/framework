@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Community\Application\Services\Topic;
 
+use RedJasmine\Article\Application\Services\Article\Commands\TopicPublishCommandHandler;
 use RedJasmine\Community\Domain\Models\Topic;
 use RedJasmine\Community\Domain\Transformer\TopicTransformer;
 use RedJasmine\Comnunity\Domain\Repositories\TopicReadRepositoryInterface;
@@ -23,6 +24,7 @@ class TopicApplicationService extends ApplicationService
     protected static string $modelClass = Topic::class;
 
     protected static $macros = [
+        'publish'        => TopicPublishCommandHandler::class,
         'approval'       => ApprovalCommandHandler::class,
         'submitApproval' => SubmitApprovalCommandHandler::class,
     ];
