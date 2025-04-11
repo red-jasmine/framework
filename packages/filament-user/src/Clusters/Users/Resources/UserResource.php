@@ -137,7 +137,7 @@ class UserResource extends Resource
                 ,
                 Tables\Columns\TextColumn::make('birthday')
                                          ->label(__('red-jasmine-user::user.fields.birthday'))
-                                         ->date()
+                                         ->date('Y-m-d')
                 ,
 
                 Tables\Columns\TextColumn::make('type')
