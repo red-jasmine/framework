@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
+use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use Illuminate\Notifications\Notifiable;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
@@ -29,6 +30,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
         // TODO 手机号、邮箱、 加密
         return [
+            'gender'   => UserGenderEnum::class,
             'type'     => UserTypeEnum::class,
             'status'   => UserStatusEnum::class,
             'password' => 'hashed',

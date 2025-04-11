@@ -51,6 +51,7 @@ class UserApplicationService extends ApplicationService
 
 
     protected static $macros = [
+        'update'          => UserUpdateBaseInfoCommandHandler::class,
         'getSocialites'   => GetSocialitesQueryHandler::class,
         'register'        => UserRegisterCommandHandler::class,
         'login'           => UserLoginCommandHandler::class,

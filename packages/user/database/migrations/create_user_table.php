@@ -10,7 +10,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->comment('用户ID');
+            $table->unsignedBigInteger('id')->primary()->comment('用户ID');
             $table->string('name', 64)->comment('账号');
             $table->string('phone_number', 64)->nullable()->comment('手机号');
             $table->string('email')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('biography')->nullable()->comment('个人介绍');
             $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
-            $table->string('status')->default(UserStatusEnum::NORMAL)->comment(UserStatusEnum::comments('状态'));
+            $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
             $table->rememberToken();
@@ -34,6 +34,7 @@ return new class extends Migration {
 
         });
     }
+
     public function down()
     {
         Schema::dropIfExists('users');

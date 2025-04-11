@@ -11,10 +11,9 @@ enum UserStatusEnum: string
 {
     use EnumsHelper;
 
-    // 正常的
-    // 未激活
+
     case UNACTIVATED = 'unactivated';
-    case NORMAL = 'normal';
+    case ACTIVATED = 'activated';
     case SUSPENDED = 'suspended';
     case DISABLED = 'disabled';
     case CANCELED = 'canceled';
@@ -23,12 +22,11 @@ enum UserStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::UNACTIVATED->value => '待激活',
-            self::NORMAL->value      => '正常',
-            self::SUSPENDED->value   => '停用',
-            self::DISABLED->value    => '禁用',
-            self::CANCELED->value    => '已注销',
-
+            self::UNACTIVATED->value => __('red-jasmine-user::user.enums.status.unactivated'),
+            self::ACTIVATED->value   => __('red-jasmine-user::user.enums.status.activated'),
+            self::SUSPENDED->value   => __('red-jasmine-user::user.enums.status.suspended'),
+            self::DISABLED->value    => __('red-jasmine-user::user.enums.status.disabled'),
+            self::CANCELED->value    => __('red-jasmine-user::user.enums.status.canceled'),
         ];
     }
 

@@ -8,6 +8,10 @@ use RedJasmine\User\Commands\UserCommand;
 
 class UserPackageServiceProvider extends PackageServiceProvider
 {
+    public static string $name = 'red-jasmine-user';
+
+    public static string $viewNamespace = 'red-jasmine-user';
+
     public function configurePackage(Package $package) : void
     {
         /*
@@ -18,6 +22,7 @@ class UserPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-user')
             ->hasConfigFile()
+            ->hasTranslations()
             ->hasViews()
             ->hasRoutes(['api'])
             ->hasMigrations(['create_user_table'])

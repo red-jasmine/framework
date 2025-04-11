@@ -21,9 +21,9 @@ enum UserTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::COMPANY->value      => '公司',
-            self::ORGANIZATION->value => '行政机构',
-            self::PERSONAL->value     => '个人',
+            self::COMPANY->value      => __('red-jasmine-user::user.enums.type.company'),
+            self::ORGANIZATION->value => __('red-jasmine-user::user.enums.type.organization'),
+            self::PERSONAL->value     => __('red-jasmine-user::user.enums.type.personal'),
         ];
 
     }

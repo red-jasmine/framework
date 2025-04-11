@@ -5,6 +5,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Domain\Models\User;
 use Throwable;
 
 class UserUpdateBaseInfoCommandHandler extends CommandHandler
@@ -16,7 +17,7 @@ class UserUpdateBaseInfoCommandHandler extends CommandHandler
     }
 
 
-    public function handle(UserUpdateBaseInfoCommand $command) : bool
+    public function handle(UserUpdateBaseInfoCommand $command) : User
     {
         $this->beginDatabaseTransaction();
 
@@ -37,7 +38,7 @@ class UserUpdateBaseInfoCommandHandler extends CommandHandler
             throw  $throwable;
         }
 
-        return true;
+        return $user;
 
     }
 }
