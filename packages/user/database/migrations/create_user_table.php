@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('用户ID');
             $table->string('name', 64)->comment('账号');
-            $table->string('phone_number', 64)->nullable()->comment('手机号');
+            $table->string('mobile', 64)->nullable()->comment('手机号');
             $table->string('email')->nullable();
             $table->string('password')->nullable();
             $table->string('nickname', 64)->nullable()->comment('昵称');
@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->timestamps();
             // 邀请人
             $table->index(['name'], 'idx_name');
-            $table->index(['phone_number'], 'idx_phone_number');
+            $table->index(['mobile'], 'idx_mobile');
             $table->index(['email'], 'idx_email');
             $table->comment('用户表');
 

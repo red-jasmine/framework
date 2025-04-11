@@ -10,7 +10,7 @@ return [
         'id'                => '用户ID',
         'name'              => '用户名',
         'email'             => '邮箱',
-        'phone_number'      => '手机号',
+        'mobile'      => '手机号',
         'password'          => '密码',
         'remember_token'    => '记住我',
         'created_at'        => '创建时间',

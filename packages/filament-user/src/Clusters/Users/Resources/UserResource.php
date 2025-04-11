@@ -76,8 +76,8 @@ class UserResource extends Resource
                                                   ->maxLength(64)
                                                   ->disabled()
                         ,
-                        Forms\Components\TextInput::make('phone_number')
-                                                  ->label(__('red-jasmine-user::user.fields.phone_number'))
+                        Forms\Components\TextInput::make('mobile')
+                                                  ->label(__('red-jasmine-user::user.fields.mobile'))
                                                   ->maxLength(64)
                                                   ->disabled()
                         ,
@@ -120,8 +120,8 @@ class UserResource extends Resource
                                          ->label(__('red-jasmine-user::user.fields.name'))
                                          ->copyable()
                 ,
-                Tables\Columns\TextColumn::make('phone_number')
-                                         ->label(__('red-jasmine-user::user.fields.phone_number'))
+                Tables\Columns\TextColumn::make('mobile')
+                                         ->label(__('red-jasmine-user::user.fields.mobile'))
                 ,
                 Tables\Columns\TextColumn::make('email')
                                          ->label(__('red-jasmine-user::user.fields.email'))

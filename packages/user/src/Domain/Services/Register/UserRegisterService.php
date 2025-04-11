@@ -18,9 +18,12 @@ class UserRegisterService
     {
         $provider = UserRegisterServiceProvider::create($data->provider);
 
+        $provider->preCheck($data);
+
+
         $userData = $provider->register($data);
 
-       return $this->makeUser($userData);
+        return $this->makeUser($userData);
     }
 
 
@@ -32,27 +35,21 @@ class UserRegisterService
 
         // 验证是否允许注册
 
-        $user->type         = $data->type;
+        $user->type     = $data->type;
         $user->name     = $data->name ?? $this->buildUserName();
-        $user->nickname     = $data->nickname ?? $this->buildNickname();
-        $user->email        = $data->email ?? null;
-        $user->phone_number = $data->phoneNumber ?? null;
-        $user->password     = $data->password ?? null;
-        $user->avatar       = $data->avatar ?? null;
-        $user->gender       = $data->gender ?? null;
-        $user->birthday     = $data->birthday ?? null;
+        $user->nickname = $data->nickname ?? $this->buildNickname();
+        $user->email    = $data->email ?? null;
+        $user->mobile   = $data->mobile ?? null;
+        $user->password = $data->password ?? null;
+        $user->avatar   = $data->avatar ?? null;
+        $user->gender   = $data->gender ?? null;
+        $user->birthday = $data->birthday ?? null;
         // 验证是否允许注册
 
         // 验证信息
 
 
         return $user;
-    }
-
-
-    public function user()
-    {
-
     }
 
     protected function buildUserName() : string

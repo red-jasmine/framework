@@ -2,9 +2,9 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\User\Domain\Data\UserData;
+use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 
-class UserRegisterCommand extends UserData
+class UserRegisterCommand extends UserRegisterData
 {
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\User\Domain\Services\Login\Providers;
+namespace RedJasmine\User\Domain\Services\Register\Providers;
 
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
