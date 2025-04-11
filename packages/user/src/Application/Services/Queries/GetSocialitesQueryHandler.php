@@ -4,7 +4,7 @@ namespace RedJasmine\User\Application\Services\Queries;
 
 use RedJasmine\Support\Application\Queries\QueryHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\User\Application\Services\UserQueryService;
+use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Domain\Services\UserSocialiteService;
 
 class GetSocialitesQueryHandler extends QueryHandler
@@ -12,7 +12,7 @@ class GetSocialitesQueryHandler extends QueryHandler
 
 
     public function __construct(
-        protected UserQueryService $service,
+        protected UserApplicationService $service,
         protected UserSocialiteService $userSocialiteService
 
     ) {
@@ -20,9 +20,7 @@ class GetSocialitesQueryHandler extends QueryHandler
 
     public function handle(GetSocialitesQuery $query)
     {
-
-
-        $user = $this->service->repository->find(FindQuery::from(['id' => $query->id]));
+        $user = $this->service->readRepository->find(FindQuery::from(['id' => $query->id]));
 
         return $this->userSocialiteService->getBinds($user);
     }

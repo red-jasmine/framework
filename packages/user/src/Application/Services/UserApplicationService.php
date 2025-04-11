@@ -3,6 +3,7 @@
 namespace RedJasmine\User\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
@@ -15,11 +16,15 @@ use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommandHandler;
+use RedJasmine\User\Application\Services\Queries\GetSocialitesQuery;
+use RedJasmine\User\Application\Services\Queries\GetSocialitesQueryHandler;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 
 /**
+ * @method getSocialites(GetSocialitesQuery $query)
  * @see UserRegisterCommandHandler::handle()
  * @method User register(UserRegisterCommand $command)
  * @see UserLoginCommandHandler::handle()
@@ -30,22 +35,23 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool setPassword(UserSetPasswordCommand $command)
  *
  */
-class UserCommandService extends ApplicationCommandService
+class UserApplicationService extends ApplicationService
 {
 
+    public static string $hookNamePrefix = 'user.application.user';
 
     public function __construct(
         public UserRepositoryInterface $repository,
+        public UserReadRepositoryInterface $readRepository,
 
     ) {
     }
 
     protected static string $modelClass = User::class;
 
-    public static string $hookNamePrefix = 'user.application.command.login';
-
 
     protected static $macros = [
+        'getSocialites'   => GetSocialitesQueryHandler::class,
         'register'        => UserRegisterCommandHandler::class,
         'login'           => UserLoginCommandHandler::class,
         'loginOrRegister' => UserLoginOrRegisterCommandHandler::class,

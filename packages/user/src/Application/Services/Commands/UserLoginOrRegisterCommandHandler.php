@@ -5,9 +5,9 @@ namespace RedJasmine\User\Application\Services\Commands;
 use Illuminate\Support\Str;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserBindCommand;
 use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\UserCommandService;
+use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
@@ -17,7 +17,7 @@ use Throwable;
 class UserLoginOrRegisterCommandHandler extends CommandHandler
 {
     public function __construct(
-        public UserCommandService $service,
+        public UserApplicationService $service,
         public UserLoginService $loginService,
         public UserRegisterService $userRegisterService
     ) {

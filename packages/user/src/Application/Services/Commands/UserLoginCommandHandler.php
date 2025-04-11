@@ -2,15 +2,15 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
-use RedJasmine\User\Application\Services\UserCommandService;
+use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
 
 class UserLoginCommandHandler extends CommandHandler
 {
     public function __construct(
-        public UserCommandService $service,
+        public UserApplicationService $service,
         public UserLoginService $loginService
     ) {
     }

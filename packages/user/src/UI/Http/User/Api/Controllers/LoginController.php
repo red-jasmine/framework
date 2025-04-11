@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
-use RedJasmine\User\Application\Services\UserCommandService;
+use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\UI\Http\User\Api\Resources\UserBaseResource;
 
 class LoginController extends Controller
@@ -16,7 +16,7 @@ class LoginController extends Controller
 
 
     public function __construct(
-        protected UserCommandService $commandService
+        protected UserApplicationService $commandService
     ) {
     }
 

@@ -48,11 +48,10 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     public function getJWTCustomClaims() : array
     {
         return [
-            'name' => $this->name,
+            'name'     => $this->name,
             'nickname' => $this->nickname
         ];
     }
-
 
 
     public function login() : void
@@ -89,7 +88,8 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         isset($data->birthday) ? $this->birthday = $data->birthday : null;
         isset($data->biography) ? $this->biography = $data->biography : null;
     }
-    public function isAdmin()
+
+    public function isAdmin() : bool
     {
         return true;
 
