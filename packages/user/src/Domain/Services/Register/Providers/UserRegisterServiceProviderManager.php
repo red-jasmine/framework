@@ -9,7 +9,8 @@ class UserRegisterServiceProviderManager extends ServiceManager
 {
 
     protected const array PROVIDERS = [
-        NameRegisterServiceProvider::NAME => NameRegisterServiceProvider::class,
+        NameRegisterServiceProvider::NAME     => NameRegisterServiceProvider::class,
+        PasswordRegisterServiceProvider::NAME => PasswordRegisterServiceProvider::class,
 
         // 短信注册服务
         // 社交账号注册服务

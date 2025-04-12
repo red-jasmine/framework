@@ -12,12 +12,21 @@ class UserLoginService
 {
 
 
+    public function attempt(Data\UserLoginData $data) : User
+    {
+        // 使用服务提供者的登陆方法 进行登陆
+        $provider = UserLoginServiceProvider::create($data->provider);
+
+        return $provider->login($data);
+
+    }
+
+
     public function login(Data\UserLoginData $data) : UserTokenData
     {
 
         // 使用服务提供者的登陆方法 进行登陆
-        $user = UserLoginServiceProvider::create($data->provider)->login($data);
-
+        $user = $this->attempt($data);
         // 返回 token
         return $this->token($user);
 

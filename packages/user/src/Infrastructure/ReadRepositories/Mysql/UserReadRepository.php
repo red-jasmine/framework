@@ -16,6 +16,17 @@ class UserReadRepository extends QueryBuilderReadRepository implements UserReadR
         return $this->query(null)->where('name', $name)->first();
     }
 
+    public function findByEmail(string $email) : ?User
+    {
+        return $this->query(null)->where('email', $email)->first();
+    }
+
+    public function findByMobile(string $mobile) : ?User
+    {
+        return $this->query(null)->where('mobile', $mobile)->first();
+    }
+
+
     public function findByAccount(string $account) : ?User
     {
         return $this->query()->whereAny(['name', 'email', 'mobile'], $account)->first();
