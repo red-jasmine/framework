@@ -9,12 +9,15 @@ use RedJasmine\Wallet\Application\Services\Commands\WalletCreateCommandHandler;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommandHandler;
+use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
+use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQueryHandler;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Domain\Repositories\WalletReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 
 /**
+ * @method Wallet|null findByOwnerType(FindByOwnerTypeQuery $query)
  * @method Wallet create(WalletCreateCommand $command)
  * @method WalletTransaction  transaction(WalletTransactionCommand $command)
  */
@@ -33,10 +36,11 @@ class WalletApplicationService extends ApplicationService
 
 
     protected static $macros = [
-        'create'      => CreateCommandHandler::class,
-        'update'      => null,
-        'delete'      => null,
-        'transaction' => WalletTransactionCommandHandler::class,
+        'findByOwnerType' => FindByOwnerTypeQueryHandler::class,
+        'create'          => CreateCommandHandler::class,
+        'update'          => null,
+        'delete'          => null,
+        'transaction'     => WalletTransactionCommandHandler::class,
     ];
 
 
