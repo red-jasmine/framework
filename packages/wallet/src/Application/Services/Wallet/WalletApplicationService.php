@@ -38,9 +38,10 @@ class WalletApplicationService extends ApplicationService
     protected static $macros = [
         'findByOwnerType' => FindByOwnerTypeQueryHandler::class,
         'create'          => CreateCommandHandler::class,
+        'transaction'     => WalletTransactionCommandHandler::class,
         'update'          => null,
         'delete'          => null,
-        'transaction'     => WalletTransactionCommandHandler::class,
+
     ];
 
 

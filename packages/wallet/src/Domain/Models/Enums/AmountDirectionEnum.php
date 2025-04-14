@@ -16,10 +16,10 @@ enum AmountDirectionEnum: string
     public static function labels() : array
     {
         return [
-            self::INCOME->value   => '收入',
-            self::EXPENSE->value  => '支出',
-            self::FROZEN->value   => '冻结',
-            self::UNFROZEN->value => '解冻',
+            self::INCOME->value   => __('red-jasmine-wallet::wallet.enums.amount_direction.income'),
+            self::EXPENSE->value  => __('red-jasmine-wallet::wallet.enums.amount_direction.expense'),
+            self::FROZEN->value   => __('red-jasmine-wallet::wallet.enums.amount_direction.frozen'),
+            self::UNFROZEN->value => __('red-jasmine-wallet::wallet.enums.amount_direction.unfrozen'),
 
         ];
 
