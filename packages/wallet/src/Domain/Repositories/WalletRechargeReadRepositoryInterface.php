@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Wallet\Domain\Repositories;
 
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 
-interface WalletRechargeReadRepositoryInterface extends RepositoryInterface
+interface WalletRechargeReadRepositoryInterface extends ReadRepositoryInterface
 {
 
 }

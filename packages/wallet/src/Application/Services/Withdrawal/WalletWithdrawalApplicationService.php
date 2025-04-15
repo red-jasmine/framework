@@ -10,7 +10,9 @@ use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalC
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalPaymentCommand;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalPaymentCommandHandler;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
+use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
+use RedJasmine\Wallet\Infrastructure\ReadRepositories\Mysql\WalletWithdrawalReadRepository;
 
 /**
  * @method WalletWithdrawal create(WalletWithdrawalCreateCommand $command)
@@ -19,10 +21,11 @@ use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
  */
 class WalletWithdrawalApplicationService extends ApplicationCommandService
 {
-    public static string $hookNamePrefix = 'wallet.application.withdrawal.command';
+    public static string $hookNamePrefix = 'wallet.application.withdrawal';
 
     public function __construct(
-        public WalletWithdrawalRepositoryInterface $repository
+        public WalletWithdrawalRepositoryInterface $repository,
+        public WalletWithdrawalReadRepositoryInterface $readRepository,
 
     ) {
     }
