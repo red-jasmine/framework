@@ -8,6 +8,7 @@ use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
@@ -40,7 +41,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
                 }
 
                 // 注册用户
-                $userRegisterCommand = new UserRegisterCommand();
+                $userRegisterCommand = new UserData();
                 $user                = $this->userRegisterService->makeUser($userRegisterCommand);
 
                 $this->service->repository->store($user);
