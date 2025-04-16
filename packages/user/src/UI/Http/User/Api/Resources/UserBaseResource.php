@@ -13,15 +13,17 @@ class UserBaseResource extends JsonResource
     public function toArray(Request $request) : array
     {
         return [
-            'id'       => $this->id,
-            'name'     => $this->name,
-            'mobile'   => $this->mobile, // TODO 掩码
-            'email'    => $this->email, // TODO 掩码
-            'nickname' => $this->nickname,
-            'gender'   => $this->gender,
-            'avatar'   => $this->avatar,
-            'type'     => $this->type,
-            'status'   => $this->status,
+            'id'        => $this->id,
+            'name'      => $this->name,
+            'mobile'    => $this->mobile, // TODO 掩码
+            'email'     => $this->email, // TODO 掩码
+            'nickname'  => $this->nickname,
+            'avatar'    => $this->avatar,
+            'gender'    => $this->gender,
+            'birthday'  => $this->birthday,
+            'type'      => $this->type,
+            'status'    => $this->status,
+            'biography' => $this->biography,
         ];
     }
 }
