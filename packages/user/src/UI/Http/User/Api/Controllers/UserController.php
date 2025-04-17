@@ -32,9 +32,13 @@ class UserController extends Controller
     }
 
 
-    // 查询
-
-
+    /**
+     * 获取绑定的社交账号
+     *
+     * @param  Request  $request
+     *
+     * @return JsonResponse|JsonResource
+     */
     public function socialites(Request $request) : JsonResponse|JsonResource
     {
         $request->offsetSet('id', Auth::id());
@@ -42,8 +46,13 @@ class UserController extends Controller
         return static::success($result);
     }
 
-    // 命令
-
+    /**
+     * 更新基础信息
+     *
+     * @param  Request  $request
+     *
+     * @return JsonResponse|JsonResource
+     */
     public function updateBaseInfo(Request $request) : JsonResponse|JsonResource
     {
 
@@ -55,6 +64,13 @@ class UserController extends Controller
     }
 
 
+    /**
+     * 解绑社交账号
+     *
+     * @param  Request  $request
+     *
+     * @return JsonResponse|JsonResource
+     */
     public function unbindSocialite(Request $request) : JsonResponse|JsonResource
     {
         $request->offsetSet('id', Auth::id());
@@ -65,6 +81,13 @@ class UserController extends Controller
     }
 
 
+    /**
+     * 修改密码
+     *
+     * @param  PasswordRequest  $request
+     *
+     * @return JsonResponse|JsonResource
+     */
     public function password(PasswordRequest $request) : JsonResponse|JsonResource
     {
         $request->offsetSet('id', Auth::id());
@@ -75,9 +98,7 @@ class UserController extends Controller
     }
 
 
-    // 修改安全信息  TODO
-    // 修改登录信息
+    // 修改用户名
     // 修改手机号
     // 修改邮箱
-
 }

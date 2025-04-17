@@ -84,11 +84,23 @@ class User extends Authenticatable implements JWTSubject, UserInterface
 
     public function setUserBaseInfo(UserBaseInfoData $data) : void
     {
-        isset($data->nickname) ? $this->nickname = $data->nickname : null;
-        isset($data->avatar) ? $this->avatar = $data->avatar : null;
-        isset($data->gender) ? $this->gender = $data->gender : null;
-        isset($data->birthday) ? $this->birthday = $data->birthday : null;
-        isset($data->biography) ? $this->biography = $data->biography : null;
+        $attributes = [
+            'nickname',
+            'avatar',
+            'gender',
+            'birthday',
+            'biography',
+            'country',
+            'province',
+            'city',
+            'district',
+            'school',
+        ];
+        foreach ($attributes as $attribute) {
+            if (isset($data->{$attribute})) {
+                $this->{$attribute} = $data->{$attribute};
+            }
+        }
     }
 
     public function isAdmin() : bool

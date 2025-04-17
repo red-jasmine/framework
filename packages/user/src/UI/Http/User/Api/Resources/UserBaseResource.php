@@ -4,6 +4,7 @@ namespace RedJasmine\User\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Str;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 use RedJasmine\User\Domain\Models\User;
 
@@ -15,8 +16,8 @@ class UserBaseResource extends JsonResource
         return [
             'id'        => $this->id,
             'name'      => $this->name,
-            'mobile'    => $this->mobile, // TODO 掩码
-            'email'     => $this->email, // TODO 掩码
+            'mobile'    => Str::mask($this->mobile, '*', 3, 4),
+            'email'     => Str::mask($this->email, '*', 0,4),
             'nickname'  => $this->nickname,
             'avatar'    => $this->avatar,
             'gender'    => $this->gender,
@@ -24,6 +25,10 @@ class UserBaseResource extends JsonResource
             'type'      => $this->type,
             'status'    => $this->status,
             'biography' => $this->biography,
+            'country'   => $this->country,
+            'province'  => $this->province,
+            'city'      => $this->city,
+            'district'  => $this->district,
         ];
     }
 }

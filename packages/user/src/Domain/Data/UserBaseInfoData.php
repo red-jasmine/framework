@@ -18,4 +18,12 @@ class UserBaseInfoData extends Data
     #[Max(50)]
     public ?string         $biography;
 
+    // 地区
+    public ?string $country;
+    public ?string $province;
+    public ?string $city;
+    public ?string $district;
+
+    // 学校
+    public ?string $school;
 }
