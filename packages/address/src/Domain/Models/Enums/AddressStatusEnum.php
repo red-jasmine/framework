@@ -18,7 +18,7 @@ enum AddressStatusEnum: string
     {
         return [
             self::DISABLE->value => '启用',
-            self::DISABLE->value => '禁用',
+            self::DISABLE->value => '停用',
         ];
     }
 
