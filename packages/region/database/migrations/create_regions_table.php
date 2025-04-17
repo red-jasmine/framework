@@ -12,12 +12,12 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('regions', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->comment('编码');
+            $table->string('code')->primary()->comment('编码');
             $table->string('name')->comment('名称');
             $table->string('level', 32)->comment(RegionLevelEnum::comments('级别'));
-            $table->string('parent_code')->nullable()->comment('编码');
-            $table->string('center')->nullable()->comment('中心点');
+            $table->string('parent_code')->nullable()->comment('父级编码');
+            $table->string('area_code')->nullable()->comment('区号');
+            $table->index('parent_code', 'idx_parent_code');
             $table->comment('行政区划表');
         });
     }

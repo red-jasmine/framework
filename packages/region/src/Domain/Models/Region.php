@@ -19,6 +19,9 @@ class Region extends Model
 
     use ModelTree;
 
+    protected $primaryKey = 'code';
+    protected $keyType    = 'string';
+
     public $timestamps   = false;
     public $incrementing = false;
 
@@ -27,17 +30,20 @@ class Region extends Model
     ];
 
     protected $fillable = [
-        'parent_id',
+        'parent_code',
         'name',
+        'code',
         'level',
-        'initial'
+        'area_code',
     ];
 
     // 父级ID字段名称，默认值为 parent_id
-    protected string $parentColumn = 'parent_id';
+    protected string $parentColumn = 'parent_code';
     // 排序字段名称，默认值为 order
-    protected string $orderColumn = 'id';
+    protected string $orderColumn = 'code';
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
+
+    public mixed $defaultParentId = 0;
 
 }

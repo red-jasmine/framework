@@ -9,9 +9,10 @@ trait HasTree
 
     public function tree(?Query $query = null) : array
     {
-
         $nodes = $this->query($query)->get();
-        return static::buildNestedArray($nodes);
+        $model = (new static::$modelClass);
+
+        return $model->toTree($nodes);
     }
 
     public static function buildNestedArray(
