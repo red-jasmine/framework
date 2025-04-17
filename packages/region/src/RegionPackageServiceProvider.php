@@ -2,83 +2,34 @@
 
 namespace RedJasmine\Region;
 
-use Illuminate\Support\ServiceProvider;
+use RedJasmine\Product\Database\Seeders\ProductPackageSeeder;
 use RedJasmine\Region\Commands\CrawlDataCommand;
 use RedJasmine\Region\Commands\OptimizeCommand;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class RegionPackageServiceProvider extends ServiceProvider
+class RegionPackageServiceProvider extends PackageServiceProvider
 {
-    /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
-     */
-    public function boot() : void
-    {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'red-jasmine');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'red-jasmine');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+    public static string $name = 'red-jasmine-region';
 
-        // Publishing is only necessary when using the CLI.
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
-        }
+    public static string $viewNamespace = 'red-jasmine-region';
+
+
+    public function configurePackage(Package $package) : void
+    {
+
+        $package->name(static::$name)
+                ->hasConfigFile()
+            //->hasTranslations()
+            //->hasViews()
+                ->hasMigrations([
+
+            ])
+                ->runsMigrations();
+
+ 
     }
 
-    /**
-     * Register any package services.
-     *
-     * @return void
-     */
-    public function register() : void
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/red-jasmine-region.php', 'red-jasmine-region');
 
-
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [ 'region' ];
-    }
-
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole() : void
-    {
-        // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/red-jasmine-region.php' => config_path('red-jasmine-region.php'),
-                         ], 'red-jasmine-region.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/red-jasmine'),
-        ], 'region.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/red-jasmine'),
-        ], 'region.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/red-jasmine'),
-        ], 'region.views');*/
-
-        // Registering package commands.
-        $this->commands([
-                            CrawlDataCommand::class,
-                            OptimizeCommand::class,
-                        ]);
-    }
 }

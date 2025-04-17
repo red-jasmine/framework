@@ -28,10 +28,8 @@ class Region extends Model
 
     protected $fillable = [
         'parent_id',
-        'id',
         'name',
         'level',
-        'pinyin',
         'initial'
     ];
 

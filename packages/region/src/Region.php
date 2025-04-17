@@ -3,6 +3,7 @@
 namespace RedJasmine\Region;
 
 use Illuminate\Database\Eloquent\Collection;
+use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
 use RedJasmine\Region\Domain\Models\Region as RegionModel;
 use RedJasmine\Region\Enums\RegionLevel;
 
@@ -32,7 +33,7 @@ class Region
     /**
      * 查询区划数据
      *
-     * @param array|int|string $id
+     * @param  array|int|string  $id
      *
      * @return  RegionModel[]|Collection|array
      */
@@ -41,7 +42,7 @@ class Region
         if (is_array($id)) {
             $id = array_filter($id);
         } else {
-            $id = [ (int)$id ];
+            $id = [(int) $id];
         }
         if (blank($id)) {
             return [];
@@ -58,7 +59,7 @@ class Region
     {
         return RegionModel::select($this->fields)
                           ->where('parent_id', 0)
-                          ->where('level', RegionLevel::COUNTRY->value)
+                          ->where('level', RegionLevelEnum::COUNTRY->value)
                           ->get();
     }
 
@@ -70,27 +71,27 @@ class Region
     {
         return RegionModel::select($this->fields)
                           ->where('parent_id', $parentID)
-                          ->where('level', RegionLevel::PROVINCE->value)
+                          ->where('level', RegionLevelEnum::PROVINCE->value)
                           ->get();
     }
 
     /**
      * 查询子集
      *
-     * @param int $parentID
+     * @param  int  $parentID
      *
      * @return RegionModel[]|Collection
      */
     public function children(int $parentID) : array|Collection
     {
-        return RegionModel::select($this->fields)->where('parent_id', (int)$parentID)->get();
+        return RegionModel::select($this->fields)->where('parent_id', (int) $parentID)->get();
     }
 
     /**
      *
-     * @param int|string $province
+     * @param  int|string  $province
      *
-     * @return \RedJasmine\Region\Domain\Models\Region[]|array|Collection
+     * @return RegionModel[]|array|Collection
      */
     public function cities(int|string $province) : Collection|array
     {
@@ -100,15 +101,15 @@ class Region
             return $this->children($province);
         } else {
             $name = $province;
-            return $query->where('name', (string)$name)->get();
+            return $query->where('name', (string) $name)->get();
         }
 
     }
 
 
-    public function tree(int $level = RegionLevel::DISTRICT->value) : array
+    public function tree(RegionLevelEnum $level = RegionLevelEnum::DISTRICT) : array
     {
-        $regionLevel = RegionLevel::tryFrom($level);
+        $regionLevel = RegionLevelEnum::tryFrom($level);
 
         $query   = RegionModel::query();
         $regions = $query
