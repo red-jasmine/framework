@@ -17,7 +17,7 @@ enum RegionLevelEnum: string
     case  STREET = 'street'; // 乡镇街道
     case  VILLAGE = 'village'; // 村庄
 
-    public function labels() : array
+    public static function labels() : array
     {
         return [
             self::COUNTRY->value  => '国家',

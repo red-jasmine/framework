@@ -21,14 +21,15 @@ class RegionPackageServiceProvider extends PackageServiceProvider
 
         $package->name(static::$name)
                 ->hasConfigFile()
-            //->hasTranslations()
-            //->hasViews()
+                ->hasRoutes(['api'])
                 ->hasMigrations([
+                    'create_countries_table',
+                    'create_regions_table'
 
-            ])
+                ])
                 ->runsMigrations();
 
- 
+
     }
 
 

@@ -8,4 +8,8 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 interface RegionReadRepositoryInterface extends ReadRepositoryInterface
 {
     public function tree(?Query $query) : array;
+
+    public function children(?Query $query) : array;
+
+
 }

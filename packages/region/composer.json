@@ -30,7 +30,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Region\\RegionPackageServiceProvider"
+                "RedJasmine\\Region\\RegionPackageServiceProvider",
+                "RedJasmine\\Region\\Application\\RegionApplicationServiceProvider"
             ]
         },
         "branch-alias": {

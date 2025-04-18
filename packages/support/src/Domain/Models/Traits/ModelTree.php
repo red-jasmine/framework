@@ -55,6 +55,11 @@ trait ModelTree
         return property_exists($this, 'depthColumn') ? $this->depthColumn : '';
     }
 
+
+    public function getDefaultKeyName()
+    {
+        return property_exists($this, 'defaultKeyName') ? $this->defaultKeyName :  $this->getKeyName();
+    }
     /**
      * @return string
      */
@@ -73,7 +78,7 @@ trait ModelTree
         return static::buildNestedArray(
             $nodes,
             $this->getDefaultParentId(),
-            $this->getKeyName(),
+            $this->getDefaultKeyName(),
             $this->getParentColumn()
         );
     }
@@ -186,9 +191,9 @@ trait ModelTree
 
                 $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix) . $d . str_replace([ $d, $space ], '', $prefix);
 
-                $children = $this->buildSelectOptions($nodes, $node[$this->getKeyName()], $childrenPrefix);
+                $children = $this->buildSelectOptions($nodes, $node[$this->getDefaultKeyName()], $childrenPrefix);
 
-                $options[$node[$this->getKeyName()]] = $node[$this->getTitleColumn()];
+                $options[$node[$this->getDefaultKeyName()]] = $node[$this->getTitleColumn()];
 
                 if ($children) {
                     $options += $children;

@@ -15,26 +15,34 @@ class Region extends Model
 
     use HasDateTimeFormatter;
 
-    use HasSnowflakeId;
-
     use ModelTree;
 
-    protected $primaryKey = 'code';
-    protected $keyType    = 'string';
+    protected string $defaultKeyName = 'code';
 
-    public $timestamps   = false;
-    public $incrementing = false;
+    protected $keyType = 'string';
 
-    protected $casts = [
-        'level' => RegionLevelEnum::class
-    ];
+    public $timestamps = false;
+
+
+    protected function casts() : array
+    {
+        return [
+            'level'        => RegionLevelEnum::class,
+            'timezones'    => 'array',
+            'translations' => 'array'
+        ];
+    }
+
 
     protected $fillable = [
         'parent_code',
         'name',
         'code',
         'level',
-        'area_code',
+        'phone_code',
+        'country_code',
+        'timezones',
+        'translations',
     ];
 
     // 父级ID字段名称，默认值为 parent_id
@@ -44,6 +52,6 @@ class Region extends Model
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
 
-    public mixed $defaultParentId = 0;
+    public mixed $defaultParentId = '0';
 
 }

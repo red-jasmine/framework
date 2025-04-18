@@ -26,7 +26,6 @@ class PaginateQuery extends Query
     }
 
 
-
     /**
      * 当前页码
      * @var int|null
@@ -51,9 +50,7 @@ class PaginateQuery extends Query
      */
     public mixed $sort;
 
-
-
-
+    
     public ?string $keyword;
 
 }
