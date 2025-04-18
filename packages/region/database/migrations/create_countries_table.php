@@ -8,8 +8,7 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('countries', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 3)->comment('ISO3');
+            $table->string('code', 3)->primary()->comment('code:ISO3166-3');
             $table->string('name', 64);
             $table->string('native', 64)->nullable();
             $table->string('region', 64)->nullable();
@@ -20,8 +19,8 @@ return new class extends Migration {
             $table->json('timezones')->nullable();
             $table->json('translations')->nullable();
             $table->timestamps();
-            $table->index('code', 'idx_code');
             $table->index('name', 'idx_name');
+            $table->index('region', 'idx_region');
             $table->comment('国家地区表');
         });
     }

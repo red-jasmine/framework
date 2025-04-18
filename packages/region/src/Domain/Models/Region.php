@@ -17,6 +17,11 @@ class Region extends Model
 
     use ModelTree;
 
+    protected $primaryKey = 'code';
+
+    public $incrementing = false;
+
+
     protected string $defaultKeyName = 'code';
 
     protected $keyType = 'string';

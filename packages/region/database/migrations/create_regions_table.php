@@ -12,8 +12,7 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('regions', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 64)->unique()->comment('代码');
+            $table->string('code', 64)->primary()->comment('代码');
             $table->string('name', 64)->comment('名称');
             $table->string('level', 32)->comment(RegionLevelEnum::comments('级别'));
             $table->string('country_code', 3)->comment('国家地区代码');

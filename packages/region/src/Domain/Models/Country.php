@@ -10,6 +10,11 @@ class Country extends Model
     use HasDateTimeFormatter;
 
 
+    protected $primaryKey = 'code';
+
+    public $incrementing = false;
+
+
     protected function casts() : array
     {
         return [

@@ -2,8 +2,10 @@
 
 namespace RedJasmine\Region\Infrastructure\ReadRepositories\Mysql;
 
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Region\Domain\Models\Country;
 use RedJasmine\Region\Domain\Repositories\CountryReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -16,6 +18,14 @@ class CountryReadRepository extends QueryBuilderReadRepository implements Countr
 
 
     protected mixed $defaultSort = 'code';
+
+    public function findS(FindQuery $query) : ?Model
+    {
+
+        return $this->query($query->except($query->getPrimaryKey()))
+                    ->where('code', $query->getKey())
+                    ->firstOrFail();
+    }
 
 
     public function allowedFilters() : array
