@@ -15,7 +15,7 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
  * @property string|class-string<Model> $modelClass
  * @property string $paginateQueryClass
  * @property string $findQueryClass
- * @property JsonResource $resourceClass
+ * @property  JsonResource $resourceClass
  */
 trait RestQueryControllerActions
 {

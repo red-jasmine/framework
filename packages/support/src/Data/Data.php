@@ -18,6 +18,13 @@ class Data extends \Spatie\LaravelData\Data
 
     protected string $_primaryKey = 'id';
 
+    public function getPrimaryKey() : string
+    {
+        return $this->_primaryKey;
+    }
+
+
+
     public function getKey()
     {
         return $this->{$this->_primaryKey} ?? null;
