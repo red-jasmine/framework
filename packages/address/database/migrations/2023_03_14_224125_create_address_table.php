@@ -27,8 +27,8 @@ return new class extends Migration {
             $table->string('city_code', 32)->nullable()->comment('城市编码');
             $table->string('district_code', 32)->nullable()->comment('区县编码');
             $table->string('street_code', 32)->nullable()->comment('乡镇街道编码');
-            $table->decimal('longitude', 10, 6)->nullable()->comment('经度');
-            $table->decimal('latitude', 10, 6)->nullable()->comment('纬度');
+            $table->decimal('longitude', 11, 8)->nullable()->comment('经度');
+            $table->decimal('latitude', 10, 8)->nullable()->comment('纬度');
             $table->string('remarks')->nullable()->comment('备注');
             $table->string('type')->nullable()->comment('地址类型');
             $table->boolean('is_default')->default(false)->comment('是否默认');
