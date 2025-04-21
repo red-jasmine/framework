@@ -28,9 +28,9 @@ class UpdateCommandHandler extends CommandHandler
         try {
 
             // 对数据进行验证
-            $this->hook('update.validate', $this->context, fn() => $this->validate($this->context));
+            $this->service->hook('update.validate', $this->context, fn() => $this->validate($this->context));
             // 填充模型属性
-            $this->hook('update.fill', $this->context, fn() => $this->fill($this->context));
+            $this->service->hook('update.fill', $this->context, fn() => $this->fill($this->context));
 
             // 存储模型到仓库
             $this->service->repository->update($this->context->model);

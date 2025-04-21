@@ -4,7 +4,9 @@ namespace RedJasmine\Support\Application;
 
 
 use BadMethodCallException;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Traits\Macroable;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
 use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
@@ -25,7 +27,7 @@ use ReflectionClass;
  * @method Model update(Data $command)
  * @method bool delete(Data $command)
  * @method Model find(FindQuery $query)
- * @method paginate(PaginateQuery $query)
+ * @method LengthAwarePaginator|Paginator  paginate(PaginateQuery $query)
  * @property RepositoryInterface $repository
  * @property ReadRepositoryInterface $readRepository
  * @property TransformerInterface $transformer
@@ -36,9 +38,9 @@ class ApplicationService
     use HasHooks;
 
     use Macroable {
-        __call as macroCall;
+        Macroable::__call as macroCall;
         Macroable::hasMacro as macroHasMacro;
-        __callStatic as macroCallStatic;
+        Macroable::__callStatic as macroCallStatic;
     }
 
 

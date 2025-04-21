@@ -14,25 +14,22 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 #[MapOutputName(SnakeCaseMapper::class)]
 class Data extends \Spatie\LaravelData\Data
 {
-
-
-    protected string $_primaryKey = 'id';
+    protected string $primaryKey = 'id';
 
     public function getPrimaryKey() : string
     {
-        return $this->_primaryKey;
+        return $this->primaryKey;
     }
-
 
 
     public function getKey()
     {
-        return $this->{$this->_primaryKey} ?? null;
+        return $this->{$this->primaryKey} ?? null;
     }
 
     public function setKey($key) : void
     {
-        $this->{$this->_primaryKey} = $key;
+        $this->{$this->primaryKey} = $key;
     }
 
 
