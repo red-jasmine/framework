@@ -5,13 +5,21 @@ namespace RedJasmine\Address\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Traits\Models\HasOperator;
-use RedJasmine\Support\Traits\Models\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class Address extends Model
+
+class Address extends Model implements OwnerInterface, OperatorInterface
 {
 
+
+    use HasSnowflakeId;
+
+    public $incrementing = false;
 
     use HasDateTimeFormatter;
 
@@ -33,11 +41,13 @@ class Address extends Model
         'city',
         'district',
         'street',
+        'village',
         'country_code',
         'province_code',
         'city_code',
         'district_code',
         'street_code',
+        'village_code',
         'address',
         'more_address',
         'company',
@@ -46,7 +56,9 @@ class Address extends Model
         'type',
         'is_default',
         'tag',
-        'remarks'
+        'remarks',
+        'latitude',
+        'longitude',
     ];
 
     protected function casts() : array

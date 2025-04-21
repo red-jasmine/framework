@@ -22,6 +22,8 @@ class AddressData extends Data
     public ?string $province;
     public ?string $city;
     public ?string $district;
+    public ?string $street;
+    public ?string $village;
     public ?string $address;
     public ?string $moreAddress;
     public ?string $company;
@@ -34,6 +36,8 @@ class AddressData extends Data
     public ?string $provinceCode;
     public ?string $cityCode;
     public ?string $districtCode;
+    public ?string $streetCode;
+    public ?string $villageCode;
 
     public ?string $latitude;
     public ?string $longitude;

@@ -31,11 +31,9 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Address\\AddressServiceProvider"
-            ],
-            "aliases": {
-                "Address": "RedJasmine\\Address\\Facades\\Address"
-            }
+              "RedJasmine\\Address\\AddressPackageServiceProvider",
+              "RedJasmine\\Address\\Application\\AddressApplicationServiceProvider"
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev",

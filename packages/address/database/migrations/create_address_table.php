@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('city', 64)->nullable()->comment('城市');
             $table->string('district', 64)->nullable()->comment('区县');
             $table->string('street', 64)->nullable()->comment('乡镇街道');
+            $table->string('village', 64)->nullable()->comment('村庄');
             $table->string('company')->nullable()->comment('公司');
             $table->text('address')->nullable()->comment('详细地址*');
             $table->text('more_address')->nullable()->comment('更多地址*');
@@ -27,6 +28,7 @@ return new class extends Migration {
             $table->string('city_code', 32)->nullable()->comment('城市编码');
             $table->string('district_code', 32)->nullable()->comment('区县编码');
             $table->string('street_code', 32)->nullable()->comment('乡镇街道编码');
+            $table->string('village_code', 32)->nullable()->comment('村庄编码');
             $table->decimal('longitude', 11, 8)->nullable()->comment('经度');
             $table->decimal('latitude', 10, 8)->nullable()->comment('纬度');
             $table->string('remarks')->nullable()->comment('备注');

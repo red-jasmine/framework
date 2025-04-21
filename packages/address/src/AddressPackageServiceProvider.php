@@ -5,7 +5,7 @@ namespace RedJasmine\Address;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class AddressServiceProvider extends PackageServiceProvider
+class AddressPackageServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'red-jasmine-address';
 
@@ -17,6 +17,7 @@ class AddressServiceProvider extends PackageServiceProvider
 
         $package->name(static::$name)
                 ->hasConfigFile()
+                ->hasRoutes(['api'])
                 ->hasMigrations([
                     'create_address_table',
                 ])
