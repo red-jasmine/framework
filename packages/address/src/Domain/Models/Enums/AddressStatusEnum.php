@@ -13,12 +13,11 @@ enum AddressStatusEnum: string
 
     case ENABLE = 'enable';
 
-
     public static function labels() : array
     {
         return [
-            self::DISABLE->value => '启用',
-            self::DISABLE->value => '停用',
+            self::DISABLE->value => __('red-jasmine-support::support.enable'),
+            self::DISABLE->value => __('red-jasmine-support::support.disable'),
         ];
     }
 

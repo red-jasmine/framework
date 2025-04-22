@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Address\Domain\Data;
 
+use RedJasmine\Address\Domain\Models\Enums\AddressStatusEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class AddressData extends Data
 {
@@ -47,6 +50,10 @@ class AddressData extends Data
     public ?string $remarks;
     public int     $sort      = 1;
     public bool    $isDefault = false;
+
+
+    #[WithCast(EnumCast::class, AddressStatusEnum::class)]
+    public AddressStatusEnum $status = AddressStatusEnum::ENABLE;
 
 
 }

@@ -5,6 +5,7 @@ namespace RedJasmine\Address\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Address\Domain\Models\Enums\AddressStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -59,6 +60,7 @@ class Address extends Model implements OwnerInterface, OperatorInterface
         'remarks',
         'latitude',
         'longitude',
+        'status',
     ];
 
     protected function casts() : array
@@ -69,6 +71,7 @@ class Address extends Model implements OwnerInterface, OperatorInterface
             'address'      => 'encrypted',
             'more_address' => 'encrypted',
             'is_default'   => 'boolean',
+            'status'       => AddressStatusEnum::class,
         ];
     }
 
