@@ -1,0 +1,51 @@
+{
+    "name": "red-jasmine/captcha",
+    "description": "captcha",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun66"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/captcha",
+    "keywords": ["Laravel", "Captcha"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "overtrue/laravel-easy-sms": "^2.1"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Captcha\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Captcha\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Captcha\\CaptchaServiceProvider",
+                "RedJasmine\\Captcha\\Application\\CaptchaApplicationServiceProvider"
+            ],
+            "aliases": {
+                "Captcha": "RedJasmine\\Captcha\\Facades\\Captcha"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}

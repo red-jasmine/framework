@@ -1,0 +1,39 @@
+<?php
+
+namespace RedJasmine\Captcha\Domain\Transformer;
+
+use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Captcha\Domain\Data\CaptchaData;
+use RedJasmine\Captcha\Domain\Models\Captcha;
+use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
+use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
+use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+
+class CaptchaTransformer implements TransformerInterface
+{
+    /**
+     * @param  Data|CaptchaData  $data
+     * @param  Model|Captcha  $model
+     *
+     * @return Model|null
+     */
+    public function transform(Data $data, ?Model $model = null) : ?Model
+    {
+        $expTime = now()->addMinutes($data->expMinutes);
+        // 存储数据
+        $model->app             = $data->app;
+        $model->type            = $data->type;
+        $model->notifiable_type = $data->notifiableType;
+        $model->notifiable_id   = $data->notifiableId;
+        $model->code            = mt_rand(00000, 999999);
+        $model->status          = CaptchaStatusEnum::WAIT;
+        $model->send_status     = CaptchaSendStatusEnum::WAIT;
+        $model->exp_time        = $expTime;
+
+        return $model;
+
+    }
+
+
+}

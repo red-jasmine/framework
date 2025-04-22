@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
+use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
+use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
+
+return new class extends Migration {
+    public function up() : void
+    {
+        Schema::create('captchas', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
+            $table->string('app', 32)->comment('应用');
+            $table->string('type', 32)->comment('识别码');
+            $table->string('notifiable_type', 32)->comment(NotifiableTypeEnum::comments('通知人类型'));
+            $table->string('notifiable_id', 64)->comment('接受通知人ID');
+            $table->string('code', 10)->comment('验证码');
+            $table->string('status')->default(CaptchaStatusEnum::WAIT)->comment(CaptchaStatusEnum::comments('状态'));
+            $table->timestamp('exp_time')->nullable()->comment('过期时间');
+            $table->timestamp('use_time')->nullable()->comment('使用时间');
+            $table->string('send_status')->default(CaptchaSendStatusEnum::WAIT)->comment(CaptchaSendStatusEnum::comments('发送状态'));
+            $table->timestamp('send_time')->nullable()->comment('发送时间');
+            $table->string('send_channel')->nullable()->comment('发送渠道');
+            $table->timestamps();
+
+            $table->index(['notifiable_id', 'type', 'app', 'notifiable_type'], 'idx_notifiable');
+        });
+    }
+
+    public function down() : void
+    {
+        Schema::dropIfExists('captchas');
+    }
+};
