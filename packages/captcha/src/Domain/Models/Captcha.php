@@ -3,10 +3,12 @@
 namespace RedJasmine\Captcha\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use RedJasmine\Captcha\Domain\Events\CaptchaCreatedEvent;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
+use RedJasmine\Captcha\Domain\Services\Sender\Contracts\CaptchaSenderResult;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class Captcha extends Model
@@ -27,6 +29,7 @@ class Captcha extends Model
         return [
             'status'      => CaptchaStatusEnum::class,
             'send_status' => CaptchaSendStatusEnum::class,
+            'send_time'   => 'datetime'
         ];
     }
 
@@ -40,5 +43,15 @@ class Captcha extends Model
             return false;
         }
         return true;
+    }
+
+
+    public function setSendResult(CaptchaSenderResult $captchaSenderResult) : void
+    {
+        $this->send_status     = $captchaSenderResult->sendStatus;
+        $this->channel         = $captchaSenderResult->channel;
+        $this->channel_no      = $captchaSenderResult->channelNo;
+        $this->channel_message = $captchaSenderResult->channelMessage;
+        $this->send_time       = Carbon::now();
     }
 }

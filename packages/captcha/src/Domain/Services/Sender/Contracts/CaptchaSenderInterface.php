@@ -7,6 +7,6 @@ use RedJasmine\Captcha\Domain\Models\Captcha;
 interface CaptchaSenderInterface
 {
 
-    public function send(Captcha $captcha);
+    public function send(Captcha $captcha) : CaptchaSenderResult;
 
 }

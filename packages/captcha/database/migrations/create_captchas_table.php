@@ -22,7 +22,9 @@ return new class extends Migration {
             $table->timestamp('use_time')->nullable()->comment('使用时间');
             $table->string('send_status')->default(CaptchaSendStatusEnum::WAIT)->comment(CaptchaSendStatusEnum::comments('发送状态'));
             $table->timestamp('send_time')->nullable()->comment('发送时间');
-            $table->string('send_channel')->nullable()->comment('发送渠道');
+            $table->string('channel')->nullable()->comment('发送渠道');
+            $table->string('channel_no')->nullable()->comment('渠道流水号');
+            $table->string('channel_message')->nullable()->comment('渠道ID');
             $table->timestamps();
 
             $table->index(['notifiable_id', 'type', 'app', 'notifiable_type'], 'idx_notifiable');

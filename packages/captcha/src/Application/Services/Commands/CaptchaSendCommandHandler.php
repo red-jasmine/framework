@@ -4,6 +4,7 @@ namespace RedJasmine\Captcha\Application\Services\Commands;
 
 use RedJasmine\Captcha\Application\Services\CaptchaApplicationService;
 use RedJasmine\Captcha\Domain\Services\CaptchaSenderService;
+use RedJasmine\Captcha\Exceptions\CaptchaException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
 use Throwable;
@@ -19,7 +20,14 @@ class CaptchaSendCommandHandler extends CommandHandler
         $this->context = new HandleContext();
     }
 
-    public function handle(CaptchaSendCommand $command)
+    /**
+     * @param  CaptchaSendCommand  $command
+     *
+     * @return void
+     * @throws Throwable
+     * @throws CaptchaException
+     */
+    public function handle(CaptchaSendCommand $command) : void
     {
 
         $this->context->setCommand($command);
@@ -32,7 +40,6 @@ class CaptchaSendCommandHandler extends CommandHandler
 
         try {
             $this->service->hook('send.validate', $this->context, function () {
-
             });
 
             $this->senderService->send($this->context->getModel());

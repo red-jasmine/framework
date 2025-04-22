@@ -7,6 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use RedJasmine\Captcha\Application\Services\CaptchaApplicationService;
+use RedJasmine\Captcha\Application\Services\Commands\CaptchaSendCommand;
+use Throwable;
 
 class CaptchaSendJob implements ShouldQueue
 {
@@ -30,7 +33,12 @@ class CaptchaSendJob implements ShouldQueue
      */
     public function handle() : void
     {
-        // TODO 发送
+        try {
+            app(CaptchaApplicationService::class)->send(CaptchaSendCommand::from(['id' => $this->id]));
+        } catch (Throwable $exception) {
+            report($exception);
+        }
+
 
     }
 }
