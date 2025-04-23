@@ -9,6 +9,7 @@ use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\Captcha\Domain\Services\Sender\Contracts\CaptchaSenderResult;
+use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class Captcha extends Model
@@ -27,9 +28,10 @@ class Captcha extends Model
     protected function casts() : array
     {
         return [
-            'status'      => CaptchaStatusEnum::class,
-            'send_status' => CaptchaSendStatusEnum::class,
-            'send_time'   => 'datetime'
+            'notifiable_id' => AesEncrypted::class,
+            'status'        => CaptchaStatusEnum::class,
+            'send_status'   => CaptchaSendStatusEnum::class,
+            'send_time'     => 'datetime'
         ];
     }
 
