@@ -23,7 +23,21 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
     public function captcha(UserRegisterData $data) : UserData
     {
         // 邮箱 or 手机 or 用户名 必须填写一个
+        $this->validate($data);
 
+
+        return $this->getUserData($data);
+
+    }
+
+    /**
+     * @param  UserRegisterData  $data
+     *
+     * @return void
+     * @throws UserRegisterException
+     */
+    public function validate(UserRegisterData $data) : void
+    {
         if (blank($data->data['name'] ?? null)
             && blank($data->data['email'] ?? null)
             && blank($data->data['mobile'] ?? null)
@@ -46,10 +60,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
             throw new UserRegisterException('邮箱已存在');
         }
 
-        return $this->getUserData($data);
-
     }
-
 
     public function getUserData(UserRegisterData $data) : UserData
     {
@@ -62,8 +73,15 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
         return $userData;
     }
 
+    /**
+     * @param  UserRegisterData  $data
+     *
+     * @return UserData
+     * @throws UserRegisterException
+     */
     public function register(UserRegisterData $data) : UserData
     {
+        $this->validate($data);
         return $this->getUserData($data);
     }
 

@@ -35,16 +35,15 @@ class RegisterController extends Controller
 
     }
 
-    public function register(RegisterRequest $request) : UserBaseResource
+    public function register(RegisterRequest $request) : JsonResponse|JsonResource
     {
 
         $command = UserRegisterCommand::from($request);
 
 
-        $user = $this->service->register($command);
+        $userTokenData = $this->service->register($command);
 
-        return UserBaseResource::make($user);
-
+        return static::success($userTokenData->toArray());
 
     }
 }

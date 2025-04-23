@@ -29,7 +29,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 /**
  * @method getSocialites(GetSocialitesQuery $query)
  * @see UserRegisterCommandHandler::handle()
- * @method User register(UserRegisterCommand $command)
+ * @method UserTokenData register(UserRegisterCommand $command)
  * @see UserRegisterCaptchaCommandHandler::handle()
  * @method bool registerCaptcha(UserRegisterCommand $command)
  * @see UserLoginCommandHandler::handle()
