@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('app', 32)->comment('应用');
             $table->string('type', 32)->comment('识别码');
             $table->string('notifiable_type', 32)->comment(NotifiableTypeEnum::comments('通知人类型'));
-            $table->string('notifiable_id', 64)->comment('接受通知人ID');
+            $table->string('notifiable_id')->comment('接受通知人ID');
             $table->string('code', 10)->comment('验证码');
             $table->string('status')->default(CaptchaStatusEnum::WAIT)->comment(CaptchaStatusEnum::comments('状态'));
             $table->timestamp('exp_time')->nullable()->comment('过期时间');
