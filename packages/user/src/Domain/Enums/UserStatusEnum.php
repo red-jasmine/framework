@@ -12,11 +12,11 @@ enum UserStatusEnum: string
     use EnumsHelper;
 
 
-    case UNACTIVATED = 'unactivated';
-    case ACTIVATED = 'activated';
-    case SUSPENDED = 'suspended';
-    case DISABLED = 'disabled';
-    case CANCELED = 'canceled';
+    case UNACTIVATED = 'unactivated'; // 未激活
+    case ACTIVATED = 'activated'; // 激活
+    case SUSPENDED = 'suspended'; // 停用
+    case DISABLED = 'disabled'; // 禁用
+    case CANCELED = 'canceled'; // 已注销
 
 
     public static function labels() : array

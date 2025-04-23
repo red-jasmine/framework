@@ -42,6 +42,9 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
+        if (!$user->isAllowActivity()) {
+            throw new  LoginException('用户异常');
+        }
 
         // 发送验证码
 
@@ -77,7 +80,8 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->captchaApplicationService->verify($command);
 
         // 查询用户信息
-        return app(UserReadRepositoryInterface::class)->findByAccount($mobile);
+        return app(UserReadRepositoryInterface::class)->findByMobile($mobile);
+
     }
 
 

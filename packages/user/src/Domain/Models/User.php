@@ -2,11 +2,14 @@
 
 namespace RedJasmine\User\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Facades\AES;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
@@ -28,8 +31,10 @@ class User extends Authenticatable implements JWTSubject, UserInterface
 
     protected function casts() : array
     {
-        // TODO 手机号、邮箱、 加密
+
         return [
+            'mobile'   => AesEncrypted::class,
+            'email'    => AesEncrypted::class,
             'gender'   => UserGenderEnum::class,
             'type'     => UserTypeEnum::class,
             'status'   => UserStatusEnum::class,
@@ -103,6 +108,15 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         }
     }
 
+
+    public function isAllowActivity() : bool
+    {
+        if ($this->status !== UserStatusEnum::ACTIVATED) {
+            return false;
+        }
+        return true;
+    }
+
     public function isAdmin() : bool
     {
         return true;
@@ -113,5 +127,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
         $this->password = $password;
     }
+
 
 }

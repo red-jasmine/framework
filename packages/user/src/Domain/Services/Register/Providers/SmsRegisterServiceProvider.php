@@ -69,7 +69,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
 
         $mobile = $data->data['mobile'] ?? null;
 
-        $hasUser = $this->userReadRepository->findByConditions(['mobile' => $mobile]);
+        $hasUser = $this->userReadRepository->findByMobile($mobile);
         if ($hasUser) {
             throw  new UserRegisterException('手机号已经注册');
         }

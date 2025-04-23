@@ -4,6 +4,7 @@ namespace RedJasmine\User\Domain\Services\Login;
 
 
 use Illuminate\Support\Facades\Auth;
+use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\Facades\UserLoginServiceProvider;
@@ -29,11 +30,20 @@ class UserLoginService
     }
 
 
+    /**
+     * @param  Data\UserLoginData  $data
+     *
+     * @return UserTokenData
+     * @throws LoginException
+     */
     public function login(Data\UserLoginData $data) : UserTokenData
     {
 
         // 使用服务提供者的登陆方法 进行登陆
         $user = $this->attempt($data);
+        if (!$user->isAllowActivity()) {
+            throw new LoginException('账户异常');
+        }
         // 返回 token
         return $this->token($user);
 
@@ -41,14 +51,11 @@ class UserLoginService
 
     public function token(User $user) : UserTokenData
     {
-
         $token                  = Auth::guard('api')->login($user);
         $userToken              = new UserTokenData();
         $userToken->accessToken = (string) $token;
         $userToken->expire      = (int) (config('jwt.ttl') * 60);
         return $userToken;
-
-
     }
 
 }
