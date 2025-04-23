@@ -54,4 +54,12 @@ class Captcha extends Model
         $this->channel_message = $captchaSenderResult->channelMessage;
         $this->send_time       = Carbon::now();
     }
+
+
+    public function setVerified() : void
+    {
+        $this->use_time = now();
+        $this->status   = CaptchaStatusEnum::USED;
+
+    }
 }
