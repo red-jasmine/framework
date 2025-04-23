@@ -12,7 +12,14 @@ class UserLoginService
 {
 
 
-    public function attempt(Data\UserLoginData $data) : User
+    public function captcha(Data\UserLoginData $data) : bool
+    {
+        $provider = UserLoginServiceProvider::create($data->provider);
+        $provider->captcha($data);
+        return true;
+    }
+
+    protected function attempt(Data\UserLoginData $data) : User
     {
         // 使用服务提供者的登陆方法 进行登陆
         $provider = UserLoginServiceProvider::create($data->provider);

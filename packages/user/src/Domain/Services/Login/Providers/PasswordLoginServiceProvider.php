@@ -13,6 +13,11 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
 {
     public const string NAME = 'password';
 
+    public function captcha(UserLoginData $data)
+    {
+        // TODO: Implement captcha() method.
+    }
+
 
     /**
      * @param  UserLoginData  $data

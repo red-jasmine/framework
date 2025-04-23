@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
@@ -18,6 +19,14 @@ class LoginController extends Controller
     public function __construct(
         protected UserApplicationService $commandService
     ) {
+    }
+
+
+    public function captcha(Request $request)
+    {
+        $command = UserLoginCaptchaCommand::from($request);
+        $this->commandService->loginCaptcha($command);
+        return static::success();
     }
 
     public function login(Request $request) : JsonResponse|JsonResource

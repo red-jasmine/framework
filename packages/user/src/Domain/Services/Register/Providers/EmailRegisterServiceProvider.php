@@ -18,7 +18,7 @@ class EmailRegisterServiceProvider implements UserRegisterServiceProviderInterfa
 
     public const string NAME = 'email';
 
-    public function preCheck(UserRegisterData $data) : UserData
+    public function captcha(UserRegisterData $data) : UserData
     {
         // TODO: Implement preCheck() method.
     }

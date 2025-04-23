@@ -9,7 +9,7 @@ interface UserRegisterServiceProviderInterface
 {
 
     // 预校验步骤
-    public function preCheck(UserRegisterData $data) : UserData;
+    public function captcha(UserRegisterData $data) : UserData;
 
     // 注册步骤
     public function register(UserRegisterData $data) : UserData;

@@ -20,7 +20,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
      * @return UserData
      * @throws UserRegisterException
      */
-    public function preCheck(UserRegisterData $data) : UserData
+    public function captcha(UserRegisterData $data) : UserData
     {
         // 邮箱 or 手机 or 用户名 必须填写一个
 

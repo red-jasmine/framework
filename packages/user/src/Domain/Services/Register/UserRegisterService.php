@@ -14,12 +14,18 @@ use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider
  */
 class UserRegisterService
 {
-    public function register(UserRegisterData $data) : User
+
+
+    public function captcha(UserRegisterData $data) : void
     {
         $provider = UserRegisterServiceProvider::create($data->provider);
 
-        $provider->preCheck($data);
+        $provider->captcha($data);
+    }
 
+    public function register(UserRegisterData $data) : User
+    {
+        $provider = UserRegisterServiceProvider::create($data->provider);
 
         $userData = $provider->register($data);
 

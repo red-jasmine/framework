@@ -21,7 +21,7 @@ class SocialiteRegisterServiceProvider implements UserRegisterServiceProviderInt
     public const string NAME = 'socialite';
 
 
-    public function preCheck(UserRegisterData $data) : UserData
+    public function captcha(UserRegisterData $data) : UserData
     {
         // 获取第三方用户
         // TODO: Implement preCheck() method.

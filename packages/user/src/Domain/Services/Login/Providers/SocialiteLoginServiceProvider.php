@@ -17,6 +17,12 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 
     public const string NAME = 'socialite';
 
+    public function captcha(UserLoginData $data)
+    {
+        // TODO: Implement captcha() method.
+    }
+
+
     /**
      * @param  UserLoginData  $data
      *

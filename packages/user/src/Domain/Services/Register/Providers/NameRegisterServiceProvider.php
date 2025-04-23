@@ -20,7 +20,7 @@ class NameRegisterServiceProvider implements UserRegisterServiceProviderInterfac
      * @return UserData
      * @throws UserRegisterException
      */
-    public function preCheck(UserRegisterData $data) : UserData
+    public function captcha(UserRegisterData $data) : UserData
     {
         //严重用户名是否已经注册
         if (app(UserReadRepositoryInterface::class)->findByName($data->data['account'])) {

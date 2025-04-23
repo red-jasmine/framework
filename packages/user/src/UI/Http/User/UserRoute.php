@@ -18,10 +18,12 @@ class UserRoute
         ], function () use ($guard) {
 
             // 无需登录
-            Route::post('login', [LoginController::class, 'login'])->name('user.user.api.login');
+            Route::post('login/captcha', [LoginController::class, 'captcha'])->name('user.user.api.login.captcha');
+            Route::post('login/login', [LoginController::class, 'login'])->name('user.user.api.login.login');
 
 
-            Route::post('register', [RegisterController::class, 'register'])->name('user.user.api.register');
+            Route::post('register/captcha', [RegisterController::class, 'captcha'])->name('user.user.api.register.captcha');
+            Route::post('register/register', [RegisterController::class, 'register'])->name('user.user.api.register.register');
 
 
 

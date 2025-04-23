@@ -4,10 +4,13 @@ namespace RedJasmine\User\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommand;
+use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserRegisterCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
@@ -27,8 +30,11 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method getSocialites(GetSocialitesQuery $query)
  * @see UserRegisterCommandHandler::handle()
  * @method User register(UserRegisterCommand $command)
+ * @see UserRegisterCaptchaCommandHandler::handle()
+ * @method bool registerCaptcha(UserRegisterCommand $command)
  * @see UserLoginCommandHandler::handle()
  * @method UserTokenData login(UserLoginCommand $command)
+ * @method bool  loginCaptcha(UserLoginCaptchaCommand $command)
  * @method UserTokenData loginOrRegister(UserLoginOrRegisterCommand $command)
  * @method bool updateBaseInfo(UserUpdateBaseInfoCommand $command)
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
@@ -53,7 +59,9 @@ class UserApplicationService extends ApplicationService
     protected static $macros = [
         'update'          => UserUpdateBaseInfoCommandHandler::class,
         'getSocialites'   => GetSocialitesQueryHandler::class,
+        'registerCaptcha' => UserRegisterCaptchaCommandHandler::class,
         'register'        => UserRegisterCommandHandler::class,
+        'loginCaptcha'    => UserLoginCaptchaCommandHandler::class,
         'login'           => UserLoginCommandHandler::class,
         'loginOrRegister' => UserLoginOrRegisterCommandHandler::class,
         'updateBaseInfo'  => UserUpdateBaseInfoCommandHandler::class,
