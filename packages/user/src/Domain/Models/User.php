@@ -3,6 +3,7 @@
 namespace RedJasmine\User\Domain\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -126,6 +127,16 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     public function setPassword(string $password) : void
     {
         $this->password = $password;
+    }
+
+    public function changeMobile(string $mobile) : void
+    {
+        $this->mobile = $mobile;
+    }
+
+    public function changeEmail(string $email) : void
+    {
+        $this->email = $email;
     }
 
 

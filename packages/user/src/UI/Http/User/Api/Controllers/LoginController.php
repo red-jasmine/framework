@@ -17,26 +17,26 @@ class LoginController extends Controller
 
 
     public function __construct(
-        protected UserApplicationService $commandService
+        protected UserApplicationService $service
     ) {
     }
 
 
-    public function captcha(Request $request)
+    public function captcha(Request $request) : JsonResponse
     {
         $command = UserLoginCaptchaCommand::from($request);
-        $this->commandService->loginCaptcha($command);
+        $this->service->loginCaptcha($command);
         return static::success();
     }
 
-    public function login(Request $request) : JsonResponse|JsonResource
+    public function login(Request $request) : JsonResponse
     {
         if (!$request->input('fallback_register', false)) {
             $command       = UserLoginCommand::from($request);
-            $userTokenData = $this->commandService->login($command);
+            $userTokenData = $this->service->login($command);
         } else {
             $command       = UserLoginOrRegisterCommand::from($request);
-            $userTokenData = $this->commandService->loginOrRegister($command);
+            $userTokenData = $this->service->loginOrRegister($command);
         }
         return static::success($userTokenData->toArray());
 

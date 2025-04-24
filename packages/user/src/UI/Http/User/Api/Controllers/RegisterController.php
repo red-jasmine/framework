@@ -22,9 +22,9 @@ class RegisterController extends Controller
     /**
      * @param  RegisterRequest  $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public function captcha(RegisterRequest $request) : JsonResponse|JsonResource
+    public function captcha(RegisterRequest $request) : JsonResponse
     {
         $command = UserRegisterCaptchaCommand::from($request);
 
@@ -35,7 +35,7 @@ class RegisterController extends Controller
 
     }
 
-    public function register(RegisterRequest $request) : JsonResponse|JsonResource
+    public function register(RegisterRequest $request) : JsonResponse
     {
 
         $command = UserRegisterCommand::from($request);

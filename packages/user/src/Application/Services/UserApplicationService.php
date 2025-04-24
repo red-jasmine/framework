@@ -4,6 +4,12 @@ namespace RedJasmine\User\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommand;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommandHandler;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountChangeCommand;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountChangeCommandHandler;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountVerifyCommand;
+use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountVerifyCommandHandler;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommand;
@@ -45,6 +51,9 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool setPassword(UserSetPasswordCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
  * @method bool forgotPassword(ForgotPasswordCommand $command)
+ * @method bool changeAccountCaptcha(ChangeAccountCaptchaCommand $command)
+ * @method bool changeAccountVerify(ChangeAccountVerifyCommand $command)
+ * @method bool changeAccountChange(ChangeAccountChangeCommand $command)
  *
  */
 class UserApplicationService extends ApplicationService
@@ -75,6 +84,11 @@ class UserApplicationService extends ApplicationService
         'setPassword'           => UserSetPasswordCommandHandler::class,
         'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
         'forgotPassword'        => ForgotPasswordCommandHandler::class,
+        'changeAccountCaptcha'  => ChangeAccountCaptchaCommandHandler::class,
+        'changeAccountVerify'   => ChangeAccountVerifyCommandHandler::class,
+        'changeAccountChange'   => ChangeAccountChangeCommandHandler::class,
+
+
     ];
 
 

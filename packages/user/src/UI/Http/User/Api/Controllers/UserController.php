@@ -37,9 +37,9 @@ class UserController extends Controller
      *
      * @param  Request  $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public function socialites(Request $request) : JsonResponse|JsonResource
+    public function socialites(Request $request) : JsonResponse
     {
         $request->offsetSet('id', Auth::id());
         $result = $this->service->getSocialites(GetSocialitesQuery::from($request));
@@ -51,9 +51,9 @@ class UserController extends Controller
      *
      * @param  Request  $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public function updateBaseInfo(Request $request) : JsonResponse|JsonResource
+    public function updateBaseInfo(Request $request) : JsonResponse
     {
 
         $request->offsetSet('id', Auth::id());
@@ -69,9 +69,9 @@ class UserController extends Controller
      *
      * @param  Request  $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public function unbindSocialite(Request $request) : JsonResponse|JsonResource
+    public function unbindSocialite(Request $request) : JsonResponse
     {
         $request->offsetSet('id', Auth::id());
 
@@ -86,9 +86,9 @@ class UserController extends Controller
      *
      * @param  PasswordRequest  $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public function password(PasswordRequest $request) : JsonResponse|JsonResource
+    public function password(PasswordRequest $request) : JsonResponse
     {
         $request->offsetSet('id', Auth::id());
 
@@ -96,9 +96,4 @@ class UserController extends Controller
 
         return static::success();
     }
-
-
-    // 修改用户名
-    // 修改手机号
-    // 修改邮箱
 }

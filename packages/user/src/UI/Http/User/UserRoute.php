@@ -3,6 +3,7 @@
 namespace RedJasmine\User\UI\Http\User;
 
 use Illuminate\Support\Facades\Route;
+use RedJasmine\User\UI\Http\User\Api\Controllers\ChangeAccountController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\ForgotPasswordController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\RegisterController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\UserController;
@@ -61,6 +62,14 @@ class UserRoute
 
                 // 设置密码
                 Route::put('password', [UserController::class, 'password'])->name('user.api.user.password');
+
+                // 更换账号
+                Route::post('change-account/captcha', [ChangeAccountController::class, 'captcha'])
+                     ->name('user.api.user.change-account.captcha');
+                Route::post('change-account/verify', [ChangeAccountController::class, 'verify'])
+                     ->name('user.api.user.change-account.verify');
+                Route::post('change-account/change', [ChangeAccountController::class, 'change'])
+                     ->name('user.api.user.change-account.change');
             });
 
 
