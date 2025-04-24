@@ -31,9 +31,9 @@ trait ResponseJson
      * @param  mixed|null  $data
      * @param  string  $message
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      */
-    public static function success(mixed $data = null, string $message = 'ok') : JsonResponse|JsonResource
+    public static function success(mixed $data = null, string $message = 'ok') : JsonResponse
     {
         if ($data instanceof JsonResource) {
             return $data;
