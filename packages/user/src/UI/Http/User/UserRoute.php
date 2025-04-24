@@ -3,6 +3,7 @@
 namespace RedJasmine\User\UI\Http\User;
 
 use Illuminate\Support\Facades\Route;
+use RedJasmine\User\UI\Http\User\Api\Controllers\ForgotPasswordController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\RegisterController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\UserController;
 use RedJasmine\User\UI\Http\User\Api\Controllers\LoginController;
@@ -26,6 +27,10 @@ class UserRoute
             Route::post('register/register', [RegisterController::class, 'register'])->name('user.user.api.register.register');
 
 
+            Route::post('forgot-password/captcha', [ForgotPasswordController::class, 'captcha'])
+                 ->name('user.user.api.forgot-password.captcha');
+            Route::post('forgot-password/forgot-password', [ForgotPasswordController::class, 'resetPassword'])
+                 ->name('user.user.api.forgot-password.forgot-password');
 
 
             // 需要登录

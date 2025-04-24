@@ -1,0 +1,20 @@
+<?php
+
+namespace RedJasmine\User\Domain\Services\ForgotPassword\Data;
+
+use RedJasmine\Support\Data\Data;
+
+class ForgotPasswordData extends Data
+{
+    public string $provider;
+
+    public ?string $ip;
+
+    public ?string $ua;
+
+    public ?string $version;
+
+    public array $data;
+
+    public ?string $password;
+}

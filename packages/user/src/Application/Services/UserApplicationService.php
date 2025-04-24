@@ -4,6 +4,10 @@ namespace RedJasmine\User\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommand;
+use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommandHandler;
+use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommand;
+use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
@@ -39,6 +43,8 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool updateBaseInfo(UserUpdateBaseInfoCommand $command)
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
  * @method bool setPassword(UserSetPasswordCommand $command)
+ * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
+ * @method bool forgotPassword(ForgotPasswordCommand $command)
  *
  */
 class UserApplicationService extends ApplicationService
@@ -57,16 +63,18 @@ class UserApplicationService extends ApplicationService
 
 
     protected static $macros = [
-        'update'          => UserUpdateBaseInfoCommandHandler::class,
-        'getSocialites'   => GetSocialitesQueryHandler::class,
-        'registerCaptcha' => UserRegisterCaptchaCommandHandler::class,
-        'register'        => UserRegisterCommandHandler::class,
-        'loginCaptcha'    => UserLoginCaptchaCommandHandler::class,
-        'login'           => UserLoginCommandHandler::class,
-        'loginOrRegister' => UserLoginOrRegisterCommandHandler::class,
-        'updateBaseInfo'  => UserUpdateBaseInfoCommandHandler::class,
-        'unbindSocialite' => UserUnbindSocialiteCommandHandler::class,
-        'setPassword'     => UserSetPasswordCommandHandler::class
+        'update'                => UserUpdateBaseInfoCommandHandler::class,
+        'getSocialites'         => GetSocialitesQueryHandler::class,
+        'registerCaptcha'       => UserRegisterCaptchaCommandHandler::class,
+        'register'              => UserRegisterCommandHandler::class,
+        'loginCaptcha'          => UserLoginCaptchaCommandHandler::class,
+        'login'                 => UserLoginCommandHandler::class,
+        'loginOrRegister'       => UserLoginOrRegisterCommandHandler::class,
+        'updateBaseInfo'        => UserUpdateBaseInfoCommandHandler::class,
+        'unbindSocialite'       => UserUnbindSocialiteCommandHandler::class,
+        'setPassword'           => UserSetPasswordCommandHandler::class,
+        'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
+        'forgotPassword'        => ForgotPasswordCommandHandler::class,
     ];
 
 

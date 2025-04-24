@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\User\Domain\Services\Login\Providers;
+namespace RedJasmine\User\Domain\Services\ForgotPassword\Providers;
 
 use RedJasmine\Captcha\Application\Services\CaptchaApplicationService;
 use RedJasmine\Captcha\Application\Services\Commands\CaptchaCreateCommand;
@@ -9,11 +9,13 @@ use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
-use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
-use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
+use RedJasmine\User\Domain\Services\ForgotPassword\Contracts\UserForgotPasswordServiceProviderInterface;
+use RedJasmine\User\Domain\Services\ForgotPassword\Data\ForgotPasswordData;
 
-class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
+class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProviderInterface
 {
+
+    public const string  NAME = 'sms';
     protected CaptchaApplicationService   $captchaApplicationService;
     protected UserReadRepositoryInterface $userReadRepository;
 
@@ -24,33 +26,13 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->userReadRepository        = app(UserReadRepositoryInterface::class);
     }
 
-    public const string NAME = 'sms';
-
-    /**
-     * @param  UserLoginData  $data
-     *
-     * @return bool
-     * @throws LoginException
-     */
-    public function captcha(UserLoginData $data) : bool
+    public function captcha(ForgotPasswordData $data) : bool
     {
-        // 验证用户是否存在
-        $mobile = $data->data['mobile'];
-        // TODO 验证手机号 格式
-
-        $user = app(UserReadRepositoryInterface::class)->findByMobile($mobile);
-        if (!$user) {
-            throw new  LoginException('用户未注册');
-        }
-        if (!$user->isAllowActivity()) {
-            throw new  LoginException('用户异常');
-        }
+        // 查询账户
 
         // 发送验证码
-
-
         $command = CaptchaCreateCommand::from([
-            'type'            => 'login',
+            'type'            => 'forgot-password',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['mobile'],
@@ -62,17 +44,39 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         return true;
     }
 
-
-    public function login(UserLoginData $data) : User
+    protected function validate(ForgotPasswordData $data) : User
     {
+        $mobile = $data->data['mobile'];
+        // 发送验证码
+        $user = app(UserReadRepositoryInterface::class)->findByMobile($mobile);
+        if (!$user) {
+            throw new  LoginException('用户未注册');
+        }
+        if (!$user->isAllowActivity()) {
+            throw new  LoginException('用户异常');
+        }
 
-        // 获取账户信息
-        $mobile  = $data->data['mobile'];
-        $code    = $data->data['code'] ?? null;
+        return $user;
+
+    }
+
+    /**
+     * @param  ForgotPasswordData  $data
+     *
+     * @return int
+     * @throws LoginException
+     */
+    public function verify(ForgotPasswordData $data) : int
+    {
+        // 验证用户
+        $user = $this->validate($data);
+
+        // 验证验证码
+        $code = $data->data['code'] ?? null;
 
 
         $command = CaptchaVerifyCommand::from([
-            'type'            => 'login',
+            'type'            => 'forgot-password',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['mobile'],
@@ -81,9 +85,8 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 
         $this->captchaApplicationService->verify($command);
 
-        // 查询用户信息
-        return app(UserReadRepositoryInterface::class)->findByMobile($mobile);
 
+        return $user->id;
     }
 
 
