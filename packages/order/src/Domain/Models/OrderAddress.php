@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -27,34 +28,41 @@ class OrderAddress extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_addresses';
+        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_addresses';
     }
 
 
     protected $fillable = [
         'contacts',
-        'mobile',
+        'phone',
         'country',
         'province',
         'city',
         'district',
         'street',
-        'country_id',
-        'province_id',
-        'city_id',
-        'district_id',
-        'street_id',
+        'village',
+        'country_code',
+        'province_code',
+        'city_code',
+        'district_code',
+        'street_code',
+        'village_code',
         'address',
-        'zip_code',
-        'lon',
-        'lat',
+        'more_address',
+        'company',
+        'postcode',
+        'sort',
+        'tag',
+        'latitude',
+        'longitude',
+
     ];
 
     protected $casts = [
-        'extras'  => 'array',
-        'contacts' => 'encrypted',
-        'mobile'   => 'encrypted',
-        'address'  => 'encrypted',
+        'extras' => 'array',
+        'contacts' => AesEncrypted::class,
+        'phone' => AesEncrypted::class,
+        'address' => AesEncrypted::class,
     ];
 
     protected $appends = [
@@ -70,7 +78,9 @@ class OrderAddress extends Model
     public function fullAddress() : Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => implode([ $attributes['province'], $attributes['city'], $attributes['district'], $attributes['street'], $attributes['address'] ])
+            get: fn($value, $attributes) => implode([
+                $attributes['province'], $attributes['city'], $attributes['district'], $attributes['street'], $attributes['address']
+            ])
         );
 
     }

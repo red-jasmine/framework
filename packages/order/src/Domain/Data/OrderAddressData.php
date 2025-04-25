@@ -7,22 +7,27 @@ use RedJasmine\Support\Data\Data;
 class OrderAddressData extends Data
 {
 
-    public string  $contacts;
-    public string  $mobile;
+    public ?string $contacts;
+    public ?string $phone;
     public ?string $country;
     public ?string $province;
     public ?string $city;
     public ?string $district;
     public ?string $street;
+    public ?string $village;
     public ?string $address;
-    public ?string $zip_code;
-    public ?string $lon;
-    public ?int    $lat;
-    public ?int    $countryId;
-    public ?int    $provinceId;
-    public ?int    $cityId;
-    public ?int    $districtId;
-    public ?int    $streetId;
+    public ?string $moreAddress;
+    public ?string $company;
+    public ?string $postcode;
+    public ?string $countryCode;
+    public ?string $provinceCode;
+    public ?string $cityCode;
+    public ?string $districtCode;
+    public ?string $streetCode;
+    public ?string $villageCode;
+    public ?string $latitude;
+    public ?string $longitude;
+    public ?string $tag;
     public ?array  $extras;
 
 }
