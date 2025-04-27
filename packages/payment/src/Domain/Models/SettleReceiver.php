@@ -28,7 +28,7 @@ class SettleReceiver extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settle_receivers';
+        return 'payment_settle_receivers';
     }
 
     protected $dispatchesEvents = [

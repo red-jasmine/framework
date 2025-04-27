@@ -10,7 +10,7 @@ use RedJasmine\Payment\Domain\Models\Enums\SettleRelationTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settle_receivers',
+        Schema::create('payment_settle_receivers',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->unsignedBigInteger('system_merchant_app_id')->comment('系统商户ID');

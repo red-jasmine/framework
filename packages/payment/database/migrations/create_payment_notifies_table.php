@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_notifies',
+        Schema::create('payment_notifies',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
@@ -31,6 +31,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_notifies');
+        Schema::dropIfExists('payment_notifies');
     }
 };

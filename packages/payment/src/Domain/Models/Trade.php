@@ -92,7 +92,7 @@ class Trade extends Model implements AsyncNotifyInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades';
+        return 'payment_trades';
     }
 
     protected $dispatchesEvents = [

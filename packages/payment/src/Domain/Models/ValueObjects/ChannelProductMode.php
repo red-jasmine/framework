@@ -30,7 +30,7 @@ class ChannelProductMode extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_product_modes';
+        return 'payment_channel_product_modes';
     }
 
 

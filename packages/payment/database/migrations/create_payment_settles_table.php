@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settles',
+        Schema::create('payment_settles',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('settle_no', 64)->unique()->comment('结算号');
@@ -50,6 +50,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_settles');
+        Schema::dropIfExists('payment_settles');
     }
 };

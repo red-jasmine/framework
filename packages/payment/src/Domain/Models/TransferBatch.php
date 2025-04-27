@@ -19,7 +19,7 @@ class TransferBatch extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfer_batches';
+        return 'payment_transfer_batches';
     }
 
 

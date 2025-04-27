@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers',
+        Schema::create( 'payment_transfers',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('transfer_no')->unique()->comment('转账号');
@@ -55,6 +55,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers');
+        Schema::dropIfExists( 'payment_transfers');
     }
 };

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfer_batches',
+        Schema::create('payment_transfer_batches',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('batch_no')->unique()->comment('批次号');
@@ -34,6 +34,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_transfer_batches');
+        Schema::dropIfExists('payment_transfer_batches');
     }
 };

@@ -8,8 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix',
-                'jasmine_').'payment_merchant_channel_app_permissions', function (Blueprint $table) {
+        Schema::create('payment_merchant_channel_app_permissions', function (Blueprint $table) {
             $table->id()->comment('ID');
             $table->unsignedBigInteger('merchant_app_id')->comment('商户应用ID');
             $table->unsignedBigInteger('channel_app_id')->comment('渠道应用表ID');
@@ -26,7 +25,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix',
-                'jasmine_').'payment_merchant_channel_app_permissions');
+        Schema::dropIfExists('payment_merchant_channel_app_permissions');
     }
 };

@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\ModeStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes', function (Blueprint $table) {
+        Schema::create( 'payment_channel_product_modes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('system_channel_product_id')->comment('支付产品ID');
             $table->string('scene_code')->comment('支付场景');
@@ -25,6 +25,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_product_modes');
+        Schema::dropIfExists( 'payment_channel_product_modes');
     }
 };

@@ -43,7 +43,7 @@ class Transfer extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_transfers';
+        return 'payment_transfers';
     }
 
     protected function casts() : array

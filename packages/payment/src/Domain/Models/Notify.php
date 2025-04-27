@@ -61,7 +61,7 @@ class Notify extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_notifies';
+        return  'payment_notifies';
     }
 
 

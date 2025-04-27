@@ -30,7 +30,7 @@ class TradeExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_trades_extension';
+        return 'payment_trades_extension';
     }
 
     public function trade() : BelongsTo

@@ -29,7 +29,7 @@ class RefundExtension extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds_extension';
+        return 'payment_refunds_extension';
     }
 
     public function refund() : BelongsTo

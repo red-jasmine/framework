@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Enums\SignMethodEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps',
+        Schema::create( 'payment_channel_apps',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->string('owner_type', 32);
@@ -48,6 +48,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channel_apps');
+        Schema::dropIfExists( 'payment_channel_apps');
     }
 };

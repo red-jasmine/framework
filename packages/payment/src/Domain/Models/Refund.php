@@ -107,7 +107,7 @@ class Refund extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_refunds';
+        return 'payment_refunds';
     }
 
     public function trade() : BelongsTo

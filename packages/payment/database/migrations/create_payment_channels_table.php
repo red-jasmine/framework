@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\ChannelStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channels', function (Blueprint $table) {
+        Schema::create( 'payment_channels', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('code')->comment('渠道标识');
             $table->string('name')->comment('渠道名称');
@@ -27,6 +27,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_') . 'payment_channels');
+        Schema::dropIfExists( 'payment_channels');
     }
 };

@@ -33,7 +33,7 @@ class Channel extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channels';
+        return 'payment_channels';
     }
 
     public function products() : HasMany

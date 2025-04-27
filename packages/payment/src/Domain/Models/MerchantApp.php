@@ -57,7 +57,7 @@ class MerchantApp extends Model
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps';
+        return 'payment_merchant_apps';
     }
 
 
@@ -90,7 +90,7 @@ class MerchantApp extends Model
     {
         return $this->belongsToMany(
             ChannelApp::class,
-            config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_channel_app_permissions',
+            'payment_merchant_channel_app_permissions',
             'merchant_app_id',
             'channel_app_id',
         )->using(MerchantChannelAppPermission::class)

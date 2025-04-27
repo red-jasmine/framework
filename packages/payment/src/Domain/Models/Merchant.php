@@ -49,7 +49,7 @@ class Merchant extends Model implements OwnerInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchants';
+        return 'payment_merchants';
     }
 
 

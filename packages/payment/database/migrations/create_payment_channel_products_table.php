@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_products',
+        Schema::create('payment_channel_products',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->string('channel_code')->comment('渠道');
@@ -33,6 +33,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_channel_products');
+        Schema::dropIfExists('payment_channel_products');
     }
 };

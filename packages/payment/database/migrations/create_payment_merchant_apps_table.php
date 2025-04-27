@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps',
+        Schema::create('payment_merchant_apps',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
@@ -34,6 +34,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix', 'jasmine_').'payment_merchant_apps');
+        Schema::dropIfExists('payment_merchant_apps');
     }
 };
