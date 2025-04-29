@@ -30,6 +30,8 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
 
+            $table->string('ip')->nullable()->comment('IP');
+
             $table->rememberToken();
             $table->timestamps();
             $table->index(['name'], 'idx_name');
