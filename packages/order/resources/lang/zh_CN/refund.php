@@ -66,7 +66,7 @@ return [
         'description'    => '描述',
         'images'         => '图片',
         'reject_reason'  => '拒绝理由',
-        'extras'        => '扩展',
+        'extra'        => '扩展',
 
         // |--------------公共部分-------------------
         'order_id'         => '订单编号',

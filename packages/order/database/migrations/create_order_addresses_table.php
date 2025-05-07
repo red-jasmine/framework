@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->decimal('latitude', 10, 8)->nullable()->comment('纬度');
             $table->string('remarks')->nullable()->comment('备注');
             $table->string('tag')->nullable()->comment('标签');
-            $table->json('extras')->nullable()->comment('扩展');
+            $table->json('extra')->nullable()->comment('扩展');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable()->comment('创建者类型');
             $table->string('creator_id', 64)->nullable()->comment('创建者ID');

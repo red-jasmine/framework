@@ -47,7 +47,7 @@ class ProductCategoryReadRepository extends QueryBuilderReadRepository implement
             'is_leaf',
             'is_show',
             'status',
-            'extras',
+            'extra',
         ];
 
     }

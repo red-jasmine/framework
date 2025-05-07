@@ -22,7 +22,7 @@ class GroupResource extends JsonResource
             'is_leaf'    => $this->is_leaf,
             'is_show'    => $this->is_show,
             'status'     => $this->status,
-            'extras'    => $this->extras,
+            'extra'    => $this->extra,
             'children'   => static::collection(collect($this->children)),
             'parent'     => new static($this->whenLoaded('parent')),
         ];

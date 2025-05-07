@@ -35,7 +35,7 @@ class ProductData extends Data
      */
     public ?string $buyerRemarks;
     public ?string $buyerMessage;
-    public ?array  $buyerExtras;
+    public ?array  $buyerExtra;
     public ?array  $tools;
 
 

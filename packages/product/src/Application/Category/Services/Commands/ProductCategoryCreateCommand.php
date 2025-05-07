@@ -45,7 +45,7 @@ class ProductCategoryCreateCommand extends Data
             'description' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'group_name'  => [ 'sometimes', 'nullable', 'max:100' ],
             'image'       => [ 'sometimes', 'nullable', 'max:255' ],
-            'extras'     => [ 'sometimes', 'nullable', 'array' ],
+            'extra'     => [ 'sometimes', 'nullable', 'array' ],
         ];
 
     }

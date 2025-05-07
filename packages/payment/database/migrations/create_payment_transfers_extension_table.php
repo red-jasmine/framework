@@ -15,7 +15,7 @@ return new class extends Migration {
                 $table->string('request_url')->nullable()->comment('请求地址');
                 $table->string('notify_url')->nullable()->comment('业务通知地址');
                 $table->json('pass_back_params')->nullable()->comment('回传参数');
-                $table->json('extras')->nullable()->comment('扩展参数');
+                $table->json('extra')->nullable()->comment('扩展参数');
                 $table->string('error_message')->nullable()->comment('错误信息');
                 $table->timestamps();
                 $table->comment('支付-转账扩展信息表');

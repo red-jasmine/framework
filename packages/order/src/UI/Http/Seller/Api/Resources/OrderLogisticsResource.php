@@ -28,7 +28,7 @@ class OrderLogisticsResource extends JsonResource
             'collect_time'         => $this->collect_time,
             'dispatch_time'        => $this->dispatch_time,
             'signed_time'          => $this->signed_time,
-            'extras'              => $this->extras,
+            'extra'              => $this->extra,
             'version'              => $this->version,
             'creator_id'           => $this->creator_id,
             'creator_type'         => $this->creator_type,

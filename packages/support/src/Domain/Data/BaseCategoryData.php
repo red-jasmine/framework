@@ -32,7 +32,7 @@ class BaseCategoryData extends Data
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['cluster', 'nullable', 'string', 'max:255'],
             'image'       => ['sometimes', 'nullable', 'max:255'],
-            'extras'      => ['sometimes', 'nullable', 'array'],
+            'extra'      => ['sometimes', 'nullable', 'array'],
         ];
 
     }

@@ -38,7 +38,7 @@ class WalletTransaction extends Model implements OperatorInterface
             'direction'        => AmountDirectionEnum::class,
             'transaction_type' => TransactionTypeEnum::class,
             'amount'           => AmountCast::class,
-            'extras'           => 'array',
+            'extra'           => 'array',
         ];
     }
 

@@ -53,7 +53,7 @@ class VipProductRepository implements VipProductRepositoryInterface
             'stock'         => $model->stock,
             'appId'         => $model->app_id,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
-            'extras'        => [
+            'extra'        => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],
@@ -84,7 +84,7 @@ class VipProductRepository implements VipProductRepositoryInterface
             'stock'         => $model->stock,
             'appId'         => $model->app_id,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
-            'extras'        => [
+            'extra'        => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],

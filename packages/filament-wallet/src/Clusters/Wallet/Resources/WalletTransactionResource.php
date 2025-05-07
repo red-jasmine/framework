@@ -74,7 +74,7 @@ class WalletTransactionResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('remarks')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('extras'),
+                Forms\Components\TextInput::make('extra'),
                 Forms\Components\TextInput::make('version')
                     ->required()
                     ->numeric()

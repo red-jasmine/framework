@@ -25,7 +25,7 @@ class WalletRecharge extends Model implements OwnerInterface, OperatorInterface
 
     protected $casts = [
         'status' => RechargeStatusEnum::class,
-        'extras' => 'array',
+        'extra' => 'array',
     ];
 
 

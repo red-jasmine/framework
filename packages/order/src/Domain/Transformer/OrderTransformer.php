@@ -46,9 +46,9 @@ class OrderTransformer
         $order->extension->seller_message = $orderData->sellerMessage;
         $order->extension->buyer_remarks  = $orderData->buyerRemarks;
         $order->extension->buyer_message  = $orderData->buyerMessage;
-        $order->extension->seller_extras  = $orderData->sellerExtras;
-        $order->extension->buyer_extras   = $orderData->buyerExtras;
-        $order->extension->other_extras   = $orderData->otherExtras;
+        $order->extension->seller_extra  = $orderData->sellerExtra;
+        $order->extension->buyer_extra   = $orderData->buyerExtra;
+        $order->extension->other_extra   = $orderData->otherExtra;
         $order->extension->tools          = $orderData->tools;
 
 
@@ -108,9 +108,9 @@ class OrderTransformer
         $orderProduct->extension->seller_message       = $orderProductData->sellerMessage;
         $orderProduct->extension->buyer_remarks        = $orderProductData->buyerRemarks;
         $orderProduct->extension->buyer_message        = $orderProductData->buyerMessage;
-        $orderProduct->extension->seller_extras        = $orderProductData->sellerExtras;
-        $orderProduct->extension->buyer_remarks        = $orderProductData->buyerExtras;
-        $orderProduct->extension->other_extras         = $orderProductData->otherExtras;
+        $orderProduct->extension->seller_extra        = $orderProductData->sellerExtra;
+        $orderProduct->extension->buyer_remarks        = $orderProductData->buyerExtra;
+        $orderProduct->extension->other_extra         = $orderProductData->otherExtra;
         $orderProduct->extension->after_sales_services = $orderProductData->afterSalesServices;
         $orderProduct->extension->tools                = $orderProductData->tools;
         $orderProduct->extension->form                 = $orderProductData->form;

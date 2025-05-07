@@ -55,7 +55,7 @@ class OrderRefundResource extends JsonResource
             'seller_custom_status'   => $this->seller_custom_status,
             'seller_remarks'         => $this->seller_remarks,
             'buyer_remarks'          => $this->buyer_remarks,
-            'extras'                => $this->extras,
+            'extra'                => $this->extra,
             'version'                => $this->version,
             'creator_id'             => $this->creator_id,
             'creator_type'           => $this->creator_type,

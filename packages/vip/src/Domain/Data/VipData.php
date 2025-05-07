@@ -24,7 +24,7 @@ class VipData extends Data
 
     public ?string $description;
 
-    public ?array $extras;
+    public ?array $extra;
 
 
 }

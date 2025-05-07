@@ -84,7 +84,7 @@ class WalletWithdrawalResource extends Resource
                 Forms\Components\TextInput::make('payment_channel_trade_no')
                     ->maxLength(64),
                 Forms\Components\DateTimePicker::make('payment_time'),
-                Forms\Components\TextInput::make('extras'),
+                Forms\Components\TextInput::make('extra'),
                 Forms\Components\TextInput::make('version')
                     ->required()
                     ->numeric()

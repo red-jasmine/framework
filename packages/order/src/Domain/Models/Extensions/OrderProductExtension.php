@@ -23,9 +23,9 @@ class OrderProductExtension extends Model
     protected $casts = [
         'after_sales_services' => 'array',
         'form'                 => 'array',
-        'buyer_extras'        => 'array',
-        'seller_extras'       => 'array',
-        'other_extras'        => 'array',
+        'buyer_extra'        => 'array',
+        'seller_extra'       => 'array',
+        'other_extra'        => 'array',
         'tools'                => 'array',
     ];
 

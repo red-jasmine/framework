@@ -54,7 +54,7 @@ class ProductCategoryQueryService extends ApplicationQueryService
             'is_leaf',
             'is_show',
             'status',
-            'extras',
+            'extra',
         ];
 
     }

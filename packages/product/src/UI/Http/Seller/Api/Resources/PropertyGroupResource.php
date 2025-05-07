@@ -15,7 +15,7 @@ class PropertyGroupResource extends JsonResource
             'name'         => $this->name,
             'sort'         => $this->sort,
             'status'       => $this->status,
-            'extras'      => $this->extras,
+            'extra'      => $this->extra,
         ];
     }
 }

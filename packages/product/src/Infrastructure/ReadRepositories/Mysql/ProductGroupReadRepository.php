@@ -36,7 +36,7 @@ class ProductGroupReadRepository extends QueryBuilderReadRepository implements P
             'is_leaf',
             'is_show',
             'status',
-            'extras',
+            'extra',
         ];
 
     }

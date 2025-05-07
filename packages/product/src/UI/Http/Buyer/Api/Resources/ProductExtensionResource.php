@@ -25,7 +25,7 @@ class ProductExtensionResource extends JsonResource
             'length'           => $this->length,
             'size'             => $this->size,
             'tools'            => $this->tools,
-            'extras'          => $this->extras,
+            'extra'          => $this->extra,
 
         ];
     }

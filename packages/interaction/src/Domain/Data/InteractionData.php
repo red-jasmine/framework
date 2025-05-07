@@ -25,6 +25,6 @@ class InteractionData extends Data
     /**
      * @var array 扩展字段 由互动类型确认
      */
-    public array $extras = [];
+    public array $extra = [];
 
 }

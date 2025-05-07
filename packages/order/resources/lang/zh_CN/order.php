@@ -104,9 +104,9 @@ return [
         'buyer_remarks'  => '买家备注',
         'buyer_message'  => '买家留言',
         'seller_message' => '卖家留言',
-        'seller_extras' => '卖家扩展信息',
-        'buyer_extras'  => '买家扩展信息',
-        'other_extras'  => '其他扩展信息',
+        'seller_extra' => '卖家扩展信息',
+        'buyer_extra'  => '买家扩展信息',
+        'other_extra'  => '其他扩展信息',
         'tools'          => '工具',
 
         // |--------------公共部分-------------------

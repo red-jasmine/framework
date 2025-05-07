@@ -21,7 +21,7 @@ class InteractionRecordResource extends JsonResource
             'user_type'        => $this->user_type,
             'user_id'          => $this->user_id,
 
-            $this->merge($this->getExtras())
+            $this->merge($this->getExtra())
 
 
         ];

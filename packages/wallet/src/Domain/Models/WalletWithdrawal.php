@@ -66,7 +66,7 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
         'payee_name'       => 'encrypted',
         'payee_account_no' => 'encrypted',
         'payee_cert_no'    => 'encrypted',
-        'extras'           => 'array',
+        'extra'           => 'array',
     ];
 
 

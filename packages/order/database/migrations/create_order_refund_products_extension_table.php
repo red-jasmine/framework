@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('description')->nullable()->comment('描述');
             $table->json('images')->nullable()->comment('图片');
             $table->string('reject_reason')->nullable()->comment('拒绝理由');
-            $table->json('extras')->nullable()->comment('扩展');
+            $table->json('extra')->nullable()->comment('扩展');
             $table->string('seller_remarks')->nullable()->comment('卖家备注');
             $table->string('buyer_remarks')->nullable()->comment('买家备注');
             $table->timestamps();

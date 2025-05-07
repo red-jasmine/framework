@@ -175,7 +175,7 @@ class Product extends Data
      * 扩展属性
      * @var array|null
      */
-    public ?array $extras;
+    public ?array $extra;
 
 
     /**

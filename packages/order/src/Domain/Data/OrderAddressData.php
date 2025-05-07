@@ -28,6 +28,6 @@ class OrderAddressData extends Data
     public ?string $latitude;
     public ?string $longitude;
     public ?string $tag;
-    public ?array  $extras;
+    public ?array  $extra;
 
 }

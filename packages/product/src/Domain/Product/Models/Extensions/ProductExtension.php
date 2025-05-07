@@ -33,7 +33,7 @@ class ProductExtension extends Model
         'images'           => 'array',
         'videos'           => 'array',
         'tools'            => 'array',
-        'extras'          => 'array',
+        'extra'          => 'array',
         'form'             => 'array',
     ];
 

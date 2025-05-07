@@ -33,12 +33,12 @@ class InteractionRecord extends Model
     use SoftDeletes;
 
 
-    public function getExtras() : array
+    public function getExtra() : array
     {
         return [];
     }
 
-    public function setExtras(array $extras = []) : void
+    public function setExtra(array $extra = []) : void
     {
 
     }

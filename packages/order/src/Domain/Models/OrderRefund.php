@@ -111,7 +111,7 @@ class OrderRefund extends Model
         'has_good_return'        => 'boolean',
         'end_time'               => 'datetime',
         'images'                 => 'array',
-        'extras'                 => 'array',
+        'extra'                 => 'array',
         'price'                  => MoneyCast::class.':'.'price,currency',
         'cost_price'             => MoneyCast::class.':'.'cost_price,currency',
         'product_amount'         => MoneyCast::class.':'.'product_amount,currency',

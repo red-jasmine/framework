@@ -59,7 +59,7 @@ class OrderAddress extends Model
     ];
 
     protected $casts = [
-        'extras' => 'array',
+        'extra' => 'array',
         'contacts' => AesEncrypted::class,
         'phone' => AesEncrypted::class,
         'address' => AesEncrypted::class,

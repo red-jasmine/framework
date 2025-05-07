@@ -43,7 +43,7 @@ class CommentInteractionType extends BaseInteractionType
     public function validate(InteractionData $data) : void
     {
         $data->quantity = 1;
-        $parentId       = (int) ($data->extras['parent_id'] ?? 0);
+        $parentId       = (int) ($data->extra['parent_id'] ?? 0);
 
         if ($parentId) {
             $query                  = FindQuery::from([]);
@@ -52,8 +52,8 @@ class CommentInteractionType extends BaseInteractionType
             $query->interactionType = $data->interactionType;
             $query->setKey($parentId);
             $parent                    = $this->recordReadRepository->find($query);
-            $data->extras['root_id']   = ($parent->root_id === 0) ? $parent->id : $parent->root_id;
-            $data->extras['parent_id'] = $parent->id;
+            $data->extra['root_id']   = ($parent->root_id === 0) ? $parent->id : $parent->root_id;
+            $data->extra['parent_id'] = $parent->id;
         }
 
         // TODO 内容过滤
@@ -71,7 +71,7 @@ class CommentInteractionType extends BaseInteractionType
         $interactionRecord->quantity         = $data->quantity;
         $interactionRecord->owner            = $data->user;
         $interactionRecord->interaction_time = Carbon::now();
-        $interactionRecord->setExtras($data->extras);
+        $interactionRecord->setExtra($data->extra);
         return $interactionRecord;
     }
 

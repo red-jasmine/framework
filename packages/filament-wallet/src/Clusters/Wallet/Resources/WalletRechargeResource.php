@@ -67,7 +67,7 @@ class WalletRechargeResource extends Resource
                 Forms\Components\TextInput::make('payment_mode')
                     ->maxLength(32),
                 Forms\Components\DateTimePicker::make('payment_time'),
-                Forms\Components\TextInput::make('extras'),
+                Forms\Components\TextInput::make('extra'),
                 Forms\Components\TextInput::make('version')
                     ->required()
                     ->numeric()

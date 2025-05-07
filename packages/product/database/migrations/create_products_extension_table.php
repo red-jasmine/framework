@@ -27,7 +27,7 @@ return new class extends Migration {
 
             $table->json('form')->nullable()->comment('表单');
             $table->json('tools')->nullable()->comment('工具');
-            $table->json('extras')->nullable()->comment('扩展');
+            $table->json('extra')->nullable()->comment('扩展');
             $table->string('remarks')->nullable()->comment('备注');
 
             $table->timestamps();

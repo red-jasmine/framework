@@ -18,7 +18,7 @@ class InteractionRecordComment extends InteractionRecord implements OperatorInte
 
     use HasOperator;
 
-    public function getExtras() : array
+    public function getExtra() : array
     {
         return [
             'content'   => $this->content,
@@ -31,12 +31,12 @@ class InteractionRecordComment extends InteractionRecord implements OperatorInte
     }
 
 
-    public function setExtras(array $extras = []) : void
+    public function setExtra(array $extra = []) : void
     {
 
-        $this->content   = $extras['content'] ?? null;
-        $this->parent_id = $extras['parent_id'] ?? 0;
-        $this->root_id   = $extras['root_id'] ?? 0;
+        $this->content   = $extra['content'] ?? null;
+        $this->parent_id = $extra['parent_id'] ?? 0;
+        $this->root_id   = $extra['root_id'] ?? 0;
 
     }
 
