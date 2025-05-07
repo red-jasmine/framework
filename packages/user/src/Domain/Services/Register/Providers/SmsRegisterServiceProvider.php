@@ -35,7 +35,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
             'type'            => 'register',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
         ]);
 
         $result = $this->captchaApplicationService->create($command);
@@ -49,7 +49,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
         $userData = new UserData();
 
         $userData->name   = $data->data['name'] ?? null;
-        $userData->mobile = $data->data['mobile'] ?? null;
+        $userData->phone = $data->data['phone'] ?? null;
         $userData->email  = $data->data['email'] ?? null;
 
         return $userData;
@@ -67,9 +67,9 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
 
         // 验证手机号是否已经注册
 
-        $mobile = $data->data['mobile'] ?? null;
+        $phone = $data->data['phone'] ?? null;
 
-        $hasUser = $this->userReadRepository->findByMobile($mobile);
+        $hasUser = $this->userReadRepository->findByPhone($phone);
         if ($hasUser) {
             throw  new UserRegisterException('手机号已经注册');
         }
@@ -90,7 +90,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
             'type'            => 'register',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
             'code'            => $code,
         ]);
 

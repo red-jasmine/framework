@@ -156,7 +156,7 @@ class OrderResource extends Resource
                                                           ->schema([
                                                                        TextEntry::make('address.full_address')->label(__('red-jasmine-order::order.fields.address.full_address')),
                                                                        TextEntry::make('address.contacts')->label(__('red-jasmine-order::order.fields.address.contacts')),
-                                                                       TextEntry::make('address.mobile')->label(__('red-jasmine-order::order.fields.address.mobile')),
+                                                                       TextEntry::make('address.phone')->label(__('red-jasmine-order::order.fields.address.phone')),
                                                                    ])
                                                           ->inlineLabel()
                                                           ->columns(1)

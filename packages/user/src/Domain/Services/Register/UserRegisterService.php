@@ -45,7 +45,7 @@ class UserRegisterService
         $user->name     = $data->name ?? $this->buildUserName();
         $user->nickname = $data->nickname ?? $this->buildNickname();
         $user->email    = $data->email ?? null;
-        $user->mobile   = $data->mobile ?? null;
+        $user->phone   = $data->phone ?? null;
         $user->password = $data->password ?? null;
         $user->avatar   = $data->avatar ?? null;
         $user->gender   = $data->gender ?? null;

@@ -12,7 +12,7 @@ use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Contracts\UserChannelAccountServiceProviderInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Data\UserChangeAccountData;
 
-class MobileUserChangeAccountServiceProvider implements UserChannelAccountServiceProviderInterface
+class PhoneUserChangeAccountServiceProvider implements UserChannelAccountServiceProviderInterface
 {
 
     protected CaptchaApplicationService   $captchaApplicationService;
@@ -25,7 +25,7 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
         $this->userReadRepository        = app(UserReadRepositoryInterface::class);
     }
 
-    public const string NAME = 'mobile';
+    public const string NAME = 'phone';
 
     public function captcha(User $user, UserChangeAccountData $data) : bool
     {
@@ -33,13 +33,13 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
         $this->validate($data);
 
 
-        if ($user->mobile) {
+        if ($user->phone) {
             // 发送老手机验证码
             $command = CaptchaCreateCommand::from([
                 'type'            => 'change-account',
                 'app'             => 'app',
                 'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-                'notifiable_id'   => $user->mobile,
+                'notifiable_id'   => $user->phone,
             ]);
 
             $result = $this->captchaApplicationService->create($command);
@@ -54,13 +54,13 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
         $this->validate($data);
 
         
-        if ($user->mobile) {
+        if ($user->phone) {
             // 验证原来手机验证码
             $command = CaptchaVerifyCommand::from([
                 'type'            => 'change-account',
                 'app'             => 'app',
                 'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-                'notifiable_id'   => $user->mobile,
+                'notifiable_id'   => $user->phone,
                 'code'            => $data->data['code'] ?? null,
             ]);
 
@@ -73,7 +73,7 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
             'type'            => 'change-account-verify',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'] ?? null,
+            'notifiable_id'   => $data->data['phone'] ?? null,
         ]);
 
         $result = $this->captchaApplicationService->create($command);
@@ -89,14 +89,14 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
             'type'            => 'change-account-verify',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'] ?? null,
+            'notifiable_id'   => $data->data['phone'] ?? null,
             'code'            => $data->data['code'] ?? null,
         ]);
 
         $this->captchaApplicationService->verify($command);
 
 
-        $user->changeMobile($data->data['mobile']);
+        $user->changePhone($data->data['phone']);
 
         return true;
     }
@@ -107,9 +107,9 @@ class MobileUserChangeAccountServiceProvider implements UserChannelAccountServic
 
         // 验证手机号是否已经注册
 
-        $mobile = $data->data['mobile'] ?? null;
+        $phone = $data->data['phone'] ?? null;
 
-        $hasUser = $this->userReadRepository->findByMobile($mobile);
+        $hasUser = $this->userReadRepository->findByPhone($phone);
         if ($hasUser) {
             throw  new UserRegisterException('手机号已经注册');
         }

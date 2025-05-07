@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('用户ID');
             $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
             $table->string('name', 64)->comment('账号');
-            $table->string('mobile')->nullable()->comment('*手机号');
+            $table->string('phone')->nullable()->comment('*手机号');
             $table->string('email')->nullable()->comment('*邮箱');
             $table->string('password')->nullable()->comment('密码');
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->rememberToken();
             $table->timestamps();
             $table->index(['name'], 'idx_name');
-            $table->index(['mobile'], 'idx_mobile');
+            $table->index(['phone'], 'idx_phone');
             $table->index(['email'], 'idx_email');
             $table->comment('用户表');
 

@@ -17,7 +17,7 @@ class OrderAddressResource extends JsonResource
     {
         return [
             'contacts'    => $this->contacts,
-            'mobile'      => $this->mobile,
+            'phone'      => $this->phone,
             'country'     => $this->country,
             'province'    => $this->province,
             'city'        => $this->city,

@@ -35,7 +35,7 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
             'type'            => 'forgot-password',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
         ]);
 
         $result = $this->captchaApplicationService->create($command);
@@ -46,9 +46,9 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
 
     protected function validate(ForgotPasswordData $data) : User
     {
-        $mobile = $data->data['mobile'];
+        $phone = $data->data['phone'];
         // 发送验证码
-        $user = app(UserReadRepositoryInterface::class)->findByMobile($mobile);
+        $user = app(UserReadRepositoryInterface::class)->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
@@ -79,7 +79,7 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
             'type'            => 'forgot-password',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
             'code'            => $code,
         ]);
 

@@ -16,7 +16,7 @@ class UserData extends UserBaseInfoData
 
     // 账号信息
     public ?string $email;
-    public ?string $mobile;
+    public ?string $phone;
     public ?string $name;
 
 

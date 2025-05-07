@@ -23,9 +23,9 @@ class UserReadRepository extends QueryBuilderReadRepository implements UserReadR
         return $this->query()->where('email', AES::encryptString($email))->first();
     }
 
-    public function findByMobile(string $mobile) : ?User
+    public function findByPhone(string $phone) : ?User
     {
-        return $this->query()->where('mobile', AES::encryptString($mobile))->first();
+        return $this->query()->where('phone', AES::encryptString($phone))->first();
     }
 
 
@@ -34,7 +34,7 @@ class UserReadRepository extends QueryBuilderReadRepository implements UserReadR
         return $this->query()
                     ->where('name', $account)
                     ->orWhere('email', AES::encryptString($account))
-                    ->orWhere('mobile', AES::encryptString($account))
+                    ->orWhere('phone', AES::encryptString($account))
                     ->first();
     }
 

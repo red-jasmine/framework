@@ -40,7 +40,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
     {
         if (blank($data->data['name'] ?? null)
             && blank($data->data['email'] ?? null)
-            && blank($data->data['mobile'] ?? null)
+            && blank($data->data['phone'] ?? null)
         ) {
             throw new UserRegisterException('请填写账号');
         }
@@ -56,7 +56,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
             throw new UserRegisterException('邮箱已存在');
         }
 
-        if (filled($data->data['mobile'] ?? null) && app(UserReadRepositoryInterface::class)->findByEmail($data->data['mobile'])) {
+        if (filled($data->data['phone'] ?? null) && app(UserReadRepositoryInterface::class)->findByEmail($data->data['phone'])) {
             throw new UserRegisterException('邮箱已存在');
         }
 
@@ -67,7 +67,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
         $userData = new UserData();
 
         $userData->name     = $data->data['name'] ?? null;
-        $userData->mobile   = $data->data['mobile'] ?? null;
+        $userData->phone   = $data->data['phone'] ?? null;
         $userData->email    = $data->data['email'] ?? null;
         $userData->password = $data->data['password'];
         return $userData;

@@ -35,10 +35,10 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
     public function captcha(UserLoginData $data) : bool
     {
         // 验证用户是否存在
-        $mobile = $data->data['mobile'];
+        $phone = $data->data['phone'];
         // TODO 验证手机号 格式
 
-        $user = app(UserReadRepositoryInterface::class)->findByMobile($mobile);
+        $user = app(UserReadRepositoryInterface::class)->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
@@ -53,7 +53,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
             'type'            => 'login',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
         ]);
 
         $result = $this->captchaApplicationService->create($command);
@@ -67,7 +67,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
     {
 
         // 获取账户信息
-        $mobile  = $data->data['mobile'];
+        $phone  = $data->data['phone'];
         $code    = $data->data['code'] ?? null;
 
 
@@ -75,14 +75,14 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
             'type'            => 'login',
             'app'             => 'app',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
-            'notifiable_id'   => $data->data['mobile'],
+            'notifiable_id'   => $data->data['phone'],
             'code'            => $code,
         ]);
 
         $this->captchaApplicationService->verify($command);
 
         // 查询用户信息
-        return app(UserReadRepositoryInterface::class)->findByMobile($mobile);
+        return app(UserReadRepositoryInterface::class)->findByPhone($phone);
 
     }
 

@@ -50,7 +50,7 @@ class Address extends Service
     {
         $rules      = [
             'contacts' => [ 'required', 'max:30', ],
-            'mobile'   => [ 'required', 'max:20', ],
+            'phone'   => [ 'required', 'max:20', ],
             'address'  => [ 'sometimes', 'max:100', ],
             'type'     => [ 'sometimes', 'max:100', ],
             'tag'      => [ 'sometimes', 'max:10', ],
@@ -62,7 +62,7 @@ class Address extends Service
         ];
         $attributes = [
             'contacts' => '联系人',
-            'mobile'   => '手机号',
+            'phone'   => '手机号',
             'address'  => '地址',
             'tag'      => '标签',
             'remarks'  => '备注',

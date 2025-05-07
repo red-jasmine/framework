@@ -8,7 +8,7 @@ class UserChangeAccountServiceProviderManager extends ServiceManager
 {
 
     protected const array PROVIDERS = [
-        MobileUserChangeAccountServiceProvider::NAME => MobileUserChangeAccountServiceProvider::class
+        PhoneUserChangeAccountServiceProvider::NAME => PhoneUserChangeAccountServiceProvider::class
     ];
 
 }

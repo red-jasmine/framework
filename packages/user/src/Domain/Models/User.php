@@ -34,7 +34,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
 
         return [
-            'mobile'   => AesEncrypted::class,
+            'phone'   => AesEncrypted::class,
             'email'    => AesEncrypted::class,
             'gender'   => UserGenderEnum::class,
             'type'     => UserTypeEnum::class,
@@ -129,9 +129,9 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         $this->password = $password;
     }
 
-    public function changeMobile(string $mobile) : void
+    public function changePhone(string $phone) : void
     {
-        $this->mobile = $mobile;
+        $this->phone = $phone;
     }
 
     public function changeEmail(string $email) : void

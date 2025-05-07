@@ -97,7 +97,7 @@ return [
             'address'      => '地址',
             'full_address' => '地址',
             'contacts'     => '联系人',
-            'mobile'       => '手机号',
+            'phone'       => '手机号',
         ],
 
         'seller_remarks' => '卖家备注',

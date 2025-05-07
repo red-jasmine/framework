@@ -16,7 +16,7 @@ class UserBaseResource extends JsonResource
         return [
             'id'        => $this->id,
             'name'      => $this->name,
-            'mobile'    => Str::mask($this->mobile, '*', 3, 4),
+            'phone'    => Str::mask($this->phone, '*', 3, 4),
             'email'     => Str::mask($this->email, '*', 0,4),
             'nickname'  => $this->nickname,
             'avatar'    => $this->avatar,

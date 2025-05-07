@@ -14,7 +14,7 @@ interface UserReadRepositoryInterface extends ReadRepositoryInterface
 
     public function findByEmail(string $email) : ?User;
 
-    public function findByMobile(string $mobile) : ?User;
+    public function findByPhone(string $phone) : ?User;
 
     /**
      * 登录账号信息
