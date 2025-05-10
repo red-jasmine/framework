@@ -9,14 +9,14 @@ return new class extends Migration {
     {
         Schema::create('user_tags', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
             $table->string('icon')->nullable()->comment('图标');
             $table->string('color')->nullable()->comment('颜色');
             $table->string('cluster')->nullable()->comment('群簇');
             $table->bigInteger('sort')->default(0)->comment('排序');
-            $table->string('status', 32)->comment('状态');
+            $table->string('status', 32)->default()->comment('状态');
             $table->json('extra')->nullable()->comment('扩展信息');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
-            $table->comment('标签');
+            $table->comment('用户标签');
         });
     }
 
