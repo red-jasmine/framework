@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->boolean('is_leaf')->default(false)->comment('是否叶子');
             $table->boolean('is_show')->default(false)->comment('是否展示');
             $table->string('status', 32)->comment(CategoryStatusEnum::comments('状态'));
+            $table->json('extra')->nullable()->comment('扩展信息');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
@@ -27,7 +28,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->index('parent_id', 'idx_parent');
-            $table->comment('文章-分类');
+            $table->comment('用户标签-分类');
         });
     }
 

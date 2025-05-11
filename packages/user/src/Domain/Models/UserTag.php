@@ -4,10 +4,14 @@ namespace RedJasmine\User\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\User\Domain\Enums\UserTagStatusEnum;
 
-class UserTag extends Model
+class UserTag extends Model implements OperatorInterface
 {
+
+    use HasOperator;
 
 
     protected function casts() : array

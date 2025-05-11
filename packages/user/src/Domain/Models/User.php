@@ -34,7 +34,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
 
         return [
-            'phone'   => AesEncrypted::class,
+            'phone'    => AesEncrypted::class,
             'email'    => AesEncrypted::class,
             'gender'   => UserGenderEnum::class,
             'type'     => UserTypeEnum::class,
@@ -140,4 +140,8 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     }
 
 
+    public function group() : BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class, 'group_id', 'id');
+    }
 }

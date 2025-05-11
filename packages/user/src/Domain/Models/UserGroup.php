@@ -4,8 +4,7 @@ namespace RedJasmine\User\Domain\Models;
 
 use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 
-class UserTagCategory extends BaseCategoryModel
+class UserGroup extends BaseCategoryModel
 {
-
 
 }

@@ -32,11 +32,15 @@ return new class extends Migration {
 
             $table->string('ip')->nullable()->comment('IP');
 
+
+            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
+
             $table->rememberToken();
             $table->timestamps();
             $table->index(['name'], 'idx_name');
             $table->index(['phone'], 'idx_phone');
             $table->index(['email'], 'idx_email');
+            $table->index(['group_id'], 'idx_group_id');
             $table->comment('用户表');
 
         });
