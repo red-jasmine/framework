@@ -28,6 +28,7 @@ class TopicCategoryTransformer implements TransformerInterface
         $model->status      = $data->status;
         $model->cluster     = $data->cluster;
         $model->sort        = $data->sort;
+        $model->extra        = $data->extra;
 
         return $model;
     }
