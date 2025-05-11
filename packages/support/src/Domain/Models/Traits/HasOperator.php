@@ -14,6 +14,8 @@ use RedJasmine\Support\Facades\ServiceContext;
  * @property  string $creator_id
  * @property  string $updater_type
  * @property  string $updater_id
+ * @property  bool $withOperatorNickname
+ * @property  bool $withOperatorAvatar
  */
 trait HasOperator
 {

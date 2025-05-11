@@ -20,19 +20,18 @@ class BaseCategoryData extends Data
     public bool               $isShow      = false;
     public ?string            $image       = null;
     public ?string            $cluster     = null;
-
+    public ?array             $extra       = null;
 
     public static function rules(ValidationContext $context) : array
     {
 
         return [
-            'id'          => [],
             'parent_id'   => ['integer'],
             'name'        => ['required', 'string', 'max:100'],
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'description' => ['cluster', 'nullable', 'string', 'max:255'],
+            'cluster'     => ['sometimes', 'nullable', 'string', 'max:255'],
             'image'       => ['sometimes', 'nullable', 'max:255'],
-            'extra'      => ['sometimes', 'nullable', 'array'],
+            'extra'       => ['sometimes', 'nullable', 'array'],
         ];
 
     }
