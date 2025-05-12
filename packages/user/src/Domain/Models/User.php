@@ -2,19 +2,17 @@
 
 namespace RedJasmine\User\Domain\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Notifications\Notifiable;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Facades\AES;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use Illuminate\Notifications\Notifiable;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
 use RedJasmine\User\Domain\Events\UserLoginEvent;
 use RedJasmine\User\Domain\Events\UserRegisteredEvent;
@@ -29,24 +27,57 @@ class User extends Authenticatable implements JWTSubject, UserInterface
 
     use Notifiable;
 
-
-    protected function casts() : array
-    {
-
-        return [
-            'phone'    => AesEncrypted::class,
-            'email'    => AesEncrypted::class,
-            'gender'   => UserGenderEnum::class,
-            'type'     => UserTypeEnum::class,
-            'status'   => UserStatusEnum::class,
-            'password' => 'hashed',
-        ];
-    }
-
     protected $dispatchesEvents = [
         'login'    => UserLoginEvent::class,
         'register' => UserRegisteredEvent::class
     ];
+
+    protected static function boot() : void
+    {
+        parent::boot();
+
+
+        static::saving(function (User $user) {
+            if ($user->relationLoaded('tags')) {
+
+                if ($user->tags?->count() > 0) {
+                    if (!is_array($user->tags->first())) {
+                        $user->tags()->sync($user->tags);
+                    } else {
+                        $user->tags()->sync($user->tags->pluck('id')->toArray());
+                    }
+
+                } else {
+                    $user->tags()->sync([]);
+                }
+                $user->load('tags');
+            }
+        });
+
+    }
+
+    public function tags() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            UserTag::class,
+            (new UserTagPivot())->table(),
+            'user_id',
+            'user_tag_id',
+        )
+                    ->using(UserTagPivot::class)
+                    ->withTimestamps();
+    }
+
+    public function newInstance($attributes = [], $exists = false) : static
+    {
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setRelation('tags', Collection::make());
+
+        }
+        return $instance;
+    }
 
     public function getJWTIdentifier()
     {
@@ -149,4 +180,19 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
         return $this->belongsTo(UserGroup::class, 'group_id', 'id');
     }
+
+    protected function casts() : array
+    {
+
+        return [
+            'phone'    => AesEncrypted::class,
+            'email'    => AesEncrypted::class,
+            'gender'   => UserGenderEnum::class,
+            'type'     => UserTypeEnum::class,
+            'status'   => UserStatusEnum::class,
+            'password' => 'hashed',
+        ];
+    }
+
+
 }

@@ -26,6 +26,8 @@ use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserSetTagsCommand;
+use RedJasmine\User\Application\Services\Commands\UserSetTagsCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
@@ -51,6 +53,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
  * @method bool setPassword(UserSetPasswordCommand $command)
  * @method bool setGroup(UserSetGroupCommand $command)
+ * @method bool setTags(UserSetTagsCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
  * @method bool forgotPassword(ForgotPasswordCommand $command)
  * @method bool changeAccountCaptcha(ChangeAccountCaptchaCommand $command)
@@ -61,19 +64,9 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 class UserApplicationService extends ApplicationService
 {
 
-    public static string $hookNamePrefix = 'user.application.user';
-
-    public function __construct(
-        public UserRepositoryInterface $repository,
-        public UserReadRepositoryInterface $readRepository,
-
-    ) {
-    }
-
-    protected static string $modelClass = User::class;
-
-
-    protected static $macros = [
+    public static string    $hookNamePrefix = 'user.application.user';
+    protected static string $modelClass     = User::class;
+    protected static        $macros         = [
         'update'                => UserUpdateBaseInfoCommandHandler::class,
         'getSocialites'         => GetSocialitesQueryHandler::class,
         'registerCaptcha'       => UserRegisterCaptchaCommandHandler::class,
@@ -85,6 +78,7 @@ class UserApplicationService extends ApplicationService
         'unbindSocialite'       => UserUnbindSocialiteCommandHandler::class,
         'setPassword'           => UserSetPasswordCommandHandler::class,
         'setGroup'              => UserSetGroupCommandHandler::class,
+        'setTags'               => UserSetTagsCommandHandler::class,
         'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
         'forgotPassword'        => ForgotPasswordCommandHandler::class,
         'changeAccountCaptcha'  => ChangeAccountCaptchaCommandHandler::class,
@@ -93,6 +87,13 @@ class UserApplicationService extends ApplicationService
 
 
     ];
+
+    public function __construct(
+        public UserRepositoryInterface $repository,
+        public UserReadRepositoryInterface $readRepository,
+
+    ) {
+    }
 
 
 }
