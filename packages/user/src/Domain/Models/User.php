@@ -129,6 +129,11 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         $this->password = $password;
     }
 
+    public function setGroup(?int $groupId = null)
+    {
+        $this->group_id = $groupId;
+    }
+
     public function changePhone(string $phone) : void
     {
         $this->phone = $phone;

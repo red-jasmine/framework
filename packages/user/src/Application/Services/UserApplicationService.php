@@ -2,7 +2,6 @@
 
 namespace RedJasmine\User\Application\Services;
 
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommandHandler;
@@ -23,6 +22,8 @@ use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHand
 use RedJasmine\User\Application\Services\Commands\UserRegisterCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
+use RedJasmine\User\Application\Services\Commands\UserSetGroupCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
@@ -49,6 +50,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool updateBaseInfo(UserUpdateBaseInfoCommand $command)
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
  * @method bool setPassword(UserSetPasswordCommand $command)
+ * @method bool setGroup(UserSetGroupCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
  * @method bool forgotPassword(ForgotPasswordCommand $command)
  * @method bool changeAccountCaptcha(ChangeAccountCaptchaCommand $command)
@@ -82,6 +84,7 @@ class UserApplicationService extends ApplicationService
         'updateBaseInfo'        => UserUpdateBaseInfoCommandHandler::class,
         'unbindSocialite'       => UserUnbindSocialiteCommandHandler::class,
         'setPassword'           => UserSetPasswordCommandHandler::class,
+        'setGroup'              => UserSetGroupCommandHandler::class,
         'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
         'forgotPassword'        => ForgotPasswordCommandHandler::class,
         'changeAccountCaptcha'  => ChangeAccountCaptchaCommandHandler::class,

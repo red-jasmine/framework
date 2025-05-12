@@ -3,11 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\User\Domain\Enums\UserTypeEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
+use RedJasmine\User\Domain\Enums\UserTypeEnum;
 
 return new class extends Migration {
-    public function up()
+    public function up() : void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('用户ID');
@@ -29,12 +29,8 @@ return new class extends Migration {
             $table->string('school')->nullable()->comment('学校');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
-
             $table->string('ip')->nullable()->comment('IP');
-
-
             $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
-
             $table->rememberToken();
             $table->timestamps();
             $table->index(['name'], 'idx_name');
