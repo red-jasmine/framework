@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -14,6 +15,7 @@ use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
+use RedJasmine\User\Domain\Events\UseCancelEvent;
 use RedJasmine\User\Domain\Events\UserLoginEvent;
 use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -29,7 +31,8 @@ class User extends Authenticatable implements JWTSubject, UserInterface
 
     protected $dispatchesEvents = [
         'login'    => UserLoginEvent::class,
-        'register' => UserRegisteredEvent::class
+        'register' => UserRegisteredEvent::class,
+        'cancel'   => UseCancelEvent::class,
     ];
 
     protected static function boot() : void
@@ -160,7 +163,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         $this->password = $password;
     }
 
-    public function setGroup(?int $groupId = null)
+    public function setGroup(?int $groupId = null) : void
     {
         $this->group_id = $groupId;
     }
@@ -181,16 +184,31 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         return $this->belongsTo(UserGroup::class, 'group_id', 'id');
     }
 
+    /**
+     * 注销账户
+     * @return void
+     */
+    public function cancel() : void
+    {
+        $this->status = UserStatusEnum::CANCELED;
+
+        $this->cancel_time = Carbon::now();
+
+        $this->fireModelEvent('cancel', false);
+
+    }
+
     protected function casts() : array
     {
 
         return [
-            'phone'    => AesEncrypted::class,
-            'email'    => AesEncrypted::class,
-            'gender'   => UserGenderEnum::class,
-            'type'     => UserTypeEnum::class,
-            'status'   => UserStatusEnum::class,
-            'password' => 'hashed',
+            'phone'       => AesEncrypted::class,
+            'email'       => AesEncrypted::class,
+            'gender'      => UserGenderEnum::class,
+            'type'        => UserTypeEnum::class,
+            'status'      => UserStatusEnum::class,
+            'password'    => 'hashed',
+            'cancel_time' => 'datetime',
         ];
     }
 

@@ -32,6 +32,8 @@ return new class extends Migration {
             $table->string('ip')->nullable()->comment('IP');
             $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
             $table->rememberToken();
+
+            $table->timestamp('cancel_time')->nullable()->comment('注销时间');
             $table->timestamps();
             $table->index(['name'], 'idx_name');
             $table->index(['phone'], 'idx_phone');

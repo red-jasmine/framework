@@ -13,6 +13,8 @@ use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommand;
 use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserCancelCommand;
+use RedJasmine\User\Application\Services\Commands\UserCancelCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommand;
 use RedJasmine\User\Application\Services\Commands\UserLoginCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserLoginCommand;
@@ -54,6 +56,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool setPassword(UserSetPasswordCommand $command)
  * @method bool setGroup(UserSetGroupCommand $command)
  * @method bool setTags(UserSetTagsCommand $command)
+ * @method bool cancel(UserCancelCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
  * @method bool forgotPassword(ForgotPasswordCommand $command)
  * @method bool changeAccountCaptcha(ChangeAccountCaptchaCommand $command)
@@ -76,6 +79,7 @@ class UserApplicationService extends ApplicationService
         'loginOrRegister'       => UserLoginOrRegisterCommandHandler::class,
         'updateBaseInfo'        => UserUpdateBaseInfoCommandHandler::class,
         'unbindSocialite'       => UserUnbindSocialiteCommandHandler::class,
+        'cancel'                => UserCancelCommandHandler::class,
         'setPassword'           => UserSetPasswordCommandHandler::class,
         'setGroup'              => UserSetGroupCommandHandler::class,
         'setTags'               => UserSetTagsCommandHandler::class,
