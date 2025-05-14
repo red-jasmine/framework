@@ -31,7 +31,7 @@ class CardGroup extends Model implements OwnerInterface, OperatorInterface
 
     public function getTable() : string
     {
-        return config('red-jasmine-card.tables.prefix','jasmine_') . 'card_groups';
+        return 'card_groups';
     }
 
     public function cards() : HasMany

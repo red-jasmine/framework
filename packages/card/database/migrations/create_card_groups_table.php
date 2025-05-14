@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create(config('red-jasmine-card.tables.prefix','jasmine_').'card_groups', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->morphs('owner');
+            $table->string('owner_type', 64);
+            $table->string('owner_id', 64);
             $table->string('name')->comment('分组名称');
             $table->string('remarks')->nullable()->comment('备注');
             $table->text('content_template')->nullable()->comment('内容模板');
