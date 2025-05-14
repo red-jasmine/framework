@@ -20,7 +20,7 @@ class SmsCaptchaSenderProvider implements CaptchaSenderInterface
         try {
             $results = app('easy-sms')->send($captcha->notifiable_id, [
                 'content'  => '您的验证码为：${code}，请勿泄露于他人！',
-                'template' => 'SMS_276355183',
+                'template' => 'SMS_276355183', // TODO 根据 应用配置
                 'data'     => [
                     'code' => $captcha->code
                 ],
