@@ -10,6 +10,8 @@ return new class extends Migration {
     {
         Schema::create('user_tags', function (Blueprint $table) {
             $table->id();
+            $table->string('owner_type',64);
+            $table->string('owner_id',64);
             $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');

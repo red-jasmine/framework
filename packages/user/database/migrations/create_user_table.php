@@ -11,6 +11,8 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('用户ID');
+            $table->string('owner_type', 64)->default('system');
+            $table->string('owner_id', 64)->default('system');
             $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
             $table->string('name', 64)->comment('账号');
             $table->string('phone')->nullable()->comment('*手机号');
@@ -32,13 +34,12 @@ return new class extends Migration {
             $table->string('ip')->nullable()->comment('IP');
             $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
             $table->rememberToken();
-
             $table->timestamp('cancel_time')->nullable()->comment('注销时间');
             $table->timestamps();
-            $table->index(['name'], 'idx_name');
-            $table->index(['phone'], 'idx_phone');
-            $table->index(['email'], 'idx_email');
-            $table->index(['group_id'], 'idx_group_id');
+            $table->index(['owner_type', 'owner_id', 'name'], 'idx_owner_name');
+            $table->index(['owner_type', 'owner_id', 'phone'], 'idx_owner_phone');
+            $table->index(['owner_type', 'owner_id', 'email'], 'idx_owner_email');
+            $table->index(['owner_type', 'owner_id', 'group_id'], 'idx_owner_group_id');
             $table->comment('用户表');
 
         });
