@@ -52,6 +52,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $command = CaptchaCreateCommand::from([
             'type'            => 'login',
             'app'             => 'app',
+            'method'          => 'sms',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['phone'],
         ]);
@@ -67,8 +68,8 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
     {
 
         // 获取账户信息
-        $phone  = $data->data['phone'];
-        $code    = $data->data['code'] ?? null;
+        $phone = $data->data['phone'];
+        $code  = $data->data['code'] ?? null;
 
 
         $command = CaptchaVerifyCommand::from([

@@ -72,6 +72,7 @@ class PhoneUserChangeAccountServiceProvider implements UserChannelAccountService
         $command = CaptchaCreateCommand::from([
             'type'            => 'change-account-verify',
             'app'             => 'app',
+            'method'         => 'sms',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['phone'] ?? null,
         ]);

@@ -34,6 +34,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
         $command = CaptchaCreateCommand::from([
             'type'            => 'register',
             'app'             => 'app',
+            'method'         => 'sms',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['phone'],
         ]);

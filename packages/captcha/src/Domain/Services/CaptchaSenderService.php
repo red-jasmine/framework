@@ -22,7 +22,7 @@ class CaptchaSenderService
             throw new CaptchaException('不支持发送');
         }
         $config         = [];
-        $senderProvider = (new CaptchaSenderProviderManager($config))->create($captcha->notifiable_type);
+        $senderProvider = (new CaptchaSenderProviderManager($config))->create($captcha->method);
 
         $sendResult = $senderProvider->send($captcha);
 

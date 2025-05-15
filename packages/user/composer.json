@@ -19,8 +19,6 @@
         "red-jasmine/support":  "1.0.x-dev",
         "red-jasmine/socialite": "1.0.x-dev",
         "red-jasmine/captcha": "1.0.x-dev",
-        "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {

@@ -63,7 +63,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface
     {
         return $this->belongsToMany(
             UserTag::class,
-            (new UserTagPivot())->table(),
+            (new UserTagPivot())->getTable(),
             'user_id',
             'user_tag_id',
         )

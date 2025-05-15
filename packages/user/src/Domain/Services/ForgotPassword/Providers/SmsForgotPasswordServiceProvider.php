@@ -34,6 +34,7 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
         $command = CaptchaCreateCommand::from([
             'type'            => 'forgot-password',
             'app'             => 'app',
+            'method'         => 'sms',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['phone'],
         ]);

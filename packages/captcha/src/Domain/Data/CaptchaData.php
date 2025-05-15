@@ -17,6 +17,9 @@ class CaptchaData extends Data
 
     public string $notifiableId;
 
+
+    public string $method;
+
     public int $expMinutes = 10;
 
 }

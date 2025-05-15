@@ -24,6 +24,7 @@ class CaptchaTransformer implements TransformerInterface
         // 存储数据
         $model->app             = $data->app;
         $model->type            = $data->type;
+        $model->method          = $data->method;
         $model->notifiable_type = $data->notifiableType;
         $model->notifiable_id   = $data->notifiableId;
         $model->code            = mt_rand(00000, 999999);

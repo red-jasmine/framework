@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Socialite;
 
+use RedJasmine\Socialite\Commands\SocialiteCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RedJasmine\Socialite\Commands\SocialiteCommand;
 
 class SocialitePackageServiceProvider extends PackageServiceProvider
 {
@@ -18,9 +18,8 @@ class SocialitePackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-socialite')
             ->hasConfigFile()
-            ->hasViews()
-            ->runsMigrations()
-            ->hasCommand(SocialiteCommand::class);
+            ->hasViews()//->runsMigrations()
+        ;
 
 
         if (file_exists($package->basePath('/../database/migrations'))) {

@@ -24,7 +24,7 @@ class UserPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasTranslations()
             ->hasViews()
-            ->hasRoutes(['api'])
+            //->hasRoutes(['api'])
             ->hasMigrations([
                 'create_user_table',
                 'create_user_groups_table',
@@ -32,6 +32,6 @@ class UserPackageServiceProvider extends PackageServiceProvider
                 'create_user_tags_table',
 
             ])
-            ->runsMigrations();
+            ;
     }
 }
