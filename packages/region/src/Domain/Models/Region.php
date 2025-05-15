@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
@@ -20,6 +21,9 @@ class Region extends Model
     protected $primaryKey = 'code';
 
     public $incrementing = false;
+
+    use HasDefaultConnection;
+
 
 
     protected string $defaultKeyName = 'code';
