@@ -9,12 +9,14 @@ use Illuminate\Support\Str;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class ProductPropertyGroup extends Model implements OperatorInterface
 {
 
+    use HasDefaultConnection;
 
     use HasSnowflakeId;
 

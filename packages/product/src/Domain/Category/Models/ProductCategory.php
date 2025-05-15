@@ -9,12 +9,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 class ProductCategory extends Model implements OperatorInterface
 {
+
+    use HasDefaultConnection;
 
     use HasSnowflakeId;
 

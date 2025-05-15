@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
+use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
@@ -16,6 +17,8 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 class Brand extends Model implements OperatorInterface
 {
+
+    use HasDefaultConnection;
 
     use HasSnowflakeId;
 
