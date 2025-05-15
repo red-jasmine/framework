@@ -7,7 +7,7 @@ namespace RedJasmine\Support\Domain\Models\Traits;
  */
 trait HasDefaultConnection
 {
-    public static ?string $defaultConnection = null;
+    protected static ?string $defaultConnection = null;
 
     public static function getDefaultConnection() : ?string
     {
