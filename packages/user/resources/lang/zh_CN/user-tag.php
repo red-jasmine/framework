@@ -18,6 +18,7 @@ return [
         'is_show'     => '是否展示',
         'is_public'   => '是否公开',
         'sort'        => '排序',
+        'extra'       => '扩展',
         'version'     => '版本',
 
     ],

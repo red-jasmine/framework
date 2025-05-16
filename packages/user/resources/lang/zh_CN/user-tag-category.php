@@ -1,10 +1,10 @@
 <?php
 return [
 
-    'labels'  => [
+    'labels'    => [
         'title' => '标签分类'
     ],
-    'fields'  => [
+    'fields'    => [
         'id'          => 'ID',
         'parent_id'   => '父级ID',
         'name'        => '类目名称',
@@ -15,17 +15,22 @@ return [
         'is_leaf'     => '叶子节点',
         'is_show'     => '是否显示',
         'status'      => '状态',
+        'extra'       => '扩展字段',
 
     ],
-    'enums'   => [
+    'enums'     => [
         'status' => [
             'disable' => '启用',
             'enable'  => '停用',
         ],
 
     ],
-    'options' => [
+    'options'   => [
 
+
+    ],
+    'relations' => [
+        'parent' => '父级'
 
     ],
 

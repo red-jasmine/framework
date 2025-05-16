@@ -5,6 +5,7 @@ namespace RedJasmine\User\Application\Services;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\User\Domain\Models\UserGroup;
+use RedJasmine\User\Domain\Models\UserTagCategory;
 use RedJasmine\User\Domain\Repositories\UserTagCategoryReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserTagCategoryRepositoryInterface;
 use RedJasmine\User\Domain\Transformers\UserTagCategoryTransformer;
@@ -19,7 +20,7 @@ class UserTagCategoryApplicationService extends ApplicationService
     ) {
     }
 
-    protected static string $modelClass = UserGroup::class;
+    protected static string $modelClass = UserTagCategory::class;
 
 
     public function tree(Query $query) : array

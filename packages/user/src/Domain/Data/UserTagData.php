@@ -17,6 +17,7 @@ class UserTagData extends Data
     public UserTagStatusEnum $status      = UserTagStatusEnum::ENABLE;
     public int               $sort        = 0;
     public ?string           $icon        = null;
+    public ?string           $color        = null;
     public ?string           $cluster     = null;
     public ?array            $extra       = null;
 

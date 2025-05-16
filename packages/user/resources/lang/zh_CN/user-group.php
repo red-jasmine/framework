@@ -31,6 +31,7 @@ return [
     ],
 
     'relations' => [
+        'parent' => '父级'
 
     ],
 ];

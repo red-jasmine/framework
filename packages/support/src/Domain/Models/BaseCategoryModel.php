@@ -69,6 +69,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
             'status'  => CategoryStatusEnum::class,
             'is_leaf' => 'boolean',
             'is_show' => 'boolean',
+            'extra'   => 'array',
         ];
     }
 
