@@ -114,18 +114,20 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-user::user.fields.id'))
-                                         ->numeric()
+                    ->copyable()
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                                          ->label(__('red-jasmine-user::user.fields.name'))
                                          ->copyable()
                 ,
+
                 Tables\Columns\TextColumn::make('phone')
                                          ->label(__('red-jasmine-user::user.fields.phone'))
+
                 ,
                 Tables\Columns\TextColumn::make('email')
                                          ->label(__('red-jasmine-user::user.fields.email'))
-                                         ->searchable(),
+                                         ,
                 Tables\Columns\TextColumn::make('nickname')
                                          ->label(__('red-jasmine-user::user.fields.nickname'))
                                          ->searchable(),
@@ -144,14 +146,32 @@ class UserResource extends Resource
                                          ->label(__('red-jasmine-user::user.fields.type'))
                                          ->useEnum()
                 ,
+
+                Tables\Columns\TextColumn::make('group.name')
+                                        ->badge()
+                                         ->label(__('red-jasmine-user::user.relations.group'))
+                                         ,
+
                 Tables\Columns\TextColumn::make('status')
                                          ->label(__('red-jasmine-user::user.fields.status'))
                                          ->useEnum()
                 ,
                 Tables\Columns\TextColumn::make('last_active_at')
                                          ->label(__('red-jasmine-user::user.fields.last_active_at'))
-                                         ->dateTime()
-                ,
+                                         ->dateTime(),
+
+
+                 Tables\Columns\TextColumn::make('country')
+                                          ->label(__('red-jasmine-user::user.fields.country')),
+                Tables\Columns\TextColumn::make('province')
+                                         ->label(__('red-jasmine-user::user.fields.province')),
+                Tables\Columns\TextColumn::make('city')
+                                         ->label(__('red-jasmine-user::user.fields.city')),
+                Tables\Columns\TextColumn::make('district')
+                                         ->label(__('red-jasmine-user::user.fields.district')),
+
+                Tables\Columns\TextColumn::make('school')
+                                         ->label(__('red-jasmine-user::user.fields.school')),
                 Tables\Columns\TextColumn::make('created_at')
                                          ->label(__('red-jasmine-user::user.fields.created_at'))
                                          ->dateTime()

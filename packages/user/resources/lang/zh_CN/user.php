@@ -10,7 +10,7 @@ return [
         'id'                => '用户ID',
         'name'              => '用户名',
         'email'             => '邮箱',
-        'phone'            => '手机号',
+        'phone'             => '手机号',
         'password'          => '密码',
         'remember_token'    => '记住我',
         'created_at'        => '创建时间',
@@ -27,6 +27,12 @@ return [
         'status'            => '状态',
         'email_verified_at' => '邮箱验证时间',
         'last_active_at'    => '活跃时间',
+        'country'           => '国家',
+        'province'          => '省份',
+        'city'              => '城市',
+        'district'          => '区县',
+        'school'            => '学校',
+        'group_id'          => '分组ID',
 
 
     ],
@@ -54,4 +60,7 @@ return [
 
     ],
 
+    'relations'=>[
+        'group'=>'分组',
+    ],
 ];
