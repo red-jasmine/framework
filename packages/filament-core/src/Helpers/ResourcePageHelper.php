@@ -257,28 +257,28 @@ trait ResourcePageHelper
     public static function operateTableColumns() : array
     {
         return [
-            Tables\Columns\TextColumn::make('creator')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname())
-                                     ->label(__('red-jasmine-support::support.creator'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('creator')
+            //                          ->formatStateUsing(fn($state) => $state?->getNickname())
+            //                          ->label(__('red-jasmine-support::support.creator'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('creator_type')
                                      ->label(__('red-jasmine-support::support.creator_type'))
                                      ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('creator_id')
                                      ->label(__('red-jasmine-support::support.creator_id'))
-                                     ->numeric()
+
                                      ->toggleable(isToggledHiddenByDefault: true),
 
-            Tables\Columns\TextColumn::make('updater')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname())
-                                     ->label(__('red-jasmine-support::support.updater'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('updater')
+            //                          ->formatStateUsing(fn($state) => $state?->getNickname())
+            //                          ->label(__('red-jasmine-support::support.updater'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updater_type')
                                      ->label(__('red-jasmine-support::support.updater_type'))
                                      ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updater_id')
                                      ->label(__('red-jasmine-support::support.updater_id'))
-                                     ->numeric()
+
                                      ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('created_at')
                                      ->label(__('red-jasmine-support::support.created_at'))

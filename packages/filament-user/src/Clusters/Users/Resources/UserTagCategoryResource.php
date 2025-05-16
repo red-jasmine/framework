@@ -13,6 +13,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagCategoryResource\Pages;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagCategoryResource\RelationManagers;
+use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
 use RedJasmine\User\Application\Services\UserTagCategoryApplicationService;
 use RedJasmine\User\Domain\Data\UserTagCategoryData;
 use RedJasmine\User\Domain\Models\UserTagCategory;
@@ -44,7 +45,7 @@ class UserTagCategoryResource extends Resource
         return $form
             ->schema([
                 SelectTree::make('parent_id')
-
+                          ->label(__('red-jasmine-user::user-tag-category.relations.parent'))
                           ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
                               modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
                                   fn($query, $value) => $query->where('id', '<>', $value)),
@@ -57,38 +58,38 @@ class UserTagCategoryResource extends Resource
                           ->parentNullValue(0)
                 ,
                 Forms\Components\TextInput::make('name')
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.name'))
                                           ->required()
                                           ->maxLength(255),
                 Forms\Components\TextInput::make('description')
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.description'))
                                           ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
+                                           ->label(__('red-jasmine-user::user-tag-category.fields.image'))
                                            ->image(),
                 Forms\Components\TextInput::make('cluster')
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.cluster'))
                                           ->maxLength(255),
                 Forms\Components\TextInput::make('sort')
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.sort'))
                                           ->required()
                                           ->numeric()
                                           ->default(0),
                 Forms\Components\Toggle::make('is_leaf')
+                                       ->label(__('red-jasmine-user::user-tag-category.fields.is_leaf'))
                                        ->required(),
                 Forms\Components\Toggle::make('is_show')
+                                       ->label(__('red-jasmine-user::user-tag-category.fields.is_show'))
                                        ->required(),
-                Forms\Components\TextInput::make('status')
-                                          ->required()
-                                          ->maxLength(32),
-                Forms\Components\TextInput::make('extra'),
-                Forms\Components\TextInput::make('version')
-                                          ->required()
-                                          ->numeric()
-                                          ->default(0),
-                Forms\Components\TextInput::make('creator_type')
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('creator_id')
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('updater_type')
-                                          ->maxLength(64),
-                Forms\Components\TextInput::make('updater_id')
-                                          ->maxLength(64),
+                Forms\Components\ToggleButtons::make('status')
+                                              ->label(__('red-jasmine-user::user-tag-category.fields.status'))
+                                              ->required()
+                                              ->inline()
+                                              ->default(CategoryStatusEnum::ENABLE)
+                                              ->useEnum(CategoryStatusEnum::class),
+                Forms\Components\KeyValue::make('extra')
+
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.extra')),
             ]);
     }
 
@@ -97,51 +98,36 @@ class UserTagCategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                                         ->label('ID')
-                                         ->numeric()
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.id'))
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('parent.name')
-                                         ->numeric()
+                                         ->label(__('red-jasmine-user::user-tag-category.relations.parent'))
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.name'))
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('description')
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.description'))
                                          ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                                          ->label(__('red-jasmine-user::user-tag-category.fields.image'))
+                ,
                 Tables\Columns\TextColumn::make('cluster')
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.cluster'))
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('sort')
-                                         ->numeric()
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.sort'))
                                          ->sortable(),
                 Tables\Columns\IconColumn::make('is_leaf')
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.is_leaf'))
                                          ->boolean(),
                 Tables\Columns\IconColumn::make('is_show')
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.is_show'))
                                          ->boolean(),
                 Tables\Columns\TextColumn::make('status')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('version')
-                                         ->numeric()
-                                         ->sortable(),
-                Tables\Columns\TextColumn::make('creator_type')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('creator_id')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('updater_type')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('updater_id')
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
+                                         ->label(__('red-jasmine-user::user-tag-category.fields.status'))
+                                         ->useEnum(),
+                ...static::operateTableColumns(),
             ])
             ->filters([
                 //
