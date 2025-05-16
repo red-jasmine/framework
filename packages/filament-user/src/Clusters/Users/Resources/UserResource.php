@@ -7,13 +7,16 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Pages;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\RelationManagers;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Application\Services\UserGroupApplicationService;
 use RedJasmine\User\Domain\Data\UserData;
+use RedJasmine\User\Domain\Data\UserGroupData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
@@ -26,11 +29,13 @@ class UserResource extends Resource
 
     public static string $service = UserApplicationService::class;
 
-    public static string $createCommand = UserData::class;
+    public static string $createCommand = UserGroupData::class;
 
-    public static string $updateCommand = UserUpdateBaseInfoCommand::class;
+    public static string $updateCommand = UserGroupData::class;
 
     protected static ?string $model = User::class;
+
+    protected static ?int $navigationSort = 1;
 
     /**
      * @return string|null
@@ -122,10 +127,12 @@ class UserResource extends Resource
                 ,
 
                 Tables\Columns\TextColumn::make('phone')
+                                         ->formatStateUsing(fn($state)=> Str::mask($state, '*', 3, 4))
                                          ->label(__('red-jasmine-user::user.fields.phone'))
 
                 ,
                 Tables\Columns\TextColumn::make('email')
+                                         ->formatStateUsing(fn($state)=> Str::mask($state, '*', 3, 4))
                                          ->label(__('red-jasmine-user::user.fields.email'))
                                          ,
                 Tables\Columns\TextColumn::make('nickname')

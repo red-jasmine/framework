@@ -141,7 +141,7 @@ trait ResourcePageHelper
 
     public static function getCreateCommand() : ?string
     {
-        return static::$createCommand;
+        return static::$createCommand ?? static::$dataClass;
     }
 
     protected function resolveRecord(int|string $key) : Model
@@ -201,7 +201,7 @@ trait ResourcePageHelper
 
     public static function getUpdateCommand() : ?string
     {
-        return static::$updateCommand;
+        return static::$updateCommand ?? static::$dataClass;
     }
 
 

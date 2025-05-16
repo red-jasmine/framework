@@ -32,6 +32,7 @@ class UserPackageServiceProvider extends PackageServiceProvider
                 'create_user_tags_table',
 
             ])
+            ->runsMigrations()
             ;
     }
 }

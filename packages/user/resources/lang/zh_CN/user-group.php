@@ -1,14 +1,16 @@
 <?php
 return [
+    'labels' => [
 
-    'labels'  => [
-        'article-category' => '文章分类',
-        'title'            => '文章分类',
+        'title' => '分组'
     ],
-    'fields'  => [
+
+
+    'fields' => [
+
         'id'          => 'ID',
         'parent_id'   => '父级ID',
-        'name'        => '类目名称',
+        'name'        => '名称',
         'description' => '描述',
         'image'       => '图片',
         'cluster'     => '群簇',
@@ -16,19 +18,19 @@ return [
         'is_leaf'     => '叶子节点',
         'is_show'     => '是否显示',
         'status'      => '状态',
+        'extra'       => '扩展字段',
 
     ],
-    'enums'   => [
+
+    'enums' => [
         'status' => [
-            'disable' => '启用',
-            'enable'  => '停用',
+            'enable'  => '启用',
+            'disable' => '停用',
         ],
 
     ],
-    'options' => [
 
+    'relations' => [
 
     ],
-
-
 ];

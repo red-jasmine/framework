@@ -4,15 +4,14 @@ namespace RedJasmine\User\Domain\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\User\Domain\Data\UserGroupData;
 use RedJasmine\User\Domain\Models\UserGroup;
-use RedJasmine\User\Domain\Models\UserTagCategory;
 
 class UserGroupTransformer implements TransformerInterface
 {
     /**
-     * @param  Data|BaseCategoryData  $data
+     * @param  Data|UserGroupData  $data
      * @param  Model|UserGroup  $model
      *
      * @return Model|null

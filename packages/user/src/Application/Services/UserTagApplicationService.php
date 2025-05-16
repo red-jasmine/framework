@@ -2,6 +2,7 @@
 
 namespace RedJasmine\User\Application\Services;
 
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\User\Domain\Models\UserTag;
 use RedJasmine\User\Domain\Repositories\UserTagReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserTagRepositoryInterface;
@@ -10,9 +11,9 @@ use RedJasmine\User\Domain\Transformers\UseTagTransformer;
 class UserTagApplicationService extends ApplicationService
 {
     public function __construct(
-        protected UserTagRepositoryInterface $repository,
-        protected UserTagReadRepositoryInterface $readRepository,
-        protected UseTagTransformer $transformer
+        public UserTagRepositoryInterface $repository,
+        public UserTagReadRepositoryInterface $readRepository,
+        public UseTagTransformer $transformer
     ) {
     }
 

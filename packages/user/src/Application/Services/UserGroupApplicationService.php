@@ -4,22 +4,22 @@ namespace RedJasmine\User\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\User\Domain\Models\UserTagCategory;
-use RedJasmine\User\Domain\Repositories\UserTagCategoryReadRepositoryInterface;
-use RedJasmine\User\Domain\Repositories\UserTagCategoryRepositoryInterface;
-use RedJasmine\User\Domain\Transformers\UserTagCategoryTransformer;
+use RedJasmine\User\Domain\Models\UserGroup;
+use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserGroupRepositoryInterface;
+use RedJasmine\User\Domain\Transformers\UserGroupTransformer;
 
 class UserGroupApplicationService extends ApplicationService
 {
 
     public function __construct(
-        protected UserTagCategoryRepositoryInterface $repository,
-        protected UserTagCategoryReadRepositoryInterface $readRepository,
-        protected UserTagCategoryTransformer $transformer
+        public UserGroupRepositoryInterface $repository,
+        public UserGroupReadRepositoryInterface $readRepository,
+        public UserGroupTransformer $transformer
     ) {
     }
 
-    protected static string $modelClass = UserTagCategory::class;
+    protected static string $modelClass = UserGroup::class;
 
 
     public function tree(Query $query) : array

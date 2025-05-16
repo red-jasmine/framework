@@ -2,8 +2,7 @@
 return [
 
     'labels'  => [
-        'article-category' => '文章分类',
-        'title'            => '文章分类',
+        'title' => '标签分类'
     ],
     'fields'  => [
         'id'          => 'ID',

@@ -5,17 +5,17 @@ namespace RedJasmine\User\Application\Services;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\User\Domain\Models\UserGroup;
-use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
-use RedJasmine\User\Domain\Repositories\UserGroupRepositoryInterface;
-use RedJasmine\User\Domain\Transformers\UserGroupTransformer;
+use RedJasmine\User\Domain\Repositories\UserTagCategoryReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserTagCategoryRepositoryInterface;
+use RedJasmine\User\Domain\Transformers\UserTagCategoryTransformer;
 
 class UserTagCategoryApplicationService extends ApplicationService
 {
 
     public function __construct(
-        protected UserGroupRepositoryInterface $repository,
-        protected UserGroupReadRepositoryInterface $readRepository,
-        protected UserGroupTransformer $transformer
+        public UserTagCategoryRepositoryInterface $repository,
+        public UserTagCategoryReadRepositoryInterface $readRepository,
+        public UserTagCategoryTransformer $transformer
     ) {
     }
 

@@ -3,6 +3,8 @@
 namespace RedJasmine\User\Application;
 
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserGroupRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserTagCategoryReadRepositoryInterface;
