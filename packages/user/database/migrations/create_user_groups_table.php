@@ -24,8 +24,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
             $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('parent_id', 'idx_parent');
