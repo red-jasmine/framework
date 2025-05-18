@@ -24,10 +24,14 @@ use RedJasmine\User\Application\Services\Commands\UserLoginOrRegisterCommandHand
 use RedJasmine\User\Application\Services\Commands\UserRegisterCaptchaCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\Application\Services\Commands\UserRegisterCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserSetAccountCommand;
+use RedJasmine\User\Application\Services\Commands\UserSetAccountCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommandHandler;
+use RedJasmine\User\Application\Services\Commands\UserSetStatusCommand;
+use RedJasmine\User\Application\Services\Commands\UserSetStatusCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserSetTagsCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetTagsCommandHandler;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
@@ -57,12 +61,16 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool setGroup(UserSetGroupCommand $command)
  * @see UserSetTagsCommandHandler::handle()
  * @method bool setTags(UserSetTagsCommand $command)
+ * @see UserSetStatusCommandHandler::handle()
+ * @method bool setStatus(UserSetStatusCommand $command)
  * @method bool cancel(UserCancelCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)
  * @method bool forgotPassword(ForgotPasswordCommand $command)
  * @method bool changeAccountCaptcha(ChangeAccountCaptchaCommand $command)
  * @method bool changeAccountVerify(ChangeAccountVerifyCommand $command)
  * @method bool changeAccountChange(ChangeAccountChangeCommand $command)
+ * @see UserSetAccountCommandHandler::handle()
+ * @method bool setAccount(UserSetAccountCommand $command)
  *
  */
 class UserApplicationService extends ApplicationService
@@ -84,11 +92,13 @@ class UserApplicationService extends ApplicationService
         'setPassword'           => UserSetPasswordCommandHandler::class,
         'setGroup'              => UserSetGroupCommandHandler::class,
         'setTags'               => UserSetTagsCommandHandler::class,
+        'setStatus'             => UserSetStatusCommandHandler::class,
         'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
         'forgotPassword'        => ForgotPasswordCommandHandler::class,
         'changeAccountCaptcha'  => ChangeAccountCaptchaCommandHandler::class,
         'changeAccountVerify'   => ChangeAccountVerifyCommandHandler::class,
         'changeAccountChange'   => ChangeAccountChangeCommandHandler::class,
+        'setAccount'            => UserSetAccountCommandHandler::class,
 
 
     ];

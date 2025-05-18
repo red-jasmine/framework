@@ -23,13 +23,13 @@ use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable implements JWTSubject, UserInterface,OperatorInterface
+class User extends Authenticatable implements JWTSubject, UserInterface, OperatorInterface
 {
 
 
     use HasOperator;
 
-    protected  $withOperatorNickname = true;
+    protected $withOperatorNickname = true;
 
     public $incrementing = false;
 
@@ -177,6 +177,11 @@ class User extends Authenticatable implements JWTSubject, UserInterface,Operator
     public function setGroup(?int $groupId = null) : void
     {
         $this->group_id = $groupId;
+    }
+
+    public function setStatus(UserStatusEnum $status) : void
+    {
+        $this->status = $status;
     }
 
     public function changePhone(string $phone) : void

@@ -33,6 +33,7 @@ return [
         'district'          => '区县',
         'school'            => '学校',
         'group_id'          => '分组ID',
+        'ip'                => 'IP',
 
 
     ],
@@ -66,8 +67,10 @@ return [
 
     ],
     'commands'  => [
-        'set-tags'  => '设置标签',
-        'set-group' => '设置分组',
+        'set-tags'    => '设置标签',
+        'set-group'   => '设置分组',
+        'set-status'  => '设置状态',
+        'set-account' => '设置账号信息',
 
     ]
 ];
