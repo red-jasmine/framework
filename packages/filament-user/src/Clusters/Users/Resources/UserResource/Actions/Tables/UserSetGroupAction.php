@@ -13,7 +13,7 @@ class UserSetGroupAction extends Action
 {
     public static function getDefaultName(): ?string
     {
-        return 'set-group';
+        return 'setGroup';
     }
 
     protected function setUp() : void

@@ -19,9 +19,22 @@ use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
 use RedJasmine\User\Domain\Models\User;
-
-class UserResource extends Resource
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+class UserResource extends Resource implements HasShieldPermissions
 {
+    public static function getPermissionPrefixes() : array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'setStatus'
+        ];
+    }
+
 
     use ResourcePageHelper;
 

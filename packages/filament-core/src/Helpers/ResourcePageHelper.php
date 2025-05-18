@@ -205,10 +205,7 @@ trait ResourcePageHelper
     }
 
 
-    public static function makeUser()
-    {
 
-    }
 
     public static function operateFormSchemas() : array
     {

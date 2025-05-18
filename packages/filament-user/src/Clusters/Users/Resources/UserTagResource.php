@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,9 +18,19 @@ use RedJasmine\User\Domain\Data\UserTagData;
 use RedJasmine\User\Domain\Enums\UserTagStatusEnum;
 use RedJasmine\User\Domain\Models\UserTag;
 
-class UserTagResource extends Resource
+class UserTagResource extends Resource  implements HasShieldPermissions
 {
-
+    public static function getPermissionPrefixes() : array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     use ResourcePageHelper;
 

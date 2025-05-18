@@ -6,6 +6,7 @@ use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
 use RedJasmine\User\Application\Services\Commands\UserSetStatusCommand;
@@ -14,14 +15,19 @@ use RedJasmine\User\Domain\Enums\UserStatusEnum;
 
 class UserSetStatusAction extends Action
 {
+
+    protected static string $resource = UserResource::class;
+
     public static function getDefaultName() : ?string
     {
-        return 'set-status';
+        return 'setStatus';
     }
 
     protected function setUp() : void
     {
+
         parent::setUp();
+        $this->authorize('setStatus');
         $this->icon('heroicon-o-cog');
         $this->label(label: __('red-jasmine-user::user.commands.set-status'));
 

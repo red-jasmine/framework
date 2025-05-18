@@ -14,7 +14,7 @@ class UserSetTagsAction extends Action
 
     public static function getDefaultName() : ?string
     {
-        return 'set-tags';
+        return 'setTags';
     }
 
     protected function setUp() : void

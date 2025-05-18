@@ -14,7 +14,7 @@ class UserSetAccountAction extends Action
 {
     public static function getDefaultName() : ?string
     {
-        return 'set-account';
+        return 'setAccount';
     }
 
     protected function setUp() : void
