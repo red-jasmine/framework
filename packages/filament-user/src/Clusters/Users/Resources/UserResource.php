@@ -15,6 +15,7 @@ use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\RelationManage
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Application\Services\UserGroupApplicationService;
+use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Data\UserGroupData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
@@ -29,9 +30,9 @@ class UserResource extends Resource
 
     public static string $service = UserApplicationService::class;
 
-    public static string $createCommand = UserGroupData::class;
+    public static string $createCommand = UserData::class;
 
-    public static string $updateCommand = UserGroupData::class;
+    public static string $updateCommand = UserUpdateBaseInfoCommand::class;
 
     protected static ?string $model = User::class;
 
@@ -59,9 +60,10 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('nickname')
                                                   ->label(__('red-jasmine-user::user.fields.nickname'))
                                                   ->maxLength(64),
-                        Forms\Components\Select::make('gender')
-                                               ->label(__('red-jasmine-user::user.fields.gender'))
-                                               ->useEnum(UserGenderEnum::class),
+                        Forms\Components\ToggleButtons::make('gender')
+                                                      ->label(__('red-jasmine-user::user.fields.gender'))
+                                                      ->inline()
+                                                      ->useEnum(UserGenderEnum::class),
                         Forms\Components\FileUpload::make('avatar')
                                                    ->label(__('red-jasmine-user::user.fields.avatar'))
                                                    ->image(),
@@ -119,7 +121,7 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-user::user.fields.id'))
-                    ->copyable()
+                                         ->copyable()
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                                          ->label(__('red-jasmine-user::user.fields.name'))
@@ -127,14 +129,14 @@ class UserResource extends Resource
                 ,
 
                 Tables\Columns\TextColumn::make('phone')
-                                         ->formatStateUsing(fn($state)=> Str::mask($state, '*', 3, 4))
+                                         ->formatStateUsing(fn($state) => Str::mask($state, '*', 3, 4))
                                          ->label(__('red-jasmine-user::user.fields.phone'))
 
                 ,
                 Tables\Columns\TextColumn::make('email')
-                                         ->formatStateUsing(fn($state)=> Str::mask($state, '*', 3, 4))
+                                         ->formatStateUsing(fn($state) => Str::mask($state, '*', 3, 4))
                                          ->label(__('red-jasmine-user::user.fields.email'))
-                                         ,
+                ,
                 Tables\Columns\TextColumn::make('nickname')
                                          ->label(__('red-jasmine-user::user.fields.nickname'))
                                          ->searchable(),
@@ -155,9 +157,9 @@ class UserResource extends Resource
                 ,
 
                 Tables\Columns\TextColumn::make('group.name')
-                                        ->badge()
+                                         ->badge()
                                          ->label(__('red-jasmine-user::user.relations.group'))
-                                         ,
+                ,
 
                 Tables\Columns\TextColumn::make('status')
                                          ->label(__('red-jasmine-user::user.fields.status'))
@@ -168,8 +170,8 @@ class UserResource extends Resource
                                          ->dateTime(),
 
 
-                 Tables\Columns\TextColumn::make('country')
-                                          ->label(__('red-jasmine-user::user.fields.country')),
+                Tables\Columns\TextColumn::make('country')
+                                         ->label(__('red-jasmine-user::user.fields.country')),
                 Tables\Columns\TextColumn::make('province')
                                          ->label(__('red-jasmine-user::user.fields.province')),
                 Tables\Columns\TextColumn::make('city')
@@ -194,6 +196,11 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Users\Resources\UserTagResource\Actions\Tables\UserSetTagsAction::make(),
+                    Users\Resources\UserTagResource\Actions\Tables\UserSetGroupAction::make(),
+                ]),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

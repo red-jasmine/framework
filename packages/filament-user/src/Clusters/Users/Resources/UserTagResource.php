@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -42,9 +43,18 @@ class UserTagResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('category_id')
-                                       ->label(__('red-jasmine-user::user-tag.relations.category'))
-                                       ->relationship('category', 'name'),
+
+                SelectTree::make('category_id')
+                          ->label(__('red-jasmine-user::user-tag.relations.category'))
+                          ->relationship(relationship: 'category', titleAttribute: 'name', parentAttribute: 'parent_id',
+                          )
+                          ->searchable()
+                          ->default(null)
+                          ->enableBranchNode()
+                          ->parentNullValue(0)
+                          ->dehydrateStateUsing(fn($state) => (int) $state),
+
+
                 Forms\Components\TextInput::make('name')
                                           ->label(__('red-jasmine-user::user-tag.fields.name'))
                                           ->required()
@@ -73,7 +83,7 @@ class UserTagResource extends Resource
 
                                           ->default(UserTagStatusEnum::ENABLE)
                                           ->useEnum(UserTagStatusEnum::class),
-                Forms\Components\TextInput::make('extra')
+                Forms\Components\KeyValue::make('extra')
                                           ->label(__('red-jasmine-user::user-tag.fields.extra')),
                 ...static::operateFormSchemas(),
             ]);
@@ -93,10 +103,10 @@ class UserTagResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                                          ->label(__('red-jasmine-user::user-tag.fields.description'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('icon')
+                Tables\Columns\ImageColumn::make('icon')
                                          ->label(__('red-jasmine-user::user-tag.fields.icon'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('color')
+                Tables\Columns\ColorColumn::make('color')
                                          ->label(__('red-jasmine-user::user-tag.fields.color'))
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('cluster')

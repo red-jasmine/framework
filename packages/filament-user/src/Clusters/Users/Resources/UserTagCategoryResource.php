@@ -88,7 +88,6 @@ class UserTagCategoryResource extends Resource
                                               ->default(CategoryStatusEnum::ENABLE)
                                               ->useEnum(CategoryStatusEnum::class),
                 Forms\Components\KeyValue::make('extra')
-
                                           ->label(__('red-jasmine-user::user-tag-category.fields.extra')),
             ]);
     }
