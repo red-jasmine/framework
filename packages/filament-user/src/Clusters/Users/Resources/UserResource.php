@@ -165,7 +165,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('last_active_at')
                                          ->label(__('red-jasmine-user::user.fields.last_active_at'))
                                          ->dateTime(),
-
+                Tables\Columns\TextColumn::make('ip')
+                                         ->label(__('red-jasmine-user::user.fields.ip'))
+                                         ->dateTime(),
 
                 Tables\Columns\TextColumn::make('country')
                                          ->label(__('red-jasmine-user::user.fields.country')),
@@ -196,6 +198,8 @@ class UserResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     UserResource\Actions\Tables\UserSetTagsAction::make(),
                     UserResource\Actions\Tables\UserSetGroupAction::make(),
+                    UserResource\Actions\Tables\UserSetStatusAction::make(),
+                    UserResource\Actions\Tables\UserSetAccountAction::make(),
                 ]),
 
             ])
