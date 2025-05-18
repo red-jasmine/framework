@@ -55,6 +55,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool unbindSocialite(UserUnbindSocialiteCommand $command)
  * @method bool setPassword(UserSetPasswordCommand $command)
  * @method bool setGroup(UserSetGroupCommand $command)
+ * @see UserSetTagsCommandHandler::handle()
  * @method bool setTags(UserSetTagsCommand $command)
  * @method bool cancel(UserCancelCommand $command)
  * @method bool forgotPasswordCaptcha(ForgotPasswordCaptchaCommand $command)

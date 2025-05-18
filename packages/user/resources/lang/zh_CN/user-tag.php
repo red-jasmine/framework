@@ -32,7 +32,9 @@ return [
     ],
 
     'relations' => [
-        'category' => '分类'
+        'category' => '分类',
+
+
 
     ],
 ];

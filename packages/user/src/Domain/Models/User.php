@@ -43,10 +43,14 @@ class User extends Authenticatable implements JWTSubject, UserInterface
         static::saving(function (User $user) {
             if ($user->relationLoaded('tags')) {
 
-                if ($user->tags?->count() > 0) {
-                    if (!is_array($user->tags->first())) {
+                if ((is_array($user->tags) ? count($user->tags) : ($user->tags?->count())) > 0) {
+                    if (is_array($user->tags)) {
+
                         $user->tags()->sync($user->tags);
+                    } elseif (!is_array($user->tags->first())) {
+                        $user->tags()->sync(($user->tags));
                     } else {
+
                         $user->tags()->sync($user->tags->pluck('id')->toArray());
                     }
 
@@ -61,14 +65,13 @@ class User extends Authenticatable implements JWTSubject, UserInterface
 
     public function tags() : BelongsToMany
     {
+
         return $this->belongsToMany(
             UserTag::class,
-            (new UserTagPivot())->getTable(),
+            'user_tag_pivot',
             'user_id',
-            'user_tag_id',
-        )
-                    ->using(UserTagPivot::class)
-                    ->withTimestamps();
+            'user_tag_id'
+        )->withTimestamps();
     }
 
     public function newInstance($attributes = [], $exists = false) : static

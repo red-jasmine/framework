@@ -60,7 +60,14 @@ return [
 
     ],
 
-    'relations'=>[
-        'group'=>'分组',
+    'relations' => [
+        'group' => '分组',
+        'tags'  => '标签',
+
     ],
+    'commands'  => [
+        'set-tags'  => '设置标签',
+        'set-group' => '设置分组',
+
+    ]
 ];
