@@ -1,15 +1,12 @@
 <?php
 
-namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Actions\Tables;
+namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
-use RedJasmine\User\Application\Services\Commands\UserSetTagsCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
 
 class UserSetGroupAction extends Action

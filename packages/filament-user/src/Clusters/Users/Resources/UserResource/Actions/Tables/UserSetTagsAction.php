@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Actions\Tables;
+namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
 use Filament\Forms;
 use Filament\Notifications\Notification;

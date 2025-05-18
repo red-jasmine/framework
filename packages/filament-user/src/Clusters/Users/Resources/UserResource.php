@@ -14,10 +14,7 @@ use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Pages;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\RelationManagers;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
-use RedJasmine\User\Application\Services\UserGroupApplicationService;
-use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Data\UserData;
-use RedJasmine\User\Domain\Data\UserGroupData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
@@ -197,8 +194,8 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ActionGroup::make([
-                    Users\Resources\UserTagResource\Actions\Tables\UserSetTagsAction::make(),
-                    Users\Resources\UserTagResource\Actions\Tables\UserSetGroupAction::make(),
+                    UserResource\Actions\Tables\UserSetTagsAction::make(),
+                    UserResource\Actions\Tables\UserSetGroupAction::make(),
                 ]),
 
             ])
