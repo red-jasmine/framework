@@ -10,6 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
@@ -21,8 +23,14 @@ use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable implements JWTSubject, UserInterface
+class User extends Authenticatable implements JWTSubject, UserInterface,OperatorInterface
 {
+
+
+    use HasOperator;
+
+    protected  $withOperatorNickname = true;
+
     public $incrementing = false;
 
     use HasSnowflakeId;

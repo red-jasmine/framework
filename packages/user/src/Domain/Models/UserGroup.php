@@ -6,5 +6,6 @@ use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 
 class UserGroup extends BaseCategoryModel
 {
+    protected  $withOperatorNickname = true;
 
 }

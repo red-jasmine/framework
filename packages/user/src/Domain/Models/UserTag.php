@@ -13,7 +13,7 @@ class UserTag extends Model implements OperatorInterface
 
     use HasOperator;
 
-
+    protected  $withOperatorNickname = true;
     protected function casts() : array
     {
         return [

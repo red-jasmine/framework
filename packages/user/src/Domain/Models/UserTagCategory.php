@@ -6,6 +6,6 @@ use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 
 class UserTagCategory extends BaseCategoryModel
 {
-
+    protected  $withOperatorNickname = true;
 
 }

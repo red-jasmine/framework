@@ -25,8 +25,16 @@ return new class extends Migration {
             $table->string('creator_nickname', 64)->nullable();
             $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
+
+
+
+
+
+
+
+
             $table->comment('用户标签');
         });
     }
