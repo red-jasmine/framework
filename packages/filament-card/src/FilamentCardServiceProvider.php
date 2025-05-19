@@ -2,19 +2,14 @@
 
 namespace RedJasmine\FilamentCard;
 
-use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
+use RedJasmine\FilamentCard\Testing\TestsFilamentCard;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RedJasmine\FilamentCard\Commands\FilamentCardCommand;
-use RedJasmine\FilamentCard\Testing\TestsFilamentCard;
 
 class FilamentCardServiceProvider extends PackageServiceProvider
 {
@@ -22,7 +17,7 @@ class FilamentCardServiceProvider extends PackageServiceProvider
 
     public static string $viewNamespace = 'red-jasmine-filament-card';
 
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         /*
          * This class is a Package Service Provider
@@ -30,15 +25,15 @@ class FilamentCardServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package->name(static::$name)
-            ->hasCommands($this->getCommands())
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile()
+                ->hasCommands($this->getCommands())
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
 //                    ->publishMigrations()
 //                    ->askToRunMigrations()
 //                    ->askToStarRepoOnGitHub('red-jasmine/filament-card')
-                ;
-            });
+                    ;
+                });
 
         $configFileName = $package->shortName();
 
@@ -59,9 +54,11 @@ class FilamentCardServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered() : void
+    {
+    }
 
-    public function packageBooted(): void
+    public function packageBooted() : void
     {
         // Asset Registration
         FilamentAsset::register(
@@ -78,19 +75,13 @@ class FilamentCardServiceProvider extends PackageServiceProvider
         FilamentIcon::register($this->getIcons());
 
         // Handle Stubs
-        if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
-                $this->publishes([
-                    $file->getRealPath() => base_path("stubs/filament-card/{$file->getFilename()}"),
-                ], 'filament-card-stubs');
-            }
-        }
+
 
         // Testing
-        Testable::mixin(new TestsFilamentCard);
+        //Testable::mixin(new TestsFilamentCard);
     }
 
-    protected function getAssetPackageName(): ?string
+    protected function getAssetPackageName() : ?string
     {
         return 'red-jasmine/filament-card';
     }
@@ -98,29 +89,29 @@ class FilamentCardServiceProvider extends PackageServiceProvider
     /**
      * @return array<Asset>
      */
-    protected function getAssets(): array
+    protected function getAssets() : array
     {
         return [
             // AlpineComponent::make('filament-card', __DIR__ . '/../resources/dist/components/filament-card.js'),
-           // Css::make('filament-card-styles', __DIR__ . '/../resources/dist/filament-card.css'),
-           // Js::make('filament-card-scripts', __DIR__ . '/../resources/dist/filament-card.js'),
+            // Css::make('filament-card-styles', __DIR__ . '/../resources/dist/filament-card.css'),
+            // Js::make('filament-card-scripts', __DIR__ . '/../resources/dist/filament-card.js'),
         ];
     }
 
     /**
      * @return array<class-string>
      */
-    protected function getCommands(): array
+    protected function getCommands() : array
     {
         return [
-            FilamentCardCommand::class,
+            //FilamentCardCommand::class,
         ];
     }
 
     /**
      * @return array<string>
      */
-    protected function getIcons(): array
+    protected function getIcons() : array
     {
         return [];
     }
@@ -128,7 +119,7 @@ class FilamentCardServiceProvider extends PackageServiceProvider
     /**
      * @return array<string>
      */
-    protected function getRoutes(): array
+    protected function getRoutes() : array
     {
         return [];
     }
@@ -136,7 +127,7 @@ class FilamentCardServiceProvider extends PackageServiceProvider
     /**
      * @return array<string, mixed>
      */
-    protected function getScriptData(): array
+    protected function getScriptData() : array
     {
         return [];
     }
@@ -144,10 +135,10 @@ class FilamentCardServiceProvider extends PackageServiceProvider
     /**
      * @return array<string>
      */
-    protected function getMigrations(): array
+    protected function getMigrations() : array
     {
         return [
-            'create_filament-card_table',
+
         ];
     }
 }
