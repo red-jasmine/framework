@@ -98,10 +98,10 @@ class ProductApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductStockLogReadRepositoryInterface::class, ProductStockLogReadRepository::class);
 
 
-        Relation::enforceMorphMap([
-                                      'product' => Product::class,
-                                      'brand'   => Brand::class,
-                                  ]);
+        // Relation::enforceMorphMap([
+        //                               'product' => Product::class,
+        //                               'brand'   => Brand::class,
+        //                           ]);
 
     }
 

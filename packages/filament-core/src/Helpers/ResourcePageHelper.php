@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\FilamentCore\Filters\TreeParent;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
@@ -44,7 +45,12 @@ trait ResourcePageHelper
 //                                  SoftDeletingScope::class,
 //                              ]);
         if (static::onlyOwner()) {
-            $query->onlyOwner(auth()->user());
+            if(auth()->user() instanceof BelongsToOwnerInterface){
+                $query->onlyOwner(auth()->user()->owner());
+            }else{
+                $query->onlyOwner(auth()->user());
+            }
+
         }
         return $query;
     }
@@ -82,8 +88,12 @@ trait ResourcePageHelper
 
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
-            $data['owner_type'] = auth()->user()->getType();
-            $data['owner_id']   = auth()->user()->getID();
+            $owner = auth()->user();
+            if(auth()->user() instanceof BelongsToOwnerInterface){
+                $owner = auth()->user()->owner();
+            }
+            $data['owner_type'] = $owner->getType();
+            $data['owner_id']   = $owner->getID();
         }
 
 
@@ -94,8 +104,12 @@ trait ResourcePageHelper
     {
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
-            $data['owner_type'] = auth()->user()->getType();
-            $data['owner_id']   = auth()->user()->getID();
+            $owner = auth()->user();
+            if(auth()->user() instanceof BelongsToOwnerInterface){
+                $owner = auth()->user()->owner();
+            }
+            $data['owner_type'] = $owner->getType();
+            $data['owner_id']   = $owner->getID();
         }
 
 
@@ -151,7 +165,12 @@ trait ResourcePageHelper
 
 
         if ($resource::onlyOwner()) {
-            $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner(auth()->user()));
+            $owner = auth()->user();
+            if(auth()->user() instanceof BelongsToOwnerInterface){
+                $owner = auth()->user()->owner();
+            }
+
+            $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
 
@@ -317,16 +336,14 @@ trait ResourcePageHelper
 
             Forms\Components\TextInput::make($name.'_type')
                                       ->label(__('red-jasmine-support::support.owner_type'))
-                                      ->hidden(!auth()->user()->isAdmin())
-                                      ->default(auth()->user()->getType())
+                                      ->default(auth()->user()->owner()->getType())
                                       ->required()
                                       ->maxLength(64)
                                       ->live(),
             Forms\Components\TextInput::make($name.'_id')
                                       ->label(__('red-jasmine-support::support.owner_id'))
                                       ->required()
-                                      ->hidden(!auth()->user()->isAdmin())
-                                      ->default(auth()->user()->getID())
+                                      ->default(auth()->user()->owner()->getID())
                                       ->live(),
 
         ];

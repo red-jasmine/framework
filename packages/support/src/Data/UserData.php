@@ -11,13 +11,13 @@ class UserData extends Data implements UserInterface
 
     /**
      * @param  string  $type
-     * @param  int  $id
+     * @param  int|string  $id
      * @param  string|null  $nickname
      * @param  string|null  $avatar
      */
     public function __construct(
         public string $type,
-        public int $id,
+        public int|string $id,
         public ?string $nickname = null,
         public ?string $avatar = null,
     ) {
