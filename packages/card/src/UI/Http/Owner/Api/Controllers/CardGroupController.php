@@ -4,8 +4,7 @@ namespace RedJasmine\Card\UI\Http\Owner\Api\Controllers;
 
 
 use Illuminate\Http\Request;
-use RedJasmine\Card\Application\Services\CardGroupCommandService;
-use RedJasmine\Card\Application\Services\CardGroupQueryService;
+use RedJasmine\Card\Application\Services\CardGroupApplicationService;
 use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupCreateCommand;
 use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupUpdateCommand;
@@ -16,12 +15,11 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 class CardGroupController extends Controller
 {
     public function __construct(
-        protected CardGroupCommandService $commandService,
-        protected CardGroupQueryService   $queryService,
+        protected CardGroupApplicationService $service,
 
-    )
-    {
-        $this->queryService->getRepository()->withQuery(function ($query) {
+
+    ) {
+        $this->service->readRepository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
 
@@ -31,7 +29,7 @@ class CardGroupController extends Controller
     public function index(Request $request) : \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(CardGroupPaginateQuery::from($request));
+        $result = $this->service->paginate(CardGroupPaginateQuery::from($request));
 
         return CardGroupResource::collection($result->appends($request->query()));
 
@@ -39,7 +37,7 @@ class CardGroupController extends Controller
 
     public function show($id, Request $request) : CardGroupResource
     {
-        $result = $this->queryService->find(FindQuery::make($id,$request));;
+        $result = $this->service->find(FindQuery::make($id, $request));;
 
         return CardGroupResource::make($result);
     }
@@ -52,7 +50,7 @@ class CardGroupController extends Controller
         $command = CardGroupCreateCommand::from($request);
 
 
-        $result = $this->commandService->create($command);
+        $result = $this->service->create($command);
 
         return CardGroupResource::make($result);
 
@@ -65,12 +63,12 @@ class CardGroupController extends Controller
         $request->offsetSet('owner_id', $this->getOwner()->getID());
         $request->offsetSet('id', $id);
 
-        $this->queryService->find(FindQuery::make($id));
+        $this->service->find(FindQuery::make($id));
 
 
         $command = CardGroupUpdateCommand::from($request);
 
-        $this->commandService->update($command);
+        $this->service->update($command);
 
         return static::success();
 
@@ -78,11 +76,11 @@ class CardGroupController extends Controller
 
     public function destroy(Request $request, $id) : \Illuminate\Http\JsonResponse
     {
-        $this->queryService->find(FindQuery::make($id));
+
         $request->offsetSet('id', $id);
         $command = CardGroupDeleteCommand::from($request);
-
-        $this->commandService->delete($command);
+        $this->service->find(FindQuery::make($id));
+        $this->service->delete($command);
 
         return static::success();
     }

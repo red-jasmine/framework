@@ -8,16 +8,17 @@ use RedJasmine\Card\Application\Services\Pipelines\CardGroupPipeline;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
+use RedJasmine\Card\Domain\Repositories\CardGroupBindProductReadRepositoryInterface;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
 use RedJasmine\Card\Exceptions\CardException;
 use RedJasmine\Support\Application\ApplicationCommandService;
-
+use RedJasmine\Support\Application\ApplicationService;
 
 
 /**
  * @method bind(CardGroupBindProductBindCommand $command)
  */
-class CardGroupBindProductCommandService extends ApplicationCommandService
+class CardGroupBindProductApplicationService extends ApplicationService
 {
 
 
@@ -26,14 +27,18 @@ class CardGroupBindProductCommandService extends ApplicationCommandService
 
     public function __construct(
         public CardGroupBindProductRepositoryInterface $repository,
-    )
-    {
-
-        static::macro('bind',CardGroupBindProductBindCommandHandler::class);
+        public CardGroupBindProductReadRepositoryInterface $readRepository,
+    ) {
+        
     }
 
+
+    protected static $macros = [
+        'bind' => CardGroupBindProductBindCommandHandler::class,
+    ];
+
     /**
-     * @param CardGroupBindProductCreateCommand $command
+     * @param  CardGroupBindProductCreateCommand  $command
      *
      * @return Model
      * @throws \Exception

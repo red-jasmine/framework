@@ -4,10 +4,11 @@ namespace RedJasmine\Card\Application\Services;
 
 use RedJasmine\Card\Application\Services\Pipelines\CardGroupPipeline;
 use RedJasmine\Card\Domain\Models\Card;
+use RedJasmine\Card\Domain\Repositories\CardReadRepositoryInterface;
 use RedJasmine\Card\Domain\Repositories\CardRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
-class CardCommandService extends ApplicationCommandService
+class CardApplicationService extends ApplicationService
 {
 
 
@@ -15,7 +16,8 @@ class CardCommandService extends ApplicationCommandService
 
 
     public function __construct(
-        protected CardRepositoryInterface $repository,
+        public CardRepositoryInterface $repository,
+        public CardReadRepositoryInterface $readRepository,
     ) {
 
     }

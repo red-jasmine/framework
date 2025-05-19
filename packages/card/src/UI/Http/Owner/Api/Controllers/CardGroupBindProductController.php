@@ -5,8 +5,7 @@ namespace RedJasmine\Card\UI\Http\Owner\Api\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
-use RedJasmine\Card\Application\Services\CardGroupBindProductQueryService;
+use RedJasmine\Card\Application\Services\CardGroupBindProductApplicationService;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductDeleteCommand;
@@ -19,13 +18,11 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 class CardGroupBindProductController extends Controller
 {
     public function __construct(
+        protected CardGroupBindProductApplicationService $service,
 
-        protected CardGroupBindProductCommandService $commandService,
-        protected CardGroupBindProductQueryService   $queryService,
 
-    )
-    {
-        $this->queryService->getRepository()->withQuery(function ($query) {
+    ) {
+        $this->service->readRepository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
 
@@ -33,14 +30,14 @@ class CardGroupBindProductController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return AnonymousResourceCollection
      */
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(CardGroupBindProductPaginateQuery::from($request));
+        $result = $this->service->paginate(CardGroupBindProductPaginateQuery::from($request));
 
         return CardGroupBindProductResource::collection($result->appends($request->query()));
 
@@ -48,7 +45,7 @@ class CardGroupBindProductController extends Controller
 
     public function show($id, Request $request) : CardGroupBindProductResource
     {
-        $result = $this->queryService->find(FindQuery::make($id,$request));;
+        $result = $this->service->find(FindQuery::make($id, $request));;
         return CardGroupBindProductResource::make($result);
     }
 
@@ -59,7 +56,7 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('owner_type', $this->getOwner()->getType());
 
         $command = CardGroupBindProductCreateCommand::from($request);
-        $result  = $this->commandService->create($command);
+        $result  = $this->service->create($command);
 
         return CardGroupBindProductResource::make($result);
 
@@ -72,7 +69,7 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('owner_type', $this->getOwner()->getType());
 
         $command = CardGroupBindProductBindCommand::from($request);
-        $result  = $this->commandService->bind($command);
+        $result  = $this->service->bind($command);
 
         return CardGroupBindProductResource::make($result);
 
@@ -86,10 +83,10 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('owner_type', $this->getOwner()->getType());
 
 
-        $this->queryService->find(FindQuery::make($id));
+        $this->service->find(FindQuery::make($id));
 
         $command = CardGroupBindProductUpdateCommand::from($request);
-        $this->commandService->update($command);
+        $this->service->update($command);
 
         return static::success();
 
@@ -100,10 +97,10 @@ class CardGroupBindProductController extends Controller
         $request->offsetSet('id', $id);
         $request->offsetSet('owner_id', $this->getOwner()->getID());
         $request->offsetSet('owner_type', $this->getOwner()->getType());
-        $this->queryService->find(FindQuery::make($id));
+        $this->service->find(FindQuery::make($id));
         $command = CardGroupBindProductDeleteCommand::from($request);
 
-        $this->commandService->delete($command);
+        $this->service->delete($command);
 
         return static::success();
 

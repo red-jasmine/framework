@@ -18,10 +18,17 @@ return new class extends Migration {
             $table->timestamp('sold_time')->nullable()->comment('出售时间');
             $table->text('content')->comment('内容');
             $table->string('remarks')->nullable()->comment('备注');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
-            $table->softDeletes();
+
+
             $table->comment('卡密表');
             $table->index([ 'group_id', 'status' ], 'idx_group_status');
         });

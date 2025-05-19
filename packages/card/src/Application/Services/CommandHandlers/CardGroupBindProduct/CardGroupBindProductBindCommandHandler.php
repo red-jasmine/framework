@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Card\Application\Services\CommandHandlers\CardGroupBindProduct;
 
-use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
+use RedJasmine\Card\Application\Services\CardGroupBindProductApplicationService;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductBindCommand;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
 /**
- * @method  CardGroupBindProductCommandService getService()
+ * @method  CardGroupBindProductApplicationService getService()
  */
 class CardGroupBindProductBindCommandHandler extends CommandHandler
 {

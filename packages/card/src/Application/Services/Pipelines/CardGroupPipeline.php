@@ -2,17 +2,15 @@
 
 namespace RedJasmine\Card\Application\Services\Pipelines;
 
-use RedJasmine\Card\Application\Services\CardGroupQueryService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Card\Application\Services\CardGroupApplicationService;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class CardGroupPipeline
 {
     public function __construct(
-        protected CardGroupQueryService $groupQueryService
-    )
-    {
+        protected CardGroupApplicationService $groupQueryService
+    ) {
 
     }
 
@@ -21,7 +19,7 @@ class CardGroupPipeline
     {
 
         if ($command->groupId) {
-            $this->groupQueryService->getRepository()->withQuery(function ($query) use ($command) {
+            $this->groupQueryService->readRepository->withQuery(function ($query) use ($command) {
 
                 $query->onlyOwner($command->owner);
             });

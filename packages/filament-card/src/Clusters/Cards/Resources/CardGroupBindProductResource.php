@@ -9,9 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use RedJasmine\Card\Application\Services\CardGroupBindProductCommandService;
-use RedJasmine\Card\Application\Services\CardGroupBindProductQueryService;
+use RedJasmine\Card\Application\Services\CardGroupBindProductApplicationService;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductCreateCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductUpdateCommand;
@@ -30,12 +28,11 @@ class CardGroupBindProductResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $commandService = CardGroupBindProductCommandService::class;
-    protected static ?string $queryService   = CardGroupBindProductQueryService::class;
-    protected static ?string $createCommand  = CardGroupBindProductCreateCommand::class;
-    protected static ?string $updateCommand  = CardGroupBindProductUpdateCommand::class;
-    protected static ?string $deleteCommand  = CardGroupBindProductDeleteCommand::class;
-    protected static ?string $model          = CardGroupBindProduct::class;
+    protected static ?string $service = CardGroupBindProductApplicationService::class;
+    protected static ?string $createCommand = CardGroupBindProductCreateCommand::class;
+    protected static ?string $updateCommand = CardGroupBindProductUpdateCommand::class;
+    protected static ?string $deleteCommand = CardGroupBindProductDeleteCommand::class;
+    protected static ?string $model         = CardGroupBindProduct::class;
 
 
     protected static bool $onlyOwner = true;
@@ -60,72 +57,81 @@ class CardGroupBindProductResource extends Resource
         return $form
             ->columns(1)
             ->schema([
-                         ...static::ownerFormSchemas(),
-                         Forms\Components\Select::make('group_id')
-                                                ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
-                                                ->relationship('group', 'name',
-                                                    modifyQueryUsing: fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ]))
-                                                )
-                                                ->searchable()
-                                                ->preload()
-                                                ->optionsLimit(30)
-                                                ->required(),
-                         Forms\Components\MorphToSelect::make('product')
-                                                       ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
-                                                       ->types([
-                                                                   ...collect(static::$model::$morphLabels)
-                                                                       ->map(fn($label, $item) => Forms\Components\MorphToSelect\Type::make($item)
-                                                                                                                                     ->titleAttribute('title')
-                                                                                                                                     ->modifyOptionsQueryUsing(fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([ 'type' => $get('owner_type'), 'id' => $get('owner_id') ])))
-                                                                                                                                     ->label($label)),
+                ...static::ownerFormSchemas(),
+                Forms\Components\Select::make('group_id')
+                                       ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
+                                       ->relationship('group', 'name',
+                                           modifyQueryUsing: fn(
+                                               Builder $query,
+                                               Forms\Get $get
+                                           ) => $query->onlyOwner(UserData::from(['type' => $get('owner_type'), 'id' => $get('owner_id')]))
+                                       )
+                                       ->searchable()
+                                       ->preload()
+                                       ->optionsLimit(30)
+                                       ->required(),
+                Forms\Components\MorphToSelect::make('product')
+                                              ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
+                                              ->types([
+                                                  ...collect(static::$model::$morphLabels)
+                                                      ->map(fn($label, $item) => Forms\Components\MorphToSelect\Type::make($item)
+                                                                                                                    ->titleAttribute('title')
+                                                                                                                    ->modifyOptionsQueryUsing(fn(
+                                                                                                                        Builder $query,
+                                                                                                                        Forms\Get $get
+                                                                                                                    ) => $query->onlyOwner(UserData::from([
+                                                                                                                        'type' => $get('owner_type'),
+                                                                                                                        'id'   => $get('owner_id')
+                                                                                                                    ])))
+                                                                                                                    ->label($label)),
 
-                                                               ])
+                                              ])
 
-                         ,
-                         Forms\Components\TextInput::make('sku_id')
-                                                   ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
-                                                   ->numeric()
-                                                   ->default(0),
-                         ...static::operateFormSchemas()
-                     ]);
+                ,
+                Forms\Components\TextInput::make('sku_id')
+                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
+                                          ->numeric()
+                                          ->default(0),
+                ...static::operateFormSchemas()
+            ]);
     }
 
     public static function table(Table $table) : Table
     {
         return $table
             ->columns([
-                          Tables\Columns\TextColumn::make('id')
-                                                   ->label('ID')
-                                                   ->sortable(),
-                          ...static::ownerTableColumns(),
-                          Tables\Columns\TextColumn::make('product.title')
-                                                   ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
-                                                   ->searchable(),
-                          Tables\Columns\TextColumn::make('product_id')
-                                                   ->label(__('red-jasmine-card::card-group-bind-product.fields.product_id'))
-                                                   ,
-                          Tables\Columns\TextColumn::make('sku_id')
-                                                   ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
-                                                   ->copyable(),
-                          Tables\Columns\TextColumn::make('group.name')
-                                                   ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
-                                                   ->numeric()
-                                                   ->sortable(),
-                          ...static::operateTableColumns()
-                      ])
+                Tables\Columns\TextColumn::make('id')
+                                         ->label('ID')
+                                         ->sortable(),
+                ...static::ownerTableColumns(),
+                Tables\Columns\TextColumn::make('product.title')
+                                         ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
+                                         ->searchable(),
+                Tables\Columns\TextColumn::make('product_id')
+                                         ->label(__('red-jasmine-card::card-group-bind-product.fields.product_id'))
+                ,
+                Tables\Columns\TextColumn::make('sku_id')
+                                         ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
+                                         ->copyable(),
+                Tables\Columns\TextColumn::make('group.name')
+                                         ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
+                                         ->numeric()
+                                         ->sortable(),
+                ...static::operateTableColumns()
+            ])
             ->filters([
-                          //Tables\Filters\TrashedFilter::make(),
-                      ])
+                //Tables\Filters\TrashedFilter::make(),
+            ])
             ->actions([
-                          Tables\Actions\EditAction::make(),
-                      ])
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
-                              Tables\Actions\BulkActionGroup::make([
-                                                                       Tables\Actions\DeleteBulkAction::make(),
-                                                                       Tables\Actions\ForceDeleteBulkAction::make(),
-                                                                       Tables\Actions\RestoreBulkAction::make(),
-                                                                   ]),
-                          ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations() : array
@@ -138,9 +144,9 @@ class CardGroupBindProductResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListCardGroupBindProducts::route('/'),
+            'index' => Pages\ListCardGroupBindProducts::route('/'),
             'create' => Pages\CreateCardGroupBindProduct::route('/create'),
-            'edit'   => Pages\EditCardGroupBindProduct::route('/{record}/edit'),
+            'edit' => Pages\EditCardGroupBindProduct::route('/{record}/edit'),
         ];
     }
 
