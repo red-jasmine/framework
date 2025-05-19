@@ -6,7 +6,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeReturnGoodsCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
@@ -30,7 +30,7 @@ beforeEach(function () {
 
     $this->orderReadRepository  = app(OrderReadRepositoryInterface::class);
     $this->orderRepository      = app(OrderRepositoryInterface::class);
-    $this->orderCommandService  = app(OrderCommandService::class);
+    $this->orderCommandService  = app(OrderApplicationService::class);
     $this->refundCommandService = app(RefundCommandService::class);
     $this->refundRepository     = app(RefundRepositoryInterface::class);
     $this->refundReadRepository = app(RefundReadRepositoryInterface::class);

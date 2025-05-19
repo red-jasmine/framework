@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use Mokhosh\FilamentRating\Components\Rating;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderStarCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 
 trait OrderStar
 {
@@ -32,7 +32,7 @@ trait OrderStar
         $this->action(function ($data, $record) {
 
             $data['id']          = $record->id;
-            $orderCommandService = app(OrderCommandService::class);
+            $orderCommandService = app(OrderApplicationService::class);
             $command             = OrderStarCommand::from($data);
             $orderCommandService->star($command);
             $this->successNotificationTitle('ok');

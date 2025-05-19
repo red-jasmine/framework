@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\Application\Services\Commands;
 
 use Illuminate\Support\Facades\Config;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
@@ -16,7 +16,7 @@ class OrderPayCommandHandler extends CommandHandler
 {
     public function __construct(
         public OrderRepositoryInterface $orderRepository,
-        public OrderCommandService $orderCommandService,
+        public OrderApplicationService $orderCommandService,
 
         public TradeCommandService $tradeCommandService,
 

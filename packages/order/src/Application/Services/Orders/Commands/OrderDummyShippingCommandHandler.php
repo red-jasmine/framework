@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
 use RedJasmine\Support\Exceptions\AbstractException;
@@ -12,7 +12,7 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
 {
 
     public function __construct(
-        OrderCommandService $service,
+        OrderApplicationService $service,
         OrderRepositoryInterface $orderRepository,
         protected OrderShippingService     $orderShippingService
     )

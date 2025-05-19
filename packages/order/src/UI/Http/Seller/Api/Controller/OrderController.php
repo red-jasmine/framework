@@ -16,7 +16,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Orders\OrderQueryService;
 use RedJasmine\Order\UI\Http\Seller\Api\Resources\OrderResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -26,7 +26,7 @@ class OrderController extends Controller
 {
     public function __construct(
         protected readonly OrderQueryService $queryService,
-        protected OrderCommandService $commandService,
+        protected OrderApplicationService $commandService,
     ) {
 
         $this->queryService->getRepository()->withQuery(function ($query) {

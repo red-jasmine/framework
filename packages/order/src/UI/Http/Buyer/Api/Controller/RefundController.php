@@ -5,7 +5,7 @@ namespace RedJasmine\Order\UI\Http\Buyer\Api\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCancelCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundReturnGoodsCommand;
@@ -21,7 +21,7 @@ class RefundController extends Controller
     public function __construct(
         protected readonly RefundQueryService $queryService,
         protected RefundCommandService        $commandService,
-        protected OrderCommandService         $orderCommandService,
+        protected OrderApplicationService         $orderCommandService,
     )
     {
 

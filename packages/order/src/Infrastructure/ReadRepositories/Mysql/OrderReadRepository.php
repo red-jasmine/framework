@@ -16,6 +16,19 @@ class OrderReadRepository extends QueryBuilderReadRepository implements OrderRea
      */
     protected static string $modelClass = Order::class;
 
+
+    public function allowedIncludes() : array
+    {
+        return [
+            'products',
+            'payments',
+            'extension',
+            'products.extension',
+            'logistics',
+            'address'
+        ];
+    }
+
     public function findByNo(string $no) : Order
     {
         return $this->query()->where('order_no', $no)->firstOrFail();

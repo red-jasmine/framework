@@ -12,7 +12,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderSellerCustomStatusCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderStarCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
@@ -29,7 +29,7 @@ beforeEach(function () {
 
     $this->orderReadRepository = app(OrderReadRepositoryInterface::class);
     $this->orderRepository     = app(OrderRepositoryInterface::class);
-    $this->orderCommandService = app(OrderCommandService::class);
+    $this->orderCommandService = app(OrderApplicationService::class);
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;

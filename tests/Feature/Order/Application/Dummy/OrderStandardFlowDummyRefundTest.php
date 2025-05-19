@@ -7,11 +7,11 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderUrgeCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentFailCommand;
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPaidCommand;
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommand;
-use RedJasmine\Order\Application\Services\Payments\OrderPaymentCommandService;
+use RedJasmine\Order\Application\Services\Payments\OrderPaymentApplicationService;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundUrgeCommand;
@@ -34,12 +34,12 @@ beforeEach(function () {
 
     $this->orderReadRepository        = app(OrderReadRepositoryInterface::class);
     $this->orderRepository            = app(OrderRepositoryInterface::class);
-    $this->orderCommandService        = app(OrderCommandService::class);
+    $this->orderCommandService        = app(OrderApplicationService::class);
     $this->refundCommandService       = app(RefundCommandService::class);
     $this->refundRepository           = app(RefundRepositoryInterface::class);
     $this->refundReadRepository       = app(RefundReadRepositoryInterface::class);
     $this->orderPaymentRepository     = app(OrderPaymentRepositoryInterface::class);
-    $this->orderPaymentCommandService = app(OrderPaymentCommandService::class);
+    $this->orderPaymentCommandService = app(OrderPaymentApplicationService::class);
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;

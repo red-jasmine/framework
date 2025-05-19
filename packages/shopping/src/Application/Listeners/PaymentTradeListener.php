@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Application\Listeners;
 
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 
 class PaymentTradeListener
@@ -32,7 +32,7 @@ class PaymentTradeListener
 
 
 
-                app(OrderCommandService::class)->paid($command);
+                app(OrderApplicationService::class)->paid($command);
 
 
             }

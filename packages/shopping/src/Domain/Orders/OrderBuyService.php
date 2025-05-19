@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Orders;
 
 use Illuminate\Support\Collection;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Product\Application\Stock\Services\StockCommandService;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
@@ -23,7 +23,7 @@ class OrderBuyService extends Service
 
     public function __construct(
         protected StockCommandService $stockCommandService,
-        protected OrderCommandService $orderCommandService,
+        protected OrderApplicationService $orderCommandService,
 
     ) {
 

@@ -9,7 +9,9 @@ use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPaidComm
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommand;
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommandHandler;
 use RedJasmine\Order\Domain\Models\OrderPayment;
+use RedJasmine\Order\Domain\Repositories\OrderPaymentReadRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see OrderPaymentPayingCommandHandler::handle()
@@ -19,8 +21,13 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see OrderPaymentFailCommandHandler::handle()
  * @method void fail(OrderPaymentFailCommand $command)
  */
-class OrderPaymentCommandService extends ApplicationCommandService
+class OrderPaymentApplicationService extends ApplicationService
 {
+
+    public function __construct(
+        public OrderPaymentReadRepositoryInterface $readRepository
+    ) {
+    }
 
     /**
      * 钩子前缀
@@ -35,7 +42,5 @@ class OrderPaymentCommandService extends ApplicationCommandService
         'paying' => OrderPaymentPayingCommandHandler::class,
         'paid'   => OrderPaymentPaidCommandHandler::class,
         'fail'   => OrderPaymentFailCommandHandler::class,
-
-
     ];
 }

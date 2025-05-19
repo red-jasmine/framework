@@ -6,7 +6,7 @@ use Filament\Forms;
 use Filament\Notifications\Notification;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCardKeyReshipmentCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
@@ -127,7 +127,7 @@ trait RefundReshipment
 
         $data['id'] = $record->id;
         $command    = OrderDummyShippingCommand::from($data);
-        app(OrderCommandService::class)->dummyShipping($command);
+        app(OrderApplicationService::class)->dummyShipping($command);
 
     }
 

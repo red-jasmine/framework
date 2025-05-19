@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
@@ -14,7 +14,7 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
 
 
     public function __construct(
-        protected OrderCommandService $service
+        protected OrderApplicationService $service
     ) {
 
     }

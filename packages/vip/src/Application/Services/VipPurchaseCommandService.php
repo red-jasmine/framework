@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Application\Services;
 
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Shopping\Application\Services\Commands\OrderPayCommand;
 use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingOrderCommandService;
@@ -14,7 +14,7 @@ class VipPurchaseCommandService extends ApplicationCommandService
 
     public function __construct(
         public ShoppingOrderCommandService $shoppingOrderCommandService,
-        public OrderCommandService $orderCommandService,
+        public OrderApplicationService $orderCommandService,
     ) {
     }
 

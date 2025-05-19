@@ -8,7 +8,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCardKeyShippingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 
@@ -105,7 +105,7 @@ trait Shipping
     {
         $data['id'] = $record->id;
         $command    = OrderCardKeyShippingCommand::from($data);
-        app(OrderCommandService::class)->cardKeyShipping($command);
+        app(OrderApplicationService::class)->cardKeyShipping($command);
     }
 
     protected function dummyForm($record) : array
@@ -133,7 +133,7 @@ trait Shipping
 
         $data['id'] = $record->id;
         $command    = OrderDummyShippingCommand::from($data);
-        app(OrderCommandService::class)->dummyShipping($command);
+        app(OrderApplicationService::class)->dummyShipping($command);
 
     }
 
@@ -144,7 +144,7 @@ trait Shipping
 
         $command    = OrderLogisticsShippingCommand::from($data);
 
-        app(OrderCommandService::class)->logisticsShipping($command);
+        app(OrderApplicationService::class)->logisticsShipping($command);
 
     }
 

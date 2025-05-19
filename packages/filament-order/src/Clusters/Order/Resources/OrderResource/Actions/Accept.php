@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderAcceptCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRejectCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Support\Exceptions\AbstractException;
 
@@ -40,9 +40,9 @@ trait Accept
             try {
 
                 if ($this->getName() === 'accept') {
-                    app(OrderCommandService::class)->accept(OrderAcceptCommand::from($data));
+                    app(OrderApplicationService::class)->accept(OrderAcceptCommand::from($data));
                 } else {
-                    app(OrderCommandService::class)->reject(OrderRejectCommand::from($data));
+                    app(OrderApplicationService::class)->reject(OrderRejectCommand::from($data));
                 }
 
             } catch (AbstractException $abstractException) {

@@ -14,7 +14,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderCardKeyResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderCardKeyResource\RelationManagers;
-use RedJasmine\Order\Application\Services\OrderCardKeyQueryService;
+use RedJasmine\Order\Application\Services\OrderCardKeyApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyStatusEnum;
 use RedJasmine\Order\Domain\Models\OrderCardKey;
 
@@ -26,7 +26,7 @@ class OrderCardKeyResource extends Resource
 
     protected static bool $onlyOwner = false;
 
-    protected static ?string $queryService = OrderCardKeyQueryService::class;
+    protected static ?string $service = OrderCardKeyApplicationService::class;
 
 
     protected static string $translationNamespace = 'red-jasmine-order::card-keys';

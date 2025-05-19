@@ -7,7 +7,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRejectCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
@@ -24,7 +24,7 @@ beforeEach(function () {
 
     $this->orderReadRepository = app(OrderReadRepositoryInterface::class);
     $this->orderRepository     = app(OrderRepositoryInterface::class);
-    $this->orderCommandService = app(OrderCommandService::class);
+    $this->orderCommandService = app(OrderApplicationService::class);
 
     $orderFake                       = new OrderDummyFake();
     $orderFake->orderType            = OrderTypeEnum::STANDARD;

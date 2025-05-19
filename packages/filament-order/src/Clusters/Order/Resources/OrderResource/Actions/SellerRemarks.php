@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderMessageCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 
 trait SellerRemarks
 {
@@ -37,7 +37,7 @@ trait SellerRemarks
         $this->action(function ($data, $record) {
 
             $data['id']          = $record->id;
-            $orderCommandService = app(OrderCommandService::class);
+            $orderCommandService = app(OrderApplicationService::class);
 
             switch ($this->name) {
                 case 'seller_message':

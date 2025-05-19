@@ -58,10 +58,10 @@ class OrderPackageServiceProvider extends PackageServiceProvider
 
     public function packageRegistered() : void
     {
-        Relation::enforceMorphMap([
-                                      'order'  => Order::class,
-                                      'refund' => OrderRefund::class
-                                  ]);
+        // Relation::enforceMorphMap([
+        //                               'order'  => Order::class,
+        //                               'refund' => OrderRefund::class
+        //                           ]);
     }
 
     public function getCommands() : array

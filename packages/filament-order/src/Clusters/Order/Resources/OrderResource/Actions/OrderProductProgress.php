@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Action
 
 use Filament\Forms\Components\TextInput;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
-use RedJasmine\Order\Application\Services\Orders\OrderCommandService;
+use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait OrderProductProgress
@@ -37,7 +37,7 @@ trait OrderProductProgress
             $data['id']             = $record->order_id;
             $data['orderProductId'] = $record->id;
             try {
-                app(OrderCommandService::class)->progress(OrderProgressCommand::from($data));
+                app(OrderApplicationService::class)->progress(OrderProgressCommand::from($data));
             }catch (AbstractException $abstractException){
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->sendFailureNotification();
