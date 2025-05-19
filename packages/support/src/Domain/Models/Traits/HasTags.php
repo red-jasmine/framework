@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Support\Domain\Models\Traits;
 
-use RedJasmine\Article\Domain\Models\Article;
 
 trait HasTags
 {
@@ -25,4 +24,5 @@ trait HasTags
             }
         });
     }
+
 }
