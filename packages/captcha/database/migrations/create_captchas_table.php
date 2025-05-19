@@ -26,8 +26,14 @@ return new class extends Migration {
             $table->string('channel')->nullable()->comment('发送渠道');
             $table->string('channel_no')->nullable()->comment('渠道流水号');
             $table->string('channel_message')->nullable()->comment('渠道ID');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
-
             $table->index(['notifiable_id', 'type', 'app', 'notifiable_type'], 'idx_notifiable');
         });
     }
