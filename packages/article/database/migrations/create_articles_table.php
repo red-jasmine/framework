@@ -24,10 +24,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('approval_status')->nullable()->comment('审批状态');
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('文章表');
