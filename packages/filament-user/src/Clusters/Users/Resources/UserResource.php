@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -19,14 +20,14 @@ use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
 use RedJasmine\User\Domain\Enums\UserTypeEnum;
 use RedJasmine\User\Domain\Models\User;
-use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+
 class UserResource extends Resource implements HasShieldPermissions
 {
     public static function getPermissionPrefixes() : array
     {
         return array_merge(
             config('filament-shield.permission_prefixes.resource', []),
-            ['setStatus','setGroup','setAccount']
+            ['setStatus', 'setGroup', 'setAccount']
         );
 
     }
@@ -132,6 +133,7 @@ class UserResource extends Resource implements HasShieldPermissions
                 Tables\Columns\TextColumn::make('name')
                                          ->label(__('red-jasmine-user::user.fields.name'))
                                          ->copyable()
+                                         ->searchable()
                 ,
 
                 Tables\Columns\TextColumn::make('phone')
@@ -193,8 +195,18 @@ class UserResource extends Resource implements HasShieldPermissions
                 ...static::operateTableColumns(),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('type')
+                                           ->multiple()
+                                           ->label(__('red-jasmine-user::user.fields.type'))
+                                           ->options(UserTypeEnum::options()),
+                Tables\Filters\SelectFilter::make('status')
+                                           ->multiple()
+                                           ->label(__('red-jasmine-user::user.fields.status'))
+                                           ->options(UserStatusEnum::options()),
+
+            ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
+            ->deferFilters()
+            ->recordUrl(null)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ActionGroup::make([
