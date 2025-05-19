@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->string('updater_id', 64)->nullable();
             $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
-
+            $table->softDeletes();
 
             $table->comment('卡密表');
             $table->index([ 'group_id', 'status' ], 'idx_group_status');
