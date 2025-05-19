@@ -189,15 +189,8 @@ class UserResource extends Resource implements HasShieldPermissions
 
                 Tables\Columns\TextColumn::make('school')
                                          ->label(__('red-jasmine-user::user.fields.school')),
-                Tables\Columns\TextColumn::make('created_at')
-                                         ->label(__('red-jasmine-user::user.fields.created_at'))
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                                         ->dateTime()
-                                         ->sortable()
-                                         ->toggleable(isToggledHiddenByDefault: true),
+
+                ...static::operateTableColumns(),
             ])
             ->filters([
                 //
