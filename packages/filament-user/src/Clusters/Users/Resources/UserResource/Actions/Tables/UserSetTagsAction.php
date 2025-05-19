@@ -23,7 +23,7 @@ class UserSetTagsAction extends Action
 
         $this->label(label: __('red-jasmine-user::user.commands.set-tags'));
 
-
+        $this->authorize(static::getDefaultName());
         $this->icon('heroicon-o-tag');
         $this->fillForm(function ($record) {
             return [

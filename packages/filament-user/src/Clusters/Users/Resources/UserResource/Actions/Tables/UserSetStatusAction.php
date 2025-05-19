@@ -27,7 +27,7 @@ class UserSetStatusAction extends Action
     {
 
         parent::setUp();
-        $this->authorize('setStatus');
+        $this->authorize(static::getDefaultName());
         $this->icon('heroicon-o-cog');
         $this->label(label: __('red-jasmine-user::user.commands.set-status'));
 

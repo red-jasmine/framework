@@ -18,14 +18,18 @@ class UserPolicy
         return Model::class;
     }
 
-    public function setStatus($user, Model $model) : bool
+    public function setAccount($user, Model $model) : bool
     {
         return $user->canany($this->buildPermissions(__FUNCTION__));
     }
 
-    public function viewAny($user) : bool
+    public function setGroup($user, Model $model) : bool
     {
+        return $user->canany($this->buildPermissions(__FUNCTION__));
+    }
 
+    public function setStatus($user, Model $model) : bool
+    {
         return $user->canany($this->buildPermissions(__FUNCTION__));
     }
 

@@ -26,7 +26,7 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return array_merge(
             config('filament-shield.permission_prefixes.resource', []),
-            ['setStatus']
+            ['setStatus','setGroup','setAccount']
         );
 
     }

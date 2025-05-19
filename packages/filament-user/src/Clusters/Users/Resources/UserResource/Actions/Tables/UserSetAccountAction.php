@@ -20,6 +20,7 @@ class UserSetAccountAction extends Action
     protected function setUp() : void
     {
         parent::setUp();
+        $this->authorize(static::getDefaultName());
         $this->icon('heroicon-o-shield-check');
         $this->label(label: __('red-jasmine-user::user.commands.set-account'));
 

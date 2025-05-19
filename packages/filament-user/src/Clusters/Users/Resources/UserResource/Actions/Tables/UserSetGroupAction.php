@@ -20,6 +20,7 @@ class UserSetGroupAction extends Action
     {
         parent::setUp();
         $this->icon('heroicon-o-squares-plus');
+        $this->authorize(static::getDefaultName());
         $this->label(label: __('red-jasmine-user::user.commands.set-group'));
 
         $this->fillForm(function ($record) {
