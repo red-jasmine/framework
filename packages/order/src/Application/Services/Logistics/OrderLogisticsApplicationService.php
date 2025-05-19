@@ -5,7 +5,6 @@ namespace RedJasmine\Order\Application\Services\Logistics;
 use RedJasmine\Order\Application\Services\Logistics\Commands\LogisticsChangeStatusCommand;
 use RedJasmine\Order\Application\Services\Logistics\Commands\LogisticsChangeStatusCommandHandler;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsReadRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -17,9 +16,8 @@ class OrderLogisticsApplicationService extends ApplicationService
 
     public function __construct(
 
-        public  OrderLogisticsReadRepositoryInterface $readRepository
-    )
-    {
+        public OrderLogisticsReadRepositoryInterface $readRepository
+    ) {
     }
 
     /**
