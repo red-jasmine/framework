@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_addresses', function (Blueprint $table) {
+        Schema::create('order_addresses', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('order_no', 64)->comment('订单号');
             $table->string('contacts', 500)->nullable()->comment('联系人*');
@@ -33,12 +33,16 @@ return new class extends Migration {
             $table->string('remarks')->nullable()->comment('备注');
             $table->string('tag')->nullable()->comment('标签');
             $table->json('extra')->nullable()->comment('扩展');
+
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable()->comment('创建者类型');
-            $table->string('creator_id', 64)->nullable()->comment('创建者ID');
-            $table->string('updater_type', 64)->nullable()->comment('更新者类型');
-            $table->string('updater_id', 64)->nullable()->comment('更新者ID');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
+
             $table->softDeletes();
             $table->comment('订单-地址表');
         });
@@ -46,6 +50,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_addresses');
+        Schema::dropIfExists('order_addresses');
     }
 };

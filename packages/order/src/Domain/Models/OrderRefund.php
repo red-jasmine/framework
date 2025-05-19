@@ -96,10 +96,7 @@ class OrderRefund extends Model
         return $this->hasOne(OrderRefundExtension::class, 'id', 'id');
     }
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_refunds';
-    }
+
 
     protected $casts = [
         'order_product_type'     => ProductTypeEnum::class,

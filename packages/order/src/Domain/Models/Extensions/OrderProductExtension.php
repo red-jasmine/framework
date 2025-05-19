@@ -15,17 +15,13 @@ class OrderProductExtension extends Model
 
     public $incrementing = false;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_products_extension';
-    }
 
     protected $casts = [
         'after_sales_services' => 'array',
         'form'                 => 'array',
-        'buyer_extra'        => 'array',
-        'seller_extra'       => 'array',
-        'other_extra'        => 'array',
+        'buyer_extra'          => 'array',
+        'seller_extra'         => 'array',
+        'other_extra'          => 'array',
         'tools'                => 'array',
     ];
 

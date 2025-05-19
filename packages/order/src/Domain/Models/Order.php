@@ -179,10 +179,7 @@ class Order extends Model implements OperatorInterface
     }
 
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_').'orders';
-    }
+
 
     public function extension() : HasOne
     {

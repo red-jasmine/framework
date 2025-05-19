@@ -40,7 +40,7 @@ trait HasOperator
 
     protected function withOperatorNickname() : bool
     {
-        return property_exists($this, 'withOperatorNickname') ? $this->withOperatorNickname : false;
+        return property_exists($this, 'withOperatorNickname') ? $this->withOperatorNickname : true;
     }
 
     protected function withOperatorAvatar() : bool

@@ -12,7 +12,7 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_refund_products_extension', function (Blueprint $table) {
+        Schema::create('order_refund_products_extension', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('售后单号');
             $table->string('description')->nullable()->comment('描述');
             $table->json('images')->nullable()->comment('图片');
@@ -28,6 +28,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'order_refund_products_extension');
+        Schema::dropIfExists('order_refund_products_extension');
     }
 };

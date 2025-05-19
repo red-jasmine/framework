@@ -44,10 +44,6 @@ class OrderProduct extends Model
 
     public bool $withTradePartiesNickname = false;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_products';
-    }
 
     protected $casts = [
         'order_product_type'      => ProductTypeEnum::class,

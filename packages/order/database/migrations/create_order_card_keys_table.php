@@ -10,7 +10,7 @@ use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_card_keys', function (Blueprint $table) {
+        Schema::create( 'order_card_keys', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('app_id', 64)->comment('应用ID');
             $table->string('order_no',64)->comment('订单号');
@@ -30,10 +30,13 @@ return new class extends Migration {
             $table->string('source_type')->nullable()->comment('来源类型');
             $table->string('source_id')->nullable()->comment('来源类型');
             $table->string('status')->nullable()->comment(OrderCardKeyStatusEnum::comments('状态'));
-            $table->string('creator_type', 32)->nullable();
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单-卡密表');
@@ -48,6 +51,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_') . 'order_card_keys');
+        Schema::dropIfExists( 'order_card_keys');
     }
 };

@@ -14,15 +14,12 @@ class OrderExtension extends Model
     use SoftDeletes;
 
     public $incrementing = false;
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'orders_extension';
-    }
+
     protected $casts = [
-        'buyer_extra'       => 'array',
-        'seller_extra'      => 'array',
-        'other_extra'       => 'array',
-        'form'                => 'array',
-        'tools'               => 'array',
+        'buyer_extra'  => 'array',
+        'seller_extra' => 'array',
+        'other_extra'  => 'array',
+        'form'         => 'array',
+        'tools'        => 'array',
     ];
 }

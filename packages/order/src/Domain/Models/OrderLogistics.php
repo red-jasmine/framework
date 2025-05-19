@@ -32,11 +32,6 @@ class OrderLogistics extends Model
 
 
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix','jasmine_') . 'order_logistics';
-    }
-
     protected $casts = [
         'order_product_id' => 'array',
         'shipper'          => LogisticsShipperEnum::class,

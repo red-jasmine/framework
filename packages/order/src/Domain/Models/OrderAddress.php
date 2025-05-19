@@ -26,10 +26,6 @@ class OrderAddress extends Model
 
     public $incrementing = false;
 
-    public function getTable() : string
-    {
-        return config('red-jasmine-order.tables.prefix', 'jasmine_').'order_addresses';
-    }
 
 
     protected $fillable = [

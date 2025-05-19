@@ -15,7 +15,7 @@ use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-order.tables.prefix', 'jasmine_').'orders', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('order_no', 64)->unique()->comment('订单号');
             $table->string('app_id', 64)->comment('应用ID');
@@ -103,10 +103,12 @@ return new class extends Migration {
             $table->string('cancel_reason')->nullable()->comment('取消原因');
 
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 32)->nullable();
+            $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
             $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('订单表');
@@ -118,6 +120,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-order.tables.prefix', 'jasmine_').'orders');
+        Schema::dropIfExists('orders');
     }
 };
