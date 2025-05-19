@@ -33,7 +33,7 @@ class TopicTagResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-article::article-tag.labels.article-tag');
+        return __('red-jasmine-community::topic-tag.labels.title');
     }
 
     public static function form(Form $form) : Form

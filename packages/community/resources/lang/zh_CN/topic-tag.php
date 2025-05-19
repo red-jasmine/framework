@@ -2,7 +2,7 @@
 return [
 
     'labels'  => [
-        'title' => '标签'
+        'title' => '话题标签'
     ],
     'fields'  => [
         'id'          => 'ID',
