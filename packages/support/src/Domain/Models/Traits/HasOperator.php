@@ -67,12 +67,12 @@ trait HasOperator
     public function creator() : Attribute
     {
         return Attribute::make(
-            get: fn() => UserData::from([
+            get: fn() => ($this->creator_type && $this->creator_id) ? UserData::from([
                 'type'     => $this->creator_type,
                 'id'       => $this->creator_id,
                 'nickname' => $this->withOperatorNickname() ? ($this->creator_nickname ?? null) : null,
                 'avatar'   => $this->withOperatorAvatar() ? ($this->creator_avatar ?? null) : null,
-            ]),
+            ]) : null,
             set: fn(?UserInterface $user = null) => array_merge([
                 'creator_type' => $user?->getType(),
                 'creator_id'   => $user?->getID(),
@@ -87,12 +87,12 @@ trait HasOperator
     public function updater() : Attribute
     {
         return Attribute::make(
-            get: fn() => UserData::from([
+            get: fn() => ($this->updater_type && $this->updater_id) ? UserData::from([
                 'type'     => $this->updater_type,
                 'id'       => $this->updater_id,
                 'nickname' => $this->withOperatorNickname() ? ($this->updater_nickname ?? null) : null,
                 'avatar'   => $this->withOperatorAvatar() ? ($this->updater_avatar ?? null) : null,
-            ]),
+            ]) : null,
             set: fn(?UserInterface $user = null) => array_merge([
                 'updater_type' => $user?->getType(),
                 'updater_id'   => $user?->getID(),
