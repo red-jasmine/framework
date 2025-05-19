@@ -17,8 +17,13 @@ return new class extends Migration {
             $table->bigInteger('sort')->default(0)->comment('排序');
             $table->boolean('is_show')->default(true)->comment('是否展示');
             $table->string('status', 32)->comment('状态');
-            $table->nullableMorphs('creator');
-            $table->nullableMorphs('updater');
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品服务');
