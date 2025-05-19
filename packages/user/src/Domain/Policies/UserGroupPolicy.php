@@ -4,17 +4,16 @@ namespace RedJasmine\User\Domain\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use RedJasmine\Support\Domain\Policies\HasDefaultPolicy;
-use RedJasmine\User\Domain\Models\UserTagCategory as Model;
+use RedJasmine\User\Domain\Models\UserGroup as Model;
 
-class UserTagCategoryPolicy
+class UserGroupPolicy
 {
     use HandlesAuthorization;
-
-    use HasDefaultPolicy;
 
     public static function getModel() : string
     {
         return Model::class;
     }
-}
 
+    use HasDefaultPolicy;
+}

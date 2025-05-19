@@ -4,49 +4,30 @@ namespace RedJasmine\User\Domain\Policies;
 
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use RedJasmine\User\Domain\Models\User;
+use RedJasmine\Support\Domain\Policies\HasDefaultPolicy;
+use RedJasmine\User\Domain\Models\User as Model;
 
 class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function setStatus($user, User $model) : bool
+    use HasDefaultPolicy;
+
+    public static function getModel() : string
     {
-        return $user->can('setStatus_user');
+        return Model::class;
+    }
+
+    public function setStatus($user, Model $model) : bool
+    {
+        return $user->canany($this->buildPermissions(__FUNCTION__));
     }
 
     public function viewAny($user) : bool
     {
-        return true;
+
+        return $user->canany($this->buildPermissions(__FUNCTION__));
     }
 
-    public function view($user, User $model) : bool
-    {
-        return true;
-    }
 
-    public function create($user) : bool
-    {
-        return true;
-    }
-
-    public function update($user, User $model) : bool
-    {
-        return true;
-    }
-
-    public function delete($user, User $model) : bool
-    {
-        return true;
-    }
-
-    public function restore($user, User $model) : bool
-    {
-        return true;
-    }
-
-    public function forceDelete($user, User $model) : bool
-    {
-        return true;
-    }
 }

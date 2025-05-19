@@ -24,15 +24,11 @@ class UserResource extends Resource implements HasShieldPermissions
 {
     public static function getPermissionPrefixes() : array
     {
-        return [
-            'view',
-            'view_any',
-            'create',
-            'update',
-            'delete',
-            'delete_any',
-            'setStatus'
-        ];
+        return array_merge(
+            config('filament-shield.permission_prefixes.resource', []),
+            ['setStatus']
+        );
+
     }
 
 
