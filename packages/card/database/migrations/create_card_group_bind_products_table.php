@@ -12,10 +12,9 @@ return new class extends Migration {
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
             $table->unsignedBigInteger('group_id')->comment('卡密分组ID');
-
             $table->string('product_type', 64);
             $table->string('product_id', 64);
-            $table->string('sku_id')->default(0)->comment('SKU-ID');
+            $table->string('sku_id',64)->default(0)->comment('SKU-ID');
 
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable();

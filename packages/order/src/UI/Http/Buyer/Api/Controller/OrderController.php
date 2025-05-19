@@ -13,7 +13,6 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderHiddenCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
-use RedJasmine\Order\Application\Services\Orders\OrderQueryService;
 use RedJasmine\Order\UI\Http\Buyer\Api\Resources\OrderResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
@@ -21,12 +20,11 @@ use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 class OrderController extends Controller
 {
     public function __construct(
-        protected readonly OrderQueryService $queryService,
-        protected OrderApplicationService        $commandService,
-    )
-    {
 
-        $this->queryService->getRepository()->withQuery(function ($query) {
+        protected OrderApplicationService $service,
+    ) {
+
+        $this->service->readRepository->withQuery(function ($query) {
             $query->onlyBuyer($this->getOwner());
         });
     }
@@ -34,14 +32,14 @@ class OrderController extends Controller
 
     public function index(Request $request) : AnonymousResourceCollection
     {
-        $result = $this->queryService->paginate(PaginateQuery::from($request->query()));
+        $result = $this->service->paginate(PaginateQuery::from($request->query()));
 
         return OrderResource::collection($result->appends($request->query()));
     }
 
     public function show(Request $request, int $id) : OrderResource
     {
-        $result = $this->queryService->find(FindQuery::make($id,$request));
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return OrderResource::make($result);
     }
@@ -52,28 +50,28 @@ class OrderController extends Controller
         $request->offsetSet('buyer', $this->getOwner());
 
         $command = OrderCreateCommand::from($request->all());
-        $result  = $this->commandService->create($command);
+        $result  = $this->service->create($command);
 
         return OrderResource::make($result);
     }
 
     public function paying(Request $request) : JsonResponse
     {
-        $order = $this->queryService->find(FindQuery::from($request));
+        $order = $this->service->find(FindQuery::from($request));
 
-        $command = OrderPayingCommand::from([ 'id' => $order->id, 'amount' => $order->payable_amount ]);
-        $payment = $this->commandService->paying($command);
+        $command = OrderPayingCommand::from(['id' => $order->id, 'amount' => $order->payable_amount]);
+        $payment = $this->service->paying($command);
 
-        return static::success([ 'id' => $order->id, 'order_payment' => $payment, 'amount' => $order->payable_amount->value() ]);
+        return static::success(['id' => $order->id, 'order_payment' => $payment, 'amount' => $order->payable_amount->value()]);
     }
 
 
     public function confirm(Request $request) : JsonResponse
     {
-        $order = $this->queryService->find(FindQuery::from($request));
+        $order = $this->service->find(FindQuery::from($request));
 
         $command = OrderConfirmCommand::from($request->all());
-        $this->commandService->confirm($command);
+        $this->service->confirm($command);
 
         return static::success();
     }
@@ -81,8 +79,8 @@ class OrderController extends Controller
     public function cancel(Request $request) : JsonResponse
     {
         $command = OrderCancelCommand::from($request->all());
-        $this->queryService->find(FindQuery::from($request));
-        $this->commandService->cancel($command);
+        $this->service->find(FindQuery::from($request));
+        $this->service->cancel($command);
 
         return static::success();
     }
@@ -90,9 +88,9 @@ class OrderController extends Controller
 
     public function destroy($id) : JsonResponse
     {
-        $command = OrderHiddenCommand::from([ 'id' => $id ]);
-        $this->queryService->find(FindQuery::make($command->id));
-        $this->commandService->buyerHidden($command);
+        $command = OrderHiddenCommand::from(['id' => $id]);
+        $this->service->find(FindQuery::make($command->id));
+        $this->service->buyerHidden($command);
 
         return static::success();
     }
@@ -100,10 +98,10 @@ class OrderController extends Controller
 
     public function remarks(Request $request) : JsonResponse
     {
-        $this->queryService->find(FindQuery::from($request));
+        $this->service->find(FindQuery::from($request));
         $command = OrderRemarksCommand::from($request->all());
 
-        $this->commandService->buyerRemarks($command);
+        $this->service->buyerRemarks($command);
         return static::success();
     }
 }

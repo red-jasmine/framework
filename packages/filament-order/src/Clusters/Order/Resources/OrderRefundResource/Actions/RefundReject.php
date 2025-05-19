@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
-use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
+use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 use Throwable;
 
@@ -37,7 +37,7 @@ trait RefundReject
             $data['reason'] = $data['reason'] ?? '';
             $command        = RefundRejectCommand::from($data);
             try {
-                app(RefundCommandService::class)->reject($command);
+                app(RefundApplicationService::class)->reject($command);
             } catch (Throwable $throwable) {
                 $this->failureNotificationTitle($throwable->getMessage());
                 $this->sendFailureNotification();

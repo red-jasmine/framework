@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 
 use Mokhosh\FilamentRating\Components\Rating;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundStarCommand;
-use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
+use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 
 trait RefundStar
 {
@@ -31,7 +31,7 @@ trait RefundStar
         $this->action(function ($data, $record) {
 
             $data['id']    = $record->id;
-            $commandService = app(RefundCommandService::class);
+            $commandService = app(RefundApplicationService::class);
             $command        = RefundStarCommand::from($data);
             $commandService->star($command);
             $this->successNotificationTitle('ok');

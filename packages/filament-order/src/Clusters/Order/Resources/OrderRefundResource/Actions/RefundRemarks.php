@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRemarksCommand;
-use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
+use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 
 trait RefundRemarks
 {
@@ -29,7 +29,7 @@ trait RefundRemarks
         $this->action(function ($data, $record) {
 
             $data['id']          = $record->id;
-            $refundCommandService = app(RefundCommandService::class);
+            $refundCommandService = app(RefundApplicationService::class);
             $refundCommandService->sellerRemarks(RefundRemarksCommand::from($data));
             $this->successNotificationTitle('ok');
             $this->success();

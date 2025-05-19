@@ -33,6 +33,7 @@ use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @method int create(RefundCreateCommand $command)
@@ -51,7 +52,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @method void star(RefundStarCommand $command)
  * @method void urge(RefundUrgeCommand $command)
  */
-class RefundCommandService extends ApplicationCommandService
+class RefundApplicationService extends ApplicationService
 {
 
     public function __construct(

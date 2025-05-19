@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
-use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
+use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\OrderRefund;
 use Throwable;
 
@@ -44,7 +44,7 @@ trait RefundAgree
             $data['id'] = $record->id;
             $command     = RefundAgreeRefundCommand::from($data);
             try {
-                app(RefundCommandService::class)->agreeRefund($command);
+                app(RefundApplicationService::class)->agreeRefund($command);
             } catch (Throwable $throwable) {
                 $this->failureNotificationTitle($throwable->getMessage());
                 $this->sendFailureNotification();

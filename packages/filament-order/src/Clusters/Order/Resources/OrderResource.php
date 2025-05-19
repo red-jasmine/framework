@@ -25,7 +25,6 @@ use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\RelationManagers;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
-use RedJasmine\Order\Application\Services\Orders\OrderQueryService;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;

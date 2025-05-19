@@ -13,5 +13,13 @@ class RefundReadRepository extends QueryBuilderReadRepository implements RefundR
      */
     protected static string $modelClass = OrderRefund::class;
 
-
+    public function allowedIncludes() : array
+    {
+        return [
+            'logistics',
+            'order',
+            'orderProduct',
+            'payments'
+        ];
+    }
 }

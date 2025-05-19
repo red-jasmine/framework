@@ -15,7 +15,7 @@ use RedJasmine\Order\Application\Services\Payments\OrderPaymentApplicationServic
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundUrgeCommand;
-use RedJasmine\Order\Application\Services\Refunds\RefundCommandService;
+use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -35,7 +35,7 @@ beforeEach(function () {
     $this->orderReadRepository        = app(OrderReadRepositoryInterface::class);
     $this->orderRepository            = app(OrderRepositoryInterface::class);
     $this->orderCommandService        = app(OrderApplicationService::class);
-    $this->refundCommandService       = app(RefundCommandService::class);
+    $this->refundCommandService       = app(RefundApplicationService::class);
     $this->refundRepository           = app(RefundRepositoryInterface::class);
     $this->refundReadRepository       = app(RefundReadRepositoryInterface::class);
     $this->orderPaymentRepository     = app(OrderPaymentRepositoryInterface::class);
