@@ -8,7 +8,7 @@ use RedJasmine\Card\Domain\Enums\CardStatus;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create(config('red-jasmine-card.tables.prefix','jasmine_'). 'cards', function (Blueprint $table) {
+        Schema::create( 'cards', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
@@ -36,6 +36,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-card.tables.prefix','jasmine_').'cards');
+        Schema::dropIfExists('cards');
     }
 };
