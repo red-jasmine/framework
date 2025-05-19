@@ -21,9 +21,10 @@ class ArticleTagResource extends Resource
 
     use ResourcePageHelper;
 
-    public static string $service       = ArticleTagApplicationService::class;
-    public static string $createCommand = ArticleTagData::class;
-    public static string $updateCommand = ArticleTagData::class;
+    protected static bool $onlyOwner     = true;
+    public static string  $service       = ArticleTagApplicationService::class;
+    public static string  $createCommand = ArticleTagData::class;
+    public static string  $updateCommand = ArticleTagData::class;
 
     protected static ?string $model = ArticleTag::class;
 
@@ -82,9 +83,7 @@ class ArticleTagResource extends Resource
                                                       ->default(TagStatusEnum::ENABLE)
                                                       ->useEnum(TagStatusEnum::class),
                     ])->grow(false),
-            ])->columnSpanFull(),
-
-
+                ])->columnSpanFull(),
 
 
                 ...static::operateFormSchemas(),

@@ -19,6 +19,8 @@ use RedJasmine\FilamentArticle\Clusters\Articles;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Actions\Tables\ApprovalAction;
+use RedJasmine\FilamentCore\Resources\Actions\Tables\SubmitApprovalAction;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
@@ -46,7 +48,7 @@ class ArticleResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-article::article.labels.article');
+        return __('red-jasmine-article::article.labels.title');
     }
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
@@ -113,7 +115,19 @@ class ArticleResource extends Resource
 
                         SelectTree::make('category_id')
                                   ->label(__('red-jasmine-article::article.fields.category_id'))
-                                  ->relationship(relationship: 'category', titleAttribute: 'name', parentAttribute: 'parent_id',
+                                  ->relationship(
+                                      relationship: 'category',
+                                      titleAttribute: 'name',
+                                      parentAttribute: 'parent_id',
+                                      modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type',
+                                          $get('owner_type'))
+                                                                                                            ->where('owner_id',
+                                                                                                                $get('owner_id')),
+                                      modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type',
+                                          $get('owner_type'))
+                                                                                                                 ->where('owner_id',
+                                                                                                                     $get('owner_id'))
+                                      ,
                                   )
                                   ->searchable()
                                   ->default(null)
@@ -127,6 +141,14 @@ class ArticleResource extends Resource
                                                ->relationship(
                                                    name: 'tags',
                                                    titleAttribute: 'name',
+                                                   modifyQueryUsing: fn(
+                                                       $query,
+                                                       Forms\Get $get,
+                                                       ?Model $record
+                                                   ) => $query->where('owner_type',
+                                                       $get('owner_type'))
+                                                              ->where('owner_id',
+                                                                  $get('owner_id')),
                                                )
                                                ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
                                                ->afterStateHydrated(function (?Model $record, Component $component, $state) {
@@ -226,19 +248,19 @@ class ArticleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                \RedJasmine\FilamentCore\Resources\Actions\Tables\ApprovalAction::make('approval')
-                                                                         ->service(static::$service),
-                \RedJasmine\FilamentCore\Resources\Actions\Tables\SubmitApprovalAction::make('submit-approval')
-                                                                                ->service(static::$service),
+                ApprovalAction::make('approval')
+                              ->service(static::$service),
+                SubmitApprovalAction::make('submit-approval')
+                                    ->service(static::$service),
                 Tables\Actions\Action::make('publish')
-                                    ->label(__('red-jasmine-article::article.commands.publish'))
+                                     ->label(__('red-jasmine-article::article.commands.publish'))
                                      ->action(function ($record) {
 
-                    $command = new ArticlePublishCommand();
-                    $command->setKey($record->getKey());
-                    app(static::$service)->publish($command);
+                                         $command = new ArticlePublishCommand();
+                                         $command->setKey($record->getKey());
+                                         app(static::$service)->publish($command);
 
-                })->visible(fn ($record)=>$record->isAllowPublish()),
+                                     })->visible(fn($record) => $record->isAllowPublish()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

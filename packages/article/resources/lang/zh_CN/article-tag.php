@@ -2,9 +2,8 @@
 return [
 
     'labels'  => [
-
-        'article-tag' => '标签'
-
+        'article-tag' => '文章标签',
+        'title' => '文章标签',
     ],
     'fields'  => [
         'id'          => 'ID',

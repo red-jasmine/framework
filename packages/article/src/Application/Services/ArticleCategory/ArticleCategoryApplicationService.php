@@ -23,6 +23,7 @@ class ArticleCategoryApplicationService extends ApplicationService
     protected static string $modelClass = ArticleCategory::class;
 
 
+
     public function tree(Query $query) : array
     {
 

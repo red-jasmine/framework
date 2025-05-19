@@ -45,9 +45,9 @@ trait ResourcePageHelper
 //                                  SoftDeletingScope::class,
 //                              ]);
         if (static::onlyOwner()) {
-            if(auth()->user() instanceof BelongsToOwnerInterface){
+            if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $query->onlyOwner(auth()->user()->owner());
-            }else{
+            } else {
                 $query->onlyOwner(auth()->user());
             }
 
@@ -89,7 +89,7 @@ trait ResourcePageHelper
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
             $owner = auth()->user();
-            if(auth()->user() instanceof BelongsToOwnerInterface){
+            if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $owner = auth()->user()->owner();
             }
             $data['owner_type'] = $owner->getType();
@@ -105,7 +105,7 @@ trait ResourcePageHelper
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
             $owner = auth()->user();
-            if(auth()->user() instanceof BelongsToOwnerInterface){
+            if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $owner = auth()->user()->owner();
             }
             $data['owner_type'] = $owner->getType();
@@ -166,7 +166,7 @@ trait ResourcePageHelper
 
         if ($resource::onlyOwner()) {
             $owner = auth()->user();
-            if(auth()->user() instanceof BelongsToOwnerInterface){
+            if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $owner = auth()->user()->owner();
             }
 
@@ -222,8 +222,6 @@ trait ResourcePageHelper
     {
         return static::$updateCommand ?? static::$dataClass;
     }
-
-
 
 
     public static function operateFormSchemas() : array
@@ -285,7 +283,7 @@ trait ResourcePageHelper
             //                          ->toggleable(isToggledHiddenByDefault: true),
 
             Tables\Columns\TextColumn::make('updater')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname()??$state?->getId())
+                                     ->formatStateUsing(fn($state) => $state?->getNickname() ?? $state?->getId())
                                      ->label(__('red-jasmine-support::support.updater'))
                                      ->toggleable(isToggledHiddenByDefault: true),
             // Tables\Columns\TextColumn::make('updater_type')
@@ -443,21 +441,28 @@ trait ResourcePageHelper
     }
 
 
-    public static function categoryForm(Form $form) : Form
+    public static function categoryForm(Form $form, bool $hasOwner = false) : Form
     {
-        return $form
-            ->columns(1)
-            ->schema([
-                Forms\Components\Split::make([
+        $owner = $hasOwner ? static::ownerFormSchemas() : [];
 
+        return $form
+            ->schema([
+                ...$owner,
+                Forms\Components\Split::make([
                     Forms\Components\Section::make([
+
                         SelectTree::make('parent_id')
                                   ->label(__('red-jasmine-support::category.fields.parent_id'))
                                   ->relationship(relationship: 'parent', titleAttribute: 'name', parentAttribute: 'parent_id',
-                                      modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                          fn($query, $value) => $query->where('id', '<>', $value)),
-                                      modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                          fn($query, $value) => $query->where('id', '<>', $value)),
+                                      modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query
+                                          ->when($hasOwner,
+                                              fn($query, $value) => $query->where('owner_type', $get('owner_type'))
+                                                                          ->where('owner_id', $get('owner_id')))
+                                          ->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
+                                      modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query
+                                          ->when($hasOwner, fn($query, $value) => $query->where('owner_type', $get('owner_type'))
+                                                                                        ->where('owner_id', $get('owner_id')))
+                                          ->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
                                   )
                                   ->searchable()
                                   ->default(0)
@@ -471,12 +476,12 @@ trait ResourcePageHelper
                                                   ->maxLength(255),
 
                         Forms\Components\ToggleButtons::make('is_leaf')
-                                              ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                              ->required()
-                                              ->boolean()
-                                              ->inline()
-                            ->inlineLabel()
-                                              ->default(false),
+                                                      ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                                                      ->required()
+                                                      ->boolean()
+                                                      ->inline()
+                                                      ->inlineLabel()
+                                                      ->default(false),
 
                         Forms\Components\TextInput::make('description')
                                                   ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
@@ -497,10 +502,10 @@ trait ResourcePageHelper
                                                   ->default(0),
 
                         Forms\Components\Toggle::make('is_show')
-                                              ->label(__('red-jasmine-support::category.fields.is_show'))
-                                              ->required()
-                                              ->inline()
-                                              ->default(true),
+                                               ->label(__('red-jasmine-support::category.fields.is_show'))
+                                               ->required()
+                                               ->inline()
+                                               ->default(true),
                         Forms\Components\ToggleButtons::make('status')
                                                       ->label(__('red-jasmine-support::category.fields.status'))
                                                       ->required()

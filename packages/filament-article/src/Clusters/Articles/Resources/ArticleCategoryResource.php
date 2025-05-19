@@ -6,6 +6,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use RedJasmine\Article\Application\Services\ArticleCategory\ArticleCategoryApplicationService;
+use RedJasmine\Article\Domain\Data\ArticleCategoryData;
 use RedJasmine\Article\Domain\Models\ArticleCategory;
 use RedJasmine\FilamentArticle\Clusters\Articles;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages;
@@ -19,11 +20,11 @@ class ArticleCategoryResource extends Resource
 
     use ResourcePageHelper;
 
-    public static string $service = ArticleCategoryApplicationService::class;
+    public static string  $service   = ArticleCategoryApplicationService::class;
+    protected static bool $onlyOwner = true;
 
-
-    public static string $createCommand = BaseCategoryData::class;
-    public static string $updateCommand = BaseCategoryData::class;
+    public static string $createCommand = ArticleCategoryData::class;
+    public static string $updateCommand = ArticleCategoryData::class;
 
 
     protected static ?string $model = ArticleCategory::class;
@@ -34,12 +35,12 @@ class ArticleCategoryResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-support::category.labels.category');
+        return __('red-jasmine-article::article-category.labels.title');
     }
 
     public static function form(Form $form) : Form
     {
-        return static::categoryForm($form);
+        return static::categoryForm($form, true);
     }
 
     public static function table(Table $table) : Table

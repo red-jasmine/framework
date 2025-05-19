@@ -4,7 +4,7 @@ return [
 
     'labels'   => [
 
-        'article' => '文章'
+        'title'   => '文章内容'
 
     ],
     'fields'   => [
