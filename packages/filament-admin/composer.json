@@ -1,0 +1,65 @@
+{
+    "name": "red-jasmine/filament-admin",
+    "description": "This is my package filament-admin",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament-admin"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-admin",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-admin/issues",
+        "source": "https://github.com/red-jasmine/filament-admin"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/admin": "1.0.x-dev"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentAdmin\\": "src/",
+            "RedJasmine\\FilamentAdmin\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentAdmin\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentAdmin\\FilamentAdminServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

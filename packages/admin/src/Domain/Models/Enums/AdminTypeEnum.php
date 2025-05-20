@@ -20,8 +20,8 @@ enum AdminTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::ROOT->value  => __('red-jasmine-admin::user.enums.type.root'),
-            self::ADMIN->value => __('red-jasmine-user::admin.enums.type.admin'),
+            self::ROOT->value  => __('red-jasmine-admin::admin.enums.type.root'),
+            self::ADMIN->value => __('red-jasmine-admin::admin.enums.type.admin'),
 
         ];
 

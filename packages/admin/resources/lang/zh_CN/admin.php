@@ -34,6 +34,7 @@ return [
         'school'            => '学校',
         'group_id'          => '分组ID',
         'ip'                => 'IP',
+        'cancel_time'       => '注销时间',
 
 
     ],

@@ -27,6 +27,7 @@ class AdminPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-admin')
             ->hasConfigFile()
+            ->hasTranslations()
             //->hasViews()
             ->hasMigrations([
                 'create_admin_table','create_permission_tables'
