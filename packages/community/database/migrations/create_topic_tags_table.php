@@ -9,8 +9,6 @@ return new class extends Migration {
     {
         Schema::create('topic_tags', function (Blueprint $table) {
             $table->id();
-            $table->string('owner_type',64);
-            $table->string('owner_id',64);
             $table->string('name')->comment('标签');
             $table->string('description')->nullable()->comment('描述');
             $table->string('icon')->nullable()->comment('图标');

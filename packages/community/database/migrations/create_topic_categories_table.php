@@ -11,8 +11,6 @@ return new class extends Migration {
     {
         Schema::create('topic_categories', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('owner_type', 64);
-            $table->string('owner_id', 64);
             $table->unsignedBigInteger('parent_id')->default(0)->comment('父级');
             $table->string('name')->comment('名称');
             $table->string('description')->nullable()->comment('描述');
