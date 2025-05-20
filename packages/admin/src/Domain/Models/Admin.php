@@ -43,10 +43,13 @@ class Admin extends Authenticatable implements JWTSubject, UserInterface, Operat
         ]);
     }
 
-    public function isAdmin() : bool
+    public function isAdministrator() : bool
     {
+
         return true;
     }
+
+
 
     public function getType() : string
     {
@@ -94,7 +97,6 @@ class Admin extends Authenticatable implements JWTSubject, UserInterface, Operat
             'password' => 'hashed',
         ];
     }
-
 
 
     protected $fillable = [

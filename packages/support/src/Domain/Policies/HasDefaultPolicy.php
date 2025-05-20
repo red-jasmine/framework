@@ -56,4 +56,21 @@ trait HasDefaultPolicy
     {
         return $user->canany($this->buildPermissions(__FUNCTION__));
     }
+
+    public function deleteAny($user) : bool
+    {
+        return $user->canany($this->buildPermissions(__FUNCTION__));
+    }
+
+    public function forceDeleteAny($user) : bool
+    {
+        return $user->canany($this->buildPermissions(__FUNCTION__));
+    }
+
+    public function restoreAny($user) : bool
+    {
+        return $user->canany($this->buildPermissions(__FUNCTION__));
+    }
+
+
 }
