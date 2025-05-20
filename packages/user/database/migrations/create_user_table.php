@@ -12,11 +12,11 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('用户ID');
             $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
+            $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
             $table->string('name', 64)->comment('账号');
             $table->string('phone')->nullable()->comment('*手机号');
             $table->string('email')->nullable()->comment('*邮箱');
             $table->string('password')->nullable()->comment('密码');
-            $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
             $table->string('nickname', 64)->nullable()->comment('昵称');
             $table->string('gender', 32)->nullable()->comment('性别');
             $table->string('avatar')->nullable()->comment('头像');
@@ -30,10 +30,11 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
             $table->string('ip')->nullable()->comment('IP');
-            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
-            $table->rememberToken();
             $table->timestamp('cancel_time')->nullable()->comment('注销时间');
+            $table->rememberToken();
 
+
+            $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
 
 
             $table->unsignedBigInteger('version')->default(0)->comment('版本');

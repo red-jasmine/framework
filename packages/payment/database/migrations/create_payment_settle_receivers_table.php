@@ -40,7 +40,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists(config('red-jasmine-payment.tables.prefix',
-                'jasmine_').'payment_settle_receivers');
+        Schema::dropIfExists('payment_settle_receivers');
     }
 };
