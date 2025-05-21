@@ -102,6 +102,11 @@ class Admin extends Authenticatable implements JWTSubject, UserInterface, Operat
     protected $fillable = [
         'email',
         'password',
-        'name'
+        'name',
+        'phone',
+        'avatar',
+        'gender',
+        'type',
+        'status',
     ];
 }

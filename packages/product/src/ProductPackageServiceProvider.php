@@ -84,7 +84,7 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_tags_table',
             'create_product_tag_pivots_table',
             'create_product_services_table',
-            'create_product_service_pivots_table',
+            'create_product_service_pivot_table',
         ];
 
     }
