@@ -21,7 +21,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\ValueObjects\Money;
@@ -82,9 +82,9 @@ class Trade extends Model implements AsyncNotifyInterface
             'notify_time'   => 'datetime',
             'refund_time'   => 'datetime',
             'settle_time'   => 'datetime',
-            'amount'        => MoneyCast::class,
-            'paymentAmount' => MoneyCast::class,
-            'refundAmount'  => MoneyCast::class,
+            'amount'        => MoneyOldCast::class,
+            'paymentAmount' => MoneyOldCast::class,
+            'refundAmount'  => MoneyOldCast::class,
 
         ];
     }

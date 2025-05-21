@@ -12,7 +12,7 @@ class BrandCreateCommand extends Data
     public int             $parentId    = 0;
     public int             $sort        = 0;
     public string          $name;
-    public ?string         $englishName = null;
+
     public ?string         $description = null;
     public ?string         $logo        = null;
     public ?string         $initial     = null;
@@ -24,7 +24,6 @@ class BrandCreateCommand extends Data
     {
         return [
             'name'         => '名称',
-            'english_name' => '英文名称',
             'description'  => '描述',
             'initial'      => '首字母',
             'parent_id'    => '父品牌',
@@ -43,7 +42,6 @@ class BrandCreateCommand extends Data
         return [
             'name'         => [ 'required', 'max:100' ],
             'parent_id'    => [ 'required', 'integer', ],
-            'english_name' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'description'  => [ 'sometimes', 'nullable', 'string', 'max:255' ],
             'initial'      => [ 'sometimes', 'nullable', 'string', 'max:1' ],
             'logo'         => [ 'sometimes', 'nullable', 'max:255' ],

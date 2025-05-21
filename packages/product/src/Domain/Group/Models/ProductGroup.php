@@ -19,6 +19,8 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 class ProductGroup extends Model implements OperatorInterface, OwnerInterface
 {
 
+
+    public $uniqueShortId = true;
     use HasSnowflakeId;
 
     use HasDateTimeFormatter;

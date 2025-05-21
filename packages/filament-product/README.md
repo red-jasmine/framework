@@ -46,8 +46,8 @@ return [
 ## Usage
 
 ```php
-$filamentProduct = new Redjasmine\FilamentProduct();
-echo $filamentProduct->echoPhrase('Hello, Redjasmine!');
+$filamentProduct = new RedJasmine\FilamentProduct();
+echo $filamentProduct->echoPhrase('Hello, RedJasmine!');
 ```
 
 ## Testing

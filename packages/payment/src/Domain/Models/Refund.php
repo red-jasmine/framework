@@ -21,7 +21,7 @@ use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -57,7 +57,7 @@ class Refund extends Model
             'refund_status' => RefundStatusEnum::class,
             'create_time'   => 'datetime',
             'refund_time'   => 'datetime',
-            'refundAmount'  => MoneyCast::class,
+            'refundAmount'  => MoneyOldCast::class,
         ];
     }
 

@@ -55,7 +55,10 @@ class AmountCast implements CastsAttributes, Cast, Transformer
     {
         $key = Str::snake($key);
         if (blank($value)) {
-            return [];
+            return [
+                $this->getValueKey($key)    => null,
+                $this->getCurrencyKey($key) => null,
+            ];
         }
         if (is_string($value) || is_numeric($value)) {
             $value = new Amount($value);
@@ -69,19 +72,34 @@ class AmountCast implements CastsAttributes, Cast, Transformer
 
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Amount
     {
+
+
         if (blank($value)) {
             return null;
         }
         $data = [];
+
         if (is_array($value)) {
             $data = $value;
         } elseif (is_string($value) || is_numeric($value)) {
             $data[$this->valueSuffix] = $value;
         }
+        if (blank($data[$this->valueSuffix] ?? null) && blank($data[$this->currencySuffix] ?? null)) {
+            return null;
+        }
+        if (blank($data[$this->valueSuffix] ?? null)) {
+            return null;
+        }
+
         if ($value instanceof Amount) {
             return $value;
         }
-        return new Amount($data[$this->valueSuffix], $data[$this->currencySuffix] ?? Amount::DEFAULT_CURRENCY);
+        try {
+            return new Amount($data[$this->valueSuffix], $data[$this->currencySuffix] ?? Amount::DEFAULT_CURRENCY);
+        } catch (\Throwable $throwable) {
+            dd($properties, $property, $data);
+        }
+
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array

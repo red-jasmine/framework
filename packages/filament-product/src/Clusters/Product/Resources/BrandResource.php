@@ -73,9 +73,7 @@ class BrandResource extends Resource
                 Forms\Components\TextInput::make('name')
                                           ->label(__('red-jasmine-product::brand.fields.name'))
                                           ->required(),
-                Forms\Components\TextInput::make('english_name')
-                                          ->label(__('red-jasmine-product::brand.fields.english_name'))
-                ,
+
                 Forms\Components\TextInput::make('initial')
                                           ->maxLength(1)
                                           ->label(__('red-jasmine-product::brand.fields.initial'))
@@ -120,8 +118,7 @@ class BrandResource extends Resource
 
                 Tables\Columns\TextColumn::make('initial')
                                          ->label(__('red-jasmine-product::brand.fields.initial')),
-                Tables\Columns\TextColumn::make('english_name')
-                                         ->label(__('red-jasmine-product::brand.fields.english_name')),
+
                 Tables\Columns\ImageColumn::make('logo')->label(__('red-jasmine-product::brand.fields.logo')),
                 Tables\Columns\IconColumn::make('is_show')->label(__('red-jasmine-product::brand.fields.is_show'))->boolean(),
                 Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::brand.fields.sort'))->sortable(),

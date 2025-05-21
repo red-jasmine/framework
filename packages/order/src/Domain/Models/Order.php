@@ -43,7 +43,7 @@ use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
 use RedJasmine\Support\Casts\AesEncrypted;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -165,16 +165,16 @@ class Order extends Model implements OperatorInterface
             'contact'                => AesEncrypted::class,
             'is_seller_delete'       => 'boolean',
             'is_buyer_delete'        => 'boolean',
-            'freight_amount'         => MoneyCast::class.':'.'freight_amount,currency',
-            'discount_amount'        => MoneyCast::class.':'.'discount_amount,currency',
-            'product_payable_amount' => MoneyCast::class.':'.'product_payable_amount,currency',
-            'payable_amount'         => MoneyCast::class.':'.'payable_amount,currency',
-            'payment_amount'         => MoneyCast::class.':'.'payment_amount,currency',
-            'refund_amount'          => MoneyCast::class.':'.'refund_amount,currency',
-            'commission_amount'      => MoneyCast::class.':'.'commission_amount,currency',
-            'cost_amount'            => MoneyCast::class.':'.'cost_amount,currency',
-            'tax_amount'             => MoneyCast::class.':'.'tax_amount,currency',
-            'product_amount'         => MoneyCast::class.':'.'product_amount,currency',
+            'freight_amount'         => MoneyOldCast::class.':'.'freight_amount,currency',
+            'discount_amount'        => MoneyOldCast::class.':'.'discount_amount,currency',
+            'product_payable_amount' => MoneyOldCast::class.':'.'product_payable_amount,currency',
+            'payable_amount'         => MoneyOldCast::class.':'.'payable_amount,currency',
+            'payment_amount'         => MoneyOldCast::class.':'.'payment_amount,currency',
+            'refund_amount'          => MoneyOldCast::class.':'.'refund_amount,currency',
+            'commission_amount'      => MoneyOldCast::class.':'.'commission_amount,currency',
+            'cost_amount'            => MoneyOldCast::class.':'.'cost_amount,currency',
+            'tax_amount'             => MoneyOldCast::class.':'.'tax_amount,currency',
+            'product_amount'         => MoneyOldCast::class.':'.'product_amount,currency',
         ];
     }
 

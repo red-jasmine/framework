@@ -118,7 +118,7 @@ class ProductCategoryResource extends Resource
                                          ->sortable()->copyable(),
                 Tables\Columns\TextColumn::make('parent.name')
                                          ->label(__('red-jasmine-product::product-category.fields.parent_id'))
-                                         ->sortable(),
+                                         ,
                 Tables\Columns\TextColumn::make('name')
                                          ->label(__('red-jasmine-product::product-category.fields.name'))
                                          ->searchable()->copyable(),

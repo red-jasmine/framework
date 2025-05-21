@@ -18,7 +18,7 @@ use RedJasmine\Payment\Domain\Models\Enums\IdentityTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TransferExtension;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -51,7 +51,7 @@ class Transfer extends Model
         return [
             'transfer_status'     => TransferStatusEnum::class,
             'scene_code'          => TransferSceneEnum::class,
-            'amount'              => MoneyCast::class,
+            'amount'              => MoneyOldCast::class,
             'payee_identity_type' => IdentityTypeEnum::class,
             'payee_cert_type'     => CertTypeEnum::class,
             'transfer_time'       => 'datetime',

@@ -19,7 +19,6 @@ class BrandResource extends JsonResource
             'id'           => $this->id,
             'parent_id'    => $this->parent_id,
             'name'         => $this->name,
-            'english_name' => $this->english_name,
             'is_show'      => $this->is_show,
             'logo'         => $this->logo,
             'status'       => $this->status,

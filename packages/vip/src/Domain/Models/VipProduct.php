@@ -3,7 +3,7 @@
 namespace RedJasmine\Vip\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -36,7 +36,7 @@ class VipProduct extends Model implements OwnerInterface, OperatorInterface
     {
         return [
             'status'    => VipProductStatusEnum::class,
-            'price'     => MoneyCast::class,
+            'price'     => MoneyOldCast::class,
             'time_unit' => TimeUnitEnum::class,
         ];
     }

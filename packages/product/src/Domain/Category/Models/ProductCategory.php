@@ -17,6 +17,8 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 class ProductCategory extends Model implements OperatorInterface
 {
 
+    public $uniqueShortId = true;
+
     use HasDefaultConnection;
 
     use HasSnowflakeId;
@@ -59,6 +61,7 @@ class ProductCategory extends Model implements OperatorInterface
         'status'  => CategoryStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',
+        'extra'   => 'array',
     ];
 
     public function parent() : BelongsTo

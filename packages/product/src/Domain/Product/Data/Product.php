@@ -18,6 +18,7 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
@@ -235,6 +236,7 @@ class Product extends Data
     // 尺寸（可选）
     public ?string $size;
     // 产品价格
+    //#[WithCast(AmountCast::class)]
     public Amount $price;
     // 市场价格
     public ?Amount $marketPrice;

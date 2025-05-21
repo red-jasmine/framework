@@ -26,8 +26,6 @@ class ProductTag extends Model implements OperatorInterface, OwnerInterface
 
     use HasOperator;
 
-
-
     protected $casts = [
         'is_public' => 'boolean',
         'is_show'   => 'boolean',

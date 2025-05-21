@@ -18,6 +18,8 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 class Brand extends Model implements OperatorInterface
 {
 
+    public $uniqueShortId = true;
+
     use HasDefaultConnection;
 
     use HasSnowflakeId;
@@ -41,7 +43,8 @@ class Brand extends Model implements OperatorInterface
 
     protected $casts = [
         'is_show' => 'boolean',
-        'status'  => BrandStatusEnum::class
+        'status'  => BrandStatusEnum::class,
+        'extra'   => 'array'
     ];
 
 
@@ -50,12 +53,12 @@ class Brand extends Model implements OperatorInterface
         'parent_id',
         'name',
         'description',
-        'english_name',
         'initial',
         'is_show',
         'status',
         'logo',
         'sort',
+        'extra'
     ];
 
     public function parent() : BelongsTo

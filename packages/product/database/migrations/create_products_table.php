@@ -36,13 +36,15 @@ return new class extends Migration {
             $table->boolean('is_multiple_spec')->default(false)->comment('是否为多规格');
             $table->string('slogan')->nullable()->comment('广告语');
             // 类目信息
-            $table->string('product_model')->nullable()->comment('产品型号');
-            $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
+
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
+            $table->string('product_model')->nullable()->comment('产品型号');
+            $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
+
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
-            $table->string('freight_payer', 32)->comment(FreightPayerEnum::comments('运费承担方'));
+            $table->string('freight_payer', 32)->default(FreightPayerEnum::SELLER)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('postage_id')->nullable()->comment('运费模板ID');
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             // 限购设置
@@ -52,11 +54,11 @@ return new class extends Migration {
 
             // 价格
             $table->string('price_currency', 3)->default('CNY')->comment('货币');
-            $table->decimal('price_total', 12)->default(0)->comment('销售价');
+            $table->decimal('price_amount', 12)->default(0)->comment('销售价');
             $table->string('market_price_currency', 3)->nullable()->comment('货币');
-            $table->decimal('market_price_total', 12)->nullable()->comment('市场价');
+            $table->decimal('market_price_amount', 12)->nullable()->comment('市场价');
             $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');
-            $table->decimal('cost_price_total', 12)->nullable()->comment('成本价');
+            $table->decimal('cost_price_amount', 12)->nullable()->comment('成本价');
 
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
@@ -67,13 +69,13 @@ return new class extends Migration {
             $table->string('barcode', 32)->nullable()->comment('商品条码');
             // 运营类
             $table->unsignedInteger('gift_point')->default(0)->comment('积分');
-            $table->string('unit')->nullable()->comment('单位');
+            $table->string('unit')->nullable()->comment('单位名称');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');
             // 数量范围
             $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
             $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
-            $table->unsignedBigInteger('step_limit')->default(1)->comment('数量步长');
+            $table->unsignedBigInteger('step_limit')->default(1)->comment('数量倍数');
 
             // 供应商
             $table->boolean('is_from_supplier')->default(false)->comment('是否来自供应商');
@@ -86,8 +88,8 @@ return new class extends Migration {
             $table->boolean('is_new')->default(false)->comment('新品');
             $table->boolean('is_best')->default(false)->comment('精品');
             $table->boolean('is_benefit')->default(false)->comment('特惠');
-            $table->bigInteger('sort')->default(0)->comment('排序');
 
+            $table->bigInteger('sort')->default(0)->comment('排序');
 
             $table->timestamp('start_sale_time')->nullable()->comment('定时上架时间');
             $table->timestamp('end_sale_time')->nullable()->comment('定时下架时间');

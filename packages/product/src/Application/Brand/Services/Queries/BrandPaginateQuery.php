@@ -13,12 +13,8 @@ class BrandPaginateQuery extends PaginateQuery
 
     public ?string $name;
 
-    public ?string $english_name;
-
     public ?string $initial;
 
-
-    public ?string $englishName;
 
 
     /**

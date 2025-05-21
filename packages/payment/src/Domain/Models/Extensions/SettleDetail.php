@@ -7,7 +7,7 @@ use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SettleStatusEnum;
 use RedJasmine\Payment\Domain\Models\Model;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class SettleDetail extends Model
@@ -26,7 +26,7 @@ class SettleDetail extends Model
     protected function casts() : array
     {
         return [
-            'amount'        => MoneyCast::class,
+            'amount'        => MoneyOldCast::class,
             'account_type'  => AccountTypeEnum::class,
             'cert_type'     => CertTypeEnum::class,
             'settle_status' => SettleStatusEnum::class,

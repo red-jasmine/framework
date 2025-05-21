@@ -1,6 +1,6 @@
 <?php
 
-// translations for Redjasmine/FilamentProduct
+// translations for RedJasmine/FilamentProduct
 return [
     //
 

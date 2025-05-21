@@ -10,7 +10,7 @@ use RedJasmine\Order\Domain\Exceptions\OrderPaymentException;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -32,7 +32,7 @@ class OrderPayment extends Model
         'entity_type'    => EntityTypeEnum::class,
         'amount_type'    => AmountTypeEnum::class,
         'status'         => PaymentStatusEnum::class,
-        'payment_amount' => MoneyCast::class.':payment_amount,currency'
+        'payment_amount' => MoneyOldCast::class.':payment_amount,currency'
     ];
 
 

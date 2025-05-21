@@ -32,7 +32,7 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\OrderRefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -109,15 +109,15 @@ class OrderRefund extends Model
         'end_time'               => 'datetime',
         'images'                 => 'array',
         'extra'                 => 'array',
-        'price'                  => MoneyCast::class.':'.'price,currency',
-        'cost_price'             => MoneyCast::class.':'.'cost_price,currency',
-        'product_amount'         => MoneyCast::class.':'.'product_amount,currency',
-        'payable_amount'         => MoneyCast::class.':'.'payable_amount,currency',
-        'payment_amount'         => MoneyCast::class.':'.'payment_amount,currency',
-        'divided_payment_amount' => MoneyCast::class.':'.'divided_payment_amount,currency',
-        'refund_amount'          => MoneyCast::class.':'.'refund_amount,currency',
-        'freight_amount'         => MoneyCast::class.':'.'freight_amount,currency',
-        'total_refund_amount'    => MoneyCast::class.':'.'total_refund_amount,currency',
+        'price'                  => MoneyOldCast::class.':'.'price,currency',
+        'cost_price'             => MoneyOldCast::class.':'.'cost_price,currency',
+        'product_amount'         => MoneyOldCast::class.':'.'product_amount,currency',
+        'payable_amount'         => MoneyOldCast::class.':'.'payable_amount,currency',
+        'payment_amount'         => MoneyOldCast::class.':'.'payment_amount,currency',
+        'divided_payment_amount' => MoneyOldCast::class.':'.'divided_payment_amount,currency',
+        'refund_amount'          => MoneyOldCast::class.':'.'refund_amount,currency',
+        'freight_amount'         => MoneyOldCast::class.':'.'freight_amount,currency',
+        'total_refund_amount'    => MoneyOldCast::class.':'.'total_refund_amount,currency',
 
     ];
 

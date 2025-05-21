@@ -12,7 +12,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
-class MoneyCast implements CastsAttributes, Cast, Transformer
+class MoneyOldCast implements CastsAttributes, Cast, Transformer
 {
 
     protected ?string $valueKey    = null;

@@ -27,10 +27,9 @@ class BrandReadRepository extends QueryBuilderReadRepository implements BrandRea
             AllowedFilter::exact('is_show'),
             AllowedFilter::exact('status'),
             AllowedFilter::partial('name'),
-            AllowedFilter::partial('english_name'),
             AllowedFilter::callback('search', static function (Builder $builder, $value) {
                 return $builder->where(function (Builder $builder) use ($value) {
-                    $builder->where('name', 'like', '%'.$value.'%')->orWhere('english_name', 'like', '%'.$value.'%');
+                    $builder->where('name', 'like', '%'.$value.'%');
                 });
             })
 

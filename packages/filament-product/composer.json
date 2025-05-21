@@ -28,13 +28,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Redjasmine\\FilamentProduct\\": "src/",
-            "Redjasmine\\FilamentProduct\\Database\\Factories\\": "database/factories/"
+            "RedJasmine\\FilamentProduct\\": "src/",
+            "RedJasmine\\FilamentProduct\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Redjasmine\\FilamentProduct\\Tests\\": "tests/"
+            "RedJasmine\\FilamentProduct\\Tests\\": "tests/"
         }
     },
     "scripts": {

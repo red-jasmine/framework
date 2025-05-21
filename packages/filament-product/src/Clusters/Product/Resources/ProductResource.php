@@ -14,8 +14,10 @@ use Filament\Resources\Resource;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use LaraZeus\Quantity\Components\Quantity;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
@@ -23,6 +25,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\FilamentCore\Forms\Fields\Money;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
@@ -112,24 +115,27 @@ class ProductResource extends Resource
     {
 
         $schema = [
-            Forms\Components\Fieldset::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
-            Forms\Components\Fieldset::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->inlineLabel()->schema(static::productAttributesFields()),
-            Forms\Components\Fieldset::make('specifications')->label(__('red-jasmine-product::product.labels.specifications'))->columns(1)->inlineLabel()->schema(static::specifications()),
-            Forms\Components\Fieldset::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
-            Forms\Components\Fieldset::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->inlineLabel()->schema(static::afterSalesServices()),
-            Forms\Components\Fieldset::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->inlineLabel()->schema(static::descriptionFields()),
-            Forms\Components\Fieldset::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->inlineLabel()->schema(static::operateFields()),
-            Forms\Components\Fieldset::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->inlineLabel()->schema(static::seoFields()),
-            Forms\Components\Fieldset::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->inlineLabel()->schema(static::shippingFields()),
-            Forms\Components\Fieldset::make('supplier')->label(__('red-jasmine-product::product.labels.supplier'))->columns(1)->inlineLabel()->schema(static::supplierFields()),
-            Forms\Components\Fieldset::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->inlineLabel()->schema(static::otherFields()),
-            Forms\Components\Fieldset::make('publish')->label(__('red-jasmine-product::product.labels.publish'))->columns(1)->inlineLabel()->schema(static::publishFields()),
+            Forms\Components\Tabs\Tab::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
+            Forms\Components\Tabs\Tab::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->inlineLabel()->schema(static::productAttributesFields()),
+            //Forms\Components\Tabs\Tab::make('specifications')->label(__('red-jasmine-product::product.labels.specifications'))->columns(1)->inlineLabel()->schema(static::specifications()),
+            Forms\Components\Tabs\Tab::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
+            Forms\Components\Tabs\Tab::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->inlineLabel()->schema(static::afterSalesServices()),
+            Forms\Components\Tabs\Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->inlineLabel()->schema(static::descriptionFields()),
+            Forms\Components\Tabs\Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->inlineLabel()->schema(static::operateFields()),
+            Forms\Components\Tabs\Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->inlineLabel()->schema(static::seoFields()),
+            Forms\Components\Tabs\Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->inlineLabel()->schema(static::shippingFields()),
+            Forms\Components\Tabs\Tab::make('supplier')->label(__('red-jasmine-product::product.labels.supplier'))->columns(1)->inlineLabel()->schema(static::supplierFields()),
+            Forms\Components\Tabs\Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->inlineLabel()->schema(static::otherFields()),
+            //Forms\Components\Tabs\Tab::make('publish')->label(__('red-jasmine-product::product.labels.publish'))->columns(1)->inlineLabel()->schema(static::publishFields()),
 
         ];
 
         return $form
             ->schema([
-                Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
+                Forms\Components\Tabs::make(__('red-jasmine-product::product.labels.product'))->tabs(
+                    $schema
+                ),
+                //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
             ->columns(1);
     }
@@ -233,13 +239,13 @@ class ProductResource extends Resource
 
         return [
             ...static::ownerFormSchemas(),
-            Forms\Components\TextInput::make('title')
-                                      ->label(__('red-jasmine-product::product.fields.title'))
-                                      ->required()
-                                      ->maxLength(60),
-            Forms\Components\TextInput::make('slogan')
-                                      ->label(__('red-jasmine-product::product.fields.slogan'))
-                                      ->maxLength(255),
+            SelectTree::make('category_id')
+                      ->label(__('red-jasmine-product::product.fields.category_id'))
+                      ->relationship('category', 'name', 'parent_id')
+//                      ->enableBranchNode()
+                      ->parentNullValue(0)
+                      ->defaultZero()
+                      ->default(0), // 设置可选
             Forms\Components\ToggleButtons::make('product_type')
                                           ->label(__('red-jasmine-product::product.fields.product_type'))
                                           ->required()
@@ -252,47 +258,26 @@ class ProductResource extends Resource
                                           ->inline()
                                           ->default(ShippingTypeEnum::LOGISTICS)
                                           ->useEnum(ShippingTypeEnum::class),
-
-            Forms\Components\ToggleButtons::make('is_pre_sale')
-                                  ->label(__('red-jasmine-product::product.fields.is_pre_sale'))
-                                  ->required()
-                                  ->inline()
-                                  ->boolean()
-                                  ->default(false),
-
-            Forms\Components\ToggleButtons::make('is_brand_new')
-                                  ->label(__('red-jasmine-product::product.fields.is_brand_new'))
-                                  ->required()
-                                  ->inline()
-                                  ->boolean()
-                                  ->default(true)
-            ,
-
-
-        ];
-    }
-
-    public static function productAttributesFields() : array
-    {
-        return [
-            SelectTree::make('category_id')
-                      ->label(__('red-jasmine-product::product.fields.category_id'))
-                      ->relationship('category', 'name', 'parent_id')
-//                      ->enableBranchNode()
-                      ->parentNullValue(0)
-                      ->defaultZero()
-                      ->default(0), // 设置可选
-            SelectTree::make('brand_id')
-                      ->label(__('red-jasmine-product::product.fields.brand_id'))
-                      ->relationship('brand', 'name', 'parent_id')
-//                      ->enableBranchNode()
-                      ->parentNullValue(0)
-                      ->default(0)
-                      ->defaultZero()
-            ,
-            Forms\Components\TextInput::make('product_model')
-                                      ->label(__('red-jasmine-product::product.fields.product_model'))
+            Forms\Components\TextInput::make('title')
+                                      ->label(__('red-jasmine-product::product.fields.title'))
+                                      ->required()
                                       ->maxLength(60),
+            Forms\Components\TextInput::make('slogan')
+                                      ->label(__('red-jasmine-product::product.fields.slogan'))
+                                      ->maxLength(255),
+            Cluster::make([
+                SelectTree::make('brand_id')
+                          ->label(__('red-jasmine-product::product.fields.brand_id'))
+                          ->relationship('brand', 'name', 'parent_id')
+//                      ->enableBranchNode()
+                          ->parentNullValue(0)
+                          ->default(0)
+                          ->defaultZero()
+                ,
+                Forms\Components\TextInput::make('product_model')
+                                          ->label(__('red-jasmine-product::product.fields.product_model'))
+                                          ->maxLength(60),
+            ]),
             SelectTree::make('product_group_id')
                       ->label(__('red-jasmine-product::product.fields.product_group_id'))
                       ->relationship(relationship: 'productGroup',
@@ -313,6 +298,17 @@ class ProductResource extends Resource
                       ->defaultZero()
 
             ,
+
+            ...static::specifications(),
+
+            ...static::publishFields(),
+
+        ];
+    }
+
+    public static function productAttributesFields() : array
+    {
+        return [
 
 
             SelectTree::make('extend_product_groups')
@@ -570,43 +566,33 @@ class ProductResource extends Resource
 
             Forms\Components\Section::make('')->schema([
 
-
-                Forms\Components\TextInput::make('price')
-                                          ->label(__('red-jasmine-product::product.fields.price'))
-                                          ->required()
-                                          ->numeric()
-
-                                          ->formatStateUsing(fn($state
-                                          ) => is_array($state) ? $state['total'] : $state)
+                Money::make('price')
+                     ->label(__('red-jasmine-product::product.fields.price'))
+                     ->required()
+                ,
+                Money::make('market_price')
+                     ->label(__('red-jasmine-product::product.fields.market_price'))
 
                 ,
-                Forms\Components\TextInput::make('stock')
-                                          ->label(__('red-jasmine-product::product.fields.stock'))
+                Money::make('cost_price')
+                     ->label(__('red-jasmine-product::product.fields.cost_price'))
+                ,
+
+                Quantity::make('stock')->label(__('red-jasmine-product::product.fields.stock'))
                                           ->required()
                                           ->integer()
                 ,
-
-                Forms\Components\TextInput::make('market_price')
-                                          ->label(__('red-jasmine-product::product.fields.market_price'))
-                                          ->numeric()
-                                          ->formatStateUsing(fn($state
-                                          ) => is_array($state) ? $state['total'] : $state)
-
-                ,
-                Forms\Components\TextInput::make('cost_price')
-                                          ->label(__('red-jasmine-product::product.fields.cost_price'))
-                                          ->numeric()
-                                          ->formatStateUsing(fn($state
-                                          ) => is_array($state) ? $state['total'] : $state)
-                ,
-                Forms\Components\TextInput::make('safety_stock')
+                Quantity::make('safety_stock')
                                           ->label(__('red-jasmine-product::product.fields.safety_stock'))
                                           ->numeric()
+                                          ->minValue(0)
                                           ->default(0),
 
 
-            ])->hidden(fn(Forms\Get $get
-            ) => $get('is_multiple_spec')),
+            ])
+                                    ->columns(3)
+                                    ->hidden(fn(Forms\Get $get
+                                    ) => $get('is_multiple_spec')),
         ];
     }
 
@@ -747,8 +733,19 @@ class ProductResource extends Resource
     public static function saleInfoFields() : array
     {
         return [
-
-
+            Forms\Components\ToggleButtons::make('is_pre_sale')
+                                          ->label(__('red-jasmine-product::product.fields.is_pre_sale'))
+                                          ->required()
+                                          ->inline()
+                                          ->boolean()
+                                          ->default(false),
+            Forms\Components\ToggleButtons::make('is_brand_new')
+                                          ->label(__('red-jasmine-product::product.fields.is_brand_new'))
+                                          ->required()
+                                          ->inline()
+                                          ->boolean()
+                                          ->default(true)
+            ,
             Forms\Components\TextInput::make('unit')
                                       ->label(__('red-jasmine-product::product.fields.unit'))
                                       ->maxLength(32),

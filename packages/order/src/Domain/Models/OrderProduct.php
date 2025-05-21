@@ -17,7 +17,7 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -62,18 +62,18 @@ class OrderProduct extends Model
         'confirm_time'            => 'datetime',
         'refund_time'             => 'datetime',
         'rate_time'               => 'datetime',
-        'price'                   => MoneyCast::class.':'.'price,currency',
-        'cost_price'              => MoneyCast::class.':'.'cost_price,currency',
-        'cost_amount'             => MoneyCast::class.':'.'cost_amount,currency',
-        'tax_amount'              => MoneyCast::class.':'.'tax_amount,currency',
-        'product_amount'          => MoneyCast::class.':'.'product_amount,currency',
-        'payable_amount'          => MoneyCast::class.':'.'payable_amount,currency',
-        'payment_amount'          => MoneyCast::class.':'.'payment_amount,currency',
-        'refund_amount'           => MoneyCast::class.':'.'refund_amount,currency',
-        'discount_amount'         => MoneyCast::class.':'.'discount_amount,currency',
-        'commission_amount'       => MoneyCast::class.':'.'commission_amount,currency',
-        'divided_discount_amount' => MoneyCast::class.':'.'divided_discount_amount,currency',
-        'divided_payment_amount'  => MoneyCast::class.':'.'divided_payment_amount,currency',
+        'price'                   => MoneyOldCast::class.':'.'price,currency',
+        'cost_price'              => MoneyOldCast::class.':'.'cost_price,currency',
+        'cost_amount'             => MoneyOldCast::class.':'.'cost_amount,currency',
+        'tax_amount'              => MoneyOldCast::class.':'.'tax_amount,currency',
+        'product_amount'          => MoneyOldCast::class.':'.'product_amount,currency',
+        'payable_amount'          => MoneyOldCast::class.':'.'payable_amount,currency',
+        'payment_amount'          => MoneyOldCast::class.':'.'payment_amount,currency',
+        'refund_amount'           => MoneyOldCast::class.':'.'refund_amount,currency',
+        'discount_amount'         => MoneyOldCast::class.':'.'discount_amount,currency',
+        'commission_amount'       => MoneyOldCast::class.':'.'commission_amount,currency',
+        'divided_discount_amount' => MoneyOldCast::class.':'.'divided_discount_amount,currency',
+        'divided_payment_amount'  => MoneyOldCast::class.':'.'divided_payment_amount,currency',
     ];
 
     protected $fillable = [
