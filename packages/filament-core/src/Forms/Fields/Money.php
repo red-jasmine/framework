@@ -18,16 +18,27 @@ class Money extends Field
     protected function setUp() : void
     {
         parent::setUp();
+        $this->afterStateHydrated(function (Money $component, $state) {
+            //$state =  new \Money\Money();
+            //dd($component,$state);
+            // TODO 格式化输出
+
+            $component->state((array) ($state?->jsonSerialize()));
+        });
+
+
         $this->schema(
             [
                 Cluster::make([
                     Forms\Components\Select::make('currency')
                                            ->searchable()
-                                           ->options(['CNY' => 'CNY']),
-                    Forms\Components\TextInput::make('total')->numeric(),
-                ])
-                       ->required($this->isRequired())
-                ,
+                                           ->options(['CNY' => 'CNY'])
+                    ,
+                    Forms\Components\TextInput::make('amount')
+                                              ->numeric(),
+                ])->name($this->name)
+
+                // ,
             ]
         );
 
@@ -37,6 +48,7 @@ class Money extends Field
     {
         parent::label($label);
         foreach ($this->getChildComponents() as $component) {
+
             $component->label($label);
         }
         return $this;

@@ -56,6 +56,7 @@ trait ResourcePageHelper
 
     public static function callResolveRecord(Model $model) : Model
     {
+
         if ($model->relationLoaded('extension')) {
 
             foreach ($model->extension->getAttributes() as $key => $value) {
@@ -63,6 +64,7 @@ trait ResourcePageHelper
 
             }
         }
+
         return $model;
     }
 

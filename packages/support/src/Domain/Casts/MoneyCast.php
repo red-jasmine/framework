@@ -5,20 +5,21 @@ namespace RedJasmine\Support\Domain\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
+use Money\Currency;
+use Money\Money;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
-class AmountCast implements CastsAttributes, Cast, Transformer
+class MoneyCast implements CastsAttributes, Cast, Transformer
 {
 
     protected ?string $valueKey    = null;
     protected ?string $currencyKey = null;
 
-    protected string $valueSuffix    = 'total';
+    protected string $valueSuffix    = 'amount';
     protected string $currencySuffix = 'currency';
 
     protected function getValueKey(string $key)
@@ -39,16 +40,18 @@ class AmountCast implements CastsAttributes, Cast, Transformer
 
     }
 
-    public function get(Model $model, string $key, mixed $value, array $attributes) : ?Amount
+    public function get(Model $model, string $key, mixed $value, array $attributes) : ?Money
     {
-        $key        = Str::snake($key);
+        $key = Str::snake($key);
+
         $moneyValue = $attributes[$this->getValueKey($key)] ?? null;
         $currency   = $attributes[$this->getCurrencyKey($key)] ?? null;
+
         if (blank($currency) && blank($moneyValue)) {
             return null;
         }
 
-        return new Amount($moneyValue, $currency);
+        return new Money($moneyValue, new Currency($currency ?? 'CNY'));
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes) : ?array
@@ -60,20 +63,28 @@ class AmountCast implements CastsAttributes, Cast, Transformer
                 $this->getCurrencyKey($key) => null,
             ];
         }
-        if (is_string($value) || is_numeric($value)) {
-            $value = new Amount($value);
+
+        if ($value instanceof Money) {
+            return [
+                $this->getValueKey($key)    => $value->getAmount(),
+                $this->getCurrencyKey($key) => $value->getCurrency()->getCode(),
+            ];
         }
+
+
+        if (is_string($value) || is_numeric($value)) {
+            $money = new Money($value, new Currency('CNY'));
+        }
+
         return [
-            $this->getValueKey($key)    => $value->total,
-            $this->getCurrencyKey($key) => $value->currency,
+            $this->getValueKey($key)    => $money->getAmount(),
+            $this->getCurrencyKey($key) => $money->getCurrency()->getCode(),
         ];
 
     }
 
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Amount
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Money
     {
-
-
         if (blank($value)) {
             return null;
         }
@@ -84,6 +95,7 @@ class AmountCast implements CastsAttributes, Cast, Transformer
         } elseif (is_string($value) || is_numeric($value)) {
             $data[$this->valueSuffix] = $value;
         }
+
         if (blank($data[$this->valueSuffix] ?? null) && blank($data[$this->currencySuffix] ?? null)) {
             return null;
         }
@@ -91,10 +103,11 @@ class AmountCast implements CastsAttributes, Cast, Transformer
             return null;
         }
 
-        if ($value instanceof Amount) {
+        if ($value instanceof Money) {
             return $value;
         }
-        return new Amount($data[$this->valueSuffix], $data[$this->currencySuffix] ?? Amount::DEFAULT_CURRENCY);
+
+        return new Money($data[$this->valueSuffix], new Currency($data[$this->currencySuffix] ?? 'CNY'));
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array
@@ -103,8 +116,8 @@ class AmountCast implements CastsAttributes, Cast, Transformer
             return null;
         }
         return [
-            $this->currencySuffix => $value->currency,
-            $this->valueSuffix    => $value->total,
+            $this->currencySuffix => $value->getCurrency()->getCode(),
+            $this->valueSuffix    => $value->amount,
         ];
     }
 

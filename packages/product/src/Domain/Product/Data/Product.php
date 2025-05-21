@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Money\Money;
 use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
@@ -237,11 +238,11 @@ class Product extends Data
     public ?string $size;
     // 产品价格
     //#[WithCast(AmountCast::class)]
-    public Amount $price;
+    public Money $price;
     // 市场价格
-    public ?Amount $marketPrice;
+    public ?Money $marketPrice;
     // 成本价格
-    public ?Amount $costPrice;
+    public ?Money $costPrice;
 
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $startSaleTime = null;

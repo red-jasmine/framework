@@ -29,6 +29,7 @@ use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Support\Domain\Casts\AmountCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -85,9 +86,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'is_alone_order'            => 'boolean',
             'is_pre_sale'               => 'boolean',
             'is_from_supplier'          => 'boolean',
-            'price'                     => AmountCast::class,
-            'market_price'              => AmountCast::class,
-            'cost_price'                => AmountCast::class,
+            'price'                     => MoneyCast::class,
+            'market_price'              => MoneyCast::class,
+            'cost_price'                => MoneyCast::class,
             'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
         ];
     }

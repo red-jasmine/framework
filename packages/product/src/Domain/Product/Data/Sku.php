@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
+use Money\Money;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
@@ -18,11 +19,11 @@ class Sku extends Data
     public ?string $outerId       = null;
     public ?int    $supplierSkuId = null;
 
-    public MoneyOld $price;
+    public Money $price;
     // 市场价格
-    public ?MoneyOld $marketPrice;
+    public ?Money $marketPrice;
     // 成本价格
-    public ?MoneyOld $costPrice;
+    public ?Money $costPrice;
 
     public int $stock       = 0;
     public int $safetyStock = 0;

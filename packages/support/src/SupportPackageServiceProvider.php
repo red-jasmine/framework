@@ -7,7 +7,9 @@ use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Money\Money;
 use RedJasmine\Support\Domain\Casts\AmountCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
@@ -85,6 +87,10 @@ class SupportPackageServiceProvider extends PackageServiceProvider
 
         $config->set('data.casts.'.MoneyOld::class, MoneyOldCast::class);
         $config->set('data.transformers.'.MoneyOld::class, MoneyOldCast::class);
+
+
+        $config->set('data.casts.'.Money::class, MoneyCast::class);
+        $config->set('data.transformers.'.Money::class, MoneyCast::class);
 
 
 

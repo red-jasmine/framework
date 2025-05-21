@@ -12,7 +12,9 @@ use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Table;
+use Livewire\Livewire;
 use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
+use RedJasmine\FilamentCore\Livewire\MoneySynth;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -86,6 +88,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
 
     public function packageBooted() : void
     {
+        Livewire::propertySynthesizer(MoneySynth::class);
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
