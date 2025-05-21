@@ -13,7 +13,7 @@ use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
@@ -44,7 +44,7 @@ test('create a transfer', function () {
     $command->merchantAppId      = $this->merchantApp->id;
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';
-    $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount             = MoneyOld::from(['value' => 1, 'currency' => 'CNY']);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
     $command->methodCode         = 'alipay';
     $command->channelAppId       = $channelApp->channel_app_id;  // 指定渠道应用

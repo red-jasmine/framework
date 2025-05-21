@@ -10,7 +10,7 @@ use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 
 /**
@@ -20,7 +20,7 @@ use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
  * @property string $name
  * @property VipProductStatusEnum $status
  * @property int $stock
- * @property Money $price
+ * @property MoneyOld $price
  * @property TimeUnitEnum $time_unit
  * @property int $time_value
  */

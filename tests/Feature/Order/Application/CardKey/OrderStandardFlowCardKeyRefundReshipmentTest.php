@@ -24,7 +24,7 @@ use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 
@@ -176,7 +176,7 @@ test('can refund a order', function (Order $order) {
         $command->id             = $order->id;
         $command->orderProductId = $product->id;
         $command->refundType     = RefundTypeEnum::RESHIPMENT;
-        $command->refundAmount   = Money::make(0);
+        $command->refundAmount   = MoneyOld::make(0);
         $command->reason         = '补发';
         $command->description    = fake()->sentence;
         $command->outerRefundId  = fake()->numerify('######');

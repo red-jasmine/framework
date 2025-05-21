@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Domain\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
@@ -36,7 +36,7 @@ class MoneyOldCast implements CastsAttributes, Cast, Transformer
 
     }
 
-    public function get(Model $model, string $key, mixed $value, array $attributes) : ?Money
+    public function get(Model $model, string $key, mixed $value, array $attributes) : ?MoneyOld
     {
         $key        = Str::snake($key);
         $moneyValue = $attributes[$this->getValueKey($key)] ?? 0;
@@ -45,7 +45,7 @@ class MoneyOldCast implements CastsAttributes, Cast, Transformer
             return null;
         }
 
-        return new Money($moneyValue, $currency);
+        return new MoneyOld($moneyValue, $currency);
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes) : ?array
@@ -55,7 +55,7 @@ class MoneyOldCast implements CastsAttributes, Cast, Transformer
             return null;
         }
         if(is_string($value) || is_numeric($value)){
-            $value = new Money($value);
+            $value = new MoneyOld($value);
         }
         return [
             $this->getValueKey($key)    => $value->value,
@@ -64,7 +64,7 @@ class MoneyOldCast implements CastsAttributes, Cast, Transformer
 
     }
 
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Money
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?MoneyOld
     {
         if (blank($value)) {
             return null;
@@ -75,10 +75,10 @@ class MoneyOldCast implements CastsAttributes, Cast, Transformer
         }elseif (is_string($value) || is_numeric($value)){
             $data['value'] = $value;
         }
-        if($value instanceof Money){
+        if($value instanceof MoneyOld){
             return $value;
         }
-        return new Money($data['value'], $data['currency'] ?? Money::DEFAULT_CURRENCY);
+        return new MoneyOld($data['value'], $data['currency'] ?? MoneyOld::DEFAULT_CURRENCY);
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array

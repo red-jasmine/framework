@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Domain\Data;
 use DateTime;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class TradeData extends Data
 {
@@ -16,7 +16,7 @@ class TradeData extends Data
 
     public ?string $merchantTradeOrderNo;
 
-    public Money $amount;
+    public MoneyOld $amount;
 
     public string $subject;
     /**

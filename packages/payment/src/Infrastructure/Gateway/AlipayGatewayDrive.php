@@ -52,7 +52,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RuntimeException;
 use Throwable;
 
@@ -278,8 +278,8 @@ class AlipayGatewayDrive implements GatewayDriveInterface
                 $channelTradeData->channelAppId       = (string)$data['app_id'];
                 $channelTradeData->tradeNo            = (string)$data['out_trade_no'];
                 $channelTradeData->channelTradeNo     = (string)$data['trade_no'];
-                $channelTradeData->amount             = new Money(bcmul($data['total_amount'], 100, 0));
-                $channelTradeData->paymentAmount      = new Money(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->amount             = new MoneyOld(bcmul($data['total_amount'], 100, 0));
+                $channelTradeData->paymentAmount      = new MoneyOld(bcmul($data['total_amount'], 100, 0));
                 $channelTradeData->status             = TradeStatusEnum::SUCCESS;
                 $channelTradeData->payer              = Payer::from([
                                                                         'type'    => $data['buyer_user_type'] ?? null,
@@ -389,7 +389,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
             if (($data['refund_status'] ?? '') === 'REFUND_SUCCESS') {
                 $channelRefundData->status       = RefundStatusEnum::SUCCESS;
                 $channelRefundData->refundTime   = Carbon::make($data['gmt_refund_pay']);
-                $channelRefundData->refundAmount = new Money(bcmul($data['refund_amount'], 100, 0));
+                $channelRefundData->refundAmount = new MoneyOld(bcmul($data['refund_amount'], 100, 0));
             }
 
             return $channelRefundData;

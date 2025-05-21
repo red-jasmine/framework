@@ -35,7 +35,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Throwable;
 
 class WechatPayGatewayDrive implements GatewayDriveInterface
@@ -261,8 +261,8 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
                 $channelTradeData->channelAppId       = (string) $data['appid'];
                 $channelTradeData->tradeNo            = (string) $data['out_trade_no'];
                 $channelTradeData->channelTradeNo     = (string) $data['transaction_id'];
-                $channelTradeData->amount             = new Money(bcdiv($data['amount']['total'], 100, 2));
-                $channelTradeData->paymentAmount      = new Money(bcdiv($data['amount']['payer_total'], 100, 2));
+                $channelTradeData->amount             = new MoneyOld(bcdiv($data['amount']['total'], 100, 2));
+                $channelTradeData->paymentAmount      = new MoneyOld(bcdiv($data['amount']['payer_total'], 100, 2));
                 $channelTradeData->status             = TradeStatusEnum::SUCCESS;
                 $channelTradeData->payer              = Payer::from([
                     'type'    => $data['payer']['buyer_user_type'] ?? null,

@@ -9,7 +9,7 @@ use RedJasmine\Shopping\Domain\Orders\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Orders\Data\ProductData;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductDiscountHook;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductPriceHook;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**
@@ -99,7 +99,7 @@ class OrderCalculationService extends Service
         foreach ($order->products as $product) {
             // 计算税费
             $product->additional([
-                'tax_amount' => Money::make(),
+                'tax_amount' => MoneyOld::make(),
 
             ]);
 
@@ -165,7 +165,7 @@ class OrderCalculationService extends Service
             'orders' => $orderData
         ]);
         // TODO   discountBreakdown 这里需要 优惠明细
-        $discountAmount = ShoppingOrderProductDiscountHook::hook($productPriceDTO, static fn() => Money::make());
+        $discountAmount = ShoppingOrderProductDiscountHook::hook($productPriceDTO, static fn() => MoneyOld::make());
 
 
         $productData->additional([
@@ -192,7 +192,7 @@ class OrderCalculationService extends Service
 
         // 计算订单优惠
         $order->additional([
-            'discount_amount' => Money::make(),
+            'discount_amount' => MoneyOld::make(),
         ]);
 
     }
@@ -209,36 +209,36 @@ class OrderCalculationService extends Service
         // TODO
         // 计算订单运费
         $order->additional([
-            'freight_amount' => Money::make(0),
+            'freight_amount' => MoneyOld::make(0),
         ]);
 
     }
 
     protected function calculateOrderTotal(OrderData $order) : void
     {
-        $productPayableAmount = Money::make(0);
+        $productPayableAmount = MoneyOld::make(0);
         // 计算单品
         foreach ($order->products as $product) {
 
             $amounts = $product->getAdditionalData();
             /**
              * 商品金额
-             * @var $productAmount Money
+             * @var $productAmount MoneyOld
              */
             $productAmount = $amounts['product_amount'];
             /**
              * 优惠金额
-             * @var $discountAmount Money
+             * @var $discountAmount MoneyOld
              */
             $productDiscountAmount = $amounts['discount_amount'];
             /**
              * 税
-             * @var $taxAmount Money
+             * @var $taxAmount MoneyOld
              */
             $taxAmount = $amounts['tax_amount'];
 
             // 计算商品
-            $payableAmount = Money::make(0);
+            $payableAmount = MoneyOld::make(0);
 
             $payableAmount->add($productAmount)
                           ->add($taxAmount)
@@ -255,13 +255,13 @@ class OrderCalculationService extends Service
 
         $orderAmounts = $order->getAdditionalData();
         // 计算订单应付金额
-        $payableAmount = Money::make(0);
+        $payableAmount = MoneyOld::make(0);
         /**
-         * @var $freightAmount Money
+         * @var $freightAmount MoneyOld
          */
         $freightAmount = $orderAmounts['freight_amount'];
         /**
-         * @var $freightAmount Money
+         * @var $freightAmount MoneyOld
          */
         $discountAmount = $orderAmounts['discount_amount'];
 

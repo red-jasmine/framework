@@ -7,7 +7,7 @@ use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
 use RedJasmine\Support\Data\Data;
 
-class Money extends Data
+class MoneyOld extends Data
 {
 
     public const string DEFAULT_CURRENCY = 'CNY';
@@ -18,7 +18,7 @@ class Money extends Data
     ) {
     }
 
-    public static function make(string|int|float $value = 0, string $currency = self::DEFAULT_CURRENCY) : Money
+    public static function make(string|int|float $value = 0, string $currency = self::DEFAULT_CURRENCY) : MoneyOld
     {
 
         return new static((float)(string) $value, $currency ?? self::DEFAULT_CURRENCY);

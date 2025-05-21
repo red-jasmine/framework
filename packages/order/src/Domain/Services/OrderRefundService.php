@@ -10,7 +10,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Models\OrderRefund;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrderRefundService
 {
@@ -87,8 +87,8 @@ class OrderRefundService
             }
         }
 
-        $orderRefund->freight_amount = new Money(0);
-        $orderRefund->refund_amount  = new Money($refundAmount);
+        $orderRefund->freight_amount = new MoneyOld(0);
+        $orderRefund->refund_amount  = new MoneyOld($refundAmount);
 
         $orderRefund->total_refund_amount = bcadd(
             $orderRefund->refund_amount,

@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data\Trades;
 
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class PaymentTradeResult extends Data
 {
@@ -20,8 +20,8 @@ class PaymentTradeResult extends Data
      * 支付ID
      * @var string
      */
-    public string $tradeNo;
-    public Money $amount;
+    public string   $tradeNo;
+    public MoneyOld $amount;
 
     public ?string $url;
 

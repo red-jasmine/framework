@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class RefundCreateCommand extends Data
 {
@@ -22,9 +22,9 @@ class RefundCreateCommand extends Data
 
     /**
      * 退款金额
-     * @var ?Money
+     * @var ?MoneyOld
      */
-    public ?Money $refundAmount = null;
+    public ?MoneyOld $refundAmount = null;
 
     /**
      * 原因

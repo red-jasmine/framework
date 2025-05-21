@@ -6,7 +6,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrderCreateCommandTransformer
 {
@@ -31,7 +31,7 @@ class OrderCreateCommandTransformer
         foreach ($orderData->products as $productData) {
             // 获取价格
             $additionalData            = $productData->getAdditionalData();
-            $price                     = Money::make($additionalData['price']);
+            $price                     = MoneyOld::make($additionalData['price']);
             $product                   = new OrderProductData();
             $product->quantity         = $productData->quantity;
             $product->orderProductType = $productData->getProduct()->product_type;
@@ -42,7 +42,7 @@ class OrderCreateCommandTransformer
             $product->productId        = $productData->getProduct()->id;
             $product->skuId            = $productData->getSku()->id;
             $product->price            = $price;
-            $product->costPrice        = new Money($productData->getSku()->cost_price ?? 0);
+            $product->costPrice        = new MoneyOld($productData->getSku()->cost_price ?? 0);
             $product->categoryId       = $productData->getProduct()->category_id;
             $product->brandId          = $productData->getProduct()->brand_id;
             $product->productGroupId   = $productData->getProduct()->product_group_id;

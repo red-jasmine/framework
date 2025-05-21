@@ -7,7 +7,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -78,10 +78,10 @@ class OrderData extends Data
     public ?array  $buyerExtra        = null;
     public ?array  $otherExtra        = null;
     public ?array  $form               = null;
-    public ?array  $tools              = null;
-    public ?Money  $freightAmount      = null;
-    public ?Money  $discountAmount     = null;
-    public ?string $clientType         = null;
+    public ?array    $tools          = null;
+    public ?MoneyOld $freightAmount  = null;
+    public ?MoneyOld $discountAmount = null;
+    public ?string   $clientType     = null;
     public ?string $clientVersion      = null;
     public ?string $clientIp           = null;
 
@@ -128,8 +128,8 @@ class OrderData extends Data
 
     public function __construct()
     {
-        $this->discountAmount = Money::make();
-        $this->freightAmount  = Money::make();
+        $this->discountAmount = MoneyOld::make();
+        $this->freightAmount  = MoneyOld::make();
     }
 
 

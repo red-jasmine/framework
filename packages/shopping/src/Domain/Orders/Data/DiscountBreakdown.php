@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Orders\Data;
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 /**
  * 优惠明细
@@ -11,6 +11,6 @@ use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 class DiscountBreakdown extends Data
 {
 
-    public Money $total;
+    public MoneyOld $total;
 
 }

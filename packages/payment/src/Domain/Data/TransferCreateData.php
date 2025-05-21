@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -15,7 +15,7 @@ class TransferCreateData extends Data
 
     public string $subject;
 
-    public Money $amount;
+    public MoneyOld $amount;
 
     public TransferPayee $payee;
 

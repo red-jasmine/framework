@@ -36,7 +36,7 @@ use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 
 class OrderRefund extends Model
@@ -265,12 +265,12 @@ class OrderRefund extends Model
     /**
      * 同意退款
      *
-     * @param  Money|null  $amount
+     * @param  MoneyOld|null  $amount
      *
      * @return void
      * @throws RefundException
      */
-    public function agreeRefund(?Money $amount = null) : void
+    public function agreeRefund(?MoneyOld $amount = null) : void
     {
         if (!$this->isAllowAgreeRefund()) {
             throw new RefundException();

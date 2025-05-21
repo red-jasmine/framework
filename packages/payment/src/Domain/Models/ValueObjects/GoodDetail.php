@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class GoodDetail extends Data
 {
@@ -12,7 +12,7 @@ class GoodDetail extends Data
 
     public int $quantity = 1;
 
-    public Money $price;
+    public MoneyOld $price;
 
     public ?string $goodsId;
 

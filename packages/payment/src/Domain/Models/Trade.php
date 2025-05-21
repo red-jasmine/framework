@@ -24,12 +24,12 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 /**
- * @property Money $amount
- * @property Money $paymentAmount
- * @property Money $refundAmount
+ * @property MoneyOld $amount
+ * @property MoneyOld $paymentAmount
+ * @property MoneyOld $refundAmount
  */
 class Trade extends Model implements AsyncNotifyInterface
 {
@@ -160,7 +160,7 @@ class Trade extends Model implements AsyncNotifyInterface
     public function preCreate() : void
     {
         $this->status       = TradeStatusEnum::PRE;
-        $this->refundAmount = new Money(0, $this->amount->currency);
+        $this->refundAmount = new MoneyOld(0, $this->amount->currency);
         $this->create_time  = now();
     }
 
@@ -276,11 +276,11 @@ class Trade extends Model implements AsyncNotifyInterface
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
         // 验证 退款金额 和 不能超过订单金额
-        if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new Money())) < 0) {
+        if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new MoneyOld())) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
 
-        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value,
+        if ($this->amount->compare($refund->refundAmount->add(new MoneyOld($this->refunding_amount_value,
                 $this->amount->currency))) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }

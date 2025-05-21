@@ -6,15 +6,15 @@ use Illuminate\Support\Carbon;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 class ChannelTradeData extends Data
 {
-    public ?string $tradeNo = null;
-    public ?Money  $amount;
-    public ?Money  $paymentAmount;
+    public ?string   $tradeNo = null;
+    public ?MoneyOld $amount;
+    public ?MoneyOld $paymentAmount;
 
 
     public ?string $channelCode;

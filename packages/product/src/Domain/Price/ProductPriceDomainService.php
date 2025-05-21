@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Price;
 
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Service\Service;
 
 class ProductPriceDomainService extends Service
@@ -20,9 +20,9 @@ class ProductPriceDomainService extends Service
      *
      * @param  ProductPriceData  $data
      *
-     * @return Money
+     * @return MoneyOld
      */
-    public function getPrice(ProductPriceData $data) : Money
+    public function getPrice(ProductPriceData $data) : MoneyOld
     {
         // 获取商品
         $product = $this->productRepository->find($data->productId);

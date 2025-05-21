@@ -23,7 +23,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
@@ -92,7 +92,7 @@ test('pre create a payment trade', function () {
     $command->isSettleSharing = true;
     $command->merchantAppId   = $this->merchantApp->id;
 
-    $command->amount               = Money::from([ 'value' => fake()->numberBetween(1000, 5000), 'currency' => 'CNY' ]);
+    $command->amount               = MoneyOld::from(['value' => fake()->numberBetween(1000, 5000), 'currency' => 'CNY' ]);
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';

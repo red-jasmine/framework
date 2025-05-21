@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\Validation\Max;
 
 class SettleDetailData extends Data
@@ -18,6 +18,6 @@ class SettleDetailData extends Data
 
     public ?string $description = null;
 
-    public Money $amount;
+    public MoneyOld $amount;
 
 }

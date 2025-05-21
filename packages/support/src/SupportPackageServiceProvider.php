@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
@@ -83,8 +83,8 @@ class SupportPackageServiceProvider extends PackageServiceProvider
 
         $config = $this->app->make('config');
 
-        $config->set('data.casts.'.Money::class, MoneyOldCast::class);
-        $config->set('data.transformers.'.Money::class, MoneyOldCast::class);
+        $config->set('data.casts.'.MoneyOld::class, MoneyOldCast::class);
+        $config->set('data.transformers.'.MoneyOld::class, MoneyOldCast::class);
 
 
 

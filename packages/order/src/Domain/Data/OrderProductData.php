@@ -7,7 +7,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -50,11 +50,11 @@ class OrderProductData extends Data
     // 单位（可选）
     public ?string $unit = null;
 
-    public Money   $price;
-    public Money   $costPrice;
-    public Money   $taxAmount;
-    public Money   $discountAmount;
-    public int     $brandId             = 0;
+    public MoneyOld $price;
+    public MoneyOld $costPrice;
+    public MoneyOld $taxAmount;
+    public MoneyOld $discountAmount;
+    public int      $brandId             = 0;
     public int     $categoryId          = 0;
     public int     $productGroupId      = 0;
     public ?string $image               = null;
@@ -86,9 +86,9 @@ class OrderProductData extends Data
 
     public function __construct()
     {
-        $this->taxAmount      = new Money(0);
-        $this->discountAmount = new Money(0);
-        $this->costPrice      = new Money(0);
+        $this->taxAmount      = new MoneyOld(0);
+        $this->discountAmount = new MoneyOld(0);
+        $this->costPrice      = new MoneyOld(0);
 
     }
 }
