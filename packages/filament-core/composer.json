@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "red-jasmine/support":  "1.0.x-dev",
         "filament/filament": "^3",
         "mokhosh/filament-rating": "^1.0",
         "icetalker/filament-table-repeatable-entry": "*",
@@ -28,6 +28,7 @@
         "ibrahim-bougaoua/filaprogress": "*",
         "awcodes/filament-table-repeater": "^3.0",
         "codewithdennis/filament-select-tree": "*",
+        "lara-zeus/quantity": "^1.0",
         "malzariey/filament-daterangepicker-filter": "*"
     },
     "require-dev": {
