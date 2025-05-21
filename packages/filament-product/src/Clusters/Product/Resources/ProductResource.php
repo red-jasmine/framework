@@ -277,7 +277,7 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('product_model')
                                           ->label(__('red-jasmine-product::product.fields.product_model'))
                                           ->maxLength(60),
-            ]),
+            ])->name('barnd'),
             SelectTree::make('product_group_id')
                       ->label(__('red-jasmine-product::product.fields.product_group_id'))
                       ->relationship(relationship: 'productGroup',

@@ -7,6 +7,9 @@ use Filament\Forms;
 use Filament\Forms\Components\Field;
 use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Contracts\Support\Htmlable;
+use Money\Currencies\ISOCurrencies;
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Parser\DecimalMoneyParser;
 
 class Money extends Field
 {
@@ -19,11 +22,33 @@ class Money extends Field
     {
         parent::setUp();
         $this->afterStateHydrated(function (Money $component, $state) {
-            //$state =  new \Money\Money();
-            //dd($component,$state);
-            // TODO 格式化输出
 
-            $component->state((array) ($state?->jsonSerialize()));
+            if ($state instanceof \Money\Money) {
+                $currencies     = new ISOCurrencies();
+                $moneyFormatter = new DecimalMoneyFormatter($currencies);
+                $data           = (array) ($state?->jsonSerialize());
+                $data['amount'] = $moneyFormatter->format($state);
+                $component->state($data);
+            }
+
+        });
+        $this->afterStateUpdated(function ($component,$state,$old){
+
+
+        });
+        $this->dehydrateStateUsing(function (Money $component, $state) {
+
+            if (is_array($state) && filled($state['amount'] ?? null) && filled($state['currency'] ?? null)) {
+                $currency        = new \Money\Currency($state['currency']);
+                $currencies      = new ISOCurrencies();
+                $moneyParser     = new DecimalMoneyParser($currencies);
+                $money           = $moneyParser->parse($state['amount'], $currency);
+                $state['amount'] = $money->getAmount();
+
+                $component->state($state);
+            }
+
+            return $state;
         });
 
 
@@ -31,12 +56,15 @@ class Money extends Field
             [
                 Cluster::make([
                     Forms\Components\Select::make('currency')
-                                           ->searchable()
+                                           ->prefix('货币')
+                                           ->columnSpan(2)
                                            ->options(['CNY' => 'CNY'])
                     ,
                     Forms\Components\TextInput::make('amount')
+                                              ->columnSpan(3)
                                               ->numeric(),
-                ])->name($this->name)
+                ])->columns(5)
+                       ->name($this->name)
 
                 // ,
             ]
