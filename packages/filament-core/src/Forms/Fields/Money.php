@@ -5,11 +5,14 @@ namespace RedJasmine\FilamentCore\Forms\Fields;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Field;
+use Filament\Support\RawJs;
 use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Contracts\Support\Htmlable;
 use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
 use Money\Parser\DecimalMoneyParser;
+use function Clue\StreamFilter\fun;
 
 class Money extends Field
 {
@@ -31,37 +34,44 @@ class Money extends Field
                 $component->state($data);
             }
 
-        });
-        $this->afterStateUpdated(function ($component,$state,$old){
-
 
         });
-        $this->dehydrateStateUsing(function (Money $component, $state) {
-
-            if (is_array($state) && filled($state['amount'] ?? null) && filled($state['currency'] ?? null)) {
-                $currency        = new \Money\Currency($state['currency']);
-                $currencies      = new ISOCurrencies();
-                $moneyParser     = new DecimalMoneyParser($currencies);
-                $money           = $moneyParser->parse($state['amount'], $currency);
-                $state['amount'] = $money->getAmount();
-
-                $component->state($state);
-            }
-
-            return $state;
-        });
-
 
         $this->schema(
             [
+                // TODO 货币配置化
                 Cluster::make([
                     Forms\Components\Select::make('currency')
                                            ->prefix('货币')
+                                           ->default('CNY')
                                            ->columnSpan(2)
                                            ->options(['CNY' => 'CNY'])
+                                           ->live()
                     ,
                     Forms\Components\TextInput::make('amount')
+                                              ->prefix('金额')
                                               ->columnSpan(3)
+                                              ->mask(function (Forms\Get $get, $state) {
+                                                  if (filled($get('currency'))) {
+                                                      $currencies = new ISOCurrencies();
+                                                      $subunit    = $currencies->subunitFor(new Currency($get('currency')));
+
+                                                      return RawJs::make('$money($input,\'.\',\',\','.$subunit.')');
+                                                  }
+                                                  return RawJs::make('$money($input)');
+                                              })
+                                              ->stripCharacters(',')
+                                              ->mutateDehydratedStateUsing(function (Forms\Get $get, $state) : ?int {
+                                                  if (filled($state) && filled($get('currency'))) {
+                                                      $currency    = new Currency($get('currency'));
+                                                      $currencies  = new ISOCurrencies();
+                                                      $moneyParser = new DecimalMoneyParser($currencies);
+                                                      $money       = $moneyParser->parse($state, $currency);
+                                                      return $money->getAmount();
+                                                  }
+
+                                                  return null;
+                                              })
                                               ->numeric(),
                 ])->columns(5)
                        ->name($this->name)

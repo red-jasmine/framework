@@ -267,6 +267,7 @@ class ProductResource extends Resource
                                       ->maxLength(255),
             Cluster::make([
                 SelectTree::make('brand_id')
+                          ->prefix(__('red-jasmine-product::product.fields.brand_id'))
                           ->label(__('red-jasmine-product::product.fields.brand_id'))
                           ->relationship('brand', 'name', 'parent_id')
 //                      ->enableBranchNode()
@@ -275,9 +276,10 @@ class ProductResource extends Resource
                           ->defaultZero()
                 ,
                 Forms\Components\TextInput::make('product_model')
+                                          ->prefix(__('red-jasmine-product::product.fields.product_model'))
                                           ->label(__('red-jasmine-product::product.fields.product_model'))
                                           ->maxLength(60),
-            ])->name('barnd'),
+            ])->label(__('red-jasmine-product::product.fields.brand_id')),
             SelectTree::make('product_group_id')
                       ->label(__('red-jasmine-product::product.fields.product_group_id'))
                       ->relationship(relationship: 'productGroup',
@@ -569,7 +571,6 @@ class ProductResource extends Resource
                 Money::make('price')
                      ->label(__('red-jasmine-product::product.fields.price'))
                      ->required()
-
                 ,
                 Money::make('market_price')
                      ->label(__('red-jasmine-product::product.fields.market_price'))
@@ -580,14 +581,15 @@ class ProductResource extends Resource
                 ,
 
                 Quantity::make('stock')->label(__('red-jasmine-product::product.fields.stock'))
-                                          ->required()
-                                          ->integer()
+                        ->required()
+                        ->integer()
+
                 ,
                 Quantity::make('safety_stock')
-                                          ->label(__('red-jasmine-product::product.fields.safety_stock'))
-                                          ->numeric()
-                                          ->minValue(0)
-                                          ->default(0),
+                        ->label(__('red-jasmine-product::product.fields.safety_stock'))
+                        ->numeric()
+                        ->minValue(0)
+                        ->default(0),
 
 
             ])
@@ -718,7 +720,6 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('length')->nullable()->numeric()->maxLength(32),
                                 Forms\Components\TextInput::make('width')->nullable()->numeric()->maxLength(32),
                                 Forms\Components\TextInput::make('height')->nullable()->numeric()->maxLength(32),
-
 
 
                             ])
@@ -1047,7 +1048,7 @@ class ProductResource extends Resource
 
                 Tables\Columns\TextColumn::make('price')
                                          ->label(__('red-jasmine-product::product.fields.price'))
-                    ->formatStateUsing(fn ($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->getAmount())
 
 
                 ,
@@ -1055,12 +1056,12 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('cost_price')
                                          ->label(__('red-jasmine-product::product.fields.cost_price'))
                                          ->numeric()
-                    ->formatStateUsing(fn ($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->getAmount())
                                          ->toggleable(true, true),
                 Tables\Columns\TextColumn::make('market_price')
                                          ->label(__('red-jasmine-product::product.fields.market_price'))
                                          ->numeric()
-                    ->formatStateUsing(fn ($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->getAmount())
                                          ->toggleable(true, true),
                 Tables\Columns\TextColumn::make('stock')
                                          ->label(__('red-jasmine-product::product.fields.stock'))

@@ -88,7 +88,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
 
     public function packageBooted() : void
     {
-        Livewire::propertySynthesizer(MoneySynth::class);
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
