@@ -2,9 +2,11 @@
 
 namespace RedJasmine\FilamentAdmin;
 
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Illuminate\Support\Str;
 use RedJadmine\FilamentAdmin\Commands\FilamentAdminCommand;
 use RedJadmine\FilamentAdmin\Testing\TestsFilamentAdmin;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -55,6 +57,11 @@ class FilamentAdminServiceProvider extends PackageServiceProvider
 
     public function packageBooted() : void
     {
+
+        FilamentShield::configurePermissionIdentifierUsing(function ($resource) {
+            return Str::of($resource::getModel())->toString();
+        });
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
