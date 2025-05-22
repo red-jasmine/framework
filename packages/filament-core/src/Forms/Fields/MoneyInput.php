@@ -62,11 +62,17 @@ class MoneyInput extends Field
                                            ->live()
                     ,
                     Forms\Components\TextInput::make('amount')
-                                              //->prefix('金额')
+                                              ->prefix(function (Forms\Get $get, $state) {
+                                                  if (filled($get('currency'))) {
+                                                      $currencies = \Cknow\Money\Money::getCurrencies();
+                                                      return $currencies->getSymbol(new Currency($get('currency')));
+                                                  }
+                                              })
                                               ->columnSpan(3)
                                               ->mask(function (Forms\Get $get, $state) {
                                                   if (filled($get('currency'))) {
                                                       $currencies = \Cknow\Money\Money::getCurrencies();
+
                                                       $subunitFor = $currencies->subunitFor(new Currency($get('currency')));
                                                       return RawJs::make('$money($input,\'.\',\',\','.$subunitFor.')');
                                                   }
@@ -114,11 +120,12 @@ class MoneyInput extends Field
     }
 
     public function hiddenLabel(bool|Closure $condition = true) : static
-    {   parent::required($condition);
+    {
+        parent::required($condition);
         foreach ($this->getChildComponents() as $component) {
             $component->hiddenLabel($condition);
         }
-        return  $this;
+        return $this;
     }
 
 
