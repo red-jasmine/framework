@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
@@ -30,7 +30,6 @@ class ProductCategory extends Model implements OperatorInterface
     use ModelTree;
 
     use SoftDeletes;
-
 
 
     public $incrementing = false;
@@ -58,7 +57,7 @@ class ProductCategory extends Model implements OperatorInterface
     ];
 
     protected $casts = [
-        'status'  => CategoryStatusEnum::class,
+        'status'  => UniversalStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',
         'extra'   => 'array',
@@ -78,13 +77,13 @@ class ProductCategory extends Model implements OperatorInterface
 
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', CategoryStatusEnum::ENABLE->value);
+        return $query->where('status', UniversalStatusEnum::ENABLE->value);
     }
 
     /**
      * 叶子目录
      *
-     * @param Builder $query
+     * @param  Builder  $query
      *
      * @return Builder
      */
@@ -102,7 +101,7 @@ class ProductCategory extends Model implements OperatorInterface
             return false;
         }
 
-        if ($this->status !== CategoryStatusEnum::ENABLE) {
+        if ($this->status !== UniversalStatusEnum::ENABLE) {
             return false;
         }
         // TODO 所有上级是否支持使用

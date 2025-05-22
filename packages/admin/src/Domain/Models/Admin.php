@@ -43,12 +43,13 @@ class Admin extends Authenticatable implements JWTSubject, UserInterface, Operat
         ]);
     }
 
+    // 超级管理员
     public function isAdministrator() : bool
     {
-
-        return true;
+        return $this->type === AdminTypeEnum::ROOT;
     }
 
+    //  平台管理员 TODO
 
 
     public function getType() : string

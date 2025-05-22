@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -21,7 +21,7 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
  * @property int $sort
  * @property bool $is_leaf
  * @property bool $is_show
- * @property CategoryStatusEnum $status
+ * @property UniversalStatusEnum $status
  *
  */
 abstract class BaseCategoryModel extends Model implements OperatorInterface
@@ -38,6 +38,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
 
     use SoftDeletes;
 
+    protected $withOperatorNickname = true;
 
     public $incrementing = false;
 
@@ -66,7 +67,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
     protected function casts() : array
     {
         return [
-            'status'  => CategoryStatusEnum::class,
+            'status'  => UniversalStatusEnum::class,
             'is_leaf' => 'boolean',
             'is_show' => 'boolean',
             'extra'   => 'array',
@@ -87,7 +88,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
 
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', CategoryStatusEnum::ENABLE->value);
+        return $query->where('status', UniversalStatusEnum::ENABLE->value);
     }
 
     /**
@@ -111,7 +112,7 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
             return false;
         }
 
-        if ($this->status !== CategoryStatusEnum::ENABLE) {
+        if ($this->status !== UniversalStatusEnum::ENABLE) {
             return false;
         }
 

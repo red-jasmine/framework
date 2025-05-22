@@ -12,10 +12,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\Support\Data\UserData;
-use RedJasmine\Support\Domain\Models\Enums\CategoryStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
 /**
- * @property static  $translationNamespace
+ * @property static $translationNamespace
  */
 trait PageHelper
 {
@@ -256,15 +256,26 @@ trait PageHelper
                                                       ->inline()
                                                       ->inlineLabel()
                                                       ->default(false),
-
+                        Forms\Components\TextInput::make('slug')
+                                                  ->label(__('red-jasmine-support::category.fields.slug'))
+                                                  ->maxLength(255),
                         Forms\Components\TextInput::make('description')
                                                   ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
                         Forms\Components\FileUpload::make('image')
                                                    ->label(__('red-jasmine-support::category.fields.image'))
                                                    ->image(),
+                        Forms\Components\FileUpload::make('icon')
+                                                   ->label(__('red-jasmine-support::category.fields.icon'))
+                                                   ->image(),
+                        Forms\Components\ColorPicker::make('color')
+                                                    ->label(__('red-jasmine-support::category.fields.color'))
+                        ,
                         Forms\Components\TextInput::make('cluster')
                                                   ->label(__('red-jasmine-support::category.fields.cluster'))
                                                   ->maxLength(255),
+
+                        Forms\Components\KeyValue::make('extra')
+                                                 ->label(__('red-jasmine-user::user-group.fields.extra')),
 
                     ]),
                     Forms\Components\Section::make([
@@ -284,8 +295,8 @@ trait PageHelper
                                                       ->label(__('red-jasmine-support::category.fields.status'))
                                                       ->required()
                                                       ->inline()
-                                                      ->default(CategoryStatusEnum::ENABLE)
-                                                      ->useEnum(CategoryStatusEnum::class),
+                                                      ->default(UniversalStatusEnum::ENABLE)
+                                                      ->useEnum(UniversalStatusEnum::class),
 
                     ])->grow(false),
 
@@ -295,13 +306,15 @@ trait PageHelper
             ]);
     }
 
-    public static function categoryTable(Table $table) : Table
+    public static function categoryTable(Table $table, bool $hasOwner = false) : Table
     {
+        $owner = $hasOwner ? static::ownerTableColumns() : [];
         return $table
             ->columns([
+                ...$owner,
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-support::category.fields.id'))
-                                         ->sortable()->copyable(),
+                                         ->copyable(),
                 Tables\Columns\TextColumn::make('parent.name')
                                          ->label(__('red-jasmine-support::category.fields.parent_id'))
                                          ->sortable(),
@@ -316,7 +329,9 @@ trait PageHelper
                                          ->searchable(),
                 Tables\Columns\IconColumn::make('is_leaf')
                                          ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                         ->boolean(),
+                                         ->boolean()
+                                         ->toggleable(isToggledHiddenByDefault: true)
+                ,
 
                 Tables\Columns\TextColumn::make('sort')
                                          ->label(__('red-jasmine-support::category.fields.sort'))
@@ -334,7 +349,7 @@ trait PageHelper
                 TreeParent::make('tree')->label(__('red-jasmine-support::category.fields.parent_id')),
                 Tables\Filters\SelectFilter::make('status')
                                            ->label(__('red-jasmine-support::category.fields.status'))
-                                           ->options(CategoryStatusEnum::options()),
+                                           ->options(UniversalStatusEnum::options()),
                 Tables\Filters\TernaryFilter::make('is_show')
                                             ->label(__('red-jasmine-support::category.fields.is_show'))
                 ,

@@ -51,94 +51,12 @@ class BrandResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->schema([
-                SelectTree::make('parent_id')
-                          ->label(__('red-jasmine-product::brand.fields.parent.name'))
-                          ->relationship(
-                              relationship: 'parent',
-                              titleAttribute: 'name',
-                              parentAttribute: 'parent_id',
-                              modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                  fn($query, $value) => $query->where('id', '<>', $value)),
-                              modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->when($record?->getKey(),
-                                  fn($query, $value) => $query->where('id', '<>', $value)),
-                          )
-                    // ->required()
-                          ->searchable()
-                          ->defaultZero()
-                          ->enableBranchNode()
-                          ->parentNullValue(0)
-                ,
-                Forms\Components\TextInput::make('name')
-                                          ->label(__('red-jasmine-product::brand.fields.name'))
-                                          ->required(),
-
-                Forms\Components\TextInput::make('initial')
-                                          ->maxLength(1)
-                                          ->label(__('red-jasmine-product::brand.fields.initial'))
-                ,
-                Forms\Components\TextInput::make('description')
-                                          ->label(__('red-jasmine-product::brand.fields.description'))
-                                          ->maxLength(255),
-                Forms\Components\FileUpload::make('logo')
-                                           ->label(__('red-jasmine-product::brand.fields.logo'))
-                                           ->image(),
-                Forms\Components\Radio::make('is_show')
-                                      ->label(__('red-jasmine-product::brand.fields.is_show'))
-                                      ->boolean()
-                                      ->inline()
-                                      ->default(true),
-                Forms\Components\TextInput::make('sort')
-                                          ->label(__('red-jasmine-product::brand.fields.sort'))
-                                          ->default(0)->required()->numeric()->minValue(0),
-
-                Forms\Components\ToggleButtons::make('status')->label(__('red-jasmine-product::brand.fields.status'))
-                                              ->inline()
-                                              ->grouped()
-                                              ->required()
-                                              ->default(BrandStatusEnum::ENABLE)
-                                              ->useEnum(BrandStatusEnum::class)
-                ,
-
-                ...static::operateFormSchemas()
-            ])->columns(1);
+        return static::categoryForm($form, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
     {
-
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('id')->copyable(),
-                Tables\Columns\TextColumn::make('parent.name')->label(__('red-jasmine-product::brand.fields.parent.name')),
-                Tables\Columns\TextColumn::make('name')
-                                         ->label(__('red-jasmine-product::brand.fields.name'))
-                                         ->searchable()->copyable(),
-
-                Tables\Columns\TextColumn::make('initial')
-                                         ->label(__('red-jasmine-product::brand.fields.initial')),
-
-                Tables\Columns\ImageColumn::make('logo')->label(__('red-jasmine-product::brand.fields.logo')),
-                Tables\Columns\IconColumn::make('is_show')->label(__('red-jasmine-product::brand.fields.is_show'))->boolean(),
-                Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::brand.fields.sort'))->sortable(),
-                Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::brand.fields.status'))
-                                         ->useEnum(),
-
-
-                ...static::operateTableColumns()
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        return static::categoryTable($table, static::$onlyOwner ?? false);
     }
 
     public static function getRelations() : array

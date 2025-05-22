@@ -51,116 +51,14 @@ class ProductGroupResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->columns(1)
-            ->schema([
-                         ...static::ownerFormSchemas(),
-
-                         SelectTree::make('parent_id')
-                                   ->label(__('red-jasmine-product::product-group.fields.parent_id'))
-                                   ->relationship(relationship: 'parent',
-                                       titleAttribute:          'name',
-                                       parentAttribute:         'parent_id',
-                                       modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
-                                                                                                             ->where('owner_id', $get('owner_id'))
-                                                                                                             ->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
-                                       modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type', $get('owner_type'))
-                                                                                                                  ->where('owner_id', $get('owner_id'))
-                                                                                                                  ->when($record?->getKey(), fn($query, $value) => $query->where('id', '<>', $value)),
-                                   )
-                             // ->required()
-                                   ->searchable()
-                                   ->default(0)
-                                   ->enableBranchNode()
-                                   ->parentNullValue(0),
-                         Forms\Components\TextInput::make('name')
-                                                   ->label(__('red-jasmine-product::product-group.fields.name'))
-                                                   ->required()
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('description')
-                                                   ->label(__('red-jasmine-product::product-group.fields.description'))
-                                                   ->maxLength(255),
-                         Forms\Components\TextInput::make('cluster')
-                                                   ->label(__('red-jasmine-product::product-group.fields.cluster'))
-                                                   ->maxLength(255),
-                         Forms\Components\FileUpload::make('image')
-                                                    ->label(__('red-jasmine-product::product-group.fields.image'))
-                                                    ->image(),
-                         Forms\Components\TextInput::make('sort')
-                                                   ->label(__('red-jasmine-product::product-group.fields.sort'))
-                                                   ->required()
-                                                   ->numeric()
-                                                   ->default(0),
-                         Forms\Components\Radio::make('is_leaf')
-                                               ->label(__('red-jasmine-product::product-group.fields.is_leaf'))
-                                               ->default(false)->boolean()->inline()->required(),
-                         Forms\Components\Radio::make('is_show')
-                                               ->label(__('red-jasmine-product::product-group.fields.is_show'))
-                                               ->default(true)->boolean()->inline()->required(),
-
-                         Forms\Components\ToggleButtons::make('status')
-                                               ->label(__('red-jasmine-product::product-group.fields.status'))
-                                               ->required()
-                                                ->grouped()
-                                               ->default(GroupStatusEnum::ENABLE)
-                                               ->useEnum(GroupStatusEnum::class)
-                                               ,
-
-
-                         ... static::operateFormSchemas()
-                     ]);
+        return static::categoryForm($form, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
     {
-        return $table
-            ->columns([
-                          Tables\Columns\TextColumn::make('id')
-                                                   ->label(__('red-jasmine-product::product-group.fields.id'))
-                                                   ->label('ID')
-                                                   ->sortable(),
-                          ...static::ownerTableColumns(),
-                          Tables\Columns\TextColumn::make('parent.name')
-                                                   ->label(__('red-jasmine-product::product-group.fields.parent_id'))
-                                                   ->sortable(),
-                          Tables\Columns\TextColumn::make('name')
-                                                   ->label(__('red-jasmine-product::product-group.fields.name'))
-                                                   ->searchable(),
-
-                          Tables\Columns\TextColumn::make('cluster')
-                                                   ->label(__('red-jasmine-product::product-group.fields.cluster'))
-                                                   ->searchable(),
-                          Tables\Columns\ImageColumn::make('image')
-                                                    ->label(__('red-jasmine-product::product-group.fields.image'))
-                          ,
-                          Tables\Columns\TextColumn::make('sort')
-                                                   ->label(__('red-jasmine-product::product-group.fields.sort'))
-                                                   ->sortable(),
-                          Tables\Columns\IconColumn::make('is_leaf')
-                                                   ->label(__('red-jasmine-product::product-group.fields.is_leaf'))
-                                                   ->boolean(),
-
-                          Tables\Columns\TextColumn::make('status')
-                                                   ->label(__('red-jasmine-product::product-group.fields.status'))
-                                                   ->useEnum(),
-                          ...static::operateTableColumns()
-
-                      ])
-            ->filters([
-                          TreeParent::make('parents')->label(__('red-jasmine-product::product-group.fields.parent_id')),
-                          Tables\Filters\SelectFilter::make('status')
-                                                     ->label(__('red-jasmine-product::product-group.fields.status'))
-                                                     ->options(GroupStatusEnum::options()),
-                      ])
-            ->actions([
-                          Tables\Actions\EditAction::make(),
-                      ])
-            ->bulkActions([
-                              Tables\Actions\BulkActionGroup::make([
-                                                                       Tables\Actions\DeleteBulkAction::make(),
-                                                                   ]),
-                          ]);
+        return static::categoryTable($table, static::$onlyOwner ?? false);
     }
+
 
     public static function getRelations() : array
     {

@@ -24,9 +24,7 @@ class MoneyInput extends Field
         $currencies      = Money::getCurrencies();
         $currenciesCodes = [];
         foreach ($currencies->getIterator() as $currency) {
-            $currenciesCodes[$currency->getCode()] =
-                trans('money::currencies.'.$currency->getCode());
-
+            $currenciesCodes[$currency->getCode()] = $currencies->getSymbol($currency).' '.trans('money::currencies.'.$currency->getCode());
         }
         return $currenciesCodes;
     }
@@ -41,7 +39,8 @@ class MoneyInput extends Field
                 $data['currency'] = $state->getCurrency()->getCode();
                 $component->state($data);
             }
-            if (is_array($state)) {
+            if (is_array($state) && filled($state['currency']) && filled($state['amount'])) {
+
                 $money            = Money::parse($state['amount'], $state['currency']);
                 $data['amount']   = $money->formatByDecimal();
                 $data['currency'] = $money->getCurrency()->getCode();
@@ -55,39 +54,32 @@ class MoneyInput extends Field
             [
                 Cluster::make([
                     Forms\Components\Select::make('currency')
-                                           ->prefix('货币')
-                                           ->default(Money::getDefaultCurrency())
                                            ->columnSpan(3)
+                                           ->default(Money::getDefaultCurrency())
                                            ->options(static::getCurrenciesCodes())
                                            ->live()
                     ,
                     Forms\Components\TextInput::make('amount')
-                                              ->prefix(function (Forms\Get $get, $state) {
-                                                  if (filled($get('currency'))) {
-                                                      $currencies = \Cknow\Money\Money::getCurrencies();
-                                                      return $currencies->getSymbol(new Currency($get('currency')));
-                                                  }
-                                              })
                                               ->columnSpan(3)
                                               ->mask(function (Forms\Get $get, $state) {
                                                   if (filled($get('currency'))) {
-                                                      $currencies = \Cknow\Money\Money::getCurrencies();
-
+                                                      $currencies = Money::getCurrencies();
                                                       $subunitFor = $currencies->subunitFor(new Currency($get('currency')));
                                                       return RawJs::make('$money($input,\'.\',\',\','.$subunitFor.')');
                                                   }
-                                                  return RawJs::make('$money($input)');
+                                                  return null;
                                               })
                                               ->stripCharacters(',')
                                               ->mutateDehydratedStateUsing(function (Forms\Get $get, $state) : ?int {
                                                   if (filled($state) && filled($get('currency'))) {
-                                                      $money = Money::parse($state, $get('currency'));
+                                                      $money = Money::parseByDecimal($state, $get('currency'));
                                                       return $money->getAmount();
                                                   }
 
                                                   return null;
                                               })
-                                              ->numeric(),
+                                              ->numeric()
+                    ,
                 ])
                        ->columns(6)
                        ->name($this->name)

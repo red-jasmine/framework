@@ -25,6 +25,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\FilamentCore\Filters\DateRangeFilter;
 use RedJasmine\FilamentCore\Forms\Fields\MoneyInput;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
@@ -45,6 +46,7 @@ use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Product\Domain\Property\Models\ProductProperty;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use Tapp\FilamentValueRangeFilter\Filters\ValueRangeFilter;
 use Throwable;
 
 class ProductResource extends Resource
@@ -584,8 +586,8 @@ class ProductResource extends Resource
 
                 Quantity::make('stock')->label(__('red-jasmine-product::product.fields.stock'))
                         ->required()
+                        ->default(100)
                         ->integer()
-
                 ,
                 Quantity::make('safety_stock')
                         ->label(__('red-jasmine-product::product.fields.safety_stock'))
@@ -595,7 +597,7 @@ class ProductResource extends Resource
 
 
             ])
-                                    ->columns(1)
+                                    ->columns(3)
                                     ->hidden(fn(Forms\Get $get
                                     ) => $get('is_multiple_spec')),
         ];
@@ -1054,8 +1056,6 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('price')
                                          ->label(__('red-jasmine-product::product.fields.price'))
                                          ->formatStateUsing(fn($state) => $state?->format())
-
-
                 ,
                 //
                 Tables\Columns\TextColumn::make('cost_price')
@@ -1076,20 +1076,17 @@ class ProductResource extends Resource
                                          ->label(__('red-jasmine-product::product.fields.safety_stock'))
                                          ->numeric()
                                          ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make('sort')
                                          ->label(__('red-jasmine-product::product.fields.sort'))
                                          ->numeric()
                                          ->toggleable(isToggledHiddenByDefault: true)
                                          ->sortable(),
-
-
-                Tables\Columns\TextColumn::make('unit')
-                                         ->label(__('red-jasmine-product::product.fields.unit'))
-                                         ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('unit_quantity')
-                                         ->label(__('red-jasmine-product::product.fields.unit_quantity'))
-                                         ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('unit')
+                //                          ->label(__('red-jasmine-product::product.fields.unit'))
+                //                          ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('unit_quantity')
+                //                          ->label(__('red-jasmine-product::product.fields.unit_quantity'))
+                //                          ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sales')
                                          ->label(__('red-jasmine-product::product.fields.sales'))
                                          ->numeric()
@@ -1098,12 +1095,13 @@ class ProductResource extends Resource
                                          ->label(__('red-jasmine-product::product.fields.views'))
                                          ->numeric()
                                          ->sortable(),
-
-                Tables\Columns\TextColumn::make('modified_time')
-                                         ->label(__('red-jasmine-product::product.fields.modified_time'))
+                Tables\Columns\TextColumn::make('on_sale_time')
+                                         ->sortable()
+                                         ->label(__('red-jasmine-product::product.fields.on_sale_time'))
                                          ->dateTime()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('version')
-                                         ->label(__('red-jasmine-product::product.fields.version'))
+                Tables\Columns\TextColumn::make('modified_time')
+                                         ->sortable()
+                                         ->label(__('red-jasmine-product::product.fields.modified_time'))
                                          ->dateTime()->toggleable(isToggledHiddenByDefault: true),
 
 
@@ -1127,7 +1125,6 @@ class ProductResource extends Resource
                                            ->multiple()
                                            ->label(__('red-jasmine-product::product.fields.shipping_type'))
                                            ->options(ShippingTypeEnum::options()),
-
                 Tables\Filters\TrashedFilter::make(),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()

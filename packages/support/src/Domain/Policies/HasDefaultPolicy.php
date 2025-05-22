@@ -7,6 +7,14 @@ use Illuminate\Support\Str;
 trait HasDefaultPolicy
 {
 
+    public function before($user, string $ability) : bool|null
+    {
+        if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            return true;
+        }
+        return null;
+    }
+
     public static function getModel() : string
     {
         return '';

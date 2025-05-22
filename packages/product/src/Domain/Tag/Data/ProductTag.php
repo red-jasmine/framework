@@ -5,20 +5,13 @@ namespace RedJasmine\Product\Domain\Tag\Data;
 use RedJasmine\Product\Domain\Tag\Models\Enums\TagStatusEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\BaseCategoryData;
 
-class ProductTag extends Data
+class ProductTag extends BaseCategoryData
 {
 
     public UserInterface $owner;
-    public string        $name;
-    public ?string       $description;
-    public bool          $isShow     = false;
-    public bool          $isPublic = false;
-    public TagStatusEnum $status     = TagStatusEnum::ENABLE;
-    public int           $sort       = 0;
-    public ?string       $cluster    = null;
-    public ?string       $icon       = null;
-    public ?string       $color      = null;
+
 
 
 }

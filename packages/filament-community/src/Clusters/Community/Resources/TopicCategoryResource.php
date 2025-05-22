@@ -33,12 +33,12 @@ class TopicCategoryResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return static::categoryForm($form);
+        return static::categoryForm($form, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
     {
-        return static::categoryTable($table);
+        return static::categoryTable($table, static::$onlyOwner ?? false);
     }
 
     public static function getRelations() : array

@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use RedJasmine\Product\Domain\Group\Models\Enums\GroupStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -58,7 +57,7 @@ class ProductGroup extends Model implements OperatorInterface, OwnerInterface
     ];
 
     protected $casts = [
-        'status'  => GroupStatusEnum::class,
+        'status'  => UniversalStatusEnum::class,
         'is_leaf' => 'boolean',
         'is_show' => 'boolean',
     ];
@@ -78,13 +77,13 @@ class ProductGroup extends Model implements OperatorInterface, OwnerInterface
 
     public function scopeEnable(Builder $query) : Builder
     {
-        return $query->where('status', GroupStatusEnum::ENABLE->value);
+        return $query->where('status', UniversalStatusEnum::ENABLE->value);
     }
 
     /**
      * 叶子目录
      *
-     * @param Builder $query
+     * @param  Builder  $query
      *
      * @return Builder
      */
@@ -103,7 +102,7 @@ class ProductGroup extends Model implements OperatorInterface, OwnerInterface
             return false;
         }
 
-        if ($this->status !== GroupStatusEnum::ENABLE) {
+        if ($this->status !== UniversalStatusEnum::ENABLE) {
             return false;
         }
         // TODO 所有上级是否支持使用

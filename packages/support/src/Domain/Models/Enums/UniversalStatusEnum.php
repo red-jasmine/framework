@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum CategoryStatusEnum: string
+enum UniversalStatusEnum: string
 {
 
     use EnumsHelper;

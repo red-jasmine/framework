@@ -29,9 +29,6 @@ trait ResourcePageHelper
 
         $query = app(static::$service)->readRepository->modelQuery();
 
-//        $query->withoutGlobalScopes([
-//                                  SoftDeletingScope::class,
-//                              ]);
         if (static::onlyOwner()) {
             if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $query->onlyOwner(auth()->user()->owner());
@@ -112,7 +109,7 @@ trait ResourcePageHelper
     protected function handleRecordCreation(array $data) : Model
     {
 
-//        dd($data);
+
         $resource = static::getResource();
 
         try {

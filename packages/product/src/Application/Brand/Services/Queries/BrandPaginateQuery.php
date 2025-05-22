@@ -13,10 +13,6 @@ class BrandPaginateQuery extends PaginateQuery
 
     public ?string $name;
 
-    public ?string $initial;
-
-
-
     /**
      * 搜索
      * @var string|null

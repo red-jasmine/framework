@@ -33,10 +33,6 @@ class UserApplicationServiceProvider extends ServiceProvider
         $this->app->bind(UserTagRepositoryInterface::class, UserTagRepository::class);
 
 
-        $this->app->bind(UserTagCategoryReadRepositoryInterface::class, UserTagCategoryReadRepository::class);
-        $this->app->bind(UserTagCategoryRepositoryInterface::class, UserTagCategoryRepository::class);
-
-
         $this->app->bind(UserGroupReadRepositoryInterface::class, UserGroupReadRepository::class);
         $this->app->bind(UserGroupRepositoryInterface::class, UserGroupRepository::class);
 

@@ -28,12 +28,12 @@ class ProductTagResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductTagApplicationService::class;
+    protected static ?string $service = ProductTagApplicationService::class;
 
-    protected static ?string $createCommand  = ProductTagCreateCommand::class;
-    protected static ?string $updateCommand  = ProductTagUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductTagDeleteCommand::class;
-    protected static bool    $onlyOwner      = true;
+    protected static ?string $createCommand = ProductTagCreateCommand::class;
+    protected static ?string $updateCommand = ProductTagUpdateCommand::class;
+    protected static ?string $deleteCommand = ProductTagDeleteCommand::class;
+    protected static bool    $onlyOwner     = true;
 
     public static function getModelLabel() : string
     {
@@ -42,113 +42,12 @@ class ProductTagResource extends Resource
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->columns(1)
-            ->schema([
-                ...static::ownerFormSchemas(),
-                Forms\Components\TextInput::make('name')
-                                          ->label(__('red-jasmine-product::product-tag.fields.name'))
-                                          ->required()
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                                          ->label(__('red-jasmine-product::product-tag.fields.description'))
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('icon')
-                                          ->label(__('red-jasmine-product::product-tag.fields.icon'))
-                                          ->maxLength(255),
-                Forms\Components\ColorPicker::make('color')
-                                            ->label(__('red-jasmine-product::product-tag.fields.color'))
-                ,
-                Forms\Components\TextInput::make('cluster')
-                                          ->label(__('red-jasmine-product::product-tag.fields.cluster'))
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('sort')
-                                          ->label(__('red-jasmine-product::product-tag.fields.sort'))
-                                          ->required()
-                                          ->numeric()
-                                          ->default(0),
-                Forms\Components\Radio::make('is_show')
-                                      ->label(__('red-jasmine-product::product-tag.fields.is_show'))
-                                      ->required()
-                                      ->boolean()->inline()
-                                      ->default(1),
-                Forms\Components\Radio::make('is_public')
-                                      ->label(__('red-jasmine-product::product-tag.fields.is_public'))
-                                      ->required()
-                                      ->boolean()
-                                      ->inline()
-                                      ->default(0),
-                Forms\Components\ToggleButtons::make('status')
-                                              ->label(__('red-jasmine-product::product-tag.fields.status'))
-                                              ->required()
-                                              ->grouped()
-                                              ->default(TagStatusEnum::ENABLE)
-                                              ->useEnum(TagStatusEnum::class),
-                ...static::operateFormSchemas(),
-            ]);
+        return static::categoryForm($form, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
     {
-        return $table
-            ->columns([
-                ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('name')
-                                         ->label(__('red-jasmine-product::product-tag.fields.name'))
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                                         ->label(__('red-jasmine-product::product-tag.fields.description'))
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('icon')
-                                         ->label(__('red-jasmine-product::product-tag.fields.icon'))
-                ,
-                Tables\Columns\ColorColumn::make('color')
-                                          ->label(__('red-jasmine-product::product-tag.fields.color'))
-                ,
-                Tables\Columns\TextColumn::make('cluster')
-                                         ->label(__('red-jasmine-product::product-tag.fields.cluster'))
-                                         ->searchable(),
-
-                Tables\Columns\IconColumn::make('is_show')
-                                         ->label(__('red-jasmine-product::product-tag.fields.is_show'))
-                                         ->boolean()
-                ,
-                Tables\Columns\IconColumn::make('is_public')
-                                         ->label(__('red-jasmine-product::product-tag.fields.is_public'))
-                                         ->boolean()
-                ,
-                Tables\Columns\TextColumn::make('sort')
-                                         ->label(__('red-jasmine-product::product-tag.fields.sort'))
-                                         ->numeric()
-                                         ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                                         ->label(__('red-jasmine-product::product-tag.fields.status'))
-                                         ->useEnum(),
-
-                ...static::operateTableColumns()
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                                           ->label(__('red-jasmine-product::product-tag.fields.status'))
-                                           ->options(TagStatusEnum::options()),
-                Tables\Filters\TernaryFilter::make('is_show')
-                                            ->label(__('red-jasmine-product::product-tag.fields.is_show'))
-                                            ->boolean(true),
-                Tables\Filters\TernaryFilter::make('is_public')
-                                            ->label(__('red-jasmine-product::product-tag.fields.is_public'))
-                                            ->boolean(true),
-
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
-            ]);
+        return static::categoryTable($table, static::$onlyOwner ?? false);
     }
 
     public static function getRelations() : array

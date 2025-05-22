@@ -28,7 +28,6 @@ class UserPackageServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_user_table',
                 'create_user_groups_table',
-                'create_user_tag_categories_table',
                 'create_user_tags_table',
 
             ])

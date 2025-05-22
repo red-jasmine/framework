@@ -15,6 +15,7 @@ use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
+use RedJasmine\Support\Migration\CategoryMigration;
 use RedJasmine\Support\Services\SQLLogService;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -67,6 +68,8 @@ class SupportPackageServiceProvider extends PackageServiceProvider
         $this->registerAes();
 
         SQLLogService::register();
+
+        CategoryMigration::register();
 
 
         $this->app->singleton(ServiceContextManage::class, function () {
@@ -134,7 +137,7 @@ class SupportPackageServiceProvider extends PackageServiceProvider
      *
      * @return string
      *
-     * @throws \Illuminate\Encryption\MissingAppKeyException
+     * @throws MissingAppKeyException
      */
     protected function key(array $config)
     {

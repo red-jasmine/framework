@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
+use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
@@ -15,80 +16,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 
-class Brand extends Model implements OperatorInterface
+class Brand extends BaseCategoryModel
 {
-
-    public $uniqueShortId = true;
-
-    use HasDefaultConnection;
-
-    use HasSnowflakeId;
-
-    use HasDateTimeFormatter;
-
-    use SoftDeletes;
-
-    use HasOperator;
-
-
-    use ModelTree;
-
-
-    // 父级ID字段名称，默认值为 parent_id
-    protected string $parentColumn = 'parent_id';
-    // 排序字段名称，默认值为 order
-    protected string $orderColumn = 'sort';
-    // 标题字段名称，默认值为 title
-    protected string $titleColumn = 'name';
-
-    protected $casts = [
-        'is_show' => 'boolean',
-        'status'  => BrandStatusEnum::class,
-        'extra'   => 'array'
-    ];
-
-
-    protected $fillable = [
-        'id',
-        'parent_id',
-        'name',
-        'description',
-        'initial',
-        'is_show',
-        'status',
-        'logo',
-        'sort',
-        'extra'
-    ];
-
-    public function parent() : BelongsTo
-    {
-        return $this->belongsTo(static::class, 'parent_id', 'id');
-    }
-
-
-    public function scopeShow(Builder $query) : Builder
-    {
-        return $query->enable()->where('is_show', true);
-    }
-
-    public function scopeEnable(Builder $query) : Builder
-    {
-        return $query->where('status', BrandStatusEnum::ENABLE->value);
-    }
-
-
-    public function create() : static
-    {
-
-        return $this;
-    }
-
-    public function modify() : static
-    {
-
-        return $this;
-    }
 
     public function isAllowUse() : bool
     {

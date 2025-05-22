@@ -52,102 +52,13 @@ class UserTagResource extends Resource  implements HasShieldPermissions
 
     public static function form(Form $form) : Form
     {
-        return $form
-            ->schema([
-
-                SelectTree::make('category_id')
-                          ->label(__('red-jasmine-user::user-tag.relations.category'))
-                          ->relationship(relationship: 'category', titleAttribute: 'name', parentAttribute: 'parent_id',
-                          )
-                          ->searchable()
-                          ->default(null)
-                          ->enableBranchNode()
-                          ->parentNullValue(0)
-                          ->dehydrateStateUsing(fn($state) => (int) $state),
-
-
-                Forms\Components\TextInput::make('name')
-                                          ->label(__('red-jasmine-user::user-tag.fields.name'))
-                                          ->required()
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                                          ->label(__('red-jasmine-user::user-tag.fields.description'))
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('icon')
-                                          ->label(__('red-jasmine-user::user-tag.fields.icon'))
-                                          ->maxLength(255),
-                Forms\Components\ColorPicker::make('color')
-                                          ->label(__('red-jasmine-user::user-tag.fields.color'))
-                                         ,
-                Forms\Components\TextInput::make('cluster')
-                                          ->label(__('red-jasmine-user::user-tag.fields.cluster'))
-                                          ->maxLength(255),
-                Forms\Components\TextInput::make('sort')
-                                          ->label(__('red-jasmine-user::user-tag.fields.sort'))
-                                          ->required()
-                                          ->numeric()
-                                          ->default(0),
-                Forms\Components\ToggleButtons::make('status')
-                                          ->label(__('red-jasmine-user::user-tag.fields.status'))
-                                          ->required()
-                    ->inline()
-
-                                          ->default(UserTagStatusEnum::ENABLE)
-                                          ->useEnum(UserTagStatusEnum::class),
-                Forms\Components\KeyValue::make('extra')
-                                          ->label(__('red-jasmine-user::user-tag.fields.extra')),
-                ...static::operateFormSchemas(),
-            ]);
+        return static::categoryForm($form, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('category.name')
-                                         ->label(__('red-jasmine-user::user-tag.relations.category'))
-                                         ->numeric()
-                                         ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                                         ->label(__('red-jasmine-user::user-tag.fields.name'))
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                                         ->label(__('red-jasmine-user::user-tag.fields.description'))
-                                         ->searchable(),
-                Tables\Columns\ImageColumn::make('icon')
-                                         ->label(__('red-jasmine-user::user-tag.fields.icon'))
-                                         ->searchable(),
-                Tables\Columns\ColorColumn::make('color')
-                                         ->label(__('red-jasmine-user::user-tag.fields.color'))
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('cluster')
-                                         ->label(__('red-jasmine-user::user-tag.fields.cluster'))
-                                         ->searchable(),
-                Tables\Columns\TextColumn::make('sort')
-                                         ->label(__('red-jasmine-user::user-tag.fields.sort'))
-                                         ->numeric()
-                                         ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                                         ->label(__('red-jasmine-user::user-tag.fields.status'))
-                                         ->useEnum()
-                ,
-
-                ...static::operateTableColumns(),
-
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        return static::categoryTable($table, static::$onlyOwner ?? false);
     }
-
     public static function getRelations() : array
     {
         return [
