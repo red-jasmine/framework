@@ -25,7 +25,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\FilamentCore\Forms\Fields\Money;
+use RedJasmine\FilamentCore\Forms\Fields\MoneyInput;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
@@ -115,17 +115,17 @@ class ProductResource extends Resource
     {
 
         $schema = [
-            Forms\Components\Tabs\Tab::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->inlineLabel()->schema(static::basicInfoFields()),
-            Forms\Components\Tabs\Tab::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->inlineLabel()->schema(static::productAttributesFields()),
+            Forms\Components\Tabs\Tab::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->schema(static::basicInfoFields()),
+            Forms\Components\Tabs\Tab::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->schema(static::productAttributesFields()),
             //Forms\Components\Tabs\Tab::make('specifications')->label(__('red-jasmine-product::product.labels.specifications'))->columns(1)->inlineLabel()->schema(static::specifications()),
-            Forms\Components\Tabs\Tab::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->inlineLabel()->schema(static::saleInfoFields()),
-            Forms\Components\Tabs\Tab::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->inlineLabel()->schema(static::afterSalesServices()),
-            Forms\Components\Tabs\Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->inlineLabel()->schema(static::descriptionFields()),
-            Forms\Components\Tabs\Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->inlineLabel()->schema(static::operateFields()),
-            Forms\Components\Tabs\Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->inlineLabel()->schema(static::seoFields()),
-            Forms\Components\Tabs\Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->inlineLabel()->schema(static::shippingFields()),
-            Forms\Components\Tabs\Tab::make('supplier')->label(__('red-jasmine-product::product.labels.supplier'))->columns(1)->inlineLabel()->schema(static::supplierFields()),
-            Forms\Components\Tabs\Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->inlineLabel()->schema(static::otherFields()),
+            Forms\Components\Tabs\Tab::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->schema(static::saleInfoFields()),
+            Forms\Components\Tabs\Tab::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->schema(static::afterSalesServices()),
+            Forms\Components\Tabs\Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->schema(static::descriptionFields()),
+            Forms\Components\Tabs\Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->schema(static::operateFields()),
+            Forms\Components\Tabs\Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
+            Forms\Components\Tabs\Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
+            Forms\Components\Tabs\Tab::make('supplier')->label(__('red-jasmine-product::product.labels.supplier'))->columns(1)->schema(static::supplierFields()),
+            Forms\Components\Tabs\Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->schema(static::otherFields()),
             //Forms\Components\Tabs\Tab::make('publish')->label(__('red-jasmine-product::product.labels.publish'))->columns(1)->inlineLabel()->schema(static::publishFields()),
 
         ];
@@ -137,6 +137,7 @@ class ProductResource extends Resource
                 ),
                 //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
+            ->inlineLabel(true)
             ->columns(1);
     }
 
@@ -507,6 +508,7 @@ class ProductResource extends Resource
     protected static function specifications() : array
     {
         return [
+            Forms\Components\Section::make('')->schema([
             Forms\Components\Toggle::make('is_multiple_spec')
                                    ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
                                    ->required()
@@ -565,18 +567,18 @@ class ProductResource extends Resource
                   ->deletable(false)
                   ->live()
                   ->visible(fn(Forms\Get $get) => $get('is_multiple_spec')),
-
+            ]),
             Forms\Components\Section::make('')->schema([
 
-                Money::make('price')
+                MoneyInput::make('price')
                      ->label(__('red-jasmine-product::product.fields.price'))
                      ->required()
                 ,
-                Money::make('market_price')
+                MoneyInput::make('market_price')
                      ->label(__('red-jasmine-product::product.fields.market_price'))
 
                 ,
-                Money::make('cost_price')
+                MoneyInput::make('cost_price')
                      ->label(__('red-jasmine-product::product.fields.cost_price'))
                 ,
 
@@ -593,7 +595,7 @@ class ProductResource extends Resource
 
 
             ])
-                                    ->columns(3)
+                                    ->columns(1)
                                     ->hidden(fn(Forms\Get $get
                                     ) => $get('is_multiple_spec')),
         ];
@@ -706,9 +708,9 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('properties_name')->readOnly(),
                                 Forms\Components\FileUpload::make('image')->image()
                                 ,
-                                Money::make('price'),
-                                Money::make('market_price'),
-                                Money::make('cost_price'),
+                                MoneyInput::make('price')->hiddenLabel(),
+                                MoneyInput::make('market_price')->hiddenLabel(),
+                                MoneyInput::make('cost_price')->hiddenLabel(),
                                 Forms\Components\TextInput::make('stock')->minValue(0)->integer()->required(),
                                 Forms\Components\TextInput::make('safety_stock')->numeric()->default(0),
                                 Forms\Components\Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
@@ -1048,7 +1050,7 @@ class ProductResource extends Resource
 
                 Tables\Columns\TextColumn::make('price')
                                          ->label(__('red-jasmine-product::product.fields.price'))
-                                         ->formatStateUsing(fn($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->format())
 
 
                 ,
@@ -1056,12 +1058,12 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('cost_price')
                                          ->label(__('red-jasmine-product::product.fields.cost_price'))
                                          ->numeric()
-                                         ->formatStateUsing(fn($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->format())
                                          ->toggleable(true, true),
                 Tables\Columns\TextColumn::make('market_price')
                                          ->label(__('red-jasmine-product::product.fields.market_price'))
                                          ->numeric()
-                                         ->formatStateUsing(fn($state) => $state?->getAmount())
+                                         ->formatStateUsing(fn($state) => $state?->format())
                                          ->toggleable(true, true),
                 Tables\Columns\TextColumn::make('stock')
                                          ->label(__('red-jasmine-product::product.fields.stock'))
