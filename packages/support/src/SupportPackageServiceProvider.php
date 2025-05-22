@@ -3,11 +3,10 @@
 namespace RedJasmine\Support;
 
 
+use Cknow\Money\Money;
 use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Money\Money;
 use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
@@ -88,11 +87,8 @@ class SupportPackageServiceProvider extends PackageServiceProvider
         $config->set('data.casts.'.MoneyOld::class, MoneyOldCast::class);
         $config->set('data.transformers.'.MoneyOld::class, MoneyOldCast::class);
 
-
         $config->set('data.casts.'.Money::class, MoneyCast::class);
         $config->set('data.transformers.'.Money::class, MoneyCast::class);
-
-
 
         $config->set('data.casts.'.Amount::class, AmountCast::class);
         $config->set('data.transformers.'.Amount::class, AmountCast::class);
@@ -118,7 +114,7 @@ class SupportPackageServiceProvider extends PackageServiceProvider
     /**
      * Parse the encryption key.
      *
-     * @param array $config
+     * @param  array  $config
      *
      * @return string
      */
@@ -134,7 +130,7 @@ class SupportPackageServiceProvider extends PackageServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
-     * @param array $config
+     * @param  array  $config
      *
      * @return string
      *

@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Money\Money;
+use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
@@ -19,8 +19,6 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Casts\AmountCast;
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 

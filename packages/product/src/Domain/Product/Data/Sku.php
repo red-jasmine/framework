@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use Money\Money;
+use Cknow\Money\Money;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+
 
 class Sku extends Data
 {

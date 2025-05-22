@@ -6,7 +6,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Money\Currency;
-use Money\Money;
+use Cknow\Money\Money;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
@@ -70,7 +70,6 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
                 $this->getCurrencyKey($key) => $value->getCurrency()->getCode(),
             ];
         }
-
 
         if (is_string($value) || is_numeric($value)) {
             $money = new Money($value, new Currency('CNY'));
