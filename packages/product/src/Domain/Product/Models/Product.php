@@ -28,9 +28,7 @@ use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Support\Domain\Casts\AmountCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -94,7 +92,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-    protected $appends  = ['price','market_price','cost_price'];
+    protected $appends = ['price', 'market_price', 'cost_price'];
+
     protected static function boot() : void
     {
         parent::boot();
