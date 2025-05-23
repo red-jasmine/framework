@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('logo')->nullable()->comment('图标');
             $table->string('tel')->nullable()->comment('电话');
             $table->string('url')->nullable()->comment('网址');
-            $table->timestamps();
+            $table->operator();
             $table->comment('物流-公司表');
             $table->unique('code', 'uk_code');
         });
