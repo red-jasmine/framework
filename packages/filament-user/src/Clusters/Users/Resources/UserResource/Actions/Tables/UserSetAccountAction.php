@@ -12,6 +12,20 @@ use RedJasmine\User\Domain\Enums\UserStatusEnum;
 
 class UserSetAccountAction extends Action
 {
+
+    protected string $service;
+
+    public function getService() : string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service) : static
+    {
+        $this->service = $service;
+        return $this;
+    }
+
     public static function getDefaultName() : ?string
     {
         return 'setAccount';
@@ -61,7 +75,7 @@ class UserSetAccountAction extends Action
             try {
                 $command = UserSetAccountCommand::from($data);
                 $command->setKey($record->getKey());
-                app(UserApplicationService::class)->setAccount($command);
+                app($this->service)->setAccount($command);
             } catch (AbstractException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->failure();

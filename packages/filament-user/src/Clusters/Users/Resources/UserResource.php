@@ -32,7 +32,6 @@ class UserResource extends Resource implements HasShieldPermissions
 
     }
 
-
     use ResourcePageHelper;
 
     public static string $service = UserApplicationService::class;
@@ -88,27 +87,31 @@ class UserResource extends Resource implements HasShieldPermissions
                                                   ->label(__('red-jasmine-user::user.fields.name'))
                                                   ->required()
                                                   ->maxLength(64)
-                                                  ->disabled()
+
                         ,
                         Forms\Components\TextInput::make('phone')
                                                   ->label(__('red-jasmine-user::user.fields.phone'))
                                                   ->maxLength(64)
-                                                  ->disabled()
+
                         ,
                         Forms\Components\TextInput::make('email')
                                                   ->label(__('red-jasmine-user::user.fields.email'))
                                                   ->email()
                                                   ->maxLength(255)
-                                                  ->disabled(),
+                        ,
+                        Forms\Components\TextInput::make('password')
+                                                  ->label(__('red-jasmine-user::user.fields.password'))
+                                                  ->password()
+                                                  ->maxLength(255)
+                        ,
 
                         Forms\Components\ToggleButtons::make('type')
-                                                      ->disabled()
                                                       ->label(__('red-jasmine-user::user.fields.type'))
                                                       ->inline()
+                                                      ->default(UserTypeEnum::PERSONAL)
                                                       ->useEnum(UserTypeEnum::class),
                         Forms\Components\ToggleButtons::make('status')
                                                       ->label(__('red-jasmine-user::user.fields.status'))
-                                                      ->disabled()
                                                       ->inline()
                                                       ->default(UserStatusEnum::ACTIVATED)
                                                       ->useEnum(UserStatusEnum::class),
@@ -210,10 +213,10 @@ class UserResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ActionGroup::make([
-                    UserResource\Actions\Tables\UserSetTagsAction::make(),
-                    UserResource\Actions\Tables\UserSetGroupAction::make(),
-                    UserResource\Actions\Tables\UserSetStatusAction::make(),
-                    UserResource\Actions\Tables\UserSetAccountAction::make(),
+                    UserResource\Actions\Tables\UserSetTagsAction::make()->setService(static::$service),
+                    UserResource\Actions\Tables\UserSetGroupAction::make()->setService(static::$service),
+                    UserResource\Actions\Tables\UserSetStatusAction::make()->setService(static::$service),
+                    UserResource\Actions\Tables\UserSetAccountAction::make()->setService(static::$service),
                 ]),
 
             ])

@@ -13,6 +13,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasTags;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
@@ -26,7 +27,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject, UserInterface, OperatorInterface
 {
 
-
     use HasOperator;
 
     protected $withOperatorNickname = true;
@@ -37,51 +37,27 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
 
     use Notifiable;
 
-    protected $dispatchesEvents = [
+
+    use HasTags;
+
+    public function isAdmin()
+    {
+        return true;
+    }
+
+    protected            $dispatchesEvents = [
         'login'    => UserLoginEvent::class,
         'register' => UserRegisteredEvent::class,
         'cancel'   => UseCancelEvent::class,
     ];
+    public static string $tagModelClass    = UserTag::class;
+    public static string $tagTable         = 'user_tag_pivot';
+    public static string $groupModelClass  = UserGroup::class;
 
     protected static function boot() : void
     {
         parent::boot();
-
-
-        static::saving(function (User $user) {
-            if ($user->relationLoaded('tags')) {
-
-                if ((is_array($user->tags) ? count($user->tags) : ($user->tags?->count())) > 0) {
-                    if (is_array($user->tags)) {
-
-                        $user->tags()->sync($user->tags);
-                    } elseif (!is_array($user->tags->first())) {
-                        $user->tags()->sync(($user->tags));
-                    } else {
-
-                        $user->tags()->sync($user->tags->pluck('id')->toArray());
-                    }
-
-                } else {
-                    $user->tags()->sync([]);
-                }
-                $user->load('tags');
-            }
-        });
-
     }
-
-    public function tags() : BelongsToMany
-    {
-
-        return $this->belongsToMany(
-            UserTag::class,
-            'user_tag_pivot',
-            'user_id',
-            'user_tag_id'
-        )->withTimestamps();
-    }
-
     public function newInstance($attributes = [], $exists = false) : static
     {
         $instance = parent::newInstance($attributes, $exists);
@@ -163,11 +139,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         return true;
     }
 
-    public function isAdmin() : bool
-    {
-        return true;
-
-    }
 
     public function setPassword(string $password) : void
     {
@@ -197,7 +168,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
 
     public function group() : BelongsTo
     {
-        return $this->belongsTo(UserGroup::class, 'group_id', 'id');
+        return $this->belongsTo(static::$groupModelClass, 'group_id', 'id');
     }
 
     /**
@@ -228,5 +199,11 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         ];
     }
 
+    protected $fillable = [
+        'email',
+        'name',
+        'nickname',
+        'password',
+    ];
 
 }

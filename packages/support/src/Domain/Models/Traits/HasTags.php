@@ -3,6 +3,12 @@
 namespace RedJasmine\Support\Domain\Models\Traits;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+/**
+ * @property static $tagModelClass
+ * @property static $tagTable
+ */
 trait HasTags
 {
     public function initializeHasTags() : void
@@ -25,4 +31,13 @@ trait HasTags
         });
     }
 
+    public function tags() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            static::$tagModelClass,
+            static::$tagTable,
+            'owner_id',
+            'tag_id'
+        )->withTimestamps();
+    }
 }

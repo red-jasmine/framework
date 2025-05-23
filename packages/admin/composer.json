@@ -17,6 +17,7 @@
     ],
     "require": {
         "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/user": "1.0.x-dev",
         "spatie/laravel-permission": "^6.0"
     },
     "require-dev": {
@@ -52,7 +53,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Admin\\AdminPackageServiceProvider"
+                "RedJasmine\\Admin\\AdminPackageServiceProvider",
+                "RedJasmine\\Admin\\Application\\AdminApplicationServiceProvider"
             ]
         },
         "branch-alias": {

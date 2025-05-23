@@ -41,7 +41,6 @@ use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommandHandl
 use RedJasmine\User\Application\Services\Queries\GetSocialitesQuery;
 use RedJasmine\User\Application\Services\Queries\GetSocialitesQueryHandler;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
@@ -74,17 +73,36 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  * @method bool setAccount(UserSetAccountCommand $command)
  *
  */
-class UserApplicationService extends BaseUserApplicationService
+abstract class BaseUserApplicationService extends ApplicationService
 {
 
+    public static string    $hookNamePrefix = 'user.application.user';
+    protected static string $modelClass     = User::class;
+    protected static        $macros         = [
+        'update'                => UserUpdateBaseInfoCommandHandler::class,
+        'getSocialites'         => GetSocialitesQueryHandler::class,
+        'registerCaptcha'       => UserRegisterCaptchaCommandHandler::class,
+        'register'              => UserRegisterCommandHandler::class,
+        'loginCaptcha'          => UserLoginCaptchaCommandHandler::class,
+        'login'                 => UserLoginCommandHandler::class,
+        'loginOrRegister'       => UserLoginOrRegisterCommandHandler::class,
+        'updateBaseInfo'        => UserUpdateBaseInfoCommandHandler::class,
+        'unbindSocialite'       => UserUnbindSocialiteCommandHandler::class,
+        'cancel'                => UserCancelCommandHandler::class,
+        'setPassword'           => UserSetPasswordCommandHandler::class,
+        'setGroup'              => UserSetGroupCommandHandler::class,
+        'setTags'               => UserSetTagsCommandHandler::class,
+        'setStatus'             => UserSetStatusCommandHandler::class,
+        'forgotPasswordCaptcha' => ForgotPasswordCaptchaCommandHandler::class,
+        'forgotPassword'        => ForgotPasswordCommandHandler::class,
+        'changeAccountCaptcha'  => ChangeAccountCaptchaCommandHandler::class,
+        'changeAccountVerify'   => ChangeAccountVerifyCommandHandler::class,
+        'changeAccountChange'   => ChangeAccountChangeCommandHandler::class,
+        'setAccount'            => UserSetAccountCommandHandler::class,
 
-    public function __construct(
-        public UserRepositoryInterface $repository,
-        public UserReadRepositoryInterface $readRepository,
-        public UserGroupReadRepositoryInterface $groupReadRepository,
 
-    ) {
-    }
+    ];
+
 
 
 }

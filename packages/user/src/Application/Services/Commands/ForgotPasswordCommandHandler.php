@@ -4,14 +4,14 @@ namespace RedJasmine\User\Application\Services\Commands;
 
 use Doctrine\DBAL\Driver\AbstractException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Application\Services\BaseUserApplicationService;
 use RedJasmine\User\Domain\Services\ForgotPassword\ForgotPasswordService;
 use Throwable;
 
 class ForgotPasswordCommandHandler extends CommandHandler
 {
     public function __construct(
-        public UserApplicationService $service,
+        public BaseUserApplicationService $service,
         public ForgotPasswordService $forgotPassword,
     ) {
     }

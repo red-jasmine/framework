@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentAdmin\Clusters;
 
 use Filament\Clusters\Cluster;
 
-class AdminCluster extends Cluster
+class Admin extends Cluster
 {
 
 

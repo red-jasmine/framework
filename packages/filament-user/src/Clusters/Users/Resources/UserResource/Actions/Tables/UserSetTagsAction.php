@@ -12,6 +12,22 @@ use RedJasmine\User\Application\Services\UserApplicationService;
 class UserSetTagsAction extends Action
 {
 
+    protected string $service;
+
+    public function getService() : string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service) : static
+    {
+        $this->service = $service;
+        return $this;
+    }
+
+
+
+
     public static function getDefaultName() : ?string
     {
         return 'setTags';
@@ -57,7 +73,7 @@ class UserSetTagsAction extends Action
             try {
                 $command = UserSetTagsCommand::from($data);
                 $command->setKey($record->getKey());
-                app(UserApplicationService::class)->setTags($command);
+                app($this->service)->setTags($command);
             } catch (AbstractException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())

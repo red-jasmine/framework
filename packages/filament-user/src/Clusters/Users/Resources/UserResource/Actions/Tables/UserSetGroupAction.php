@@ -11,6 +11,20 @@ use RedJasmine\User\Application\Services\UserApplicationService;
 
 class UserSetGroupAction extends Action
 {
+
+    protected string $service;
+
+    public function getService() : string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service) : static
+    {
+        $this->service = $service;
+        return $this;
+    }
+
     public static function getDefaultName(): ?string
     {
         return 'setGroup';
@@ -51,7 +65,7 @@ class UserSetGroupAction extends Action
             try {
                 $command = UserSetGroupCommand::from($data);
                 $command->setKey($record->getKey());
-                app(UserApplicationService::class)->setGroup($command);
+                app($this->service)->setGroup($command);
             } catch (AbstractException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())

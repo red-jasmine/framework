@@ -16,7 +16,21 @@ use RedJasmine\User\Domain\Enums\UserStatusEnum;
 class UserSetStatusAction extends Action
 {
 
-    protected static string $resource = UserResource::class;
+
+
+    protected string $service;
+
+    public function getService() : string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service) : static
+    {
+        $this->service = $service;
+        return $this;
+    }
+
 
     public static function getDefaultName() : ?string
     {
@@ -55,7 +69,7 @@ class UserSetStatusAction extends Action
             try {
                 $command = UserSetStatusCommand::from($data);
                 $command->setKey($record->getKey());
-                app(UserApplicationService::class)->setStatus($command);
+                app($this->service)->setStatus($command);
             } catch (AbstractException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->failure();

@@ -4,14 +4,14 @@ namespace RedJasmine\User\Application\Services\Commands\ChangeAccount;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Application\Services\BaseUserApplicationService;
 use RedJasmine\User\Domain\Services\ChangeAccount\UserChangeAccountService;
 use Throwable;
 
 class ChangeAccountVerifyCommandHandler extends CommandHandler
 {
     public function __construct(
-        public UserApplicationService $service,
+        public BaseUserApplicationService $service,
         public UserChangeAccountService $changeAccountService,
     ) {
 

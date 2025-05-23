@@ -3,10 +3,10 @@
 namespace RedJasmine\Admin\Domain\Repositories;
 
 use RedJasmine\Admin\Domain\Models\Admin;
-use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 
 
-interface AdminReadRepositoryInterface extends ReadRepositoryInterface
+interface AdminReadRepositoryInterface extends UserReadRepositoryInterface
 {
 
 

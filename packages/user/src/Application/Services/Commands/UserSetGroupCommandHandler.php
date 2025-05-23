@@ -5,7 +5,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\User\Application\Services\BaseUserApplicationService;
 use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
 use Throwable;
 
@@ -13,9 +13,11 @@ class UserSetGroupCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected UserApplicationService $service,
-        protected UserGroupReadRepositoryInterface $groupReadRepository,
-    ) {
+        protected BaseUserApplicationService $service,
+
+        // TODO
+    )
+    {
     }
 
 
@@ -32,7 +34,7 @@ class UserSetGroupCommandHandler extends CommandHandler
 
         try {
             if ($command->groupId) {
-                $this->groupReadRepository->find(FindQuery::from(['id' => $command->groupId]));
+                $this->service->groupReadRepository->find(FindQuery::from(['id' => $command->groupId]));
             }
 
             $user = $this->service->repository->find($command->id);

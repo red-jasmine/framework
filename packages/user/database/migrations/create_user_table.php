@@ -9,11 +9,13 @@ use RedJasmine\User\Domain\Enums\UserTypeEnum;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('用户ID');
-            $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('账号类型'));
+        $name  = 'user';
+        $label = '用户';
+        Schema::create(\Illuminate\Support\Str::plural($name), function (Blueprint $table) use ($label) {
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
+            $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('类型'));
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
-            $table->string('name', 64)->comment('账号');
+            $table->string('name', 64)->comment('帐号');
             $table->string('phone')->nullable()->comment('*手机号');
             $table->string('email')->nullable()->comment('*邮箱');
             $table->string('password')->nullable()->comment('密码');
@@ -51,14 +53,40 @@ return new class extends Migration {
             $table->index(['phone'], 'idx_phone');
             $table->index(['email'], 'idx_email');
             $table->index(['group_id'], 'idx_owner_group_id');
-            $table->comment('用户表');
+            $table->comment($label);
 
+        });
+
+        Schema::create($name.'_groups', function (Blueprint $table) use ($label) {
+            $table->category($label.'分组');
+
+        });
+
+        Schema::create($name.'_tags', function (Blueprint $table) use ($label) {
+            $table->category($label.'标签');
+        });
+
+        Schema::create($name.'_tag_pivot', function (Blueprint $table) use ($label) {
+            $table->id();
+            $table->unsignedBigInteger('owner_id');
+            $table->unsignedBigInteger('tag_id');
+            $table->timestamps();
+            $table->index('owner_id', 'idx_owner');
+            $table->index('tag_id', 'idx_tag');
+            $table->comment($label.'标签关联表');
         });
     }
 
     public function down() : void
     {
-        Schema::dropIfExists('users');
+        $name = 'user';
+        Schema::dropIfExists(\Illuminate\Support\Str::plural($name));
+
+        Schema::dropIfExists('user_groups');
+
+        Schema::dropIfExists('user_tags');
+
+        Schema::dropIfExists('user_tag_pivot');
     }
 
 };
