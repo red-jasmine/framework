@@ -17,7 +17,7 @@ class AdminTagResource extends UserTagResource
     public static string     $service = AdminTagApplicationService::class;
     protected static ?string $model   = AdminTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
 
     protected static ?string $cluster = Admin::class;
 
