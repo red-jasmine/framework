@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Address\Domain\Models\Enums\AddressStatusEnum;
 
 return new class extends Migration {
     public function up()
@@ -35,16 +36,19 @@ return new class extends Migration {
             $table->string('type')->nullable()->comment('地址类型');
             $table->boolean('is_default')->default(false)->comment('是否默认');
             $table->integer('sort')->default(0)->comment('排序');
-            $table->string('status', 32)->nullable()->comment('状态');
+            $table->string('status', 32)->default(AddressStatusEnum::ENABLE)->comment(AddressStatusEnum::comments('状态'));
             $table->string('tag')->nullable()->comment('标签');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable()->comment('创建者类型');
-            $table->string('creator_id', 64)->nullable()->comment('创建者ID');
-            $table->string('updater_type', 64)->nullable()->comment('更新者类型');
-            $table->string('updater_id', 64)->nullable()->comment('更新者ID');
 
+            $table->unsignedBigInteger('version')->default(0)->comment('版本');
+            $table->string('creator_type', 64)->nullable();
+            $table->string('creator_id', 64)->nullable();
+            $table->string('creator_nickname', 64)->nullable();
+            $table->string('updater_type', 64)->nullable();
+            $table->string('updater_id', 64)->nullable();
+            $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
+
             $table->comment('地址表');
         });
     }

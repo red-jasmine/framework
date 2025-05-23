@@ -31,9 +31,6 @@ class Address extends Model implements OwnerInterface, OperatorInterface
     use HasOperator;
 
 
-    protected $table = 'address';
-
-
     protected $fillable = [
         'contacts',
         'phone',
