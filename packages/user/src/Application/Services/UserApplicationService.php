@@ -45,6 +45,7 @@ use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
+use RedJasmine\User\Domain\Transformers\UserTransformer;
 
 /**
  * @method getSocialites(GetSocialitesQuery $query)
@@ -82,7 +83,7 @@ class UserApplicationService extends BaseUserApplicationService
         public UserRepositoryInterface $repository,
         public UserReadRepositoryInterface $readRepository,
         public UserGroupReadRepositoryInterface $groupReadRepository,
-
+        public UserTransformer $transformer
     ) {
     }
 

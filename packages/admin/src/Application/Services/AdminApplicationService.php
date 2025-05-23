@@ -7,6 +7,7 @@ use RedJasmine\Admin\Domain\Repositories\AdminGroupReadRepositoryInterface;
 use RedJasmine\Admin\Domain\Repositories\AdminReadRepositoryInterface;
 use RedJasmine\Admin\Domain\Repositories\AdminRepositoryInterface;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
+use RedJasmine\User\Domain\Transformers\UserTransformer;
 
 class AdminApplicationService extends BaseUserApplicationService
 {
@@ -14,6 +15,7 @@ class AdminApplicationService extends BaseUserApplicationService
         public AdminRepositoryInterface $repository,
         public AdminReadRepositoryInterface $readRepository,
         public AdminGroupReadRepositoryInterface $groupReadRepository,
+        public UserTransformer $transformer
     ) {
     }
 
