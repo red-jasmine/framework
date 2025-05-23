@@ -90,14 +90,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('refund_id')->nullable()->comment('最后退款单ID');
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('updater_type', 64)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->string('updater_nickname', 64)->nullable();
-            $table->timestamps();
+            $this->operator();
             $table->softDeletes();
             $table->index('order_no', 'idx_order');
             $table->index([ 'seller_id', 'seller_type', 'order_no' ], 'idx_seller');

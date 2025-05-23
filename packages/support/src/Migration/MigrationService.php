@@ -5,10 +5,22 @@ namespace RedJasmine\Support\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
-class CategoryMigration
+class MigrationService
 {
     public static function register() : void
     {
+
+        Blueprint::macro('operator', function () {
+            $this->unsignedBigInteger('version')->default(0)->comment('版本');
+            $this->string('creator_type', 32)->nullable();
+            $this->string('creator_id', 64)->nullable();
+            $this->string('creator_nickname', 64)->nullable();
+            $this->string('updater_type', 32)->nullable();
+            $this->string('updater_id', 64)->nullable();
+            $this->string('updater_nickname', 64)->nullable();
+            $this->timestamps();
+        });
+
 
         Blueprint::macro('category', function (?string $comment = null) {
 
@@ -29,14 +41,9 @@ class CategoryMigration
             $this->string('icon')->nullable()->comment('图标');
             $this->string('color')->nullable()->comment('颜色');
             $this->json('extra')->nullable()->comment('扩展字段');
-            $this->unsignedBigInteger('version')->default(0)->comment('版本');
-            $this->string('creator_type', 64)->nullable();
-            $this->string('creator_id', 64)->nullable();
-            $this->string('creator_nickname', 64)->nullable();
-            $this->string('updater_type', 64)->nullable();
-            $this->string('updater_id', 64)->nullable();
-            $this->string('updater_nickname', 64)->nullable();
-            $this->timestamps();
+
+
+            $this->operator();
             $this->softDeletes();
 
             $this->index(['parent_id'], 'idx_parent');
@@ -47,6 +54,5 @@ class CategoryMigration
                 $this->comment($comment);
             }
         });
-
     }
 }

@@ -41,11 +41,7 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
             $table->string('ip')->nullable()->comment('IP');
             $table->timestamp('cancel_time')->nullable()->comment('注销时间');
             $table->rememberToken();
-
-
             $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
-
-
             $table->unsignedBigInteger('version')->default(0)->comment('版本');
             $table->string('creator_type', 64)->nullable();
             $table->string('creator_id', 64)->nullable();

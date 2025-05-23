@@ -77,14 +77,7 @@ return new class extends Migration {
                 $table->unsignedTinyInteger('star')->nullable()->comment('加星');
                 $table->unsignedTinyInteger('urge')->nullable()->comment('催单');
                 $table->timestamp('urge_time')->nullable()->comment('催单时间');
-                $table->unsignedBigInteger('version')->default(0)->comment('版本');
-                $table->string('creator_type', 64)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('creator_nickname', 64)->nullable();
-                $table->string('updater_type', 64)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->string('updater_nickname', 64)->nullable();
-                $table->timestamps();
+                $this->operator();
                 $table->softDeletes();
                 $table->comment('订单-退款表');
 
