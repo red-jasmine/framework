@@ -24,6 +24,7 @@ class LogisticsFreightTemplateTransformer implements TransformerInterface
          */
         $model->owner       = $data->owner;
         $model->name        = $data->name;
+        $model->is_free        = $data->isFree;
         $model->sort        = $data->sort;
         $model->charge_type = $data->chargeType;
 

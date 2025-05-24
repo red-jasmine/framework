@@ -153,7 +153,8 @@ class LogisticsFreightTemplateResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                                          ->searchable(),
                 Tables\Columns\TextColumn::make('charge_type')
-                                         ->searchable(),
+                                         ->useEnum()
+                ,
                 Tables\Columns\IconColumn::make('is_free')
                                          ->boolean(),
                 Tables\Columns\TextColumn::make('sort')

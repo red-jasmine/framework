@@ -136,10 +136,11 @@ class ProductResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make(__('red-jasmine-product::product.labels.product'))->tabs(
                     $schema
-                ),
+                )   ->persistTabInQueryString(),
                 //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
             ->inlineLabel(true)
+
             ->columns(1);
     }
 

@@ -20,7 +20,8 @@ class LogisticsFreightTemplateData extends Data
     #[WithCast(EnumCast::class, FreightChargeTypeEnum::class)]
     public FreightChargeTypeEnum $chargeType;
 
-    public int    $sort = 0;
+    public int    $sort   = 0;
+    public bool   $isFree = false;
     public string $name;
 
 
