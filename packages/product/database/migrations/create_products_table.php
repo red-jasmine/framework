@@ -45,7 +45,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
             $table->string('freight_payer', 32)->default(FreightPayerEnum::SELLER)->comment(FreightPayerEnum::comments('运费承担方'));
-            $table->unsignedBigInteger('postage_id')->nullable()->comment('运费模板ID');
+            $table->unsignedBigInteger('freight_template_id')->nullable()->comment('运费模板ID');
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');

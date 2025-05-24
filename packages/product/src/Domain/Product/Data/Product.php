@@ -93,7 +93,7 @@ class Product extends Data
     public array $tags                = [];
     public array $services            = [];
     // 邮费模板ID（可选）
-    public ?int $postageId = null;
+    public ?int $freightTemplateId = null;
     // 最小购买限制（可选）
     public ?int $minLimit = 0;
     // 最大购买限制（可选）

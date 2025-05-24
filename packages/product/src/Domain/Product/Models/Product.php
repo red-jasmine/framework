@@ -16,6 +16,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\HasSupplier;
+use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
@@ -401,4 +402,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     }
 
+
+    public function freightTemplate() : HasOne
+    {
+        return $this->hasOne(LogisticsFreightTemplate::class , 'freight_template_id', 'id');
+    }
 }

@@ -862,12 +862,21 @@ class ProductResource extends Resource
     public static function shippingFields() : array
     {
         return [
-            Forms\Components\Radio::make('freight_payer')
-                                  ->label(__('red-jasmine-product::product.fields.freight_payer'))
-                                  ->required()
-                                  ->default(FreightPayerEnum::SELLER->value)
-                                  ->inline()->options(FreightPayerEnum::options()),
-            Forms\Components\TextInput::make('postage_id')->label(__('red-jasmine-product::product.fields.postage_id'))->numeric(),
+            Forms\Components\ToggleButtons::make('freight_payer')
+                                          ->label(__('red-jasmine-product::product.fields.freight_payer'))
+                                          ->required()
+                                          ->default(FreightPayerEnum::SELLER)
+                                          ->useEnum(FreightPayerEnum::class)
+                                          ->live()
+                                          ->inline(),
+            Forms\Components\Select::make('freight_template_id')
+                                   ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Forms\Get $get) {
+                                       return $query->where('owner_type', $get('owner_type'))->where('owner_id', $get('owner_id'));
+                                   }
+                                   )
+                                   ->formatStateUsing(fn($state) => (string) $state)
+                                   ->required(fn(Forms\Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
+                                   ->label(__('red-jasmine-product::product.fields.freight_template_id')),
             Forms\Components\TextInput::make('delivery_time')
                                       ->label(__('red-jasmine-product::product.fields.delivery_time'))
                                       ->required()

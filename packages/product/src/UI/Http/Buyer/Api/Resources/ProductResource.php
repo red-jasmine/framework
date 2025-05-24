@@ -28,7 +28,7 @@ class ProductResource extends JsonResource
             'unit_quantity'      => $this->unit_quantity,
             'unit'               => $this->unit,
             'freight_payer'      => $this->freight_payer,
-            'postage_id'         => $this->postage_id,
+            'freight_template_id'         => $this->freight_template_id,
             'price'              => (string)$this->price,
             'market_price'       => (string)$this->market_price,
             'sub_stock'          => $this->sub_stock,

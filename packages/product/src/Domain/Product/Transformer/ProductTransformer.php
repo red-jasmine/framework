@@ -74,7 +74,7 @@ class ProductTransformer
         $product->product_model                   = $command->productModel;
         $product->product_group_id                = $command->productGroupId;
         $product->freight_payer                   = $command->freightPayer;
-        $product->postage_id                      = $command->postageId;
+        $product->freight_template_id             = $command->freightTemplateId;
         $product->min_limit                       = $command->minLimit;
         $product->max_limit                       = $command->maxLimit;
         $product->step_limit                      = $command->stepLimit;
@@ -101,7 +101,7 @@ class ProductTransformer
         $product->extension->detail               = $command->detail;
         $product->extension->remarks              = $command->remarks;
         $product->extension->tools                = $command->tools;
-        $product->extension->extra               = $command->extra;
+        $product->extension->extra                = $command->extra;
         $product->extension->form                 = $command->form;
         $product->extension->basic_props          = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
         $product->extension->customize_props      = $command->customizeProps?->toArray() ?? [];

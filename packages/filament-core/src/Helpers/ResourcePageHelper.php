@@ -54,6 +54,7 @@ trait ResourcePageHelper
     public static function callResolveRecord(Model $model) : Model
     {
 
+
         if ($model->relationLoaded('extension')) {
 
             foreach ($model->extension->getAttributes() as $key => $value) {
@@ -72,6 +73,7 @@ trait ResourcePageHelper
      */
     protected function mutateFormDataBeforeCreate(array $data) : array
     {
+
 
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
@@ -114,7 +116,8 @@ trait ResourcePageHelper
 
         try {
             $commandService = app($resource::getService());
-            $command        = ($resource::getCreateCommand())::from($data);
+
+            $command = ($resource::getCreateCommand())::from($data);
 
             return $commandService->create($command);
         } catch (ValidationException $exception) {

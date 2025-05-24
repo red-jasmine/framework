@@ -10,6 +10,6 @@ use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepositor
 class LogisticsCompanyReadRepository extends QueryBuilderReadRepository implements LogisticsCompanyReadRepositoryInterface
 {
 
-    public $modelClass = LogisticsCompany::class;
+    protected static string $modelClass = LogisticsCompany::class;
 
 }

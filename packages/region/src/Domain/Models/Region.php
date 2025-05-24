@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Region\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
 use RedJasmine\Region\Enums\RegionLevel;
@@ -23,7 +24,6 @@ class Region extends Model
     public $incrementing = false;
 
     use HasDefaultConnection;
-
 
 
     protected string $defaultKeyName = 'code';
@@ -62,5 +62,14 @@ class Region extends Model
     protected string $titleColumn = 'name';
 
     public mixed $defaultParentId = '0';
+
+
+    public function scopeLevels(Builder $query, ...$args)
+    {
+        if (count($args) === 1 && is_array($args[0])) {
+            $args = $args[0];
+        }
+        return $query->whereIn('level', $args);
+    }
 
 }

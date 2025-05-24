@@ -139,38 +139,43 @@ trait PageHelper
     }
 
 
-    public static function translationLabels(ViewComponent $component) : ViewComponent
+    public static function translationLabels(ViewComponent $component, array $parent = []) : ViewComponent
     {
+        // 设置自身的字段
         if (property_exists($component, 'label') && !$component->isSetLabel()) {
-            $component->label(static function (ViewComponent $component) {
-                return __(static::$translationNamespace.'.fields.'.$component->getName());
+            $component->label(static function (ViewComponent $component) use ($parent) {
+                /**
+                 * @var Forms\Components\Field $component
+                 */
+                $name = $component->getName();
+
+                if (method_exists($component, 'childComponents') && count($component->getChildComponents()) > 0) {
+                    return __(static::$translationNamespace.'.relations.'.$name);
+                }
+
+                if (filled($parent)) {
+                    $name = implode('.', $parent).'.'.$name;
+                }
+                return __(static::$translationNamespace.'.fields.'.$name);
             });
         }
 
-        if (method_exists($component, 'getComponents')) {
 
-            foreach ($component->getComponents(true) as $childComponent) {
+        if (method_exists($component, 'getComponents')) {
+            foreach ($component->getComponents() as $childComponent) {
                 static::translationLabels($childComponent);
             }
-
-        }
-        if (method_exists($component, 'getChildComponents')) {
-
-//            foreach ($component->getChildComponents(true) as $childComponent) {
-////
-//                try {
-//
-//                    static::translationLabels($childComponent);
-//                }catch (\Throwable $throwable){
-//                        dd($childComponent);
-//                }
-//
-//            }
-
+            return  $component;
         }
 
+        if (method_exists($component, 'childComponents')) {
+            $parent[] = $component->getName();
+            foreach ($component->getChildComponents() as $childComponent) {
+                static::translationLabels($childComponent, $parent);
+            }
+            return  $component;
+        }
         if ($component instanceof Table) {
-
             // 字段翻译
             foreach ($component->getColumns() as $column) {
 
@@ -199,19 +204,8 @@ trait PageHelper
 
 
         }
-
-
-        if ($component instanceof Infolist) {
-
-//            foreach ($component->getComponents(true) as $entity) {
-//
-//                static::translationLabels($entity);
-//            }
-
-        }
-
-
         return $component;
+
     }
 
 

@@ -39,6 +39,7 @@ class CreateCommandHandler extends CommandHandler
 
 
         $this->context->setCommand($command);
+
         $this->context->setModel($this->newModel($command));
         // 开始数据库事务
         $this->beginDatabaseTransaction();
@@ -49,7 +50,7 @@ class CreateCommandHandler extends CommandHandler
             $this->service->hook('create.fill', $this->context, fn() => $this->fill($this->context));
 
             // 存储模型到仓库
-            $this->service->repository->store($this->context->model);
+            $this->service->repository->store($this->context->getModel());
 
             // 提交事务
             $this->commitDatabaseTransaction();
