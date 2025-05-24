@@ -81,7 +81,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                        ->relationship('regions', 'name', 'parent_code', modifyChildQueryUsing: function (
                                                            $query
                                                        ) {
-                                                           return $query->levels([RegionLevelEnum::PROVINCE, RegionLevelEnum::CITY,]);
+                                                           return $query->treeHeight(2);
                                                        })
                                                        ->default([])
                                                        ->inlineLabel()
@@ -119,7 +119,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                        ->label(__(static::$translationNamespace.'.fields.strategies.extra_fee')),
 
                                          ])
-                                         ->columns(6)
+                                         ->columns(2)
                                          ->dehydrated()
                                          ->saveRelationshipsUsing(null)
                 ,

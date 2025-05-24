@@ -8,10 +8,12 @@ use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 
+/**
+ * @property int $tree_height
+ */
 class Region extends Model
 {
 
@@ -49,6 +51,7 @@ class Region extends Model
         'code',
         'level',
         'phone_code',
+        'tree_height',
         'country_code',
         'timezones',
         'translations',
@@ -70,6 +73,11 @@ class Region extends Model
             $args = $args[0];
         }
         return $query->whereIn('level', $args);
+    }
+
+    public function scopeTreeHeight(Builder $query, int $height = 3)
+    {
+        return $query->where('tree_height', '<=', $height);
     }
 
 }

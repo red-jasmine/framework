@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('country_code', 3)->comment('国家地区代码');
             $table->string('parent_code', 64)->default('0')->comment('父级编码');
             $table->string('phone_code', 64)->nullable()->comment('电话区号');
+            $table->unsignedTinyInteger('tree_height')->default(0)->comment('树高');
             $table->decimal('longitude', 11, 8)->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->json('timezones')->nullable();
