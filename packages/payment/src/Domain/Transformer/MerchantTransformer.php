@@ -2,30 +2,33 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Domain\Data\MerchantData;
 use RedJasmine\Payment\Domain\Models\Merchant;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class MerchantTransformer implements TransformerInterface
 {
 
+    /**
+     * @param  MerchantData  $data
+     * @param  Merchant  $model
+     *
+     * @return Merchant
+     */
     public function transform(
-        MerchantData|Data $data,
-        Merchant|Model|null $merchant = null
+        $data,
+        $model = null
     ) : Merchant {
 
-        $merchant = $merchant ?? Merchant::make();
 
-        $merchant->owner      = $data->owner;
-        $merchant->name       = $data->name;
-        $merchant->short_name = $data->shortName;
-        $merchant->type       = $data->type;
-        $merchant->isv_id     = $data->isvId;
-        $merchant->status     = $data->status;
+        $model->owner      = $data->owner;
+        $model->name       = $data->name;
+        $model->short_name = $data->shortName;
+        $model->type       = $data->type;
+        $model->isv_id     = $data->isvId;
+        $model->status     = $data->status;
 
 
-        return $merchant;
+        return $model;
     }
 }

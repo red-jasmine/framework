@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Support\Domain\Casts;
 
+use Cknow\Money\Money;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Money\Currency;
-use Cknow\Money\Money;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
@@ -19,8 +19,9 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
     protected ?string $valueKey    = null;
     protected ?string $currencyKey = null;
 
-    protected string $valueSuffix    = 'amount';
-    protected string $currencySuffix = 'currency';
+    protected string $valueSuffix          = 'amount';
+    protected string $currencySuffix       = 'currency';
+    protected bool   $isShareCurrencyField = false;
 
     protected function getValueKey(string $key)
     {
@@ -35,8 +36,10 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
     public function __construct(...$args)
     {
 
-        $this->valueKey    = $args[0] ?? null;
-        $this->currencyKey = $args[1] ?? null;
+        $this->valueKey             = $args[0] ?? null;
+        $this->currencyKey          = $args[1] ?? null;
+        $this->isShareCurrencyField = (boolean) ($args[2] ?? false);
+
 
     }
 
@@ -50,6 +53,9 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         if (blank($currency) && blank($moneyValue)) {
             return null;
         }
+        if ($this->isShareCurrencyField && blank($moneyValue)) {
+            return null;
+        }
 
         return new Money($moneyValue, new Currency($currency ?? 'CNY'));
     }
@@ -58,6 +64,11 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
     {
         $key = Str::snake($key);
         if (blank($value)) {
+            if ($this->isShareCurrencyField) {
+                return [
+                    $this->getValueKey($key) => null,
+                ];
+            }
             return [
                 $this->getValueKey($key)    => null,
                 $this->getCurrencyKey($key) => null,
@@ -70,9 +81,23 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
                 $this->getCurrencyKey($key) => $value->getCurrency()->getCode(),
             ];
         }
-
+        $money = null;
         if (is_string($value) || is_numeric($value)) {
             $money = new Money($value, new Currency('CNY'));
+        }
+        if (is_array($value)) {
+            $money = new Money($value[$this->valueSuffix], new Currency($value[$this->currencySuffix]));
+        }
+        if ($money === null) {
+            if ($this->isShareCurrencyField) {
+                return [
+                    $this->getValueKey($key) => null,
+                ];
+            }
+            return [
+                $this->getValueKey($key)    => null,
+                $this->getCurrencyKey($key) => null,
+            ];
         }
 
         return [

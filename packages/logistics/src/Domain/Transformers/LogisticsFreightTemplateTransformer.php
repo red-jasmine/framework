@@ -16,7 +16,7 @@ class LogisticsFreightTemplateTransformer implements TransformerInterface
     ) {
     }
 
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : LogisticsFreightTemplate
     {
         /**
          * @var LogisticsFreightTemplateData $data
@@ -24,7 +24,7 @@ class LogisticsFreightTemplateTransformer implements TransformerInterface
          */
         $model->owner       = $data->owner;
         $model->name        = $data->name;
-        $model->is_free        = $data->isFree;
+        $model->is_free     = $data->isFree;
         $model->sort        = $data->sort;
         $model->charge_type = $data->chargeType;
 

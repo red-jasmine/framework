@@ -19,7 +19,7 @@ return new class extends Migration {
 
             $table->string('market', 64)->default('default')->comment('市场'); // 市场
             // 卖家信息
-            $table->string('owner_type', 64);
+            $table->string('owner_type', 32);
             $table->string('owner_id', 64);
 
             $table->string('title')->comment('标题');

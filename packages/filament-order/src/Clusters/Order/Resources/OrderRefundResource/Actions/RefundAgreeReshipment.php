@@ -4,7 +4,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeReshipmentCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait RefundAgreeReshipment
@@ -17,7 +17,7 @@ trait RefundAgreeReshipment
 
         $this->color('success');
         $this->icon('heroicon-o-check-badge');
-        $this->visible(fn(OrderRefund $record) => $record->isAllowAgreeReshipment());
+        $this->visible(fn(Refund $record) => $record->isAllowAgreeReshipment());
         $this->requiresConfirmation();
 
 

@@ -7,5 +7,11 @@ use RedJasmine\Support\Data\Data;
 
 interface TransformerInterface
 {
-    public function transform(Data $data, ?Model $model = null) : ?Model;
+    /**
+     * @param  Data  $data
+     * @param  Model  $model
+     *
+     * @return Model
+     */
+    public function transform( $data, $model) : mixed;
 }

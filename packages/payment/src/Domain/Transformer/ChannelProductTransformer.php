@@ -12,13 +12,13 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class ChannelProductTransformer implements TransformerInterface
 {
     /**
-     * @param  ChannelProductData|Data  $data
+     * @param  ChannelProductData  $data
      * @param  ChannelProduct|Model|null  $channelProduct
      *
      * @return ChannelProduct
      */
     public function transform(
-        ChannelProductData|Data $data,
+        ChannelProductData $data,
         ChannelProduct|Model|null $channelProduct = null
     ) : ChannelProduct {
         $channelProduct               = $channelProduct ?? ChannelProduct::make();

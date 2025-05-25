@@ -11,12 +11,12 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class TopicTransformer implements TransformerInterface
 {
     /**
-     * @param  Data|TopicData  $data
-     * @param  Model|null|Topic  $model
+     * @param  TopicData  $data
+     * @param  Topic  $model
      *
-     * @return Model|null
+     * @return Topic
      */
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : Topic
     {
 
         $model->title                   = $data->title;

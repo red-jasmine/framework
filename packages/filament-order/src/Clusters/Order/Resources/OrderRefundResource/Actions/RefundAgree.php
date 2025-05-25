@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use Throwable;
 
 
@@ -21,10 +21,10 @@ trait RefundAgree
         $this->icon('heroicon-o-check-circle');
         $this->color('success');
 
-        $this->visible(fn(OrderRefund $record) => $record->isAllowAgreeRefund());
+        $this->visible(fn(Refund $record) => $record->isAllowAgreeRefund());
 
 
-        $this->fillForm(fn(OrderRefund $record) : array => [
+        $this->fillForm(fn(Refund $record) : array => [
 
             'amount'         => $record->refund_amount->value(),
             'freight_amount' => $record->freight_amount->value(),

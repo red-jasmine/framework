@@ -13,12 +13,12 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class CaptchaTransformer implements TransformerInterface
 {
     /**
-     * @param  Data|CaptchaData  $data
-     * @param  Model|Captcha  $model
+     * @param  CaptchaData  $data
+     * @param  Captcha  $model
      *
-     * @return Model|null
+     * @return Captcha
      */
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : Captcha
     {
         $expTime = now()->addMinutes($data->expMinutes);
         // 存储数据

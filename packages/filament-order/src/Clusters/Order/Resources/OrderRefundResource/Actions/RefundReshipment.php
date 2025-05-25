@@ -10,7 +10,7 @@ use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCardKeyReshipmentCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 trait RefundReshipment
@@ -21,9 +21,9 @@ trait RefundReshipment
 
         $this->label(label: __('red-jasmine-order::refund.actions.reshipment'));
 
-        $this->visible(fn(OrderRefund $record) => $record->isAllowReshipment());
+        $this->visible(fn(Refund $record) => $record->isAllowReshipment());
 
-        $this->form(function (OrderRefund $record) {
+        $this->form(function (Refund $record) {
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
                 ShippingTypeEnum::CARD_KEY => $this->cardKeyForm($record),

@@ -11,18 +11,17 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class ArticleTransformer implements TransformerInterface
 {
     /**
-     * @param  Data|ArticleData  $data
-     * @param  Model|Article  $model
+     * @param  ArticleData  $data
+     * @param  Article  $model
      *
-     * @return Model|null
+     * @return Article
      */
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : Article
     {
         /**
          * @var Article $model
+         * @var ArticleData $data
          */
-        $model = $model ?? Article::make();
-
         $model->title                   = $data->title;
         $model->image                   = $data->image;
         $model->description             = $data->description;

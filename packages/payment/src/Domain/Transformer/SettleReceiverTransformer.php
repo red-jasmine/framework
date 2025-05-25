@@ -2,19 +2,22 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Domain\Data\SettleReceiverData;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\ValueObjects\SettleReceiverAccount;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class SettleReceiverTransformer implements TransformerInterface
 {
-    public function transform(Data|SettleReceiverData $data, Model|SettleReceiver|null $model = null) : ?SettleReceiver
+    /**
+     * @param  SettleReceiverData  $data
+     * @param  SettleReceiver  $model
+     *
+     * @return SettleReceiver
+     */
+    public function transform($data, $model) : SettleReceiver
     {
-        $model = $model ?? SettleReceiver::make();
+
 
         $model->system_merchant_app_id = $data->systemMerchantAppId;
         $model->receiver_type          = $data->receiverType;

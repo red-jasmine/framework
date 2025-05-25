@@ -11,7 +11,13 @@ use RedJasmine\User\Domain\Models\User;
 
 class UserTransformer implements TransformerInterface
 {
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    /**
+     * @param  UserBaseInfoData|UserData  $data
+     * @param  User  $model
+     *
+     * @return User
+     */
+    public function transform($data, $model) : User
     {
         /**
          * @var User $model

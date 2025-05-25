@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use Throwable;
 
 trait RefundReject
@@ -19,7 +19,7 @@ trait RefundReject
         $this->icon('heroicon-o-minus-circle');
         $this->color('danger');
 
-        $this->visible(fn(OrderRefund $record) => $record->isAllowReject());
+        $this->visible(fn(Refund $record) => $record->isAllowReject());
 
         $this->fillForm([
                             'reason' => ''

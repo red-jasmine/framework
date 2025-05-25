@@ -11,11 +11,11 @@ class CategoryTransformer implements TransformerInterface
 {
     /**
      * @param  BaseCategoryData  $data
-     * @param  Model|null|BaseCategoryModel  $model
+     * @param  BaseCategoryModel  $model
      *
-     * @return Model|null
+     * @return BaseCategoryModel
      */
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : BaseCategoryModel
     {
         /**
          * @var BaseCategoryModel $model
@@ -26,7 +26,7 @@ class CategoryTransformer implements TransformerInterface
         $model->name        = $data->name;
         $model->description = $data->description;
         $model->is_leaf     = $data->isLeaf;
-        $model->slug     = $data->slug;
+        $model->slug        = $data->slug;
         $model->is_show     = $data->isShow;
         $model->image       = $data->image;
         $model->icon        = $data->icon;

@@ -17,7 +17,7 @@ class AdminTransformer implements TransformerInterface
      *
      * @return Model|null
      */
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : Admin
     {
         /**
          * @var Admin $model

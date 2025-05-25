@@ -29,7 +29,7 @@ use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCreateCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 
 class OrderRefundResource extends Resource
 {
@@ -41,7 +41,7 @@ class OrderRefundResource extends Resource
 
     protected static ?string $createCommand = RefundCreateCommand::class;
 
-    protected static ?string $model = OrderRefund::class;
+    protected static ?string $model = Refund::class;
 
     public static string $translationNamespace = 'red-jasmine-order::refund';
 
@@ -117,7 +117,7 @@ class OrderRefundResource extends Resource
                    ])
             ,
             Section::make('退款')
-                   ->schema(function (OrderRefund $record) {
+                   ->schema(function (Refund $record) {
                        $schema     = [
                            TextEntry::make('refund_type')->useEnum(),
                            TextEntry::make('phase')->useEnum(),
@@ -165,7 +165,7 @@ class OrderRefundResource extends Resource
                        if (filled($components)) {
                            foreach ($components as $component) {
                                $schema[] = Livewire::make($component,
-                                   fn(OrderRefund $record) : array => [
+                                   fn(Refund $record) : array => [
                                        'orderId'    => $record->order_id,
                                        'entityType' => EntityTypeEnum::REFUND->value,
                                        'entityId'   => $record->id,

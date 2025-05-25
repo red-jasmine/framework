@@ -10,9 +10,15 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class ChannelAppTransformer implements TransformerInterface
 {
-    public function transform(Data|ChannelAppData $data, Model|ChannelApp|null $model = null) : ?ChannelApp
+    /**
+     * @param  ChannelAppData  $data
+     * @param  ChannelApp  $model
+     *
+     * @return ChannelApp
+     */
+    public function transform($data, $model) : ChannelApp
     {
-        $model                          = $model ?? ChannelApp::make();
+
         $model->owner                   = $data->owner;
         $model->channel_code            = $data->channelCode;
         $model->channel_app_id          = $data->channelAppId;

@@ -10,7 +10,7 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class LogisticsFreightTemplateStrategyTransformer implements TransformerInterface
 {
-    public function transform(Data $data, ?Model $model = null) : ?Model
+    public function transform($data, $model) : LogisticsFreightTemplateStrategy
     {
         /**
          * @var LogisticsFreightTemplateStrategyData $data
