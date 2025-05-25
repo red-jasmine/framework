@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 
-class OrderRefundExtension extends Model
+class RefundExtension extends Model
 {
     use HasDateTimeFormatter;
 

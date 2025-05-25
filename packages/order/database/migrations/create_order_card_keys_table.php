@@ -30,7 +30,7 @@ return new class extends Migration {
             $table->string('source_type')->nullable()->comment('来源类型');
             $table->string('source_id')->nullable()->comment('来源类型');
             $table->string('status')->nullable()->comment(OrderCardKeyStatusEnum::comments('状态'));
-            $this->operator();
+            $table->operator();
             $table->softDeletes();
             $table->comment('订单-卡密表');
 

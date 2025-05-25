@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Infrastructure\ReadRepositories\Mysql;
 
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 
@@ -11,7 +11,7 @@ class RefundReadRepository extends QueryBuilderReadRepository implements RefundR
     /**
      * @var $modelClass class-string
      */
-    protected static string $modelClass = OrderRefund::class;
+    protected static string $modelClass = Refund::class;
 
     public function allowedIncludes() : array
     {

@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,12 +18,17 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use Spatie\LaravelData\WithData;
 
+/**
+ * @property Money $cost_price
+ * @property Money $total_price
+ * @property Money $product_amount
+ */
 class OrderProduct extends Model
 {
 
@@ -46,34 +52,41 @@ class OrderProduct extends Model
 
 
     protected $casts = [
-        'order_product_type'      => ProductTypeEnum::class,
-        'shipping_type'           => ShippingTypeEnum::class,
-        'order_status'            => OrderStatusEnum::class,
-        'shipping_status'         => ShippingStatusEnum::class,
-        'payment_status'          => PaymentStatusEnum::class,
-        'refund_status'           => RefundStatusEnum::class,
-        'created_time'            => 'datetime',
-        'payment_time'            => 'datetime',
-        'close_time'              => 'datetime',
-        'shipping_time'           => 'datetime',
-        'collect_time'            => 'datetime',
-        'dispatch_time'           => 'datetime',
-        'signed_time'             => 'datetime',
-        'confirm_time'            => 'datetime',
-        'refund_time'             => 'datetime',
-        'rate_time'               => 'datetime',
-        'price'                   => MoneyOldCast::class.':'.'price,currency',
-        'cost_price'              => MoneyOldCast::class.':'.'cost_price,currency',
-        'cost_amount'             => MoneyOldCast::class.':'.'cost_amount,currency',
-        'tax_amount'              => MoneyOldCast::class.':'.'tax_amount,currency',
-        'product_amount'          => MoneyOldCast::class.':'.'product_amount,currency',
-        'payable_amount'          => MoneyOldCast::class.':'.'payable_amount,currency',
-        'payment_amount'          => MoneyOldCast::class.':'.'payment_amount,currency',
-        'refund_amount'           => MoneyOldCast::class.':'.'refund_amount,currency',
-        'discount_amount'         => MoneyOldCast::class.':'.'discount_amount,currency',
-        'commission_amount'       => MoneyOldCast::class.':'.'commission_amount,currency',
-        'divided_discount_amount' => MoneyOldCast::class.':'.'divided_discount_amount,currency',
-        'divided_payment_amount'  => MoneyOldCast::class.':'.'divided_payment_amount,currency',
+        'order_product_type' => ProductTypeEnum::class,
+        'shipping_type'      => ShippingTypeEnum::class,
+        'order_status'       => OrderStatusEnum::class,
+        'shipping_status'    => ShippingStatusEnum::class,
+        'payment_status'     => PaymentStatusEnum::class,
+        'refund_status'      => RefundStatusEnum::class,
+        'created_time'       => 'datetime',
+        'payment_time'       => 'datetime',
+        'close_time'         => 'datetime',
+        'shipping_time'      => 'datetime',
+        'collect_time'       => 'datetime',
+        'dispatch_time'      => 'datetime',
+        'signed_time'        => 'datetime',
+        'confirm_time'       => 'datetime',
+        'refund_time'        => 'datetime',
+        'rate_time'          => 'datetime',
+
+        'price'                      => MoneyCast::class.':currency,price,false',
+        'total_price'                => MoneyCast::class.':currency,total_price,true',
+        'discount_amount'            => MoneyCast::class.':currency,discount_amount,true',
+        'product_amount'             => MoneyCast::class.':currency,product_amount,true',
+        'divided_discount_amount'    => MoneyCast::class.':currency,divided_discount_amount,true',
+        'divided_freight_fee_amount' => MoneyCast::class.':currency,divided_freight_fee_amount,true',
+        'divided_product_amount'     => MoneyCast::class.':currency,divided_product_amount,true',
+        'tax_amount'                 => MoneyCast::class.':currency,tax_amount,true',
+        'payable_amount'             => MoneyCast::class.':currency,payable_amount,true',
+        'payment_amount'             => MoneyCast::class.':currency,payment_amount,true',
+        'refund_amount'              => MoneyCast::class.':currency,refund_amount,true',
+        'commission_amount'          => MoneyCast::class.':currency,commission_amount,true',
+        'platform_fee_amount'        => MoneyCast::class.':currency,platform_fee_amount,true',
+        'platform_subsidy_amount'    => MoneyCast::class.':currency,platform_subsidy_amount,true',
+        'receivable_amount'          => MoneyCast::class.':currency,receivable_amount,true',
+        'cost_price'                 => MoneyCast::class.':currency,cost_price,true',
+        'total_cost_price'           => MoneyCast::class.':currency,total_cost_price,true',
+
     ];
 
     protected $fillable = [
@@ -116,7 +129,7 @@ class OrderProduct extends Model
 
     public function refunds() : HasMany
     {
-        return $this->hasMany(OrderRefund::class, 'order_product_id', 'id');
+        return $this->hasMany(Refund::class, 'order_product_id', 'id');
     }
 
 

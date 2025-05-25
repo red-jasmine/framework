@@ -43,7 +43,7 @@ return new class extends Migration {
 
                 $table->string('message')->nullable()->comment('其他信息');
 
-                $this->operator();
+                $table->operator();
                 $table->comment('订单-支付单');
 
 

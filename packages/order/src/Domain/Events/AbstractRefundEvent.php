@@ -3,14 +3,14 @@
 namespace RedJasmine\Order\Domain\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 
 class AbstractRefundEvent
 {
 
     use Dispatchable;
 
-    public function __construct(public readonly OrderRefund $orderRefund)
+    public function __construct(public readonly Refund $orderRefund)
     {
     }
 

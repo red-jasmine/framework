@@ -34,7 +34,7 @@ return new class extends Migration {
             $table->string('tag')->nullable()->comment('标签');
             $table->json('extra')->nullable()->comment('扩展');
 
-            $this->operator();
+            $table->operator();
 
             $table->softDeletes();
             $table->comment('订单-地址表');

@@ -57,7 +57,7 @@ return new class extends Migration {
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
-            $this->operator();
+            $table->operator();
             $table->softDeletes();
             $table->index('order_no', 'idx_order');
             $table->index([ 'seller_id', 'seller_type', 'order_no' ], 'idx_seller');

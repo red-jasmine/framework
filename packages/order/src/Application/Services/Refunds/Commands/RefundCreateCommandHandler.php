@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
 use Exception;
 use RedJasmine\Order\Application\Services\Handlers\Refund\AbstractException;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use Throwable;
 
 class RefundCreateCommandHandler extends AbstractRefundCommandHandler
@@ -26,7 +26,7 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
             $order->products;
 
             $orderProduct = $order->products->where('id', $command->orderProductId)->first();
-            $orderRefund  = OrderRefund::make([
+            $orderRefund  = Refund::make([
                 'app_id'    => $order->app_id,
                 'seller_id' => $order->seller_id,
                 'buyer_id'  => $order->buyer_id,

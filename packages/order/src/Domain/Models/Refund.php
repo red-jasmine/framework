@@ -29,17 +29,16 @@ use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
-use RedJasmine\Order\Domain\Models\Extensions\OrderRefundExtension;
+use RedJasmine\Order\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 
-class OrderRefund extends Model
+class Refund extends Model
 {
 
 
@@ -62,7 +61,7 @@ class OrderRefund extends Model
 
     public $incrementing = false;
 
-    public function newInstance($attributes = [], $exists = false) : OrderRefund
+    public function newInstance($attributes = [], $exists = false) : Refund
     {
 
         $instance = parent::newInstance($attributes, $exists);
@@ -70,7 +69,7 @@ class OrderRefund extends Model
         if (!$instance->exists) {
             $instance->setUniqueIds();
             $instance->generateNo();
-            $extension     = OrderRefundExtension::make();
+            $extension     = $instance->extension()->newModelInstance();
             $extension->id = $instance->id;
             $instance->setRelation('extension', $extension);
         }
@@ -93,31 +92,22 @@ class OrderRefund extends Model
 
     public function extension() : HasOne
     {
-        return $this->hasOne(OrderRefundExtension::class, 'id', 'id');
+        return $this->hasOne(RefundExtension::class, 'id', 'id');
     }
 
 
-
     protected $casts = [
-        'order_product_type'     => ProductTypeEnum::class,
-        'shipping_type'          => ShippingTypeEnum::class,
-        'refund_type'            => RefundTypeEnum::class,
-        'refund_status'          => RefundStatusEnum::class,
-        'good_status'            => RefundGoodsStatusEnum::class,
-        'phase'                  => RefundPhaseEnum::class,
-        'has_good_return'        => 'boolean',
-        'end_time'               => 'datetime',
-        'images'                 => 'array',
-        'extra'                 => 'array',
-        'price'                  => MoneyOldCast::class.':'.'price,currency',
-        'cost_price'             => MoneyOldCast::class.':'.'cost_price,currency',
-        'product_amount'         => MoneyOldCast::class.':'.'product_amount,currency',
-        'payable_amount'         => MoneyOldCast::class.':'.'payable_amount,currency',
-        'payment_amount'         => MoneyOldCast::class.':'.'payment_amount,currency',
-        'divided_payment_amount' => MoneyOldCast::class.':'.'divided_payment_amount,currency',
-        'refund_amount'          => MoneyOldCast::class.':'.'refund_amount,currency',
-        'freight_amount'         => MoneyOldCast::class.':'.'freight_amount,currency',
-        'total_refund_amount'    => MoneyOldCast::class.':'.'total_refund_amount,currency',
+        'order_product_type' => ProductTypeEnum::class,
+        'shipping_type'      => ShippingTypeEnum::class,
+        'refund_type'        => RefundTypeEnum::class,
+        'refund_status'      => RefundStatusEnum::class,
+        'good_status'        => RefundGoodsStatusEnum::class,
+        'phase'              => RefundPhaseEnum::class,
+        'has_good_return'    => 'boolean',
+        'end_time'           => 'datetime',
+        'images'             => 'array',
+        'extra'              => 'array',
+
 
     ];
 

@@ -9,7 +9,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
-use RedJasmine\Order\Domain\Models\OrderRefund;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrderRefundService
@@ -17,12 +17,12 @@ class OrderRefundService
 
     /**
      * @param  Order  $order
-     * @param  OrderRefund  $orderRefund
+     * @param  Refund  $orderRefund
      *
-     * @return OrderRefund
+     * @return Refund
      * @throws RefundException
      */
-    public function create(Order $order, OrderRefund $orderRefund) : OrderRefund
+    public function create(Order $order, Refund $orderRefund) : Refund
     {
         /**
          * @var $orderProduct OrderProduct

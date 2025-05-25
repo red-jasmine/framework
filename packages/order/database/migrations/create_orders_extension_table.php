@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('orders_extension', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->text('seller_remarks')->nullable()->comment('卖家备注');
             $table->text('buyer_remarks')->nullable()->comment('买家备注');
+            $table->text('seller_remarks')->nullable()->comment('卖家备注');
             $table->string('seller_message')->nullable()->comment('卖家留言');
             $table->string('buyer_message')->nullable()->comment('买家留言');
             $table->json('seller_extra')->nullable()->comment('卖家扩展信息');

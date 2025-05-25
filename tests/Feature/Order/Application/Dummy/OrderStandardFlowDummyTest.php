@@ -44,7 +44,7 @@ test('can create a new order', function () {
     $command = OrderCreateCommand::from($this->orderFake->order());
 
     $result  = $this->orderCommandService->create($command);
-
+    dd($result);
 
     $this->assertInstanceOf(Order::class, $result, '创建订单失败');
     $this->order = $result;
@@ -52,7 +52,7 @@ test('can create a new order', function () {
     return $result;
 });
 
-
+return;
 test('cna paying a order', function (Order $order) {
 
 

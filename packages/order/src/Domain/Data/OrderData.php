@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Order\Domain\Data;
 
+use Cknow\Money\Money;
 use Illuminate\Support\Collection;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
@@ -15,9 +15,6 @@ class OrderData extends Data
 {
 
     public string $appId = 'system';
-
-
-    public string $currency = 'CNY';
 
     /**
      * 卖家
@@ -37,12 +34,6 @@ class OrderData extends Data
     public OrderTypeEnum $orderType;
 
     /**
-     * 发货类型
-     * @var ShippingTypeEnum
-     */
-    #[WithCast(EnumCast::class, type: ShippingTypeEnum::class)]
-    public ShippingTypeEnum $shippingType;
-    /**
      * 渠道
      * @var UserInterface|null
      */
@@ -58,38 +49,37 @@ class OrderData extends Data
      */
     public ?UserInterface $guide = null;
     /**
-     * 订单标题
-     * @var string
+     * 来源
+     * @var UserInterface|null
      */
-    public string $title;
+    public ?UserInterface $source = null;
 
 
-    public ?string $sourceType         = null;
-    public ?string $sourceId           = null;
+    public ?Money $freightAmount  = null;
+    public ?Money $discountAmount = null;
+    /**
+     * 商品集合
+     * @var array<OrderProductData>
+     */
+    public array $products;
+
+    public ?string $title              = null;
     public ?string $outerOrderId       = null;
     public ?string $sellerCustomStatus = null;
-    public ?string $contact            = null;
-    public ?string $password           = null;
     public ?string $sellerRemarks      = null;
     public ?string $sellerMessage      = null;
     public ?string $buyerRemarks       = null;
     public ?string $buyerMessage       = null;
-    public ?array  $sellerExtra       = null;
-    public ?array  $buyerExtra        = null;
-    public ?array  $otherExtra        = null;
+    public ?array  $sellerExtra        = null;
+    public ?array  $buyerExtra         = null;
+    public ?array  $otherExtra         = null;
     public ?array  $form               = null;
-    public ?array    $tools          = null;
-    public ?MoneyOld $freightAmount  = null;
-    public ?MoneyOld $discountAmount = null;
-    public ?string   $clientType     = null;
+    public ?array  $tools              = null;
+    public ?string $clientType         = null;
     public ?string $clientVersion      = null;
     public ?string $clientIp           = null;
 
-    /**
-     * 商品集合
-     * @var Collection<OrderProductData>
-     */
-    public Collection $products;
+
     /**
      * 地址
      * @var OrderAddressData|null
@@ -124,13 +114,6 @@ class OrderData extends Data
      * @var int
      */
     public int $rateWaitMaxTime = -1;
-
-
-    public function __construct()
-    {
-        $this->discountAmount = MoneyOld::make();
-        $this->freightAmount  = MoneyOld::make();
-    }
 
 
 }

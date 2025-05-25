@@ -2,9 +2,6 @@
 
 namespace RedJasmine\Order;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\Domain\Models\OrderRefund;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

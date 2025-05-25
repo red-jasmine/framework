@@ -5,7 +5,7 @@ namespace RedJasmine\Order\UI\Http\Buyer\Api\Resources;
 use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Order\Domain\Models\OrderRefund */
+/** @mixin \RedJasmine\Order\Domain\Models\Refund */
 class OrderRefundResource extends JsonResource
 {
     public function toArray(Request $request) : array

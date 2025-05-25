@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Events\OrderAcceptEvent;
@@ -41,9 +40,8 @@ use RedJasmine\Order\Domain\Models\Extensions\OrderExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
-use RedJasmine\Support\Casts\AesEncrypted;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -145,40 +143,48 @@ class Order extends Model implements OperatorInterface
     public function casts() : array
     {
         return [
-            'order_type'             => OrderTypeEnum::class,
-            'shipping_type'          => ShippingTypeEnum::class,
-            'order_status'           => OrderStatusEnum::class,
-            'accept_status'          => AcceptStatusEnum::class,
-            'payment_status'         => PaymentStatusEnum::class,
-            'shipping_status'        => ShippingStatusEnum::class,
-            'created_time'           => 'datetime',
-            'payment_time'           => 'datetime',
-            'accept_time'            => 'datetime',
-            'close_time'             => 'datetime',
-            'shipping_time'          => 'datetime',
-            'collect_time'           => 'datetime',
-            'dispatch_time'          => 'datetime',
-            'signed_time'            => 'datetime',
-            'confirm_time'           => 'datetime',
-            'refund_time'            => 'datetime',
-            'rate_time'              => 'datetime',
-            'contact'                => AesEncrypted::class,
-            'is_seller_delete'       => 'boolean',
-            'is_buyer_delete'        => 'boolean',
-            'freight_amount'         => MoneyOldCast::class.':'.'freight_amount,currency',
-            'discount_amount'        => MoneyOldCast::class.':'.'discount_amount,currency',
-            'product_payable_amount' => MoneyOldCast::class.':'.'product_payable_amount,currency',
-            'payable_amount'         => MoneyOldCast::class.':'.'payable_amount,currency',
-            'payment_amount'         => MoneyOldCast::class.':'.'payment_amount,currency',
-            'refund_amount'          => MoneyOldCast::class.':'.'refund_amount,currency',
-            'commission_amount'      => MoneyOldCast::class.':'.'commission_amount,currency',
-            'cost_amount'            => MoneyOldCast::class.':'.'cost_amount,currency',
-            'tax_amount'             => MoneyOldCast::class.':'.'tax_amount,currency',
-            'product_amount'         => MoneyOldCast::class.':'.'product_amount,currency',
+            'order_type'       => OrderTypeEnum::class,
+            'shipping_type'    => ShippingTypeEnum::class,
+            'order_status'     => OrderStatusEnum::class,
+            'accept_status'    => AcceptStatusEnum::class,
+            'payment_status'   => PaymentStatusEnum::class,
+            'shipping_status'  => ShippingStatusEnum::class,
+            'created_time'     => 'datetime',
+            'payment_time'     => 'datetime',
+            'accept_time'      => 'datetime',
+            'close_time'       => 'datetime',
+            'shipping_time'    => 'datetime',
+            'collect_time'     => 'datetime',
+            'dispatch_time'    => 'datetime',
+            'signed_time'      => 'datetime',
+            'confirm_time'     => 'datetime',
+            'refund_time'      => 'datetime',
+            'rate_time'        => 'datetime',
+            'is_seller_delete' => 'boolean',
+            'is_buyer_delete'  => 'boolean',
+            'guide'            => UserInterfaceCast::class,
+            'store'            => UserInterfaceCast::class,
+            'channel'          => UserInterfaceCast::class,
+
+
+            'total_product_amount'          => MoneyCast::class.':currency,total_product_amount,false',
+            'total_tax_amount'              => MoneyCast::class.':currency,total_tax_amount,true',
+            'discount_amount'               => MoneyCast::class.':currency,discount_amount,true',
+            'freight_fee_amount'            => MoneyCast::class.':currency,freight_fee_amount,true',
+            'payable_amount'                => MoneyCast::class.':currency,payable_amount,true',
+            'payment_amount'                => MoneyCast::class.':currency,payment_amount,true',
+            'refund_amount'                 => MoneyCast::class.':currency,refund_amount,true',
+            'receivable_amount'             => MoneyCast::class.':currency,receivable_amount,true',
+            'received_amount'               => MoneyCast::class.':currency,received_amount,true',
+            'total_commission_amount'       => MoneyCast::class.':currency,total_commission_amount,true',
+            'total_platform_fee_amount'     => MoneyCast::class.':currency,total_platform_fee_amount,true',
+            'total_platform_subsidy_amount' => MoneyCast::class.':currency,total_platform_subsidy_amount,true',
+            'total_product_price'           => MoneyCast::class.':currency,total_product_price,true',
+            'total_product_discount_amount' => MoneyCast::class.':currency,total_product_discount_amount,true',
+            'total_total_cost_price'        => MoneyCast::class.':currency,total_total_cost_price,true',
+
         ];
     }
-
-
 
 
     public function extension() : HasOne
@@ -205,48 +211,6 @@ class Order extends Model implements OperatorInterface
     public function payments() : HasMany
     {
         return $this->hasMany(OrderPayment::class, 'order_no', 'order_no');
-    }
-
-
-    public function guide() : MorphTo
-    {
-        return $this->morphTo('guide', 'guide_type', 'guide_id');
-    }
-
-
-    public function setGuideAttribute(?UserInterface $user) : static
-    {
-        $this->setAttribute('guide_type', $user?->getType());
-        $this->setAttribute('guide_id', $user?->getID());
-        $this->setAttribute('guide_name', $user?->getNickname());
-
-        return $this;
-    }
-
-    public function store() : MorphTo
-    {
-        return $this->morphTo('store', 'store_type', 'store_id');
-    }
-
-    public function setStoreAttribute(?UserInterface $user) : static
-    {
-        $this->setAttribute('store_type', $user?->getType());
-        $this->setAttribute('store_id', $user?->getID());
-        $this->setAttribute('store_name', $user?->getNickname());
-        return $this;
-    }
-
-    public function channel() : MorphTo
-    {
-        return $this->morphTo('channel', 'channel_type', 'channel_id');
-    }
-
-    public function setChannelAttribute(?UserInterface $user) : static
-    {
-        $this->setAttribute('channel_type', $user?->getType());
-        $this->setAttribute('channel_id', $user?->getID());
-        $this->setAttribute('channel_name', $user?->getNickname());
-        return $this;
     }
 
     public function addProduct(OrderProduct $orderProduct) : static
@@ -595,16 +559,16 @@ class Order extends Model implements OperatorInterface
 
     public function refunds() : HasMany
     {
-        return $this->hasMany(OrderRefund::class, 'order_no', 'order_no');
+        return $this->hasMany(Refund::class, 'order_no', 'order_no');
     }
 
     /**
-     * @param  OrderRefund  $orderRefund
+     * @param  Refund  $orderRefund
      *
-     * @return OrderRefund
+     * @return Refund
      * @throws RefundException
      */
-    public function createRefund(OrderRefund $orderRefund) : OrderRefund
+    public function createRefund(Refund $orderRefund) : Refund
     {
         return app(OrderRefundService::class)->create($this, $orderRefund);
     }
@@ -626,10 +590,13 @@ class Order extends Model implements OperatorInterface
     {
         // 统计商品金额
         $this->calculateProductsAmount();
-        // 汇总订单金额
+        //  汇总订单金额
         $this->calculateOrderAmount();
-        // 分摊订单数据
+
+        // 分摊运费 、 分摊优惠
         $this->calculateDivideDiscountAmount();
+        //  计算税费
+
         return $this;
     }
 
@@ -640,28 +607,17 @@ class Order extends Model implements OperatorInterface
     protected function calculateProductsAmount() : void
     {
         foreach ($this->products as $product) {
-            // 成本金额
-            $product->cost_amount = bcmul($product->quantity, $product->cost_price, 2);
 
-            // 商品总金额   < 0 TODO 验证金额
-            $product->product_amount = bcmul($product->quantity, $product->price, 2);
-            // 计算税费
-            $product->tax_amount;
+            // 成本金额
+            $product->total_cost_price = $product->cost_price?->multiply($product->quantity);
+            // 总价
+            $product->total_price = $product->price->multiply($product->quantity);
             // 单品优惠
             $product->discount_amount;
 
+            // 商品总金额   < 0
+            $product->product_amount = $product->total_price->subtract($product->discount_amount);
 
-            // 实付金额 完成支付时
-            $product->payment_amount = $product->payment_amount ?? 0;
-            // 佣金
-            $product->commission_amount = $product->commission_amount ?? 0;
-
-            // 单商品应付金额  = 商品金额 - 单品优惠 + 税费
-            $product->payable_amount = bcsub(
-                bcadd($product->product_amount
-
-                    , $product->tax_amount, 2), $product->discount_amount, 2
-            );
         }
     }
 

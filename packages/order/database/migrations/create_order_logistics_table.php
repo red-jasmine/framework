@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->timestamp('signed_time')->nullable()->comment('签收时间');
             // 收件码
             // 取件码
-            $this->operator();
+            $table->operator();
             $table->softDeletes();
             $table->comment('订单-物流表');
 
