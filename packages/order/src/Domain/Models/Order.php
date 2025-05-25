@@ -4,6 +4,7 @@
 namespace RedJasmine\Order\Domain\Models;
 
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -71,7 +72,9 @@ class Order extends Model implements OperatorInterface
     protected $fillable = [
         'app_id',
         'buyer_id',
-        'seller_id'
+        'seller_id',
+        'seller',
+        'buyer',
     ];
 
     protected $dispatchesEvents = [
@@ -128,46 +131,38 @@ class Order extends Model implements OperatorInterface
 
     protected function generateNo() : void
     {
-        if (!$this->order_no && isset($this->app_id)) {
-            $this->order_no = app(OrderNoGenerator::class)->generator(
-                [
-                    'app_id'    => $this->app_id,
-                    'seller_id' => $this->seller_id,
-                    'buyer_id'  => $this->buyer_id,
-                ]
-            );
+        if (!$this->order_no) {
+            $this->order_no = app(OrderNoGenerator::class)->generator($this);
         }
-
     }
 
     public function casts() : array
     {
         return [
-            'order_type'       => OrderTypeEnum::class,
-            'shipping_type'    => ShippingTypeEnum::class,
-            'order_status'     => OrderStatusEnum::class,
-            'accept_status'    => AcceptStatusEnum::class,
-            'payment_status'   => PaymentStatusEnum::class,
-            'shipping_status'  => ShippingStatusEnum::class,
-            'created_time'     => 'datetime',
-            'payment_time'     => 'datetime',
-            'accept_time'      => 'datetime',
-            'close_time'       => 'datetime',
-            'shipping_time'    => 'datetime',
-            'collect_time'     => 'datetime',
-            'dispatch_time'    => 'datetime',
-            'signed_time'      => 'datetime',
-            'confirm_time'     => 'datetime',
-            'refund_time'      => 'datetime',
-            'rate_time'        => 'datetime',
-            'is_seller_delete' => 'boolean',
-            'is_buyer_delete'  => 'boolean',
-            'guide'            => UserInterfaceCast::class,
-            'store'            => UserInterfaceCast::class,
-            'channel'          => UserInterfaceCast::class,
-
-
-            'total_product_amount'          => MoneyCast::class.':currency,total_product_amount,false',
+            'order_type'                    => OrderTypeEnum::class,
+            'shipping_type'                 => ShippingTypeEnum::class,
+            'order_status'                  => OrderStatusEnum::class,
+            'accept_status'                 => AcceptStatusEnum::class,
+            'payment_status'                => PaymentStatusEnum::class,
+            'shipping_status'               => ShippingStatusEnum::class,
+            'created_time'                  => 'datetime',
+            'payment_time'                  => 'datetime',
+            'accept_time'                   => 'datetime',
+            'close_time'                    => 'datetime',
+            'shipping_time'                 => 'datetime',
+            'collect_time'                  => 'datetime',
+            'dispatch_time'                 => 'datetime',
+            'signed_time'                   => 'datetime',
+            'confirm_time'                  => 'datetime',
+            'refund_time'                   => 'datetime',
+            'rate_time'                     => 'datetime',
+            'is_seller_delete'              => 'boolean',
+            'is_buyer_delete'               => 'boolean',
+            'guide'                         => UserInterfaceCast::class,
+            'store'                         => UserInterfaceCast::class,
+            'channel'                       => UserInterfaceCast::class,
+            'source'                        => UserInterfaceCast::class,
+            'total_product_amount'          => MoneyCast::class.':currency,total_product_amount',
             'total_tax_amount'              => MoneyCast::class.':currency,total_tax_amount,true',
             'discount_amount'               => MoneyCast::class.':currency,discount_amount,true',
             'freight_fee_amount'            => MoneyCast::class.':currency,freight_fee_amount,true',
@@ -179,9 +174,9 @@ class Order extends Model implements OperatorInterface
             'total_commission_amount'       => MoneyCast::class.':currency,total_commission_amount,true',
             'total_platform_fee_amount'     => MoneyCast::class.':currency,total_platform_fee_amount,true',
             'total_platform_subsidy_amount' => MoneyCast::class.':currency,total_platform_subsidy_amount,true',
-            'total_product_price'           => MoneyCast::class.':currency,total_product_price,true',
+            'total_price'                   => MoneyCast::class.':currency,total_price,true',
             'total_product_discount_amount' => MoneyCast::class.':currency,total_product_discount_amount,true',
-            'total_total_cost_price'        => MoneyCast::class.':currency,total_total_cost_price,true',
+            'total_cost_price'              => MoneyCast::class.':currency,total_cost_price,true',
 
         ];
     }
@@ -216,7 +211,6 @@ class Order extends Model implements OperatorInterface
     public function addProduct(OrderProduct $orderProduct) : static
     {
         $orderProduct->app_id         = $this->app_id;
-        $orderProduct->shipping_type  = $this->shipping_type;
         $orderProduct->order_no       = $this->order_no;
         $orderProduct->buyer          = $this->buyer;
         $orderProduct->seller         = $this->seller;
@@ -590,13 +584,13 @@ class Order extends Model implements OperatorInterface
     {
         // 统计商品金额
         $this->calculateProductsAmount();
-        //  汇总订单金额
-        $this->calculateOrderAmount();
-
         // 分摊运费 、 分摊优惠
         $this->calculateDivideDiscountAmount();
-        //  计算税费
 
+        //  计算税费
+        $this->calculateTaxAmount();
+        //  汇总订单金额
+        $this->calculateOrderAmount();
         return $this;
     }
 
@@ -623,46 +617,62 @@ class Order extends Model implements OperatorInterface
 
     protected function calculateOrderAmount() : void
     {
+        $order = $this;
+        // 邮费
 
-        // 商品统计
-
-        // 商品金额
-        $this->product_amount = $this->products->reduce(function ($sum, $product) {
-            return bcadd($sum, $product->product_amount, 2);
-        }, 0);
-
-        // 商品成本
-        $this->cost_amount = $this->products->reduce(function ($sum, $product) {
-            return bcadd($sum, $product->cost_amount, 2);
-        }, 0);
-        // 商品总税费
-        $this->tax_amount = $this->products->reduce(function ($sum, $product) {
-            return bcadd($sum, $product->tax_amount, 2);
-        }, 0);
-        // 商品总佣金
-        $this->commission_amount = $this->products->reduce(function ($sum, $product) {
-            return bcadd($sum, $product->commission_amount, 2);
-        }, 0);
-
+        // 订单优惠
+        $order->discount_amount;
 
         // | ------------------------------------------------
-
-        // 商品应付汇总
-        $this->product_payable_amount = $this->products->reduce(function ($sum, $product) {
-            return bcadd($sum, $product->payable_amount, 2);
-        }, 0);
-        // 邮费
-        $this->freight_amount;
-        // 订单优惠
-        $this->discount_amount;
+        $order->total_product_amount = Money::sum(...$order->products->pluck('product_amount'));
+        $order->total_tax_amount     = Money::sum(...$order->products->pluck('tax_amount'));
+        $order->freight_fee_amount   = $order->freight_fee_amount ?? $order->total_tax_amount->subtract($order->total_tax_amount);
+        $order->payable_amount       = Money::sum($order->total_product_amount, $order->freight_fee_amount)
+                                            ->subtract($order->discount_amount)
+                                            ->add($order->total_tax_amount);
 
 
-        // 订单应付金额 = 商品总应付金额 + 邮费  - 优惠
-        $this->payable_amount = bcsub(
-            bcadd($this->product_payable_amount, $this->freight_amount, 2),
-            $this->discount_amount,
-            2
-        );
+        // 小计项目
+
+        $order->total_product_discount_amount = Money::sum(...$order->products->pluck('discount_amount'));
+        $order->total_price                   = Money::sum(...$order->products->pluck('price'));
+        $order->total_cost_price              = Money::sum(...$order->products->pluck('total_cost_price'));
+
+
+    }
+
+
+    public static function divided(Money $amount, array $proportions = []) : array
+    {
+        if (empty($proportions)) {
+            return [];  // 如果没有比例数组，直接返回全部金额
+        }
+
+        arsort($proportions);
+
+        // 计算比例的总和
+        $totalProportion = array_sum($proportions);
+
+
+        $result = [];
+        if ($totalProportion <= 0) {
+            foreach ($proportions as $index => $proportion) {
+                $result[$index] = $amount->subtract($amount);
+            }
+            return $result;
+        }
+
+        $indexCount = 0;
+        foreach ($proportions as $index => $proportion) {
+            if ($indexCount + 1 === count($proportions)) {
+                // 最后一个
+                $result[$index] = $amount->subtract(...$result);
+            } else {
+                $result[$index] = $amount->multiply(bcdiv($proportion, $totalProportion, 6), \Money\Money::ROUND_HALF_DOWN);
+
+            }
+        }
+        return $result;
 
     }
 
@@ -673,38 +683,40 @@ class Order extends Model implements OperatorInterface
     protected function calculateDivideDiscountAmount() : void
     {
         $order = $this;
+
+
+        // 获取商品分摊 比例
+        $proportions = $order->products->pluck('product_amount', 'id')->map(function ($productAmount) {
+            return (int) $productAmount->getAmount();
+        })->toArray();
+
         $order->discount_amount;
+        // 分摊订单优惠
+        $discounts  = static::divided($order->discount_amount, $proportions);
+        $freightFee = static::divided($order->freight_fee_amount, $proportions);
+        foreach ($order->products as $product) {
+            $product->divided_discount_amount    = $discounts[$product->id];
+            $product->divided_freight_fee_amount = $freightFee[$product->id];
+        }
+    }
 
-        // 对商品进行排序 从小到大
-        $products     = $order->products->sortBy('product_amount')->values();
-        $productCount = count($products);
-        // 剩余优惠金额
-        $discountAmountSurplus = $this->discount_amount;
-        /**
-         * @var $product OrderProduct
-         */
-        foreach ($products as $key => $product) {
+    protected function calculateTaxAmount()
+    {
+        $order = $this;
 
-            $product->divided_discount_amount = 0;
-            if ($key === $productCount - 1) {
-                // 最后一个子商品单  分摊优惠  = 剩余优惠
-                $product->divided_discount_amount = $discountAmountSurplus;
-            } else {
-                if (bccomp($product->payable_amount, 0, 2) !== 0) {
-                    $product->divided_discount_amount = bcmul($this->discount_amount,
-                        bcdiv($product->payable_amount, $this->product_payable_amount, 4), 2);
-                } else {
-                    $product->divided_discount_amount = 0;
-                }
-            }
-            $discountAmountSurplus           = bcsub($discountAmountSurplus, $product->divided_discount_amount, 2);
-            $product->divided_payment_amount = bcsub($product->payable_amount, $product->divided_discount_amount, 2);
-
+        // 计算商品 分摊后商品金额
+        foreach ($order->products as $product) {
+            $product->divided_product_amount = Money::sum(
+                $product->product_amount,
+                $product->divided_discount_amount,
+                $product->divided_freight_fee_amount,
+            );
+            $product->tax_amount             = $product->divided_product_amount->multiply(bcdiv($product->tax_rate, 100, 8));
+            $product->payable_amount         = Money::sum($product->divided_product_amount, $product->tax_amount);
         }
 
 
     }
-
 
     public function isAllowShipping() : bool
     {
@@ -848,7 +860,7 @@ class Order extends Model implements OperatorInterface
 
     public function isRefundFreightAmount() : bool
     {
-        $excludeFreightAmount = bcsub($this->payment_amount, $this->freight_amount, 2);
+        $excludeFreightAmount = bcsub($this->payment_amount, $this->freight_fee_amount, 2);
         if (bcsub($this->refund_amount, $excludeFreightAmount, 2) >= 0) {
             return true;
         }

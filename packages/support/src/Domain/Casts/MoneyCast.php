@@ -21,7 +21,9 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
     protected string $valueSuffix          = 'amount';
     protected string $currencySuffix       = 'currency';
-    protected bool   $isShareCurrencyField = false;
+    protected        $isShareCurrencyField = false;
+
+    protected $args;
 
     protected function getValueKey(string $key)
     {
@@ -33,12 +35,12 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         return $this->currencyKey ?? $key.'_'.$this->currencySuffix;
     }
 
-    public function __construct(...$args)
+    public function __construct($currencyKey = null, $valueKey = null, string $isShareCurrencyField = null)
     {
 
-        $this->valueKey             = $args[0] ?? null;
-        $this->currencyKey          = $args[1] ?? null;
-        $this->isShareCurrencyField = (boolean) ($args[2] ?? false);
+        $this->valueKey             = $valueKey ?? null;
+        $this->currencyKey          = $currencyKey ?? null;
+        $this->isShareCurrencyField = filter_var($isShareCurrencyField, FILTER_VALIDATE_BOOLEAN);
 
 
     }
@@ -62,6 +64,7 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
     public function set(Model $model, string $key, mixed $value, array $attributes) : ?array
     {
+
         $key = Str::snake($key);
         if (blank($value)) {
             if ($this->isShareCurrencyField) {

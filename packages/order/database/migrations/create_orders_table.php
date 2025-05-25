@@ -57,7 +57,7 @@ return new class extends Migration {
 
 
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
-            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+            //$table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
@@ -88,8 +88,8 @@ return new class extends Migration {
             $table->bigInteger('total_platform_subsidy_amount')->default(0)->comment('平台补贴');
 
             // 小计
-            $table->bigInteger('total_total_price')->default(0)->comment('总商品总价');
-            $table->bigInteger('total_total_cost_price')->default(0)->comment('总商品成本总价');
+            $table->bigInteger('total_price')->default(0)->comment('总商品总价');
+            $table->bigInteger('total_cost_price')->default(0)->comment('总商品成本总价');
             $table->bigInteger('total_product_discount_amount')->default(0)->comment('总商品优惠');
 
             // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等 分钟

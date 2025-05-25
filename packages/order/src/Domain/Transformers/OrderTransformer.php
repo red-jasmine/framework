@@ -22,7 +22,6 @@ class OrderTransformer implements TransformerInterface
     public function transform($data, $order) : Order
     {
 
-
         $order->app_id                    = $data->appId;
         $order->seller                    = $data->seller;
         $order->buyer                     = $data->buyer;
@@ -58,6 +57,7 @@ class OrderTransformer implements TransformerInterface
         // 转换商品项实体
 
         foreach ($data->products as $productData) {
+
             $order->addProduct($this->transformProduct($productData));
         }
 

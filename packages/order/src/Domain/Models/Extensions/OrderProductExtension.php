@@ -15,6 +15,7 @@ class OrderProductExtension extends Model
 
     public $incrementing = false;
 
+    protected $table = 'order_products_extension';
 
     protected $casts = [
         'after_sales_services' => 'array',

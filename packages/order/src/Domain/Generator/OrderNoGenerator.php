@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Order\Domain\Generator;
 
-use RedJasmine\Support\Domain\Generator\UniqueIdGeneratorInterface;
+use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 
-class OrderNoGenerator implements UniqueIdGeneratorInterface
+class OrderNoGenerator implements OrderNoGeneratorInterface
 {
 
 
@@ -15,20 +15,20 @@ class OrderNoGenerator implements UniqueIdGeneratorInterface
     }
 
     /**
-     * @param  array{app_id:string,seller_id:int,buyer_id:int}  $factors
+     * @param  Order  $order
      *
      * @return string
      */
-    public function generator(array $factors = []) : string
+    public function generator(Order $order) : string
     {
         // 14位时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID
 
         return implode('', [
             DatetimeIdGenerator::buildId(),
             $this->getBusinessCode(),
-            $this->remainder($factors['app_id']),
-            $this->remainder($factors['seller_id']),
-            $this->remainder($factors['buyer_id']),
+            $this->remainder($order->app_id),
+            $this->remainder($order->seller_id),
+            $this->remainder($order->buyer_id),
         ]);
     }
 
