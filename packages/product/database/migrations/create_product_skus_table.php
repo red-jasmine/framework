@@ -18,11 +18,11 @@ return new class extends Migration {
 
             // 价格
             $table->string('price_currency', 3)->default('CNY')->comment('货币');
-            $table->bigInteger('price_amount')->default(0)->comment('销售价');
+            $table->decimal('price_amount',12)->default(0)->comment('销售价');
             $table->string('market_price_currency', 3)->nullable()->comment('货币');
-            $table->bigInteger('market_price_amount')->nullable()->comment('市场价');
+            $table->decimal('market_price_amount',12)->nullable()->comment('市场价');
             $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');
-            $table->bigInteger('cost_price_amount')->nullable()->comment('成本价');
+            $table->decimal('cost_price_amount',12)->nullable()->comment('成本价');
 
             // 库存
             $table->bigInteger('stock')->default(0)->comment('库存');

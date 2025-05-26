@@ -402,9 +402,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     }
 
-
-    public function freightTemplate() : HasOne
+    public function freightTemplate() : BelongsTo
     {
-        return $this->hasOne(LogisticsFreightTemplate::class , 'freight_template_id', 'id');
+        return $this->belongsTo(LogisticsFreightTemplate::class, 'freight_template_id', 'id');
     }
+
 }
