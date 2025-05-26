@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,7 +36,6 @@ use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 
 class Refund extends Model
@@ -255,12 +255,12 @@ class Refund extends Model
     /**
      * 同意退款
      *
-     * @param  MoneyOld|null  $amount
+     * @param  Money|null  $amount
      *
      * @return void
      * @throws RefundException
      */
-    public function agreeRefund(?MoneyOld $amount = null) : void
+    public function agreeRefund(?Money $amount = null) : void
     {
         if (!$this->isAllowAgreeRefund()) {
             throw new RefundException();

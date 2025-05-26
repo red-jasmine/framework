@@ -2,12 +2,10 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Support\Data\Data;
-
-class OrderCancelCommand extends Data
+class OrderCancelCommand extends AbstractOrderCommand
 {
 
-    public int     $id;
+
     public ?string $cancelReason = null;
 
 

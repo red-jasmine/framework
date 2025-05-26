@@ -12,21 +12,22 @@ class OrderPayingCommandHandler extends AbstractOrderCommandHandler
 
     public function handle(OrderPayingCommand $command) : OrderPayment
     {
-
+        $this->context->setCommand($command);
 
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $orderPayment                 = OrderPayment::make();
+
             $orderPayment->payment_amount = $command->amount ?? $order->payable_amount;
             $orderPayment->amount_type    = $command->amountType;
 
             $order->paying($orderPayment);
 
-
             $this->service->repository->store($order);
+
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

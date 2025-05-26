@@ -16,7 +16,8 @@ class OrderRepository extends EloquentRepository implements OrderRepositoryInter
 
     public function findByNo(string $no) : Order
     {
-        return static::$eloquentModelClass::where('order_no')->firstOrFail();
+
+        return static::$eloquentModelClass::where('order_no', $no)->firstOrFail();
 
     }
 

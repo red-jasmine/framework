@@ -2,9 +2,11 @@
 
 namespace RedJasmine\Order\Domain\Data;
 
+use Cknow\Money\Money;
+
 class OrderPaymentData
 {
-    public string  $amount;
+    public Money   $amount;
     public string  $paymentType;
     public int     $paymentId;
     public ?string $paymentTime;

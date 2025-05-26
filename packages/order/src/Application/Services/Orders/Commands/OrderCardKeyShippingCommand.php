@@ -6,7 +6,10 @@ use RedJasmine\Order\Domain\Data\CardKeyData;
 
 class OrderCardKeyShippingCommand extends CardKeyData
 {
-    public int $id;
+
+
+    public ?string $orderNo;
+    public ?int    $id;
 
     public int $orderProductId;
 
