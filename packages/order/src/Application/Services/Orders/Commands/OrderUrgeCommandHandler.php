@@ -18,7 +18,7 @@ class OrderUrgeCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $order->urge();
 

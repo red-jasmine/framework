@@ -4,9 +4,9 @@ namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Support\Data\Data;
 
-class OrderDummyShippingCommand extends Data
+class OrderDummyShippingCommand extends AbstractOrderCommand
 {
-    public int $id;
+
 
     /**
      * 部分订单商品 集合

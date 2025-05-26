@@ -42,7 +42,7 @@ return new class extends Migration {
             $table->string('client_version', 32)->nullable()->comment('客户端版本');
             $table->string('client_ip', 32)->nullable()->comment('IP');
 
-            //$table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             // 状态
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));

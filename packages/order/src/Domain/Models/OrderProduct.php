@@ -160,7 +160,7 @@ class OrderProduct extends Model
     public function isEffective() : bool
     {
         // 没有全款退
-        if (bcsub($this->divided_payment_amount, $this->refund_amount, 2) <= 0) {
+        if ($this->payment_amount->subtract($this->refund_amount)->isZero() || $this->payment_amount->subtract($this->refund_amount)->isNegative()) {
             return false;
         }
         return true;

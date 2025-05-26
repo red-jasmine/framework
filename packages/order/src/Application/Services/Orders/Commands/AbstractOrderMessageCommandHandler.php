@@ -36,7 +36,7 @@ abstract class AbstractOrderMessageCommandHandler extends AbstractOrderCommandHa
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $order->message($this->tradeParty, $command->message, $command->orderProductId, $command->isAppend);
 

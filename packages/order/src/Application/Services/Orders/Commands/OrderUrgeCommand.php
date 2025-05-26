@@ -4,8 +4,8 @@ namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Support\Data\Data;
 
-class OrderUrgeCommand extends Data
+class OrderUrgeCommand extends AbstractOrderCommand
 {
-    public int $id;
+
 
 }

@@ -44,9 +44,9 @@ class OrderStandardFlow implements OrderFlowInterface
         });
 
         // 为自定接受
-        if ($order->accept_wait_max_time === 0) {
+        if ($order->accept_timeout <= 0) {
             $order->accept();
-        }else{
+        } else {
             // 设置最大自动接单时间
         }
 
@@ -55,7 +55,9 @@ class OrderStandardFlow implements OrderFlowInterface
 
     /**
      * 接单操作
-     * @param Order $order
+     *
+     * @param  Order  $order
+     *
      * @return void
      */
     public function accept(Order $order) : void
@@ -104,7 +106,7 @@ class OrderStandardFlow implements OrderFlowInterface
     /**
      * 订单确认
      *
-     * @param Order $order
+     * @param  Order  $order
      *
      * @return void
      */

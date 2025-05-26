@@ -7,10 +7,10 @@ use RedJasmine\Support\Data\Data;
 /**
  *  拒单
  */
-class OrderRejectCommand extends Data
+class OrderRejectCommand extends AbstractOrderCommand
 {
 
-    public int $id;
+
 
     public ?string $reason = null;
 

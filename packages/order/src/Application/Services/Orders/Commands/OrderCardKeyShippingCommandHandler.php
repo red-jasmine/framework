@@ -16,7 +16,7 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $orderProductCardKey                   = OrderCardKey::make();
             $orderProductCardKey->order_product_id = $command->orderProductId;

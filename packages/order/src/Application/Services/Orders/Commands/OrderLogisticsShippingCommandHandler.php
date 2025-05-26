@@ -17,7 +17,7 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order          = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
             $orderLogistics = OrderLogistics::make();
 
             $orderLogistics->shipper                = LogisticsShipperEnum::SELLER;

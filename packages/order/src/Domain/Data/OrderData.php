@@ -3,11 +3,10 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use Cknow\Money\Money;
-use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
@@ -32,7 +31,12 @@ class OrderData extends Data
      */
     #[WithCast(EnumCast::class, type: OrderTypeEnum::class)]
     public OrderTypeEnum $orderType;
-
+    /**
+     * 发货类型
+     * @var ShippingTypeEnum
+     */
+    #[WithCast(EnumCast::class, type: ShippingTypeEnum::class)]
+    public ShippingTypeEnum $shippingType;
     /**
      * 渠道
      * @var UserInterface|null
@@ -91,12 +95,11 @@ class OrderData extends Data
     /**
      * @var int
      */
-
     public int $paymentTimeout = -1;
 
-    public int $acceptTimeout = -1;
+    public int $acceptTimeout = 0; // 0 自动接单
 
-    public int $confirmTimeout = -1;
+    public int $confirmTimeout = -1; // -1 不指定确认 、 0 自动确认 > 0 超过某个时间后自动确认
 
     public int $rateTimeout = -1;
 

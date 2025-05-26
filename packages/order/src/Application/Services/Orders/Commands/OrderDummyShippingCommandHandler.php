@@ -31,7 +31,7 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
         try {
             // 订单状态必须在发货中 或者
             // TODO 判断订单状态
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $order->products;
 

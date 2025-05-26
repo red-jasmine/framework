@@ -30,6 +30,7 @@ class OrderTransformer implements TransformerInterface
         $order->store                     = $data->store;
         $order->title                     = $data->title;
         $order->order_type                = $data->orderType;
+        $order->shipping_type             = $data->shippingType;
         $order->source                    = $data->source;
         $order->seller_custom_status      = $data->sellerCustomStatus;
         $order->freight_fee_amount        = $data->freightAmount;

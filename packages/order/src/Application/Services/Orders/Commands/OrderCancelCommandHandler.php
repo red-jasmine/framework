@@ -23,7 +23,7 @@ class OrderCancelCommandHandler extends AbstractOrderCommandHandler
 
         try {
 
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
             $order->cancel($command->cancelReason);
             $this->service->repository->update($order);
 

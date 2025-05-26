@@ -7,7 +7,8 @@ use RedJasmine\Order\Domain\Data\LogisticsData;
 class OrderLogisticsShippingCommand extends LogisticsData
 {
 
-    public int $id;
+    public ?string $orderNo;
+    public ?int    $id;
     /**
      * 是否完成发货
      * @var bool

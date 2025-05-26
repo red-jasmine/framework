@@ -16,7 +16,7 @@ class OrderPaidCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             // TODO 换成 通过 仓库查询
             $orderPayment                     = $order->payments->where('id', $command->orderPaymentId)->firstOrFail();

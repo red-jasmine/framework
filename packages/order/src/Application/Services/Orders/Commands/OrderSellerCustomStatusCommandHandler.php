@@ -20,8 +20,7 @@ class OrderSellerCustomStatusCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
-
+            $order = $this->findByNo($command->orderNo);
 
             $order->setSellerCustomStatus($command->sellerCustomStatus, $command->orderProductId);
 

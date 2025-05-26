@@ -4,9 +4,9 @@ namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Support\Data\Data;
 
-class OrderRemarksCommand extends Data
+class OrderRemarksCommand extends AbstractOrderCommand
 {
-    public int $id;
+
 
     public ?int $orderProductId = null;
 

@@ -18,7 +18,7 @@ class OrderStarCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
 
             $order->star($command->star);

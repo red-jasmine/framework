@@ -25,7 +25,7 @@ class OrderProgressCommandHandler extends AbstractOrderCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $order    = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
             $progress = $order->setProductProgress($command->orderProductId, $command->progress, $command->isAppend, $command->isAllowLess);
             $this->service->repository->update($order);
             $this->commitDatabaseTransaction();

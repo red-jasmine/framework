@@ -37,7 +37,7 @@ abstract class AbstractOrderHiddenCommandHandler extends AbstractOrderCommandHan
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $order->hiddenOrder($this->getTradeParty(), $command->isHidden);
 

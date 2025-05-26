@@ -36,7 +36,7 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
         $this->beginDatabaseTransaction();
 
         try {
-            $order = $this->find($command->id);
+            $order = $this->findByNo($command->orderNo);
 
             $order->remarks($this->tradeParty, $command->remarks, $command->orderProductId, $command->isAppend);
 

@@ -60,7 +60,6 @@ test('cna paying a order', function (Order $order) {
 
     $command = OrderPayingCommand::from(
         [
-            'id'      => $order->id,
             'orderNo' => $order->order_no,
             'amount'  => $order->payable_amount
 
@@ -86,7 +85,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderPaidCommand;
 
-    $command->id               = $order->id;
+    $command->orderNo          = $order->order_no;
     $command->orderPaymentId   = $orderPayment->id;
     $command->amount           = $orderPayment->payment_amount;
     $command->paymentType      = 'online';
@@ -120,7 +119,7 @@ test('can progress a order', function (Order $order) {
     $progress       = 10;
     $orderProductId = $order->products->first()->id;
     $command        = OrderProgressCommand::from([
-        'id'             => $orderId,
+        'orderNo'        => $order->order_no,
         'orderProductId' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
@@ -136,7 +135,7 @@ test('can progress a order', function (Order $order) {
     $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
     $command = OrderProgressCommand::from([
-        'id'             => $orderId,
+        'orderNo'        => $order->order_no,
         'orderProductId' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => true,
@@ -152,7 +151,7 @@ test('can progress a order', function (Order $order) {
 
 
     $command = OrderProgressCommand::from([
-        'id'             => $orderId,
+        'orderNo'        => $order->order_no,
         'orderProductId' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
@@ -166,7 +165,7 @@ test('can progress a order', function (Order $order) {
 
 
     $command = OrderProgressCommand::from([
-        'id'             => $orderId,
+        'orderNo'        => $order->order_no,
         'orderProductId' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
@@ -192,7 +191,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 
     $command = $this->orderFake->shippingDummy([
-        'id'             => $order->id,
+        'orderNo'        => $order->order_no,
         'order_products' => $order->products->pluck('id')->toArray()
     ]);
 
@@ -210,10 +209,10 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
     return $order;
 })->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
-return;
+
 test('can confirm a order', function (Order $order) {
 
-    $command = OrderConfirmCommand::from(['id' => $order->id]);
+    $command = OrderConfirmCommand::from(['orderNo' => $order->order_no]);
 
     $this->orderCommandService->confirm($command);
 
@@ -229,7 +228,7 @@ test('can custom status a order', function (Order $order) {
 
     $sellerCustomStatus = 'TEST';
     $commands[]         = OrderSellerCustomStatusCommand::from([
-        'id'                 => $order->id,
+        'orderNo'            => $order->order_no,
         'sellerCustomStatus' => $sellerCustomStatus
 
     ]);
@@ -237,7 +236,7 @@ test('can custom status a order', function (Order $order) {
 
     foreach ($order->products as $product) {
         $commands[] = OrderSellerCustomStatusCommand::from([
-            'id'                 => $order->id,
+            'orderNo'            => $order->order_no, 'id' => $order->id,
             'orderProductId'     => $product->id,
             'sellerCustomStatus' => $sellerCustomStatus
 
@@ -266,8 +265,8 @@ test('can star a order', function (Order $order) {
 
     $star    = 1;
     $command = OrderStarCommand::from([
-        'id'   => $order->id,
-        'star' => $star
+        'orderNo' => $order->order_no,
+        'star'    => $star
     ]);
 
     $this->orderCommandService->star($command);
@@ -279,8 +278,8 @@ test('can star a order', function (Order $order) {
 
     $star    = null;
     $command = OrderStarCommand::from([
-        'id'   => $order->id,
-        'star' => $star
+        'orderNo' => $order->order_no,
+        'star'    => $star
     ]);
 
     $this->orderCommandService->star($command);
@@ -300,14 +299,14 @@ test('can remarks a order', function (Order $order) {
     $remarks = '测试备注';
     // 订单商品项备注
     $commands[] = OrderRemarksCommand::from([
-        'id'      => $order->id,
+        'orderNo' => $order->order_no,
         'remarks' => $remarks
     ]);
 
 
     foreach ($order->products as $product) {
         $commands[] = OrderRemarksCommand::from([
-            'id'             => $order->id,
+            'orderNo'        => $order->order_no,
             'orderProductId' => $product->id,
             'remarks'        => $remarks,
         ]);
@@ -320,7 +319,7 @@ test('can remarks a order', function (Order $order) {
 
 
     $command           = OrderRemarksCommand::from([
-        'id'      => $order->id,
+        'orderNo' => $order->order_no,
         'remarks' => $remarks
     ]);
     $command->isAppend = true;
@@ -351,14 +350,14 @@ test('can message a order', function (Order $order) {
     $message = '测试留言';
     // 订单商品项备注
     $commands[] = OrderMessageCommand::from([
-        'id'      => $order->id,
+        'orderNo' => $order->order_no,
         'message' => $message
     ]);
 
 
     foreach ($order->products as $product) {
         $commands[] = OrderMessageCommand::from([
-            'id'             => $order->id,
+            'orderNo'        => $order->order_no,
             'orderProductId' => $product->id,
             'message'        => $message
         ]);
@@ -371,7 +370,7 @@ test('can message a order', function (Order $order) {
 
 
     $command           = OrderMessageCommand::from([
-        'id'      => $order->id,
+        'orderNo' => $order->order_no,
         'message' => $message
     ]);
     $command->isAppend = true;
@@ -399,7 +398,7 @@ test('can hidden a order', function (Order $order) {
 
 
     $command = OrderHiddenCommand::from([
-        'id'       => $order->id,
+        'orderNo'  => $order->order_no,
         'isHidden' => true,
 
     ]);
@@ -415,7 +414,7 @@ test('can hidden a order', function (Order $order) {
 
     // 设置为显示
     $command = OrderHiddenCommand::from([
-        'id'       => $order->id,
+        'orderNo'  => $order->order_no,
         'isHidden' => false,
     ]);
 
