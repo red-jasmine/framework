@@ -5,10 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 
@@ -25,6 +26,23 @@ return new class extends Migration {
             $table->string('buyer_type', 32)->comment('买家类型');
             $table->string('buyer_id', 64)->comment('买家类型');
             $table->string('buyer_nickname')->nullable()->comment('买家昵称');
+            //  订单来源 如：活动、购物车、商品、其他等
+            $table->string('source_type', 32)->nullable()->comment('订单来源');
+            $table->string('source_id', 32)->nullable()->comment('来源ID');
+            // 门店 、渠道 、导购、客户端
+            $table->string('store_type', 32)->nullable()->comment('门店类型');
+            $table->unsignedBigInteger('store_id')->nullable()->comment('门店ID');
+            $table->string('store_nickname')->nullable()->comment('门店名称');
+            $table->string('channel_type', 32)->nullable()->comment('渠道类型');
+            $table->unsignedBigInteger('channel_id')->nullable()->comment('渠道ID');
+            $table->string('channel_nickname')->nullable()->comment('渠道名称');
+            $table->string('guide_type', 32)->nullable()->comment('导购类型');
+            $table->unsignedBigInteger('guide_id')->nullable()->comment('导购ID');
+            $table->string('guide_nickname')->nullable()->comment('导购名称');
+            $table->string('client_type', 32)->nullable()->comment('客户端类型');
+            $table->string('client_version', 32)->nullable()->comment('客户端版本');
+            $table->string('client_ip', 32)->nullable()->comment('IP');
+
 
 
             // 商品基本信息
@@ -33,8 +51,6 @@ return new class extends Migration {
             $table->string('product_type', 32)->comment('商品源类型');
             $table->unsignedBigInteger('product_id')->comment('商品源ID');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
-
-
             // 商品信息
             $table->string('title')->comment('标题');
             $table->string('sku_name')->nullable()->comment('规格名称');
@@ -47,75 +63,72 @@ return new class extends Migration {
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
-
-
-
-
+            $table->unsignedBigInteger('gift_point')->default(0)->comment('赠送积分');
+            $table->string('warehouse_code', 64)->nullable()->comment('仓库编码');
             // 商品总价   = 价格 * 数量
             // 商品金额  = 商品总价 - 优惠； 到手价 = (商品金额 / 数量)
             // 分摊后商品金额  = 商品金额 - 分摊订单优惠 + 分摊运费
             // 商品税费 = 分摊后商品金额 * 税率
             // 商品应付金额 = 分摊后商品金额 + 商品税费
-            $table->decimal('tax_rate',8,4)->default(0)->comment('税率%');
+            $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             $table->string('currency', 3)->default('CNY')->comment('货币');
-            $table->bigInteger('price')->default(0)->comment('单价');
-            $table->bigInteger('total_price')->default(0)->comment('总价');// 单价 * 数量
-            $table->bigInteger('discount_amount')->default(0)->comment('优惠金额');
-            $table->bigInteger('product_amount')->default(0)->comment('商品金额');
-            $table->bigInteger('divided_discount_amount')->default(0)->comment('分摊优惠金额');
-            $table->bigInteger('divided_freight_fee_amount')->default(0)->comment('分摊运费金额');
-            $table->bigInteger('divided_product_amount')->default(0)->comment('分摊后商品金额');
-            $table->bigInteger('tax_amount')->default(0)->comment('税费金额');
-            $table->bigInteger('payable_amount')->default(0)->comment('应付金额');
-            $table->bigInteger('payment_amount')->default(0)->comment('实付金额'); // 运行退款最大金额
-            $table->bigInteger('refund_amount')->default(0)->comment('退款金额');
+
+            $table->decimal('price', 10)->default(0)->comment('单价');
+            $table->decimal('total_price', 10)->default(0)->comment('总价');// 单价 * 数量
+            $table->decimal('discount_amount', 10)->default(0)->comment('商品优惠金额');
+            $table->decimal('product_amount', 10)->default(0)->comment('商品金额'); // 商品总结 - 商品优惠
+            $table->decimal('divided_discount_amount', 10)->default(0)->comment('分摊优惠');
+            $table->decimal('divided_freight_fee_amount', 10)->default(0)->comment('分摊运费');
+            $table->decimal('divided_product_amount', 10)->default(0)->comment('分摊后商品金额');
+            $table->decimal('tax_amount', 10)->default(0)->comment('税费金额');
+            $table->decimal('payable_amount', 10)->default(0)->comment('应付金额');
+            $table->decimal('payment_amount', 10)->default(0)->comment('实付金额'); // 运行退款最大金额
+            $table->decimal('refund_amount', 10)->default(0)->comment('退款金额');
 
             // 结算
-            $table->bigInteger('commission_amount')->default(0)->comment('佣金');
-            $table->bigInteger('platform_fee_amount')->default(0)->comment('平台服务费');
-            $table->bigInteger('platform_subsidy_amount')->default(0)->comment('平台补贴');
-            $table->bigInteger('receivable_amount')->default(0)->comment('卖家应收金额');
-            $table->bigInteger('received_amount')->default(0)->comment('卖家实收金额');
+            $table->decimal('commission_amount', 10)->default(0)->comment('佣金');
+            $table->decimal('platform_fee_amount', 10)->default(0)->comment('平台技术费');
+            $table->decimal('platform_subsidy_amount', 10)->default(0)->comment('平台补贴');
+            $table->decimal('receivable_amount', 10)->default(0)->comment('卖家应收金额');
+            $table->decimal('received_amount', 10)->default(0)->comment('卖家实收金额');
+            $table->decimal('cost_price', 10)->default(0)->comment('成本价格');
+            $table->decimal('total_cost_price', 10)->default(0)->comment('成本总价');
 
 
-            $table->bigInteger('cost_price')->default(0)->comment('成本价格');
-            $table->bigInteger('total_cost_price')->default(0)->comment('成本总价');
-
-
-            // 卡密专用
-            $table->string('contact')->nullable()->comment('联系方式');
-            $table->string('password')->nullable()->comment('查询密码');
             // 状态
+            $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
+            $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->string('refund_status', 32)->nullable()->comment(RefundStatusEnum::comments('退款状态'));
-            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
-            $table->string('abnormal_status', 32)->nullable()->comment('异常状态');
-            // 自动确认时间
-            $table->unsignedBigInteger('progress')->nullable()->comment('进度');
-            $table->unsignedBigInteger('progress_total')->nullable()->comment('进度总数');
-            $table->unsignedBigInteger('gift_point')->default(0)->comment('赠送积分');
-
-            $table->string('warehouse_code', 32)->nullable()->comment('仓库编码');
-            $table->timestamp('expiration_date')->nullable()->comment('过期时间');
-
+            $table->string('invoice_status', 32)->nullable()->comment('发票状态');
+            // 时间
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');
-            $table->timestamp('close_time')->nullable()->comment('关闭时间');
+            $table->timestamp('accept_time')->nullable()->comment('接单时间');
             $table->timestamp('shipping_time')->nullable()->comment('发货时间');
-            $table->timestamp('collect_time')->nullable()->comment('揽收时间');
-            $table->timestamp('dispatch_time')->nullable()->comment('派送时间');
             $table->timestamp('signed_time')->nullable()->comment('签收时间');
             $table->timestamp('confirm_time')->nullable()->comment('确认时间');
+            $table->timestamp('close_time')->nullable()->comment('关闭时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
             $table->timestamp('rate_time')->nullable()->comment('评价时间');
             $table->timestamp('settlement_time')->nullable()->comment('结算时间');
-            $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
+            $table->timestamp('collect_time')->nullable()->comment('揽收时间');
+            $table->timestamp('dispatch_time')->nullable()->comment('派送时间');
 
+            $table->timestamp('expiration_date')->nullable()->comment('过期时间');
+            // 虚拟商品使用
+            $table->unsignedBigInteger('progress')->nullable()->comment('进度');
+            $table->unsignedBigInteger('progress_total')->nullable()->comment('进度总数');
+            // 卡密专用
+            $table->string('contact')->nullable()->comment('联系方式');
+            $table->string('password')->nullable()->comment('查询密码');
+
+            $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
             $table->unsignedBigInteger('refund_id')->nullable()->comment('最后退款单ID');
             // 供应商
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');

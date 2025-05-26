@@ -20,7 +20,6 @@ class OrderExtension extends Model
         'buyer_extra'  => 'array',
         'seller_extra' => 'array',
         'other_extra'  => 'array',
-        'form'         => 'array',
         'tools'        => 'array',
     ];
 }

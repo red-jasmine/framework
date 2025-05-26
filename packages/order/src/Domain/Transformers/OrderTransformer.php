@@ -48,10 +48,10 @@ class OrderTransformer implements TransformerInterface
         $order->extension->tools          = $data->tools;
 
 
-        $order->payment_wait_max_time = $data->paymentWaitMaxTime;
-        $order->accept_wait_max_time  = $data->acceptWaitMaxTime;
-        $order->confirm_wait_max_time = $data->confirmWaitMaxTime;
-        $order->rate_wait_max_time    = $data->rateWaitMaxTime;
+        $order->payment_timeout = $data->paymentTimeout;
+        $order->accept_timeout  = $data->acceptTimeout;
+        $order->confirm_timeout = $data->confirmTimeout;
+        $order->rate_timeout    = $data->rateTimeout;
 
 
         // 转换商品项实体
@@ -110,7 +110,7 @@ class OrderTransformer implements TransformerInterface
         $orderProduct->extension->other_extra          = $orderProductData->otherExtra;
         $orderProduct->extension->after_sales_services = $orderProductData->afterSalesServices;
         $orderProduct->extension->tools                = $orderProductData->tools;
-        $orderProduct->extension->form                 = $orderProductData->form;
+        $orderProduct->extension->customized           = $orderProductData->customized;
         return $orderProduct;
     }
 

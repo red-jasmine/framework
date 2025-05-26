@@ -40,6 +40,7 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\OrderExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
+use RedJasmine\Order\Domain\Services\OrderAmountCalculateService;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
@@ -139,29 +140,30 @@ class Order extends Model implements OperatorInterface
     public function casts() : array
     {
         return [
-            'order_type'                    => OrderTypeEnum::class,
-            'shipping_type'                 => ShippingTypeEnum::class,
-            'order_status'                  => OrderStatusEnum::class,
-            'accept_status'                 => AcceptStatusEnum::class,
-            'payment_status'                => PaymentStatusEnum::class,
-            'shipping_status'               => ShippingStatusEnum::class,
-            'created_time'                  => 'datetime',
-            'payment_time'                  => 'datetime',
-            'accept_time'                   => 'datetime',
-            'close_time'                    => 'datetime',
-            'shipping_time'                 => 'datetime',
-            'collect_time'                  => 'datetime',
-            'dispatch_time'                 => 'datetime',
-            'signed_time'                   => 'datetime',
-            'confirm_time'                  => 'datetime',
-            'refund_time'                   => 'datetime',
-            'rate_time'                     => 'datetime',
-            'is_seller_delete'              => 'boolean',
-            'is_buyer_delete'               => 'boolean',
-            'guide'                         => UserInterfaceCast::class,
-            'store'                         => UserInterfaceCast::class,
-            'channel'                       => UserInterfaceCast::class,
-            'source'                        => UserInterfaceCast::class,
+            'order_type'       => OrderTypeEnum::class,
+            'shipping_type'    => ShippingTypeEnum::class,
+            'order_status'     => OrderStatusEnum::class,
+            'accept_status'    => AcceptStatusEnum::class,
+            'payment_status'   => PaymentStatusEnum::class,
+            'shipping_status'  => ShippingStatusEnum::class,
+            'guide'            => UserInterfaceCast::class,
+            'store'            => UserInterfaceCast::class,
+            'channel'          => UserInterfaceCast::class,
+            'source'           => UserInterfaceCast::class,
+            'created_time'     => 'datetime',
+            'payment_time'     => 'datetime',
+            'accept_time'      => 'datetime',
+            'close_time'       => 'datetime',
+            'shipping_time'    => 'datetime',
+            'collect_time'     => 'datetime',
+            'dispatch_time'    => 'datetime',
+            'signed_time'      => 'datetime',
+            'confirm_time'     => 'datetime',
+            'refund_time'      => 'datetime',
+            'rate_time'        => 'datetime',
+            'is_seller_delete' => 'boolean',
+            'is_buyer_delete'  => 'boolean',
+
             'total_product_amount'          => MoneyCast::class.':currency,total_product_amount',
             'total_tax_amount'              => MoneyCast::class.':currency,total_tax_amount,true',
             'discount_amount'               => MoneyCast::class.':currency,discount_amount,true',
@@ -212,8 +214,12 @@ class Order extends Model implements OperatorInterface
     {
         $orderProduct->app_id         = $this->app_id;
         $orderProduct->order_no       = $this->order_no;
+        $orderProduct->order_type     = $this->order_type;
         $orderProduct->buyer          = $this->buyer;
         $orderProduct->seller         = $this->seller;
+        $orderProduct->store          = $this->store;
+        $orderProduct->guide          = $this->guide;
+        $orderProduct->channel        = $this->channel;
         $orderProduct->progress_total = (int) bcmul($orderProduct->quantity, $orderProduct->unit_quantity, 0);
         $orderProduct->created_time   = now();
 
@@ -582,141 +588,9 @@ class Order extends Model implements OperatorInterface
      */
     public function calculateAmount() : static
     {
-        // 统计商品金额
-        $this->calculateProductsAmount();
-        // 分摊运费 、 分摊优惠
-        $this->calculateDivideDiscountAmount();
-
-        //  计算税费
-        $this->calculateTaxAmount();
-        //  汇总订单金额
-        $this->calculateOrderAmount();
-        return $this;
+        return app(OrderAmountCalculateService::class)->calculate($this);
     }
 
-    /**
-     * 计算商品金额
-     * @return void
-     */
-    protected function calculateProductsAmount() : void
-    {
-        foreach ($this->products as $product) {
-
-            // 成本金额
-            $product->total_cost_price = $product->cost_price?->multiply($product->quantity);
-            // 总价
-            $product->total_price = $product->price->multiply($product->quantity);
-            // 单品优惠
-            $product->discount_amount;
-
-            // 商品总金额   < 0
-            $product->product_amount = $product->total_price->subtract($product->discount_amount);
-
-        }
-    }
-
-    protected function calculateOrderAmount() : void
-    {
-        $order = $this;
-        // 邮费
-
-        // 订单优惠
-        $order->discount_amount;
-
-        // | ------------------------------------------------
-        $order->total_product_amount = Money::sum(...$order->products->pluck('product_amount'));
-        $order->total_tax_amount     = Money::sum(...$order->products->pluck('tax_amount'));
-        $order->freight_fee_amount   = $order->freight_fee_amount ?? $order->total_tax_amount->subtract($order->total_tax_amount);
-        $order->payable_amount       = Money::sum($order->total_product_amount, $order->freight_fee_amount)
-                                            ->subtract($order->discount_amount)
-                                            ->add($order->total_tax_amount);
-
-
-        // 小计项目
-
-        $order->total_product_discount_amount = Money::sum(...$order->products->pluck('discount_amount'));
-        $order->total_price                   = Money::sum(...$order->products->pluck('price'));
-        $order->total_cost_price              = Money::sum(...$order->products->pluck('total_cost_price'));
-
-
-    }
-
-
-    public static function divided(Money $amount, array $proportions = []) : array
-    {
-        if (empty($proportions)) {
-            return [];  // 如果没有比例数组，直接返回全部金额
-        }
-
-        arsort($proportions);
-
-        // 计算比例的总和
-        $totalProportion = array_sum($proportions);
-
-
-        $result = [];
-        if ($totalProportion <= 0) {
-            foreach ($proportions as $index => $proportion) {
-                $result[$index] = $amount->subtract($amount);
-            }
-            return $result;
-        }
-
-        $indexCount = 0;
-        foreach ($proportions as $index => $proportion) {
-            if ($indexCount + 1 === count($proportions)) {
-                // 最后一个
-                $result[$index] = $amount->subtract(...$result);
-            } else {
-                $result[$index] = $amount->multiply(bcdiv($proportion, $totalProportion, 6), \Money\Money::ROUND_HALF_DOWN);
-
-            }
-        }
-        return $result;
-
-    }
-
-    /**
-     * 计算分摊优惠
-     * @return void
-     */
-    protected function calculateDivideDiscountAmount() : void
-    {
-        $order = $this;
-
-
-        // 获取商品分摊 比例
-        $proportions = $order->products->pluck('product_amount', 'id')->map(function ($productAmount) {
-            return (int) $productAmount->getAmount();
-        })->toArray();
-
-        $order->discount_amount;
-        // 分摊订单优惠
-        $discounts  = static::divided($order->discount_amount, $proportions);
-        $freightFee = static::divided($order->freight_fee_amount, $proportions);
-        foreach ($order->products as $product) {
-            $product->divided_discount_amount    = $discounts[$product->id];
-            $product->divided_freight_fee_amount = $freightFee[$product->id];
-        }
-    }
-
-    protected function calculateTaxAmount()
-    {
-        $order = $this;
-
-        // 计算商品 分摊后商品金额
-        foreach ($order->products as $product) {
-            $product->divided_product_amount = Money::sum(
-                $product->product_amount,
-                $product->divided_discount_amount,
-                $product->divided_freight_fee_amount,
-            );
-            $product->tax_amount             = $product->divided_product_amount->multiply(bcdiv($product->tax_rate, 100, 8));
-            $product->payable_amount         = Money::sum($product->divided_product_amount, $product->tax_amount);
-        }
-
-
-    }
 
     public function isAllowShipping() : bool
     {

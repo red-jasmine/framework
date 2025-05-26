@@ -10,11 +10,12 @@ return new class extends Migration {
         Schema::create('order_products_extension', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->json('after_sales_services')->nullable()->comment('售后服务');
+            $table->json('discount_details')->nullable()->comment('优惠明细');
             $table->text('seller_remarks')->nullable()->comment('卖家备注');
             $table->text('buyer_remarks')->nullable()->comment('买家备注');
             $table->string('seller_message')->nullable()->comment('卖家留言');
             $table->string('buyer_message')->nullable()->comment('买家留言');
-            $table->json('form')->nullable()->comment('表单');
+            $table->json('customized')->nullable()->comment('定制信息');
             $table->json('tools')->nullable()->comment('商品工具');
             $table->json('seller_extra')->nullable()->comment('卖家扩展信息');
             $table->json('buyer_extra')->nullable()->comment('买家扩展信息');

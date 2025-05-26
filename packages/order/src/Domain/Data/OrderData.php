@@ -87,33 +87,18 @@ class OrderData extends Data
     public ?OrderAddressData $address;
 
 
-    /**
-     * 等待接单自动确认时间
-     * 单位： 分钟
-     * 当为 0 时 是付款成功后 立即确认
-     * 当 为 -1 时  无限等待
-     * @var int
-     */
-    public int $waitAcceptMaxTime = 0;
-
-
     // 自定处理流程控制
     /**
      * @var int
      */
-    public int $paymentWaitMaxTime = -1;
-    /**
-     * @var int
-     */
-    public int $acceptWaitMaxTime = -1;
-    /**
-     * @var int
-     */
-    public int $confirmWaitMaxTime = -1;
-    /**
-     * @var int
-     */
-    public int $rateWaitMaxTime = -1;
+
+    public int $paymentTimeout = -1;
+
+    public int $acceptTimeout = -1;
+
+    public int $confirmTimeout = -1;
+
+    public int $rateTimeout = -1;
 
 
 }

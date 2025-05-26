@@ -4,6 +4,7 @@ namespace RedJasmine\Order\Domain\Generator;
 
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
+use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
 class OrderNoGenerator implements OrderNoGeneratorInterface
 {
@@ -21,24 +22,28 @@ class OrderNoGenerator implements OrderNoGeneratorInterface
      */
     public function generator(Order $order) : string
     {
-        // 14位时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID
+        // 14位日期时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID + 校验码
 
-        return implode('', [
+        $baseNo = implode('', [
             DatetimeIdGenerator::buildId(),
             $this->getBusinessCode(),
             $this->remainder($order->app_id),
             $this->remainder($order->seller_id),
             $this->remainder($order->buyer_id),
+            rand(0, 9)
         ]);
+        return NoCheckNumber::generator($baseNo);
+
     }
 
     public function parse(string $UniqueId) : array
     {
+
         return [
             'datetime'  => substr($UniqueId, 0, 14),
+            'seller_id' => substr($UniqueId, -8, -6),
             'seller_id' => substr($UniqueId, -6, -4),
-            'seller_id' => substr($UniqueId, -4, -2),
-            'buyer_id'  => substr($UniqueId, -2),
+            'buyer_id'  => substr($UniqueId, -4, -2),
         ];
     }
 

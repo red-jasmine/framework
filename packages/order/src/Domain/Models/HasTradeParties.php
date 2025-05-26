@@ -27,11 +27,6 @@ trait HasTradeParties
         return $this;
     }
 
-    public function sellerable() : MorphTo
-    {
-        return $this->morphTo('seller', 'seller_type', 'seller_id');
-    }
-
 
     public function setBuyerAttribute(UserInterface $user) : static
     {
@@ -43,11 +38,6 @@ trait HasTradeParties
         }
 
         return $this;
-    }
-
-    public function buyerable() : MorphTo
-    {
-        return $this->morphTo('buyer', 'buyer_type', 'buyer_id');
     }
 
     public function seller() : Attribute

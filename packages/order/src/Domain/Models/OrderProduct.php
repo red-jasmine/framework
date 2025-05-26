@@ -19,6 +19,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
@@ -52,23 +53,26 @@ class OrderProduct extends Model
 
 
     protected $casts = [
-        'order_product_type' => ProductTypeEnum::class,
-        'shipping_type'      => ShippingTypeEnum::class,
-        'order_status'       => OrderStatusEnum::class,
-        'shipping_status'    => ShippingStatusEnum::class,
-        'payment_status'     => PaymentStatusEnum::class,
-        'refund_status'      => RefundStatusEnum::class,
-        'created_time'       => 'datetime',
-        'payment_time'       => 'datetime',
-        'close_time'         => 'datetime',
-        'shipping_time'      => 'datetime',
-        'collect_time'       => 'datetime',
-        'dispatch_time'      => 'datetime',
-        'signed_time'        => 'datetime',
-        'confirm_time'       => 'datetime',
-        'refund_time'        => 'datetime',
-        'rate_time'          => 'datetime',
-
+        'order_product_type'         => ProductTypeEnum::class,
+        'shipping_type'              => ShippingTypeEnum::class,
+        'order_status'               => OrderStatusEnum::class,
+        'shipping_status'            => ShippingStatusEnum::class,
+        'payment_status'             => PaymentStatusEnum::class,
+        'refund_status'              => RefundStatusEnum::class,
+        'guide'                      => UserInterfaceCast::class,
+        'store'                      => UserInterfaceCast::class,
+        'channel'                    => UserInterfaceCast::class,
+        'source'                     => UserInterfaceCast::class,
+        'created_time'               => 'datetime',
+        'payment_time'               => 'datetime',
+        'close_time'                 => 'datetime',
+        'shipping_time'              => 'datetime',
+        'collect_time'               => 'datetime',
+        'dispatch_time'              => 'datetime',
+        'signed_time'                => 'datetime',
+        'confirm_time'               => 'datetime',
+        'refund_time'                => 'datetime',
+        'rate_time'                  => 'datetime',
         'price'                      => MoneyCast::class.':currency,price,false',
         'total_price'                => MoneyCast::class.':currency,total_price,true',
         'discount_amount'            => MoneyCast::class.':currency,discount_amount,true',

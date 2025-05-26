@@ -50,8 +50,12 @@ class OrderProductData extends Data
     // 单位（可选）
     public ?string $unit = null;
 
-    public Money            $price;
-    public ?Money           $costPrice      = null;
+    public Money  $price;
+    public ?Money $costPrice = null;
+    /**
+     * 商品优惠
+     * @var Money|null
+     */
     public ?Money           $discountAmount = null;
     public string|int|float $texRate        = 0;
 
@@ -84,14 +88,8 @@ class OrderProductData extends Data
     public ?array  $otherExtra    = null;
     public ?array  $tools         = null;
     public ?array  $form          = null;
+    public ?string $contact       = null;
+    public ?string $password      = null;
+    public ?array  $customized    = null; // 定制
 
-    public ?string $contact  = null;
-    public ?string $password = null;
-
-
-    public function __construct()
-    {
-
-
-    }
 }
