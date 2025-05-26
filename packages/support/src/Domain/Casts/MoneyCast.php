@@ -19,11 +19,15 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
     protected ?string $valueKey    = null;
     protected ?string $currencyKey = null;
 
+
+    public const string AMOUNT_TYPE_DECIMAL = 'decimal';
+    public const string AMOUNT_TYPE_BIGINT  = 'bigint';
+
+    protected string $valueType            = self::AMOUNT_TYPE_DECIMAL;
     protected string $valueSuffix          = 'amount';
     protected string $currencySuffix       = 'currency';
-    protected        $isShareCurrencyField = false;
+    protected bool   $isShareCurrencyField = false;
 
-    protected $args;
 
     protected function getValueKey(string $key)
     {
@@ -35,11 +39,16 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         return $this->currencyKey ?? $key.'_'.$this->currencySuffix;
     }
 
-    public function __construct($currencyKey = null, $valueKey = null, string $isShareCurrencyField = null)
-    {
+    public function __construct(
+        $currencyKey = null,
+        $valueKey = null,
+        string $isShareCurrencyField = null,
+        string $valueType = self::AMOUNT_TYPE_DECIMAL
+    ) {
 
         $this->valueKey             = $valueKey ?? null;
         $this->currencyKey          = $currencyKey ?? null;
+        $this->valueType            = $valueType ?? 'decimal';
         $this->isShareCurrencyField = filter_var($isShareCurrencyField, FILTER_VALIDATE_BOOLEAN);
 
 
@@ -59,14 +68,16 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
             return null;
         }
 
-        return new Money($moneyValue, new Currency($currency ?? 'CNY'));
+        return $this->valueType === static::AMOUNT_TYPE_DECIMAL ?
+            Money::parseByDecimal($moneyValue, $currency) : Money::parseByIntl($moneyValue, $currency);
+
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes) : ?array
     {
-
-        $key = Str::snake($key);
-        if (blank($value)) {
+        $money = $value;
+        $key   = Str::snake($key);
+        if (blank($money)) {
             if ($this->isShareCurrencyField) {
                 return [
                     $this->getValueKey($key) => null,
@@ -78,36 +89,20 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
             ];
         }
 
-        if ($value instanceof Money) {
-            return [
-                $this->getValueKey($key)    => $value->getAmount(),
-                $this->getCurrencyKey($key) => $value->getCurrency()->getCode(),
-            ];
-        }
-        $money = null;
         if (is_string($value) || is_numeric($value)) {
             $money = new Money($value, new Currency('CNY'));
         }
         if (is_array($value)) {
             $money = new Money($value[$this->valueSuffix], new Currency($value[$this->currencySuffix]));
         }
-        if ($money === null) {
-            if ($this->isShareCurrencyField) {
-                return [
-                    $this->getValueKey($key) => null,
-                ];
-            }
-            return [
-                $this->getValueKey($key)    => null,
-                $this->getCurrencyKey($key) => null,
-            ];
-        }
+
 
         return [
-            $this->getValueKey($key)    => $money->getAmount(),
+            $this->getValueKey($key)    => $this->valueType === static::AMOUNT_TYPE_DECIMAL ?
+                $money->formatByDecimal() :
+                $money->getAmount(),
             $this->getCurrencyKey($key) => $money->getCurrency()->getCode(),
         ];
-
     }
 
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Money
