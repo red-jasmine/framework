@@ -3,8 +3,9 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use Cknow\Money\Money;
+use RedJasmine\Support\Data\Data;
 
-class OrderPaymentData
+class OrderPaymentData extends Data
 {
     public Money   $amount;
     public string  $paymentType;

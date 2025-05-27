@@ -13,6 +13,8 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
+use RedJasmine\Order\Domain\Generator\OrderNoGenerator;
+use RedJasmine\Order\Domain\Generator\OrderProductNoGenerator;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
@@ -59,9 +61,9 @@ class OrderProduct extends Model
         'shipping_status'            => ShippingStatusEnum::class,
         'payment_status'             => PaymentStatusEnum::class,
         'refund_status'              => RefundStatusEnum::class,
-        'guide'                      => UserInterfaceCast::class,
-        'store'                      => UserInterfaceCast::class,
-        'channel'                    => UserInterfaceCast::class,
+        'guide'                      => UserInterfaceCast::class.':1',
+        'store'                      => UserInterfaceCast::class.':1',
+        'channel'                    => UserInterfaceCast::class.':1',
         'source'                     => UserInterfaceCast::class,
         'created_time'               => 'datetime',
         'payment_time'               => 'datetime',
@@ -100,6 +102,9 @@ class OrderProduct extends Model
         'sku_id',
         'quantity',
         'price',
+        'buyer',
+        'seller',
+        'app_id',
     ];
 
 
@@ -115,7 +120,17 @@ class OrderProduct extends Model
             $instance->setRelation('extension', $extension);
 
         }
+        if (!$instance->exists && !empty($attributes)) {
+            $instance->generateNo();
+        }
         return $instance;
+    }
+
+    protected function generateNo() : void
+    {
+        if (!$this->order_product_no) {
+            $this->order_product_no = app(OrderProductNoGenerator::class)->generator($this);
+        }
     }
 
 

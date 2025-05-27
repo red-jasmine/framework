@@ -2,15 +2,19 @@
 
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
+use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class RefundCreateCommand extends Data
 {
+    public string $orderNo;
 
 
-    public int $id;
+    /**
+     * @var array
+     */
+    public array $orderProductNo;
 
     public int $orderProductId;
 
@@ -20,11 +24,11 @@ class RefundCreateCommand extends Data
      */
     public RefundTypeEnum $refundType;
 
-    /**
-     * 退款金额
-     * @var ?MoneyOld
-     */
-    public ?MoneyOld $refundAmount = null;
+
+    public ?Money $refundAmount = null;
+
+
+    protected ?Money $freightAmount = null;
 
     /**
      * 原因
@@ -50,10 +54,5 @@ class RefundCreateCommand extends Data
     public ?string $outerRefundId = null;
 
 
-    /**
-     * 包含邮费
-     * @var string|int|float|null
-     */
-    protected string|int|float|null $freightAmount = 0;
 
 }

@@ -58,8 +58,7 @@ class OrderTransformer implements TransformerInterface
         // 转换商品项实体
 
         foreach ($data->products as $productData) {
-
-            $order->addProduct($this->transformProduct($productData));
+            $order->addProduct($this->transformProduct($productData, $order->makeProduct()));
         }
 
         // 转换 地址
@@ -73,11 +72,8 @@ class OrderTransformer implements TransformerInterface
     }
 
 
-    public function transformProduct(
-        OrderProductData $orderProductData,
-        ?OrderProduct $orderProduct = null
-    ) : OrderProduct {
-        $orderProduct = $orderProduct ?? OrderProduct::make();
+    public function transformProduct(OrderProductData $orderProductData, OrderProduct $orderProduct) : OrderProduct
+    {
 
         $orderProduct->order_product_type              = $orderProductData->orderProductType;
         $orderProduct->shipping_type                   = $orderProductData->shippingType;

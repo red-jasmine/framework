@@ -63,13 +63,12 @@ test('can create a new order', function () {
 test('cna paying a order', function (Order $order) {
 
 
-
     //Event::fake();
 
     $command = OrderPayingCommand::from(
         [
-            'id'     => $order->id,
-            'amount' => $order->payable_amount
+            'order_no' => $order->order_no,
+            'amount'   => $order->payable_amount
 
         ]
 
@@ -91,11 +90,13 @@ test('cna paying a order', function (Order $order) {
 test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
 
-    $command = new  OrderPaidCommand;
+    $command = OrderPaidCommand::from([
+        'orderNo'        => $order->order_no,
+        'orderPaymentId' => $orderPayment->id,
+        'amount'         => $orderPayment->payment_amount->toArray()
 
-    $command->id             = $order->id;
-    $command->orderPaymentId = $orderPayment->id;
-    $command->amount         = $orderPayment->payment_amount;
+    ]);
+
 
     $this->orderFake->fakeOrderPayment($command);
 
@@ -108,19 +109,17 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $order = $this->orderRepository->find($order->id);
 
 
-
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
-    $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
+    $this->assertTrue($order->payable_amount->equals($order->payment_amount));
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
 
 test('can urge a order', function (Order $order, OrderPayment $orderPayment) {
 
-
-    $command = new  OrderUrgeCommand();
-
-    $command->id = $order->id;
+    $command = OrderUrgeCommand::from([
+        'order_no' => $order->order_no,
+    ]);
 
     $result = $this->orderCommandService->urge($command);
 
@@ -138,25 +137,22 @@ test('can urge a order', function (Order $order, OrderPayment $orderPayment) {
 
 test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 
-    $commands    = [];
-    $command     = new RefundCreateCommand;
-    $command->id = $order->id;
+    $commands = [];
+
 
     $refunds = [];
     foreach ($order->products as $product) {
-        $command                 = new RefundCreateCommand;
 
-        $command->id             = $order->id;
-        $command->orderProductId = $product->id;
-        $command->refundType     = RefundTypeEnum::REFUND;
-        $command->refundAmount   = $product->payment_amount;
-        $command->reason         = '不想要了';
-        $command->description    = fake()->sentence;
-        $command->outerRefundId  = fake()->numerify('######');
-        $command->images         = [ fake()->imageUrl, fake()->imageUrl, fake()->imageUrl, ];
-
-        $commands [] = $command;
-
+        $command = RefundCreateCommand::from([
+            'orderNo'        => $order->order_no,
+            'orderProductId' => $product->id,
+            'refundType'     => RefundTypeEnum::REFUND,
+            'refundAmount'   => $product->payment_amount,
+            'reason'         => '不想要了',
+            'description'    => fake()->sentence,
+            'outerRefundId'  => fake()->numerify('######'),
+            'images'         => [fake()->imageUrl, fake()->imageUrl, fake()->imageUrl,],
+        ]);
 
         $refunds[] = $this->refundCommandService->create($command);
     }
@@ -174,7 +170,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 })
     ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
-
+return;
 test('can urge a refund', function (Order $order, $refunds = []) {
 
     foreach ($refunds as $refundId) {

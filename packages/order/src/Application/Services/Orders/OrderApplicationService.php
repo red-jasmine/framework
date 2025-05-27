@@ -49,6 +49,7 @@ use RedJasmine\Support\Application\ApplicationService;
 
 
 /**
+ *
  * @see  OrderCreateCommandHandler::handle()
  * @method Order create(OrderCreateCommand $command)
  * @see  OrderCancelCommandHandler::handle()
@@ -133,5 +134,10 @@ class OrderApplicationService extends ApplicationService
         'urge'               => OrderUrgeCommandHandler::class,
     ];
 
+
+    public function findByNo(string $no) : Order
+    {
+        return $this->repository->findByNo($no);
+    }
 
 }

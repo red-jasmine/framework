@@ -125,6 +125,16 @@ class Order extends Model implements OperatorInterface
         });
     }
 
+    public function makeProduct() : OrderProduct
+    {
+
+        return OrderProduct::make([
+            'app_id' => $this->app_id,
+            'seller' => $this->seller,
+            'buyer'  => $this->buyer,
+        ]);
+    }
+
     public function newInstance($attributes = [], $exists = false) : Order
     {
 
@@ -162,9 +172,9 @@ class Order extends Model implements OperatorInterface
             'accept_status'    => AcceptStatusEnum::class,
             'payment_status'   => PaymentStatusEnum::class,
             'shipping_status'  => ShippingStatusEnum::class,
-            'guide'            => UserInterfaceCast::class,
-            'store'            => UserInterfaceCast::class,
-            'channel'          => UserInterfaceCast::class,
+            'guide'            => UserInterfaceCast::class.':1',
+            'store'            => UserInterfaceCast::class.':1',
+            'channel'          => UserInterfaceCast::class.':1',
             'source'           => UserInterfaceCast::class,
             'created_time'     => 'datetime',
             'payment_time'     => 'datetime',

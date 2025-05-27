@@ -2,35 +2,33 @@
 
 namespace RedJasmine\Order\Domain\Generator;
 
-use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
-class OrderNoGenerator implements OrderNoGeneratorInterface
+class OrderProductNoGenerator implements OrderProductNoGeneratorInterface
 {
 
 
     public function getBusinessCode() : string
     {
-        return '10';
+        return '88';
     }
 
     /**
-     * @param  Order  $order
+     * @param  OrderProduct  $model
      *
      * @return string
      */
-    public function generator(Order $order) : string
+    public function generator(OrderProduct $model) : string
     {
-        // 14位日期时间 + 10位序号   + 2位应用ID + 2位 卖家 + 2位 用户ID + 2 位业务  + 1 随机 校验码
-
-        // 14位日期时间 + 10位序号  + 2位应用ID + 2位 卖家 + 2位 用户ID  + 2 位业务  + 1 随机 + 1位 校验码
+        // 14位日期时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID + 校验码
 
         $baseNo = implode('', [
             DatetimeIdGenerator::buildId(),
-            $this->remainder($order->app_id),
-            $this->remainder($order->seller_id),
-            $this->remainder($order->buyer_id),
+            $this->remainder($model->app_id),
+            $this->remainder($model->seller_id),
+            $this->remainder($model->buyer_id),
             $this->getBusinessCode(),// 业务识别码
             rand(0, 9)
         ]);
@@ -58,4 +56,6 @@ class OrderNoGenerator implements OrderNoGeneratorInterface
         }
         return sprintf("%02d", ($number % 64));
     }
+
+
 }
