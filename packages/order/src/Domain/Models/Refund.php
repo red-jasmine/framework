@@ -21,7 +21,7 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
-use RedJasmine\Order\Domain\Generator\RefundNoGenerator;
+use RedJasmine\Order\Domain\Generator\RefundNoGeneratorInterface;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
@@ -33,15 +33,20 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
-class Refund extends Model
+/**
+ * @property string $refund_no
+ * @property RefundTypeEnum $refund_type
+ * @property Money $freight_amount
+ */
+class Refund extends Model implements OperatorInterface
 {
-
-
     use HasSnowflakeId;
 
     use HasDateTimeFormatter;
@@ -56,7 +61,10 @@ class Refund extends Model
 
     use HasStar;
 
+    use HasCommonAttributes;
 
+
+    protected   $table                    = 'order_refunds';
     public bool $withTradePartiesNickname = true;
 
     public $incrementing = false;
@@ -68,24 +76,20 @@ class Refund extends Model
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
-            $instance->generateNo();
-            $extension     = $instance->extension()->newModelInstance();
-            $extension->id = $instance->id;
-            $instance->setRelation('extension', $extension);
+            $instance->setRelation('extension', $instance->extension()->newModelInstance(['id' => $instance->getKey()]));
         }
+        if (!$instance->exists && !empty($attributes)) {
+            $instance->generateNo();
+        }
+
         return $instance;
     }
 
     protected function generateNo() : void
     {
-        if (!$this->refund_no && isset($this->app_id)) {
-            $this->refund_no = app(RefundNoGenerator::class)->generator(
-                [
-                    'app_id'    => $this->app_id,
-                    'seller_id' => $this->seller_id,
-                    'buyer_id'  => $this->buyer_id,
-                ]
-            );
+        if (!$this->refund_no) {
+
+            $this->refund_no = app(RefundNoGeneratorInterface::class)->generator($this);
         }
 
     }
@@ -96,20 +100,20 @@ class Refund extends Model
     }
 
 
-    protected $casts = [
-        'order_product_type' => ProductTypeEnum::class,
-        'shipping_type'      => ShippingTypeEnum::class,
-        'refund_type'        => RefundTypeEnum::class,
-        'refund_status'      => RefundStatusEnum::class,
-        'good_status'        => RefundGoodsStatusEnum::class,
-        'phase'              => RefundPhaseEnum::class,
-        'has_good_return'    => 'boolean',
-        'end_time'           => 'datetime',
-        'images'             => 'array',
-        'extra'              => 'array',
+    public function casts() : array
+    {
+        return array_merge([
+            'order_product_type' => ProductTypeEnum::class,
+            'shipping_type'      => ShippingTypeEnum::class,
+            'refund_type'        => RefundTypeEnum::class,
+            'refund_status'      => RefundStatusEnum::class,
+            'good_status'        => RefundGoodsStatusEnum::class,
+            'phase'              => RefundPhaseEnum::class,
+            'has_good_return'    => 'boolean',
+            'end_time'           => 'datetime',
+        ], $this->getCommonAttributesCast());
+    }
 
-
-    ];
 
     protected $dispatchesEvents = [
         'created'             => RefundCreatedEvent::class,
@@ -136,9 +140,63 @@ class Refund extends Model
     protected $fillable = [
         'app_id',
         'seller_id',
+        'seller',
         'buyer_id',
+        'buyer',
     ];
 
+
+    public function setOrder(Order $order) : void
+    {
+        $this->setRelation('order', $order);
+        $this->app_id     = $order->app_id;
+        $this->seller     = $order->seller;
+        $this->buyer      = $order->buyer;
+        $this->source     = $order->source;
+        $this->store      = $order->store;
+        $this->channel    = $order->channel;
+        $this->guide      = $order->guide;
+        $this->order_type = $order->order_type;
+        //$this->shipping_type = $order->shipping_type;
+
+    }
+
+
+    public function setOrderProduct(OrderProduct $orderProduct) : void
+    {
+        $this->setRelation('product', $orderProduct);
+
+        $this->order_product_no           = $orderProduct->order_product_no;
+        $this->order_product_type         = $orderProduct->order_product_type;
+        $this->shipping_type              = $orderProduct->shipping_type;
+        $this->product_type               = $orderProduct->product_type;
+        $this->product_id                 = $orderProduct->product_id;
+        $this->sku_id                     = $orderProduct->sku_id;
+        $this->title                      = $orderProduct->title;
+        $this->sku_name                   = $orderProduct->sku_name;
+        $this->image                      = $orderProduct->image;
+        $this->outer_product_id           = $orderProduct->outer_product_id;
+        $this->outer_sku_id               = $orderProduct->outer_sku_id;
+        $this->barcode                    = $orderProduct->barcode;
+        $this->unit_quantity              = $orderProduct->unit_quantity;
+        $this->unit                       = $orderProduct->unit;
+        $this->category_id                = $orderProduct->category_id;
+        $this->brand_id                   = $orderProduct->brand_id;
+        $this->product_group_id           = $orderProduct->product_group_id;
+        $this->tax_rate                   = $orderProduct->tax_rate;
+        $this->quantity                   = $orderProduct->quantity;
+        $this->price                      = $orderProduct->price;
+        $this->total_price                = $orderProduct->total_price;
+        $this->discount_amount            = $orderProduct->discount_amount;
+        $this->product_amount             = $orderProduct->product_amount;
+        $this->divided_discount_amount    = $orderProduct->divided_discount_amount;
+        $this->divided_freight_amount = $orderProduct->divided_freight_amount;
+        $this->divided_product_amount     = $orderProduct->divided_product_amount;
+        $this->tax_amount                 = $orderProduct->tax_amount;
+        $this->payable_amount             = $orderProduct->payable_amount;
+        $this->payment_amount             = $orderProduct->payment_amount;
+
+    }
 
     public function order() : BelongsTo
     {

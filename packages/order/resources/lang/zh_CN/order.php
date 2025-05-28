@@ -71,8 +71,6 @@ return [
         'cancel_reason'          => '取消原因',
 
 
-
-
         'product' => [
             'id'              => '订单商品项编号',
             'image'           => '商品图片',
@@ -97,17 +95,17 @@ return [
             'address'      => '地址',
             'full_address' => '地址',
             'contacts'     => '联系人',
-            'phone'       => '手机号',
+            'phone'        => '手机号',
         ],
 
-        'seller_remarks' => '卖家备注',
-        'buyer_remarks'  => '买家备注',
-        'buyer_message'  => '买家留言',
-        'seller_message' => '卖家留言',
-        'seller_extra' => '卖家扩展信息',
-        'buyer_extra'  => '买家扩展信息',
-        'other_extra'  => '其他扩展信息',
-        'tools'          => '工具',
+        'seller_remarks'   => '卖家备注',
+        'buyer_remarks'    => '买家备注',
+        'buyer_message'    => '买家留言',
+        'seller_message'   => '卖家留言',
+        'seller_extra'     => '卖家扩展信息',
+        'buyer_extra'      => '买家扩展信息',
+        'other_extra'      => '其他扩展信息',
+        'tools'            => '工具',
 
         // |--------------公共部分-------------------
         'order_id'         => '订单编号',
@@ -135,12 +133,12 @@ return [
     ],
     'enums'  => [
 
-        'order_type'   => [
+        'order_type'          => [
             'standard'       => '标准',
             'presale'        => '预售',
             'group_purchase' => '团购',
         ],
-        'order_status' => [
+        'order_status'        => [
             'wait_buyer_pay'           => '待付款',
             'wait_seller_accept'       => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
             'wait_seller_send_goods'   => '待发货',
@@ -148,6 +146,10 @@ return [
             'finished'                 => '已完成',
             'cancel'                   => '已取消',
             'closed'                   => '已关闭',
+        ],
+        'order_refund_status' => [
+            'full_refund'    => '全款退款',
+            'partial_refund' => '全款退款',
         ],
 
         'accept_status' => [

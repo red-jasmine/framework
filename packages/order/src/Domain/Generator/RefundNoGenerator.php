@@ -2,44 +2,51 @@
 
 namespace RedJasmine\Order\Domain\Generator;
 
-use RedJasmine\Support\Domain\Generator\UniqueIdGeneratorInterface;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
+use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
-class RefundNoGenerator implements UniqueIdGeneratorInterface
+class RefundNoGenerator implements RefundNoGeneratorInterface
 {
 
 
     public function getBusinessCode() : string
     {
-        return '20';
+        return '88';
     }
 
     /**
-     * @param  array{app_id:string,seller_id:int,buyer_id:int}  $factors
+     * @param  Refund  $model
      *
      * @return string
      */
-    public function generator(array $factors = []) : string
+    public function generator(Refund $model) : string
     {
-        // 14位时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID
+        // 14位日期时间 + 10位序号  + 2 位业务 + 2位应用ID + 2位 卖家 + 2位 用户ID + 校验码
 
-        return implode('', [
+        $baseNo = implode('', [
             DatetimeIdGenerator::buildId(),
-            $this->getBusinessCode(),
-            $this->remainder($factors['app_id']),
-            $this->remainder($factors['seller_id']),
-            $this->remainder($factors['buyer_id']),
+            $this->remainder($model->app_id),
+            $this->remainder($model->seller_id),
+            $this->remainder($model->buyer_id),
+            $this->getBusinessCode(),// 业务识别码
+            rand(0, 9)
         ]);
+        return NoCheckNumber::generator($baseNo);
+
     }
 
     public function parse(string $UniqueId) : array
     {
-        return [
-            'datetime'  => substr($UniqueId, 0, 14),
-            'seller_id' => substr($UniqueId, -6, -4),
-            'seller_id' => substr($UniqueId, -4, -2),
-            'buyer_id'  => substr($UniqueId, -2),
 
+        return [
+            'datetime'      => substr($UniqueId, 0, 14),
+            'app_id'        => substr($UniqueId, -10, -8),
+            'seller_id'     => substr($UniqueId, -8, -6),
+            'buyer_id'      => substr($UniqueId, -6, -4),
+            'business_code' => substr($UniqueId, -4, -2),
+            'random'        => substr($UniqueId, -2, -1),
+            'check_number'  => substr($UniqueId, -1, 0),
         ];
     }
 
@@ -51,6 +58,5 @@ class RefundNoGenerator implements UniqueIdGeneratorInterface
         }
         return sprintf("%02d", ($number % 64));
     }
-
 
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
@@ -48,6 +49,8 @@ return new class extends Migration {
             // 商品基本信息
             $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+
+            // 商品信息
             $table->string('product_type', 32)->comment('商品源类型');
             $table->unsignedBigInteger('product_id')->comment('商品源ID');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
@@ -65,47 +68,48 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
             $table->unsignedBigInteger('gift_point')->default(0)->comment('赠送积分');
             $table->string('warehouse_code', 64)->nullable()->comment('仓库编码');
-            // 商品总价   = 价格 * 数量
-            // 商品金额  = 商品总价 - 优惠； 到手价 = (商品金额 / 数量)
-            // 分摊后商品金额  = 商品金额 - 分摊订单优惠 + 分摊运费
-            // 商品税费 = 分摊后商品金额 * 税率
-            // 商品应付金额 = 分摊后商品金额 + 商品税费
             $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+            // 销售总价  = 销售单价 * 数量
+            // 商品金额  = 销售总价 - 优惠
+            // 税费金额  = ( 商品金额 + (?运费)  ) * 税率 // TODO 是否加运费计算 如果是 海外直购 那么需要计算 如果是 国内直购 那么不需要计算
+            // 应付金额  = 商品金额 + 服务费 + 运费金额 + 商品税费 - 分摊优惠金额  = 最大退款金额
+
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             $table->string('currency', 3)->default('CNY')->comment('货币');
-
-            $table->decimal('price', 10)->default(0)->comment('单价');
-            $table->decimal('total_price', 10)->default(0)->comment('总价');// 单价 * 数量
-            $table->decimal('discount_amount', 10)->default(0)->comment('商品优惠金额');
-            $table->decimal('product_amount', 10)->default(0)->comment('商品金额'); // 商品总结 - 商品优惠
-            $table->decimal('divided_discount_amount', 10)->default(0)->comment('分摊优惠');
-            $table->decimal('divided_freight_fee_amount', 10)->default(0)->comment('分摊运费');
-            $table->decimal('divided_product_amount', 10)->default(0)->comment('分摊后商品金额');
-            $table->decimal('tax_amount', 10)->default(0)->comment('税费金额');
-            $table->decimal('payable_amount', 10)->default(0)->comment('应付金额');
-            $table->decimal('payment_amount', 10)->default(0)->comment('实付金额'); // 运行退款最大金额
-            $table->decimal('refund_amount', 10)->default(0)->comment('退款金额');
-
-            // 结算
-            $table->decimal('commission_amount', 10)->default(0)->comment('佣金');
-            $table->decimal('platform_fee_amount', 10)->default(0)->comment('平台技术费');
-            $table->decimal('platform_subsidy_amount', 10)->default(0)->comment('平台补贴');
-            $table->decimal('receivable_amount', 10)->default(0)->comment('卖家应收金额');
-            $table->decimal('received_amount', 10)->default(0)->comment('卖家实收金额');
-            $table->decimal('cost_price', 10)->default(0)->comment('成本价格');
-            $table->decimal('total_cost_price', 10)->default(0)->comment('成本总价');
+            $table->decimal('price', 12)->default(0)->comment('销售单价');
+            $table->decimal('total_price', 12)->default(0)->comment('销售总价');
+            $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
+            $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
+            $table->decimal('tax_amount', 12)->default(0)->comment('税费金额');
+            $table->decimal('service_amount', 12)->default(0)->comment('服务费金额');
+            $table->decimal('freight_amount', 12)->default(0)->comment('分摊运费金额');
+            $table->decimal('divided_discount_amount', 12)->default(0)->comment('分摊优惠金额');
+            $table->decimal('payable_amount', 12)->default(0)->comment('买家应付金额');
+            $table->decimal('payment_amount', 12)->default(0)->comment('买家实付金额');
+            $table->decimal('refund_amount', 12)->default(0)->comment('买家退款金额');
+            // 结算类
+            $table->decimal('commission_amount', 12)->default(0)->comment('佣金');
+            $table->decimal('seller_discount_amount', 12)->default(0)->comment('卖家优惠金额');
+            $table->decimal('platform_discount_amount', 12)->default(0)->comment('平台优惠金额');
+            $table->decimal('platform_service_amount', 12)->default(0)->comment('平台服务费');
+            $table->decimal('receivable_amount', 12)->default(0)->comment('卖家应收金额');
+            $table->decimal('received_amount', 12)->default(0)->comment('卖家实收金额');
+            // 统计类
+            $table->decimal('cost_price', 12)->default(0)->comment('成本单价');
+            $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
 
 
             // 状态
             $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
+            $table->string('order_refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
             $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
             $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
             $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
             $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
-            $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             $table->string('invoice_status', 32)->nullable()->comment('发票状态');
+            $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             // 时间
             $table->timestamp('created_time')->nullable()->comment('创建时间');
             $table->timestamp('payment_time')->nullable()->comment('付款时间');
@@ -128,9 +132,11 @@ return new class extends Migration {
             $table->string('contact')->nullable()->comment('联系方式');
             $table->string('password')->nullable()->comment('查询密码');
 
-            $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
-            $table->unsignedBigInteger('refund_id')->nullable()->comment('最后退款单ID');
+            $table->string('last_refund_no')->nullable()->comment('最后单款单号');
             // 供应商
+            $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
+            // 供应商
+
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
             $table->operator();
             $table->softDeletes();

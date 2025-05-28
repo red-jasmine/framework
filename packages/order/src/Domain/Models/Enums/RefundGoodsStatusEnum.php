@@ -17,9 +17,9 @@ enum RefundGoodsStatusEnum: string
     {
         return [
 
-            self::BUYER_NOT_RECEIVED->value   => '买家未收到货',
-            self::BUYER_RECEIVED->value       => '买家已收到货',
-            self::BUYER_RETURNED_GOODS->value => '买家已退货',
+            self::BUYER_NOT_RECEIVED->value   => '未收到货',
+            self::BUYER_RECEIVED->value       => '已收到货',
+            self::BUYER_RETURNED_GOODS->value => '已退货',
         ];
     }
 

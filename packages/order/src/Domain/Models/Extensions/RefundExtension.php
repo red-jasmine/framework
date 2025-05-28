@@ -15,7 +15,7 @@ class RefundExtension extends Model
     public $incrementing = false;
 
 
-    protected $fillable = [];
+    protected $fillable = ['id'];
 
 
     protected $casts = [

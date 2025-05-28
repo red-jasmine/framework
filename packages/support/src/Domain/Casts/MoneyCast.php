@@ -50,8 +50,6 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         $this->currencyKey          = $currencyKey ?? null;
         $this->valueType            = $valueType ?? 'decimal';
         $this->isShareCurrencyField = filter_var($isShareCurrencyField, FILTER_VALIDATE_BOOLEAN);
-
-
     }
 
     public function get(Model $model, string $key, mixed $value, array $attributes) : ?Money

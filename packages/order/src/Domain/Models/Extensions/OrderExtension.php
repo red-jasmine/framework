@@ -12,9 +12,13 @@ class OrderExtension extends Model
     use HasDateTimeFormatter;
 
     use SoftDeletes;
+
     protected $table = 'orders_extension';
 
     public $incrementing = false;
+
+
+    protected $fillable = ['id'];
 
     protected $casts = [
         'buyer_extra'  => 'array',

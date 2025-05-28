@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Services;
 
+use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
@@ -10,7 +11,6 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Models\Refund;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrderRefundService
 {
@@ -33,67 +33,38 @@ class OrderRefundService
         if (!in_array($orderRefund->refund_type, $orderProduct->allowRefundTypes(), true)) {
             throw RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
-        // TODO
-
-
-        // 填充 子商品单
-        $orderRefund->app_id                 = $order->app_id;
-        $orderRefund->order_no               = $order->order_no;
-        $orderRefund->seller                 = $order->seller;
-        $orderRefund->buyer                  = $order->buyer;
-        $orderRefund->shipping_type          = $orderProduct->shipping_type;
-        $orderRefund->order_product_type     = $orderProduct->order_product_type;
-        $orderRefund->product_type           = $orderProduct->product_type;
-        $orderRefund->product_id             = $orderProduct->product_id;
-        $orderRefund->sku_id                 = $orderProduct->sku_id;
-        $orderRefund->title                  = $orderProduct->title;
-        $orderRefund->sku_name               = $orderProduct->sku_name;
-        $orderRefund->image                  = $orderProduct->image;
-        $orderRefund->category_id            = $orderProduct->category_id;
-        $orderRefund->brand_id               = $orderProduct->brand_id;
-        $orderRefund->product_group_id       = $orderProduct->product_group_id;
-        $orderRefund->outer_product_id       = $orderProduct->outer_product_id;
-        $orderRefund->outer_sku_id           = $orderProduct->outer_sku_id;
-        $orderRefund->barcode                = $orderProduct->barcode;
-        $orderRefund->price                  = $orderProduct->price;
-        $orderRefund->cost_price             = $orderProduct->cost_price;
-        $orderRefund->product_amount         = $orderProduct->product_amount;
-        $orderRefund->payable_amount         = $orderProduct->payable_amount;
-        $orderRefund->payment_amount         = $orderProduct->payment_amount;
-        $orderRefund->divided_payment_amount = $orderProduct->divided_payment_amount;
-        $orderRefund->shipping_status        = $orderProduct->shipping_status;
-        $orderRefund->unit                   = $orderProduct->unit;
-        $orderRefund->unit_quantity          = $orderProduct->unit_quantity;
 
 
         // 获取当售后阶段
         $orderRefund->phase = $this->getRefundPhase($orderProduct);
+
         // 计算退款金额
-        $refundAmount = 0;
+        $refundAmount = Money::parse('0', $orderProduct->currency);
         if (in_array($orderRefund->refund_type, [
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND,
         ], true)) {
 
-            $refundAmount = (string) ($orderRefund->refund_amount->value() ?? 0);
+            // 获取最大退款金额
+            //$refundAmount = (string) ($orderRefund->refund_amount ?? 0);
 
             $maxRefundAmount = $orderProduct->maxRefundAmount();
 
-            if (bccomp($refundAmount, 0, 2) <= 0) {
-                $refundAmount = $maxRefundAmount;
-            }
-            if (bccomp($refundAmount, $maxRefundAmount, 2) > 0) {
-                $refundAmount = $maxRefundAmount;
-            }
+            $refundAmount = $maxRefundAmount;
+
+            // if (bccomp($refundAmount, 0, 2) <= 0) {
+            //     $refundAmount = $maxRefundAmount;
+            // }
+            // if (bccomp($refundAmount, $maxRefundAmount, 2) > 0) {
+            //     $refundAmount = $maxRefundAmount;
+            // }
         }
 
-        $orderRefund->freight_amount = new MoneyOld(0);
-        $orderRefund->refund_amount  = new MoneyOld($refundAmount);
+        // TODO 计算运费
+        $orderRefund->freight_amount = Money::parse(0, $orderProduct->currency);
+        $orderRefund->refund_amount  = $refundAmount;
 
-        $orderRefund->total_refund_amount = bcadd(
-            $orderRefund->refund_amount,
-            $orderRefund->freight_amount,
-            2);
+        $orderRefund->total_refund_amount = $orderRefund->refund_amount->add($orderRefund->freight_amount);
 
 
         switch ($orderRefund->refund_type) {
@@ -114,8 +85,7 @@ class OrderRefundService
         $orderRefund->created_time = now();
 
         // 设置订单项目状态
-        $orderProduct->refund_status = $orderRefund->refund_status;
-        $orderProduct->refund_id     = $orderRefund->id;
+        $orderProduct->last_refund_no = $orderRefund->refund_no;
         $order->refunds->add($orderRefund);
         return $orderRefund;
     }

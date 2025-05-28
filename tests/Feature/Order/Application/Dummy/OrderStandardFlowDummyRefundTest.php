@@ -145,7 +145,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 
         $command = RefundCreateCommand::from([
             'orderNo'        => $order->order_no,
-            'orderProductId' => $product->id,
+            'orderProductNo' => $product->order_product_no,
             'refundType'     => RefundTypeEnum::REFUND,
             'refundAmount'   => $product->payment_amount,
             'reason'         => '不想要了',
@@ -155,6 +155,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
         ]);
 
         $refunds[] = $this->refundCommandService->create($command);
+        dd($refunds);
     }
 
 

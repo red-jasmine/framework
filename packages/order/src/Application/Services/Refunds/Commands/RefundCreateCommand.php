@@ -10,13 +10,7 @@ class RefundCreateCommand extends Data
 {
     public string $orderNo;
 
-
-    /**
-     * @var array
-     */
-    public array $orderProductNo;
-
-    public int $orderProductId;
+    public string $orderProductNo;
 
     /**
      * 申请类型
@@ -52,7 +46,6 @@ class RefundCreateCommand extends Data
      * @var string|null
      */
     public ?string $outerRefundId = null;
-
 
 
 }

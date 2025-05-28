@@ -52,7 +52,7 @@ class OrderAmountCalculateService
     protected function calculateOrderAmount(Order $order) : void
     {
         // 订单 邮费
-        $order->freight_fee_amount = $order->freight_fee_amount ?? Money::parse(0, $order->currency);
+        $order->freight_amount = $order->freight_amount ?? Money::parse(0, $order->currency);
         // 订单优惠
         $order->discount_amount;
 
@@ -63,7 +63,7 @@ class OrderAmountCalculateService
         $order->total_tax_amount = Money::sum(...$order->products->pluck('tax_amount'));
 
         // 订单应付金额 = 商品金额 + 邮费 - 优惠 +  税费
-        $order->payable_amount = Money::sum($order->total_product_amount, $order->freight_fee_amount)
+        $order->payable_amount = Money::sum($order->total_product_amount, $order->freight_amount)
                                       ->subtract($order->discount_amount)
                                       ->add($order->total_tax_amount);
 
@@ -130,12 +130,12 @@ class OrderAmountCalculateService
         // 计算分摊订单优惠
         $discounts = static::divided($order->discount_amount, $proportions);
         // 计算分摊运费
-        $freightFee = static::divided($order->freight_fee_amount, $proportions);
+        $freightFee = static::divided($order->freight_amount, $proportions);
 
         // 循环商品，设置分摊优惠金额
         foreach ($order->products as $product) {
             $product->divided_discount_amount    = $discounts[$product->id];
-            $product->divided_freight_fee_amount = $freightFee[$product->id];
+            $product->divided_freight_amount = $freightFee[$product->id];
         }
     }
 
@@ -147,10 +147,10 @@ class OrderAmountCalculateService
             $product->divided_product_amount = Money::sum(
                 $product->product_amount,
                 $product->divided_discount_amount,
-                $product->divided_freight_fee_amount,
+                $product->divided_freight_amount,
             );
             // 商品计税价格 =  商品金额 +  运费
-            $productTaxPrice = $product->product_amount->add($product->divided_freight_fee_amount);
+            $productTaxPrice = $product->product_amount->add($product->divided_freight_amount);
             // 税费计算 = 商品计税价格 * 税率
             $product->tax_amount = $productTaxPrice->multiply(bcdiv($product->tax_rate, 100, 8));
             // 订单商品 应付金额

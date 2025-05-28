@@ -15,11 +15,11 @@ class OrderProductExtension extends Model
 
     public $incrementing = false;
 
-    protected $table = 'order_products_extension';
-
-    protected $casts = [
+    protected $table    = 'order_products_extension';
+    protected $fillable = ['id'];
+    protected $casts    = [
         'after_sales_services' => 'array',
-        'customized'                 => 'array',
+        'customized'           => 'array',
         'buyer_extra'          => 'array',
         'seller_extra'         => 'array',
         'other_extra'          => 'array',

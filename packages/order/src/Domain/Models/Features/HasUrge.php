@@ -2,6 +2,11 @@
 
 namespace RedJasmine\Order\Domain\Models\Features;
 
+use Illuminate\Support\Carbon;
+
+/**
+ * @property ?Carbon $urge_time
+ */
 trait HasUrge
 {
 

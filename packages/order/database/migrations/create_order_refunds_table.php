@@ -3,63 +3,100 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundGoodsStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundPhaseEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
+
 
 return new class extends Migration {
     public function up() : void
     {
         Schema::create('order_refunds',
             function (Blueprint $table) {
-                $table->unsignedBigInteger('id')->primary()->comment('ID');
-                $table->string('app_id', 64)->comment('应用ID');
+                $table->unsignedBigInteger('id')->primary();
                 $table->string('refund_no', 64)->unique()->comment('售后单号');
+                // 订单数据
                 $table->string('order_no', 64)->comment('订单号');
+                $table->string('app_id', 64)->comment('应用ID');
                 $table->string('seller_type', 32)->comment('卖家类型');
                 $table->string('seller_id', 64)->comment('卖家ID');
                 $table->string('seller_nickname')->nullable()->comment('卖家昵称');
                 $table->string('buyer_type', 32)->comment('买家类型');
                 $table->string('buyer_id', 64)->comment('买家类型');
                 $table->string('buyer_nickname')->nullable()->comment('买家昵称');
+                //  订单来源 如：活动、购物车、商品、其他等
+                $table->string('source_type', 32)->nullable()->comment('订单来源');
+                $table->string('source_id', 32)->nullable()->comment('来源ID');
+                // 门店 、渠道 、导购、客户端
+                $table->string('store_type', 32)->nullable()->comment('门店类型');
+                $table->unsignedBigInteger('store_id')->nullable()->comment('门店ID');
+                $table->string('store_nickname')->nullable()->comment('门店名称');
+                $table->string('channel_type', 32)->nullable()->comment('渠道类型');
+                $table->unsignedBigInteger('channel_id')->nullable()->comment('渠道ID');
+                $table->string('channel_nickname')->nullable()->comment('渠道名称');
+                $table->string('guide_type', 32)->nullable()->comment('导购类型');
+                $table->unsignedBigInteger('guide_id')->nullable()->comment('导购ID');
+                $table->string('guide_nickname')->nullable()->comment('导购名称');
 
-                // 售后
-                $table->string('refund_type', 32)->comment(RefundTypeEnum::comments('售后类型'));
-                $table->string('phase', 32)->comment(RefundPhaseEnum::comments('售后阶段'));
-                $table->boolean('has_good_return')->default(false)->comment('是否需要退货');
-                $table->string('reason')->nullable()->comment('原因');
-                $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
-
-                // 订单数据
+                // 订单类型
                 $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
 
+
+                // 订单商品数据
+                $table->string('order_product_no', 64)->unique()->comment('商品单号');
+
+                // 商品基本信息
+                $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
+                $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+                $table->string('product_type', 32)->comment('商品源类型');
+                $table->unsignedBigInteger('product_id')->comment('商品源ID');
+                $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
+                // 商品信息
+                $table->string('title')->comment('标题');
+                $table->string('sku_name')->nullable()->comment('规格名称');
+                $table->string('image')->nullable()->comment('图片');
+                $table->string('outer_product_id', 64)->nullable()->comment('外部商品编码');
+                $table->string('outer_sku_id', 64)->nullable()->comment('外部规格编码');
+                $table->string('barcode', 64)->nullable()->comment('条形码');
+                $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
+                $table->string('unit')->nullable()->comment('单位');
+                $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
+                $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
+                $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
                 // 金额
-                $table->string('currency', 10)->default('CNY')->comment('货币');
-                $table->decimal('price', 12)->default(0)->comment('价格');
-                $table->decimal('cost_price', 12)->default(0)->comment('成本价格');
-                $table->decimal('product_amount', 12)->default(0)->comment('商品金额');
+                $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+                $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
+                $table->string('currency', 3)->default('CNY')->comment('货币');
+                $table->decimal('price', 12)->default(0)->comment('单价');
+                $table->decimal('total_price', 12)->default(0)->comment('总价');// 单价 * 数量
+                $table->decimal('discount_amount', 12)->default(0)->comment('商品优惠金额');
+                $table->decimal('product_amount', 12)->default(0)->comment('商品金额'); // 商品总结 - 商品优惠
+                $table->decimal('divided_discount_amount', 12)->default(0)->comment('分摊优惠');
+                $table->decimal('divided_freight_amount', 12)->default(0)->comment('分摊运费');
+                $table->decimal('divided_product_amount', 12)->default(0)->comment('分摊后商品金额');
                 $table->decimal('tax_amount', 12)->default(0)->comment('税费');
-                $table->decimal('discount_amount', 12)->default(0)->comment('商品优惠');
                 $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
                 $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
-                $table->decimal('divided_payment_amount', 12)->default(0)->comment('分摊后实际付款金额');
 
-                $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-
-
+                // 退款售后
+                $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
+                $table->string('phase', 32)->comment(RefundPhaseEnum::comments('阶段'));
+                $table->string('refund_type', 32)->comment(RefundTypeEnum::comments('售后类型'));
+                $table->boolean('has_good_return')->default(false)->comment('是否需要退货');
                 $table->string('good_status', 32)->nullable()->comment(RefundGoodsStatusEnum::comments('货物状态'));
-
-                $table->string('outer_refund_id', 64)->nullable()->comment('外部退款单号');
-
-
+                $table->string('reason')->nullable()->comment('原因');
                 $table->decimal('freight_amount', 12)->default(0)->comment('运费');
                 $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
                 $table->decimal('total_refund_amount', 12)->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
 
+
+                $table->string('outer_refund_id', 64)->nullable()->comment('外部退款单号');
+
+                //  TODO 供应商相关
 
                 $table->timestamp('created_time')->nullable()->comment('创建时间');
                 $table->timestamp('end_time')->nullable()->comment('完结时间');
@@ -71,7 +108,7 @@ return new class extends Migration {
                 $table->softDeletes();
                 $table->comment('订单-退款表');
 
-
+                $table->index(['order_no', 'order_product_no'], 'idx_order_product');
                 $table->index(['seller_id', 'seller_type', 'refund_status'], 'idx_seller');
                 $table->index(['buyer_id', 'buyer_type', 'refund_status'], 'idx_buyer');
                 $table->comment('订单-商品表');
