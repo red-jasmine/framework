@@ -22,4 +22,10 @@ class RefundReadRepository extends QueryBuilderReadRepository implements RefundR
             'payments'
         ];
     }
+
+    public function findByNo(string $no) : Refund
+    {
+        return $this->query()->where('order_no', $no)->firstOrFail();
+    }
+
 }

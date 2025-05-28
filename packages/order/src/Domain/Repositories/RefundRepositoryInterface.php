@@ -11,4 +11,6 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 interface RefundRepositoryInterface extends RepositoryInterface
 {
 
+    public function findByNo(string $no) : Refund;
+
 }

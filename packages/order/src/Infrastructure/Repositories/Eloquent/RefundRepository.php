@@ -14,5 +14,10 @@ class RefundRepository extends EloquentRepository implements RefundRepositoryInt
 
     protected static string $eloquentModelClass = Refund::class;
 
+    public function findByNo(string $no) : Refund
+    {
+        return static::$eloquentModelClass::where('refund_no', $no)->firstOrFail();
+    }
+
 
 }

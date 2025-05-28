@@ -18,8 +18,9 @@ return new class extends Migration {
     {
         Schema::create('order_products', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->string('order_no', 64)->comment('订单号');
+            $table->string('order_product_no', 64)->unique()->comment('商品单号');
             $table->string('app_id', 64)->comment('应用ID');
+            $table->string('order_no', 64)->comment('订单号');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->string('seller_id', 64)->comment('卖家ID');
             $table->string('seller_nickname')->nullable()->comment('卖家昵称');
@@ -42,7 +43,6 @@ return new class extends Migration {
             $table->string('client_type', 32)->nullable()->comment('客户端类型');
             $table->string('client_version', 32)->nullable()->comment('客户端版本');
             $table->string('client_ip', 32)->nullable()->comment('IP');
-
 
 
             // 商品基本信息
