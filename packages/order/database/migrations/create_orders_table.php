@@ -45,10 +45,11 @@ return new class extends Migration {
             $table->string('client_ip', 32)->nullable()->comment('IP');
 
             // 订单类型
-            $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
+            $table->string('order_type', 32)->comment('订单类型');
+
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             // 状态
-            // 流程状态
+            // 总流程状态
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('order_refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
             // 步骤状态
@@ -97,7 +98,6 @@ return new class extends Migration {
             // 统计类
             $table->decimal('cost_price', 12)->default(0)->comment('成本单价');
             $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
-
 
 
             // 由此可可以控制 各类订单类型 的确认时间 如：等待拼单时间、拼团时间、酒店单确认时间等 分钟

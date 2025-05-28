@@ -7,7 +7,9 @@ use Cknow\Money\Money;
 use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\Str;
+use Money\Currency;
 use RedJasmine\Support\Domain\Casts\AmountCast;
+use RedJasmine\Support\Domain\Casts\CurrencyCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\MoneyOldCast;
 use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
@@ -86,11 +88,15 @@ class SupportPackageServiceProvider extends PackageServiceProvider
 
         $config = $this->app->make('config');
 
-        $config->set('data.casts.'.MoneyOld::class, MoneyOldCast::class);
-        $config->set('data.transformers.'.MoneyOld::class, MoneyOldCast::class);
 
         $config->set('data.casts.'.Money::class, MoneyCast::class);
         $config->set('data.transformers.'.Money::class, MoneyCast::class);
+
+        $config->set('data.casts.'.Currency::class, CurrencyCast::class);
+        $config->set('data.transformers.'.Currency::class, CurrencyCast::class);
+
+        $config->set('data.casts.'.MoneyOld::class, MoneyOldCast::class);
+        $config->set('data.transformers.'.MoneyOld::class, MoneyOldCast::class);
 
         $config->set('data.casts.'.Amount::class, AmountCast::class);
         $config->set('data.transformers.'.Amount::class, AmountCast::class);

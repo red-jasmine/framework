@@ -50,14 +50,27 @@ class OrderProductData extends Data
     // 单位（可选）
     public ?string $unit = null;
 
-    public Money  $price;
+    /**
+     * @var Money
+     */
+    public Money $price;
+    /**
+     * 成本
+     * @var Money|null
+     */
     public ?Money $costPrice = null;
     /**
      * 商品优惠
      * @var Money|null
      */
-    public ?Money           $discountAmount = null;
-    public string|int|float $texRate        = 0;
+    public ?Money $discountAmount = null;
+    /**
+     * 服务费
+     * @var Money|null
+     */
+    public ?Money $serviceAmount = null;
+
+    public string|int|float $texRate = 0;
 
     public int     $brandId             = 0;
     public int     $categoryId          = 0;

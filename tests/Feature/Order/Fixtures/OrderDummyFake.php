@@ -69,6 +69,7 @@ class OrderDummyFake
                 'id'       => fake()->numberBetween(1000000, 999999999),
                 'nickname' => fake()->name(),
             ],
+            'currency'              => $this->currency,
             'title'                 => fake()->text(),
             'order_type'            => $this->orderType->value,
             'shipping_type'         => $this->shippingType->value,
@@ -150,32 +151,32 @@ class OrderDummyFake
     public function fakeProductArray(array $product = []) : array
     {
         $fake = [
-            'shipping_type'          => $this->shippingType->value,
-            'order_product_type'     => ProductTypeEnum::GOODS->value,
-            'title'                  => fake()->sentence(),
-            'sku_name'               => fake()->words(1, true),
-            'image'                  => fake()->imageUrl,
-            'product_type'           => 'product',
-            'product_id'             => fake()->numberBetween(1000000, 999999999),
-            'sku_id'                 => fake()->numberBetween(1000000, 999999999),
-            'category_id'            => 0,
-            'brand_id'               => 2,
-            'product_group_id'       => 0,
-            'outer_product_id'       => fake()->numerify('outer_product_id-########'),
-            'outer_sku_id'           => fake()->numerify('outer_sku_id-########'),
-            'barcode'                => fake()->ean13(),
-            'quantity'               => fake()->numberBetween(1, 10),
-            'unit'                   => $this->unit,
-            'unit_quantity'          => $this->unitQuantity,
-            'price'                  => [
+            'shipping_type'      => $this->shippingType->value,
+            'order_product_type' => ProductTypeEnum::GOODS->value,
+            'title'              => fake()->sentence(),
+            'sku_name'           => fake()->words(1, true),
+            'image'              => fake()->imageUrl,
+            'product_type'       => 'product',
+            'product_id'         => fake()->numberBetween(1000000, 999999999),
+            'sku_id'             => fake()->numberBetween(1000000, 999999999),
+            'category_id'        => 0,
+            'brand_id'           => 2,
+            'product_group_id'   => 0,
+            'outer_product_id'   => fake()->numerify('outer_product_id-########'),
+            'outer_sku_id'       => fake()->numerify('outer_sku_id-########'),
+            'barcode'            => fake()->ean13(),
+            'quantity'           => fake()->numberBetween(1, 10),
+            'unit'               => $this->unit,
+            'unit_quantity'      => $this->unitQuantity,
+            'price'              => [
                 'currency' => $this->currency,
                 'amount'   => fake()->randomFloat(2, 90, 100),
             ],
-            'cost_price'             => [
+            'cost_price'         => [
                 'currency' => $this->currency,
                 'amount'   => fake()->randomFloat(2, 70, 80),
             ],
-            'tex_rate'               => 7,// %
+            'tex_rate'           => 7,// %
 
             'discount_amount'        => [
                 'currency' => $this->currency,

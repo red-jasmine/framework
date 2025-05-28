@@ -3,8 +3,8 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use Cknow\Money\Money;
+use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -14,23 +14,25 @@ class OrderData extends Data
 {
 
     public string $appId = 'system';
-
+    // 订单类型
+    public string $orderType;
     /**
      * 卖家
      * @var UserInterface
      */
     public UserInterface $seller;
+
+    /**
+     * 货币
+     * @var Currency
+     */
+    public Currency $currency;
     /**
      * 买家
      * @var UserInterface
      */
     public UserInterface $buyer;
-    /**
-     * 订单类型
-     * @var OrderTypeEnum
-     */
-    #[WithCast(EnumCast::class, type: OrderTypeEnum::class)]
-    public OrderTypeEnum $orderType;
+
     /**
      * 发货类型
      * @var ShippingTypeEnum
@@ -58,8 +60,16 @@ class OrderData extends Data
      */
     public ?UserInterface $source = null;
 
+    /**
+     * 整体邮费
+     * @var Money|null
+     */
+    public ?Money $freightAmount = null;
 
-    public ?Money $freightAmount  = null;
+    /**
+     * 订单级别优惠
+     * @var Money|null
+     */
     public ?Money $discountAmount = null;
     /**
      * 商品集合

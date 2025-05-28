@@ -98,9 +98,8 @@ return new class extends Migration {
             $table->decimal('cost_price', 12)->default(0)->comment('成本单价');
             $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
 
-
+            $table->string('order_type', 32)->comment('订单类型');
             // 状态
-            $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
             $table->string('order_refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
             $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));

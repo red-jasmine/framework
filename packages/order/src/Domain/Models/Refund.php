@@ -22,6 +22,7 @@ use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Generator\RefundNoGeneratorInterface;
+use RedJasmine\Order\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
@@ -33,7 +34,6 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
-use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -42,8 +42,10 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property string $refund_no
+ * @property RefundStatusEnum $refund_status
  * @property RefundTypeEnum $refund_type
- * @property Money $freight_amount
+ * @property Money $refund_freight_amount
+ * @property Money $refund_product_amount
  */
 class Refund extends Model implements OperatorInterface
 {
@@ -103,14 +105,17 @@ class Refund extends Model implements OperatorInterface
     public function casts() : array
     {
         return array_merge([
-            'order_product_type' => ProductTypeEnum::class,
-            'shipping_type'      => ShippingTypeEnum::class,
-            'refund_type'        => RefundTypeEnum::class,
-            'refund_status'      => RefundStatusEnum::class,
-            'good_status'        => RefundGoodsStatusEnum::class,
-            'phase'              => RefundPhaseEnum::class,
-            'has_good_return'    => 'boolean',
-            'end_time'           => 'datetime',
+            'order_product_type'    => ProductTypeEnum::class,
+            'shipping_type'         => ShippingTypeEnum::class,
+            'refund_type'           => RefundTypeEnum::class,
+            'refund_status'         => RefundStatusEnum::class,
+            'good_status'           => RefundGoodsStatusEnum::class,
+            'phase'                 => RefundPhaseEnum::class,
+            'has_good_return'       => 'boolean',
+            'end_time'              => 'datetime',
+            'refund_product_amount' => MoneyCast::class,
+            'refund_freight_amount' => MoneyCast::class,
+            'total_refund_amount'   => MoneyCast::class,
         ], $this->getCommonAttributesCast());
     }
 
@@ -143,12 +148,14 @@ class Refund extends Model implements OperatorInterface
         'seller',
         'buyer_id',
         'buyer',
+        'currency',
     ];
 
 
     public function setOrder(Order $order) : void
     {
         $this->setRelation('order', $order);
+        $this->order_no   = $order->order_no;
         $this->app_id     = $order->app_id;
         $this->seller     = $order->seller;
         $this->buyer      = $order->buyer;
@@ -166,35 +173,34 @@ class Refund extends Model implements OperatorInterface
     {
         $this->setRelation('product', $orderProduct);
 
-        $this->order_product_no           = $orderProduct->order_product_no;
-        $this->order_product_type         = $orderProduct->order_product_type;
-        $this->shipping_type              = $orderProduct->shipping_type;
-        $this->product_type               = $orderProduct->product_type;
-        $this->product_id                 = $orderProduct->product_id;
-        $this->sku_id                     = $orderProduct->sku_id;
-        $this->title                      = $orderProduct->title;
-        $this->sku_name                   = $orderProduct->sku_name;
-        $this->image                      = $orderProduct->image;
-        $this->outer_product_id           = $orderProduct->outer_product_id;
-        $this->outer_sku_id               = $orderProduct->outer_sku_id;
-        $this->barcode                    = $orderProduct->barcode;
-        $this->unit_quantity              = $orderProduct->unit_quantity;
-        $this->unit                       = $orderProduct->unit;
-        $this->category_id                = $orderProduct->category_id;
-        $this->brand_id                   = $orderProduct->brand_id;
-        $this->product_group_id           = $orderProduct->product_group_id;
-        $this->tax_rate                   = $orderProduct->tax_rate;
-        $this->quantity                   = $orderProduct->quantity;
-        $this->price                      = $orderProduct->price;
-        $this->total_price                = $orderProduct->total_price;
-        $this->discount_amount            = $orderProduct->discount_amount;
-        $this->product_amount             = $orderProduct->product_amount;
-        $this->divided_discount_amount    = $orderProduct->divided_discount_amount;
-        $this->divided_freight_amount = $orderProduct->divided_freight_amount;
-        $this->divided_product_amount     = $orderProduct->divided_product_amount;
-        $this->tax_amount                 = $orderProduct->tax_amount;
-        $this->payable_amount             = $orderProduct->payable_amount;
-        $this->payment_amount             = $orderProduct->payment_amount;
+        $this->order_product_no        = $orderProduct->order_product_no;
+        $this->order_product_type      = $orderProduct->order_product_type;
+        $this->shipping_type           = $orderProduct->shipping_type;
+        $this->product_type            = $orderProduct->product_type;
+        $this->product_id              = $orderProduct->product_id;
+        $this->sku_id                  = $orderProduct->sku_id;
+        $this->title                   = $orderProduct->title;
+        $this->sku_name                = $orderProduct->sku_name;
+        $this->image                   = $orderProduct->image;
+        $this->outer_product_id        = $orderProduct->outer_product_id;
+        $this->outer_sku_id            = $orderProduct->outer_sku_id;
+        $this->barcode                 = $orderProduct->barcode;
+        $this->unit_quantity           = $orderProduct->unit_quantity;
+        $this->unit                    = $orderProduct->unit;
+        $this->category_id             = $orderProduct->category_id;
+        $this->brand_id                = $orderProduct->brand_id;
+        $this->product_group_id        = $orderProduct->product_group_id;
+        $this->tax_rate                = $orderProduct->tax_rate;
+        $this->quantity                = $orderProduct->quantity;
+        $this->price                   = $orderProduct->price;
+        $this->total_price             = $orderProduct->total_price;
+        $this->discount_amount         = $orderProduct->discount_amount;
+        $this->product_amount          = $orderProduct->product_amount;
+        $this->divided_discount_amount = $orderProduct->divided_discount_amount;
+        $this->freight_amount          = $orderProduct->freight_amount;
+        $this->tax_amount              = $orderProduct->tax_amount;
+        $this->payable_amount          = $orderProduct->payable_amount;
+        $this->payment_amount          = $orderProduct->payment_amount;
 
     }
 

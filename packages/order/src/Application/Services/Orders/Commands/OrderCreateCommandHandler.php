@@ -23,11 +23,14 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
      */
     public function handle(OrderCreateCommand $command) : Order
     {
+
         $order = Order::make(
             [
-                'app_id' => $command->appId,
-                'seller' => $command->seller,
-                'buyer'  => $command->buyer,
+                'currency' => $command->currency,
+                'app_id'   => $command->appId,
+                'seller'   => $command->seller,
+                'buyer'    => $command->buyer,
+
             ]
         );
 

@@ -29,31 +29,33 @@ use RedJasmine\Order\Domain\Events\OrderStarChangedEvent;
 use RedJasmine\Order\Domain\Events\OrderUrgeEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
+use RedJasmine\Order\Domain\Facades\OrderType;
 use RedJasmine\Order\Domain\Generator\OrderNoGenerator;
+use RedJasmine\Order\Domain\Models\Casts\MoneyCast;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\OrderExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
-use RedJasmine\Order\Domain\Services\OrderAmountCalculateService;
 use RedJasmine\Order\Domain\Services\OrderRefundService;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
-use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Order\Domain\Types\OrderTypeInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use Throwable;
 
 
 /**
  * @property Money $payment_amount
  * @property Money $payable_amount
+ * @property PaymentStatusEnum $payment_status
+ * @property OrderStatusEnum $order_status
+ * @property ShippingStatusEnum $shipping_status
+ * @property AcceptStatusEnum $accept_status
  */
 class Order extends Model implements OperatorInterface
 {
@@ -83,6 +85,7 @@ class Order extends Model implements OperatorInterface
         'seller_id',
         'seller',
         'buyer',
+        'currency',
     ];
 
     protected $dispatchesEvents = [
@@ -124,9 +127,10 @@ class Order extends Model implements OperatorInterface
     {
 
         return OrderProduct::make([
-            'app_id' => $this->app_id,
-            'seller' => $this->seller,
-            'buyer'  => $this->buyer,
+            'app_id'   => $this->app_id,
+            'seller'   => $this->seller,
+            'buyer'    => $this->buyer,
+            'currency' => $this->currency,
         ]);
     }
 
@@ -161,40 +165,34 @@ class Order extends Model implements OperatorInterface
     public function casts() : array
     {
         return array_merge([
-            'order_type'                    => OrderTypeEnum::class,
-            'shipping_type'                 => ShippingTypeEnum::class,
-            'order_status'                  => OrderStatusEnum::class,
-            'accept_status'                 => AcceptStatusEnum::class,
-            'payment_status'                => PaymentStatusEnum::class,
-            'shipping_status'               => ShippingStatusEnum::class,
-            'created_time'                  => 'datetime',
-            'payment_time'                  => 'datetime',
-            'accept_time'                   => 'datetime',
-            'close_time'                    => 'datetime',
-            'shipping_time'                 => 'datetime',
-            'collect_time'                  => 'datetime',
-            'dispatch_time'                 => 'datetime',
-            'signed_time'                   => 'datetime',
-            'confirm_time'                  => 'datetime',
-            'refund_time'                   => 'datetime',
-            'rate_time'                     => 'datetime',
-            'is_seller_delete'              => 'boolean',
-            'is_buyer_delete'               => 'boolean',
-            'total_product_amount'          => MoneyCast::class.':currency,total_product_amount',
-            'total_tax_amount'              => MoneyCast::class.':currency,total_tax_amount,true',
-            'discount_amount'               => MoneyCast::class.':currency,discount_amount,true',
-            'freight_amount'                => MoneyCast::class.':currency,freight_amount,true',
-            'payable_amount'                => MoneyCast::class.':currency,payable_amount,true',
-            'payment_amount'                => MoneyCast::class.':currency,payment_amount,true',
-            'refund_amount'                 => MoneyCast::class.':currency,refund_amount,true',
-            'receivable_amount'             => MoneyCast::class.':currency,receivable_amount,true',
-            'received_amount'               => MoneyCast::class.':currency,received_amount,true',
-            'total_commission_amount'       => MoneyCast::class.':currency,total_commission_amount,true',
-            'total_platform_fee_amount'     => MoneyCast::class.':currency,total_platform_fee_amount,true',
-            'total_platform_subsidy_amount' => MoneyCast::class.':currency,total_platform_subsidy_amount,true',
-            'total_price'                   => MoneyCast::class.':currency,total_price,true',
-            'total_product_discount_amount' => MoneyCast::class.':currency,total_product_discount_amount,true',
-            'total_cost_price'              => MoneyCast::class.':currency,total_cost_price,true',
+            //'order_type'                    => OrderTypeEnum::class,
+            'shipping_type'    => ShippingTypeEnum::class,
+            'order_status'     => OrderStatusEnum::class,
+            'accept_status'    => AcceptStatusEnum::class,
+            'payment_status'   => PaymentStatusEnum::class,
+            'shipping_status'  => ShippingStatusEnum::class,
+            'created_time'     => 'datetime',
+            'payment_time'     => 'datetime',
+            'accept_time'      => 'datetime',
+            'close_time'       => 'datetime',
+            'shipping_time'    => 'datetime',
+            'collect_time'     => 'datetime',
+            'dispatch_time'    => 'datetime',
+            'signed_time'      => 'datetime',
+            'confirm_time'     => 'datetime',
+            'refund_time'      => 'datetime',
+            'rate_time'        => 'datetime',
+            'is_seller_delete' => 'boolean',
+            'is_buyer_delete'  => 'boolean',
+
+
+            'commission_amount'        => MoneyCast::class,
+            'seller_discount_amount'   => MoneyCast::class,
+            'platform_discount_amount' => MoneyCast::class,
+            'platform_service_amount'  => MoneyCast::class,
+            'receivable_amount'        => MoneyCast::class,
+            'received_amount'          => MoneyCast::class,
+
 
         ], $this->getCommonAttributesCast());
     }
@@ -579,9 +577,10 @@ class Order extends Model implements OperatorInterface
     {
 
         $refund = Refund::make([
-            'app_id' => $this->app_id,
-            'seller' => $this->seller,
-            'buyer'  => $this->buyer,
+            'app_id'   => $this->app_id,
+            'seller'   => $this->seller,
+            'buyer'    => $this->buyer,
+            'currency' => $this->currency,
         ]);
 
         // 设置订单信息
@@ -608,22 +607,28 @@ class Order extends Model implements OperatorInterface
         return app(OrderRefundService::class)->create($this, $orderRefund);
     }
 
+
+    public function getOrderTypeStrategy() : OrderTypeInterface
+    {
+        return OrderType::create($this->order_type);
+    }
+
     public function create() : static
     {
         // 计算金额
-        $this->calculateAmount();
+        $this->getOrderTypeStrategy()->calculateAmount($this);
+
         $this->created_time = now();
+        $order              = $this;
+        // 小计项目
+        $order->quantity         = $order->products->sum('quantity');
+        $order->price            = Money::avg(...$order->products->pluck('price'));
+        $order->cost_price       = Money::avg(...$order->products->pluck('cost_price'));
+        $order->total_price      = Money::sum(...$order->products->pluck('total_price'));
+        $order->total_cost_price = Money::sum(...$order->products->pluck('total_cost_price'));
+
 
         return $this;
-    }
-
-    /**
-     * 计算金额
-     * @return $this
-     */
-    public function calculateAmount() : static
-    {
-        return app(OrderAmountCalculateService::class)->calculate($this);
     }
 
 

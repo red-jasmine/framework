@@ -155,15 +155,14 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
         ]);
 
         $refunds[] = $this->refundCommandService->create($command);
-        dd($refunds);
+
     }
 
 
-    $order = $this->orderRepository->find($order->id);
 
-    foreach ($order->products as $product) {
-
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $product->refund_status->value, '退款状态不正确');
+    foreach ($refunds as $refundNo) {
+        $refund  = $this->refundRepository->findByNo($refundNo);
+        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value, '退款状态不正确');
     }
 
     return $refunds;

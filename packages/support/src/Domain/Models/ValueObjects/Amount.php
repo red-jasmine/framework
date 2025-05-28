@@ -7,6 +7,9 @@ use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
 use RedJasmine\Support\Data\Data;
 
+/**
+ * @deprecated
+ */
 class Amount extends Data
 {
 

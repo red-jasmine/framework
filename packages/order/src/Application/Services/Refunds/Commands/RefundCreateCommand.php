@@ -5,6 +5,8 @@ namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class RefundCreateCommand extends Data
 {
@@ -16,13 +18,14 @@ class RefundCreateCommand extends Data
      * 申请类型
      * @var RefundTypeEnum
      */
+    #[WithCast(EnumCast::class,RefundTypeEnum::class)]
     public RefundTypeEnum $refundType;
 
 
-    public ?Money $refundAmount = null;
+    public ?Money $refundProductAmount = null;
 
 
-    protected ?Money $freightAmount = null;
+    public ?Money $refundFreightAmount = null;
 
     /**
      * 原因

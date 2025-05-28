@@ -12,8 +12,9 @@ class RefundExtension extends Model
 
     use SoftDeletes;
 
-    public $incrementing = false;
+    public    $incrementing = false;
 
+    protected $table        = 'order_refunds_extension';
 
     protected $fillable = ['id'];
 

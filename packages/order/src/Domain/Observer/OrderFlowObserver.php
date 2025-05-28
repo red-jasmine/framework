@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Order\Domain\Observer;
 
-use RedJasmine\Order\Domain\Exceptions\OrderException;
-use RedJasmine\Order\Domain\Flows\OrderFlowInterface;
 use RedJasmine\Order\Domain\Models\Order;
 
 /**
@@ -15,86 +13,70 @@ class OrderFlowObserver
 
 
     /**
-     * @param Order $order
+     * @param  Order  $order
      *
-     * @return OrderFlowInterface
-     * @throws OrderException
-     */
-    protected function orderFlow(Order $order) : OrderFlowInterface
-    {
-        $flows = config('red-jasmine-order.flows', []);
-
-        $flowClass = $flows[$order->order_type->value] ?? null;
-        if (blank($flowClass)) {
-            throw new OrderException('流程不支持');
-        }
-        return app($flowClass);
-    }
-
-    /**
-     * @param Order $order
      * @return void
-     * @throws OrderException
      */
     public function creating(Order $order) : void
     {
-        $this->orderFlow($order)->creating($order);
+        $order->getOrderTypeStrategy()->creating($order);
+
     }
 
     /**
-     * @param Order $order
+     * @param  Order  $order
+     *
      * @return void
-     * @throws OrderException
      */
     public function paid(Order $order) : void
     {
-
-        $this->orderFlow($order)->paid($order);
+        $order->getOrderTypeStrategy()->paid($order);
     }
 
     /**
-     * @param Order $order
+     * @param  Order  $order
+     *
      * @return void
-     * @throws OrderException
      */
     public function accept(Order $order) : void
     {
-        $this->orderFlow($order)->accept($order);
+        $order->getOrderTypeStrategy()->accept($order);
     }
 
     /**
-     * @param Order $order
+     * @param  Order  $order
+     *
      * @return void
-     * @throws OrderException
      */
-    public function reject(Order $order):void
+    public function reject(Order $order) : void
     {
-        $this->orderFlow($order)->reject($order);
+        $order->getOrderTypeStrategy()->reject($order);
     }
 
     public function shipping(Order $order) : void
     {
 
-        $this->orderFlow($order)->shipping($order);
+        $order->getOrderTypeStrategy()->shipping($order);
     }
 
     public function shipped(Order $order) : void
     {
 
-        $this->orderFlow($order)->shipped($order);
+        $order->getOrderTypeStrategy()->shipped($order);
     }
 
     /**
      * 订单确认
      *
-     * @param Order $order
+     * @param  Order  $order
      *
      * @return void
-     * @throws OrderException
      */
     public function confirmed(Order $order) : void
     {
-        $this->orderFlow($order)->confirmed($order);
+
+        $order->getOrderTypeStrategy()->confirmed($order);
+
     }
 
 }

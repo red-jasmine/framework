@@ -14,10 +14,10 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
     /**
      * @param  RefundCreateCommand  $command
      *
-     * @return int
+     * @return string
      * @throws Exception|Throwable
      */
-    public function handle(RefundCreateCommand $command) : int
+    public function handle(RefundCreateCommand $command) : string
     {
         $this->beginDatabaseTransaction();
 
@@ -28,8 +28,10 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
             // 创建退款单实例
             $orderRefund = $order->newRefundInstance($orderProduct);
 
-            $orderRefund->refund_type            = $command->refundType;
-            $orderRefund->refund_amount          = $command->refundAmount;
+            $orderRefund->refund_type           = $command->refundType;
+            $orderRefund->refund_product_amount = $command->refundProductAmount;
+            $orderRefund->refund_freight_amount = $command->refundFreightAmount;
+
             $orderRefund->reason                 = $command->reason;
             $orderRefund->extension->description = $command->description;
             $orderRefund->extension->images      = $command->images;
@@ -48,7 +50,7 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
             throw  $throwable;
         }
 
-        return $orderRefund->id;
+        return $orderRefund->refund_no;
     }
 
 }

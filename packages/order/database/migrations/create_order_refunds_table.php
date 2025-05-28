@@ -43,7 +43,7 @@ return new class extends Migration {
                 $table->string('guide_nickname')->nullable()->comment('导购名称');
 
                 // 订单类型
-                $table->string('order_type', 32)->comment(OrderTypeEnum::comments('订单类型'));
+                $table->string('order_type', 32)->comment('订单类型');
 
 
                 // 订单商品数据
@@ -67,20 +67,27 @@ return new class extends Migration {
                 $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
                 $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
                 $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
-                // 金额
                 $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+
+
+                // 金额
                 $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
                 $table->string('currency', 3)->default('CNY')->comment('货币');
-                $table->decimal('price', 12)->default(0)->comment('单价');
-                $table->decimal('total_price', 12)->default(0)->comment('总价');// 单价 * 数量
-                $table->decimal('discount_amount', 12)->default(0)->comment('商品优惠金额');
-                $table->decimal('product_amount', 12)->default(0)->comment('商品金额'); // 商品总结 - 商品优惠
-                $table->decimal('divided_discount_amount', 12)->default(0)->comment('分摊优惠');
-                $table->decimal('divided_freight_amount', 12)->default(0)->comment('分摊运费');
-                $table->decimal('divided_product_amount', 12)->default(0)->comment('分摊后商品金额');
-                $table->decimal('tax_amount', 12)->default(0)->comment('税费');
-                $table->decimal('payable_amount', 12)->default(0)->comment('应付金额');
-                $table->decimal('payment_amount', 12)->default(0)->comment('实付金额');
+                $table->decimal('price', 12)->default(0)->comment('销售单价');
+                $table->decimal('total_price', 12)->default(0)->comment('销售总价');// 汇总
+                $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
+                $table->decimal('product_amount', 12)->default(0)->comment('商品金额'); // 汇总
+                $table->decimal('tax_amount', 12)->default(0)->comment('税费金额'); // 汇总
+                $table->decimal('service_amount', 12)->default(0)->comment('服务费金额'); // 汇总
+                $table->decimal('freight_amount', 12)->default(0)->comment('运费金额'); // 需要分摊
+                $table->decimal('divided_discount_amount', 12)->default(0)->comment('分摊优惠金额');
+                $table->decimal('payable_amount', 12)->default(0)->comment('买家应付金额');
+                $table->decimal('payment_amount', 12)->default(0)->comment('买家实付金额');
+                $table->decimal('refund_amount', 12)->default(0)->comment('买家退款金额');
+
+                // 统计类
+                $table->decimal('cost_price', 12)->default(0)->comment('成本单价');
+                $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
 
                 // 退款售后
                 $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
@@ -89,8 +96,8 @@ return new class extends Migration {
                 $table->boolean('has_good_return')->default(false)->comment('是否需要退货');
                 $table->string('good_status', 32)->nullable()->comment(RefundGoodsStatusEnum::comments('货物状态'));
                 $table->string('reason')->nullable()->comment('原因');
-                $table->decimal('freight_amount', 12)->default(0)->comment('运费');
-                $table->decimal('refund_amount', 12)->default(0)->comment('退款金额');
+                $table->decimal('refund_freight_amount', 12)->default(0)->comment('退运费');
+                $table->decimal('refund_product_amount', 12)->default(0)->comment('退商品金额');
                 $table->decimal('total_refund_amount', 12)->default(0)->comment('总退款金额'); // 退商品金额 + 邮费
 
 

@@ -34,37 +34,31 @@ class OrderRefundService
             throw RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
-
         // 获取当售后阶段
         $orderRefund->phase = $this->getRefundPhase($orderProduct);
 
-        // 计算退款金额
-        $refundAmount = Money::parse('0', $orderProduct->currency);
+
+        // 如果需要退款
         if (in_array($orderRefund->refund_type, [
             RefundTypeEnum::REFUND,
             RefundTypeEnum::RETURN_GOODS_REFUND,
         ], true)) {
+            // 计算最大的商品金额  = 应付金额 - 退款金额
+            $maxRefundAmount = $orderProduct->maxRefundProductAmount();
 
-            // 获取最大退款金额
-            //$refundAmount = (string) ($orderRefund->refund_amount ?? 0);
-
-            $maxRefundAmount = $orderProduct->maxRefundAmount();
-
-            $refundAmount = $maxRefundAmount;
-
-            // if (bccomp($refundAmount, 0, 2) <= 0) {
-            //     $refundAmount = $maxRefundAmount;
-            // }
-            // if (bccomp($refundAmount, $maxRefundAmount, 2) > 0) {
-            //     $refundAmount = $maxRefundAmount;
-            // }
+            $orderRefund->refund_product_amount = $orderRefund->refund_product_amount ?? $maxRefundAmount;
+            if ($orderRefund->refund_product_amount->compare($maxRefundAmount)) {
+                $orderRefund->refund_product_amount = $maxRefundAmount;
+            }
+            $orderRefund->refund_freight_amount = Money::parse(0, $orderRefund->currency);
+        } else {
+            // 如果不需要退款
+            $orderRefund->refund_product_amount = Money::parse(0, $orderRefund->currency);
+            $orderRefund->refund_freight_amount = Money::parse(0, $orderRefund->currency);
         }
 
-        // TODO 计算运费
-        $orderRefund->freight_amount = Money::parse(0, $orderProduct->currency);
-        $orderRefund->refund_amount  = $refundAmount;
 
-        $orderRefund->total_refund_amount = $orderRefund->refund_amount->add($orderRefund->freight_amount);
+        $orderRefund->total_refund_amount = $orderRefund->refund_product_amount->add($orderRefund->refund_freight_amount);
 
 
         switch ($orderRefund->refund_type) {
