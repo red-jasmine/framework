@@ -9,10 +9,10 @@ enum AmountTypeEnum: string
 
     use EnumsHelper;
 
-    case FULL = 'full';
-    case DEPOSIT = 'deposit';
-    case TAIL = 'tail';
-    case REFUND = 'refund';
+    case FULL = 'full'; // 全款
+    case DEPOSIT = 'deposit'; // 定金
+    case TAIL = 'tail'; //  尾款
+    case REFUND = 'refund'; // 退款
 
 
     public static function labels() : array
