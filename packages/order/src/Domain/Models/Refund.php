@@ -6,6 +6,7 @@ use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -211,7 +212,7 @@ class Refund extends Model implements OperatorInterface
 
     public function product() : BelongsTo
     {
-        return $this->belongsTo(OrderProduct::class, 'order_product_id', 'id');
+        return $this->belongsTo(OrderProduct::class, 'order_product_no', 'order_product_no');
     }
 
 
@@ -225,9 +226,9 @@ class Refund extends Model implements OperatorInterface
         return $this->morphMany(OrderCardKey::class, 'entity');
     }
 
-    public function payments() : MorphMany
+    public function payments() : HasMany
     {
-        return $this->morphMany(OrderPayment::class, 'entity');
+        return $this->hasMany(OrderPayment::class, 'entity_id', 'refund_no')->where('entity_type', EntityTypeEnum::REFUND->value);
     }
 
     /**
@@ -330,37 +331,37 @@ class Refund extends Model implements OperatorInterface
             throw new RefundException();
         }
 
-        $amount = $amount ?: $this->refund_amount;
+        $amount = $amount ?: $this->total_refund_amount;
 
-        if (bccomp($amount, $this->refund_amount, 2) > 0) {
+        if ($amount->compare($this->total_refund_amount) > 0) {
             throw RefundException::newFromCodes(RefundException::REFUND_AMOUNT_OVERFLOW, '退款金额超出');
+
         }
-        $this->end_time      = now();
-        $this->refund_amount = $amount;
-        $this->refund_status = RefundStatusEnum::FINISHED;
+        $this->end_time            = now();
+        $this->total_refund_amount = $amount;
+        $this->refund_status       = RefundStatusEnum::FINISHED;
         // 如果是售中阶段同步状态
         if ($this->phase === RefundPhaseEnum::ON_SALE) {
             // 设置订单商品项信息
-            $this->product->refund_amount = bcadd($this->product->refund_amount, $amount, 2);
-            $this->product->refund_status = $this->refund_status;
-            $this->product->refund_time   = $this->product->refund_time ?? now();
 
-            if (bccomp($this->product->refund_amount, $this->product->divided_discount_amount, 2)) {
-                $this->product->order_status    = OrderStatusEnum::CLOSED;
-                $this->product->shipping_status = null;
+            // 同步 订单商品信息和状态
+            $this->product->refund_amount = $this->product->refund_amount->add($this->total_refund_amount);
+            //$this->product->refund_status = $this->refund_status;
+            $this->product->refund_time = $this->product->refund_time ?? now();
+            // 如果全款退，那么久是无效订单
+            if ($this->product->refund_amount->compare($this->product->payable_amount) >= 0) {
+                // TODO 退款流程指正 提款状态进行处理
+                $this->product->order_status = OrderStatusEnum::CLOSED;
+                // TODO 设置退款状态
             }
+
 
             // 设置订单项
-            $this->order->refund_amount = bcadd($this->order->refund_amount, $amount, 2);
+            $this->order->refund_amount = $this->order->refund_amount->add($this->total_refund_amount);
             $this->order->refund_time   = $this->order->refund_time ?? now();
 
-            // 如果订单退款金额
-            if ($this->order->isRefundFreightAmount()) {
-                $this->freight_amount = bcsub($this->order->payment_amount, $this->order->refund_amount, 2);
-            }
-            // 订单退款金额需要加上退邮费
-            $this->order->refund_amount = bcadd($this->order->refund_amount, $this->freight_amount, 2);
 
+            // 如果是全款退 ，那么就关闭订单
             if ($this->order->isEffective() === false) {
                 $this->order->close();
             }
@@ -369,7 +370,9 @@ class Refund extends Model implements OperatorInterface
         }
 
 
-        // 设置退款单
+        // 只有在已经支付了情况下 才去创建支付单 TODO
+
+        // 创建支付单
         $payment                 = OrderPayment::make();
         $payment->order_no       = $this->order_no;
         $payment->app_id         = $this->app_id;
@@ -378,16 +381,19 @@ class Refund extends Model implements OperatorInterface
         $payment->entity_type    = EntityTypeEnum::REFUND;
         $payment->entity_id      = $this->id;
         $payment->amount_type    = AmountTypeEnum::REFUND;
-        $payment->payment_amount = bcadd($this->refund_amount, $this->freight_amount, 2);
+        $payment->payment_amount = $this->total_refund_amount;
         $payment->status         = PaymentStatusEnum::WAIT_PAY;
         $this->payments->add($payment);
 
 
-        // 如果是售后状态 则不同步
+
         $this->fireModelEvent('agreed', false);
     }
 
-
+    /**
+     * 是否允许同意退款
+     * @return bool
+     */
     public function isAllowAgreeRefund() : bool
     {
         if (!in_array($this->refund_type, [

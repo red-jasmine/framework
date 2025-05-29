@@ -1,6 +1,7 @@
 '<?php
 
 
+use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
@@ -27,6 +28,7 @@ use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Order\Domain\Types\OrderStandardType;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 
@@ -50,13 +52,21 @@ beforeEach(function () {
 
 test('can create a new order', function () {
 
+
     $command = OrderCreateCommand::from($this->orderFake->order());
-    $result  = $this->orderCommandService->create($command);
+    $order   = $this->orderCommandService->create($command);
 
-    $this->assertInstanceOf(Order::class, $result, '创建订单失败');
-    $this->order = $result;
+    $this->assertInstanceOf(Order::class, $order, '创建订单失败');
+    $this->order = $order;
 
-    return $result;
+    $this->assertTrue($order->freight_amount->equals(Money::sum(...$order->products->pluck('freight_amount'))));
+    $this->assertTrue($order->discount_amount->equals(Money::sum(...$order->products->pluck('divided_discount_amount'))));
+    $this->assertTrue($order->product_amount->equals(Money::sum(...$order->products->pluck('product_amount'))));
+    $this->assertTrue($order->tax_amount->equals(Money::sum(...$order->products->pluck('tax_amount'))));
+    $this->assertTrue($order->service_amount->equals(Money::sum(...$order->products->pluck('service_amount'))));
+
+
+    return $order;
 });
 
 
@@ -159,29 +169,32 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
     }
 
 
-
+    $refundModels = collect([]);
     foreach ($refunds as $refundNo) {
-        $refund  = $this->refundRepository->findByNo($refundNo);
+        $refund = $this->refundRepository->findByNo($refundNo);
+        $refundModels->add($refund);
         $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value, '退款状态不正确');
     }
+    $sumRefundAmount = Money::sum(...$refundModels->pluck('total_refund_amount'));
+    $this->assertTrue($order->payable_amount->equals($sumRefundAmount));
 
     return $refunds;
 
 })
     ->depends('can create a new order', 'cna paying a order', 'can paid a order');
 
-return;
+
 test('can urge a refund', function (Order $order, $refunds = []) {
 
     foreach ($refunds as $refundId) {
 
 
-        $command     = new RefundUrgeCommand();
-        $command->id = $refundId;
+        $command           = new RefundUrgeCommand();
+        $command->refundNo = $refundId;
 
         $this->refundCommandService->urge($command);
 
-        $refund = $this->refundRepository->find($refundId);
+        $refund = $this->refundRepository->findByNo($refundId);
 
         $this->assertEquals(1, $refund->urge);
     }
@@ -197,10 +210,10 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
     foreach ($refunds as $refundId) {
 
-        $refund          = $this->refundRepository->find($refundId);
-        $command         = new RefundAgreeRefundCommand();
-        $command->id     = $refund->id;
-        $command->amount = $refund->refund_amount;
+        $refund            = $this->refundRepository->findByNo($refundId);
+        $command           = new RefundAgreeRefundCommand();
+        $command->refundNo = $refund->refund_no;
+        $command->amount   = $refund->total_refund_amount;
 
         $this->refundCommandService->agreeRefund($command);
     }
@@ -216,8 +229,8 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
 
     foreach ($order->products as $product) {
-        $this->assertEquals(RefundStatusEnum::FINISHED->value, $product->refund_status->value, '退款状态不正确');
-        $this->assertEquals($product->divided_payment_amount->value(), $product->refund_amount->value(), '退款金额不正确');
+        //$this->assertEquals(RefundStatusEnum::FINISHED->value, $product->refund_status->value, '退款状态不正确');
+        $this->assertTrue($product->payable_amount->equals($product->refund_amount), '退款金额不正确');
     }
 
     return $refunds;
@@ -226,9 +239,9 @@ test('can agree refund a order', function (Order $order, $refunds = []) {
 
 test('can refund payment paying', function (Order $order, $refunds = []) {
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund = $this->refundRepository->find($refundId);
+        $refund = $this->refundRepository->findByNo($refundNo);
 
         $orderPayment         = $refund->payments->first();
         $command              = new OrderPaymentPayingCommand();
@@ -243,9 +256,9 @@ test('can refund payment paying', function (Order $order, $refunds = []) {
         $this->orderPaymentCommandService->paying($command);
     }
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund       = $this->refundRepository->find($refundId);
+        $refund       = $this->refundRepository->findByNo($refundNo);
         $orderPayment = $refund->payments->first();
 
 

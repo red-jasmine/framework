@@ -6,7 +6,7 @@ use RedJasmine\Support\Data\Data;
 
 class RefundUrgeCommand extends Data
 {
-    public int $id;
+    public string $refundNo;
 
 
 }

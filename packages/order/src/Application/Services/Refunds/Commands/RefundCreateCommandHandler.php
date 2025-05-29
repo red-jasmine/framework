@@ -28,10 +28,9 @@ class RefundCreateCommandHandler extends AbstractRefundCommandHandler
             // 创建退款单实例
             $orderRefund = $order->newRefundInstance($orderProduct);
 
-            $orderRefund->refund_type           = $command->refundType;
-            $orderRefund->refund_product_amount = $command->refundProductAmount;
-            $orderRefund->refund_freight_amount = $command->refundFreightAmount;
-
+            $orderRefund->refund_type            = $command->refundType;
+            $orderRefund->refund_product_amount  = $command->refundProductAmount;
+            $orderRefund->refund_freight_amount  = $command->refundFreightAmount;
             $orderRefund->reason                 = $command->reason;
             $orderRefund->extension->description = $command->description;
             $orderRefund->extension->images      = $command->images;

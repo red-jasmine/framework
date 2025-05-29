@@ -25,5 +25,10 @@ abstract class AbstractRefundCommandHandler extends CommandHandler
         return $this->service->repository->find($id);
     }
 
+    protected function findByNo(string $no) : Refund
+    {
+        return $this->service->repository->findByNo($no);
+    }
+
 
 }

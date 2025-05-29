@@ -268,7 +268,8 @@ class Order extends Model implements OperatorInterface
     public function isEffective() : bool
     {
 
-        if ($this->payment_amount->subtract($this->refund_amount)->isZero() || $this->payment_amount->subtract($this->refund_amount)->isNegative()) {
+        if ($this->payable_amount->subtract($this->refund_amount)->isZero() ||
+            $this->payable_amount->subtract($this->refund_amount)->isNegative()) {
             return false;
         }
         return true;

@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
+use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class RefundAgreeRefundCommand extends Data
 {
-    public int $id; // 退款单ID
+    public string $refundNo; // 退款单号
 
-    public ?MoneyOld $amount;
+    public ?Money $amount = null;
 }

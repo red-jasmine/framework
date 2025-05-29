@@ -131,7 +131,8 @@ return new class extends Migration {
             $table->string('contact')->nullable()->comment('联系方式');
             $table->string('password')->nullable()->comment('查询密码');
 
-            $table->string('last_refund_no')->nullable()->comment('最后单款单号');
+            $table->string('last_refund_no')->nullable()->comment('最后退款单款单号');
+
             // 供应商
             $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
             // 供应商

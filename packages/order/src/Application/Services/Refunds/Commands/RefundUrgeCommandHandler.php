@@ -14,7 +14,7 @@ class RefundUrgeCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund = $this->find($command->id);
+            $refund = $this->findByNo($command->refundNo);
 
             $refund->urge();
 
