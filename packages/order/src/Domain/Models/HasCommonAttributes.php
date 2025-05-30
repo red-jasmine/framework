@@ -4,11 +4,16 @@ namespace RedJasmine\Order\Domain\Models;
 
 use Cknow\Money\Money;
 use RedJasmine\Order\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\CurrencyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 
 /**
+ * @property OrderTypeEnum $order_type
+ * @property string $app_id
+ * @property UserInterface $buyer
+ * @property UserInterface $seller
  * @property UserInterface $store
  * @property UserInterface $guide
  * @property UserInterface $channel
