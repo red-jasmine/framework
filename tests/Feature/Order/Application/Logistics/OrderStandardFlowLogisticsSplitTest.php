@@ -55,8 +55,8 @@ test('cna paying a order', function (Order $order) {
 
     $command = OrderPayingCommand::from(
         [
-            'id'     => $order->id,
-            'amount' => $order->payable_amount
+            'orderNo' => $order->order_no,
+            'amount'  => $order->payable_amount
 
         ]
 
@@ -80,7 +80,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderPaidCommand;
 
-    $command->orderNo               = $order->order_no;
+    $command->orderNo          = $order->order_no;
     $command->orderPaymentId   = $orderPayment->id;
     $command->amount           = $orderPayment->payment_amount;
     $command->paymentType      = 'online';
@@ -98,7 +98,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $order = $this->orderRepository->find($order->id);
 
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
-    $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
+    $this->assertEquals($order->payable_amount->getAmount(), $order->payment_amount->getAmount());
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
@@ -118,11 +118,11 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
             $isFinished = true;
         }
         $command             = $this->orderFake->shippingLogistics([
-                                                                       'id'             => $order->id,
-                                                                       'is_split'       => true,
-                                                                       'is_finished'    => $isFinished,
-                                                                       'order_products' => [ $product1->id ]
-                                                                   ]);
+            'order_no'       => $order->order_no,
+            'is_split'       => true,
+            'is_finished'    => $isFinished,
+            'order_products' => [$product1->order_product_no]
+        ]);
         $logisticsCommands[] = $command;
         $this->orderCommandService->logisticsShipping($command);
 
@@ -156,11 +156,11 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
             continue;
         }
         $command             = $this->orderFake->shippingLogistics([
-                                                                       'id'             => $order->id,
-                                                                       'is_split'       => true,
-                                                                       'is_finished'    => true,
-                                                                       'order_products' => [ $product->id ]
-                                                                   ]);
+            'order_no'       => $order->order_no,
+            'is_split'       => true,
+            'is_finished'    => true,
+            'order_products' => [$product->order_product_no]
+        ]);
         $logisticsCommands[] = $command;
         $this->orderCommandService->logisticsShipping($command);
     }
@@ -203,7 +203,7 @@ test('can change logistics status', function (Order $order, OrderPayment $orderP
 
 test('can confirm a order', function (Order $order, $logisticsCommands) {
 
-    $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
+    $command = OrderConfirmCommand::from(['orderNo' => $order->order_no]);
 
     $this->orderCommandService->confirm($command);
 
