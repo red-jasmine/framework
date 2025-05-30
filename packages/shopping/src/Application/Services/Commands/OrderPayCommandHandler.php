@@ -27,7 +27,7 @@ class OrderPayCommandHandler extends CommandHandler
     {
 
 
-        $order = $this->orderRepository->find($command->id);
+        $order = $this->orderRepository->findByNo($command->orderNo);
 
 
         $goodDetails = GoodDetailData::collect($order->products->map(fn($orderProduct
@@ -37,7 +37,7 @@ class OrderPayCommandHandler extends CommandHandler
 
         // 订单发起支付，获取订单支付单
         $orderPayingCommand = OrderPayingCommand::from([
-            'id' => $command->id,
+            'orderNo' => $command->orderNo,
         ]);
         // 订单发起支付
         $orderPayment = $this->orderCommandService->paying($orderPayingCommand);

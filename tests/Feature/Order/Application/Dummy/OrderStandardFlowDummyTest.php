@@ -100,7 +100,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $this->assertTrue($result);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
     $this->assertTrue($order->payable_amount->equals($order->payment_amount));
@@ -115,12 +115,12 @@ test('can progress a order', function (Order $order) {
     // 订单备注
     $message = '测试留言';
     // 订单商品项备注
-    $orderId        = $order->id;
+    $orderNo        = $order->order_no;
     $progress       = 10;
-    $orderProductId = $order->products->first()->id;
+    $orderProductNo = $order->products->first()->order_product_no;
     $command        = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductNo' => $orderProductId,
+        'orderProductNo' => $orderProductNo,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => false,
@@ -129,14 +129,14 @@ test('can progress a order', function (Order $order) {
 
     // 设置进度
     $this->orderCommandService->progress($command);
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductNo' => $orderProductId,
+        'orderProductNo' => $orderProductNo,
         'progress'       => $progress,
         'isAppend'       => true,
         'isAllowLess'    => false,
@@ -144,15 +144,15 @@ test('can progress a order', function (Order $order) {
 
 
     $this->orderCommandService->progress($command);
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress + $progress, '进度设置失败');
 
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductNo' => $orderProductId,
+        'orderProductNo' => $orderProductNo,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => false,
@@ -166,7 +166,7 @@ test('can progress a order', function (Order $order) {
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductNo' => $orderProductId,
+        'orderProductNo' => $orderProductNo,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => true,
@@ -178,8 +178,8 @@ test('can progress a order', function (Order $order) {
     $this->orderCommandService->progress($command);
 
 
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
@@ -191,16 +191,17 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 
     $command = $this->orderFake->shippingDummy([
-        'orderNo'        => $order->order_no,
-        'order_products' => $order->products->pluck('id')->toArray()
+        'order_no'        => $order->order_no,
+        'order_products' => $order->products->pluck('order_product_no')->toArray()
     ]);
+
 
     $this->orderCommandService->dummyShipping($command);
 
     /**
      * @var $order Order
      */
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
@@ -216,7 +217,7 @@ test('can confirm a order', function (Order $order) {
 
     $this->orderCommandService->confirm($command);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals($order->order_status, OrderStatusEnum::FINISHED, '订单状态');
 
@@ -248,7 +249,7 @@ test('can custom status a order', function (Order $order) {
     }
 
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals($order->seller_custom_status, $sellerCustomStatus, '自定义状态设置失败');
 
@@ -271,7 +272,7 @@ test('can star a order', function (Order $order) {
 
     $this->orderCommandService->star($command);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals($order->star, $star, ' 加星设置失败');
 
@@ -284,7 +285,7 @@ test('can star a order', function (Order $order) {
 
     $this->orderCommandService->star($command);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals($order->star, $star, '加星设置失败');
 
@@ -328,7 +329,7 @@ test('can remarks a order', function (Order $order) {
     $this->orderCommandService->buyerRemarks($command);
 
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $actualCount  = \Illuminate\Support\Str::substrCount($order->extension->seller_remarks, $remarks);
     $actualCount1 = \Illuminate\Support\Str::substrCount($order->extension->buyer_remarks, $remarks);
@@ -379,7 +380,7 @@ test('can message a order', function (Order $order) {
     $this->orderCommandService->buyerMessage($command);
 
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $actualCount  = \Illuminate\Support\Str::substrCount($order->extension->seller_message, $message);
     $actualCount1 = \Illuminate\Support\Str::substrCount($order->extension->buyer_message, $message);
@@ -407,7 +408,7 @@ test('can hidden a order', function (Order $order) {
     $this->orderCommandService->sellerHidden($command);
     $this->orderCommandService->buyerHidden($command);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
     $this->assertEquals($order->is_seller_delete, true, '卖家隐藏');
     $this->assertEquals($order->is_buyer_delete, true, '买家隐藏');
 
@@ -422,7 +423,7 @@ test('can hidden a order', function (Order $order) {
     $this->orderCommandService->buyerHidden($command);
 
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
     $this->assertEquals($order->is_seller_delete, false, '卖家显示');
     $this->assertEquals($order->is_buyer_delete, false, '买家显示');
 

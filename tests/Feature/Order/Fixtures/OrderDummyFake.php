@@ -38,10 +38,10 @@ class OrderDummyFake
     public string $unit         = '件';
     public int    $unitQuantity = 1;
 
-    public int $payment_timeout       = -1;
-    public int $accept_timeout        = 0;
-    public int $confirm_timeout       = -1;
-    public int $rate_timeout          = -1;
+    public int $payment_timeout = -1;
+    public int $accept_timeout  = 0;
+    public int $confirm_timeout = -1;
+    public int $rate_timeout    = -1;
 
     public function order(array $order = []) : array
     {
@@ -269,7 +269,7 @@ class OrderDummyFake
     public function shippingDummy(array $merge) : OrderDummyShippingCommand
     {
         $data = [
-            'order_no'               => 0,
+            'order_no'         => null,
             'order_product_id' => 0,
             'is_finished'      => true,
         ];
