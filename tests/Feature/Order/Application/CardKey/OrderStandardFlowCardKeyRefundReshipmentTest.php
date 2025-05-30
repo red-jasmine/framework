@@ -64,8 +64,8 @@ test('cna paying a order', function (Order $order) {
     //Event::fake();
     $command = OrderPayingCommand::from(
         [
-            'id'     => $order->id,
-            'amount' => $order->payable_amount
+            'orderNo' => $order->order_no,
+            'amount'  => $order->payable_amount
 
         ]
 
@@ -88,7 +88,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderPaidCommand;
 
-    $command->orderNo               = $order->order_no;
+    $command->orderNo          = $order->order_no;
     $command->orderPaymentId   = $orderPayment->id;
     $command->amount           = $orderPayment->payment_amount;
     $command->paymentType      = 'online';
@@ -106,7 +106,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $order = $this->orderRepository->find($order->id);
 
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
-    $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
+    $this->assertEquals($order->payable_amount->getAmount(), $order->payment_amount->getAmount());
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
@@ -119,8 +119,8 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
     foreach ($order->products as $product) {
         $command = OrderCardKeyShippingCommand::from(
             [
-                'id'             => $order->id,
-                'orderProductId' => $product->id,
+                'orderNo'        => $order->order_no,
+                'orderProductNo' => $product->order_product_no,
                 'content'        => fake()->sentence(),
                 'quantity'       => 1
             ]
@@ -152,7 +152,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 test('can confirm a order', function (Order $order) {
 
-    $command = OrderConfirmCommand::from(['id' => $order->id]);
+    $command = OrderConfirmCommand::from(['orderNo' => $order->order_no]);
 
     $this->orderCommandService->confirm($command);
 
@@ -173,10 +173,9 @@ test('can refund a order', function (Order $order) {
     $refunds = [];
     foreach ($order->products as $product) {
         $command                 = new RefundCreateCommand;
-        $command->id             = $order->id;
-        $command->orderProductId = $product->id;
+        $command->orderNo        = $order->order_no;
+        $command->orderProductNo = $product->order_product_no;
         $command->refundType     = RefundTypeEnum::RESHIPMENT;
-        $command->refundAmount   = MoneyOld::make(0);
         $command->reason         = '补发';
         $command->description    = fake()->sentence;
         $command->outerRefundId  = fake()->numerify('######');
@@ -190,11 +189,15 @@ test('can refund a order', function (Order $order) {
 
     $order = $this->orderRepository->find($order->id);
 
-    foreach ($order->products as $product) {
 
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $product->refund_status->value,
+    foreach ($refunds as $refundNo) {
+        $refund = $this->refundRepository->findByNo($refundNo);
+
+
+        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value,
             '退款状态不正确');
     }
+
 
     return $refunds;
 
@@ -206,12 +209,12 @@ test('can refund a order', function (Order $order) {
 
 test('can agree refund reshipment', function ($refunds) {
 
-    foreach ($refunds as $refund) {
+    foreach ($refunds as $refundNo) {
 
-        $command     = new RefundAgreeReshipmentCommand();
-        $command->id = $refund;
+        $command           = new RefundAgreeReshipmentCommand();
+        $command->refundNo = $refundNo;
         $this->refundCommandService->agreeReshipment($command);
-        $refund = $this->refundRepository->find($command->id);
+        $refund = $this->refundRepository->findByNo($command->refundNo);
         $this->assertEquals(RefundStatusEnum::WAIT_SELLER_RESHIPMENT, $refund->refund_status, '退款状态不正确');
     }
 
@@ -221,13 +224,13 @@ test('can agree refund reshipment', function ($refunds) {
 })->depends('can refund a order');
 
 test('can reshipment', function ($refunds) {
-    foreach ($refunds as $refund) {
+    foreach ($refunds as $refundNo) {
 
-        $command          = new RefundCardKeyReshipmentCommand();
-        $command->id      = $refund;
-        $command->content = fake()->sentence;
+        $command           = new RefundCardKeyReshipmentCommand();
+        $command->refundNo = $refundNo;
+        $command->content  = fake()->sentence;
         $this->refundCommandService->cardKeyReshipment($command);
-        $refund = $this->refundRepository->find($command->id);
+        $refund = $this->refundRepository->findByNo($command->refundNo);
         $this->assertEquals(RefundStatusEnum::FINISHED, $refund->refund_status, '退款状态不正确');
     }
 

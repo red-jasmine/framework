@@ -22,8 +22,7 @@ return new class extends Migration {
             $table->string('entity_type',32)->comment(EntityTypeEnum::comments('对象类型'));
             $table->string('entity_id',64)->comment('对象单号');
 
-
-            $table->unsignedBigInteger('order_product_no')->comment('订单商品项单号');
+            $table->string('order_product_no')->comment('订单商品项单号');
             $table->unsignedBigInteger('quantity')->default(1)->comment('数量');
             $table->string('content_type')->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
             $table->text('content')->nullable()->comment('内容');

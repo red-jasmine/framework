@@ -63,7 +63,8 @@ class OrderShippingService
                 if ($orderProduct->isEffective() === false) {
                     return;
                 }
-                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->order_product_no, $logistics->order_product_no ?? [], false))) {
+                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->order_product_no,
+                            $logistics->order_product_no ?? [], false))) {
                     $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
                     $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
                     $isEffectiveShipping           = true;
@@ -99,24 +100,16 @@ class OrderShippingService
         /**
          * @var $orderProduct OrderProduct
          */
-        $orderProduct = $order->products->where('id', $orderProductCardKey->order_product_id)->firstOrFail();
+        $orderProduct = $order->products->where('order_product_no', $orderProductCardKey->order_product_no)->firstOrFail();
 
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
-            dd($orderProduct->shipping_status);
+
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
 
-        $orderProductCardKey->order_no    = $order->order_no;
-        $orderProductCardKey->entity_type = EntityTypeEnum::ORDER;
-        $orderProductCardKey->entity_id   = $order->id;
-        $orderProductCardKey->seller_type = $order->seller_type;
-        $orderProductCardKey->seller_id   = $order->seller_id;
-        $orderProductCardKey->buyer_type  = $order->buyer_type;
-        $orderProductCardKey->buyer_id    = $order->buyer_id;
-
         $orderProduct->addCardKey($orderProductCardKey);
 
-
+        $orderProduct->progress        += $orderProductCardKey->quantity;
         $orderProduct->shipping_status = ShippingStatusEnum::PART_SHIPPED;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
 

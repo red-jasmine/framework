@@ -12,7 +12,7 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
 
 
     /**
-     * @param RefundCardKeyReshipmentCommand $command
+     * @param  RefundCardKeyReshipmentCommand  $command
      *
      * @return void
      * @throws Exception|Throwable
@@ -24,14 +24,13 @@ class RefundCardKeyReshipmentCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund              = $this->find($command->id);
+            $refund              = $this->findByNo($command->refundNo);
             $orderProductCardKey = OrderCardKey::make();
-
 
 
             $orderProductCardKey->content      = $command->content;
             $orderProductCardKey->content_type = $command->contentType;
-            $orderProductCardKey->quantity          = $command->quantity;
+            $orderProductCardKey->quantity     = $command->quantity;
             $orderProductCardKey->status       = $command->status;
             $orderProductCardKey->source_type  = $command->sourceType;
             $orderProductCardKey->source_id    = $command->sourceId;

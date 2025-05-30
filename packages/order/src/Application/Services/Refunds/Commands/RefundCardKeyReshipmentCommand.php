@@ -7,7 +7,7 @@ use RedJasmine\Order\Domain\Data\CardKeyData;
 class RefundCardKeyReshipmentCommand extends CardKeyData
 {
 
-    public int $id; // 退款单ID
+    public string $refundNo; // 退款单号
 
 
 }

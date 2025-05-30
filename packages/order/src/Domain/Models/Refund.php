@@ -573,21 +573,24 @@ class Refund extends Model implements OperatorInterface
 
         $this->end_time = now();
 
-        $cardKey->entity_type      = EntityTypeEnum::REFUND;
-        $cardKey->entity_id        = $this->refund_no;
-        $cardKey->app_id           = $this->app_id;
-        $cardKey->order_no         = $this->order_no;
-        $cardKey->order_product_id = $this->order_product_id;
-        $cardKey->seller_type      = $this->seller_type;
-        $cardKey->seller_id        = $this->seller_id;
-        $cardKey->buyer_type       = $this->buyer_type;
-        $cardKey->buyer_id         = $this->buyer_id;
-
-
-        $this->cardKeys->add($cardKey);
+        $this->addCardKey($cardKey);
 
         $this->fireModelEvent('reshipment', false);
     }
+
+    public function addCardKey(OrderCardKey $cardKey) : void
+    {
+        $cardKey->seller           = $this->seller;
+        $cardKey->buyer            = $this->buyer;
+        $cardKey->order_no         = $this->order_no;
+        $cardKey->app_id           = $this->app_id;
+        $cardKey->entity_id        = $this->refund_no;
+        $cardKey->order_product_no = $this->order_product_no;
+        $cardKey->entity_type      = EntityTypeEnum::REFUND;
+
+        $this->cardKeys->add($cardKey);
+    }
+
 
     public function isAllowReshipment() : bool
     {

@@ -15,6 +15,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Order\Domain\Generator\OrderProductNoGenerator;
 use RedJasmine\Order\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
@@ -149,17 +150,18 @@ class OrderProduct extends Model
 
     public function cardKeys() : HasMany
     {
-        return $this->hasMany(OrderCardKey::class, 'order_product_id', 'id');
+        return $this->hasMany(OrderCardKey::class, 'entity_id', 'order_product_no');
     }
 
     public function addCardKey(OrderCardKey $cardKey) : void
     {
-        $cardKey->seller = $this->seller;
-        $cardKey->buyer  = $this->buyer;
+        $cardKey->seller      = $this->seller;
+        $cardKey->buyer       = $this->buyer;
+        $cardKey->order_no    = $this->order_no;
+        $cardKey->app_id      = $this->app_id;
+        $cardKey->entity_id   = $this->order_product_no;
+        $cardKey->entity_type = EntityTypeEnum::ORDER_PRODUCT;
 
-        $cardKey->order_no = $this->order_no;
-        $cardKey->app_id   = $this->app_id;
-        $this->progress    += $cardKey->quantity;
         $this->cardKeys->add($cardKey);
     }
 

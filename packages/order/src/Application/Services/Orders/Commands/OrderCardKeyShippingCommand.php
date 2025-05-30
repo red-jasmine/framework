@@ -9,9 +9,8 @@ class OrderCardKeyShippingCommand extends CardKeyData
 
 
     public ?string $orderNo;
-    public ?int    $id;
 
-    public int $orderProductId;
+    public string $orderProductNo;
 
 
 }
