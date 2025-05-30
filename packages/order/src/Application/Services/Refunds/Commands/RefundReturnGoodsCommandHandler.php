@@ -13,10 +13,10 @@ class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
 
 
     /**
-     * @param RefundReturnGoodsCommand $command
+     * @param  RefundReturnGoodsCommand  $command
      *
      * @return void
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function handle(RefundReturnGoodsCommand $command) : void
     {
@@ -24,14 +24,14 @@ class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $refund                               = $this->find($command->id);
-            $orderLogistics                       = OrderLogistics::make();
-            $orderLogistics->shipper              = LogisticsShipperEnum::BUYER;
-            $orderLogistics->order_product_id     = [ $refund->order_product_id ];
+            $refund                                 = $this->findByNo($command->refundNo);
+            $orderLogistics                         = OrderLogistics::make();
+            $orderLogistics->shipper                = LogisticsShipperEnum::BUYER;
+            $orderLogistics->order_product_no       = [$refund->order_product_no];
             $orderLogistics->logistics_company_code = $command->logisticsCompanyCode;
             $orderLogistics->logistics_no           = $command->logisticsNo;
-            $orderLogistics->status               = $command->status;
-            $orderLogistics->shipping_time        = now();
+            $orderLogistics->status                 = $command->status;
+            $orderLogistics->shipping_time          = now();
 
 
             $refund->returnGoods($orderLogistics);

@@ -22,20 +22,20 @@ trait RefundReject
         $this->visible(fn(Refund $record) => $record->isAllowReject());
 
         $this->fillForm([
-                            'reason' => ''
-                        ]
+                'reason' => ''
+            ]
         );
         $this->form([
-                        Forms\Components\TextInput::make('reason')
-                                                  ->label(__('red-jasmine-order::refund.fields.reason')),
+            Forms\Components\TextInput::make('reason')
+                                      ->label(__('red-jasmine-order::refund.fields.reason')),
 
-                    ]);
+        ]);
 
         $this->action(function ($data, $record) {
 
-            $data['id']    = $record->id;
-            $data['reason'] = $data['reason'] ?? '';
-            $command        = RefundRejectCommand::from($data);
+            $data['refund_no'] = $record->refund_no;
+            $data['reason']    = $data['reason'] ?? '';
+            $command           = RefundRejectCommand::from($data);
             try {
                 app(RefundApplicationService::class)->reject($command);
             } catch (Throwable $throwable) {

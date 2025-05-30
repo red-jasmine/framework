@@ -7,7 +7,7 @@ use RedJasmine\Order\Domain\Data\LogisticsData;
 class RefundReturnGoodsCommand extends LogisticsData
 {
 
-    public int $id; // 退款单ID
+    public string $refundNo; // 退款单ID
 
 
 }

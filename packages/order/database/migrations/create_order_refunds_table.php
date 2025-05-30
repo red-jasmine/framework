@@ -47,7 +47,7 @@ return new class extends Migration {
 
 
                 // 订单商品数据
-                $table->string('order_product_no', 64)->unique()->comment('商品单号');
+                $table->string('order_product_no', 64)->comment('商品单号');
 
                 // 商品基本信息
                 $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
