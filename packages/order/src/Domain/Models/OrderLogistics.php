@@ -31,13 +31,12 @@ class OrderLogistics extends Model
     use SoftDeletes;
 
 
-
     protected $casts = [
-        'order_product_id' => 'array',
+        'order_product_no' => 'array',
         'shipper'          => LogisticsShipperEnum::class,
         'entity_type'      => EntityTypeEnum::class,
         'status'           => LogisticsStatusEnum::class,
-        'extra'          => 'array',
+        'extra'            => 'array',
         'shipping_time'    => 'datetime',
         'collect_time'     => 'datetime',
         'dispatch_time'    => 'datetime',

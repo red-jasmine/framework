@@ -38,7 +38,8 @@ abstract class AbstractOrderMessageCommandHandler extends AbstractOrderCommandHa
         try {
             $order = $this->findByNo($command->orderNo);
 
-            $order->message($this->tradeParty, $command->message, $command->orderProductId, $command->isAppend);
+            $order->message($this->tradeParty, $command->message,
+                $command->orderProductNo, $command->isAppend);
 
             $this->service->repository->update($order);
 

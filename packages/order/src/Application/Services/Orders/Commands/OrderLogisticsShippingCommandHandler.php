@@ -18,10 +18,11 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
 
         try {
             $order = $this->findByNo($command->orderNo);
+
             $orderLogistics = OrderLogistics::make();
 
             $orderLogistics->shipper                = LogisticsShipperEnum::SELLER;
-            $orderLogistics->order_product_id       = $command->orderProducts;
+            $orderLogistics->order_product_no       = $command->orderProducts;
             $orderLogistics->logistics_company_code = $command->logisticsCompanyCode;
             $orderLogistics->logistics_no           = $command->logisticsNo;
             $orderLogistics->status                 = $command->status;

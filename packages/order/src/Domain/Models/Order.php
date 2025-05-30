@@ -125,7 +125,6 @@ class Order extends Model implements OperatorInterface
     ];
 
 
-
     public function makeProduct() : OrderProduct
     {
 
@@ -217,9 +216,10 @@ class Order extends Model implements OperatorInterface
         return $this->hasOne(OrderAddress::class, 'id', 'id');
     }
 
-    public function logistics() : MorphMany
+    public function logistics() : HasMany
     {
-        return $this->morphMany(OrderLogistics::class, 'entity');
+        return $this->hasMany(OrderLogistics::class, 'entity_id', 'order_no')
+                    ->where('entity_type', EntityTypeEnum::ORDER->value);
     }
 
     public function payments() : HasMany
@@ -258,7 +258,7 @@ class Order extends Model implements OperatorInterface
     {
         $logistics->app_id      = $this->app_id;
         $logistics->entity_type = EntityTypeEnum::ORDER;
-        $logistics->entity_id   = $this->id;
+        $logistics->entity_id   = $this->order_no;
         $logistics->order_no    = $this->order_no;
         $logistics->seller_type = $this->seller_type;
         $logistics->seller_id   = $this->seller_id;
@@ -674,7 +674,7 @@ class Order extends Model implements OperatorInterface
      *
      * @param  TradePartyEnums  $tradeParty  交易双方类型，用于确定备注信息字段
      * @param  string|null  $remarks  备注信息文本，要添加或更新的内容
-     * @param  int|null  $orderProductId  订单产品ID，指定特定的订单产品添加备注信息
+     * @param  string|null  $orderProductNo  订单产品ID，指定特定的订单产品添加备注信息
      * @param  bool  $isAppend  是否追加备注信息，如果为true，则在现有备注信息后追加新内容
      *
      * @return void
@@ -682,16 +682,16 @@ class Order extends Model implements OperatorInterface
     public function remarks(
         TradePartyEnums $tradeParty,
         string $remarks = null,
-        ?int $orderProductId = null,
+        ?string $orderProductNo = null,
         bool $isAppend = false
     ) : void {
         // 根据交易双方类型动态确定备注信息字段名
         $field = $tradeParty->value.'_remarks';
 
         // 根据是否提供订单产品ID，确定操作的对象
-        if ($orderProductId) {
+        if ($orderProductNo) {
             // 如果提供了订单产品ID，获取对应的订单产品实例
-            $model = $this->products->where('id', $orderProductId)->firstOrFail();
+            $model = $this->products->where('order_product_no', $orderProductNo)->firstOrFail();
         } else {
             // 如果未提供订单产品ID，操作订单本身
             $model = $this;
@@ -712,16 +712,16 @@ class Order extends Model implements OperatorInterface
     public function message(
         TradePartyEnums $tradeParty,
         string $message = null,
-        ?int $orderProductId = null,
+        ?string $orderProductNo = null,
         bool $isAppend = false
     ) : void {
 
         $field = $tradeParty->value.'_message';
 
 
-        if ($orderProductId) {
+        if ($orderProductNo) {
 
-            $model = $this->products->where('id', $orderProductId)->firstOrFail();
+            $model = $this->products->where('order_product_no', $orderProductNo)->firstOrFail();
         } else {
 
             $model = $this;
@@ -738,10 +738,10 @@ class Order extends Model implements OperatorInterface
 
     }
 
-    public function setSellerCustomStatus(string $sellerCustomStatus, ?int $orderProductId = null) : void
+    public function setSellerCustomStatus(string $sellerCustomStatus, ?string $orderProductNo = null) : void
     {
-        if ($orderProductId) {
-            $model = $this->products->where('id', $orderProductId)->firstOrFail();
+        if ($orderProductNo) {
+            $model = $this->products->where('order_product_no', $orderProductNo)->firstOrFail();
         } else {
             $model = $this;
         }

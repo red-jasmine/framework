@@ -22,7 +22,7 @@ class OrderSellerCustomStatusCommandHandler extends AbstractOrderCommandHandler
         try {
             $order = $this->findByNo($command->orderNo);
 
-            $order->setSellerCustomStatus($command->sellerCustomStatus, $command->orderProductId);
+            $order->setSellerCustomStatus($command->sellerCustomStatus, $command->orderProductNo);
 
             $this->service->repository->update($order);
 

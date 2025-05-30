@@ -25,7 +25,8 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
 
 
     /**
-     * @param OrderRemarksCommand $command
+     * @param  OrderRemarksCommand  $command
+     *
      * @return void
      * @throws AbstractException
      * @throws Throwable
@@ -38,7 +39,12 @@ abstract class AbstractOrderRemarksCommandHandler extends AbstractOrderCommandHa
         try {
             $order = $this->findByNo($command->orderNo);
 
-            $order->remarks($this->tradeParty, $command->remarks, $command->orderProductId, $command->isAppend);
+            $order->remarks(
+                $this->tradeParty,
+                $command->remarks,
+                $command->orderProductNo,
+                $command->isAppend
+            );
 
             $this->service->repository->update($order);
 

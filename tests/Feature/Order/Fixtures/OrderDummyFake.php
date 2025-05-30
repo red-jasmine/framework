@@ -239,7 +239,7 @@ class OrderDummyFake
     public function shippingLogistics(array $merge = []) : OrderLogisticsShippingCommand
     {
         $data = [
-            'id'                     => 1,
+            'order_no'               => 1,
             'is_split'               => false,
             'is_finished'            => true,
             'order_products'         => null,

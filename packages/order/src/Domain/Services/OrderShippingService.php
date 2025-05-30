@@ -63,7 +63,7 @@ class OrderShippingService
                 if ($orderProduct->isEffective() === false) {
                     return;
                 }
-                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->id, $logistics->order_product_id ?? [], false))) {
+                if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->order_product_no, $logistics->order_product_no ?? [], false))) {
                     $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
                     $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
                     $isEffectiveShipping           = true;
