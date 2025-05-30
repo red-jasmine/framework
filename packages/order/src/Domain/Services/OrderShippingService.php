@@ -18,7 +18,8 @@ class OrderShippingService
 
 
     /**
-     * @param Order $order
+     * @param  Order  $order
+     *
      * @return void
      * @throws OrderException
      */
@@ -33,10 +34,11 @@ class OrderShippingService
     /**
      * 物流发货
      *
-     * @param Order $order
-     * @param bool $isSplit
-     * @param OrderLogistics $logistics
-     * @param bool $isFinished
+     * @param  Order  $order
+     * @param  bool  $isSplit
+     * @param  OrderLogistics  $logistics
+     * @param  bool  $isFinished
+     *
      * @return void
      * @throws OrderException
      */
@@ -81,8 +83,8 @@ class OrderShippingService
     /**
      * 卡密发货
      *
-     * @param Order $order
-     * @param OrderCardKey $orderProductCardKey
+     * @param  Order  $order
+     * @param  OrderCardKey  $orderProductCardKey
      *
      * @return void
      * @throws OrderException
@@ -130,14 +132,14 @@ class OrderShippingService
     /**
      * 虚拟发货
      *
-     * @param Order $order
-     * @param int $orderProductId
-     * @param bool $isFinished 是否完成发货
+     * @param  Order  $order
+     * @param  string  $orderProductNo
+     * @param  bool  $isFinished  是否完成发货
      *
      * @return void
      * @throws OrderException
      */
-    public function dummy(Order $order, int $orderProductId, bool $isFinished = true) : void
+    public function dummy(Order $order, string $orderProductNo, bool $isFinished = true) : void
     {
         $this->validateShipping($order);
 
@@ -145,7 +147,7 @@ class OrderShippingService
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
 
-        $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+        $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);

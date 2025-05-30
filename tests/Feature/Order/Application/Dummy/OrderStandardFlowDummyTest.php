@@ -120,7 +120,7 @@ test('can progress a order', function (Order $order) {
     $orderProductId = $order->products->first()->id;
     $command        = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductId' => $orderProductId,
+        'orderProductNo' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => false,
@@ -136,7 +136,7 @@ test('can progress a order', function (Order $order) {
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductId' => $orderProductId,
+        'orderProductNo' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => true,
         'isAllowLess'    => false,
@@ -152,7 +152,7 @@ test('can progress a order', function (Order $order) {
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductId' => $orderProductId,
+        'orderProductNo' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => false,
@@ -166,7 +166,7 @@ test('can progress a order', function (Order $order) {
 
     $command = OrderProgressCommand::from([
         'orderNo'        => $order->order_no,
-        'orderProductId' => $orderProductId,
+        'orderProductNo' => $orderProductId,
         'progress'       => $progress,
         'isAppend'       => false,
         'isAllowLess'    => true,

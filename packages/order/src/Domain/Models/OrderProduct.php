@@ -26,6 +26,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use Spatie\LaravelData\WithData;
 
 /**
+ * @property string $order_product_no
  * @property Money $cost_price
  * @property Money $total_price
  * @property Money $product_amount

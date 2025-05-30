@@ -2,15 +2,13 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Support\Data\Data;
-
 class OrderDummyShippingCommand extends AbstractOrderCommand
 {
 
 
     /**
      * 部分订单商品 集合
-     * @var array|null
+     * @var array<string>|null
      */
     public ?array $orderProducts = null;
     /**

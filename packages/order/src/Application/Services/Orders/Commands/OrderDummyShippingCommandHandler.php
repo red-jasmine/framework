@@ -36,11 +36,12 @@ class OrderDummyShippingCommandHandler extends AbstractOrderCommandHandler
             $order->products;
 
             if (count($command->orderProducts) <= 0) {
-                $command->orderProducts = $order->products->pluck('id')->toArray();
+                // TODO 排除 无效商品
+                $command->orderProducts = $order->products->pluck('order_product_no')->toArray();
             }
 
-            foreach ($command->orderProducts as $orderProductId) {
-                $this->orderShippingService->dummy($order, $orderProductId, $command->isFinished);
+            foreach ($command->orderProducts as $orderProductNo) {
+                $this->orderShippingService->dummy($order, $orderProductNo, $command->isFinished);
             }
 
             $this->service->repository->update($order);

@@ -2,15 +2,11 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Support\Data\Data;
-
 class OrderProgressCommand extends AbstractOrderCommand
 {
 
-    public ?string $orderNo;
-    public ?int    $id;
 
-    public int $orderProductId;
+    public string $orderProductNo;
 
     public int $progress;
 

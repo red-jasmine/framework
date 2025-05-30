@@ -7,7 +7,7 @@ use RedJasmine\Support\Data\Data;
 class AbstractOrderCommand extends Data
 {
 
-    public ?string $orderNo;
+    public string $orderNo;
     public ?int    $id;
 
 }

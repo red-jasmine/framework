@@ -27,11 +27,11 @@ beforeEach(function () {
     $this->orderRepository     = app(OrderRepositoryInterface::class);
     $this->orderCommandService = app(OrderApplicationService::class);
 
-    $orderFake                       = new OrderDummyFake();
-    $orderFake->orderType            = OrderTypeEnum::STANDARD;
-    $orderFake->shippingType         = ShippingTypeEnum::DUMMY;
-    $orderFake->accept_wait_max_time = 30;
-    $this->orderFake                 = $orderFake;
+    $orderFake                 = new OrderDummyFake();
+    $orderFake->orderType      = OrderTypeEnum::STANDARD;
+    $orderFake->shippingType   = ShippingTypeEnum::DUMMY;
+    $orderFake->accept_timeout = 30;
+    $this->orderFake           = $orderFake;
     //
 });
 
@@ -55,8 +55,8 @@ test('cna paying a order', function (Order $order) {
 
     $command = OrderPayingCommand::from(
         [
-            'id'     => $order->id,
-            'amount' => $order->payable_amount
+            'orderNo' => $order->order_no,
+            'amount'  => $order->payable_amount
 
         ]
 
@@ -80,7 +80,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderPaidCommand;
 
-    $command->orderNo               = $order->order_no;
+    $command->orderNo          = $order->order_no;
     $command->orderPaymentId   = $orderPayment->id;
     $command->amount           = $orderPayment->payment_amount;
     $command->paymentType      = 'online';
@@ -98,7 +98,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $order = $this->orderRepository->find($order->id);
     $this->assertEquals(OrderStatusEnum::WAIT_SELLER_ACCEPT->value, $order->order_status->value);
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
-    $this->assertEquals($order->payable_amount->value(), $order->payment_amount->value());
+    $this->assertEquals($order->payable_amount->getAmount(), $order->payment_amount->getAmount());
     return $result;
 
 })->depends('can create a new order', 'cna paying a order');
@@ -109,13 +109,13 @@ test('can accept a order', function (Order $order, OrderPayment $orderPayment) {
 
     $command = new  OrderAcceptCommand();
 
-    $command->id = $order->id;
+    $command->orderNo = $order->order_no;
 
     $result = $this->orderCommandService->accept($command);
 
     $this->assertTrue($result);
 
-    $order = $this->orderRepository->find($order->id);
+    $order = $this->orderRepository->findByNo($order->order_no);
 
     $this->assertEquals(OrderStatusEnum::WAIT_SELLER_SEND_GOODS->value, $order->order_status->value);
 
@@ -128,50 +128,50 @@ test('can progress a order', function (Order $order) {
 
     $commands = [];
     // 订单备注
-    $message = '测试留言';
+
     // 订单商品项备注
-    $orderId        = $order->id;
+    $orderNo        = $order->order_no;
     $progress       = 10;
-    $orderProductId = $order->products->first()->id;
+    $orderProductNo = $order->products->first()->order_product_no;
     $command        = OrderProgressCommand::from([
-                                                     'id'             => $orderId,
-                                                     'orderProductId' => $orderProductId,
-                                                     'progress'       => $progress,
-                                                     'isAppend'       => false,
-                                                     'isAllowLess'    => false,
-                                                 ]);
+        'orderNo'        => $orderNo,
+        'orderProductNo' => $orderProductNo,
+        'progress'       => $progress,
+        'isAppend'       => false,
+        'isAllowLess'    => false,
+    ]);
 
 
     // 设置进度
     $this->orderCommandService->progress($command);
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
     $command = OrderProgressCommand::from([
-                                              'id'             => $orderId,
-                                              'orderProductId' => $orderProductId,
-                                              'progress'       => $progress,
-                                              'isAppend'       => true,
-                                              'isAllowLess'    => false,
-                                          ]);
+        'orderNo'        => $orderNo,
+        'orderProductNo' => $orderProductNo,
+        'progress'       => $progress,
+        'isAppend'       => true,
+        'isAllowLess'    => false,
+    ]);
 
 
     $this->orderCommandService->progress($command);
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress + $progress, '进度设置失败');
 
 
     $command = OrderProgressCommand::from([
-                                              'id'             => $orderId,
-                                              'orderProductId' => $orderProductId,
-                                              'progress'       => $progress,
-                                              'isAppend'       => false,
-                                              'isAllowLess'    => false,
-                                          ]);
+        'orderNo'             => $orderNo,
+        'orderProductNo' => $orderProductNo,
+        'progress'       => $progress,
+        'isAppend'       => false,
+        'isAllowLess'    => false,
+    ]);
 
 
     $this->expectException(OrderException::class);
@@ -180,12 +180,12 @@ test('can progress a order', function (Order $order) {
 
 
     $command = OrderProgressCommand::from([
-                                              'id'             => $orderId,
-                                              'orderProductId' => $orderProductId,
-                                              'progress'       => $progress,
-                                              'isAppend'       => false,
-                                              'isAllowLess'    => true,
-                                          ]);
+        'orderNo'        => $orderNo,
+        'orderProductNo' => $orderProductNo,
+        'progress'       => $progress,
+        'isAppend'       => false,
+        'isAllowLess'    => true,
+    ]);
 
 
     $this->expectException(OrderException::class);
@@ -193,8 +193,8 @@ test('can progress a order', function (Order $order) {
     $this->orderCommandService->progress($command);
 
 
-    $order        = $this->orderRepository->find($orderId);
-    $orderProduct = $order->products->where('id', $orderProductId)->firstOrFail();
+    $order        = $this->orderRepository->findByNo($orderNo);
+    $orderProduct = $order->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
     $this->assertEquals($orderProduct->progress, $progress, '进度设置失败');
 
@@ -206,9 +206,10 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 
     $command = $this->orderFake->shippingDummy([
-                                                   'id'             => $order->id,
-                                                   'order_products' => $order->products->pluck('id')->toArray()
-                                               ]);
+        'order_no'             => $order->order_no,
+        'order_products' => $order->products->pluck('order_product_no')->toArray()
+    ]);
+
 
     $this->orderCommandService->dummyShipping($command);
 
@@ -227,7 +228,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 test('can confirm a order', function (Order $order) {
 
-    $command = OrderConfirmCommand::from([ 'id' => $order->id ]);
+    $command = OrderConfirmCommand::from(['orderNo' => $order->order_no]);
 
     $this->orderCommandService->confirm($command);
 

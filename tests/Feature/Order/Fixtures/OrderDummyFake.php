@@ -38,11 +38,10 @@ class OrderDummyFake
     public string $unit         = '件';
     public int    $unitQuantity = 1;
 
-
-    public int $payment_wait_max_time = -1;
-    public int $accept_wait_max_time  = 0;
-    public int $confirm_wait_max_time = -1;
-    public int $rate_wait_max_time    = -1;
+    public int $payment_timeout       = -1;
+    public int $accept_timeout        = 0;
+    public int $confirm_timeout       = -1;
+    public int $rate_timeout          = -1;
 
     public function order(array $order = []) : array
     {
@@ -59,28 +58,28 @@ class OrderDummyFake
 
 
         $fake = [
-            'buyer'                 => [
+            'buyer'           => [
                 'type'     => $user->getType(),
                 'id'       => $user->getId(),
                 'nickname' => fake()->name(),
             ],
-            'seller'                => [
+            'seller'          => [
                 'type'     => 'seller',
                 'id'       => fake()->numberBetween(1000000, 999999999),
                 'nickname' => fake()->name(),
             ],
-            'currency'              => $this->currency,
-            'title'                 => fake()->text(),
-            'order_type'            => $this->orderType->value,
-            'shipping_type'         => $this->shippingType->value,
-            'source_type'           => fake()->randomElement(['product', 'activity']),
-            'source_id'             => fake()->numerify('out-order-id-########'),
-            'outer_order_id'        => fake()->numerify('out-order-id-########'),
-            'payment_wait_max_time' => $this->payment_wait_max_time,
-            'accept_wait_max_time'  => $this->accept_wait_max_time,
-            'confirm_wait_max_time' => $this->confirm_wait_max_time,
-            'rate_wait_max_time'    => $this->rate_wait_max_time,
-            'channel'               => [
+            'currency'        => $this->currency,
+            'title'           => fake()->text(),
+            'order_type'      => $this->orderType->value,
+            'shipping_type'   => $this->shippingType->value,
+            'source_type'     => fake()->randomElement(['product', 'activity']),
+            'source_id'       => fake()->numerify('out-order-id-########'),
+            'outer_order_id'  => fake()->numerify('out-order-id-########'),
+            'payment_timeout' => $this->payment_timeout,
+            'accept_timeout'  => $this->accept_timeout,
+            'confirm_timeout' => $this->confirm_timeout,
+            'rate_timeout'    => $this->rate_timeout,
+            'channel'         => [
                 'type'     => fake()->randomElement(['channel',]),
                 'id'       => fake()->randomNumber(5, true),
                 'nickname' => fake()->name(),
@@ -270,7 +269,7 @@ class OrderDummyFake
     public function shippingDummy(array $merge) : OrderDummyShippingCommand
     {
         $data = [
-            'id'               => 0,
+            'order_no'               => 0,
             'order_product_id' => 0,
             'is_finished'      => true,
         ];

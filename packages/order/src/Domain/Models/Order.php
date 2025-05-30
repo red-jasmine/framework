@@ -538,7 +538,7 @@ class Order extends Model implements OperatorInterface
     }
 
     /**
-     * @param  int  $orderProductId
+     * @param  string  $orderProductNo
      * @param  int  $progress
      * @param  bool  $isAppend
      * @param  bool  $isAllowLess
@@ -547,13 +547,13 @@ class Order extends Model implements OperatorInterface
      * @throws OrderException
      */
     public function setProductProgress(
-        int $orderProductId,
+        string $orderProductNo,
         int $progress,
         bool $isAppend = false,
         bool $isAllowLess = false
     ) : int {
 
-        $orderProduct = $this->products->where('id', $orderProductId)->firstOrFail();
+        $orderProduct = $this->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
         // 判断发货方式是否不支持设置进度
         if ($orderProduct->shipping_type === ShippingTypeEnum::CARD_KEY) {
