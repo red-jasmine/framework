@@ -21,7 +21,7 @@ class PaymentTradeListener
 
                 $command = new OrderPaidCommand();
 
-                $command->id = $event->trade->merchant_trade_order_no;
+                $command->orderNo = $event->trade->merchant_trade_order_no;
                 $command->orderPaymentId = null;
 
                 $command->amount;

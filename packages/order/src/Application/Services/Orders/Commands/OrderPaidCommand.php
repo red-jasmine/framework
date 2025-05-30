@@ -6,11 +6,8 @@ use RedJasmine\Order\Domain\Data\OrderPaymentData;
 
 class OrderPaidCommand extends OrderPaymentData
 {
+    public string $orderNo;
 
-
-    public ?string $orderNo;
-    public ?int    $id;
-
-    public int     $orderPaymentId;
+    public int $orderPaymentId;
 
 }

@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->string('buyer_id',64)->comment('买家类型');
 
             $table->string('order_no',64)->comment('订单号');
-            $table->string('entity_type')->comment(EntityTypeEnum::comments('对象类型'));
-            $table->unsignedBigInteger('entity_id')->comment('对象单号');
+            $table->string('entity_type',32)->comment(EntityTypeEnum::comments('对象类型'));
+            $table->string('entity_id',64)->comment('对象单号');
 
             $table->string('order_product_id')->nullable()->comment('订单商品项单号');
             $table->string('shipper', 32)->comment(LogisticsShipperEnum::comments('发货方'));

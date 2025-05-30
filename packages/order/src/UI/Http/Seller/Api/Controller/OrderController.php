@@ -76,7 +76,7 @@ class OrderController extends Controller
     {
         $command = OrderPaidCommand::from($request->all());
 
-        $this->service->find(FindQuery::make($command->id));
+        $this->service->findByNo($command->orderNo);
 
         $this->service->paid($command);
 

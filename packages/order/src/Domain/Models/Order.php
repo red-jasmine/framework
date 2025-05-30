@@ -6,6 +6,7 @@ namespace RedJasmine\Order\Domain\Models;
 
 use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -50,6 +51,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 /**
+ * @property string $order_no
  * @property Money $payment_amount
  * @property Money $payable_amount
  * @property PaymentStatusEnum $payment_status
@@ -121,6 +123,7 @@ class Order extends Model implements OperatorInterface
         'urge',
 
     ];
+
 
 
     public function makeProduct() : OrderProduct

@@ -298,7 +298,7 @@ class Refund extends Model implements OperatorInterface
 
         $this->refund_status          = RefundStatusEnum::CANCEL;
         $this->end_time               = now();
-        $this->product->refund_status = null;
+
 
         $this->fireModelEvent('canceled', false);
     }
@@ -379,12 +379,11 @@ class Refund extends Model implements OperatorInterface
         $payment->seller         = $this->seller;
         $payment->buyer          = $this->buyer;
         $payment->entity_type    = EntityTypeEnum::REFUND;
-        $payment->entity_id      = $this->id;
+        $payment->entity_id      = $this->refund_no;
         $payment->amount_type    = AmountTypeEnum::REFUND;
         $payment->payment_amount = $this->total_refund_amount;
         $payment->status         = PaymentStatusEnum::WAIT_PAY;
         $this->payments->add($payment);
-
 
 
         $this->fireModelEvent('agreed', false);
@@ -427,7 +426,7 @@ class Refund extends Model implements OperatorInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
         $this->refund_status          = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
-        $this->product->refund_status = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
+
         $this->fireModelEvent('agreedReturnGoods');
 
     }
@@ -484,7 +483,6 @@ class Refund extends Model implements OperatorInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
         $this->refund_status          = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
-        $this->product->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
 
         $this->fireModelEvent('confirmed');
 
@@ -509,11 +507,10 @@ class Refund extends Model implements OperatorInterface
         }
 
         $this->refund_status          = RefundStatusEnum::WAIT_SELLER_CONFIRM;
-        $this->product->refund_status = RefundStatusEnum::WAIT_SELLER_CONFIRM;
 
 
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
-        $orderLogistics->entity_id   = $this->id;
+        $orderLogistics->entity_id   = $this->refund_no;
         $orderLogistics->seller_type = $this->seller_type;
         $orderLogistics->seller_id   = $this->seller_id;
         $orderLogistics->buyer_type  = $this->buyer_type;
@@ -545,11 +542,10 @@ class Refund extends Model implements OperatorInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
         $this->refund_status          = RefundStatusEnum::FINISHED;
-        $this->product->refund_status = RefundStatusEnum::FINISHED;
         $this->end_time               = now();
 
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
-        $orderLogistics->entity_id   = $this->id;
+        $orderLogistics->entity_id   = $this->refund_no;
         $orderLogistics->order_no    = $this->order_no;
         $orderLogistics->seller_type = $this->seller_type;
         $orderLogistics->seller_id   = $this->seller_id;
@@ -574,11 +570,11 @@ class Refund extends Model implements OperatorInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
         $this->refund_status          = RefundStatusEnum::FINISHED;
-        $this->product->refund_status = RefundStatusEnum::FINISHED;
+
         $this->end_time               = now();
 
         $cardKey->entity_type      = EntityTypeEnum::REFUND;
-        $cardKey->entity_id        = $this->id;
+        $cardKey->entity_id        = $this->refund_no;
         $cardKey->app_id           = $this->app_id;
         $cardKey->order_no         = $this->order_no;
         $cardKey->order_product_id = $this->order_product_id;

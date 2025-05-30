@@ -274,9 +274,9 @@ test('can refund payment paying', function (Order $order, $refunds = []) {
 
 test('can refund payment fail', function (Order $order, $refunds = []) {
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund = $this->refundRepository->find($refundId);
+        $refund = $this->refundRepository->findByNo($refundNo);
 
         $orderPayment    = $refund->payments->first();
         $command         = new OrderPaymentFailCommand();
@@ -287,9 +287,9 @@ test('can refund payment fail', function (Order $order, $refunds = []) {
         $this->orderPaymentCommandService->fail($command);
     }
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund       = $this->refundRepository->find($refundId);
+        $refund       = $this->refundRepository->findByNo($refundNo);
         $orderPayment = $refund->payments->first();
 
 
@@ -303,9 +303,9 @@ test('can refund payment fail', function (Order $order, $refunds = []) {
 
 test('can refund payment paid', function (Order $order, $refunds = []) {
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund = $this->refundRepository->find($refundId);
+        $refund = $this->refundRepository->findByNo($refundNo);
 
         $orderPayment    = $refund->payments->first();
         $command         = new OrderPaymentPaidCommand();
@@ -316,9 +316,9 @@ test('can refund payment paid', function (Order $order, $refunds = []) {
         $this->orderPaymentCommandService->paid($command);
     }
 
-    foreach ($refunds as $refundId) {
+    foreach ($refunds as $refundNo) {
         // 根据退款单 查询支付单
-        $refund       = $this->refundRepository->find($refundId);
+        $refund       = $this->refundRepository->findByNo($refundNo);
         $orderPayment = $refund->payments->first();
 
 
