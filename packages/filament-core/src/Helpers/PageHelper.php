@@ -10,6 +10,7 @@ use Filament\Support\Components\ViewComponent;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
@@ -84,7 +85,7 @@ trait PageHelper
 
     public static function ownerQueryUsing(string $name = 'owner') : callable
     {
-        return static fn(Builder $query, Forms\Get $get) => $query->onlyOwner(UserData::from([
+        return static fn( $query, Forms\Get $get) => $query->onlyOwner(UserData::from([
             'type' => $get('owner_type'), 'id' => $get('owner_id')
         ]));
     }
@@ -165,7 +166,7 @@ trait PageHelper
             foreach ($component->getComponents() as $childComponent) {
                 static::translationLabels($childComponent);
             }
-            return  $component;
+            return $component;
         }
 
         if (method_exists($component, 'childComponents')) {
@@ -173,7 +174,7 @@ trait PageHelper
             foreach ($component->getChildComponents() as $childComponent) {
                 static::translationLabels($childComponent, $parent);
             }
-            return  $component;
+            return $component;
         }
         if ($component instanceof Table) {
             // 字段翻译

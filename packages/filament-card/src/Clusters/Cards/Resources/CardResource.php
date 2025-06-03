@@ -45,32 +45,48 @@ class CardResource extends Resource
             ->schema([
 
                 ...static::ownerFormSchemas(),
-                Forms\Components\Select::make('group_id')
-                                       ->label(__('red-jasmine-card::card.fields.group_id'))
-                                       ->relationship('group', 'name',
-                                           modifyQueryUsing: static::ownerQueryUsing()
-                                       )
-                                       ->required()
-                                       ->default(0),
-                Forms\Components\Toggle::make('is_loop')
-                                       ->label(__('red-jasmine-card::card.fields.is_loop'))
-                                       ->required(),
-                Forms\Components\ToggleButtons::make('status')
-                                              ->label(__('red-jasmine-card::card.fields.status'))
-                                              ->required()
-                                              ->grouped()
-                                              ->default(CardStatus::ENABLE)
-                                              ->useEnum(CardStatus::class),
-                Forms\Components\DateTimePicker::make('sold_time')
-                                               ->label(__('red-jasmine-card::card.fields.sold_time'))
-                                               ->disabled(),
-                Forms\Components\Textarea::make('content')
-                                         ->label(__('red-jasmine-card::card.fields.content'))
-                                         ->required()
-                                         ->columnSpanFull(),
-                Forms\Components\TextInput::make('remarks')
-                                          ->label(__('red-jasmine-card::card.fields.remarks'))
-                                          ->maxLength(255),
+                Forms\Components\Split::make([
+
+                    Forms\Components\Section::make([
+
+                        Forms\Components\Select::make('group_id')
+                                               ->label(__('red-jasmine-card::card.fields.group_id'))
+                                               ->relationship('group', 'name',
+                                                   modifyQueryUsing: static::ownerQueryUsing()
+                                               )
+                                               ->required()
+                                               ->default(0),
+
+                        Forms\Components\Textarea::make('content')
+                                                 ->label(__('red-jasmine-card::card.fields.content'))
+                                                 ->required()
+                                                 ->columnSpanFull(),
+
+
+                    ]),
+                    Forms\Components\Section::make([
+                        Forms\Components\Toggle::make('is_loop')
+                                               ->label(__('red-jasmine-card::card.fields.is_loop'))
+                                               ->required(),
+                        Forms\Components\ToggleButtons::make('status')
+                                                      ->label(__('red-jasmine-card::card.fields.status'))
+                                                      ->required()
+                                                      ->grouped()
+                                                      ->default(CardStatus::ENABLE)
+                                                      ->useEnum(CardStatus::class),
+                        Forms\Components\DateTimePicker::make('sold_time')
+                                                       ->label(__('red-jasmine-card::card.fields.sold_time'))
+                                                       ->disabled(),
+
+                        Forms\Components\TextInput::make('remarks')
+                                                  ->label(__('red-jasmine-card::card.fields.remarks'))
+                                                  ->maxLength(255),
+
+
+                    ])->grow(false),
+                ])->columnSpanFull(),
+
+
                 ...static::operateFormSchemas()
             ]);
     }
