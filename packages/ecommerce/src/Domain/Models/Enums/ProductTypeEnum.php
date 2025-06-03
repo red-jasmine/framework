@@ -41,4 +41,51 @@ enum ProductTypeEnum: string
 
         ];
     }
+
+    public static function shippingTypes() : array
+    {
+        return [
+
+
+            self::GOODS->value => [
+                ShippingTypeEnum::LOGISTICS->value,
+                ShippingTypeEnum::DELIVERY->value,
+                //ShippingTypeEnum::NONE->value,
+                //ShippingTypeEnum::COUPONS->value,
+                //ShippingTypeEnum::DUMMY->value,
+                //ShippingTypeEnum::CARD_KEY->value,
+            ],
+
+            self::VIRTUAL->value => [
+                //ShippingTypeEnum::LOGISTICS->value,
+                //ShippingTypeEnum::DELIVERY->value,
+                ShippingTypeEnum::NONE->value,
+                ShippingTypeEnum::COUPONS->value,
+                ShippingTypeEnum::DUMMY->value,
+                ShippingTypeEnum::CARD_KEY->value,
+            ],
+
+
+            self::TICKET->value => [
+                ShippingTypeEnum::LOGISTICS->value,
+                ShippingTypeEnum::DELIVERY->value,
+                ShippingTypeEnum::DUMMY->value,
+                //ShippingTypeEnum::NONE->value,
+                //ShippingTypeEnum::COUPONS->value,
+                //ShippingTypeEnum::CARD_KEY->value,
+            ],
+
+
+            self::SERVICE->value => [
+                //ShippingTypeEnum::LOGISTICS->value,
+                //ShippingTypeEnum::DELIVERY->value,
+                ShippingTypeEnum::NONE->value,
+                //ShippingTypeEnum::COUPONS->value,
+                //ShippingTypeEnum::DUMMY->value,
+                //ShippingTypeEnum::CARD_KEY->value,
+            ],
+
+
+        ];
+    }
 }

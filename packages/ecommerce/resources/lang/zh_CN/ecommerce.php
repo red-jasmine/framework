@@ -35,6 +35,7 @@ return [
             'dummy'     => '虚拟',
             'cardKey'   => '卡密',
             'delivery'  => '配送',
+            'coupons'   => '卡券',
             'none'      => '免发',
         ],
         'order_quantity_limit_type' => [

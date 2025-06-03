@@ -16,12 +16,13 @@ enum ShippingTypeEnum: string
 
     case  DUMMY = 'dummy';  // 虚拟发货
 
-
     case CARD_KEY = 'cardKey'; // 卡密
 
     case DELIVERY = 'delivery'; // 配送
 
-    case NONE = 'none'; // 没有的
+    case COUPONS = 'coupons'; // 卡券
+
+    case NONE = 'none'; // 无需发货
 
 
     public static function labels() : array
@@ -31,6 +32,7 @@ enum ShippingTypeEnum: string
             self::CARD_KEY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cardKey'),
             self::DUMMY->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
             self::DELIVERY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
+            self::COUPONS->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.coupons'),
             self::NONE->value      => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
         ];
     }
@@ -42,6 +44,7 @@ enum ShippingTypeEnum: string
             self::DUMMY->value     => 'heroicon-o-bolt',
             self::CARD_KEY->value  => 'heroicon-o-key',
             self::DELIVERY->value  => 'heroicon-o-home-modern',
+            self::COUPONS->value  => 'heroicon-o-ticket',
             self::NONE->value      => 'heroicon-o-cloud',
 
         ];
