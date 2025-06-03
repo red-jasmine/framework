@@ -255,7 +255,7 @@ class ProductResource extends Resource
                                           ->required()
                                           ->inline()
                                           ->live()
-                                          ->default(ProductTypeEnum::GOODS)
+                                          ->default(ProductTypeEnum::GOODS->value)
                                           ->useEnum(ProductTypeEnum::class),
             Forms\Components\ToggleButtons::make('shipping_type')
                                           ->label(__('red-jasmine-product::product.fields.shipping_type'))
@@ -264,7 +264,7 @@ class ProductResource extends Resource
                                           ->default(ShippingTypeEnum::LOGISTICS)
                                           ->useEnum(ShippingTypeEnum::class)
             ->disableOptionWhen(function ($value,Forms\Get $get){
-                $shippingTypes = ProductTypeEnum::shippingTypes()[$get('product_type')->value];
+                $shippingTypes = ProductTypeEnum::shippingTypes()[ProductTypeEnum::tryFrom($get('product_type'))->value];
 
                 return !in_array($value,$shippingTypes,true);
             }),
