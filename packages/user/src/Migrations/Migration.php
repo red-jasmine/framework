@@ -51,6 +51,9 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
             $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
 
+            // TODO 邀请人
+            // TODO
+
 
             $table->index(['name'], 'idx_name');
             $table->index(['phone'], 'idx_phone');
