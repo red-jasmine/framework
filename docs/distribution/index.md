@@ -26,3 +26,6 @@ order: 5
 | InvitationCode        | 邀请码    | 邀请用户注册          |
 | InvitationCommission  | 邀请佣金   | 通过邀请下级用户购买产生的佣金 |
 | ProductCommission     | 商品佣金   | 通过推广商品促成下单的佣金   |
+
+
+- 佣金比例
