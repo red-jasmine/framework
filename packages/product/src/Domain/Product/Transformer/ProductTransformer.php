@@ -54,6 +54,7 @@ class ProductTransformer
         $product->owner                           = $command->owner;
         $product->supplier                        = $command->supplier;
         $product->product_type                    = $command->productType;
+        $product->shipping_types                  = $command->shippingTypes;
         $product->shipping_type                   = $command->shippingType;
         $product->is_alone_order                  = $command->isAloneOrder;
         $product->is_pre_sale                     = $command->isPreSale;

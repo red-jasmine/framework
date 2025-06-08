@@ -66,6 +66,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return [
             'product_type'              => ProductTypeEnum::class,  // 商品类型
             'shipping_type'             => ShippingTypeEnum::class,// 发货类型
+            'shipping_types'            => 'array',// 发货方式
             'status'                    => ProductStatusEnum::class,// 状态
             'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方

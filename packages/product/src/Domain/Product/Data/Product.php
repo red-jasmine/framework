@@ -34,6 +34,11 @@ class Product extends Data
     public ProductTypeEnum $productType;
     // 运输类型
     public ShippingTypeEnum $shippingType;
+    /**
+     * 发货方式
+     * @var array
+     */
+    public array $shippingTypes = [];
     // 产品所属用户
     public UserInterface $owner;
     // 产品标题

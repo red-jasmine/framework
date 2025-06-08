@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+            $table->string('shipping_types')->nullable()->comment(ShippingTypeEnum::comments('发货类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
@@ -54,7 +55,7 @@ return new class extends Migration {
 
             // 价格
             $table->string('price_currency', 3)->default('CNY')->comment('货币');
-            $table->decimal('price_amount',10)->default(0)->comment('销售价');
+            $table->decimal('price_amount', 10)->default(0)->comment('销售价');
             $table->string('market_price_currency', 3)->nullable()->comment('货币');
             $table->decimal('market_price_amount')->nullable()->comment('市场价');
             $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');

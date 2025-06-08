@@ -15,33 +15,9 @@ enum ProductTypeEnum: string
 
     case VIRTUAL = 'virtual'; // 虚拟
 
-    case TICKET = 'ticket'; // 票据
+    case COUPONS = 'coupons'; // 优惠券类
 
     case SERVICE = 'service'; // 服务
-
-    // 服务
-
-    public static function labels() : array
-    {
-        return [
-            self::GOODS->value   => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
-            self::VIRTUAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
-            self::TICKET->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.ticket'),
-            self::SERVICE->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
-        ];
-    }
-
-    public static function icons() : array
-    {
-        return [
-            self::GOODS->value   => 'heroicon-o-briefcase',
-            self::VIRTUAL->value => 'heroicon-o-chart-bar-square',
-            self::TICKET->value  => 'heroicon-o-ticket',
-            self::SERVICE->value => 'heroicon-o-shield-check',
-
-        ];
-    }
-
     public static function shippingTypes() : array
     {
         return [
@@ -50,6 +26,7 @@ enum ProductTypeEnum: string
             self::GOODS->value => [
                 ShippingTypeEnum::LOGISTICS->value,
                 ShippingTypeEnum::DELIVERY->value,
+                ShippingTypeEnum::SELF_PICKUP->value,
                 //ShippingTypeEnum::NONE->value,
                 //ShippingTypeEnum::COUPONS->value,
                 //ShippingTypeEnum::DUMMY->value,
@@ -59,20 +36,16 @@ enum ProductTypeEnum: string
             self::VIRTUAL->value => [
                 //ShippingTypeEnum::LOGISTICS->value,
                 //ShippingTypeEnum::DELIVERY->value,
-                ShippingTypeEnum::NONE->value,
-                ShippingTypeEnum::COUPONS->value,
+                //ShippingTypeEnum::NONE->value,
                 ShippingTypeEnum::DUMMY->value,
                 ShippingTypeEnum::CARD_KEY->value,
             ],
 
 
-            self::TICKET->value => [
+            self::COUPONS->value => [
+                ShippingTypeEnum::COUPONS->value,
                 ShippingTypeEnum::LOGISTICS->value,
                 ShippingTypeEnum::DELIVERY->value,
-                ShippingTypeEnum::DUMMY->value,
-                //ShippingTypeEnum::NONE->value,
-                //ShippingTypeEnum::COUPONS->value,
-                //ShippingTypeEnum::CARD_KEY->value,
             ],
 
 
@@ -88,4 +61,34 @@ enum ProductTypeEnum: string
 
         ];
     }
+    // 服务
+
+    public static function labels() : array
+    {
+        return [
+            self::GOODS->value   => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
+            self::VIRTUAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::COUPONS->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
+            self::SERVICE->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
+        ];
+    }
+
+    public static function icons() : array
+    {
+        return [
+            self::GOODS->value   => 'heroicon-o-briefcase',
+            self::VIRTUAL->value => 'heroicon-o-chart-bar-square',
+            self::COUPONS->value => 'heroicon-o-ticket',
+            self::SERVICE->value => 'heroicon-o-shield-check',
+
+        ];
+    }
+
+    public static function tips() : array
+    {
+        return [];
+    }
+
+
+
 }

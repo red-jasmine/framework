@@ -136,7 +136,7 @@ class ProductResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make(__('red-jasmine-product::product.labels.product'))->tabs(
                     $schema
-                )   ->persistTabInQueryString(),
+                )->persistTabInQueryString(),
                 //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
             ->inlineLabel(true)
@@ -262,12 +262,21 @@ class ProductResource extends Resource
                                           ->required()
                                           ->inline()
                                           ->default(ShippingTypeEnum::LOGISTICS)
-                                          ->useEnum(ShippingTypeEnum::class)
-            ->disableOptionWhen(function ($value,Forms\Get $get){
-                $shippingTypes = ProductTypeEnum::shippingTypes()[ProductTypeEnum::tryFrom($get('product_type'))->value];
+                                          ->useEnum(ShippingTypeEnum::class),
+            Forms\Components\ToggleButtons::make('shipping_types')
+                                          ->required()
+                                          ->inline()
+                                          ->multiple()
+                                          ->label(__('red-jasmine-product::product.fields.shipping_types'))
+                                          ->options(ShippingTypeEnum::options())
 
-                return !in_array($value,$shippingTypes,true);
-            }),
+            //->useEnum(ShippingTypeEnum::class)
+            ,
+            // ->disableOptionWhen(function ($value,Forms\Get $get){
+            //     $shippingTypes = ProductTypeEnum::shippingTypes()[ProductTypeEnum::tryFrom($get('product_type'))->value];
+            //
+            //     return !in_array($value,$shippingTypes,true);
+            // }),
             Forms\Components\TextInput::make('title')
                                       ->label(__('red-jasmine-product::product.fields.title'))
                                       ->required()

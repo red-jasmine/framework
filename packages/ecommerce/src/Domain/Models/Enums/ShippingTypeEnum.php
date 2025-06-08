@@ -14,11 +14,15 @@ enum ShippingTypeEnum: string
 
     case LOGISTICS = 'logistics'; // 物流快递
 
+    case DELIVERY = 'delivery'; // 配送
+
+    case SELF_PICKUP = 'selfPickup'; //自己提货
+
+
+
     case  DUMMY = 'dummy';  // 虚拟发货
 
     case CARD_KEY = 'cardKey'; // 卡密
-
-    case DELIVERY = 'delivery'; // 配送
 
     case COUPONS = 'coupons'; // 卡券
 
@@ -33,6 +37,7 @@ enum ShippingTypeEnum: string
             self::DUMMY->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
             self::DELIVERY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
             self::COUPONS->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.coupons'),
+            self::SELF_PICKUP->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.selfPickup'),
             self::NONE->value      => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
         ];
     }
@@ -44,7 +49,7 @@ enum ShippingTypeEnum: string
             self::DUMMY->value     => 'heroicon-o-bolt',
             self::CARD_KEY->value  => 'heroicon-o-key',
             self::DELIVERY->value  => 'heroicon-o-home-modern',
-            self::COUPONS->value  => 'heroicon-o-ticket',
+            self::COUPONS->value   => 'heroicon-o-ticket',
             self::NONE->value      => 'heroicon-o-cloud',
 
         ];

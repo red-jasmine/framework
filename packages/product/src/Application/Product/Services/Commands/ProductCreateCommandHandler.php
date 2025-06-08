@@ -27,6 +27,7 @@ class ProductCreateCommandHandler extends ProductCommandHandler
     {
 
 
+
         // 初始化产品模型实例
         /**
          * @var $product Product
