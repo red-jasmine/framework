@@ -21,7 +21,7 @@ return new class extends Migration {
             // 卖家信息
             $table->string('owner_type', 32);
             $table->string('owner_id', 64);
-
+            // 开放渠道 门店、网店 TODO
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             // 配送方式
