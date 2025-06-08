@@ -38,7 +38,7 @@ class Product extends Data
      * 发货方式
      * @var array
      */
-    public array $shippingTypes = [];
+    public array $deliveryMethods = [];
     // 产品所属用户
     public UserInterface $owner;
     // 产品标题

@@ -3,7 +3,6 @@
 namespace RedJasmine\Product\Domain\Product\Transformer;
 
 use JsonException;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
 use RedJasmine\Product\Domain\Product\Data\Sku;
@@ -54,8 +53,6 @@ class ProductTransformer
         $product->owner                           = $command->owner;
         $product->supplier                        = $command->supplier;
         $product->product_type                    = $command->productType;
-        $product->shipping_types                  = $command->shippingTypes;
-        $product->shipping_type                   = $command->shippingType;
         $product->is_alone_order                  = $command->isAloneOrder;
         $product->is_pre_sale                     = $command->isPreSale;
         $product->title                           = $command->title;
@@ -74,6 +71,7 @@ class ProductTransformer
         $product->brand_id                        = $command->brandId;
         $product->product_model                   = $command->productModel;
         $product->product_group_id                = $command->productGroupId;
+        $product->delivery_methods                = $command->deliveryMethods;
         $product->freight_payer                   = $command->freightPayer;
         $product->freight_template_id             = $command->freightTemplateId;
         $product->min_limit                       = $command->minLimit;

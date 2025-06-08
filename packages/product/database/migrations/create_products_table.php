@@ -24,8 +24,7 @@ return new class extends Migration {
 
             $table->string('title')->comment('标题');
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
-            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
-            $table->string('shipping_types')->nullable()->comment(ShippingTypeEnum::comments('发货类型'));
+            // 配送方式
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
@@ -45,6 +44,7 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
+            $table->string('delivery_methods')->nullable()->comment(ShippingTypeEnum::comments('配送方式'));
             $table->string('freight_payer', 32)->default(FreightPayerEnum::SELLER)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('freight_template_id')->nullable()->comment('运费模板ID');
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));

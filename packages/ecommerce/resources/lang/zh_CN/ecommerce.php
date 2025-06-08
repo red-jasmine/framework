@@ -24,9 +24,10 @@ return [
     'enums' => [
 
         'product_type' => [
-            'goods'   => '普通',
+            'goods'   => '实物',
             'virtual' => '虚拟',
-            'coupons' => '卡券',
+            'cardKey' => '卡密',
+            'coupons' => '优惠券',
             'service' => '服务',
         ],
 

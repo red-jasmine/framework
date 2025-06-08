@@ -19,7 +19,6 @@ enum ShippingTypeEnum: string
     case SELF_PICKUP = 'selfPickup'; //自己提货
 
 
-
     case  DUMMY = 'dummy';  // 虚拟发货
 
     case CARD_KEY = 'cardKey'; // 卡密
@@ -32,25 +31,26 @@ enum ShippingTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::LOGISTICS->value => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.logistics'),
-            self::CARD_KEY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cardKey'),
-            self::DUMMY->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
-            self::DELIVERY->value  => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
-            self::COUPONS->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.coupons'),
-            self::SELF_PICKUP->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.selfPickup'),
-            self::NONE->value      => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
+            self::LOGISTICS->value   => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.logistics'),
+            self::CARD_KEY->value    => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.cardKey'),
+            self::DUMMY->value       => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.dummy'),
+            self::DELIVERY->value    => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.delivery'),
+            self::COUPONS->value     => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.coupons'),
+            self::SELF_PICKUP->value => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.selfPickup'),
+            self::NONE->value        => __('red-jasmine-ecommerce::ecommerce.enums.shipping_type.none'),
         ];
     }
 
     public static function icons() : array
     {
         return [
-            self::LOGISTICS->value => 'heroicon-o-truck',
-            self::DUMMY->value     => 'heroicon-o-bolt',
-            self::CARD_KEY->value  => 'heroicon-o-key',
-            self::DELIVERY->value  => 'heroicon-o-home-modern',
-            self::COUPONS->value   => 'heroicon-o-ticket',
-            self::NONE->value      => 'heroicon-o-cloud',
+            self::LOGISTICS->value   => 'heroicon-o-truck',
+            self::DUMMY->value       => 'heroicon-o-bolt',
+            self::CARD_KEY->value    => 'heroicon-o-key',
+            self::DELIVERY->value    => 'heroicon-o-home-modern',
+            self::COUPONS->value     => 'heroicon-o-ticket',
+            self::SELF_PICKUP->value => 'heroicon-o-building-storefront',
+            self::NONE->value        => 'heroicon-o-cloud',
 
         ];
     }

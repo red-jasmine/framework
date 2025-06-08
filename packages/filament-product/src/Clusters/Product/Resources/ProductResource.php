@@ -140,7 +140,6 @@ class ProductResource extends Resource
                 //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
             ->inlineLabel(true)
-
             ->columns(1);
     }
 
@@ -257,21 +256,14 @@ class ProductResource extends Resource
                                           ->live()
                                           ->default(ProductTypeEnum::GOODS->value)
                                           ->useEnum(ProductTypeEnum::class),
-            Forms\Components\ToggleButtons::make('shipping_type')
-                                          ->label(__('red-jasmine-product::product.fields.shipping_type'))
-                                          ->required()
-                                          ->inline()
-                                          ->default(ShippingTypeEnum::LOGISTICS)
-                                          ->useEnum(ShippingTypeEnum::class),
-            Forms\Components\ToggleButtons::make('shipping_types')
-                                          ->required()
-                                          ->inline()
-                                          ->multiple()
-                                          ->label(__('red-jasmine-product::product.fields.shipping_types'))
-                                          ->options(ShippingTypeEnum::options())
+            // Forms\Components\ToggleButtons::make('shipping_type')
+            //                               ->label(__('red-jasmine-product::product.fields.shipping_type'))
+            //                               ->required()
+            //                               ->inline()
+            //                               ->default(ShippingTypeEnum::LOGISTICS)
+            //                               ->useEnum(ShippingTypeEnum::class),
 
             //->useEnum(ShippingTypeEnum::class)
-            ,
             // ->disableOptionWhen(function ($value,Forms\Get $get){
             //     $shippingTypes = ProductTypeEnum::shippingTypes()[ProductTypeEnum::tryFrom($get('product_type'))->value];
             //
@@ -878,6 +870,14 @@ class ProductResource extends Resource
     public static function shippingFields() : array
     {
         return [
+
+            Forms\Components\ToggleButtons::make('delivery_methods')
+                                          ->inline()
+                                          ->multiple()
+                                          ->label(__('red-jasmine-product::product.fields.delivery_methods'))
+                                          ->icons(ShippingTypeEnum::icons())
+                                          ->options(ShippingTypeEnum::options()),
+
             Forms\Components\ToggleButtons::make('freight_payer')
                                           ->label(__('red-jasmine-product::product.fields.freight_payer'))
                                           ->required()

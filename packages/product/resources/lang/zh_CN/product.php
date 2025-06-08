@@ -23,6 +23,7 @@ return [
         'owner_id'                  => '所属者ID',
         'product_type'              => '商品类型',
         'shipping_type'             => '发货类型',
+        'delivery_methods'          => '配送方式',
         'title'                     => '标题',
         'slogan'                    => '卖点',
         'image'                     => '主图',

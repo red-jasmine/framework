@@ -15,9 +15,12 @@ enum ProductTypeEnum: string
 
     case VIRTUAL = 'virtual'; // 虚拟
 
-    case COUPONS = 'coupons'; // 优惠券类
+    case CardKey = 'cardKey'; // 数字卡密
+
+    case COUPONS = 'coupons'; // 卡券
 
     case SERVICE = 'service'; // 服务
+
     public static function shippingTypes() : array
     {
         return [
@@ -61,6 +64,7 @@ enum ProductTypeEnum: string
 
         ];
     }
+
     // 服务
 
     public static function labels() : array
@@ -68,6 +72,7 @@ enum ProductTypeEnum: string
         return [
             self::GOODS->value   => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
             self::VIRTUAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::CardKey->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.cardKey'),
             self::COUPONS->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
             self::SERVICE->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
         ];
@@ -76,9 +81,10 @@ enum ProductTypeEnum: string
     public static function icons() : array
     {
         return [
-            self::GOODS->value   => 'heroicon-o-briefcase',
+            self::GOODS->value   => 'heroicon-o-shopping-bag',
             self::VIRTUAL->value => 'heroicon-o-chart-bar-square',
             self::COUPONS->value => 'heroicon-o-ticket',
+            self::CardKey->value => 'heroicon-o-key',
             self::SERVICE->value => 'heroicon-o-shield-check',
 
         ];
@@ -88,7 +94,6 @@ enum ProductTypeEnum: string
     {
         return [];
     }
-
 
 
 }
