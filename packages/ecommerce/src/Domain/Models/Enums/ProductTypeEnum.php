@@ -82,7 +82,7 @@ enum ProductTypeEnum: string
     {
         return [
             self::GOODS->value   => 'heroicon-o-shopping-bag',
-            self::VIRTUAL->value => 'heroicon-o-chart-bar-square',
+            self::VIRTUAL->value => 'heroicon-o-cloud',
             self::COUPONS->value => 'heroicon-o-ticket',
             self::CardKey->value => 'heroicon-o-key',
             self::SERVICE->value => 'heroicon-o-shield-check',

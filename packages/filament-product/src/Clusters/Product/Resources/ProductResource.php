@@ -253,6 +253,7 @@ class ProductResource extends Resource
                                           ->label(__('red-jasmine-product::product.fields.product_type'))
                                           ->required()
                                           ->inline()
+                                          ->live()
                                           ->default(ProductTypeEnum::GOODS->value)
                                           ->useEnum(ProductTypeEnum::class),
             Forms\Components\TextInput::make('title')
@@ -857,12 +858,23 @@ class ProductResource extends Resource
     {
         return [
 
+            Forms\Components\TextInput::make('delivery_time')
+                                      ->label(__('red-jasmine-product::product.fields.delivery_time'))
+                                      ->required()
+                                      ->numeric()
+                                      ->default(0),
+
+
             Forms\Components\ToggleButtons::make('delivery_methods')
                                           ->inline()
                                           ->multiple()
                                           ->label(__('red-jasmine-product::product.fields.delivery_methods'))
                                           ->icons(ShippingTypeEnum::icons())
-                                          ->options(ShippingTypeEnum::options()),
+                                          ->required(fn(Forms\Get $get
+                                          ) => ProductTypeEnum::tryFrom($get('product_type')) === ProductTypeEnum::GOODS)
+                                          ->visible(fn(Forms\Get $get
+                                          ) => ProductTypeEnum::tryFrom($get('product_type')) === ProductTypeEnum::GOODS)
+                                          ->options(ShippingTypeEnum::deliveryMethods()),
 
             Forms\Components\ToggleButtons::make('freight_payer')
                                           ->label(__('red-jasmine-product::product.fields.freight_payer'))
@@ -870,6 +882,8 @@ class ProductResource extends Resource
                                           ->default(FreightPayerEnum::SELLER)
                                           ->useEnum(FreightPayerEnum::class)
                                           ->live()
+                                          ->visible(fn(Forms\Get $get
+                                          ) => ProductTypeEnum::tryFrom($get('product_type')) === ProductTypeEnum::GOODS)
                                           ->inline(),
             Forms\Components\Select::make('freight_template_id')
                                    ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Forms\Get $get) {
@@ -878,12 +892,10 @@ class ProductResource extends Resource
                                    )
                                    ->formatStateUsing(fn($state) => (string) $state)
                                    ->required(fn(Forms\Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
+                                   ->visible(fn(Forms\Get $get
+                                   ) => ProductTypeEnum::tryFrom($get('product_type')) === ProductTypeEnum::GOODS)
                                    ->label(__('red-jasmine-product::product.fields.freight_template_id')),
-            Forms\Components\TextInput::make('delivery_time')
-                                      ->label(__('red-jasmine-product::product.fields.delivery_time'))
-                                      ->required()
-                                      ->numeric()
-                                      ->default(0),
+
 
         ];
     }
@@ -1022,6 +1034,7 @@ class ProductResource extends Resource
                 ...static::ownerTableColumns(),
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-product::product.fields.id'))
+                                         ->copyable()
                                          ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                                          ->label(__('red-jasmine-product::product.fields.title'))
@@ -1031,14 +1044,11 @@ class ProductResource extends Resource
 
                 Tables\Columns\ImageColumn::make('image')->label(__('red-jasmine-product::product.fields.image')),
 
+                Tables\Columns\TextColumn::make('productGroup.name')
+                                         ->label(__('red-jasmine-product::product.fields.product_group_id'))
+                                         ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('product_type')
                                          ->label(__('red-jasmine-product::product.fields.product_type'))
-                                         ->useEnum()->toggleable(true, true),
-                Tables\Columns\TextColumn::make('shipping_type')
-                                         ->label(__('red-jasmine-product::product.fields.shipping_type'))
-                                         ->useEnum()->toggleable(true, true),
-                Tables\Columns\TextColumn::make('status')
-                                         ->label(__('red-jasmine-product::product.fields.status'))
                                          ->useEnum(),
 
 
@@ -1060,9 +1070,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')
                                          ->label(__('red-jasmine-product::product.fields.category_id'))
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('productGroup.name')
-                                         ->label(__('red-jasmine-product::product.fields.product_group_id'))
-                                         ->toggleable(isToggledHiddenByDefault: true),
+
 
                 Tables\Columns\TextColumn::make('price')
                                          ->label(__('red-jasmine-product::product.fields.price'))
@@ -1083,10 +1091,17 @@ class ProductResource extends Resource
                                          ->label(__('red-jasmine-product::product.fields.stock'))
                                          ->numeric()
                                          ->sortable(),
+
+
+                Tables\Columns\TextColumn::make('status')
+                                         ->label(__('red-jasmine-product::product.fields.status'))
+                                         ->useEnum(),
+
                 Tables\Columns\TextColumn::make('safety_stock')
                                          ->label(__('red-jasmine-product::product.fields.safety_stock'))
                                          ->numeric()
                                          ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('sort')
                                          ->label(__('red-jasmine-product::product.fields.sort'))
                                          ->numeric()
@@ -1132,11 +1147,7 @@ class ProductResource extends Resource
                                            ->label(__('red-jasmine-product::product.fields.product_type'))
                                            ->options(ProductTypeEnum::options()),
 
-                Tables\Filters\SelectFilter::make('shipping_type')
-                                           ->multiple()
-                                           ->label(__('red-jasmine-product::product.fields.shipping_type'))
-                                           ->options(ShippingTypeEnum::options()),
-                Tables\Filters\TrashedFilter::make(),
+               // Tables\Filters\TrashedFilter::make(),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->recordUrl(null)

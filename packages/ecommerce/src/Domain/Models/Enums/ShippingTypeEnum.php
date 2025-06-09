@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Models\Enums;
 
+use Illuminate\Support\Arr;
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
 /**
@@ -27,6 +28,15 @@ enum ShippingTypeEnum: string
 
     case NONE = 'none'; // 无需发货
 
+
+    public static function deliveryMethods() : array
+    {
+        return Arr::only(self::labels(), [
+            self::LOGISTICS->value,
+            self::DELIVERY->value,
+            self::SELF_PICKUP->value,
+        ]);
+    }
 
     public static function labels() : array
     {
