@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class PromoterLevel<<推广等级>> {
++level : int 推广等级
++name : string 推广等级名称
++description : string 描述
++icon : string 图标
++image:  string 图片
++conditions:List  升级条件
++rights:List 权益 如 分佣比例
+}
+class PromoterGroup<<分组>>{
++name : string 分组名称
++ description : string 描述
+}
+
+class Promoter<<推广员>> {
++ user : User 用户
++ level : PromoterLevel 推广等级
++ team: List<Promoter> 团队
++ group: PromoterGroup 分组
++ ?Inviter : Promoter 邀请人
++ upgradeAt: Date 升级时间
++ status : string 状态
++ totalCommission : double 总推广佣金
++ totalWithdrawal : double 总提现
++ totalOrder : int 总订单
++ totalOrderAmount : double 累计销售额
++ totalOrderCommission : double 累计佣金
++ totalCustomers : double 累计客户数
++ totalInvitations : double 累计邀请数
+}
+
+@enduml
