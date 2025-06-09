@@ -32,10 +32,9 @@ class Product extends Data
     public string $market = 'default';
     // 产品类型
     public ProductTypeEnum $productType;
-    // 运输类型
-    public ShippingTypeEnum $shippingType;
     /**
-     * 发货方式
+     * 配送方式
+     * 当实物时选择配送方式
      * @var array
      */
     public array $deliveryMethods = [];

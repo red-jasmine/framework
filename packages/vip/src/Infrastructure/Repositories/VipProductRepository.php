@@ -4,7 +4,6 @@ namespace RedJasmine\Vip\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
@@ -47,13 +46,12 @@ class VipProductRepository implements VipProductRepositoryInterface
             'title'         => $model->name,
             'price'         => $model->price->toArray(),
             'productType'   => ProductTypeEnum::VIRTUAL,
-            'shippingType'  => ShippingTypeEnum::DUMMY,
             'unit'          => $model->time_unit->value,
             'unitQuantity'  => $model->time_value,
             'stock'         => $model->stock,
             'appId'         => $model->app_id,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
-            'extra'        => [
+            'extra'         => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],
@@ -78,13 +76,12 @@ class VipProductRepository implements VipProductRepositoryInterface
             'title'         => $model->name,
             'price'         => $model->price->toArray(),
             'productType'   => ProductTypeEnum::VIRTUAL,
-            'shippingType'  => ShippingTypeEnum::DUMMY,
             'unit'          => $model->time_unit->value,
             'unitQuantity'  => $model->time_value,
             'stock'         => $model->stock,
             'appId'         => $model->app_id,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
-            'extra'        => [
+            'extra'         => [
                 'app_id' => $model->app_id,
                 'type'   => $model->type,
             ],
