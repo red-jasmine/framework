@@ -19,6 +19,7 @@ class PromoterTeam<<推广团队>>{
 +icon : string 图标
 +image:  string 图片
 +leader: Promoter 团队负责人
++ parent:  PromoterTeam 父级管理团队
 }
 
 class PromoterGroup<<分组>>{
