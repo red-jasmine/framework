@@ -10,7 +10,17 @@ class PromoterLevel<<推广等级>> {
 +image:  string 图片
 +conditions:List  升级条件
 +rights:List 权益 如 分佣比例
++parent:  PromoterLevel 父级推广员
 }
+class PromoterTeam<<推广团队>>{
++name : string 推广团队名称
++description : string 描述
++type:enum 类型
++icon : string 图标
++image:  string 图片
++leader: Promoter 团队负责人
+}
+
 class PromoterGroup<<分组>>{
 +name : string 分组名称
 + description : string 描述
@@ -19,7 +29,7 @@ class PromoterGroup<<分组>>{
 class Promoter<<推广员>> {
 + user : User 用户
 + level : PromoterLevel 推广等级
-+ team: List<Promoter> 团队
++ team: List<Promoter> 所属团队
 + group: PromoterGroup 分组
 + ?Inviter : Promoter 邀请人
 + upgradeAt: Date 升级时间
@@ -31,6 +41,15 @@ class Promoter<<推广员>> {
 + totalOrderCommission : double 累计佣金
 + totalCustomers : double 累计客户数
 + totalInvitations : double 累计邀请数
+}
+
+
+
+object 佣金配置{
+
+- 分销模式
+
+
 }
 
 @enduml
