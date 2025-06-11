@@ -1,6 +1,7 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+package 推广领域{
 
 class PromoterLevel<<推广等级>> {
 +level : int 推广等级
@@ -9,8 +10,8 @@ class PromoterLevel<<推广等级>> {
 +icon : string 图标
 +image:  string 图片
 +conditions:List  升级条件
++保级条件:List
 +rights:List 权益 如 分佣比例
-+parent:  PromoterLevel 父级推广员
 }
 class PromoterTeam<<推广团队>>{
 +name : string 推广团队名称
@@ -78,15 +79,6 @@ class  推广订单记录{
 }
 
 
-object 用户{
- +名称
-}
-
-
-object 佣金配置{
-- 分销模式
-
-}
 
 
 object 绑客模式{
@@ -94,5 +86,36 @@ object 绑客模式{
 +关系保护期  M天、永久  M < N
 +关系生成条件; 点击推广链接、需要 N 时内下单
 }
+
+
+
+Promoter *-- PromoterTeam:入团|退团
+
+Promoter *-- PromoterGroup:包含
+
+Promoter ..> PromoterLevel:升级|降级
+
+Promoter . 推广关系:推广邀请用户
+Promoter . 推广订单记录:推广
+
+
+}
+用户 . 推广订单记录:下单
+推广关系 . 用户:点击|下单
+
+推广订单记录 .. 电子钱包:结算
+package 用户{
+
+}
+
+package 电子钱包{
+
+object 佣金账户{
+}
+}
+
+
+
+
 
 @enduml
