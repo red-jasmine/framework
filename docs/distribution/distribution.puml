@@ -15,11 +15,18 @@ class PromoterLevel<<推广等级>> {
 class PromoterTeam<<推广团队>>{
 +name : string 推广团队名称
 +description : string 描述
-+type:enum 类型
++type:enum 团队类型
 +icon : string 图标
 +image:  string 图片
 +leader: Promoter 团队负责人
 + parent:  PromoterTeam 父级管理团队
++ 状态
++ totalWithdrawal : double 总提现
++ totalOrderCommission : double 累计佣金
++ totalOrder : int 总订单
++ totalOrderAmount : double 累计销售额
++ totalCustomers : double 累计客户数
++ totalInvitations : double 累计邀请数
 }
 
 class PromoterGroup<<分组>>{
@@ -35,21 +42,49 @@ class Promoter<<推广员>> {
 + ?Inviter : Promoter 邀请人
 + upgradeAt: Date 升级时间
 + status : string 状态
-+ totalCommission : double 总推广佣金
 + totalWithdrawal : double 总提现
++ totalOrderCommission : double 累计佣金
 + totalOrder : int 总订单
 + totalOrderAmount : double 累计销售额
-+ totalOrderCommission : double 累计佣金
 + totalCustomers : double 累计客户数
 + totalInvitations : double 累计邀请数
 }
 
 
+class 推广关系{
+- 推广员
+- 用户
+- 关系状态 待确认、确认中、成功、失败
+- 创建时间
+- 更新时间
+- 有效期
+- 保护期
+}
+
+class  推广订单记录{
+- 用户
+- 推广员
+- 推广员所属团队
+- 推广员所属分组
+- 推广订单
+- 推广关系
+- 推广订单金额
+- 推广订单状态
+- 推广订单创建时间
+- 推广订单更新时间
+- 推广订单完成时间
+- 结算方式
+- 结算状态
+}
+
+
+object 用户{
+ +名称
+}
+
 
 object 佣金配置{
-
 - 分销模式
-
 
 }
 
