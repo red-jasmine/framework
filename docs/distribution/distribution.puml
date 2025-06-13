@@ -3,9 +3,9 @@
 
 package 推广领域{
 
-class PromoterLevel<<推广等级>> {
-+level : int 推广等级
-+name : string 推广等级名称
+class PromoterLevel<<分销员等级>> {
++level : int 分销员等级
++name : string 分销员等级名称
 +description : string 描述
 +icon : string 图标
 +image:  string 图片
@@ -35,9 +35,9 @@ class PromoterGroup<<分组>>{
 + description : string 描述
 }
 
-class Promoter<<推广员>> {
-+ user : User 用户
-+ level : PromoterLevel 推广等级
+class Promoter<<分销员>> {
++ owner : User 所属人
++ level : PromoterLevel 分销员等级
 + team: List<Promoter> 所属团队
 + group: PromoterGroup 分组
 + ?Inviter : Promoter 邀请人
@@ -53,7 +53,7 @@ class Promoter<<推广员>> {
 
 
 class 推广关系{
-- 推广员
+- 分销员
 - 用户
 - 关系状态 待确认、确认中、成功、失败
 - 创建时间
@@ -64,9 +64,9 @@ class 推广关系{
 
 class  推广订单记录{
 - 用户
-- 推广员
-- 推广员所属团队
-- 推广员所属分组
+- 分销员
+- 分销员所属团队
+- 分销员所属分组
 - 推广订单
 - 推广关系
 - 推广订单金额
