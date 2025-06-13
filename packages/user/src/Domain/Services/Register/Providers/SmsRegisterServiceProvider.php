@@ -49,9 +49,10 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
     {
         $userData = new UserData();
 
-        $userData->name   = $data->data['name'] ?? null;
-        $userData->phone = $data->data['phone'] ?? null;
-        $userData->email  = $data->data['email'] ?? null;
+        $userData->name           = $data->data['name'] ?? null;
+        $userData->phone          = $data->data['phone'] ?? null;
+        $userData->email          = $data->data['email'] ?? null;
+        $userData->invitationCode = $data->data['invitation_code'] ?? null;
 
         return $userData;
     }

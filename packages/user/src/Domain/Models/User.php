@@ -24,6 +24,10 @@ use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
+/**
+ * @property string $phone
+ * @property string $name
+ */
 class User extends Authenticatable implements JWTSubject, UserInterface, OperatorInterface
 {
 
@@ -58,6 +62,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
     {
         parent::boot();
     }
+
     public function newInstance($attributes = [], $exists = false) : static
     {
         $instance = parent::newInstance($attributes, $exists);
@@ -205,5 +210,10 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         'nickname',
         'password',
     ];
+
+    public function register() : void
+    {
+        $this->fireModelEvent('register', false);
+    }
 
 }

@@ -29,7 +29,12 @@ class UserRegisterService
 
         $userData = $provider->register($data);
 
-        return $this->makeUser($userData);
+
+        $user = $this->makeUser($userData);
+
+        $user->register();
+
+        return $user;
     }
 
 
@@ -45,15 +50,16 @@ class UserRegisterService
         $user->name     = $data->name ?? $this->buildUserName();
         $user->nickname = $data->nickname ?? $this->buildNickname();
         $user->email    = $data->email ?? null;
-        $user->phone   = $data->phone ?? null;
+        $user->phone    = $data->phone ?? null;
         $user->password = $data->password ?? null;
         $user->avatar   = $data->avatar ?? null;
         $user->gender   = $data->gender ?? null;
         $user->birthday = $data->birthday ?? null;
         // 验证是否允许注册
 
-        // 验证信息
-
+        // 邀请码
+        $user->invitation_code = $data->invitationCode;
+        // 渠道 TODO
 
         return $user;
     }

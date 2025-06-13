@@ -36,6 +36,7 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
             $table->string('city')->nullable()->comment('城市');
             $table->string('district')->nullable()->comment('区县');
             $table->string('school')->nullable()->comment('学校');
+            $table->string('invitation_code', 64)->comment('邀请码')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
             $table->string('ip')->nullable()->comment('IP');
@@ -51,8 +52,7 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
             $table->string('updater_nickname', 64)->nullable();
             $table->timestamps();
 
-            // TODO 邀请人
-            // TODO
+
 
 
             $table->index(['name'], 'idx_name');

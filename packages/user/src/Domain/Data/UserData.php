@@ -21,6 +21,14 @@ class UserData extends UserBaseInfoData
 
 
     public ?string $password;
+    /**
+     * 邀请码
+     * @var string|null
+     */
+    public ?string $invitationCode;
+
+
+
 
 
 }

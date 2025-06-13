@@ -66,10 +66,11 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
     {
         $userData = new UserData();
 
-        $userData->name     = $data->data['name'] ?? null;
-        $userData->phone   = $data->data['phone'] ?? null;
-        $userData->email    = $data->data['email'] ?? null;
-        $userData->password = $data->data['password'];
+        $userData->name           = $data->data['name'] ?? null;
+        $userData->phone          = $data->data['phone'] ?? null;
+        $userData->email          = $data->data['email'] ?? null;
+        $userData->password       = $data->data['password'];
+        $userData->invitationCode = $data->data['invitation_code'] ?? null;
         return $userData;
     }
 
