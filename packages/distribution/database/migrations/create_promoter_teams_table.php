@@ -11,6 +11,9 @@ return new class extends Migration {
         Schema::create('promoter_teams', function (Blueprint $table) {
             $table->category('推广员团队');
             $table->unsignedTinyInteger('leader_id')->nullable()->comment('团长ID');
+
+
+            // TODO 统计数据
         });
     }
 

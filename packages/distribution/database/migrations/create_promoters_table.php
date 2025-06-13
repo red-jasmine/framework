@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('team_id')->nullable()->comment('所属团队ID');
             $table->string('owner_id', 64)->comment('所属人ID');
             $table->operator();
+            // 统计数据 TODO
             $table->comment('分销员');
         });
     }

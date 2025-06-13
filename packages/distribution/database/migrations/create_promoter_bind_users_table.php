@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->timestamp('protection_time')->comment('保护时间');// 保护期
             $table->timestamp('expiration_time')->comment('过期时间');// 到期时间
             $table->operator();
+
+            // TODO 统计数据
             $table->comment('分销绑定用户');
         });
     }
