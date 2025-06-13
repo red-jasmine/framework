@@ -16,8 +16,8 @@ class UserBaseResource extends JsonResource
         return [
             'id'        => $this->id,
             'name'      => $this->name,
-            'phone'    => Str::mask($this->phone, '*', 3, 4),
-            'email'     => Str::mask($this->email, '*', 0,4),
+            'phone'     => Str::mask($this->phone, '*', 3, 4),
+            'email'     => Str::mask($this->email, '*', 0, 4),
             'nickname'  => $this->nickname,
             'avatar'    => $this->avatar,
             'gender'    => $this->gender,
@@ -29,6 +29,7 @@ class UserBaseResource extends JsonResource
             'province'  => $this->province,
             'city'      => $this->city,
             'district'  => $this->district,
+            'school'     => $this->school,
         ];
     }
 }
