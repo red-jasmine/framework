@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,9 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
+/**
+ * @property Money $price
+ */
 class Product extends Model implements OperatorInterface, OwnerInterface
 {
 

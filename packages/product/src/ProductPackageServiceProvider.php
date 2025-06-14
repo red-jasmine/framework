@@ -22,6 +22,7 @@ class ProductPackageServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
                 ->hasCommands($this->getCommands())
                 ->runsMigrations()
+                ->hasRoutes(['api'])
                 ->hasInstallCommand(function (InstallCommand $command) {
                     $command
                         ->publishConfigFile()
@@ -29,11 +30,10 @@ class ProductPackageServiceProvider extends PackageServiceProvider
                         ->askToRunMigrations()
                         ->endWith(function (InstallCommand $command) {
                             if ($command->confirm('Seed demo data')) {
-                                $command->call('db:seed', [ '--class' => ProductPackageSeeder::class ]);
+                                $command->call('db:seed', ['--class' => ProductPackageSeeder::class]);
                             }
 
-                        })
-//                        ->askToStarRepoOnGitHub('red-jasmine/product')
+                        })//                        ->askToStarRepoOnGitHub('red-jasmine/product')
                     ;
                 });
 

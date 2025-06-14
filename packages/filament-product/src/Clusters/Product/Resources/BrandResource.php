@@ -3,13 +3,9 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
 use App\Filament\Clusters\Product\Resources\BrandResource\RelationManagers;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\BrandResource\Pages\CreateBrand;
@@ -20,7 +16,6 @@ use RedJasmine\Product\Application\Brand\Services\Commands\BrandCreateCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandDeleteCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandUpdateCommand;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
-use RedJasmine\Product\Domain\Brand\Models\Enums\BrandStatusEnum;
 
 class BrandResource extends Resource
 {
