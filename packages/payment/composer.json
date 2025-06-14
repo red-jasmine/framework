@@ -32,7 +32,7 @@
               "RedJasmine\\Payment\\PaymentPackageServiceProvider",
               "RedJasmine\\Payment\\Domain\\PaymentDomainServiceProvider",
               "RedJasmine\\Payment\\Application\\PaymentApplicationServiceProvider",
-              "RedJasmine\\Payment\\Ui\\PaymentUIServiceProvider"
+              "RedJasmine\\Payment\\UI\\PaymentUIServiceProvider"
             ],
             "aliases": {
 
