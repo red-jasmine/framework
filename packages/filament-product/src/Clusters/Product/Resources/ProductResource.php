@@ -769,7 +769,10 @@ class ProductResource extends Resource
     public static function descriptionFields() : array
     {
         return [
-            Forms\Components\FileUpload::make('image')->label(__('red-jasmine-product::product.fields.image'))->image(),
+            Forms\Components\FileUpload::make('image')
+                                       ->fetchFileInformation(false)
+                                       ->directory('products')
+                                       ->label(__('red-jasmine-product::product.fields.image'))->image(),
             Forms\Components\FileUpload::make('images')->label(__('red-jasmine-product::product.fields.images'))->image()->multiple(),
             Forms\Components\FileUpload::make('videos')->label(__('red-jasmine-product::product.fields.videos'))->image()->multiple(),
             Forms\Components\RichEditor::make('detail')->label(__('red-jasmine-product::product.fields.detail')),
@@ -1147,7 +1150,7 @@ class ProductResource extends Resource
                                            ->label(__('red-jasmine-product::product.fields.product_type'))
                                            ->options(ProductTypeEnum::options()),
 
-               // Tables\Filters\TrashedFilter::make(),
+                // Tables\Filters\TrashedFilter::make(),
             ], layout: Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->deferFilters()
             ->recordUrl(null)
