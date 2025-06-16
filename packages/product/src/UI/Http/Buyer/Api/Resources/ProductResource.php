@@ -31,7 +31,7 @@ class ProductResource extends JsonResource
             'freight_template_id' => $this->freight_template_id,
             'price'               => $this->price->formatByDecimal(),
             'market_price'        => $this->market_price?->formatByDecimal(),
-            'sub_stock'           => $this->sub_stock,
+            'sub_stock'           => $this->sub_stock, // 库存扣减方式
             'stock'               => $this->stock,
             'channel_stock'       => $this->channel_stock,
             'delivery_time'       => $this->delivery_time,
