@@ -59,8 +59,9 @@ trait ModelTree
 
     public function getDefaultKeyName()
     {
-        return property_exists($this, 'defaultKeyName') ? $this->defaultKeyName :  $this->getKeyName();
+        return property_exists($this, 'defaultKeyName') ? $this->defaultKeyName : $this->getKeyName();
     }
+
     /**
      * @return string
      */
@@ -81,7 +82,9 @@ trait ModelTree
             $nodes,
             $this->getDefaultParentId(),
             $this->getDefaultKeyName(),
-            $this->getParentColumn()
+            $this->getParentColumn(),
+            null,
+            $this->getOrderColumn(),
         );
     }
 
@@ -109,20 +112,21 @@ trait ModelTree
         $parentId = 0,
         ?string $primaryKeyName = null,
         ?string $parentKeyName = null,
-        ?string $childrenKeyName = null
-    ) : array
-    {
+        ?string $childrenKeyName = null,
+        ?string $orderKeyName = null,
+    ) : array {
         $branch          = [];
         $primaryKeyName  = $primaryKeyName ?: 'id';
         $parentKeyName   = $parentKeyName ?: 'parent_id';
         $childrenKeyName = $childrenKeyName ?: 'children';
+        $orderKeyName    = $orderKeyName ?: 'sort';
 
-        $parentId = is_numeric($parentId) ? (int)$parentId : $parentId;
+        $parentId = is_numeric($parentId) ? (int) $parentId : $parentId;
 
         foreach ($nodes as $node) {
             $pk = $node[$parentKeyName];
 
-            $pk = is_numeric($pk) ? (int)$pk : $pk;
+            $pk = is_numeric($pk) ? (int) $pk : $pk;
 
             if ($pk === $parentId) {
                 $children = static::buildNestedArray(
@@ -140,15 +144,21 @@ trait ModelTree
             }
         }
 
+        // 对数组进行排序
+        usort($branch, function ($a, $b) use ($orderKeyName) {
+            return $b[$orderKeyName] <=> $a[$orderKeyName];
+        });
+
+
         return $branch;
     }
 
     /**
      * Get options for Select field in form.
      *
-     * @param Closure|null $closure
-     * @param bool $needRoot
-     * @param null $rootText
+     * @param  Closure|null  $closure
+     * @param  bool  $needRoot
+     * @param  null  $rootText
      *
      * @return array
      */
@@ -166,17 +176,18 @@ trait ModelTree
     /**
      * Build options of select field in form.
      *
-     * @param array $nodes
-     * @param int $parentId
-     * @param string $prefix
-     * @param string $space
+     * @param  array  $nodes
+     * @param  int  $parentId
+     * @param  string  $prefix
+     * @param  string  $space
+     *
      * @return array
      */
     protected function buildSelectOptions(array $nodes = [], $parentId = null, string $prefix = '', string $space = '&nbsp;') : array
     {
         $d      = '├─';
-        $prefix = $prefix ?: $d . $space;
-        if(is_null($parentId)){
+        $prefix = $prefix ?: $d.$space;
+        if (is_null($parentId)) {
             $parentId = $this->getDefaultParentId();
         }
 
@@ -188,11 +199,12 @@ trait ModelTree
 
         foreach ($nodes as $index => $node) {
             if ($node[$this->getParentColumn()] == $parentId) {
-                $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()], $index) ? $prefix : str_replace($d, '└─', $prefix);
+                $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()], $index) ? $prefix : str_replace($d, '└─',
+                    $prefix);
 
-                $node[$this->getTitleColumn()] = $currentPrefix . $space . $node[$this->getTitleColumn()];
+                $node[$this->getTitleColumn()] = $currentPrefix.$space.$node[$this->getTitleColumn()];
 
-                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix) . $d . str_replace([ $d, $space ], '', $prefix);
+                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix).$d.str_replace([$d, $space], '', $prefix);
 
                 $children = $this->buildSelectOptions($nodes, $node[$this->getDefaultKeyName()], $childrenPrefix);
 

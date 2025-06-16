@@ -16,6 +16,17 @@ trait HasTree
         return $model->toTree($nodes);
     }
 
+
+    /**
+     * @deprecated
+     * @param $nodes
+     * @param $parentId
+     * @param  string|null  $primaryKeyName
+     * @param  string|null  $parentKeyName
+     * @param  string|null  $childrenKeyName
+     *
+     * @return array
+     */
     public static function buildNestedArray(
         $nodes = [],
         $parentId = 0,
