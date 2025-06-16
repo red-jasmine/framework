@@ -2,8 +2,10 @@
 
 namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
 
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
+use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -52,6 +54,9 @@ class ProductGroupReadRepository extends QueryBuilderReadRepository implements P
             AllowedFilter::exact('parent_id'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
+            AllowedFilter::callback('owner', fn(Builder $builder, $value) => $builder->onlyOwner(
+                is_array($value) ? UserData::from($value) : $value
+            )),
         ];
     }
 

@@ -15,9 +15,4 @@ class ProductGroupTreeQuery extends Query
     public ?bool   $isShow;
 
 
-    public string|array|null $append;
-
-    public string|array|null $sort;
-
-
 }

@@ -64,11 +64,12 @@ class ProductGroupApplicationService extends ApplicationService
 
     public function tree(Query $query) : array
     {
-        $owner = $query->owner;
-        unset($query->owner);
-        $this->readRepository->withQuery(function ($builder)use($owner){
-            return $builder->onlyOwner($owner);
-        });
+
+        // $owner = $query->owner;
+        // unset($query->owner);
+        // $this->readRepository->withQuery(function ($builder)use($owner){
+        //     return $builder->onlyOwner($owner);
+        // });
         return $this->readRepository->tree($query);
     }
 
