@@ -18,9 +18,7 @@ use RedJasmine\Logistics\Domain\Data\LogisticsFreightTemplateData;
 use RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightChargeTypeEnum;
 use RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightTemplateStatusEnum;
 use RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightTemplateStrategyTypeEnum;
-use RedJasmine\Logistics\Domain\Models\Extensions\LogisticsFreightTemplateStrategy;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
-use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
 
 class LogisticsFreightTemplateResource extends Resource
 {
@@ -81,7 +79,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                        ->relationship('regions', 'name', 'parent_code', modifyChildQueryUsing: function (
                                                            $query
                                                        ) {
-                                                           return $query->treeHeight(2);
+                                                           return $query->level(2);
                                                        })
                                                        ->default([])
                                                        ->inlineLabel()
@@ -89,6 +87,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                        ->withCount()
                                                        ->parentNullValue('0')
                                                        ->grouped(true)
+                                                        ->independent(false)
                                                        ->saveRelationshipsUsing(null)
                                                        ->dehydrated()
                                                        ->visible(fn(Forms\Get $get) => !$get('is_all_regions'))
