@@ -11,8 +11,8 @@ class GroupResource extends JsonResource
     public function toArray(Request $request) : array
     {
         return [
-            'id'         => $this->id,
-            'parent_id'  => $this->parent_id,
+            'id'         => (string) $this->id,
+            'parent_id'  => (string) $this->parent_id,
             'owner_id'   => $this->owner_id,
             'owner_type' => $this->owner_type,
             'name'       => $this->name,
@@ -22,7 +22,7 @@ class GroupResource extends JsonResource
             'is_leaf'    => $this->is_leaf,
             'is_show'    => $this->is_show,
             'status'     => $this->status,
-            'extra'    => $this->extra,
+            'extra'      => $this->extra,
             'children'   => static::collection(collect($this->children)),
             'parent'     => new static($this->whenLoaded('parent')),
         ];

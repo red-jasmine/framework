@@ -41,6 +41,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property Money $price
+ * @property ?Money $market_price
  */
 class Product extends Model implements OperatorInterface, OwnerInterface
 {

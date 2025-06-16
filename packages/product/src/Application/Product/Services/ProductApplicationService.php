@@ -40,18 +40,21 @@ class ProductApplicationService extends ApplicationService
         public ProductRepositoryInterface $repository,
         public ProductReadRepositoryInterface $readRepository
 
-    )
-    {
+    ) {
 
     }
 
-    protected static        $macros     = [
+    public function getDefaultModelWithInfo() : array
+    {
+        return ['extension', 'tags'];
+    }
+
+    protected static $macros = [
         'create'    => ProductCreateCommandHandler::class,
         'update'    => ProductUpdateCommandHandler::class,
         'delete'    => ProductDeleteCommandHandler::class,
         'setStatus' => ProductSetStatusCommandHandler::class,
     ];
-
 
 
 }
