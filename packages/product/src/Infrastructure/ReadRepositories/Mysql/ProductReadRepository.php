@@ -61,10 +61,13 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
         ];
     }
 
+
+
     public function allowedIncludes() : array
     {
         return [
             'extension',
+            'services',
             'skus',
             'brand',
             'category',
