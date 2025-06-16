@@ -50,7 +50,11 @@ class PaginateQuery extends Query
      */
     public mixed $sort;
 
-    
-    public ?string $keyword;
+
+    /**
+     * 搜索字段
+     * @var string|null
+     */
+    public ?string $search;
 
 }

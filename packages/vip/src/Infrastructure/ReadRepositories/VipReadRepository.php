@@ -16,7 +16,6 @@ class VipReadRepository extends QueryBuilderReadRepository implements VipReadRep
             AllowedFilter::exact('id'),
             AllowedFilter::exact('app_id'),
             AllowedFilter::exact('type'),
-            AllowedFilter::exact('keyword'),
 
         ];
     }

@@ -27,7 +27,7 @@ class ArticleReadRepository extends QueryBuilderReadRepository implements Articl
     {
         return [
             AllowedFilter::exact('category_id'),
-            AllowedFilter::partial('keyword', 'title'),
+            AllowedFilter::partial('search', 'title'),
         ];
 
     }
