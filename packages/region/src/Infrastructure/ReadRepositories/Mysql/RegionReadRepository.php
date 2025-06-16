@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Region\Infrastructure\ReadRepositories\Mysql;
 
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Region\Domain\Models\Region;
 use RedJasmine\Region\Domain\Repositories\RegionReadRepositoryInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
@@ -13,15 +14,20 @@ class RegionReadRepository extends QueryBuilderReadRepository implements RegionR
 {
     use HasTree;
 
-    public static string $modelClass = Region::class;
+    protected mixed      $defaultSort = '-code';
+    public static string $modelClass  = Region::class;
 
     public function tree(?Query $query = null) : array
     {
-        $nodes = $this->query($query)
-                      ->select($this->baseFields())->get();
+        $nodes = $this->query($query)->select($this->baseFields())->get();
         $model = (new static::$modelClass);
-
         return $model->toTree($nodes);
+    }
+
+
+    public function allowedSorts() : array
+    {
+        return ['code'];
     }
 
     protected function baseFields() : array
@@ -30,6 +36,7 @@ class RegionReadRepository extends QueryBuilderReadRepository implements RegionR
             'code',
             'parent_code',
             'name',
+            'type',
             'level'
         ];
     }
@@ -49,9 +56,10 @@ class RegionReadRepository extends QueryBuilderReadRepository implements RegionR
     {
         return [
             AllowedFilter::exact('country_code'),
-            AllowedFilter::exact('code'),
             AllowedFilter::exact('parent_code'),
-            AllowedFilter::exact('level'),
+            AllowedFilter::exact('code'),
+            AllowedFilter::exact('type'),
+            AllowedFilter::scope('level'),
         ];
     }
 }

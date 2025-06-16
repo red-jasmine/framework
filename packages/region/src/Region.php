@@ -3,7 +3,7 @@
 namespace RedJasmine\Region;
 
 use Illuminate\Database\Eloquent\Collection;
-use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
+use RedJasmine\Region\Domain\Enums\RegionTypeEnum;
 use RedJasmine\Region\Domain\Models\Region as RegionModel;
 use RedJasmine\Region\Enums\RegionLevel;
 
@@ -59,7 +59,7 @@ class Region
     {
         return RegionModel::select($this->fields)
                           ->where('parent_id', 0)
-                          ->where('level', RegionLevelEnum::COUNTRY->value)
+                          ->where('level', RegionTypeEnum::COUNTRY->value)
                           ->get();
     }
 
@@ -71,7 +71,7 @@ class Region
     {
         return RegionModel::select($this->fields)
                           ->where('parent_id', $parentID)
-                          ->where('level', RegionLevelEnum::PROVINCE->value)
+                          ->where('level', RegionTypeEnum::PROVINCE->value)
                           ->get();
     }
 
@@ -107,9 +107,9 @@ class Region
     }
 
 
-    public function tree(RegionLevelEnum $level = RegionLevelEnum::DISTRICT) : array
+    public function tree(RegionTypeEnum $level = RegionTypeEnum::DISTRICT) : array
     {
-        $regionLevel = RegionLevelEnum::tryFrom($level);
+        $regionLevel = RegionTypeEnum::tryFrom($level);
 
         $query   = RegionModel::query();
         $regions = $query

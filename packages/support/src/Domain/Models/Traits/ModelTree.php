@@ -46,6 +46,11 @@ trait ModelTree
         return property_exists($this, 'orderColumn') ? $this->orderColumn : 'order';
     }
 
+    public function getSortType() : string
+    {
+        return property_exists($this, 'sortType') ? $this->sortType : 'desc';
+    }
+
     /**
      * Get depth column name.
      *
@@ -146,7 +151,11 @@ trait ModelTree
 
         // 对数组进行排序
         usort($branch, function ($a, $b) use ($orderKeyName) {
-            return $b[$orderKeyName] <=> $a[$orderKeyName];
+            if ($b->getSortType() === 'desc') {
+                return $b[$orderKeyName] <=> $a[$orderKeyName];
+            } else {
+                return $a[$orderKeyName] <=> $b[$orderKeyName];
+            }
         });
 
 

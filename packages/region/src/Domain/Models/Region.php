@@ -4,7 +4,7 @@ namespace RedJasmine\Region\Domain\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Region\Domain\Enums\RegionLevelEnum;
+use RedJasmine\Region\Domain\Enums\RegionTypeEnum;
 use RedJasmine\Region\Enums\RegionLevel;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
@@ -38,7 +38,7 @@ class Region extends Model
     protected function casts() : array
     {
         return [
-            'level'        => RegionLevelEnum::class,
+            'type'         => RegionTypeEnum::class,
             'timezones'    => 'array',
             'translations' => 'array'
         ];
@@ -49,9 +49,9 @@ class Region extends Model
         'parent_code',
         'name',
         'code',
+        'type',
         'level',
         'phone_code',
-        'tree_height',
         'country_code',
         'timezones',
         'translations',
@@ -61,23 +61,16 @@ class Region extends Model
     protected string $parentColumn = 'parent_code';
     // 排序字段名称，默认值为 order
     protected string $orderColumn = 'code';
+    protected string $sortType    = 'asc';
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
 
     public mixed $defaultParentId = '0';
 
 
-    public function scopeLevels(Builder $query, ...$args)
+    public function scopeLevel(Builder $query, int $height = 3)
     {
-        if (count($args) === 1 && is_array($args[0])) {
-            $args = $args[0];
-        }
-        return $query->whereIn('level', $args);
-    }
-
-    public function scopeTreeHeight(Builder $query, int $height = 3)
-    {
-        return $query->where('tree_height', '<=', $height);
+        return $query->where('level', '<=', $height);
     }
 
 }

@@ -4,7 +4,7 @@ namespace RedJasmine\Region\Domain\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum RegionLevelEnum: string
+enum RegionTypeEnum: string
 {
 
     use EnumsHelper;
