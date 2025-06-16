@@ -19,5 +19,11 @@ class Query extends Data
      */
     public mixed $fields;
 
+    public mixed $append;
+
+    public mixed $sort;
+
+
+
 
 }

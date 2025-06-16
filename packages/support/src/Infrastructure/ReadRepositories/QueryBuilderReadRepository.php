@@ -97,7 +97,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function query(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
     {
 
-        $queryBuilder = QueryBuilder::for($this->modelQuery($query), $this->buildRequest($query?->toArray() ?? []));
+        $queryBuilder = QueryBuilder::for($this->modelQuery($query), $this->buildRequest($query));
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
         // 只有当相应的允许列表不为空时，才应用相应的限制
@@ -121,49 +121,60 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
         return $queryBuilder;
     }
 
+
     /**
      * 构建请求对象
      *
-     * 本方法用于根据传入的查询参数数组构建一个请求对象。它会从配置文件中读取一系列
-     * 查询参数配置项，并根据这些配置项对传入的查询参数进行处理，最终生成一个初始化的
-     * Request 对象
+     * 根据提供的查询对象，构建并返回一个Request对象此方法首先创建一个新的Request对象，
+     * 然后根据提供的查询对象（或一个新的空查询对象，如果没有提供），填充Request对象的各个属性
+     * 它特别关注于处理查询参数，如包含、附加、排序、字段和过滤参数，根据配置文件中的设置
      *
-     * @param  array  $requestQuery  查询参数数组，默认为空数组。这允许在构建请求时预设一些查询参数
+     * @param  Query|null  $query  可选的查询对象，用于构建请求如果未提供，则创建一个新的空查询对象
      *
-     * @return Request 返回一个初始化并设置了查询参数的 Request 对象
+     * @return Request 返回构建好的Request对象
      */
-    protected function buildRequest(array $requestQuery = []) : Request
+    protected function buildRequest(?Query $query = null) : Request
     {
 
-        $requestQuery = array_filter($requestQuery, fn($value) => !is_null($value));
+        // 创建一个新的Request对象
+        $request = (new Request());
 
+        // 确保查询对象存在，如果未提供，则创建一个新的空查询对象
+        $query = $query ?? Query::from([]);
 
         // 从配置文件中获取参数名称
         $includeParameterName = config('query-builder.parameters.include', 'include');
         $appendParameterName  = config('query-builder.parameters.append', 'append');
-        $fieldsParameterName  = config('query-builder.parameters.fields', 'fields');
         $sortParameterName    = config('query-builder.parameters.sort', 'sort');
+        $fieldsParameterName  = config('query-builder.parameters.fields', 'fields');
         $filterParameterName  = config('query-builder.parameters.filter', 'filter');
 
 
-        // 如果filter参数存在，则移除某些默认参数，以避免冲突或不必要的处理
+        $queryFilters = $query->except($includeParameterName,
+            $appendParameterName,
+            $fieldsParameterName,
+            $sortParameterName,
+            'page', 'perPage');
+
+        // 如果过滤参数名称已配置，处理查询参数以生成过滤条件
         if (filled($filterParameterName)) {
-            $requestQuery[$filterParameterName] = Arr::except($requestQuery, [
-                $includeParameterName,
-                $appendParameterName,
-                $fieldsParameterName,
-                $sortParameterName,
-                'page', 'per_page'
-            ]);
+            // 排除特定的查询参数，准备过滤条件
+            // 将过滤条件添加到请求对象中
+            $request->offsetSet($filterParameterName, $queryFilters->toArray());
+        } else {
+            // 如果未配置过滤参数，直接用查询参数初始化请求对象
+            $request->initialize($queryFilters->toArray());
         }
+        // 将包含、附加、排序和字段参数添加到请求对象中
+        $request->offsetSet($includeParameterName, $query->include);
+        $request->offsetSet($appendParameterName, $query->append);
+        $request->offsetSet($sortParameterName, $query->sort);
+        $request->offsetSet($fieldsParameterName, $query->fields);
 
-
-        // 创建一个新的Request对象，并用处理后的查询参数初始化它
-        $request = (new Request());
-        $request->initialize($requestQuery);
-
+        // 返回构建好的Request对象
         return $request;
     }
+
 
     protected function queryCallbacks($query) : static
     {
