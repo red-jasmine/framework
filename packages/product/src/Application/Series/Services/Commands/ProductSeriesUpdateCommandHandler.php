@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Application\Series\Services\Commands;
 
 use Illuminate\Database\Eloquent\Collection;
+use RedJasmine\Product\Application\Series\Services\ProductSeriesApplicationService;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Support\Application\Commands\CommandHandler;
@@ -12,6 +13,12 @@ use Throwable;
 class ProductSeriesUpdateCommandHandler extends CommandHandler
 {
 
+
+    public function __construct(
+        protected ProductSeriesApplicationService $service
+    )
+    {
+    }
 
     /**
      * @throws AbstractException
@@ -25,7 +32,7 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
             /**
              * @var $model ProductSeries
              */
-            $model          = $this->getService()->getRepository()->find($command->id);
+            $model          = $this->service->repository->find($command->id);
             $model->remarks = $command->remarks;
             $model->name    = $command->name;
 
@@ -40,7 +47,7 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
                 });
             }
 
-            $this->getService()->getRepository()->update($model);
+            $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $abstractException) {

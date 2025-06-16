@@ -6,11 +6,16 @@ use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateC
 use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesDeleteCommandHandler;
 use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesUpdateCommandHandler;
 use RedJasmine\Product\Application\Series\Services\Pipelines\SeriesProductPipeline;
+use RedJasmine\Product\Application\Series\Services\Queries\FindProductSeriesQuery;
+use RedJasmine\Product\Application\Series\Services\Queries\FindProductSeriesQueryHandler;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
+/**
+ * @method findProductSeries(FindProductSeriesQuery $query)
+ */
 class ProductSeriesApplicationService extends ApplicationService
 {
 
@@ -24,9 +29,10 @@ class ProductSeriesApplicationService extends ApplicationService
     protected static string $modelClass = ProductSeries::class;
 
     protected static $macros = [
-        'create' => ProductSeriesCreateCommandHandler::class,
-        'update' => ProductSeriesUpdateCommandHandler::class,
-        'delete' => ProductSeriesDeleteCommandHandler::class
+        'create'            => ProductSeriesCreateCommandHandler::class,
+        'update'            => ProductSeriesUpdateCommandHandler::class,
+        'delete'            => ProductSeriesDeleteCommandHandler::class,
+        'findProductSeries' => FindProductSeriesQueryHandler::class
     ];
 
     public function __construct(

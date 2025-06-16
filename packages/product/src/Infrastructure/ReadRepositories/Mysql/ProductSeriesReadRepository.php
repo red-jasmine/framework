@@ -3,6 +3,7 @@
 namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
@@ -31,7 +32,23 @@ class ProductSeriesReadRepository extends QueryBuilderReadRepository implements 
 
     public function allowedIncludes() : array
     {
-        return [ 'products' ];
+        return ['products'];
+    }
+
+
+    /**
+     * @param $productId
+     *
+     * @return ProductSeries
+     */
+    public function findProductSeries($productId) : ProductSeries
+    {
+        return $this->query()
+                    ->with('products')
+                    ->whereHas('products', function (Builder $query) use ($productId) {
+                        $query->where('product_id', $productId);
+                    })
+                    ->firstOrFail();
     }
 
 

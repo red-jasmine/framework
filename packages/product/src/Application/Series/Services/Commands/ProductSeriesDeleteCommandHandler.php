@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Application\Series\Services\Commands;
 
+use RedJasmine\Product\Application\Series\Services\ProductSeriesApplicationService;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
@@ -9,7 +10,11 @@ use Throwable;
 class ProductSeriesDeleteCommandHandler extends CommandHandler
 {
 
-
+    public function __construct(
+        protected ProductSeriesApplicationService $service
+    )
+    {
+    }
     /**
      * @throws Throwable
      */
@@ -20,8 +25,8 @@ class ProductSeriesDeleteCommandHandler extends CommandHandler
             /**
              * @var $model ProductSeries
              */
-            $model = $this->getService()->getRepository()->find($command->id);
-            $this->getService()->getRepository()->delete($model);
+            $model = $this->service->repository->find($command->id);
+            $this->service->repository->delete($model);
             $this->commitDatabaseTransaction();
         } catch (Throwable $throwable) {
             $this->rollbackDatabaseTransaction();
