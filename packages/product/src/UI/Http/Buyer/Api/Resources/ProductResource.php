@@ -13,13 +13,13 @@ class ProductResource extends JsonResource
     {
 
         return [
-            'id'                  => $this->id,
+            'id'                  => (string) $this->id,
             'owner_id'            => $this->owner_id,
             'owner_type'          => $this->owner_type,
             'title'               => $this->title,
             'slogan'              => $this->slogan,
             'product_type'        => $this->product_type,
-            'shipping_type'       => $this->shipping_type,
+            'delivery_methods'    => $this->delivery_methods,
             'status'              => $this->status,
             'is_multiple_spec'    => $this->is_multiple_spec,
             'image'               => $this->image,
@@ -50,8 +50,8 @@ class ProductResource extends JsonResource
             'on_sale_time'        => $this->on_sale_time?->format('Y-m-d H:i:s'),
             'sold_out_time'       => $this->sold_out_time?->format('Y-m-d H:i:s'),
             'stop_sale_time'      => $this->stop_sale_time?->format('Y-m-d H:i:s'),
-            'brand_id'            => $this->brand_id,
             'product_model'       => $this->product_model,
+            'brand_id'            => $this->brand_id,
             'category_id'         => $this->category_id,
             $this->mergeWhen($this->relationLoaded('extension'),
                 $this->relationLoaded('extension') ? new ProductExtensionResource($this->whenLoaded('extension')) : null),
