@@ -2,50 +2,40 @@
 
 namespace RedJasmine\Product\UI\Http\Buyer\Api\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
-use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupPaginateQuery;
+use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService as Service;
 use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupTreeQuery;
-use RedJasmine\Product\UI\Http\Buyer\Api\Resources\GroupResource;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Product\Domain\Group\Models\ProductGroup as Model;
+use RedJasmine\Product\UI\Http\Buyer\Api\Resources\GroupResource as Resource;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
+use RedJasmine\Support\UI\Http\Controllers\HasTreeAction;
+use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 
 class GroupController extends Controller
 {
+
+    protected static string $resourceClass      = Resource::class;
+    protected static string $paginateQueryClass = PaginateQuery::class;
+    protected static string $treeQueryClass     = ProductGroupTreeQuery::class;
+    protected static string $modelClass         = Model::class;
+
+
+    use RestControllerActions;
+
+    use HasTreeAction;
+
     public function __construct(
-        protected ProductGroupApplicationService $service,
-
+        protected Service $service,
     ) {
-
         $this->service->readRepository->withQuery(function ($query) {
-            $query->onlyOwner($this->getOwner());
+            $query->show();
         });
 
     }
 
-    public function tree(Request $request) : AnonymousResourceCollection
+    public function authorize($ability, $arguments = []) : bool
     {
-        $tree = $this->service->tree(ProductGroupTreeQuery::from($request));
-
-        return GroupResource::collection($tree);
+        return false;
     }
 
-    public function index(Request $request) : AnonymousResourceCollection
-    {
-
-
-        $result = $this->service->paginate(ProductGroupPaginateQuery::from($request));
-
-        return GroupResource::collection($result->appends($request->query()));
-    }
-
-
-    public function show($id, Request $request) : GroupResource
-    {
-
-        $result = $this->service->find(FindQuery::make($id, $request));
-
-        return GroupResource::make($result);
-    }
 
 }

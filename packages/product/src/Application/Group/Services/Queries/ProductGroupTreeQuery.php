@@ -2,16 +2,16 @@
 
 namespace RedJasmine\Product\Application\Group\Services\Queries;
 
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
 class ProductGroupTreeQuery extends Query
 {
 
-    public ?string $ownerType = null;
-
-    public ?int $ownerId = null;
+    public UserInterface $owner;
 
     public ?string $status;
+
     public ?bool   $isShow;
 
 

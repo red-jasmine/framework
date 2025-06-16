@@ -14,6 +14,7 @@ use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 
 
 /**
@@ -61,9 +62,13 @@ class ProductGroupApplicationService extends ApplicationService
         })->find(FindQuery::make($id))?->isAllowUse());
     }
 
-    public function tree(ProductGroupTreeQuery $query) : array
+    public function tree(Query $query) : array
     {
-
+        $owner = $query->owner;
+        unset($query->owner);
+        $this->readRepository->withQuery(function ($builder)use($owner){
+            return $builder->onlyOwner($owner);
+        });
         return $this->readRepository->tree($query);
     }
 
