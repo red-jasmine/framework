@@ -18,8 +18,7 @@ class RegionReadRepository extends QueryBuilderReadRepository implements RegionR
     public function tree(?Query $query = null) : array
     {
         $nodes = $this->query($query)
-                      ->select($this->baseFields())
-                      ->get()->toArray();
+                      ->select($this->baseFields())->get();
         $model = (new static::$modelClass);
 
         return $model->toTree($nodes);

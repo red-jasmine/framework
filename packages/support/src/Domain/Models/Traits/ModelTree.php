@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Closure;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @property  $children
@@ -69,11 +70,12 @@ trait ModelTree
     }
 
 
-    public function toTree(array $nodes = null) : array
+    public function toTree(Collection $nodes = null) : array
     {
         if ($nodes === null) {
             $nodes = $this->allNodes();
         }
+
 
         return static::buildNestedArray(
             $nodes,
@@ -119,6 +121,7 @@ trait ModelTree
 
         foreach ($nodes as $node) {
             $pk = $node[$parentKeyName];
+
             $pk = is_numeric($pk) ? (int)$pk : $pk;
 
             if ($pk === $parentId) {
@@ -180,7 +183,7 @@ trait ModelTree
         $options = [];
 
         if (empty($nodes)) {
-            $nodes = $this->allNodes()->toArray();
+            $nodes = $this->allNodes();
         }
 
         foreach ($nodes as $index => $node) {

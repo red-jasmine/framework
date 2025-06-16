@@ -9,8 +9,8 @@ trait HasTree
 
     public function tree(?Query $query = null) : array
     {
+        $nodes = $this->query($query)->get();
 
-        $nodes = $this->query($query)->get()->toArray();
         $model = (new static::$modelClass);
 
         return $model->toTree($nodes);
