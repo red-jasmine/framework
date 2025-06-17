@@ -56,6 +56,10 @@ order: 5
 	- 用户下单、完成订单
 	- 冻结佣金、订单完成后发放佣金
 
+```plantuml
+<!--@include: ./core_flow.puml-->
+```
+
 #### 分销员升级
 
 > 分销员升级，分销员升级条件满足后，分销员升级。
@@ -85,17 +89,17 @@ order: 5
 
 ## 统一语言表
 
-| 名称                    | 中文     | 备注              |
-|-----------------------|--------|-----------------|
-| Scene                 | 场景     | 场景如邀请、推广佣金      |
-| Promoter              | 分销员    | 拥有分销资格的用户       |
-| PromoterLevel         | 分销员等级  | 分销员等级           |
-| PromotionRelationship | 推广关系   | 表示分销员之间上下级关系    |
-| PromotionRecord       | 推广业绩记录 | 分销订单            |
-| Commission            | 佣金     | 佣金              |
-| InvitationCode        | 邀请码    | 邀请用户注册          |
-| InvitationCommission  | 邀请佣金   | 通过邀请下级用户购买产生的佣金 |
-| ProductCommission     | 商品佣金   | 通过推广商品促成下单的佣金   |
+| 名称                  | 中文         | 备注                           |
+| --------------------- | ------------ | ------------------------------ |
+| Scene                 | 场景         | 场景如邀请、推广佣金           |
+| Promoter              | 分销员       | 拥有分销资格的用户             |
+| PromoterLevel         | 分销员等级   | 分销员等级                     |
+| PromotionRelationship | 推广关系     | 表示分销员之间上下级关系       |
+| PromotionRecord       | 推广业绩记录 | 分销订单                       |
+| Commission            | 佣金         | 佣金                           |
+| InvitationCode        | 邀请码       | 邀请用户注册                   |
+| InvitationCommission  | 邀请佣金     | 通过邀请下级用户购买产生的佣金 |
+| ProductCommission     | 商品佣金     | 通过推广商品促成下单的佣金     |
 
 ## 领域事件
 
