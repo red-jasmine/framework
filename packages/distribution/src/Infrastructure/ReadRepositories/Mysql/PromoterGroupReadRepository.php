@@ -10,8 +10,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class PromoterGroupReadRepository extends QueryBuilderReadRepository implements PromoterGroupReadRepositoryInterface
 {
-
-    use HasTree
+    use HasTree;
     
     protected static string $modelClass = PromoterGroup::class;
 
