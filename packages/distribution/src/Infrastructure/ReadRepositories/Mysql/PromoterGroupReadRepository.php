@@ -12,7 +12,7 @@ class PromoterGroupReadRepository extends QueryBuilderReadRepository implements 
 {
 
     use HasTree
-
+    
     protected static string $modelClass = PromoterGroup::class;
 
     public function allowedFilters() : array
