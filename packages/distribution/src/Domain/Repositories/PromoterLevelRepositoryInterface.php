@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Distribution\Domain\Repositories;
 
+use RedJasmine\Distribution\Domain\Models\PromoterLevel;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
-interface PromoterRepositoryInterface extends RepositoryInterface
+interface PromoterLevelRepositoryInterface extends RepositoryInterface
 {
-
 
 }

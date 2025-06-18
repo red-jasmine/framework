@@ -4,7 +4,7 @@ namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 
-interface PromoterReadRepositoryInterface extends ReadRepositoryInterface
+interface PromoterOrderReadRepositoryInterface extends ReadRepositoryInterface
 {
 
 }
