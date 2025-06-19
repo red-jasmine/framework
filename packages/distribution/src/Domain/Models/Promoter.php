@@ -52,7 +52,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         'deleted' => PromoterDeleted::class,
     ];
 
-    protected function casts() : array
+    protected function casts(): array
     {
         return [
             'status' => PromoterStatusEnum::class,
@@ -60,8 +60,15 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-    
-   
+
+
+    public function setOwner(UserInterface $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;;
+    }
+
 
     /**
      * 设置分销员信息
@@ -108,6 +115,17 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         return $this->setStatus(PromoterStatusEnum::ENABLE);
     }
 
+
+
+
+    public function apply(): static
+    {
+
+        $this->status = PromoterStatusEnum::DISABLE;
+
+        $this->fireModelEvent('applied', false);
+        return $this;
+    }
     /**
      * 禁用
      */
@@ -116,22 +134,22 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         return $this->setStatus(PromoterStatusEnum::DISABLE);
     }
 
-    public function parent() : BelongsTo
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id', 'id');
     }
 
-    public function group() : BelongsTo
+    public function group(): BelongsTo
     {
         return $this->belongsTo(PromoterGroup::class, 'group_id', 'id');
     }
 
-    public function team() : BelongsTo
+    public function team(): BelongsTo
     {
         return $this->belongsTo(PromoterTeam::class, 'team_id', 'id');
     }
 
-    public function users() : HasMany
+    public function users(): HasMany
     {
         return $this->hasMany(PromoterBindUser::class, 'promoter_id', 'id');
     }

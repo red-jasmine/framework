@@ -20,6 +20,13 @@ class DistributionPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_distribution_table')
-            ->hasCommand();
+            ->hasMigrations([
+                'create_promoter_bind_users_table',
+                'create_promoter_groups_table',
+                'create_promoter_levels_table',
+                'create_promoter_teams_table',
+                'create_promoters_table',
+            ])
+            ;
     }
 }

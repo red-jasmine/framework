@@ -2,16 +2,12 @@
 
 namespace RedJasmine\Distribution\Application\Promoter\Services\Commands;
 
+use RedJasmine\Distribution\Domain\Data\PromoterData;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
-class PromoterApplyCommand extends Data
+class PromoterApplyCommand extends PromoterData
 {
-    public UserInterface $owner;
     
-    public string $name;
     
-    public ?string $remarks = null;
-    
-    public ?int $parentId = null;
 } 

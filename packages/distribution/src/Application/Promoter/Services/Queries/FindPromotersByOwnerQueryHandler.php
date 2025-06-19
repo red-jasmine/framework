@@ -14,10 +14,10 @@ class FindPromotersByOwnerQueryHandler extends QueryHandler
 
     public function handle(FindPromotersByOwnerQuery $query)
     {
-        return $this->service->readRepository->withQuery(function ($query) {
-            return $query->onlyOwner($query->owner)
-                ->when($query->name, function ($query) use ($query) {
-                    return $query->where('name', 'like', "%{$query->name}%");
+        return $this->service->readRepository->withQuery(function ($queryBuilder) use ($query) {
+            return $queryBuilder->onlyOwner($query->owner)
+                ->when($query->name, function ($queryBuilder) use ($query) {
+                    return $queryBuilder->where('name', 'like', "%{$query->name}%");
                 });
         })->paginate($query);
     }

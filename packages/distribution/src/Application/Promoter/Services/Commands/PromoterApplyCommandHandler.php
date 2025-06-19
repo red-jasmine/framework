@@ -27,10 +27,13 @@ class PromoterApplyCommandHandler extends CommandHandler
         try {
             /** @var Promoter $model */
             $model = $this->service->newModel();
-            $model->owner = $command->owner;
-            $model->setPromoterInfo($command->name, $command->remarks)
+
+            $model
+                ->setOwner($command->owner)
+                ->setLevel($command->level)
                 ->setParent($command->parentId)
-                ->disable();
+                ->setPromoterInfo($command->name, $command->remarks)
+                ->apply();
 
             $this->service->repository->store($model);
 
@@ -45,4 +48,4 @@ class PromoterApplyCommandHandler extends CommandHandler
 
         return $model;
     }
-} 
+}
