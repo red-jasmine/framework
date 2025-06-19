@@ -19,6 +19,7 @@ class DistributionPackageServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-distribution')
             ->hasConfigFile()
             ->hasViews()
+            ->hasRoutes(['api'])
             ->hasMigration('create_distribution_table')
             ->hasMigrations([
                 'create_promoter_bind_users_table',
@@ -27,6 +28,7 @@ class DistributionPackageServiceProvider extends PackageServiceProvider
                 'create_promoter_teams_table',
                 'create_promoters_table',
             ])
+            ->runsMigrations()
             ;
     }
 }

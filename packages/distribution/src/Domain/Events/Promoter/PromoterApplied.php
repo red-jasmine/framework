@@ -26,9 +26,9 @@ class PromoterApplied
     /**
      * 创建一个新的事件实例
      */
-    public function __construct(Promoter $promoter, string $reason)
+    public function __construct(Promoter $promoter)
     {
         $this->promoter = $promoter;
-        $this->reason = $reason;
+
     }
 } 

@@ -43,16 +43,16 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
      * @var array
      */
     protected $dispatchesEvents = [
-        'applied' => PromoterApplied::class,
-        'audited' => PromoterAudited::class,
-        'upgraded' => PromoterUpgraded::class,
+        'applied'    => PromoterApplied::class,
+        'audited'    => PromoterAudited::class,
+        'upgraded'   => PromoterUpgraded::class,
         'downgraded' => PromoterDowngraded::class,
-        'disabled' => PromoterDisabled::class,
-        'enabled' => PromoterEnabled::class,
-        'deleted' => PromoterDeleted::class,
+        'disabled'   => PromoterDisabled::class,
+        'enabled'    => PromoterEnabled::class,
+        'deleted'    => PromoterDeleted::class,
     ];
 
-    protected function casts(): array
+    protected function casts() : array
     {
         return [
             'status' => PromoterStatusEnum::class,
@@ -60,9 +60,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-
-
-    public function setOwner(UserInterface $owner): static
+    public function setOwner(UserInterface $owner) : static
     {
         $this->owner = $owner;
 
@@ -73,9 +71,9 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     /**
      * 设置分销员信息
      */
-    public function setPromoterInfo(string $name, ?string $remarks = null): self
+    public function setPromoterInfo(string $name, ?string $remarks = null) : self
     {
-        $this->name = $name;
+        $this->name    = $name;
         $this->remarks = $remarks;
         return $this;
     }
@@ -83,7 +81,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     /**
      * 设置上级
      */
-    public function setParent(?int $parentId): self
+    public function setParent(?int $parentId) : self
     {
         $this->parent_id = $parentId;
         return $this;
@@ -92,7 +90,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     /**
      * 设置等级
      */
-    public function setLevel(int $level): self
+    public function setLevel(int $level) : self
     {
         $this->level = $level;
         return $this;
@@ -101,7 +99,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     /**
      * 设置状态
      */
-    public function setStatus(PromoterStatusEnum $status): self
+    public function setStatus(PromoterStatusEnum $status) : self
     {
         $this->status = $status;
         return $this;
@@ -110,46 +108,43 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     /**
      * 启用
      */
-    public function enable(): self
+    public function enable() : self
     {
         return $this->setStatus(PromoterStatusEnum::ENABLE);
     }
 
 
-
-
-    public function apply(): static
+    public function apply() : static
     {
-
-        $this->status = PromoterStatusEnum::DISABLE;
-
+        $this->status = PromoterStatusEnum::APPLYING;
         $this->fireModelEvent('applied', false);
         return $this;
     }
+
     /**
      * 禁用
      */
-    public function disable(): self
+    public function disable() : self
     {
         return $this->setStatus(PromoterStatusEnum::DISABLE);
     }
 
-    public function parent(): BelongsTo
+    public function parent() : BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id', 'id');
     }
 
-    public function group(): BelongsTo
+    public function group() : BelongsTo
     {
         return $this->belongsTo(PromoterGroup::class, 'group_id', 'id');
     }
 
-    public function team(): BelongsTo
+    public function team() : BelongsTo
     {
         return $this->belongsTo(PromoterTeam::class, 'team_id', 'id');
     }
 
-    public function users(): HasMany
+    public function users() : HasMany
     {
         return $this->hasMany(PromoterBindUser::class, 'promoter_id', 'id');
     }

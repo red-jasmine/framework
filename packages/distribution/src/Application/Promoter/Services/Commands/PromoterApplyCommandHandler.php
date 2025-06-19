@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Distribution\Application\Promoter\Services\Commands;
 
+use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterApplyCommand;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
 use RedJasmine\Support\Application\ApplicationService;
@@ -32,7 +33,6 @@ class PromoterApplyCommandHandler extends CommandHandler
                 ->setOwner($command->owner)
                 ->setLevel($command->level)
                 ->setParent($command->parentId)
-                ->setPromoterInfo($command->name, $command->remarks)
                 ->apply();
 
             $this->service->repository->store($model);

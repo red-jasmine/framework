@@ -40,14 +40,12 @@ class PromoterController extends Controller
      */
     public function apply(PromoterApplyRequest $request)
     {
+
         $command = PromoterApplyCommand::from([
             'owner' => $request->user(),
             'level' => $request->input('level', 1),
             'parentId' => $request->input('parent_id', 0),
-            'groupId' => $request->input('group_id'),
-            'teamId' => $request->input('team_id'),
-            'name' => $request->input('name'),
-            'remarks' => $request->input('remarks'),
+
         ]);
 
         $promoter = $this->service->apply($command);

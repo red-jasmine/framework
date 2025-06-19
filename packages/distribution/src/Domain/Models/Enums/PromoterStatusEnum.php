@@ -11,6 +11,10 @@ enum PromoterStatusEnum: string
 {
     use EnumsHelper;
 
+        // 申请中
+    case APPLYING = 'applying';
+
+
     case DISABLE = 'disable';
 
 
@@ -19,26 +23,26 @@ enum PromoterStatusEnum: string
     /**
      * @return array
      */
-    public static function labels() : array
+    public static function labels(): array
     {
         return [
-            self::ENABLE->value  => '启用',
-            self::DISABLE->value => '停用',
+            self::APPLYING->value   => '申请中',
+            self::ENABLE->value     => '启用',
+            self::DISABLE->value    => '停用',
         ];
-
     }
 
 
-    public static function colors() : array
+    public static function colors(): array
     {
         return [
-            self::ENABLE->value  => 'success',
-            self::DISABLE->value => 'gray',
+            self::APPLYING->value   => 'info',
+            self::ENABLE->value     =>   'success',
+            self::DISABLE->value    =>   'gray',
         ];
-
     }
 
-    public static function icons() : array
+    public static function icons(): array
     {
         return [
             self::ENABLE->value  => 'heroicon-o-check-circle',

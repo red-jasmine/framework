@@ -15,6 +15,7 @@ use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
+ * @method apply()
  * @method findPromoterById(FindPromoterByIdQuery $query)
  * @method findPromotersByOwner(FindPromotersByOwnerQuery $query)
  */
@@ -43,4 +44,4 @@ class PromoterApplicationService extends ApplicationService
         public PromoterReadRepositoryInterface $readRepository,
     ) {
     }
-} 
+}

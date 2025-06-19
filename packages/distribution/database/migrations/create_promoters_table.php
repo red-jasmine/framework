@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('parent_id')->default(0)->comment('所属上级ID');
             $table->string('status', 32)->comment(PromoterStatusEnum::comments('状态'));
             $table->unsignedBigInteger('team_id')->nullable()->comment('所属团队ID');
-            $table->string('owner_id', 64)->comment('所属人ID');
             $table->string('remarks')->nullable()->comment('备注');
             $table->operator();
             // 统计数据 TODO

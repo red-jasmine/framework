@@ -7,16 +7,20 @@ use RedJasmine\Distribution\Domain\Repositories\PromoterGroupReadRepositoryInter
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterOrderReadRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterOrderRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamRepositoryInterface;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterGroupReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterLevelReadRepository;
+use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterOrderReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterTeamReadRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterGroupRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterLevelRepository;
+use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterOrderRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterTeamRepository;
 
@@ -37,7 +41,8 @@ class DistributionApplicationServiceProvider extends ServiceProvider {
         $this->app->bind(PromoterTeamReadRepositoryInterface::class,PromoterTeamReadRepository::class);
         $this->app->bind(PromoterTeamRepositoryInterface::class,PromoterTeamRepository::class);
 
-
+        $this->app->bind(PromoterOrderReadRepositoryInterface::class,PromoterOrderReadRepository::class);
+        $this->app->bind(PromoterOrderRepositoryInterface::class,PromoterOrderRepository::class);
     }
 
     public function boot(){
