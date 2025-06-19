@@ -22,11 +22,6 @@ class PromoterData extends Data
     public int $level = 0;
 
     /**
-     * 所属分组ID
-     */
-    public ?int $groupId = null;
-
-    /**
      * 所属上级ID
      */
     public int $parentId = 0;
@@ -43,9 +38,10 @@ class PromoterData extends Data
     public ?int $teamId = null;
 
     /**
-     * 推广员名称
+     * 所属分组ID
      */
-    public ?string $name = null;
+    public ?int $groupId = null;
+
 
     /**
      * 备注
