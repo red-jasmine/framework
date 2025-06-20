@@ -23,14 +23,8 @@ return new class extends Migration {
             $table->timestamp('publish_time')->nullable()->comment('发布时间');
             $table->unsignedBigInteger('sort')->default(0)->comment('排序');
             $table->string('approval_status')->nullable()->comment('审批状态');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('updater_type', 64)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->string('updater_nickname', 64)->nullable();
-            $table->timestamps();
+
+            $table->operator();
             $table->softDeletes();
             $table->comment('文章表');
         });
