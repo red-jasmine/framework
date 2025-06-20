@@ -25,23 +25,21 @@ class PromoterData extends Data
      * 所属上级ID
      */
     public int $parentId = 0;
-
-    /**
-     * 状态
-     */
-    #[WithCast(EnumCast::class, PromoterStatusEnum::class)]
-    public PromoterStatusEnum $status;
-
     /**
      * 所属团队ID
      */
     public ?int $teamId = null;
 
+
     /**
      * 所属分组ID
      */
     public ?int $groupId = null;
-
+    /**
+     * 状态
+     */
+    #[WithCast(EnumCast::class, PromoterStatusEnum::class)]
+    public PromoterStatusEnum $status;
 
     /**
      * 备注

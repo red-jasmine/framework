@@ -9,10 +9,30 @@ class PromoterLevel<<分销员等级>> {
 +description : string 描述
 +icon : string 图标
 +image:  string 图片
++product_ratio:  Int 商品比例
++parent_ratio:  Int 商品比例
 +conditions:List  升级条件
-+保级条件:List
-+rights:List 权益 如 分佣比例
++keeps:List 保级条件
++apply_method: enum 申请方式
++audit_method: enum 审核方式
++benefits:List 权益
 }
+
+
+enum PromoterApplyMethod <<分销员申请方式>>{
+disable 关闭申请
+manual 手动申请
+auto 自动申请
+
+}
+
+enum PromoterAuditMethod <<分销员审核方式>>{
+manual 手动
+auto 自动
+
+}
+PromoterLevel --> PromoterApplyMethod
+PromoterLevel --> PromoterAuditMethod
 class PromoterTeam<<推广团队>>{
 +name : string 推广团队名称
 +description : string 描述
@@ -52,6 +72,30 @@ class Promoter<<分销员>> {
 }
 
 
+class PromoterApply <<分销员申请单>>{
++PromoterId: Int 分销员ID
++level : PromoterLevel 分销员等级
++apply_type: enum 类型 招募、升级、降级
++apply_method: enum 申请方式
++apply_time: Date 申请时间
++audit_method: enum 审核方式
++audit_time: Date 审核时间
++audit_status: enum 审核结果状态
++audit_reason: string 审核原因
++?auditor : User 审核人
+
++ approve()  批准
++ reject() 拒绝
+}
+
+enum PromoterApplyType <<分销员申请类型>>{
+register 注册
+upgrade 升级
+Downgrade 降级
+}
+PromoterApply ---> PromoterApplyType
+PromoterApply -> Promoter
+PromoterApply -> PromoterLevel
 class 推广关系{
 - 分销员
 - 用户

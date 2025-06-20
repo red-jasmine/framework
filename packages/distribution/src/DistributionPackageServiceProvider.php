@@ -27,6 +27,7 @@ class DistributionPackageServiceProvider extends PackageServiceProvider
                 'create_promoter_levels_table',
                 'create_promoter_teams_table',
                 'create_promoters_table',
+                'create_promoter_applies_table',
             ])
             ->runsMigrations()
             ;

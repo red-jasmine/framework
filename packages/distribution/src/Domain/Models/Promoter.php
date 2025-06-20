@@ -5,6 +5,7 @@ namespace RedJasmine\Distribution\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterApplied;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterAudited;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDeleted;
@@ -12,6 +13,7 @@ use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDisabled;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDowngraded;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterEnabled;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterUpgraded;
+use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyTypeEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -59,6 +61,17 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         ];
     }
 
+    public function newInstance($attributes = [], $exists = false) : static
+    {
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setUniqueIds();
+
+        }
+
+        return $instance;
+    }
 
     public function setOwner(UserInterface $owner) : static
     {
@@ -114,11 +127,29 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-    public function apply() : static
+    public function apply(PromoterApply $apply) : static
     {
-        $this->status = PromoterStatusEnum::APPLYING;
+        $apply->promoter_id = $this->id;
+
+        if ($apply->apply_type === PromoterApplyTypeEnum::REGISTER) {
+            $this->status = PromoterStatusEnum::APPLYING;
+            $this->level  = 0;
+        }
+        $this->applies->add($apply);
+
+
         $this->fireModelEvent('applied', false);
         return $this;
+    }
+
+
+    /**
+     * 申请单
+     * @return HasMany
+     */
+    public function applies() : HasMany
+    {
+        return $this->hasMany(PromoterApply::class, 'promoter_id', 'id');
     }
 
     /**

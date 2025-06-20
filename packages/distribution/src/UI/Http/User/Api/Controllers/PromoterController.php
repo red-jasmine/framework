@@ -30,7 +30,7 @@ class PromoterController extends Controller
         });
     }
 
-    public function authorize($ability, $arguments = []): bool
+    public function authorize($ability, $arguments = []) : bool
     {
         return true;
     }
@@ -42,9 +42,9 @@ class PromoterController extends Controller
     {
 
         $command = PromoterApplyCommand::from([
-            'owner' => $request->user(),
-            'level' => $request->input('level', 1),
-            'parentId' => $request->input('parent_id', 0),
+            'promoter' => [
+                'owner' => $request->user(),
+            ]
 
         ]);
 
@@ -59,9 +59,9 @@ class PromoterController extends Controller
     public function index(Request $request)
     {
         $query = FindPromotersByOwnerQuery::from([
-            'owner' => $request->user(),
-            'name' => $request->input('name'),
-            'page' => $request->input('page', 1),
+            'owner'   => $request->user(),
+            'name'    => $request->input('name'),
+            'page'    => $request->input('page', 1),
             'perPage' => $request->input('per_page', 15),
         ]);
 

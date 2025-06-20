@@ -3,8 +3,10 @@
 namespace RedJasmine\Distribution\Application\Promoter\Services\Commands;
 
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterApplyCommand;
+use RedJasmine\Distribution\Application\Promoter\Services\PromoterApplicationService;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
+use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
@@ -13,7 +15,7 @@ use Throwable;
 
 class PromoterApplyCommandHandler extends CommandHandler
 {
-    public function __construct(protected ApplicationService $service)
+    public function __construct(protected PromoterApplicationService $service)
     {
         $this->context = new HandleContext();
     }
@@ -22,18 +24,19 @@ class PromoterApplyCommandHandler extends CommandHandler
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(PromoterApplyCommand $command): Promoter
+    public function handle(PromoterApplyCommand $command) : Promoter
     {
         $this->beginDatabaseTransaction();
         try {
             /** @var Promoter $model */
             $model = $this->service->newModel();
 
-            $model
-                ->setOwner($command->owner)
-                ->setLevel($command->level)
-                ->setParent($command->parentId)
-                ->apply();
+            $model->setOwner($command->promoter->owner)->setParent($command->promoter->parentId);
+
+
+            $promoterService = new PromoterService($this->service->levelReadRepository);
+
+            $promoterService->apply($model, $command);
 
             $this->service->repository->store($model);
 
