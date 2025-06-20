@@ -10,8 +10,9 @@ class PromoterUserRoute
 
     public static function api() : void
     {
+        Route::get('promoters/info', [PromoterController::class, 'info']);
         Route::post('promoters/apply', [PromoterController::class, 'apply']);
-        Route::apiResource('promoters', PromoterController::class);
+
     }
 
 }

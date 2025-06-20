@@ -8,8 +8,9 @@ use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterAudit
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterDowngradeCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterSetParentCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterUpgradeCommandHandler;
+use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQuery;
+use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQueryHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindPromoterByIdQueryHandler;
-use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindPromotersByOwnerQueryHandler;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
@@ -20,7 +21,7 @@ use RedJasmine\Support\Application\ApplicationService;
  * @see PromoterApplyCommandHandler::handle()
  * @method apply(PromoterApplyCommand $command)
  * @method findPromoterById(FindPromoterByIdQuery $query)
- * @method findPromotersByOwner(FindPromotersByOwnerQuery $query)
+ * @method findByOwner(FindByOwnerQuery $query)
  */
 class PromoterApplicationService extends ApplicationService
 {
@@ -33,13 +34,13 @@ class PromoterApplicationService extends ApplicationService
     protected static string $modelClass = Promoter::class;
 
     protected static $macros = [
-        'apply'                => PromoterApplyCommandHandler::class,
-        'audit'                => PromoterAuditCommandHandler::class,
-        'upgrade'              => PromoterUpgradeCommandHandler::class,
-        'downgrade'            => PromoterDowngradeCommandHandler::class,
-        'setParent'            => PromoterSetParentCommandHandler::class,
-        'findPromoterById'     => FindPromoterByIdQueryHandler::class,
-        'findPromotersByOwner' => FindPromotersByOwnerQueryHandler::class
+        'apply'            => PromoterApplyCommandHandler::class,
+        'audit'            => PromoterAuditCommandHandler::class,
+        'upgrade'          => PromoterUpgradeCommandHandler::class,
+        'downgrade'        => PromoterDowngradeCommandHandler::class,
+        'setParent'        => PromoterSetParentCommandHandler::class,
+        'findPromoterById' => FindPromoterByIdQueryHandler::class,
+        'findByOwner'      => FindByOwnerQueryHandler::class
     ];
 
     public function __construct(

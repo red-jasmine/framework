@@ -77,7 +77,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     {
         $this->owner = $owner;
 
-        return $this;;
+        return $this;
     }
 
 
@@ -178,5 +178,10 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
     public function users() : HasMany
     {
         return $this->hasMany(PromoterBindUser::class, 'promoter_id', 'id');
+    }
+
+    public function promoterLevel() : BelongsTo
+    {
+        return $this->belongsTo(PromoterLevel::class, 'level', 'level');
     }
 }
