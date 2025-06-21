@@ -29,9 +29,11 @@ class PromoterApplyCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             /** @var Promoter $model */
-            $model = $this->service->newModel();
+            $model = $this->service->repository->findByOwner($command->promoter->owner) ?? $this->service->newModel()
 
-            $model->setOwner($command->promoter->owner)->setParent($command->promoter->parentId);
+            ->setOwner($command->promoter->owner)->setParent($command->promoter->parentId);
+
+
 
 
             $promoterService = new PromoterService($this->service->levelReadRepository);

@@ -8,6 +8,7 @@ use RedJasmine\Distribution\Application\Promoter\Services\PromoterApplicationSer
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQuery;
 use RedJasmine\Distribution\Domain\Data\PromoterData as Data;
 use RedJasmine\Distribution\Domain\Models\Promoter as Model;
+use RedJasmine\Distribution\Domain\Facades\PromoterConditionFacade;
 use RedJasmine\Distribution\UI\Http\User\Api\Requests\PromoterApplyRequest;
 use RedJasmine\Distribution\UI\Http\User\Api\Resources\PromoterResource as Resource;
 
@@ -36,11 +37,10 @@ class PromoterController extends Controller
 
     public function info(Request $request) : Resource
     {
+
         $request->offsetSet('owner', $this->getOwner());
-        $query = FindByOwnerQuery::from($request);
-
+        $query    = FindByOwnerQuery::from($request);
         $promoter = $this->service->findByOwner($query);
-
 
         return new Resource($promoter);
     }
@@ -57,8 +57,8 @@ class PromoterController extends Controller
             ]
         ]);
 
-        $promoter = $this->service->apply($command);
 
+        $promoter = $this->service->apply($command);
         return new Resource($promoter);
     }
 

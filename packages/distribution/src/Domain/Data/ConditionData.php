@@ -7,11 +7,14 @@ use RedJasmine\Support\Data\Data;
 class ConditionData extends Data
 {
 
+
+    public bool $enabled = true;
+
     /**
      * 条件类型
      * @var string
      */
-    public string $type;
+    public string $name;
 
 
     /**

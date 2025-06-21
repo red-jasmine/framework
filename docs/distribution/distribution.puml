@@ -11,13 +11,22 @@ class PromoterLevel<<分销员等级>> {
 +image:  string 图片
 +product_ratio:  Int 商品比例
 +parent_ratio:  Int 商品比例
-+conditions:List  升级条件
-+keeps:List 保级条件
++conditions:List  升级资格条件
++keeps:List 保级资格条件
 +apply_method: enum 申请方式
 +audit_method: enum 审核方式
 +benefits:List 权益
 }
+PromoterLevel ...> PromoterConditionInterface: 条件
+interface PromoterConditionInterface <<分销员条件接口>>{
++ static  allowTypes():array 支持的申请类型
++ static  name():string
++ static  label():string   名称
++ static  tips():?string 提示
++ static  unit():?string 单位
 
++ static getPromoterValue(Promoter $promoter):value 获取分销员调整值
+}
 
 enum PromoterApplyMethod <<分销员申请方式>>{
 disable 关闭申请

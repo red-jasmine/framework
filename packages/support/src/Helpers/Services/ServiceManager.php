@@ -12,7 +12,8 @@ abstract class ServiceManager
 
     protected array $config;
     protected array $resolved = [];
-    protected const PROVIDERS = [];
+    protected const array PROVIDERS = [];
+    protected static array $customCreators = [];
 
     public function __construct(array $config = [])
     {
@@ -24,17 +25,21 @@ abstract class ServiceManager
         return $this->config;
     }
 
+    public function providers() : array
+    {
+        return array_merge(static::PROVIDERS, static::$customCreators[static::class] ?? []);
+    }
+
     public function setConfig(array $config) : ServiceManager
     {
         $this->config = $config;
         return $this;
     }
 
-    protected static array $customCreators = [];
 
     public function extend(string $name, Closure $callback) : self
     {
-        static::$customCreators[strtolower($name)] = $callback;
+        static::$customCreators[static::class][strtolower($name)] = $callback;
 
         return $this;
     }
@@ -42,7 +47,6 @@ abstract class ServiceManager
     public function create(string $name)
     {
         $name = strtolower($name);
-
 
         if (!isset($this->resolved[$name])) {
             $this->resolved[$name] = $this->createProvider($name);
@@ -56,7 +60,7 @@ abstract class ServiceManager
         $config   = Arr::get($this->config, $name, []);
         $provider = $config['provider'] ?? $name;
 
-        if (isset(self::$customCreators[$provider])) {
+        if (isset(self::$customCreators[static::class][$provider])) {
             return $this->callCustomCreator($provider, $config);
         }
 
@@ -80,7 +84,7 @@ abstract class ServiceManager
 
     protected function callCustomCreator(string $name, array $config)
     {
-        return self::$customCreators[$name]($config);
+        return self::$customCreators[static::class][$name]($config);
     }
 
     protected function isValidProvider(string $provider) : bool

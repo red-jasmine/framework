@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Distribution\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -81,6 +82,12 @@ class PromoterApply extends Model implements OperatorInterface
                 'auditor_nickname' => $user?->getNickname(),
             ]
         );
+    }
+
+
+    public function scopePending(Builder $builder)
+    {
+        return $builder->where('audit_status', PromoterApplyAuditStatusEnum::PENDING);
     }
 
 }

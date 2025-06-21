@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->userMorphs('auditor', '审核员');
             $table->operator();
             $table->softDeletes();
+            $table->comment('分销员申请记录');
         });
     }
 

@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+
+actor 用户
+actor 分销员
+participant 推广系统
+participant 分销员等级
+participant 分销员资格
+
+
+用户 -> 推广系统: 提交申请
+推广系统 -> 推广系统: 初始化分销员
+推广系统 -> 分销员等级: 查询等级条件
+推广系统 -> 分销员资格: 查询资格
+推广系统 -> 推广系统: 验证资格
+
+
+
+
+@enduml
