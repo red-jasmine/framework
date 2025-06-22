@@ -7,6 +7,7 @@ use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Exceptions\ApprovalException;
 
 /**
+ * 具有审批功能的模型
  * @property ApprovalStatusEnum $approval_status
  * @method approvalPass(ApprovalData $data)
  * @method approvalReject(ApprovalData $data)
@@ -17,7 +18,7 @@ trait HasApproval
 
     public function isAllowApproval() : bool
     {
-        if ($this->approval_status !== ApprovalStatusEnum::PROCESSING) {
+        if ($this->approval_status !== ApprovalStatusEnum::PENDING) {
             return false;
         }
         return true;
@@ -26,7 +27,7 @@ trait HasApproval
 
     public function isAllowSubmitApproval() : bool
     {
-        if (in_array($this->approval_status, [ApprovalStatusEnum::PASS, ApprovalStatusEnum::PROCESSING], true)) {
+        if (in_array($this->approval_status, [ApprovalStatusEnum::PASS, ApprovalStatusEnum::PENDING], true)) {
             return false;
         }
         return true;
@@ -42,7 +43,7 @@ trait HasApproval
         if (!$this->isAllowSubmitApproval()) {
             throw new ApprovalException();
         }
-        $this->approval_status = ApprovalStatusEnum::PROCESSING;
+        $this->approval_status = ApprovalStatusEnum::PENDING;
 
     }
 
@@ -61,20 +62,22 @@ trait HasApproval
         $this->approval_status = $data->approvalStatus;
         switch ($data->approvalStatus) {
             case ApprovalStatusEnum::PASS:
-
                 if (method_exists($this, 'approvalPass')) {
                     $this->approvalPass($data);
                 }
+                $this->fireModelEvent('approvalPass', false);
                 break;
             case ApprovalStatusEnum::REJECT:
                 if (method_exists($this, 'approvalReject')) {
                     $this->approvalReject($data);
                 }
+                $this->fireModelEvent('approvalReject', false);
                 break;
             case ApprovalStatusEnum::REVOKE:
                 if (method_exists($this, 'approvalRevoke')) {
                     $this->approvalRevoke($data);
                 }
+                $this->fireModelEvent('approvalRevoke', false);
                 break;
             default:
                 break;

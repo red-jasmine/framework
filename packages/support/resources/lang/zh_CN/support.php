@@ -23,10 +23,10 @@ return [
 
     'enums' => [
         'approval_status' => [
-            'processing' => '审批中',
-            'pass'       => '审批通过',
-            'reject'     => '审批拒绝',
-            'revoke'     => '审批撤销',
+            'pending' => '审批中',
+            'pass'    => '审批通过',
+            'reject'  => '审批拒绝',
+            'revoke'  => '审批撤销',
         ],
         'content_type'    => [
             'markdown' => 'markdown',

@@ -9,7 +9,8 @@ enum ApprovalStatusEnum: string
 
     use EnumsHelper;
 
-    case PROCESSING = 'processing'; //
+    case PENDING = 'pending'; //
+
     case PASS = 'pass';
     case REJECT = 'reject';
     case REVOKE = 'revoke';
@@ -19,7 +20,7 @@ enum ApprovalStatusEnum: string
     {
 
         return [
-            self::PROCESSING->value => __('red-jasmine-support::support.enums.approval_status.processing'),
+            self::PENDING->value    => __('red-jasmine-support::support.enums.approval_status.pending'),
             self::PASS->value       => __('red-jasmine-support::support.enums.approval_status.pass'),
             self::REJECT->value     => __('red-jasmine-support::support.enums.approval_status.reject'),
             self::REVOKE->value     => __('red-jasmine-support::support.enums.approval_status.revoke'),
