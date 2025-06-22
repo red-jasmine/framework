@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyMethodEnum;
-use RedJasmine\Distribution\Domain\Models\Enums\PromoterAuditMethodEnum;
+use RedJasmine\Distribution\Domain\Models\Enums\PromoterApprovalMethodEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('icon')->nullable()->comment('图标');
             $table->string('image')->nullable()->comment('图片');
             $table->string('apply_method')->comment(PromoterApplyMethodEnum::comments('申请方式'));
-            $table->string('audit_method')->comment(PromoterAuditMethodEnum::comments('审核方式'));
+            $table->string('approval_method')->comment(PromoterApprovalMethodEnum::comments('审核方式'));
             $table->unsignedTinyInteger('product_ratio')->default(0)->comment('产品佣金比例');
             $table->unsignedTinyInteger('parent_ratio')->default(0)->comment('上级佣金比例');
             $table->json('upgrades')->nullable()->comment('升级条件');

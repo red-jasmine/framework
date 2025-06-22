@@ -3,10 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyAuditStatusEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyMethodEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyTypeEnum;
-use RedJasmine\Distribution\Domain\Models\Enums\PromoterAuditMethodEnum;
+use RedJasmine\Distribution\Domain\Models\Enums\PromoterApprovalMethodEnum;
+use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -17,13 +17,13 @@ return new class extends Migration {
             $table->unsignedTinyInteger('level')->default(1)->comment('等级');
             $table->string('apply_type', 32)->comment(PromoterApplyTypeEnum::comments('类型'));
             $table->string('apply_method', 32)->comment(PromoterApplyMethodEnum::comments('申请方式'));
-            $table->string('audit_method', 32)->comment(PromoterAuditMethodEnum::comments('审核方式'));
-            $table->string('audit_status', 32)->comment(PromoterApplyAuditStatusEnum::comments('审核状态'));
+            $table->string('approval_method', 32)->comment(PromoterApprovalMethodEnum::comments('审核方式'));
+            $table->string('approval_status', 32)->comment(ApprovalStatusEnum::comments('审批状态'));
             $table->timestamp('apply_at')->comment('申请时间');
-            $table->timestamp('audit_at')->nullable()->comment('审核时间');
-            $table->string('audit_reason')->nullable()->comment('审核原因');
+            $table->timestamp('approval_at')->nullable()->comment('审批时间');
+            $table->string('approval_reason')->nullable()->comment('审核原因');
             $table->json('extra')->nullable()->comment('扩展字段');
-            $table->userMorphs('auditor', '审核员');
+            $table->userMorphs('approver', '审批人');
             $table->operator();
             $table->softDeletes();
             $table->comment('分销员申请记录');

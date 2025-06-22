@@ -8,7 +8,7 @@ use RedJasmine\Distribution\Domain\Data\PromoterData;
 /**
  * 招募申请
  */
-class PromoterApplyCommand extends PromoterApplyData
+class PromoterRegisterCommand extends PromoterApplyData
 {
     public PromoterData $promoter;
 

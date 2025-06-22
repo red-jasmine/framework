@@ -2,11 +2,18 @@
 
 namespace RedJasmine\Distribution\Application\PromoterApply\Services;
 
+use RedJasmine\Distribution\Application\PromoterApply\Services\Commands\PromoterApplyApprovalCommand;
+use RedJasmine\Distribution\Application\PromoterApply\Services\Commands\PromoterApplyApprovalCommandHandler;
+use RedJasmine\Distribution\Application\PromoterApply\Services\Queries\PromoterApplyPaginateQueryHandler;
 use RedJasmine\Distribution\Domain\Models\PromoterApply;
 use RedJasmine\Distribution\Domain\Repositories\PromoterApplyReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterApplyRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
+/**
+ * @see PromoterApplyApprovalCommandHandler::handle()
+ * @method approval(PromoterApplyApprovalCommand $command)
+ */
 class PromoterApplyApplicationService extends ApplicationService
 {
     /**
@@ -17,7 +24,10 @@ class PromoterApplyApplicationService extends ApplicationService
 
     protected static string $modelClass = PromoterApply::class;
 
-    protected static $macros = [];
+    protected static $macros = [
+        'approval' => PromoterApplyApprovalCommandHandler::class,
+        'paginate' => PromoterApplyPaginateQueryHandler::class,
+    ];
 
     public function __construct(
         public PromoterApplyRepositoryInterface $repository,

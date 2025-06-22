@@ -5,9 +5,7 @@ namespace RedJasmine\Distribution\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterApplied;
-use RedJasmine\Distribution\Domain\Events\Promoter\PromoterAudited;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDeleted;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDisabled;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterDowngraded;
@@ -46,7 +44,6 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
      */
     protected $dispatchesEvents = [
         'applied'    => PromoterApplied::class,
-        'audited'    => PromoterAudited::class,
         'upgraded'   => PromoterUpgraded::class,
         'downgraded' => PromoterDowngraded::class,
         'disabled'   => PromoterDisabled::class,
@@ -126,10 +123,16 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         return $this->setStatus(PromoterStatusEnum::ENABLE);
     }
 
+    public function disable():static
+    {
+        return  $this->setStatus(PromoterStatusEnum::DISABLE);
+    }
+
 
     public function apply(PromoterApply $apply) : static
     {
         $apply->promoter_id = $this->id;
+        $apply->setRelation('promoter',$this);
 
         if ($apply->apply_type === PromoterApplyTypeEnum::REGISTER) {
             $this->status = PromoterStatusEnum::APPLYING;
@@ -152,13 +155,7 @@ class Promoter extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(PromoterApply::class, 'promoter_id', 'id');
     }
 
-    /**
-     * 禁用
-     */
-    public function disable() : self
-    {
-        return $this->setStatus(PromoterStatusEnum::DISABLE);
-    }
+
 
     public function parent() : BelongsTo
     {

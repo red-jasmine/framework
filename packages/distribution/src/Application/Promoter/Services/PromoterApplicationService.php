@@ -2,11 +2,12 @@
 
 namespace RedJasmine\Distribution\Application\Promoter\Services;
 
-use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterApplyCommand;
-use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterApplyCommandHandler;
+use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterRegisterCommand;
+use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterRegisterCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterAuditCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterDowngradeCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterSetParentCommandHandler;
+use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterUpgradeCommand;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterUpgradeCommandHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQuery;
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQueryHandler;
@@ -18,8 +19,10 @@ use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
- * @see PromoterApplyCommandHandler::handle()
- * @method apply(PromoterApplyCommand $command)
+ * @see PromoterRegisterCommandHandler::handle()
+ * @method register(PromoterRegisterCommand $command)
+ * @see PromoterUpgradeCommandHandler::handle()
+ * @method upgrade(PromoterUpgradeCommand $command)
  * @method findPromoterById(FindPromoterByIdQuery $query)
  * @method findByOwner(FindByOwnerQuery $query)
  */
@@ -34,8 +37,7 @@ class PromoterApplicationService extends ApplicationService
     protected static string $modelClass = Promoter::class;
 
     protected static $macros = [
-        'apply'            => PromoterApplyCommandHandler::class,
-        'audit'            => PromoterAuditCommandHandler::class,
+        'register'         => PromoterRegisterCommandHandler::class,
         'upgrade'          => PromoterUpgradeCommandHandler::class,
         'downgrade'        => PromoterDowngradeCommandHandler::class,
         'setParent'        => PromoterSetParentCommandHandler::class,

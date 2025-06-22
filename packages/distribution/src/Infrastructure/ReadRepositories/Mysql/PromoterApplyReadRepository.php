@@ -21,8 +21,8 @@ class PromoterApplyReadRepository extends QueryBuilderReadRepository implements 
             AllowedFilter::exact('id'),
             AllowedFilter::exact('promoter_id'),
             AllowedFilter::exact('level'),
-            AllowedFilter::exact('audit_method'),
-            AllowedFilter::exact('audit_status'),
+            AllowedFilter::exact('approval_method'),
+            AllowedFilter::exact('approval_status'),
         ];
     }
 }

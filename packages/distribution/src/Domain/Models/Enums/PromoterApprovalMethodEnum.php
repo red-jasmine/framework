@@ -4,7 +4,7 @@ namespace RedJasmine\Distribution\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum PromoterAuditMethodEnum: string
+enum PromoterApprovalMethodEnum: string
 {
     use EnumsHelper;
 
