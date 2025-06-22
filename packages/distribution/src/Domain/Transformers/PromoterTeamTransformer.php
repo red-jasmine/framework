@@ -12,7 +12,7 @@ class PromoterTeamTransformer extends CategoryTransformer implements Transformer
 {
     /**
      * @param  PromoterTeamData  $data
-     * @param  BaseCategoryModel  $model
+     * @param  PromoterTeam  $model
      *
      * @return BaseCategoryModel
      */
