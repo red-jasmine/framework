@@ -10,6 +10,7 @@ use RedJasmine\Distribution\Domain\Data\PromoterGroupData;
 use RedJasmine\Distribution\Domain\Models\PromoterGroup;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupRepositoryInterface;
+use RedJasmine\Distribution\Domain\Transformers\PromoterGroupTransformer;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -33,7 +34,8 @@ class PromoterGroupApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterGroupRepositoryInterface $repository,
-        public PromoterGroupReadRepositoryInterface $readRepository
+        public PromoterGroupReadRepositoryInterface $readRepository,
+        public PromoterGroupTransformer $transformer,
     ) {
     }
 

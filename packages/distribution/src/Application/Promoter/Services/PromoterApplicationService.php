@@ -16,6 +16,7 @@ use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
+use RedJasmine\Distribution\Domain\Transformers\PromoterTransformer;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -49,6 +50,7 @@ class PromoterApplicationService extends ApplicationService
         public PromoterRepositoryInterface $repository,
         public PromoterReadRepositoryInterface $readRepository,
         public PromoterLevelReadRepositoryInterface $levelReadRepository,
+        public PromoterTransformer $transformer,
     ) {
     }
 }

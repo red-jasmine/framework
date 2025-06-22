@@ -13,5 +13,5 @@ interface TransformerInterface
      *
      * @return Model
      */
-    public function transform( $data, $model) : mixed;
+    public function transform($data, $model) : mixed;
 }
