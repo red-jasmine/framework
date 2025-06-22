@@ -47,7 +47,7 @@ class WalletWithdrawalService
         $withdrawal->amount             = $data->amount;
         $withdrawal->withdrawal_time    = Carbon::now();
         $withdrawal->status             = WithdrawalStatusEnum::PROCESSING;
-        $withdrawal->approval_status    = ApprovalStatusEnum::PROCESSING;
+        $withdrawal->approval_status    = ApprovalStatusEnum::PENDING;
         $withdrawal->payee_channel      = $data->payee->channel;
         $withdrawal->payee_account_type = $data->payee->accountType;
         $withdrawal->payee_account_no   = $data->payee->accountNo;
@@ -91,7 +91,7 @@ class WalletWithdrawalService
                 $this->refundWallet($withdrawal);
                 $withdrawal->fail();
                 break;
-            case ApprovalStatusEnum::PROCESSING:
+            case ApprovalStatusEnum::PENDING:
 
                 throw new WalletWithdrawalException('To be implemented');
                 break;

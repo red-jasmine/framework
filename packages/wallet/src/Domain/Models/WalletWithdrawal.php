@@ -88,7 +88,7 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
 
     public function isAllowApproval() : bool
     {
-        return $this->approval_status === ApprovalStatusEnum::PROCESSING;
+        return $this->approval_status === ApprovalStatusEnum::PENDING;
 
     }
 
