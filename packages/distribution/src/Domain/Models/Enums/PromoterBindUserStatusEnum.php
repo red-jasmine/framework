@@ -11,6 +11,7 @@ enum PromoterBindUserStatusEnum: string
 
     case BINDING = 'binding';
     case BOUND = 'bound';
+    case UNBOUND = 'unbound';
 
 
     /**
@@ -21,6 +22,7 @@ enum PromoterBindUserStatusEnum: string
         return [
             self::BINDING->value => '绑定中',
             self::BOUND->value   => '已绑定',
+            self::UNBOUND->value => '已解绑',
         ];
 
     }
@@ -29,8 +31,9 @@ enum PromoterBindUserStatusEnum: string
     public static function colors() : array
     {
         return [
-            self::BOUND->value  => 'success',
+            self::BOUND->value   => 'success',
             self::BINDING->value => 'gray',
+            self::UNBOUND->value => 'danger',
         ];
 
     }
@@ -38,8 +41,9 @@ enum PromoterBindUserStatusEnum: string
     public static function icons() : array
     {
         return [
-            self::BOUND->value  => 'heroicon-o-link',
+            self::BOUND->value   => 'heroicon-o-link',
             self::BINDING->value => 'heroicon-o-arrow-path-rounded-square',
+            self::UNBOUND->value => 'heroicon-o-link-slash',
         ];
     }
 }

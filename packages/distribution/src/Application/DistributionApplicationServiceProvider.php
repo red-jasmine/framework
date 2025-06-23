@@ -15,7 +15,10 @@ use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserReadRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterApplyReadRepository;
+use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterBindUserReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterGroupReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterLevelReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterOrderReadRepository;
@@ -27,6 +30,7 @@ use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterLevelRe
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterOrderRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterTeamRepository;
+use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterBindUserRepository;
 
 class DistributionApplicationServiceProvider extends ServiceProvider {
 
@@ -50,6 +54,9 @@ class DistributionApplicationServiceProvider extends ServiceProvider {
 
         $this->app->bind(PromoterApplyReadRepositoryInterface::class,PromoterApplyReadRepository::class);
         $this->app->bind(PromoterApplyRepositoryInterface::class,PromoterApplyRepository::class);
+
+        $this->app->bind(PromoterBindUserReadRepositoryInterface::class,PromoterBindUserReadRepository::class);
+        $this->app->bind(PromoterBindUserRepositoryInterface::class,PromoterBindUserRepository::class);
     }
 
     public function boot(){
