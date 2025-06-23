@@ -8,48 +8,50 @@ use RedJasmine\Distribution\Application\PromoterBindUser\PromoterBindUserApplica
 use RedJasmine\Distribution\Application\PromoterBindUser\Commands\PromoterBindUserCommand;
 use RedJasmine\Distribution\Application\PromoterBindUser\Queries\PromoterBindUserPaginateQuery;
 use RedJasmine\Distribution\UI\Http\User\Api\Resources\PromoterBindUserResource;
-use RedJasmine\Support\UI\Http\Controllers\Controller;
 
-final class PromoterBindUserController extends Controller
+
+class PromoterBindUserController extends Controller
 {
+    use HasPromoter;
+
     public function __construct(
         protected PromoterBindUserApplicationService $service
     ) {
+
+        $this->service->readRepository->withQuery(function ($query) {
+            $query->onlyPromoter($this->getPromoter());
+        });
     }
+
 
     /**
      * 查询当前用户的绑定关系
      */
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request) : AnonymousResourceCollection
     {
-        $query = PromoterBindUserPaginateQuery::from($request->all());
-        $query->userId = $request->user()->getID();
-        $query->userType = $request->user()->getType();
-
+        $query   = PromoterBindUserPaginateQuery::from($request);
         $results = $this->service->paginate($query);
-
         return PromoterBindUserResource::collection($results);
     }
 
     /**
      * 绑定分销员（通过邀请码）
      */
-    public function store(Request $request): PromoterBindUserResource
+    public function store(Request $request) : PromoterBindUserResource
     {
-        $request->validate([
-            'promoter_id' => 'required|integer',
-            'invitation_code' => 'nullable|string'
-        ]);
+
+
 
         $command = PromoterBindUserCommand::from([
-            'promoterId' => $request->input('promoter_id'),
-            'user' => $request->user(),
-            'bindReason' => '用户主动绑定',
+            'promoterId'     => $this->getPromoter()->id,
+            'user'           => $request->user(),
+            'bindReason'     => '用户主动绑定',
             'invitationCode' => $request->input('invitation_code')
         ]);
+
 
         $result = $this->service->bind($command);
 
         return PromoterBindUserResource::make($result);
     }
-} 
+}

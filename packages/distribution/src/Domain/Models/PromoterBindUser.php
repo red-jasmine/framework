@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Distribution\Domain\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
@@ -24,7 +25,7 @@ class PromoterBindUser extends Model implements OperatorInterface
 
     protected $fillable = [
         'user_type',
-        'user_id', 
+        'user_id',
         'promoter_id',
         'status',
         'bind_time',
@@ -51,5 +52,11 @@ class PromoterBindUser extends Model implements OperatorInterface
     public function promoter() : BelongsTo
     {
         return $this->belongsTo(Promoter::class, 'id', 'promoter_id');
+    }
+
+
+    public function scopeOnlyPromoter(Builder $builder, Promoter $promoter)
+    {
+        return $builder->where('promoter_id', $promoter->id);
     }
 }

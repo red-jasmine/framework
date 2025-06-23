@@ -24,11 +24,8 @@ class PromoterApplyController extends Controller
 
     use RestQueryControllerActions;
 
-    protected function getPromoter() : Promoter
-    {
-        $query = FindByOwnerQuery::from(['owner' => $this->getOwner()]);
-        return $this->promoterApplicationService->findByOwner($query);
-    }
+    use HasPromoter;
+
 
     public function __construct(
         protected PromoterApplicationService $promoterApplicationService,

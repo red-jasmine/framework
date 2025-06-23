@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use RedJasmine\Distribution\UI\Http\User\PromoterUserRoute;
+use RedJasmine\Distribution\UI\Http\User\DistributionUserRoute;
 
 Route::group([
     'prefix' => 'api/distribution',
     'middleware' => ['auth:api']
 ],function () {
 
-    PromoterUserRoute::api();
+    DistributionUserRoute::api();
 });

@@ -12,7 +12,7 @@ use RedJasmine\Distribution\Application\PromoterBindUser\Queries\PromoterBindUse
 use RedJasmine\Distribution\UI\Http\Admin\Api\Resources\PromoterBindUserResource;
 use RedJasmine\Support\UI\Http\Controllers\Controller;
 
-final class PromoterBindUserController extends Controller
+class PromoterBindUserController extends Controller
 {
     public function __construct(
         protected PromoterBindUserApplicationService $service
@@ -64,10 +64,10 @@ final class PromoterBindUserController extends Controller
     public function destroy(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         $bindUser = $this->service->find(PromoterBindUserFindQuery::make($id));
-        
+
         $command = PromoterUnbindUserCommand::from([
-            'promoterId' => $bindUser->promoter_id,
-            'user' => $bindUser->user,
+            'promoterId'   => $bindUser->promoter_id,
+            'user'         => $bindUser->user,
             'unbindReason' => $request->input('unbind_reason', '管理员解绑')
         ]);
         $command->setOwner($request->user());

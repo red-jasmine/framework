@@ -81,4 +81,12 @@ class PromoterController extends Controller
     }
 
 
+
+    public function test()  
+    {
+
+
+        
+    }
+
 }
