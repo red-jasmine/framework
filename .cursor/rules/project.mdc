@@ -77,7 +77,6 @@ alwaysApply: true
   
 ## 应用层
 - 应用层 Command 类  一般情况下 继承 领域层 Data 下的基本数据，或者是继承 RedJasmine\Support\Data\Data 类
-
 - 应用层 Query 类，一般情况下 继承 packages\support\src\Domain\Data\Queries 下的查询子类，列表查询 继承 PaginateQuery 类，单个查询继承 FindQuery 类，其他查询继承 Query 类。
 
 ###  应用层 XXXApplicationService
@@ -99,9 +98,12 @@ alwaysApply: true
  * @see PromoterApplyApprovalCommandHandler::handle()
  * @method approval(PromoterApplyApprovalCommand $command)
  */
-protected static $macros = [
-     'approval' => PromoterApplyApprovalCommandHandler::class,
-];
+ class  xxxApplicationService extends ApplicationService
+ {
+     protected static $macros = [
+         'approval' => PromoterApplyApprovalCommandHandler::class,
+    ];
+ }
 
 ```
 ###  处理器 CommandHandler、QueryHandler
@@ -134,3 +136,12 @@ public static function web() : void
 
 ## 综合规则
 - 如果 Model  继承了 RedJasmine\Support\Domain\Models\BaseCategoryModel ,则 转换器、应用层服务等 基本上是继承 公共代码中的基础类。
+- Data DTO Command 涉及到 人员信息 一般直接使用  RedJasmine\Support\Contracts\UserInterface 如:
+```php
+use RedJasmine\Support\Contracts\UserInterface;
+class Data extends \RedJasmine\Support\Data\Data
+{
+    public UserInterface $inviter; // 邀请人
+
+}
+```
