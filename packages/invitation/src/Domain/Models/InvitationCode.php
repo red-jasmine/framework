@@ -1,9 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace RedJasmine\Invitation\Domain\Models;
 
+use DateTime;
+use DomainException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Invitation\Domain\Events\InvitationCodeCreated;
 use RedJasmine\Invitation\Domain\Events\InvitationCodeUsed;
@@ -12,12 +14,22 @@ use RedJasmine\Invitation\Domain\Models\Enums\GenerateType;
 use RedJasmine\Invitation\Domain\Models\ValueObjects\Inviter;
 use RedJasmine\Invitation\Domain\Models\ValueObjects\InvitationTag;
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 
 /**
  * 邀请码聚合根
  */
-final class InvitationCode extends Model
+class InvitationCode extends Model implements OwnerInterface, OperatorInterface
 {
+
+    use HasOperator;
+
+    use HasOwner;
+
     protected $table = 'invitation_codes';
 
     /**
@@ -29,9 +41,6 @@ final class InvitationCode extends Model
 
     protected $fillable = [
         'code',
-        'inviter_type',
-        'inviter_id', 
-        'inviter_name',
         'title',
         'description',
         'slogan',
@@ -46,25 +55,25 @@ final class InvitationCode extends Model
 
     protected $casts = [
         'generate_type' => GenerateType::class,
-        'status' => CodeStatus::class,
-        'max_usage' => 'integer',
-        'used_count' => 'integer',
-        'expires_at' => 'datetime',
-        'tags' => 'array',
-        'extra_data' => 'array',
+        'status'        => CodeStatus::class,
+        'max_usage'     => 'integer',
+        'used_count'    => 'integer',
+        'expires_at'    => 'datetime',
+        'tags'          => 'array',
+        'extra_data'    => 'array',
     ];
 
     protected $attributes = [
         'generate_type' => GenerateType::SYSTEM,
-        'status' => CodeStatus::ACTIVE,
-        'max_usage' => 0,
-        'used_count' => 0,
+        'status'        => CodeStatus::ACTIVE,
+        'max_usage'     => 0,
+        'used_count'    => 0,
     ];
 
     /**
      * 获取邀请人信息
      */
-    public function getInviterAttribute(): Inviter
+    public function getInviterAttribute() : Inviter
     {
         return new Inviter(
             type: $this->inviter_type,
@@ -76,17 +85,17 @@ final class InvitationCode extends Model
     /**
      * 设置邀请人信息
      */
-    public function setInviterAttribute(Inviter $inviter): void
+    public function setInviterAttribute(Inviter $inviter) : void
     {
         $this->inviter_type = $inviter->type;
-        $this->inviter_id = $inviter->id;
+        $this->inviter_id   = $inviter->id;
         $this->inviter_name = $inviter->name;
     }
 
     /**
      * 获取标签集合
      */
-    public function getTagsCollectionAttribute(): array
+    public function getTagsCollectionAttribute() : array
     {
         if (empty($this->tags)) {
             return [];
@@ -100,10 +109,10 @@ final class InvitationCode extends Model
 
     /**
      * 设置标签集合
-     * 
-     * @param InvitationTag[] $tags
+     *
+     * @param  InvitationTag[]  $tags
      */
-    public function setTagsCollectionAttribute(array $tags): void
+    public function setTagsCollectionAttribute(array $tags) : void
     {
         $this->tags = array_map(
             fn(InvitationTag $tag) => $tag->toArray(),
@@ -114,7 +123,7 @@ final class InvitationCode extends Model
     /**
      * 邀请去向配置
      */
-    public function destinations(): HasMany
+    public function destinations() : HasMany
     {
         return $this->hasMany(InvitationDestination::class);
     }
@@ -122,7 +131,7 @@ final class InvitationCode extends Model
     /**
      * 使用记录
      */
-    public function usageLogs(): HasMany
+    public function usageLogs() : HasMany
     {
         return $this->hasMany(InvitationUsageLog::class);
     }
@@ -130,7 +139,7 @@ final class InvitationCode extends Model
     /**
      * 统计信息
      */
-    public function statistics(): HasMany
+    public function statistics() : HasMany
     {
         return $this->hasMany(InvitationStatistics::class);
     }
@@ -146,21 +155,21 @@ final class InvitationCode extends Model
         string $slogan = '',
         GenerateType $generateType = GenerateType::SYSTEM,
         int $maxUsage = 0,
-        ?\DateTime $expiresAt = null,
+        ?DateTime $expiresAt = null,
         array $tags = [],
         array $extraData = []
-    ): self {
-        $invitationCode = new self();
-        $invitationCode->code = $code;
-        $invitationCode->inviter = $inviter;
-        $invitationCode->title = $title;
-        $invitationCode->description = $description;
-        $invitationCode->slogan = $slogan;
-        $invitationCode->generate_type = $generateType;
-        $invitationCode->max_usage = $maxUsage;
-        $invitationCode->expires_at = $expiresAt;
+    ) : self {
+        $invitationCode                  = new self();
+        $invitationCode->code            = $code;
+        $invitationCode->inviter         = $inviter;
+        $invitationCode->title           = $title;
+        $invitationCode->description     = $description;
+        $invitationCode->slogan          = $slogan;
+        $invitationCode->generate_type   = $generateType;
+        $invitationCode->max_usage       = $maxUsage;
+        $invitationCode->expires_at      = $expiresAt;
         $invitationCode->tags_collection = $tags;
-        $invitationCode->extra_data = $extraData;
+        $invitationCode->extra_data      = $extraData;
 
         return $invitationCode;
     }
@@ -168,14 +177,14 @@ final class InvitationCode extends Model
     /**
      * 使用邀请码
      */
-    public function use(): void
+    public function use() : void
     {
         if (!$this->canUse()) {
-            throw new \DomainException('邀请码不可用');
+            throw new DomainException('邀请码不可用');
         }
 
         $this->used_count++;
-        
+
         // 检查是否达到使用上限
         if ($this->max_usage > 0 && $this->used_count >= $this->max_usage) {
             $this->status = CodeStatus::DISABLED;
@@ -185,10 +194,10 @@ final class InvitationCode extends Model
     /**
      * 禁用邀请码
      */
-    public function disable(): void
+    public function disable() : void
     {
         if (!$this->status->canTransitionTo(CodeStatus::DISABLED)) {
-            throw new \DomainException('当前状态无法转换为禁用状态');
+            throw new DomainException('当前状态无法转换为禁用状态');
         }
 
         $this->status = CodeStatus::DISABLED;
@@ -197,10 +206,10 @@ final class InvitationCode extends Model
     /**
      * 启用邀请码
      */
-    public function enable(): void
+    public function enable() : void
     {
         if (!$this->status->canTransitionTo(CodeStatus::ACTIVE)) {
-            throw new \DomainException('当前状态无法转换为启用状态');
+            throw new DomainException('当前状态无法转换为启用状态');
         }
 
         $this->status = CodeStatus::ACTIVE;
@@ -209,10 +218,10 @@ final class InvitationCode extends Model
     /**
      * 设置过期
      */
-    public function expire(): void
+    public function expire() : void
     {
         if (!$this->status->canTransitionTo(CodeStatus::EXPIRED)) {
-            throw new \DomainException('当前状态无法转换为过期状态');
+            throw new DomainException('当前状态无法转换为过期状态');
         }
 
         $this->status = CodeStatus::EXPIRED;
@@ -221,43 +230,43 @@ final class InvitationCode extends Model
     /**
      * 添加标签
      */
-    public function addTag(InvitationTag $tag): void
+    public function addTag(InvitationTag $tag) : void
     {
         $tags = $this->tags_collection;
-        
+
         // 检查是否已存在相同名称的标签
         foreach ($tags as $existingTag) {
             if ($existingTag->name === $tag->name) {
-                throw new \DomainException("标签 {$tag->name} 已存在");
+                throw new DomainException("标签 {$tag->name} 已存在");
             }
         }
 
         // 检查标签数量限制
         if (count($tags) >= 10) {
-            throw new \DomainException('标签数量不能超过10个');
+            throw new DomainException('标签数量不能超过10个');
         }
 
-        $tags[] = $tag;
+        $tags[]                = $tag;
         $this->tags_collection = $tags;
     }
 
     /**
      * 移除标签
      */
-    public function removeTag(string $tagName): void
+    public function removeTag(string $tagName) : void
     {
-        $tags = $this->tags_collection;
-        $filteredTags = array_filter($tags, fn($tag) => $tag->name !== $tagName);
+        $tags                  = $this->tags_collection;
+        $filteredTags          = array_filter($tags, fn($tag) => $tag->name !== $tagName);
         $this->tags_collection = array_values($filteredTags);
     }
 
     /**
      * 更新使用统计
      */
-    public function updateUsageStats(int $usedCount): void
+    public function updateUsageStats(int $usedCount) : void
     {
         $this->used_count = $usedCount;
-        
+
         // 检查是否需要更新状态
         if ($this->max_usage > 0 && $this->used_count >= $this->max_usage) {
             $this->status = CodeStatus::DISABLED;
@@ -267,7 +276,7 @@ final class InvitationCode extends Model
     /**
      * 是否有效
      */
-    public function isValid(): bool
+    public function isValid() : bool
     {
         return $this->status === CodeStatus::ACTIVE && !$this->isExpired();
     }
@@ -275,7 +284,7 @@ final class InvitationCode extends Model
     /**
      * 是否已过期
      */
-    public function isExpired(): bool
+    public function isExpired() : bool
     {
         if (!$this->expires_at) {
             return false;
@@ -287,7 +296,7 @@ final class InvitationCode extends Model
     /**
      * 是否可以使用
      */
-    public function canUse(): bool
+    public function canUse() : bool
     {
         if (!$this->isValid()) {
             return false;
@@ -304,13 +313,13 @@ final class InvitationCode extends Model
     /**
      * 是否在宽限期内
      */
-    public function isInGracePeriod(): bool
+    public function isInGracePeriod() : bool
     {
         if (!$this->expires_at || !$this->isExpired()) {
             return false;
         }
 
-        $graceHours = config('invitation.code.expire_grace_hours', 24);
+        $graceHours    = config('invitation.code.expire_grace_hours', 24);
         $graceDeadline = $this->expires_at->addHours($graceHours);
 
         return now()->isBefore($graceDeadline);
@@ -319,7 +328,7 @@ final class InvitationCode extends Model
     /**
      * 获取剩余使用次数
      */
-    public function getRemainingUsageAttribute(): ?int
+    public function getRemainingUsageAttribute() : ?int
     {
         if ($this->max_usage === 0) {
             return null; // 无限制
@@ -331,7 +340,7 @@ final class InvitationCode extends Model
     /**
      * 获取使用率
      */
-    public function getUsageRateAttribute(): float
+    public function getUsageRateAttribute() : float
     {
         if ($this->max_usage === 0) {
             return 0.0;
@@ -343,7 +352,7 @@ final class InvitationCode extends Model
     /**
      * 检查是否达到最大使用次数
      */
-    public function isMaxUsagesReached(): bool
+    public function isMaxUsagesReached() : bool
     {
         return $this->max_usage && $this->used_count >= $this->max_usage;
     }
@@ -351,42 +360,42 @@ final class InvitationCode extends Model
     /**
      * 检查用户是否已使用过此邀请码
      */
-    public function hasBeenUsedBy(\RedJasmine\Support\Contracts\UserInterface $user): bool
+    public function hasBeenUsedBy(UserInterface $user) : bool
     {
         return $this->usageLogs()
-            ->where('user_type', get_class($user))
-            ->where('user_id', $user->id)
-            ->exists();
+                    ->where('user_type', get_class($user))
+                    ->where('user_id', $user->id)
+                    ->exists();
     }
 
     /**
      * 记录使用日志
      */
-    public function recordUsage(\RedJasmine\Support\Contracts\UserInterface $user, array $context = []): InvitationUsageLog
+    public function recordUsage(UserInterface $user, array $context = []) : InvitationUsageLog
     {
-        $usageLog = new InvitationUsageLog();
+        $usageLog                     = new InvitationUsageLog();
         $usageLog->invitation_code_id = $this->id;
-        $usageLog->user_type = get_class($user);
-        $usageLog->user_id = $user->id;
-        $usageLog->used_at = now();
-        $usageLog->context = $context;
-        
+        $usageLog->user_type          = get_class($user);
+        $usageLog->user_id            = $user->id;
+        $usageLog->used_at            = now();
+        $usageLog->context            = $context;
+
         // 保存使用日志
         $usageLog->save();
-        
+
         // 增加使用计数
         $this->increment('used_count');
-        
+
         // 分发使用事件
         event(new InvitationCodeUsed($this, $usageLog));
-        
+
         return $usageLog;
     }
 
     /**
      * 检查是否为活跃状态
      */
-    public function isActive(): bool
+    public function isActive() : bool
     {
         return $this->status === CodeStatus::ACTIVE;
     }
@@ -394,7 +403,7 @@ final class InvitationCode extends Model
     /**
      * 设置邀请码
      */
-    public function setCode(string $code): self
+    public function setCode(string $code) : self
     {
         $this->code = $code;
         return $this;
@@ -403,7 +412,7 @@ final class InvitationCode extends Model
     /**
      * 设置邀请人
      */
-    public function setInviter(Inviter $inviter): self
+    public function setInviter(Inviter $inviter) : self
     {
         $this->inviter = $inviter;
         return $this;
@@ -412,7 +421,7 @@ final class InvitationCode extends Model
     /**
      * 设置生成类型
      */
-    public function setGenerateType(GenerateType $generateType): self
+    public function setGenerateType(GenerateType $generateType) : self
     {
         $this->generate_type = $generateType;
         return $this;
@@ -421,7 +430,7 @@ final class InvitationCode extends Model
     /**
      * 设置过期时间
      */
-    public function setExpiredAt(?\DateTime $expiredAt): self
+    public function setExpiredAt(?DateTime $expiredAt) : self
     {
         $this->expired_at = $expiredAt;
         return $this;
@@ -430,7 +439,7 @@ final class InvitationCode extends Model
     /**
      * 设置最大使用次数
      */
-    public function setMaxUsages(?int $maxUsages): self
+    public function setMaxUsages(?int $maxUsages) : self
     {
         $this->max_usages = $maxUsages;
         return $this;
@@ -439,7 +448,7 @@ final class InvitationCode extends Model
     /**
      * 设置状态
      */
-    public function setStatus(CodeStatus $status): self
+    public function setStatus(CodeStatus $status) : self
     {
         $this->status = $status;
         return $this;

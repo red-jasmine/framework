@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * 邀请统计实体
  */
-final class InvitationStatistics extends Model
+class InvitationStatistics extends Model
 {
     protected $table = 'invitation_statistics';
 

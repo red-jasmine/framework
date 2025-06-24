@@ -12,7 +12,7 @@ use RedJasmine\Invitation\Domain\Models\Enums\PlatformType;
 /**
  * 邀请去向实体
  */
-final class InvitationDestination extends Model
+class InvitationDestination extends Model
 {
     protected $table = 'invitation_destinations';
 

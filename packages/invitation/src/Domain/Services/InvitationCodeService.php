@@ -9,7 +9,6 @@ use RedJasmine\Invitation\Domain\Models\Enums\GenerateType;
 use RedJasmine\Invitation\Domain\Models\InvitationCode;
 use RedJasmine\Invitation\Domain\Models\InvitationUsageLog;
 use RedJasmine\Invitation\Domain\Repositories\InvitationCodeRepositoryInterface;
-use RedJasmine\Invitation\Domain\ValueObjects\Inviter;
 use RedJasmine\Invitation\Exceptions\InvitationCodeException;
 use RedJasmine\Invitation\Infrastructure\Services\InvitationCodeGenerator;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -32,7 +31,7 @@ class InvitationCodeService extends Service
     public function generateCode(InvitationCodeData $data): InvitationCode
     {
         // 检查用户是否已有有效邀请码
-        if ($this->hasActiveCode($data->inviter->user)) {
+        if ($this->hasActiveCode($data->inviter)) {
             throw new InvitationCodeException('用户已存在有效的邀请码');
         }
 
@@ -48,8 +47,15 @@ class InvitationCodeService extends Service
             throw new InvitationCodeException('邀请码已存在');
         }
 
+        // 将UserInterface转换为Inviter值对象
+        $inviter = new \RedJasmine\Invitation\Domain\Models\ValueObjects\Inviter(
+            get_class($data->inviter),
+            $data->inviter->id,
+            $data->inviter->name ?? $data->inviter->id
+        );
+
         $invitationCode->setCode($code)
-            ->setInviter($data->inviter)
+            ->setInviter($inviter)
             ->setGenerateType($data->generateType)
             ->setExpiredAt($data->expiredAt)
             ->setMaxUsages($data->maxUsages)

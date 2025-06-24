@@ -40,7 +40,13 @@ class InvitationCodeTransformer implements TransformerInterface
 
         // 设置邀请人信息
         if (isset($data->inviter)) {
-            $model->setInviter($data->inviter);
+            // 将UserInterface转换为Inviter值对象
+            $inviter = new \RedJasmine\Invitation\Domain\Models\ValueObjects\Inviter(
+                get_class($data->inviter),
+                $data->inviter->id,
+                $data->inviter->name ?? $data->inviter->id
+            );
+            $model->setInviter($inviter);
         }
 
         return $model;

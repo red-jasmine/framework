@@ -10,6 +10,7 @@ alwaysApply: true
       - Domain 为领域层代码
       - Application 为应用层代码
       - Infrastructure 为基础设施层代码
+      - Exceptions 为异常处理类,提供各层使用的异常类
   - config 领域配置文件
   - routes 领域的默认路由
   - resources 为资源目录 如 lang 翻译文件
