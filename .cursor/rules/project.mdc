@@ -175,13 +175,14 @@ interface TransformerInterface
  * - 实现相关接口规范
  * - 使用雪花ID作为主键
  * - 支持所属者信息管理
+ * - 有审批需求时才添加审批功能
  */
 class PromoterApply extends Model implements OperatorInterface, OwnerInterface
 {
     use HasSnowflakeId;        // 雪花ID
     use HasOperator;           // 操作人信息
     use HasOwner;              // 所属者信息
-    use HasApproval;           // 审批功能
+    //  use HasApproval;           // 审批功能
     
     /**
      * 雪花ID配置 - 必须设置
