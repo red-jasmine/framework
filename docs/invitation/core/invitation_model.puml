@@ -1,0 +1,212 @@
+@startuml invitation_model
+
+' 邀请码聚合根 / Invitation Code Aggregate Root
+class InvitationCode <<邀请码>> {
+  +id: InvitationCodeId                      // 邀请码ID
+  +code: String                              // 邀请码
+  +inviter: Inviter                          // 邀请人
+  +title: String                             // 邀请标题
+  +description: String                       // 邀请描述
+  +slogan: String                            // 广告语
+  +generateType: GenerateType                // 生成类型
+  +maxUsage: Integer                         // 最大使用次数
+  +usedCount: Integer                        // 已使用次数
+  +expiresAt: DateTime                       // 过期时间
+  +status: CodeStatus                        // 状态
+  +destinations: List<InvitationDestination> // 邀请去向列表
+  +tags: List<InvitationTag>                 // 标签列表
+  +statistics: InvitationStatistics          // 统计信息
+  --
+  +create(): InvitationCode                  // 创建邀请码
+  +use(): void                               // 使用邀请码
+  +disable(): void                           // 禁用邀请码
+  +expire(): void                            // 过期邀请码
+  +updateUsage(): void                       // 更新使用次数
+  +addDestination(): void                    // 添加去向
+  +addTag(): void                            // 添加标签
+  +generateLink(): InvitationLink            // 生成邀请链接
+  +generatePoster(): InvitationPoster        // 生成邀请海报
+  +isValid(): Boolean                        // 是否有效
+  +isExpired(): Boolean                      // 是否过期
+  +canUse(): Boolean                         // 是否可使用
+}
+
+' 邀请人值对象 / Inviter Value Object
+class Inviter <<邀请人>> {
+  +type: String                              // 邀请人类型
+  +id: String                                // 邀请人ID
+  +name: String                              // 邀请人姓名
+  --
+  +toString(): String                        // 转为字符串
+}
+
+' 邀请去向实体 / Invitation Destination Entity
+class InvitationDestination <<邀请去向>> {
+  +id: DestinationId                         // 去向ID
+  +invitationCodeId: InvitationCodeId        // 邀请码ID
+  +destinationType: DestinationType          // 去向类型
+  +destinationId: String                     // 目标ID
+  +destinationUrl: String                    // 目标URL
+  +platformType: PlatformType                // 平台类型
+  +platformConfig: Json                      // 平台配置
+  +isDefault: Boolean                        // 是否默认
+  --
+  +createLink(): InvitationLink              // 创建链接
+  +isSupported(): Boolean                    // 是否支持
+}
+
+' 邀请标签值对象 / Invitation Tag Value Object
+class InvitationTag <<邀请标签>> {
+  +name: String                              // 标签名称
+  +value: String                             // 标签值
+  --
+  +toString(): String                        // 转为字符串
+}
+
+' 邀请链接值对象 / Invitation Link Value Object
+class InvitationLink <<邀请链接>> {
+  +url: String                               // 链接地址
+  +platformType: PlatformType                // 平台类型
+  +parameters: Map<String, String>           // 参数列表
+  --
+  +build(): String                           // 构建链接
+  +parse(): Map<String, String>              // 解析参数
+}
+
+' 邀请海报值对象 / Invitation Poster Value Object
+class InvitationPoster <<邀请海报>> {
+  +template: InvitationTemplate              // 海报模板
+  +qrCode: String                            // 二维码
+  +content: Map<String, String>              // 内容数据
+  +imageUrl: String                          // 图片URL
+  --
+  +generate(): String                        // 生成海报
+  +download(): InputStream                   // 下载海报
+}
+
+' 邀请模板实体 / Invitation Template Entity
+class InvitationTemplate <<邀请模板>> {
+  +id: TemplateId                            // 模板ID
+  +name: String                              // 模板名称
+  +type: TemplateType                        // 模板类型
+  +category: String                          // 模板分类
+  +templateData: Json                        // 模板数据
+  +previewImage: String                      // 预览图片
+  +sortOrder: Integer                        // 排序
+  +isActive: Boolean                         // 是否启用
+  --
+  +render(): String                          // 渲染模板
+  +preview(): String                         // 预览模板
+}
+
+' 邀请使用记录实体 / Invitation Usage Log Entity
+class InvitationUsageLog <<使用记录>> {
+  +id: UsageLogId                            // 日志ID
+  +invitationCodeId: InvitationCodeId        // 邀请码ID
+  +invitationCode: String                    // 邀请码
+  +user: User                                // 用户
+  +visitor: Visitor                          // 访客
+  +actionType: ActionType                    // 操作类型
+  +platformType: PlatformType                // 平台类型
+  +ipAddress: String                         // IP地址
+  +userAgent: String                         // 用户代理
+  +referer: String                           // 来源页面
+  +extraData: Json                           // 额外数据
+  +createdAt: DateTime                       // 创建时间
+  --
+  +record(): void                            // 记录日志
+}
+
+' 邀请统计值对象 / Invitation Statistics Value Object
+class InvitationStatistics <<邀请统计>> {
+  +invitationCodeId: InvitationCodeId        // 邀请码ID
+  +statDate: Date                            // 统计日期
+  +visitCount: Integer                       // 访问次数
+  +uniqueVisitorCount: Integer               // 独立访客数
+  +registerCount: Integer                    // 注册数
+  +orderCount: Integer                       // 下单数
+  +orderAmount: Money                        // 订单金额
+  +shareCount: Integer                       // 分享次数
+  +conversionRate: Double                    // 转化率
+  --
+  +calculate(): void                         // 计算统计
+  +update(): void                            // 更新统计
+}
+
+' 用户值对象 / User Value Object
+class User <<用户>> {
+  +type: String                              // 用户类型
+  +id: String                                // 用户ID
+  +name: String                              // 用户姓名
+}
+
+' 访客值对象 / Visitor Value Object
+class Visitor <<访客>> {
+  +id: String                                // 访客ID
+  +sessionId: String                         // 会话ID
+  +fingerprint: String                       // 浏览器指纹
+}
+
+' 枚举类 / Enum Types
+enum GenerateType <<生成类型>> {
+  CUSTOM                                     // 自定义
+  SYSTEM                                     // 系统生成
+}
+
+enum CodeStatus <<邀请码状态>> {
+  ACTIVE                                     // 有效
+  DISABLED                                   // 禁用
+  EXPIRED                                    // 过期
+}
+
+enum DestinationType <<去向类型>> {
+  REGISTER                                   // 注册页面
+  PRODUCT                                    // 商品页面
+  ACTIVITY                                   // 活动页面
+  HOME                                       // 首页
+  CUSTOM                                     // 自定义页面
+}
+
+enum PlatformType <<平台类型>> {
+  WEB                                        // 网页版
+  H5                                         // 手机网页
+  MINIPROGRAM                                // 小程序
+  APP                                        // 应用程序
+}
+
+enum TemplateType <<模板类型>> {
+  POSTER                                     // 海报模板
+  LINK                                       // 链接模板
+  MESSAGE                                    // 消息模板
+}
+
+enum ActionType <<操作类型>> {
+  VISIT                                      // 访问
+  REGISTER                                   // 注册
+  ORDER                                      // 下单
+  SHARE                                      // 分享
+}
+
+' 关系定义 / Relationship Definitions
+InvitationCode ||--o{ InvitationDestination : "包含去向 / contains destinations"
+InvitationCode ||--o{ InvitationTag : "包含标签 / contains tags"
+InvitationCode ||--|| InvitationStatistics : "聚合统计 / aggregates statistics"
+InvitationCode ||--o{ InvitationUsageLog : "跟踪使用 / tracks usage"
+InvitationCode ||--|| Inviter : "属于邀请人 / belongs to inviter"
+
+InvitationDestination ||--|| InvitationLink : "生成链接 / generates link"
+InvitationCode ||--|| InvitationPoster : "生成海报 / generates poster"
+
+InvitationTemplate ||--|| InvitationPoster : "模板使用 / template used by"
+InvitationUsageLog ||--|| User : "关联用户 / associated with user"
+InvitationUsageLog ||--|| Visitor : "跟踪访客 / tracks visitor"
+
+InvitationCode ||--|| GenerateType : "生成类型 / has generate type"
+InvitationCode ||--|| CodeStatus : "状态类型 / has status"
+InvitationDestination ||--|| DestinationType : "去向类型 / has destination type"
+InvitationDestination ||--|| PlatformType : "支持平台 / supports platform"
+InvitationTemplate ||--|| TemplateType : "模板分类 / categorized as"
+InvitationUsageLog ||--|| ActionType : "记录操作 / records action"
+InvitationUsageLog ||--|| PlatformType : "来源平台 / from platform"
+
+@enduml 

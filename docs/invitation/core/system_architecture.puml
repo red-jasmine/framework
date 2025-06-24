@@ -1,0 +1,87 @@
+@startuml system_architecture
+
+title 邀请系统整体架构 / Invitation System Overall Architecture
+
+package "用户接口层 (UI)" {
+    [Web管理端] as WebAdmin
+    [H5邀请页面] as H5Page
+    [小程序端] as MiniProgram
+    [APP端] as App
+    [API接口] as API
+}
+
+package "应用服务层 (Application)" {
+    [邀请码应用服务] as InvitationCodeApp
+    [海报生成服务] as PosterApp
+    [统计分析服务] as StatisticsApp
+    [链接生成服务] as LinkApp
+}
+
+package "领域服务层 (Domain)" {
+    [邀请码聚合] as InvitationCodeDomain
+    [邀请链接聚合] as InvitationLinkDomain
+    [海报模板聚合] as PosterTemplateDomain
+    [统计聚合] as StatisticsDomain
+    
+    [邀请码生成器] as CodeGenerator
+    [链接适配器] as LinkAdapter
+    [海报渲染器] as PosterRenderer
+    [数据统计器] as DataAggregator
+}
+
+package "基础设施层 (Infrastructure)" {
+    database "MySQL" {
+        [邀请码表] as InvitationCodeTable
+        [邀请链接表] as InvitationLinkTable
+        [使用记录表] as UsageLogTable
+        [统计表] as StatisticsTable
+    }
+    
+    database "Redis" {
+        [邀请码缓存] as CodeCache
+        [统计缓存] as StatsCache
+        [限流缓存] as RateLimit
+    }
+    
+    cloud "外部服务" {
+        [图片生成服务] as ImageService
+        [短链服务] as ShortUrlService
+        [消息队列] as MessageQueue
+    }
+}
+
+' 用户接口层到应用服务层
+WebAdmin --> InvitationCodeApp
+H5Page --> LinkApp
+MiniProgram --> LinkApp
+App --> LinkApp
+API --> InvitationCodeApp
+API --> StatisticsApp
+
+' 应用服务层到领域服务层
+InvitationCodeApp --> InvitationCodeDomain
+InvitationCodeApp --> CodeGenerator
+PosterApp --> PosterTemplateDomain
+PosterApp --> PosterRenderer
+StatisticsApp --> StatisticsDomain
+StatisticsApp --> DataAggregator
+LinkApp --> InvitationLinkDomain
+LinkApp --> LinkAdapter
+
+' 领域服务层到基础设施层
+InvitationCodeDomain --> InvitationCodeTable
+InvitationCodeDomain --> CodeCache
+InvitationLinkDomain --> InvitationLinkTable
+StatisticsDomain --> StatisticsTable
+StatisticsDomain --> StatsCache
+
+' 外部服务依赖
+PosterRenderer --> ImageService
+LinkAdapter --> ShortUrlService
+DataAggregator --> MessageQueue
+
+' 限流和缓存
+CodeGenerator --> RateLimit
+LinkAdapter --> RateLimit
+
+@enduml 

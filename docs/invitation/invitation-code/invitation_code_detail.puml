@@ -1,0 +1,229 @@
+@startuml invitation_code_detail
+
+title 邀请码管理子模块 - 详细设计 / Invitation Code Management Module - Detailed Design
+
+package "邀请码聚合 / Invitation Code Aggregate" {
+    class InvitationCode <<邀请码>> {
+        +id: InvitationCodeId                      // 邀请码ID / Code ID
+        +code: String                              // 邀请码 / Code
+        +inviter: Inviter                          // 邀请人 / Inviter
+        +title: String                             // 邀请标题 / Title
+        +description: String                       // 邀请描述 / Description
+        +slogan: String                            // 广告语 / Slogan
+        +generateType: GenerateType                // 生成类型 / Generate Type
+        +maxUsage: Integer                         // 最大使用次数 / Max Usage
+        +usedCount: Integer                        // 已使用次数 / Used Count
+        +expiresAt: DateTime                       // 过期时间 / Expires At
+        +status: CodeStatus                        // 状态 / Status
+        +destinations: Collection<InvitationDestination> // 去向集合 / Destinations
+        +tags: Collection<InvitationTag>           // 标签集合 / Tags
+        +createdAt: DateTime                       // 创建时间 / Created At
+        +updatedAt: DateTime                       // 更新时间 / Updated At
+        --
+        +create(data): InvitationCode              // 创建邀请码 / Create
+        +use(): void                               // 使用邀请码 / Use
+        +disable(): void                           // 禁用邀请码 / Disable
+        +expire(): void                            // 过期邀请码 / Expire
+        +addDestination(destination): void         // 添加去向 / Add Destination
+        +addTag(tag): void                         // 添加标签 / Add Tag
+        +extendExpiration(expiresAt): void         // 延长有效期 / Extend Expiration
+        +isValid(): Boolean                        // 是否有效 / Is Valid
+        +isExpired(): Boolean                      // 是否过期 / Is Expired
+        +canUse(): Boolean                         // 是否可使用 / Can Use
+        +getRemainingUsage(): Integer              // 剩余使用次数 / Get Remaining Usage
+    }
+
+    class InvitationDestination <<邀请去向>> {
+        +id: DestinationId
+        +invitationCodeId: InvitationCodeId
+        +destinationType: DestinationType
+        +destinationId: String
+        +destinationUrl: String
+        +platformType: PlatformType
+        +platformConfig: Json
+        +isDefault: Boolean
+        --
+        +createLink(): InvitationLink
+        +isSupported(platform): Boolean
+        +validateConfig(): Boolean
+    }
+
+    class InvitationUsageLog <<使用记录>> {
+        +id: UsageLogId
+        +invitationCodeId: InvitationCodeId
+        +invitationCode: String
+        +user: User
+        +visitor: Visitor
+        +actionType: ActionType
+        +platformType: PlatformType
+        +ipAddress: String
+        +userAgent: String
+        +referer: String
+        +extraData: Json
+        +createdAt: DateTime
+        --
+        +record(context): void
+        +getConversionPath(): String
+    }
+}
+
+package "值对象" {
+    class Inviter <<邀请人>> {
+        +type: String
+        +id: String
+        +name: String
+        --
+        +toString(): String
+        +equals(other): Boolean
+    }
+
+    class InvitationTag <<邀请标签>> {
+        +name: String
+        +value: String
+        --
+        +toString(): String
+        +equals(other): Boolean
+    }
+
+    class InvitationLink <<邀请链接>> {
+        +url: String
+        +platformType: PlatformType
+        +parameters: Map<String, String>
+        +qrCode: String
+        --
+        +build(): String
+        +parse(): Map<String, String>
+        +generateQRCode(): String
+    }
+
+    class User <<用户>> {
+        +type: String
+        +id: String
+        +name: String
+    }
+
+    class Visitor <<访客>> {
+        +id: String
+        +sessionId: String
+        +fingerprint: String
+    }
+}
+
+package "领域服务" {
+    class InvitationCodeGenerator <<邀请码生成器>> {
+        --
+        +generateSystemCode(inviter): String
+        +validateCustomCode(code): Boolean
+        +checkUniqueness(code): Boolean
+    }
+
+    class InvitationCodeValidator <<邀请码验证器>> {
+        --
+        +validateFormat(code): ValidationResult
+        +validateSensitiveWords(code): Boolean
+        +validateLength(code): Boolean
+    }
+
+    class ExpirationManager <<有效期管理器>> {
+        --
+        +validateExpiration(expiresAt): void
+        +isInGracePeriod(code): Boolean
+        +calculateRemainingTime(code): Duration
+    }
+
+    class UsageController <<使用次数控制器>> {
+        --
+        +canUse(code): Boolean
+        +recordUsage(code, context): void
+        +checkConcurrency(code): Boolean
+    }
+
+    class LinkGenerator <<链接生成器>> {
+        --
+        +generateLink(code, destination, platform): InvitationLink
+        +adaptToPlatform(link, platform): String
+        +encryptParameters(params): String
+    }
+}
+
+package "枚举类型" {
+    enum GenerateType <<生成类型>> {
+        CUSTOM
+        SYSTEM
+    }
+
+    enum CodeStatus <<邀请码状态>> {
+        ACTIVE
+        DISABLED
+        EXPIRED
+    }
+
+    enum DestinationType <<去向类型>> {
+        REGISTER
+        PRODUCT
+        ACTIVITY
+        HOME
+        CUSTOM
+    }
+
+    enum PlatformType <<平台类型>> {
+        WEB
+        H5
+        MINIPROGRAM
+        APP
+    }
+
+    enum ActionType <<操作类型>> {
+        VISIT
+        REGISTER
+        ORDER
+        SHARE
+    }
+}
+
+package "仓储接口" {
+    interface InvitationCodeRepository {
+        +findById(id): InvitationCode
+        +findByCode(code): InvitationCode
+        +save(code): void
+        +delete(code): void
+        +existsByCode(code): Boolean
+        +findByInviter(inviter): Collection
+        +findExpiring(days): Collection
+    }
+
+    interface InvitationUsageLogRepository {
+        +save(log): void
+        +findByCode(codeId): Collection
+        +findByUser(user): Collection
+        +getStatistics(codeId, dateRange): Statistics
+    }
+}
+
+' 关系定义
+InvitationCode ||--o{ InvitationDestination : "包含"
+InvitationCode ||--o{ InvitationTag : "拥有"
+InvitationCode ||--o{ InvitationUsageLog : "记录"
+InvitationCode ||--|| Inviter : "属于"
+
+InvitationDestination ||--|| InvitationLink : "生成"
+InvitationUsageLog ||--|| User : "关联"
+InvitationUsageLog ||--|| Visitor : "关联"
+
+InvitationCode ||--|| GenerateType : "类型"
+InvitationCode ||--|| CodeStatus : "状态"
+InvitationDestination ||--|| DestinationType : "去向类型"
+InvitationDestination ||--|| PlatformType : "平台类型"
+InvitationUsageLog ||--|| ActionType : "行为类型"
+InvitationUsageLog ||--|| PlatformType : "来源平台"
+
+InvitationCodeGenerator ..> InvitationCode : "生成"
+InvitationCodeValidator ..> InvitationCode : "验证"
+ExpirationManager ..> InvitationCode : "管理"
+UsageController ..> InvitationCode : "控制"
+LinkGenerator ..> InvitationLink : "生成"
+
+InvitationCodeRepository ..> InvitationCode : "存储"
+InvitationUsageLogRepository ..> InvitationUsageLog : "存储"
+
+@enduml 

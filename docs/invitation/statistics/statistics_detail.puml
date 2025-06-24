@@ -1,0 +1,332 @@
+@startuml statistics_detail
+
+title 统计分析子模块 - 详细设计 / Statistics Analysis Module - Detailed Design
+
+package "统计聚合" {
+    class InvitationStatistics <<邀请统计>> {
+        +id: StatisticsId
+        +invitationCodeId: InvitationCodeId
+        +timeRange: TimeRange
+        +dimensions: Collection<Dimension>
+        +metrics: Collection<Metric>
+        +filters: Collection<Filter>
+        +totalViews: Long
+        +uniqueVisitors: Long
+        +totalClicks: Long
+        +conversions: Long
+        +conversionRate: Double
+        +revenue: Money
+        +lastUpdated: DateTime
+        +version: Integer
+        --
+        +calculate(): void
+        +aggregate(events): void
+        +addMetric(metric): void
+        +getMetric(type): Metric
+        +getTrend(period): Trend
+        +compare(other): Comparison
+        +isUpToDate(): Boolean
+        +refresh(): void
+    }
+
+    class EventCollector <<事件收集器>> {
+        +id: CollectorId
+        +eventType: EventType
+        +source: EventSource
+        +eventData: Json
+        +userId: String
+        +sessionId: String
+        +timestamp: DateTime
+        +processed: Boolean
+        +retryCount: Integer
+        +metadata: Json
+        --
+        +collect(event): void
+        +validate(): ValidationResult
+        +process(): void
+        +retry(): void
+        +markProcessed(): void
+        +enrich(enricher): void
+    }
+
+    class MetricCalculator <<指标计算器>> {
+        +id: CalculatorId
+        +metricType: MetricType
+        +calculationRule: CalculationRule
+        +inputData: Collection<DataPoint>
+        +outputValue: Double
+        +confidence: Double
+        +calculatedAt: DateTime
+        +isValid: Boolean
+        --
+        +calculate(data): Double
+        +validate(input): ValidationResult
+        +getCacheKey(): String
+        +getFormula(): String
+        +explain(): Explanation
+    }
+}
+
+package "值对象" {
+    class TimeRange <<时间范围>> {
+        +startTime: DateTime
+        +endTime: DateTime
+        +granularity: TimeGranularity
+        +timezone: String
+        --
+        +contains(timestamp): Boolean
+        +split(granularity): Collection<TimeRange>
+        +duration(): Duration
+        +overlaps(other): Boolean
+        +merge(other): TimeRange
+    }
+
+    class Dimension <<统计维度>> {
+        +name: String
+        +type: DimensionType
+        +value: String
+        +level: Integer
+        +hierarchy: Collection<String>
+        --
+        +getParent(): Dimension
+        +getChildren(): Collection<Dimension>
+        +drill(direction): Dimension
+        +equals(other): Boolean
+    }
+
+    class Metric <<统计指标>> {
+        +name: String
+        +type: MetricType
+        +value: Double
+        +unit: String
+        +precision: Integer
+        +trend: TrendDirection
+        +changeRate: Double
+        --
+        +format(): String
+        +compare(other): Double
+        +isSignificant(threshold): Boolean
+        +getDisplayValue(): String
+    }
+
+    class Filter <<过滤器>> {
+        +field: String
+        +operator: FilterOperator
+        +value: String
+        +isActive: Boolean
+        --
+        +apply(data): FilteredData
+        +combine(other): Filter
+        +validate(): Boolean
+        +toSql(): String
+    }
+
+    class DataPoint <<数据点>> {
+        +timestamp: DateTime
+        +dimensions: Map<String, String>
+        +metrics: Map<String, Double>
+        +weight: Double
+        +quality: DataQuality
+        --
+        +aggregate(others): DataPoint
+        +project(fields): DataPoint
+        +transform(transformer): DataPoint
+        +isValid(): Boolean
+    }
+
+    class Trend <<趋势分析>> {
+        +direction: TrendDirection
+        +strength: Double
+        +confidence: Double
+        +points: Collection<TrendPoint>
+        +prediction: Collection<TrendPoint>
+        --
+        +analyze(data): Trend
+        +forecast(periods): Collection<TrendPoint>
+        +detectAnomaly(): Collection<Anomaly>
+        +getSummary(): String
+    }
+
+    class Comparison <<对比分析>> {
+        +baseValue: Double
+        +compareValue: Double
+        +changeRate: Double
+        +significance: Double
+        +pValue: Double
+        +conclusion: String
+        --
+        +isSignificant(): Boolean
+        +getChangeDirection(): TrendDirection
+        +getInterpretation(): String
+        +format(): String
+    }
+}
+
+package "领域服务" {
+    class DataAggregator <<数据聚合器>> {
+        --
+        +aggregate(events, dimensions): AggregatedData
+        +realTimeAggregate(stream): StreamedData
+        +batchAggregate(batch): BatchResult
+        +incrementalAggregate(delta): IncrementalResult
+        +validateAggregation(result): ValidationResult
+    }
+
+    class TrendAnalyzer <<趋势分析器>> {
+        --
+        +analyzeTrend(data): Trend
+        +detectSeasonality(data): Seasonality
+        +forecastValues(data, periods): Forecast
+        +detectAnomalies(data): Collection<Anomaly>
+        +calculateCorrelation(metrics): CorrelationMatrix
+    }
+
+    class ReportGenerator <<报表生成器>> {
+        --
+        +generateReport(template, data): Report
+        +scheduleReport(schedule): ScheduledReport
+        +exportReport(report, format): ExportedFile
+        +customizeReport(report, options): CustomReport
+        +validateReport(report): ValidationResult
+    }
+
+    class AnomalyDetector <<异常检测器>> {
+        --
+        +detectAnomalies(data): Collection<Anomaly>
+        +setThreshold(metric, threshold): void
+        +trainModel(historicalData): DetectionModel
+        +validateDetection(anomaly): ValidationResult
+        +explainAnomaly(anomaly): Explanation
+    }
+
+    class CacheManager <<缓存管理器>> {
+        --
+        +cache(key, data, ttl): void
+        +get(key): CachedData
+        +invalidate(pattern): void
+        +preWarm(keys): void
+        +getStatistics(): CacheStatistics
+    }
+}
+
+package "枚举类型" {
+    enum EventType <<事件类型>> {
+        INVITATION_CREATED
+        LINK_ACCESSED
+        POSTER_GENERATED
+        USER_REGISTERED
+        ORDER_CONVERTED
+        SHARE_ACTION
+    }
+
+    enum MetricType <<指标类型>> {
+        COUNT
+        SUM
+        AVERAGE
+        RATIO
+        CONVERSION_RATE
+        GROWTH_RATE
+    }
+
+    enum DimensionType <<维度类型>> {
+        TIME
+        USER
+        CHANNEL
+        PLATFORM
+        LOCATION
+        DEVICE
+    }
+
+    enum TimeGranularity <<时间粒度>> {
+        MINUTE
+        HOUR
+        DAY
+        WEEK
+        MONTH
+        QUARTER
+        YEAR
+    }
+
+    enum TrendDirection <<趋势方向>> {
+        UP
+        DOWN
+        STABLE
+        VOLATILE
+    }
+
+    enum FilterOperator <<过滤操作符>> {
+        EQUALS
+        NOT_EQUALS
+        GREATER_THAN
+        LESS_THAN
+        CONTAINS
+        IN
+        BETWEEN
+    }
+
+    enum DataQuality <<数据质量>> {
+        HIGH
+        MEDIUM
+        LOW
+        INVALID
+    }
+}
+
+package "仓储接口" {
+    interface InvitationStatisticsRepository {
+        +findById(id): InvitationStatistics
+        +findByTimeRange(range): Collection
+        +findByInvitationCode(codeId): InvitationStatistics
+        +save(statistics): void
+        +aggregate(criteria): AggregatedStatistics
+        +getTrend(metric, period): Trend
+    }
+
+    interface EventCollectorRepository {
+        +save(event): void
+        +findUnprocessed(): Collection<EventCollector>
+        +findByTimeRange(range): Collection
+        +findByType(type): Collection
+        +markProcessed(events): void
+        +getStatistics(): CollectionStatistics
+    }
+
+    interface MetricCalculatorRepository {
+        +findById(id): MetricCalculator
+        +findByType(type): Collection
+        +save(calculator): void
+        +findActive(): Collection
+        +getHistory(calculatorId): Collection
+    }
+}
+
+' 关系定义
+InvitationStatistics ||--|| TimeRange : "时间范围"
+InvitationStatistics ||--o{ Dimension : "维度"
+InvitationStatistics ||--o{ Metric : "指标"
+InvitationStatistics ||--o{ Filter : "过滤器"
+
+EventCollector ||--|| EventType : "事件类型"
+EventCollector ||--o{ DataPoint : "数据点"
+
+MetricCalculator ||--|| MetricType : "指标类型"
+MetricCalculator ||--o{ DataPoint : "输入数据"
+
+Dimension ||--|| DimensionType : "维度类型"
+TimeRange ||--|| TimeGranularity : "时间粒度"
+Filter ||--|| FilterOperator : "操作符"
+DataPoint ||--|| DataQuality : "数据质量"
+Trend ||--|| TrendDirection : "趋势方向"
+Metric ||--|| TrendDirection : "变化趋势"
+
+DataAggregator ..> InvitationStatistics : "聚合"
+TrendAnalyzer ..> Trend : "分析"
+ReportGenerator ..> InvitationStatistics : "生成报表"
+AnomalyDetector ..> EventCollector : "检测"
+CacheManager ..> InvitationStatistics : "缓存"
+
+InvitationStatisticsRepository ..> InvitationStatistics : "存储"
+EventCollectorRepository ..> EventCollector : "存储"
+MetricCalculatorRepository ..> MetricCalculator : "存储"
+
+@enduml 

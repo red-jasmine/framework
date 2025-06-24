@@ -1,0 +1,42 @@
+@startuml create_invitation_sequence
+
+title 创建邀请码时序图 / Create Invitation Code Sequence
+
+actor 邀请人 as Inviter
+participant "邀请码应用服务" as InvitationApp
+participant "邀请码生成器" as CodeGenerator
+participant "邀请码仓库" as CodeRepo
+participant "链接生成服务" as LinkService
+participant "缓存服务" as Cache
+
+Inviter -> InvitationApp: 创建邀请码请求
+activate InvitationApp
+
+InvitationApp -> CodeGenerator: 生成邀请码
+activate CodeGenerator
+CodeGenerator -> CodeGenerator: 验证自定义码/生成系统码
+CodeGenerator -> CodeRepo: 检查唯一性
+CodeRepo --> CodeGenerator: 唯一性结果
+CodeGenerator --> InvitationApp: 邀请码
+deactivate CodeGenerator
+
+InvitationApp -> InvitationApp: 创建邀请码聚合
+InvitationApp -> CodeRepo: 保存邀请码
+activate CodeRepo
+CodeRepo --> InvitationApp: 保存成功
+deactivate CodeRepo
+
+InvitationApp -> LinkService: 生成邀请链接
+activate LinkService
+LinkService --> InvitationApp: 邀请链接
+deactivate LinkService
+
+InvitationApp -> Cache: 缓存邀请码
+activate Cache
+Cache --> InvitationApp: 缓存成功
+deactivate Cache
+
+InvitationApp --> Inviter: 返回邀请码信息
+deactivate InvitationApp
+
+@enduml 

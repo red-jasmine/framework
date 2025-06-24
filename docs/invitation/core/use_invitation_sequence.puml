@@ -1,0 +1,74 @@
+@startuml use_invitation_sequence
+
+title 使用邀请码时序图 / Use Invitation Code Sequence
+
+actor 访客 as Visitor
+participant "链接处理服务" as LinkHandler
+participant "邀请码仓库" as CodeRepo
+participant "邀请码聚合" as InvitationCode
+participant "统计服务" as StatsService
+participant "用户服务" as UserService
+participant "缓存服务" as Cache
+
+Visitor -> LinkHandler: 访问邀请链接
+activate LinkHandler
+
+LinkHandler -> LinkHandler: 解析链接参数
+LinkHandler -> Cache: 查询邀请码缓存
+activate Cache
+Cache --> LinkHandler: 缓存结果
+deactivate Cache
+
+alt 缓存未命中
+    LinkHandler -> CodeRepo: 查询邀请码
+    activate CodeRepo
+    CodeRepo --> LinkHandler: 邀请码信息
+    deactivate CodeRepo
+    
+    LinkHandler -> Cache: 更新缓存
+    activate Cache
+    Cache --> LinkHandler: 缓存更新完成
+    deactivate Cache
+end
+
+LinkHandler -> InvitationCode: 验证邀请码有效性
+activate InvitationCode
+InvitationCode --> LinkHandler: 验证结果
+deactivate InvitationCode
+
+alt 邀请码有效
+    LinkHandler -> InvitationCode: 记录使用
+    activate InvitationCode
+    InvitationCode -> CodeRepo: 更新使用次数
+    activate CodeRepo
+    CodeRepo --> InvitationCode: 更新成功
+    deactivate CodeRepo
+    
+    InvitationCode --> LinkHandler: 使用记录完成
+    deactivate InvitationCode
+    
+    LinkHandler -> StatsService: 记录访问统计
+    activate StatsService
+    StatsService --> LinkHandler: 统计记录完成
+    deactivate StatsService
+    
+    LinkHandler -> LinkHandler: 生成跳转链接
+    LinkHandler --> Visitor: 返回目标页面
+else 邀请码无效
+    LinkHandler --> Visitor: 返回错误页面
+end
+
+deactivate LinkHandler
+
+opt 用户完成注册
+    Visitor -> UserService: 完成注册
+    activate UserService
+    UserService -> StatsService: 记录转化事件
+    activate StatsService
+    StatsService --> UserService: 转化记录完成
+    deactivate StatsService
+    UserService --> Visitor: 注册成功
+    deactivate UserService
+end
+
+@enduml 
