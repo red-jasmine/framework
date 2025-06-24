@@ -67,7 +67,14 @@ alwaysApply: true
 
 - 领域层模型采用充血模型策略，操作模型内部属性尽量收窄在模型内部
 - 在 Transformers 目录创建模型对应的转换器，主要对模型和基础 DTO 进行转换，转换器一般 需要时间接口 RedJasmine\Support\Domain\Transformer\TransformerInterface
+- 枚举值 Enum 需要 use RedJasmine\Support\Helpers\Enums\EnumsHelper，内置了通用方法，只需要实现 labels，icons, colors 方法即可
+- 只读仓库接口一般情况下继承 RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface
+- 仓库接口一般情况下继承 RedJasmine\Support\Domain\Repositories\RepositoryInterface
 
+## 基础设施层
+- Infrastructure\Repositories\Eloquent 目录下为仓库实现，命名不需要以 Eloquent 开头，实现一般继承 RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository
+- Infrastructure\ReadRepositories\Mysql 目录下为自读仓库Mysql 实现，命名不需要以 Mysql 开头，继承 RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository
+  
 ## 应用层
 - 应用层 Command 类  一般情况下 继承 领域层 Data 下的基本数据，或者是继承 RedJasmine\Support\Data\Data 类
 
@@ -79,6 +86,9 @@ alwaysApply: true
 
 要求
 - 子模块的xxApplicationService  一般情况下 继承   RedJasmine\Support\Application\ApplicationService
+- xxxApplicationService 类注入的属性 一般设置文 public 为 处理器支持调用
+- Commands 目录为 命令和命令处理器存放
+- Queries 目录为 查询 和查询处理器存放
 - 如果子模块功能只有简单的增删改查，ApplicationService 基类功能已经内置,不需要而外的命令和查询以及处理器
 - 处理器 CommandHandler 和 QueryHandler 需要配置在 $macros 宏中,支持更好的扩展 。
 - 应用层服务类 需要对每个处理器添加注释
