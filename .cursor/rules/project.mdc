@@ -1,148 +1,690 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
-# 目录结构
+# Red Jasmine Framework 项目规则说明书
 
-- packages 下为每个子领域的 composer 包构建的代码,使用 laravel 的特性
-  - src 存放着每个子领域代码
-      - Domain 为领域层代码
-      - Application 为应用层代码
-      - Infrastructure 为基础设施层代码
-      - Exceptions 为异常处理类,提供各层使用的异常类
-  - config 领域配置文件
-  - routes 领域的默认路由
-  - resources 为资源目录 如 lang 翻译文件
-  - database 为数据库相关文件, migrations 为数据库迁移文件
-- docs 存放着每个子领域的技术文档，同时符合 vitepress 构建文档网站
-- tests 存放着每个子领域测试代码
+## 项目概述
 
+Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.3+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
 
-## 公共代码
+### 技术栈
+- **PHP**: 8.3+
+- **Laravel**: 12.0+
+- **数据库**: MySQL 8.0+
+- **缓存**: Redis
+- **队列**: Laravel Queue
+- **测试**: Pest PHP
+- **文档**: VitePress
 
-- packages/support 目录为 提取的公共代码，以及一些标准协议
+## 目录结构
 
-
-# 文档要求
-
-## 文档格式要求
-- 按每个子领域存放在 docs 下
-- 每个子领域下 按 子模块划分存在在不同的目录中
-- 文档采用 markdown 格式，同时需要符合 vitepress 格式配置头部信息
-- 领域下有统一介绍的 index 文档
-- 领域下有一个存储层 表设计文件
-- 文档不需要具体的代码
-- UML 时名称 、字段、方法需要用到 中文为主、引文为辅，中英文对照,如果 UML 关键字能使用注释的注释中写英文。如 << XXX>>
-- UML 单独一个文件 通过一下形式映入
-```plantuml
-<!--@include: ./model.puml-->
+### 整体架构
+```
+framework/
+├── packages/                    # 领域包目录
+│   ├── support/                # 公共支持包
+│   ├── user/                   # 用户领域
+│   ├── product/                # 商品领域
+│   ├── order/                  # 订单领域
+│   ├── payment/                # 支付领域
+│   ├── distribution/           # 分销领域
+│   ├── wallet/                 # 钱包领域
+│   ├── logistics/              # 物流领域
+│   ├── interaction/            # 互动领域
+│   ├── community/              # 社区领域
+│   ├── article/                # 文章领域
+│   ├── shopping/               # 购物车领域
+│   ├── invitation/             # 邀请领域
+│   ├── address/                # 地址领域
+│   ├── region/                 # 地区领域
+│   ├── captcha/                # 验证码领域
+│   ├── socialite/              # 社交登录领域
+│   ├── vip/                    # VIP领域
+│   ├── resource-usage/         # 资源使用领域
+│   ├── ecommerce/              # 电商领域
+│   ├── card/                   # 卡券领域
+│   ├── admin/                  # 管理后台领域
+│   └── filament-*/             # Filament管理面板相关包
+├── docs/                       # 文档目录
+├── tests/                      # 测试目录
+├── workbench/                  # 开发工作台
+└── vendor/                     # Composer依赖
 ```
 
-## 介绍文档要求
-- 包含有 概述、核心能力、角色、链接领域、核心用例、统一语言表、领域模型等内容
-- 概述 介绍领域的基本情况，问题域
-- 领域参与角色
-- 链接领域
-- 核心用例
-- 统一语言表  为领域下的统一名称定义，有中文、英文、备注
-- 领域模型,以 UML 类图形式展示，列举核心模型和关系，不用太详细
+### 领域包结构
+每个领域包都遵循统一的目录结构：
 
+```
+packages/{domain}/
+├── src/                        # 源代码
+│   ├── Domain/                 # 领域层
+│   │   ├── Models/             # 领域模型
+│   │   │   ├── Enums/          # 枚举定义
+│   │   │   └── ValueObjects/   # 值对象
+│   │   ├── Repositories/       # 仓库接口
+│   │   ├── Data/               # 基础DTO
+│   │   ├── Transformers/       # 转换器
+│   │   ├── Events/             # 领域事件
+│   │   ├── Services/           # 领域服务
+│   │   ├── Contracts/          # 领域契约
+│   │   └── Facades/            # 门面类
+│   ├── Application/            # 应用层
+│   │   ├── Commands/           # 命令定义和命令处理器
+│   │   ├── Queries/            # 查询定义和查询处理器
+│   │   └── Services/           # 应用服务
+│   ├── Infrastructure/         # 基础设施层
+│   │   ├── Repositories/       # 仓库实现
+│   │   │   └── Eloquent/       # Eloquent实现
+│   │   └── ReadRepositories/   # 只读仓库实现
+│   │       └── Mysql/          # MySQL实现
+│   ├── UI/                     # 用户接口层
+│   │   └── Http/               # HTTP接口
+│   │       ├── Admin/          # 管理员接口
+│   │       ├── User/           # 用户接口
+│   │       └── Shop/           # 商家接口
+│   └── Exceptions/             # 异常处理
+├── config/                     # 配置文件
+├── database/                   # 数据库相关
+│   └── migrations/             # 数据库迁移
+├── routes/                     # 路由定义
+├── resources/                  # 资源文件
+│   ├── lang/                   # 语言文件
+│   └── views/                  # 视图文件
+├── composer.json               # 包配置
+└── README.md                   # 包说明
+```
 
-## 子模块介绍
-- 子模块必须创建不同的子目录，包含有 介绍、领域模型、领域事件、核心规则等内容
-- 领域模型 需要 UML 图累出，属性、支持的方法操作等
-- 核心命令 如有需要，需写 plantuml 时序图 配以说明，不需要具体的代码，
+## 公共代码规范
 
-# DDD 代码类要求
+### Support 包核心组件
 
-## 领域层
-- 领域层代码 一般放在 Domain 下，Models 目录为领域模型
-  - Models 目录为领域模型
-  - Models/Enums 为模型属性的枚举目录
-  - Models/ValueObjects 为模型属性对应的值对象
-  - Repositories 目录为仓库接口
-  - Data 目录为模型对应的基础 DTO
-  - Transformers 为转换器目录
-  - Events 为领域事件
-
-- 领域层模型采用充血模型策略，操作模型内部属性尽量收窄在模型内部
-- 在 Transformers 目录创建模型对应的转换器，主要对模型和基础 DTO 进行转换，转换器一般 需要时间接口 RedJasmine\Support\Domain\Transformer\TransformerInterface
-- 枚举值 Enum 需要 use RedJasmine\Support\Helpers\Enums\EnumsHelper，内置了通用方法，只需要实现 labels，icons, colors 方法即可
-- 只读仓库接口一般情况下继承 RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface
-- 仓库接口一般情况下继承 RedJasmine\Support\Domain\Repositories\RepositoryInterface
-
-## 基础设施层
-- Infrastructure\Repositories\Eloquent 目录下为仓库实现，命名不需要以 Eloquent 开头，实现一般继承 RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository
-- Infrastructure\ReadRepositories\Mysql 目录下为自读仓库Mysql 实现，命名不需要以 Mysql 开头，继承 RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository
-  
-## 应用层
-- 应用层 Command 类  一般情况下 继承 领域层 Data 下的基本数据，或者是继承 RedJasmine\Support\Data\Data 类
-- 应用层 Query 类，一般情况下 继承 packages\support\src\Domain\Data\Queries 下的查询子类，列表查询 继承 PaginateQuery 类，单个查询继承 FindQuery 类，其他查询继承 Query 类。
-
-###  应用层 XXXApplicationService
-
-> 应用层 后缀 ApplicationService 类一般为 子模块的入口文件，
-
-要求
-- 子模块的xxApplicationService  一般情况下 继承   RedJasmine\Support\Application\ApplicationService
-- xxxApplicationService 类注入的属性 一般设置文 public 为 处理器支持调用
-- Commands 目录为 命令和命令处理器存放
-- Queries 目录为 查询 和查询处理器存放
-- 如果子模块功能只有简单的增删改查，ApplicationService 基类功能已经内置,不需要而外的命令和查询以及处理器
-- 处理器 CommandHandler 和 QueryHandler 需要配置在 $macros 宏中,支持更好的扩展 。
-- 应用层服务类 需要对每个处理器添加注释
-- 构建方法需要注入 仓库接口、只读仓库接口，模型转换器
-
+#### 1. 应用服务基类 (ApplicationService)
 ```php
 /**
+ * 应用服务基类，提供标准的CRUD操作和宏扩展能力
+ * 
+ * 内置方法：
+ * - create(Data $command): Model
+ * - update(Data $command): Model  
+ * - delete(Data $command): bool
+ * - find(FindQuery $query): Model
+ * - paginate(PaginateQuery $query): LengthAwarePaginator
+ */
+class ApplicationService
+{
+    use HasHooks;
+    use Macroable;
+    
+    protected static array $handlers = [
+        'create'   => CreateCommandHandler::class,
+        'update'   => UpdateCommandHandler::class,
+        'delete'   => DeleteCommandHandler::class,
+        'find'     => FindQueryHandler::class,
+        'paginate' => PaginateQueryHandler::class
+    ];
+    
+    // 自定义宏方法
+    protected static array $macros = [];
+}
+```
+
+#### 2. 仓库接口规范
+```php
+// 写操作仓库接口
+interface RepositoryInterface
+{
+    public function find($id);
+    public function store(Model $model);
+    public function update(Model $model);
+    public function delete(Model $model);
+}
+
+// 读操作仓库接口
+interface ReadRepositoryInterface
+{
+    public function modelQuery(?Query $query = null): Builder;
+    public function find(FindQuery $query): ?Model;
+    public function paginate(PaginateQuery $query): LengthAwarePaginator|Paginator;
+    public function withQuery(Closure $queryCallback): static;
+}
+```
+
+#### 3. 转换器接口
+```php
+interface TransformerInterface
+{
+    public function transform($data, $model): Model;
+}
+```
+
+## DDD 代码规范
+
+### 领域层 (Domain)
+
+#### 1. 领域模型规范
+
+##### 基础规范
+```php
+/**
+ * 领域模型采用充血模型策略
+ * - 业务逻辑封装在模型内部
+ * - 使用 Trait 复用通用功能
+ * - 支持领域事件分发
+ * - 实现相关接口规范
+ * - 使用雪花ID作为主键
+ * - 支持所属者信息管理
+ */
+class PromoterApply extends Model implements OperatorInterface, OwnerInterface
+{
+    use HasSnowflakeId;        // 雪花ID
+    use HasOperator;           // 操作人信息
+    use HasOwner;              // 所属者信息
+    use HasApproval;           // 审批功能
+    
+    /**
+     * 雪花ID配置 - 必须设置
+     */
+    public $incrementing = false;
+    
+    /**
+     * 是否使用短雪花ID（可选配置）
+     * true: 使用短雪花ID（13位）
+     * false: 使用标准雪花ID（19位）
+     * 默认为 false
+     */
+    public $uniqueShortId = false;
+    
+    /**
+     * 所属者列名配置（可选配置，默认为'owner'）
+     * 对应数据库字段：{ownerColumn}_type, {ownerColumn}_id, {ownerColumn}_nickname, {ownerColumn}_avatar
+     */
+    protected $ownerColumn = 'owner';
+    
+    /**
+     * 是否包含所属者昵称（可选配置）
+     * 为true时，会自动处理 owner_nickname 字段
+     */
+    protected $withOwnerNickname = true;
+    
+    /**
+     * 是否包含所属者头像（可选配置）
+     * 为true时，会自动处理 owner_avatar 字段
+     */
+    protected $withOwnerAvatar = false;
+    
+    /**
+     * 操作人配置
+     */
+    protected $withOperatorNickname = true;
+    protected $withOperatorAvatar = false;
+    
+    // 领域事件配置
+    protected $dispatchesEvents = [
+        'approvalPass'   => PromoterApplyApproved::class,
+        'approvalReject' => PromoterApplyRejected::class,
+    ];
+    
+    // 业务方法
+    public function approvalPass(ApprovalData $data): void
+    {
+        // 业务逻辑实现
+    }
+}
+```
+
+##### 完整模型示例
+```php
+/**
+ * 完整的领域模型示例
+ * 包含所属者、雪花ID、操作人、审批等功能
+ * 适用于复杂的业务场景
+ */
+class PromoterApply extends Model implements OwnerInterface, OperatorInterface
+{
+    use HasSnowflakeId;
+    use HasOwner;
+    use HasOperator;
+    use HasApproval;
+    
+    /**
+     * 雪花ID配置
+     */
+    public $incrementing = false;
+    public $uniqueShortId = false;
+    
+    /**
+     * 所属者配置
+     */
+    protected $ownerColumn = 'owner';
+    protected $withOwnerNickname = true;
+    protected $withOwnerAvatar = false;
+    
+    /**
+     * 操作人配置
+     */
+    protected $withOperatorNickname = true;
+    protected $withOperatorAvatar = false;
+    
+    /**
+     * 领域事件配置
+     */
+    protected $dispatchesEvents = [
+        'approvalPass'   => PromoterApplyApproved::class,
+        'approvalReject' => PromoterApplyRejected::class,
+        'approvalRevoke' => PromoterApplyRejected::class,
+    ];
+    
+    /**
+     * 类型转换配置
+     */
+    protected function casts(): array
+    {
+        return [
+            'extra'           => 'array',
+            'apply_method'    => PromoterApplyMethodEnum::class,
+            'apply_type'      => PromoterApplyTypeEnum::class,
+            'approval_method' => PromoterApprovalMethodEnum::class,
+            'approval_status' => ApprovalStatusEnum::class,
+            'apply_at'        => 'datetime',
+            'approval_at'     => 'datetime',
+        ];
+    }
+    
+    /**
+     * 关联关系
+     */
+    public function promoterLevel(): BelongsTo
+    {
+        return $this->belongsTo(PromoterLevel::class, 'level', 'level');
+    }
+    
+    public function promoter(): BelongsTo
+    {
+        return $this->belongsTo(Promoter::class, 'promoter_id', 'id');
+    }
+    
+    /**
+     * 业务方法
+     */
+    public function approvalPass(ApprovalData $data): void
+    {
+        $this->approval_at     = Carbon::now();
+        $this->approval_reason = $data->message;
+        $this->approver        = $data->approver;
+        
+        // 更新关联的 Promoter 状态和等级
+        if ($this->promoter) {
+            $this->promoter->level  = $this->level;
+            $this->promoter->status = PromoterStatusEnum::ENABLE;
+        }
+    }
+    
+    public function approvalReject(ApprovalData $data): void
+    {
+        $this->approval_at     = Carbon::now();
+        $this->approval_reason = $data->message;
+        $this->approver        = $data->approver;
+        
+        // 审核拒绝时的业务逻辑
+        if ($this->promoter && $this->apply_type === PromoterApplyTypeEnum::REGISTER) {
+            $this->promoter->disable();
+        }
+    }
+    
+    /**
+     * 查询作用域
+     */
+    public function scopePending(Builder $builder): Builder
+    {
+        return $builder->where('approval_status', ApprovalStatusEnum::PENDING);
+    }
+    
+    public function scopeOnlyPromoter(Builder $builder, Promoter $promoter): Builder
+    {
+        return $builder->where('promoter_id', $promoter->id);
+    }
+    
+    /**
+     * 所属者访问器（由 HasOwner Trait 提供）
+     * 返回 UserData 对象，包含 type, id, nickname, avatar
+     */
+    public function owner(): Attribute
+    {
+        // 由 HasOwner Trait 自动实现
+    }
+    
+    /**
+     * 查询作用域：只查询指定所属者的记录
+     */
+    public function scopeOnlyOwner(Builder $query, ?UserInterface $owner = null): Builder
+    {
+        // 由 HasOwner Trait 自动实现
+    }
+}
+```
+
+## 文档规范
+
+### 1. 文档结构要求
+
+#### 目录结构规范
+```
+docs/
+├── {domain}/                    # 领域文档目录
+│   ├── index.md                # 领域介绍文档（必需）
+│   ├── storage.md              # 存储层设计文档（必需）
+│   ├── {submodule}/            # 子模块文档目录
+│   │   ├── index.md            # 子模块介绍（必需）
+│   │   ├── model.puml          # 领域模型UML（必需）
+│   │   ├── events.puml         # 领域事件UML（可选）
+│   │   ├── sequence.puml       # 时序图UML（可选）
+│   │   └── rules.md            # 核心规则说明（可选）
+│   ├── *.puml                  # 领域级UML图（可选）
+│   └── assets/                 # 静态资源目录（可选）
+│       ├── images/             # 图片资源
+│       └── diagrams/           # 图表资源
+```
+
+#### 文件命名规范
+- **领域目录**：使用英文小写，如 `distribution`、`payment`、`user`
+- **子模块目录**：使用英文小写，如 `promoter`、`order`、`wallet`
+- **UML文件**：使用英文小写，如 `model.puml`、`events.puml`
+- **Markdown文件**：使用英文小写，如 `index.md`、`storage.md`
+
+### 2. 文档格式规范
+
+#### 2.1 文档头部配置规则
+- **必需配置项**：
+  - `title`：文档标题，使用中文
+  - `description`：文档描述，简要说明文档内容
+  - `outline`：大纲深度，设置为 `deep`
+  - `order`：文档排序，使用数字
+- **可选配置项**：
+  - `lastUpdated`：最后更新时间，设置为 `true`
+  - `tags`：文档标签，用于分类
+  - `author`：文档作者
+
+#### 2.2 概述部分规则
+- **概述内容**：必须包含领域的基本情况、主要职责、业务价值
+- **问题域**：列出领域要解决的核心问题
+- **业务价值**：说明领域为业务带来的价值
+- **语言要求**：使用清晰、准确的中文描述
+
+#### 2.3 核心能力描述规则
+- **分类要求**：按功能模块分类描述核心能力
+- **描述格式**：每个能力包含功能名称和具体说明
+- **数量要求**：核心能力数量控制在3-6个
+- **重点突出**：突出领域最核心、最重要的功能
+
+#### 2.4 领域参与角色规则
+- **分类要求**：必须区分内部角色和外部角色
+- **角色描述**：每个角色必须说明职责和权限
+- **角色数量**：内部角色控制在4-6个，外部角色控制在3-5个
+- **命名规范**：角色名称使用中文，职责描述清晰明确
+
+#### 2.5 连接领域规则
+- **分类要求**：必须区分上游领域和下游领域
+- **依赖说明**：说明与每个连接领域的依赖关系
+- **接口描述**：简要说明与连接领域的接口
+- **数量控制**：上下游领域各控制在3-5个
+
+#### 2.6 核心用例规则
+- **用例格式**：使用标准用例格式，包含参与者、前置条件、主流程、后置条件
+- **用例编号**：使用UC001、UC002等格式编号
+- **用例数量**：核心用例控制在3-5个
+- **流程描述**：主流程使用步骤列表，步骤清晰明确
+
+#### 2.7 统一语言表规则
+- **表格结构**：必须包含英文名称、中文名称、说明、示例四列
+- **术语数量**：控制在8-12个核心术语
+- **命名规范**：英文名称使用PascalCase，中文名称简洁明了
+- **示例要求**：每个术语必须提供使用示例
+
+#### 2.8 领域模型规则
+- **UML引用**：必须通过include方式引用UML文件
+- **模型说明**：必须提供核心实体的说明
+- **实体数量**：核心实体控制在5-8个
+- **关系描述**：说明实体间的主要关系
+
+### 3. UML 规范
+
+#### 3.1 命名规范
+- **类名**：必须使用中文，如 `分销员`、`佣金`、`推广订单`
+- **属性名**：必须使用中文，如 `用户ID`、`佣金金额`、`申请时间`
+- **方法名**：必须使用中文，如 `计算佣金()`、`审核申请()`、`更新状态()`
+- **UML关键字**：必须在注释中使用英文，如 `<< Entity >>`、`<< ValueObject >>`
+
+#### 3.2 文件组织规则
+- **文件格式**：使用.puml扩展名
+- **文件命名**：使用英文小写，如 `model.puml`、`events.puml`
+- **样式配置**：必须配置背景色、边框色、字体色等样式
+- **主题设置**：使用plain主题，确保清晰可读
+
+#### 3.3 引用方式规则
+- **引用格式**：使用 `<!--@include: ./filename.puml-->` 格式
+- **路径规范**：使用相对路径，避免绝对路径
+- **文件位置**：UML文件与引用文档在同一目录或子目录
+
+### 4. 子模块文档规范
+
+#### 4.1 子模块介绍文档规则
+- **文档结构**：必须包含概述、核心功能、业务流程、核心规则
+- **概述要求**：说明子模块的职责和重要性
+- **功能列表**：列出3-5个核心功能
+- **流程描述**：使用步骤列表描述主要业务流程
+- **规则说明**：列出3-5个核心业务规则
+
+#### 4.2 领域事件文档规则
+- **事件列表**：列出所有重要的领域事件
+- **事件命名**：使用中文命名，格式为"实体+动作+事件"
+- **事件处理**：说明每个事件的处理方式
+- **触发条件**：说明事件的触发条件
+
+#### 4.3 核心规则文档规则
+- **规则分类**：按业务类型分类规则
+- **规则格式**：使用编号列表，每个规则包含标题和详细说明
+- **规则数量**：每个分类控制在3-5个规则
+- **规则描述**：规则描述必须清晰、可执行
+
+### 5. 文档质量要求
+
+#### 5.1 内容要求
+- **准确性**：文档内容必须准确反映实际业务逻辑
+- **完整性**：覆盖所有重要的业务场景和规则
+- **一致性**：术语使用保持一致，避免歧义
+- **可读性**：使用清晰的语言，结构合理
+
+#### 5.2 更新要求
+- **及时性**：业务变更时及时更新文档
+- **版本控制**：记录文档的版本变更历史
+- **审核机制**：重要文档需要经过审核确认
+- **反馈机制**：建立文档反馈和改进机制
+
+#### 5.3 维护要求
+- **定期检查**：定期检查文档的准确性和完整性
+- **依赖管理**：及时更新文档中的依赖关系
+- **链接检查**：确保文档中的链接和引用有效
+- **格式统一**：保持文档格式的统一性
+
+## 测试规范
+
+### 1. 测试目录结构
+```
+tests/
+├── Feature/                    # 功能测试
+│   ├── {domain}/              # 按领域分组
+│   │   ├── {submodule}/       # 按子模块分组
+│   │   │   ├── Commands/      # 命令测试
+│   │   │   ├── Queries/       # 查询测试
+│   │   │   └── Services/      # 服务测试
+│   │   └── Integration/       # 集成测试
+└── Unit/                      # 单元测试
+    ├── Domain/                # 领域层测试
+    ├── Application/           # 应用层测试
+    └── Infrastructure/        # 基础设施层测试
+```
+
+### 2. 测试命名规范
+```php
+// 功能测试
+class PromoterApplyApprovalTest extends TestCase
+{
+    public function test_can_approve_promoter_apply(): void
+    {
+        // 测试实现
+    }
+    
+    public function test_cannot_approve_already_approved_apply(): void
+    {
+        // 测试实现
+    }
+}
+```
+
+## 代码质量规范
+
+### 1. 编码标准
+- 遵循 PSR-12 编码标准
+- 使用 PHP 8.3+ 新特性
+- 强制类型声明
+- 使用严格类型模式
+
+### 2. 命名规范
+- 类名：PascalCase
+- 方法名：camelCase
+- 属性名：camelCase
+- 常量：UPPER_SNAKE_CASE
+- 数据库字段：snake_case
+
+### 3. 注释规范
+```php
+/**
+ * 分销员申请应用服务
+ * 
+ * 负责处理分销员申请相关的业务逻辑，包括：
+ * - 申请提交
+ * - 申请审核
+ * - 申请查询
+ * 
  * @see PromoterApplyApprovalCommandHandler::handle()
  * @method approval(PromoterApplyApprovalCommand $command)
  */
- class  xxxApplicationService extends ApplicationService
- {
-     protected static $macros = [
-         'approval' => PromoterApplyApprovalCommandHandler::class,
-    ];
- }
-
+class PromoterApplyApplicationService extends ApplicationService
+{
+    // 实现代码
+}
 ```
-###  处理器 CommandHandler、QueryHandler
 
-- 处理器 一般注入protected XXXApplicationService $service, 在处理器中 使用 service 中的 注入的仓库实现
-
-## 用户接口层 UI
-- Resource 一般继承 RedJasmine\Support\UI\Http\Resources\Json\JsonResource
-- Http 下 为 每个角色的 Http 服务，一般角色有 Admin、User、Shop
-- 每个角色下 有 Api、Web 等入口
-- 角色下有一个文件 {模块}{角色}Route 文件作为，所有路由的管理器。如: PromoterUserRoute
+### 4. 异常处理规范
 ```php
 /**
- * api 理由
+ * 自定义异常应该继承 AbstractException
  */
-public static function api() : void
+class PromoterApplyNotFoundException extends AbstractException
 {
-      Route::apiResource('promoters/applies', PromoterApplyController::class)->names('distribution.api.user.promoter-applies')->only(['index', 'show']);
-
-}
-/**
- * Web 路由
- */
-public static function web() : void
-{
-  
+   
 }
 ```
 
+## 性能优化规范
 
-## 综合规则
-- 如果 Model  继承了 RedJasmine\Support\Domain\Models\BaseCategoryModel ,则 转换器、应用层服务等 基本上是继承 公共代码中的基础类。
-- Data DTO Command 涉及到 人员信息 一般直接使用  RedJasmine\Support\Contracts\UserInterface 如:
-```php
-use RedJasmine\Support\Contracts\UserInterface;
-class Data extends \RedJasmine\Support\Data\Data
-{
-    public UserInterface $inviter; // 邀请人
+### 1. 数据库优化
+- 合理使用索引
+- 避免 N+1 查询问题
+- 使用查询构建器优化复杂查询
+- 合理使用数据库事务
 
-}
-```
+### 2. 缓存策略
+- 使用 Redis 缓存热点数据
+- 实现缓存失效策略
+- 合理使用缓存标签
+
+### 3. 队列处理
+- 异步处理耗时操作
+- 使用 Laravel Horizon 监控队列
+- 实现失败重试机制
+
+## 安全规范
+
+### 1. 数据验证
+- 使用 Form Request 进行请求验证
+- 实现数据净化
+- 防止 SQL 注入和 XSS 攻击
+
+### 2. 权限控制
+- 使用 Laravel Policy 进行权限管理
+- 实现基于角色的访问控制
+- 记录操作日志
+
+### 3. 敏感数据处理
+- 加密敏感信息
+- 使用环境变量存储配置
+- 实现数据脱敏
+
+## 部署规范
+
+### 1. 环境配置
+- 使用 .env 文件管理环境变量
+- 区分开发、测试、生产环境
+- 使用 Docker 容器化部署
+
+### 2. 数据库迁移
+- 使用 Laravel Migration 管理数据库结构
+- 实现数据迁移脚本
+- 备份重要数据
+
+### 3. 监控和日志
+- 使用 Laravel Telescope 进行调试
+- 实现应用性能监控
+- 记录错误日志和访问日志
+
+## 版本管理规范
+
+### 1. Git 工作流
+- 使用 Git Flow 工作流
+- 创建功能分支进行开发
+- 使用 Pull Request 进行代码审查
+
+### 2. 版本号规范
+- 遵循语义化版本控制
+- 主版本号：不兼容的 API 修改
+- 次版本号：向下兼容的功能性新增
+- 修订号：向下兼容的问题修正
+
+### 3. 发布流程
+- 自动化测试
+- 代码质量检查
+- 文档更新
+- 版本标签创建
+
+## 最佳实践
+
+### 1. 领域建模
+- 深入理解业务领域
+- 识别核心概念和边界
+- 建立统一语言
+- 持续重构和优化
+
+### 2. 代码组织
+- 保持模块间的低耦合
+- 遵循单一职责原则
+- 使用依赖注入
+- 实现接口隔离
+
+### 3. 错误处理
+- 使用异常处理机制
+- 提供有意义的错误信息
+- 记录详细的错误日志
+- 实现优雅的降级策略
+
+### 4. 性能考虑
+- 合理使用缓存
+- 优化数据库查询
+- 使用异步处理
+- 监控系统性能
+
+这个规则说明书为 Red Jasmine Framework 项目提供了全面的开发规范和最佳实践指导，确保代码质量、可维护性和可扩展性。
+
+
