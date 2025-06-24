@@ -1,0 +1,67 @@
+{
+    "name": "red-jasmine/invitation",
+    "description": "邀请领域包 - 支持邀请码、邀请链接、海报模板等营销功能",
+    "keywords": [
+        "invitation",
+        "laravel",
+        "marketing",
+        "referral"
+    ],
+    "homepage": "https://github.com/red-jasmine/invitation",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/support": "^1.0",
+        "red-jasmine/user": "^1.0.x-dev",
+        "intervention/image": "^3.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Invitation\\": "src/",
+            "RedJasmine\\Invitation\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Invitation\\InvitationPackageServiceProvider",
+                "RedJasmine\\Invitation\\Domain\\InvitationDomainServiceProvider",
+                "RedJasmine\\Invitation\\Application\\InvitationApplicationServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+} 
