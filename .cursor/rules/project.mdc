@@ -101,22 +101,41 @@ packages/{domain}/
 ### Support 包核心组件
 
 #### 1. 应用服务基类 (ApplicationService)
+##### 规范
+- **基类功能**：提供标准的CRUD操作，支持宏扩展和Hook机制
+- **Trait组合**：使用 `HasHooks` 和 `Macroable` Trait
+- **静态配置**：定义 `$handlers` 数组配置默认处理器
+- **方法调用**：通过 `__call` 魔术方法实现动态方法调用
+- **依赖注入**：支持处理器的依赖注入
+- **Hook集成**：内置钩子机制，支持扩展点管理
+
+##### 代码示例
 ```php
+<?php
+
+namespace RedJasmine\Support\Application;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
+use RedJasmine\Support\Application\Commands\CreateCommandHandler;
+use RedJasmine\Support\Foundation\Hook\HasHooks;
+
 /**
- * 应用服务基类，提供标准的CRUD操作和宏扩展能力
+ * 应用服务基类
  * 
- * 内置方法：
- * - create(Data $command): Model
- * - update(Data $command): Model  
- * - delete(Data $command): bool
- * - find(FindQuery $query): Model
- * - paginate(PaginateQuery $query): LengthAwarePaginator
+ * @method Model create(Data $command)
+ * @method Model update(Data $command)
+ * @method bool delete(Data $command)
+ * @method Model find(FindQuery $query)
+ * @method LengthAwarePaginator|Paginator paginate(PaginateQuery $query)
  */
 class ApplicationService
 {
     use HasHooks;
-    use Macroable;
-    
+    use Macroable {
+        Macroable::__call as macroCall;
+    }
+
     protected static array $handlers = [
         'create'   => CreateCommandHandler::class,
         'update'   => UpdateCommandHandler::class,
@@ -124,38 +143,902 @@ class ApplicationService
         'find'     => FindQueryHandler::class,
         'paginate' => PaginateQueryHandler::class
     ];
-    
-    // 自定义宏方法
+
     protected static array $macros = [];
+    protected static string $modelClass = Model::class;
+
+    public function __call($method, $parameters)
+    {
+        if (!isset(static::getMacros()[$method])) {
+            throw new BadMethodCallException(sprintf(
+                'Method %s::%s does not exist.', static::class, $method
+            ));
+        }
+
+        $macro = static::getMacros()[$method];
+        $macro = $this->makeHandler($macro);
+        
+        if (method_exists($macro, 'handle')) {
+            return $this->callHandler($macro, $method, $parameters);
+        }
+        
+        return $macro(...$parameters);
+    }
+
+    public function callHandler($macro, $method, $parameters): mixed
+    {
+        return $this->hook(
+            $method,
+            count($parameters) === 1 ? $parameters[0] : $parameters,
+            fn() => $macro->handle(...$parameters)
+        );
+    }
+
+    protected function makeHandler($macro)
+    {
+        if (is_string($macro) && class_exists($macro)) {
+            return app($macro, ['service' => $this]);
+        }
+        return $macro;
+    }
 }
 ```
 
-#### 2. 仓库接口规范
+#### 2. 命令处理器基类 (CommandHandler)
+##### 规范
+- **基类功能**：提供命令处理的基础功能
+- **事务支持**：使用 `CanUseDatabaseTransactions` Trait
+- **钩子机制**：使用 `HasHooks` Trait 支持扩展点
+- **上下文管理**：使用 `HandleContext` 管理处理上下文
+- **验证和填充**：提供 `validate()` 和 `fill()` 扩展点
+
+##### 代码示例
 ```php
-// 写操作仓库接口
+<?php
+
+namespace RedJasmine\Support\Application\Commands;
+
+use RedJasmine\Support\Foundation\Hook\HasHooks;
+use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
+
+abstract class CommandHandler
+{
+    use HasHooks;
+    use CanUseDatabaseTransactions;
+
+    protected HandleContext $context;
+
+    public function __construct(protected ApplicationService $service)
+    {
+        $this->context = new HandleContext();
+    }
+
+    public function handle(Data $command): ?Model
+    {
+        $this->context->setCommand($command);
+        $this->context->setModel($this->newModel($command));
+        
+        $this->beginDatabaseTransaction();
+        try {
+            $this->service->hook('create.validate', $this->context, fn() => $this->validate($this->context));
+            $this->service->hook('create.fill', $this->context, fn() => $this->fill($this->context));
+            
+            $this->service->repository->store($this->context->getModel());
+            $this->commitDatabaseTransaction();
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
+
+        return $this->context->model;
+    }
+
+    protected function validate(HandleContext $context): void
+    {
+        // 子类实现具体验证逻辑
+    }
+
+    protected function fill(HandleContext $context): Model
+    {
+        if (property_exists($this->service, 'transformer')) {
+            if ($this->service->transformer instanceof TransformerInterface) {
+                $context->setModel($this->service->transformer->transform($context->getCommand(), $context->getModel()));
+            }
+        } else {
+            $context->getModel()->fill($context->getCommand()->all());
+        }
+
+        if ($context->model instanceof OwnerInterface && property_exists($context->getCommand(), 'owner')) {
+            $context->model->owner = $context->getCommand()->owner;
+        }
+        
+        return $context->getModel();
+    }
+}
+```
+
+#### 3. 仓库接口规范
+##### 写操作仓库接口
+```php
+<?php
+
+namespace RedJasmine\Support\Domain\Repositories;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * 仓储接口，提供标准的数据操作方法
+ * 主要用于抽象数据访问层，支持不同的数据存储机制
+ */
 interface RepositoryInterface
 {
+    /**
+     * 查找指定ID的记录
+     */
     public function find($id);
-    public function store(Model $model);
-    public function update(Model $model);
-    public function delete(Model $model);
-}
 
-// 读操作仓库接口
-interface ReadRepositoryInterface
-{
-    public function modelQuery(?Query $query = null): Builder;
-    public function find(FindQuery $query): ?Model;
-    public function paginate(PaginateQuery $query): LengthAwarePaginator|Paginator;
-    public function withQuery(Closure $queryCallback): static;
+    /**
+     * 存储模型实例到数据库
+     */
+    public function store(Model $model);
+
+    /**
+     * 更新模型实例的数据
+     */
+    public function update(Model $model);
+
+    /**
+     * 从数据库中删除模型实例
+     */
+    public function delete(Model $model);
 }
 ```
 
-#### 3. 转换器接口
+##### 只读仓库接口
 ```php
-interface TransformerInterface
+<?php
+
+namespace RedJasmine\Support\Domain\Repositories;
+
+use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+/**
+ * 读取仓库接口，定义数据读取的相关规范
+ * 提供模型查询能力，支持排序、字段选择、分页、关联数据等
+ */
+interface ReadRepositoryInterface
 {
-    public function transform($data, $model): Model;
+    /**
+     * 获取模型查询构建器
+     */
+    public function modelQuery(?Query $query = null): Builder;
+
+    /**
+     * 添加查询回调函数
+     */
+    public function withQuery(Closure $queryCallback): static;
+
+    /**
+     * 通过ID查找记录
+     */
+    public function find(FindQuery $query): ?Model;
+
+    /**
+     * 分页查询实体列表
+     */
+    public function paginate(PaginateQuery $query): LengthAwarePaginator|Paginator;
+}
+```
+
+#### 4. 仓库实现基类
+##### Eloquent仓库实现
+```php
+<?php
+
+namespace RedJasmine\Support\Infrastructure\Repositories\Eloquent;
+
+use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+
+/**
+ * Eloquent仓库基础实现
+ * @template TClass of Model
+ */
+class EloquentRepository implements RepositoryInterface
+{
+    /**
+     * @var class-string<TClass>
+     */
+    protected static string $eloquentModelClass = Model::class;
+
+    public function find($id)
+    {
+        return static::$eloquentModelClass::findOrFail($id);
+    }
+
+    public function store(Model $model): Model
+    {
+        $model->push();
+        return $model;
+    }
+
+    public function update(Model $model): void
+    {
+        $model->push();
+    }
+
+    public function delete(Model $model)
+    {
+        $model->delete();
+    }
+}
+```
+
+##### 只读仓库实现
+```php
+<?php
+
+namespace RedJasmine\Support\Infrastructure\ReadRepositories;
+
+use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
+use Spatie\QueryBuilder\QueryBuilder;
+
+/**
+ * 基于QueryBuilder的只读仓库实现
+ * 集成Spatie QueryBuilder，支持过滤、排序、字段选择、关联包含
+ */
+abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
+{
+    protected ?array $allowedFilters = null;
+    protected ?array $allowedIncludes = null;
+    protected ?array $allowedFields = null;
+    protected ?array $allowedSorts = null;
+    protected array $queryCallbacks = [];
+    protected mixed $defaultSort = '-id';
+
+    public function withQuery(Closure $queryCallback): static
+    {
+        $this->queryCallbacks[] = $queryCallback;
+        return $this;
+    }
+
+    public function query(?Query $query = null): QueryBuilder
+    {
+        $queryBuilder = QueryBuilder::for($this->modelQuery($query), $this->buildRequest($query));
+
+        // 配置允许的过滤器、字段、包含关系和排序字段
+        if (method_exists($this, 'allowedFilters') && $allowedFilters = $this->allowedFilters($query)) {
+            $queryBuilder->allowedFilters($allowedFilters);
+        }
+        if (method_exists($this, 'allowedIncludes') && $allowedIncludes = $this->allowedIncludes($query)) {
+            $queryBuilder->allowedIncludes($allowedIncludes);
+        }
+        if (method_exists($this, 'allowedSorts') && $allowedSorts = $this->allowedSorts($query)) {
+            $queryBuilder->allowedSorts($allowedSorts);
+        }
+
+        // 执行查询回调
+        $this->queryCallbacks($queryBuilder);
+
+        return $queryBuilder;
+    }
+
+    public function paginate(PaginateQuery $query): LengthAwarePaginator|Paginator
+    {
+        $queryBuilder = $this->query($query)->defaultSort($this->defaultSort);
+        return $query->isWithCount() ? $queryBuilder->paginate($query->perPage) : $queryBuilder->simplePaginate($query->perPage);
+    }
+}
+```
+
+#### 5. 数据传输对象基类 (Data)
+##### 规范
+- **基类继承**：继承 `Spatie\LaravelData\Data`
+- **映射配置**：使用 `SnakeCaseMapper` 进行命名映射
+- **主键管理**：提供主键相关的方法
+- **管道支持**：支持数据管道处理
+- **用户接口转换**：集成用户接口转换管道
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Data;
+
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\MapOutputName;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
+
+#[MapInputName(SnakeCaseMapper::class)]
+#[MapOutputName(SnakeCaseMapper::class)]
+class Data extends \Spatie\LaravelData\Data
+{
+    protected string $primaryKey = 'id';
+
+    public function getPrimaryKey(): string
+    {
+        return $this->primaryKey;
+    }
+
+    public function getKey()
+    {
+        return $this->{$this->primaryKey} ?? null;
+    }
+
+    public function setKey($key): void
+    {
+        $this->{$this->primaryKey} = $key;
+    }
+
+    public static function pipeline(): DataPipeline
+    {
+        $pipeline = parent::pipeline();
+        $pipeline->firstThrough(UserInterfacePipeline::class);
+        return $pipeline;
+    }
+}
+```
+
+#### 6. 钩子机制 (HasHooks)
+##### 规范
+- **Trait特性**：提供钩子功能的可复用特性
+- **前缀配置**：支持钩子名称前缀配置
+- **Hook注册**：支持静态和动态Hook注册
+- **管道执行**：通过Hook Facade执行钩子管道
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Foundation\Hook;
+
+use Closure;
+use RedJasmine\Support\Facades\Hook;
+
+/**
+ * 钩子能力Trait
+ */
+trait HasHooks
+{
+    /**
+     * 钩子前缀
+     */
+    public static string $hookNamePrefix;
+
+    /**
+     * 执行钩子操作
+     */
+    public function hook(string $hook, mixed $passable, Closure $destination): mixed
+    {
+        $this->registerDefaultHooks();
+        return Hook::hook(
+            $this->getHookName($hook),
+            $passable,
+            $destination
+        );
+    }
+
+    protected function registerDefaultHooks(): void
+    {
+        foreach ($this->hooks() as $hook => $pipelines) {
+            static::registerHook($hook, $pipelines);
+        }
+    }
+
+    protected function hooks(): array
+    {
+        return [];
+    }
+
+    public static function registerHook(string $hook, mixed $pipeline): void
+    {
+        if (static::getHookName($hook)) {
+            Hook::register(static::getHookName($hook), $pipeline);
+        }
+    }
+
+    public static function getHookName(string $hook): string
+    {
+        $prefix = static::class;
+        if (method_exists(static::class, 'hookNamePrefix')) {
+            $prefix = (string) static::hookNamePrefix();
+        } elseif (isset(static::$hookNamePrefix)) {
+            $prefix = static::$hookNamePrefix;
+        }
+        return $prefix.'.'.$hook;
+    }
+}
+```
+
+#### 7. 领域模型Trait组件
+##### HasSnowflakeId Trait
+```php
+<?php
+
+namespace RedJasmine\Support\Domain\Models\Traits;
+
+use RedJasmine\Support\Helpers\ID\Snowflake;
+
+/**
+ * 雪花ID生成器Trait
+ * @property-read bool $uniqueShortId
+ */
+trait HasSnowflakeId
+{
+    public function initializeHasSnowflakeId(): void
+    {
+        $this->usesUniqueIds = true;
+    }
+
+    public function uniqueIds(): array
+    {
+        return [$this->getKeyName()];
+    }
+
+    public function newUniqueId(): int
+    {
+        $hasUniqueShortId = property_exists($this, 'uniqueShortId') && (bool) $this->uniqueShortId;
+        return $hasUniqueShortId ? Snowflake::shortId() : Snowflake::buildId();
+    }
+
+    public function getIncrementing(): bool
+    {
+        return false;
+    }
+}
+```
+
+##### HasOwner Trait
+```php
+<?php
+
+namespace RedJasmine\Support\Domain\Models\Traits;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\UserData;
+
+/**
+ * 所有者管理Trait
+ * @property string $owner_type
+ * @property int $owner_id
+ */
+trait HasOwner
+{
+    public function owner(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => UserData::from([
+                'type' => $this->{$this->getOwnerKey('type')},
+                'id' => $this->{$this->getOwnerKey('id')},
+                'nickname' => $this->withOwnerNickname() ? ($this->{$this->getOwnerKey('nickname')} ?? null) : null,
+                'avatar' => $this->withOwnerAvatar() ? ($this->{$this->getOwnerKey('avatar')} ?? null) : null,
+            ]),
+            set: fn(?UserInterface $user = null) => array_merge([
+                $this->getOwnerKey('type') => $user?->getType(),
+                $this->getOwnerKey('id') => $user?->getID(),
+            ], $this->withOwnerNickname() ? [
+                $this->getOwnerKey('nickname') => $user?->getNickname(),
+            ] : [], $this->withOwnerAvatar() ? [
+                $this->getOwnerKey('avatar') => $user?->getAvatar(),
+            ] : [])
+        );
+    }
+
+    public function scopeOnlyOwner(Builder $query, ?UserInterface $owner = null): Builder
+    {
+        if ($owner) {
+            return $query->where($this->getOwnerColumn().'_type', $owner->getType())
+                        ->where($this->getOwnerColumn().'_id', $owner->getID());
+        }
+        return $query;
+    }
+
+    protected function getOwnerKey(string $key): string
+    {
+        return $this->getOwnerColumn().'_'.$key;
+    }
+}
+```
+
+#### 8. 控制器动作Trait (RestControllerActions)
+##### 规范
+- **组合模式**：组合查询和命令动作Trait
+- **RESTful设计**：提供标准的RESTful API方法
+- **权限验证**：集成权限验证机制
+- **资源转换**：支持API资源转换
+- **静态配置**：通过静态属性配置资源类和数据类
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\UI\Http\Controllers;
+
+trait RestControllerActions
+{
+    use RestQueryControllerActions;
+    use RestCommandControllerActions;
+}
+
+/**
+ * RESTful命令控制器动作
+ * @property ApplicationService $service
+ * @property string $resourceClass
+ * @property string $modelClass
+ * @property string $dataClass
+ */
+trait RestCommandControllerActions
+{
+    public function store(Request $request): JsonResource
+    {
+        if ($request instanceof FormRequest) {
+            $request->validated();
+        }
+        if (method_exists($this, 'authorize')) {
+            $this->authorize('create', static::$modelClass);
+        }
+
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner());
+        $dataClass = static::$createCommandClass ?? static::$dataClass;
+        $command = $dataClass::from($request);
+
+        $result = $this->service->create($command);
+        return new static::$resourceClass($result);
+    }
+
+    public function update($id, Request $request): JsonResource
+    {
+        if ($request instanceof FormRequest) {
+            $request->validated();
+        }
+        $model = $this->service->find(FindQuery::from(['id' => $id]));
+
+        if (method_exists($this, 'authorize')) {
+            $this->authorize('update', $model);
+        }
+        
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner());
+        $dataClass = static::$updateCommandClass ?? static::$dataClass;
+        $command = $dataClass::from($request);
+        $command->setKey($id);
+        
+        $result = $this->service->update($command);
+        return new (static::$resourceClass)($result);
+    }
+
+    public function destroy($id)
+    {
+        $model = $this->service->find(FindQuery::from(['id' => $id]));
+        if (method_exists($this, 'authorize')) {
+            $this->authorize('delete', $model);
+        }
+        
+        $command = new Data();
+        $command->setKey($id);
+        $this->service->delete($command);
+        
+        return static::success();
+    }
+}
+```
+
+#### 9. 值对象基类 (ValueObject)
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Domain\Models\ValueObjects\ValueObject`
+- **不可变性**：值对象应该是不可变的
+- **业务表达**：表达特定的业务概念
+- **类型安全**：使用强类型声明
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Domain\Models\ValueObjects;
+
+/**
+ * 值对象基类
+ * 所有值对象都应该继承此基类
+ */
+class ValueObject
+{
+    // 基础值对象功能
+}
+```
+
+#### 10. 处理上下文 (HandleContext)
+##### 规范
+- **上下文管理**：管理命令处理过程中的上下文信息
+- **命令存储**：存储和管理命令对象
+- **模型管理**：存储和管理领域模型对象
+- **链式调用**：支持链式方法调用
+- **类型安全**：使用强类型声明
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Application;
+
+use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Data\Data;
+
+/**
+ * 处理上下文类
+ * 用于在命令处理过程中管理上下文信息
+ */
+class HandleContext
+{
+    /**
+     * 命令对象
+     */
+    protected Data $command;
+
+    /**
+     * 领域模型
+     */
+    public Model $model;
+
+    public function getCommand(): Data
+    {
+        return $this->command;
+    }
+
+    public function setCommand(Data $command): HandleContext
+    {
+        $this->command = $command;
+        return $this;
+    }
+
+    public function setModel(Model $model): HandleContext
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    public function getModel(): Model
+    {
+        return $this->model;
+    }
+}
+```
+
+#### 11. 宏扩展机制 (MacroAble)
+##### 规范
+- **动态扩展**：支持运行时动态添加方法
+- **静态宏**：支持静态宏方法注册
+- **实例宏**：支持实例宏方法注册
+- **混入支持**：支持将其他对象的方法混入到当前类
+- **反射机制**：使用反射获取方法信息
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Application;
+
+use Closure;
+use ReflectionMethod;
+
+/**
+ * 宏扩展机制Trait
+ * 提供动态方法扩展能力
+ */
+trait MacroAble
+{
+    /**
+     * 注册的宏方法
+     */
+    protected static array $macros = [];
+
+    /**
+     * 注册自定义宏方法
+     */
+    public static function macro(string $name, callable|object $macro): void
+    {
+        static::$macros[$name] = $macro;
+    }
+
+    /**
+     * 混入其他对象的方法
+     */
+    public static function mixin(object $mixin, $replace = true)
+    {
+        $methods = (new \ReflectionClass($mixin))->getMethods(
+            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
+        );
+
+        foreach ($methods as $method) {
+            if ($replace || !static::hasMacro($method->name)) {
+                static::macro($method->name, $method->invoke($mixin));
+            }
+        }
+    }
+
+    /**
+     * 检查宏方法是否已注册
+     */
+    public static function hasMacro(string $name): bool
+    {
+        return isset(static::$macros[$name]);
+    }
+
+    /**
+     * 清除所有宏方法
+     */
+    public static function flushMacros(): void
+    {
+        static::$macros = [];
+    }
+
+    /**
+     * 动态调用宏方法
+     */
+    public function __call($method, $parameters)
+    {
+        if (!static::hasMacro($method)) {
+            throw new \BadMethodCallException(sprintf(
+                'Method %s::%s does not exist.', static::class, $method
+            ));
+        }
+
+        $macro = static::$macros[$method];
+
+        if ($macro instanceof Closure) {
+            $macro = $macro->bindTo($this, static::class);
+        }
+
+        return $macro(...$parameters);
+    }
+}
+```
+
+#### 12. 枚举助手 (EnumsHelper)
+##### 规范
+- **标签支持**：提供 `labels()` 方法返回枚举标签映射
+- **颜色支持**：提供 `colors()` 方法返回枚举颜色映射
+- **图标支持**：提供 `icons()` 方法返回枚举图标映射
+- **选项生成**：提供 `options()` 方法生成选项数组
+- **国际化支持**：集成Laravel的国际化功能
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Helpers\Enums;
+
+/**
+ * 枚举助手Trait
+ * 为枚举类提供通用功能
+ */
+trait EnumsHelper
+{
+    /**
+     * 获取枚举标签映射
+     */
+    public static function labels(): array
+    {
+        return [];
+    }
+
+    /**
+     * 获取枚举颜色映射
+     */
+    public static function colors(): array
+    {
+        return [];
+    }
+
+    /**
+     * 获取枚举图标映射
+     */
+    public static function icons(): array
+    {
+        return [];
+    }
+
+    /**
+     * 获取选项数组
+     */
+    public static function options(): array
+    {
+        $labels = static::labels();
+        $options = [];
+        
+        foreach (static::cases() as $case) {
+            $options[] = [
+                'value' => $case->value,
+                'label' => $labels[$case->value] ?? $case->value,
+                'color' => static::colors()[$case->value] ?? null,
+                'icon' => static::icons()[$case->value] ?? null,
+            ];
+        }
+        
+        return $options;
+    }
+
+    /**
+     * 获取枚举标签
+     */
+    public function getLabel(): string
+    {
+        return static::labels()[$this->value] ?? $this->value;
+    }
+
+    /**
+     * 获取枚举颜色
+     */
+    public function getColor(): ?string
+    {
+        return static::colors()[$this->value] ?? null;
+    }
+
+    /**
+     * 获取枚举图标
+     */
+    public function getIcon(): ?string
+    {
+        return static::icons()[$this->value] ?? null;
+    }
+}
+```
+
+#### 13. 用户接口管道 (UserInterfacePipeline)
+##### 规范
+- **数据管道**：实现数据传输对象的处理管道
+- **用户接口转换**：专门处理UserInterface类型的转换
+- **属性检测**：自动检测包含UserInterface的属性
+- **类型安全**：确保类型转换的安全性
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Support\Data;
+
+use Spatie\LaravelData\DataPipeline;
+use RedJasmine\Support\Contracts\UserInterface;
+
+/**
+ * 用户接口数据管道
+ * 专门处理UserInterface类型的数据转换
+ */
+class UserInterfacePipeline
+{
+    public function handle($data, $next)
+    {
+        // 处理用户接口类型转换
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if ($this->isUserInterfaceProperty($key, $value)) {
+                    $data[$key] = $this->transformUserInterface($value);
+                }
+            }
+        }
+
+        return $next($data);
+    }
+
+    protected function isUserInterfaceProperty(string $key, $value): bool
+    {
+        return str_contains($key, 'owner') || str_contains($key, 'operator') || str_contains($key, 'user');
+    }
+
+    protected function transformUserInterface($value): ?UserInterface
+    {
+        if ($value instanceof UserInterface) {
+            return $value;
+        }
+
+        if (is_array($value) && isset($value['type'], $value['id'])) {
+            return new UserData($value);
+        }
+
+        return null;
+    }
 }
 ```
 
