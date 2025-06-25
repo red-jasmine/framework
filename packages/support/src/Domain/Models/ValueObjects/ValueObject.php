@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Support\Domain\Models\ValueObjects;
 
-class ValueObject
+use RedJasmine\Support\Data\Data;
+
+class ValueObject extends Data
 {
 
 
