@@ -1,14 +1,4 @@
 @startuml 邀请领域模型
-!theme plain
-
-skinparam backgroundColor #FFFFFF
-skinparam classBackgroundColor #F8F9FA
-skinparam classBorderColor #DEE2E6
-skinparam classArrowColor #6C757D
-skinparam classFontColor #212529
-skinparam classFontSize 12
-skinparam classAttributeFontSize 10
-skinparam classStereotypeFontSize 10
 
 package "邀请领域" {
     
@@ -27,15 +17,11 @@ package "邀请领域" {
         +used_count: Integer
         +expired_at: DateTime
         --
-        +target_type: InvitationTargetTypeEnum
-        +target_url: String
-        +extra_data: JSON
+        +extra: JSON
         +description: String
         --
         +use(invitee, context): InvitationRecord
         +validateUsage(): void
-        +generateInvitationUrl(targetUrl): String
-        +getDefaultTargetUrl(): String
     }
     
     class "邀请记录-InvitationRecord" <<Entity>> {
@@ -50,7 +36,6 @@ package "邀请领域" {
         +invitee_nickname: String
         --
         +context: JSON
-        +rewards: JSON
         +invited_at: DateTime
         +completed_at: DateTime
         --
@@ -70,7 +55,7 @@ package "邀请领域" {
         +generateSystemCode(): String
         +createRandomCode(): String
     }
-    
+
     enum "邀请码类型-InvitationCodeTypeEnum" {
         SYSTEM
         CUSTOM

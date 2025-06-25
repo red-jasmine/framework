@@ -19,4 +19,9 @@ class ArticleUserRoute
 
     }
 
+    public static function web():void
+    {
+
+    }
+
 }

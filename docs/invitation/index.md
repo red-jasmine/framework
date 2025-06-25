@@ -159,8 +159,6 @@ order: 1
 | InvitationCode | 邀请码 | 用于邀请他人的唯一标识码 | INVITE123 |
 | Inviter | 邀请人 | 创建和分享邀请码的用户 | User{id: 1001} |
 | Invitee | 被邀请人 | 使用邀请码的用户 | User{id: 1002} |
-| CustomCode | 自定义邀请码 | 用户自定义的邀请码 | WELCOME2024 |
-| SystemCode | 系统生成邀请码 | 系统自动生成的邀请码 | A1B2C3D4 |
 | MaxUsage | 最大使用次数 | 邀请码可使用的最大次数 | 100 |
 | UsedCount | 已使用次数 | 邀请码已被使用的次数 | 25 |
 | ExpiredAt | 过期时间 | 邀请码失效的时间点 | 2024-12-31 23:59:59 |
@@ -170,8 +168,6 @@ order: 1
 | InvitationUrl | 邀请链接 | 包含邀请码的完整链接 | https://app.com/register?code=INVITE123 |
 | CodeStatus | 邀请码状态 | 邀请码的当前状态 | active, disabled, expired |
 | Context | 邀请上下文 | 邀请使用时的环境信息 | {source: "wechat", device: "mobile"} |
-| Rewards | 邀请奖励 | 邀请成功获得的奖励信息 | {points: 100, coupon: "WELCOME"} |
-| ConversionRate | 转化率 | 邀请码的使用转化率 | 65.5% |
 | Signature | 链接签名 | 用于验证邀请链接安全性的签名 | sha256hash |
 
 ## 领域模型
@@ -187,7 +183,7 @@ order: 1
 
 ### 枚举
 
-- **邀请码类型枚举**：系统生成 vs 自定义
+- **邀请码类型枚举**：系统生成 、 自定义
 - **邀请码状态枚举**：激活、禁用、过期、用尽
 - **邀请目标类型枚举**：注册页、商品页、自定义页面
 
