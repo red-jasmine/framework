@@ -20,7 +20,7 @@ class CreateInvitationCodeCommandHandler extends CommandHandler
     public function __construct(
         protected InvitationCodeApplicationService $service
     ) {
-        parent::__construct($service);
+
     }
 
     /**

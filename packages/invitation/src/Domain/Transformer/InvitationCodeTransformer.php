@@ -10,25 +10,22 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class InvitationCodeTransformer implements TransformerInterface
 {
     /**
-     * @param InvitationCodeData $data
-     * @param InvitationCode $model
+     * @param  InvitationCodeData  $data
+     * @param  InvitationCode  $model
+     *
      * @return InvitationCode
      */
-    public function transform($data, $model): Model
+    public function transform($data, $model) : Model
     {
-        $model->code = $data->code;
-        $model->code_type = $data->codeType;
-        $model->status = $data->status;
-        $model->max_usage = $data->maxUsage;
-        $model->used_count = $data->usedCount;
-        $model->expired_at = $data->expiredAt;
-        $model->extra_data = $data->extraData;
+        $model->code        = $data->code;
+        $model->code_type   = $data->codeType;
+        $model->status      = $data->status;
+        $model->max_usage   = $data->maxUsage;
+        $model->used_count  = $data->usedCount;
+        $model->expired_at  = $data->expiredAt;
+        $model->extra_data  = $data->extraData;
         $model->description = $data->description;
-        $model->inviter = $data->inviter;
-
-        if ($data->operator) {
-            $model->operator = $data->operator;
-        }
+        $model->owner     = $data->owner;
 
         return $model;
     }

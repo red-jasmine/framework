@@ -27,10 +27,6 @@ use RedJasmine\Support\Application\ApplicationService;
  * @method InvitationCode create(InvitationCodeData $command)
  * @see UseInvitationCodeCommandHandler::handle()
  * @method InvitationRecord use(UseInvitationCodeData $command)
- * @method InvitationCode|null findByCode(string $code)
- * @method bool codeExists(string $code, int|null $excludeId = null)
- * @method string generateInvitationUrl(string $code, string $targetUrl, string|null $targetType = null)
- * @method array getUserInvitationStatistics(mixed $userId, mixed $userType)
  */
 class InvitationCodeApplicationService extends ApplicationService
 {
