@@ -9,42 +9,16 @@ alwaysApply: true
 
 Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.3+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
 
-### 技术栈
-- **PHP**: 8.3+
-- **Laravel**: 12.0+
-- **数据库**: MySQL 8.0+
-- **缓存**: Redis
-- **队列**: Laravel Queue
-- **测试**: Pest PHP
-- **文档**: VitePress
+
 
 ## 目录结构
 
 ### 整体架构
 ```
 framework/
-├── packages/                    # 领域包目录
+├── packages/                   # 领域包目录
 │   ├── support/                # 公共支持包
-│   ├── user/                   # 用户领域
-│   ├── product/                # 商品领域
-│   ├── order/                  # 订单领域
-│   ├── payment/                # 支付领域
-│   ├── distribution/           # 分销领域
-│   ├── wallet/                 # 钱包领域
-│   ├── logistics/              # 物流领域
-│   ├── interaction/            # 互动领域
-│   ├── community/              # 社区领域
-│   ├── article/                # 文章领域
-│   ├── shopping/               # 购物车领域
-│   ├── invitation/             # 邀请领域
-│   ├── address/                # 地址领域
-│   ├── region/                 # 地区领域
-│   ├── captcha/                # 验证码领域
-│   ├── socialite/              # 社交登录领域
-│   ├── vip/                    # VIP领域
-│   ├── resource-usage/         # 资源使用领域
-│   ├── ecommerce/              # 电商领域
-│   ├── card/                   # 卡券领域
+│   ├── *                       # 各个业务领域包
 │   ├── admin/                  # 管理后台领域
 │   └── filament-*/             # Filament管理面板相关包
 ├── docs/                       # 文档目录
@@ -71,9 +45,9 @@ packages/{domain}/
 │   │   ├── Contracts/          # 领域契约
 │   │   └── Facades/            # 门面类
 │   ├── Application/            # 应用层
-│   │   ├── Commands/           # 命令定义和命令处理器
-│   │   ├── Queries/            # 查询定义和查询处理器
 │   │   └── Services/           # 应用服务
+│   │       ├── Commands/       # 命令定义和 命令处理器
+│   │       └── Queries/        # 查询定义和 查询处理器
 │   ├── Infrastructure/         # 基础设施层
 │   │   ├── Repositories/       # 仓库实现
 │   │   │   └── Eloquent/       # Eloquent实现
@@ -81,9 +55,9 @@ packages/{domain}/
 │   │       └── Mysql/          # MySQL实现
 │   ├── UI/                     # 用户接口层
 │   │   └── Http/               # HTTP接口
-│   │       ├── Admin/          # 管理员接口
-│   │       ├── User/           # 用户接口
-│   │       └── Shop/           # 商家接口
+│   │       ├── Admin/          # 管理员接口 （按需）
+│   │       ├── User/           # 用户接口 （按需）
+│   │       └── Shop/           # 商家接口（按需）
 │   └── Exceptions/             # 异常处理
 ├── config/                     # 配置文件
 ├── database/                   # 数据库相关
@@ -2024,6 +1998,32 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
 
 ### 用户接口层 (UI)
 
+#### Http 
+- **目录结构**：按角色划分，每个角色对应一个目录
+- **命名规范**：路由格式为 `{role}`
+- **路由文件**：定义路由文件 `{Domain}{Role}Route`
+```php
+class ArticleUserRoute
+{
+
+    public static function api() : void
+    {
+        Route::group(['prefix' => 'article'], function () {
+            Route::apiResource('articles', ArticleController::class);
+            Route::get('categories/tree', [ArticleCategoryController::class, 'tree']);
+            Route::apiResource('categories', ArticleCategoryController::class);
+        });
+
+    }
+
+    public static function web():void
+    {
+
+    }
+
+}
+```
+
 #### 控制器
 ##### 规范
 - **基类继承**：继承适当的基础控制器类
@@ -2073,7 +2073,7 @@ class ArticleController extends Controller
 
 #### API资源
 ##### 规范
-- **基类继承**：继承 `JsonResource` 或框架提供的基础资源类
+- **基类继承**：继承 `RedJasmine\Support\UI\Http\Resources\Json\JsonResource` 或框架提供的基础资源类
 - **数据转换**：将模型数据转换为API响应格式
 - **关联加载**：合理处理关联数据的加载和展示
 - **条件字段**：根据条件显示不同的字段
