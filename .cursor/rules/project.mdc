@@ -163,90 +163,26 @@ interface TransformerInterface
 
 ### 领域层 (Domain)
 
-#### 1. 领域模型规范
+#### 领域模型
+#####  规范
+- **领域模型**：领域模型采用充血模型策略
+- **业务封装**：业务逻辑封装在模型内部
+- **逻辑复用**：使用 Trait 复用通用功能
+- **事件处理**：支持领域事件分发
+- **接口实现**：实现相关接口规范
+- **ID生成**：通常雪花ID作为主键，可通过 HasSnowflakeId Trait，设置 public $incrementing = false;
+- **所属者信息管理**：支持所属者信息管理
+- **审批功能**：有审批需求时才添加审批功能
 
-##### 基础规范
+##### 代码示例
 ```php
-/**
- * 领域模型采用充血模型策略
- * - 业务逻辑封装在模型内部
- * - 使用 Trait 复用通用功能
- * - 支持领域事件分发
- * - 实现相关接口规范
- * - 使用雪花ID作为主键
- * - 支持所属者信息管理
- * - 有审批需求时才添加审批功能
- */
-class PromoterApply extends Model implements OperatorInterface, OwnerInterface
-{
-    use HasSnowflakeId;        // 雪花ID
-    use HasOperator;           // 操作人信息
-    use HasOwner;              // 所属者信息
-    //  use HasApproval;           // 审批功能
-    
-    /**
-     * 雪花ID配置 - 必须设置
-     */
-    public $incrementing = false;
-    
-    /**
-     * 是否使用短雪花ID（可选配置）
-     * true: 使用短雪花ID（13位）
-     * false: 使用标准雪花ID（19位）
-     * 默认为 false
-     */
-    public $uniqueShortId = false;
-    
-    /**
-     * 所属者列名配置（可选配置，默认为'owner'）
-     * 对应数据库字段：{ownerColumn}_type, {ownerColumn}_id, {ownerColumn}_nickname, {ownerColumn}_avatar
-     */
-    protected $ownerColumn = 'owner';
-    
-    /**
-     * 是否包含所属者昵称（可选配置）
-     * 为true时，会自动处理 owner_nickname 字段
-     */
-    protected $withOwnerNickname = true;
-    
-    /**
-     * 是否包含所属者头像（可选配置）
-     * 为true时，会自动处理 owner_avatar 字段
-     */
-    protected $withOwnerAvatar = false;
-    
-    /**
-     * 操作人配置
-     */
-    protected $withOperatorNickname = true;
-    protected $withOperatorAvatar = false;
-    
-    // 领域事件配置
-    protected $dispatchesEvents = [
-        'approvalPass'   => PromoterApplyApproved::class,
-        'approvalReject' => PromoterApplyRejected::class,
-    ];
-    
-    // 业务方法
-    public function approvalPass(ApprovalData $data): void
-    {
-        // 业务逻辑实现
-    }
-}
-```
 
-##### 完整模型示例
-```php
-/**
- * 完整的领域模型示例
- * 包含所属者、雪花ID、操作人、审批等功能
- * 适用于复杂的业务场景
- */
 class PromoterApply extends Model implements OwnerInterface, OperatorInterface
 {
     use HasSnowflakeId;
     use HasOwner;
     use HasOperator;
+    // 按需配置
     use HasApproval;
     
     /**
@@ -347,24 +283,69 @@ class PromoterApply extends Model implements OwnerInterface, OperatorInterface
         return $builder->where('promoter_id', $promoter->id);
     }
     
+}
+```
+
+
+#### 枚举值
+- **逻辑复用**：使用  RedJasmine\Support\Helpers\Enums\EnumsHelper Trait 复用通用功能
+- **其他**： 补充 labels,colors,icons 方法的配置
+
+##### 代码示例
+```php
+namespace RedJasmine\Article\Domain\Models\Enums;
+
+use RedJasmine\Support\Helpers\Enums\EnumsHelper;
+
+enum TagStatusEnum: string
+{
+
+    use EnumsHelper;
+
+    case DISABLE = 'disable';
+
+
+    case ENABLE = 'enable';
+
     /**
-     * 所属者访问器（由 HasOwner Trait 提供）
-     * 返回 UserData 对象，包含 type, id, nickname, avatar
+     * @return array
      */
-    public function owner(): Attribute
+    public static function labels() : array
     {
-        // 由 HasOwner Trait 自动实现
+        return [
+            self::ENABLE->value  => __('red-jasmine-article::article-tag.enums.status.disable'),
+            self::DISABLE->value => __('red-jasmine-article::article-tag.enums.status.enable'),
+        ];
+
     }
-    
-    /**
-     * 查询作用域：只查询指定所属者的记录
-     */
-    public function scopeOnlyOwner(Builder $query, ?UserInterface $owner = null): Builder
+
+
+    public static function colors() : array
     {
-        // 由 HasOwner Trait 自动实现
+        return [
+            self::ENABLE->value  => 'success',
+            self::DISABLE->value => 'danger',
+        ];
+
+    }
+
+    public static function icons() : array
+    {
+        return [
+            self::ENABLE->value  => 'heroicon-o-check-circle',
+            self::DISABLE->value => 'heroicon-o-no-symbol',
+        ];
     }
 }
 ```
+
+
+###  应用层 (Application)
+
+### 基础设施层 (Infrastructure)
+
+### 用户接口层 (UI)
+
 
 ## 文档规范
 

@@ -1,0 +1,191 @@
+@startuml 邀请领域模型
+!theme plain
+
+skinparam backgroundColor #FFFFFF
+skinparam classBackgroundColor #F8F9FA
+skinparam classBorderColor #DEE2E6
+skinparam classArrowColor #6C757D
+skinparam classFontColor #212529
+skinparam classFontSize 12
+skinparam classAttributeFontSize 10
+skinparam classStereotypeFontSize 10
+
+package "邀请领域" {
+    
+    class "邀请码-InvitationCode" <<Entity>> {
+        +id: BigInt
+        +code: String
+        +code_type: InvitationCodeTypeEnum
+        +status: InvitationCodeStatusEnum
+        --
+        +inviter_type: String
+        +inviter_id: BigInt
+        +inviter_nickname: String
+        +inviter_avatar: String
+        --
+        +max_usage: Integer
+        +used_count: Integer
+        +expired_at: DateTime
+        --
+        +target_type: InvitationTargetTypeEnum
+        +target_url: String
+        +extra_data: JSON
+        +description: String
+        --
+        +use(invitee, context): InvitationRecord
+        +validateUsage(): void
+        +generateInvitationUrl(targetUrl): String
+        +getDefaultTargetUrl(): String
+    }
+    
+    class "邀请记录-InvitationRecord" <<Entity>> {
+        +id: BigInt
+        +invitation_code_id: BigInt
+        --
+        +inviter_type: String
+        +inviter_id: BigInt
+        --
+        +invitee_type: String
+        +invitee_id: BigInt
+        +invitee_nickname: String
+        --
+        +context: JSON
+        +rewards: JSON
+        +invited_at: DateTime
+        +completed_at: DateTime
+        --
+        +complete(rewards): void
+    }
+    
+    class "邀请码配置-InvitationCodeConfig" <<ValueObject>> {
+        +codeType: InvitationCodeTypeEnum
+        +customCode: String
+        +maxUsage: Integer
+        +expiredAt: DateTime
+        +targetType: InvitationTargetTypeEnum
+        +targetUrl: String
+        +extraData: Array
+        --
+        +generateCode(): String
+        +generateSystemCode(): String
+        +createRandomCode(): String
+    }
+    
+    enum "邀请码类型-InvitationCodeTypeEnum" {
+        SYSTEM
+        CUSTOM
+    }
+    
+    enum "邀请码状态-InvitationCodeStatusEnum" {
+        ACTIVE
+        DISABLED
+        EXPIRED
+        EXHAUSTED
+    }
+    
+    enum "邀请目标类型-InvitationTargetTypeEnum" {
+        REGISTER
+        PRODUCT
+        CUSTOM
+    }
+    
+    class "用户接口-UserInterface" <<Interface>> {
+        +getMorphClass(): String
+        +getKey(): String
+        +getNickname(): String
+        +getAvatar(): String
+    }
+    
+    class "所属者接口-OwnerInterface" <<Interface>> {
+        +getOwner(): UserData
+        +setOwner(owner): void
+    }
+    
+    class "操作人接口-OperatorInterface" <<Interface>> {
+        +getCreator(): UserData
+        +getUpdater(): UserData
+        +setCreator(creator): void
+        +setUpdater(updater): void
+    }
+}
+
+package "应用层" {
+    class "邀请码应用服务-InvitationCodeApplicationService" <<ApplicationService>> {
+        +create(command): InvitationCode
+        +update(command): InvitationCode
+        +delete(command): boolean
+        +find(query): InvitationCode
+        +paginate(query): Paginator
+        +use(command): InvitationRecord
+        +generateUrl(query): String
+    }
+    
+    class "创建邀请码命令-CreateInvitationCodeCommand" <<Command>> {
+        +codeType: InvitationCodeTypeEnum
+        +customCode: String
+        +maxUsage: Integer
+        +expiredAt: DateTime
+        +targetType: InvitationTargetTypeEnum
+        +targetUrl: String
+        +inviter: UserInterface
+        +description: String
+        +extraData: Array
+        +operator: UserInterface
+    }
+    
+    class "使用邀请码命令-UseInvitationCodeCommand" <<Command>> {
+        +code: String
+        +invitee: UserInterface
+        +context: Array
+        +operator: UserInterface
+    }
+    
+    class "生成邀请链接查询-GenerateInvitationUrlQuery" <<Query>> {
+        +code: String
+        +targetUrl: String
+    }
+}
+
+package "领域事件" {
+    class "邀请码创建事件-InvitationCodeCreated" <<DomainEvent>> {
+        +invitationCode: InvitationCode
+    }
+    
+    class "邀请码使用事件-InvitationCodeUsed" <<DomainEvent>> {
+        +invitationCode: InvitationCode
+        +invitee: UserInterface
+        +context: Array
+    }
+    
+    class "邀请完成事件-InvitationCompleted" <<DomainEvent>> {
+        +invitationRecord: InvitationRecord
+    }
+}
+
+' 关联关系
+"邀请码-InvitationCode" ||--o{ "邀请记录-InvitationRecord" : "生成"
+"邀请码-InvitationCode" ..> "邀请码类型-InvitationCodeTypeEnum" : "使用"
+"邀请码-InvitationCode" ..> "邀请码状态-InvitationCodeStatusEnum" : "使用"
+"邀请码-InvitationCode" ..> "邀请目标类型-InvitationTargetTypeEnum" : "使用"
+"邀请码-InvitationCode" ..|> "所属者接口-OwnerInterface" : "实现"
+"邀请码-InvitationCode" ..|> "操作人接口-OperatorInterface" : "实现"
+
+"邀请记录-InvitationRecord" ..|> "操作人接口-OperatorInterface" : "实现"
+"邀请记录-InvitationRecord" }o-- "用户接口-UserInterface" : "邀请人/被邀请人"
+
+"邀请码配置-InvitationCodeConfig" ..> "邀请码类型-InvitationCodeTypeEnum" : "使用"
+"邀请码配置-InvitationCodeConfig" ..> "邀请目标类型-InvitationTargetTypeEnum" : "使用"
+
+"邀请码应用服务-InvitationCodeApplicationService" ..> "创建邀请码命令-CreateInvitationCodeCommand" : "处理"
+"邀请码应用服务-InvitationCodeApplicationService" ..> "使用邀请码命令-UseInvitationCodeCommand" : "处理"
+"邀请码应用服务-InvitationCodeApplicationService" ..> "生成邀请链接查询-GenerateInvitationUrlQuery" : "处理"
+
+"创建邀请码命令-CreateInvitationCodeCommand" }o-- "用户接口-UserInterface" : "邀请人/操作人"
+"使用邀请码命令-UseInvitationCodeCommand" }o-- "用户接口-UserInterface" : "被邀请人/操作人"
+
+' 事件关系
+"邀请码-InvitationCode" ..> "邀请码创建事件-InvitationCodeCreated" : "触发"
+"邀请码-InvitationCode" ..> "邀请码使用事件-InvitationCodeUsed" : "触发"
+"邀请记录-InvitationRecord" ..> "邀请完成事件-InvitationCompleted" : "触发"
+
+@enduml 
