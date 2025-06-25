@@ -173,116 +173,170 @@ interface TransformerInterface
 - **ID生成**：通常雪花ID作为主键，可通过 HasSnowflakeId Trait，设置 public $incrementing = false;
 - **所属者信息管理**：支持所属者信息管理
 - **审批功能**：有审批需求时才添加审批功能
+- **复杂关联**：在 boot 方法中处理复杂的多对多关联同步
+- **实例初始化**：重写 newInstance 方法进行模型初始化
+- **生命周期钩子**：使用 saving、deleting、restoring 等钩子处理业务逻辑
 
 ##### 代码示例
 ```php
+<?php
 
-class PromoterApply extends Model implements OwnerInterface, OperatorInterface
+namespace RedJasmine\Product\Domain\Product\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Product\Models\Extensions\ProductExtension;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+
+class Product extends Model implements OperatorInterface, OwnerInterface
 {
     use HasSnowflakeId;
     use HasOwner;
     use HasOperator;
-    // 按需配置
-    use HasApproval;
-    
-    /**
-     * 雪花ID配置
-     */
+    use SoftDeletes;
+
     public $incrementing = false;
-    public $uniqueShortId = false;
-    
-    /**
-     * 所属者配置
-     */
-    protected $ownerColumn = 'owner';
-    protected $withOwnerNickname = true;
-    protected $withOwnerAvatar = false;
-    
-    /**
-     * 操作人配置
-     */
-    protected $withOperatorNickname = true;
-    protected $withOperatorAvatar = false;
-    
-    /**
-     * 领域事件配置
-     */
-    protected $dispatchesEvents = [
-        'approvalPass'   => PromoterApplyApproved::class,
-        'approvalReject' => PromoterApplyRejected::class,
-        'approvalRevoke' => PromoterApplyRejected::class,
-    ];
-    
+
     /**
      * 类型转换配置
      */
     protected function casts(): array
     {
         return [
-            'extra'           => 'array',
-            'apply_method'    => PromoterApplyMethodEnum::class,
-            'apply_type'      => PromoterApplyTypeEnum::class,
-            'approval_method' => PromoterApprovalMethodEnum::class,
-            'approval_status' => ApprovalStatusEnum::class,
-            'apply_at'        => 'datetime',
-            'approval_at'     => 'datetime',
+            'product_type' => ProductTypeEnum::class,
+            'status' => ProductStatusEnum::class,
+            'is_multiple_spec' => 'boolean',
+            'is_brand_new' => 'boolean',
+            'price' => MoneyCast::class,
+            'market_price' => MoneyCast::class,
+            'on_sale_time' => 'datetime',
+            'modified_time' => 'datetime',
         ];
     }
-    
+
     /**
-     * 关联关系
+     * 模型生命周期钩子
      */
-    public function promoterLevel(): BelongsTo
+    protected static function boot(): void
     {
-        return $this->belongsTo(PromoterLevel::class, 'level', 'level');
+        parent::boot();
+
+        // 保存时处理关联关系
+        static::saving(callback: static function (Product $product) {
+            // 处理扩展产品分组关联
+            if ($product->relationLoaded('extendProductGroups')) {
+                if ($product->extendProductGroups?->count() > 0) {
+                    if (!is_array($product->extendProductGroups->first())) {
+                        $product->extendProductGroups()->sync($product->extendProductGroups);
+                    } else {
+                        $product->extendProductGroups()->sync($product->extendProductGroups->pluck('id')->toArray());
+                    }
+                    $product->load('extendProductGroups');
+                } else {
+                    $product->extendProductGroups()->sync([]);
+                }
+            }
+
+            // 处理标签关联
+            if ($product->relationLoaded('tags')) {
+                if ($product->tags?->count() > 0) {
+                    $product->tags()->sync($product->tags);
+                } else {
+                    $product->tags()->sync([]);
+                }
+                $product->load('tags');
+            }
+        });
+
+        // 删除时级联处理
+        static::deleting(callback: static function (Product $product) {
+            $product->extension()->delete();
+            $product->skus()->delete();
+        });
+
+        // 恢复时级联处理
+        static::restoring(callback: static function (Product $product) {
+            $product->skus()->withTrashed()->whereNot('status', ProductStatusEnum::DELETED)->restore();
+            $product->extension()->withTrashed()->restore();
+        });
     }
-    
-    public function promoter(): BelongsTo
-    {
-        return $this->belongsTo(Promoter::class, 'promoter_id', 'id');
-    }
-    
+
     /**
-     * 业务方法
+     * 新实例初始化
      */
-    public function approvalPass(ApprovalData $data): void
+    public function newInstance($attributes = [], $exists = false): static
     {
-        $this->approval_at     = Carbon::now();
-        $this->approval_reason = $data->message;
-        $this->approver        = $data->approver;
-        
-        // 更新关联的 Promoter 状态和等级
-        if ($this->promoter) {
-            $this->promoter->level  = $this->level;
-            $this->promoter->status = PromoterStatusEnum::ENABLE;
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setUniqueIds();
+            $instance->setRelation('extension', ProductExtension::make());
+            $instance->setRelation('skus', Collection::make());
+            $instance->setRelation('extendProductGroups', Collection::make());
+            $instance->setRelation('tags', Collection::make());
         }
+
+        return $instance;
     }
-    
-    public function approvalReject(ApprovalData $data): void
+
+    /**
+     * 关联关系定义
+     */
+    public function extension(): HasOne
     {
-        $this->approval_at     = Carbon::now();
-        $this->approval_reason = $data->message;
-        $this->approver        = $data->approver;
-        
-        // 审核拒绝时的业务逻辑
-        if ($this->promoter && $this->apply_type === PromoterApplyTypeEnum::REGISTER) {
-            $this->promoter->disable();
-        }
+        return $this->hasOne(ProductExtension::class, 'id', 'id');
     }
-    
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductTag::class, 'product_tag_pivots', 'product_id', 'product_tag_id')
+                    ->withTimestamps();
+    }
+
     /**
      * 查询作用域
      */
-    public function scopePending(Builder $builder): Builder
+    public function scopeOnSale(Builder $query)
     {
-        return $builder->where('approval_status', ApprovalStatusEnum::PENDING);
+        return $query->where('status', ProductStatusEnum::ON_SALE);
     }
-    
-    public function scopeOnlyPromoter(Builder $builder, Promoter $promoter): Builder
+
+    public function scopeWarehoused(Builder $query)
     {
-        return $builder->where('promoter_id', $promoter->id);
+        return $query->where('status', ProductStatusEnum::WAREHOUSED);
     }
-    
+
+    /**
+     * 业务方法
+     */
+    public function setStatus(ProductStatusEnum $status): void
+    {
+        if (!$this->isAllowSetStatus($status)) {
+            throw new ProductException('当前状态不允许设置为：' . $status->value);
+        }
+
+        $oldStatus = $this->status;
+        $this->status = $status;
+
+        // 状态变更时的业务逻辑
+        if ($status === ProductStatusEnum::ON_SALE) {
+            $this->on_sale_time = Carbon::now();
+        }
+    }
+
+    public function isAllowSale(): bool
+    {
+        return $this->status === ProductStatusEnum::ON_SALE 
+            && $this->stock > 0;
+    }
 }
 ```
 
@@ -339,12 +393,840 @@ enum TagStatusEnum: string
 }
 ```
 
+#### 值对象 (ValueObjects)
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Domain\Models\ValueObjects\ValueObject`
+- **不可变性**：值对象应该是不可变的，所有属性都是只读的
+- **类型安全**：使用强类型声明和PHPDoc注释
+- **命名规范**：值对象名格式为具体业务概念名称
+- **业务表达**：值对象应该表达特定的业务概念
 
-###  应用层 (Application)
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Domain\Product\Models\ValueObjects;
+
+use Illuminate\Support\Collection;
+use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
+
+class Property extends ValueObject
+{
+    /**
+     * 属性ID
+     * @var int
+     */
+    public int $pid;
+
+    /**
+     * 名称
+     * @var string
+     */
+    public string $name;
+
+    /**
+     * 单位
+     * @var string|null
+     */
+    public ?string $unit;
+    
+    /**
+     * 属性值
+     * @var Collection<PropValue>
+     */
+    public Collection $values;
+}
+```
+
+#### 领域服务 (Domain Services)
+##### 规范
+- **职责明确**：处理不属于任何实体或值对象的业务逻辑
+- **无状态性**：领域服务应该是无状态的
+- **业务聚焦**：专注于特定的业务逻辑处理
+- **命名规范**：服务名格式为 `{业务概念}{Service/Formatter/Calculator}`
+- **方法设计**：方法应该表达明确的业务意图
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Domain\Product;
+
+use RedJasmine\Product\Exceptions\ProductPropertyException;
+
+class PropertyFormatter
+{
+    /**
+     * 转换规格名称
+     *
+     * @param array $labels
+     * @return string
+     */
+    public function toNameString(array $labels): string
+    {
+        $labelString = [];
+        foreach ($labels as $label) {
+            $labelString[] = implode(':', [
+                $label['name'], 
+                filled($label['alias'] ?? '') ? $label['alias'] : $label['value']
+            ]);
+        }
+
+        return implode(';', $labelString);
+    }
+
+    /**
+     * 属性笛卡尔积
+     *
+     * @param array{pid:int,vid:int|int[]} $props
+     * @return string[]
+     */
+    public function crossJoinToString(array $props = []): array
+    {
+        $crossJoin = $this->crossJoinToArray($props);
+        $crossJoinTextList = [];
+        foreach ($crossJoin as $item) {
+            $crossJoinTextList[] = $this->toString($item);
+        }
+        return $crossJoinTextList;
+    }
+}
+```
+
+#### 自定义类型转换器 (Custom Casts)
+##### 规范
+- **接口实现**：实现 `Illuminate\Contracts\Database\Eloquent\CastsAttributes` 接口
+- **命名规范**：转换器名格式为 `{属性名}Cast`
+- **类型安全**：确保类型转换的安全性和正确性
+- **双向转换**：实现 `get` 和 `set` 方法进行双向转换
+- **异常处理**：处理转换过程中可能出现的异常
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Domain\Product\Casts;
+
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
+
+class SalePropsCast implements CastsAttributes
+{
+    public function get(Model $model, string $key, mixed $value, array $attributes)
+    {
+        // 实现从数据库到应用的转换逻辑
+        return json_decode($value, true);
+    }
+
+    public function set(Model $model, string $key, mixed $value, array $attributes)
+    {
+        // 实现从应用到数据库的转换逻辑
+        return json_encode($value);
+    }
+}
+```
+
+#### 领域仓库接口
+##### 规范
+- **接口继承**：继承 `RedJasmine\Support\Domain\Repositories\RepositoryInterface`
+- **方法注释**：使用 PHPDoc 注释指定返回类型
+- **命名规范**：接口名格式为 `{Entity}RepositoryInterface`
+- **职责单一**：每个仓库接口只负责一个聚合根的写操作
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Domain\Repositories;
+
+use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+
+/**
+ * @method Article find($id)
+ */
+interface ArticleRepositoryInterface extends RepositoryInterface
+{
+    // 可添加特定的写操作方法
+}
+```
+
+#### 领域只读仓库接口
+##### 规范
+- **接口继承**：继承 `RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface`
+- **命名规范**：接口名格式为 `{Entity}ReadRepositoryInterface`
+- **职责分离**：只负责数据查询，不涉及写操作
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Domain\Repositories;
+
+use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
+
+interface ArticleReadRepositoryInterface extends ReadRepositoryInterface
+{
+    // 可添加特定的查询方法
+}
+```
+
+#### 数据传输对象 (DTO)
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Data\Data`
+- **属性类型**：使用强类型声明，支持 PHP 8.3+ 类型系统
+- **枚举转换**：使用 `#[WithCast(EnumCast::class)]` 属性进行枚举转换
+- **命名规范**：DTO名格式为 `{Entity}Data`
+- **初始化值**：为属性提供合理的默认值
+- **用户类型属性**：使用 RedJasmine\Support\Contracts\UserInterface 作为属性类型
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Domain\Data;
+
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
+
+class ArticleData extends Data
+{
+    public UserInterface $owner;
+
+    public string $title;
+
+    #[WithCast(EnumCast::class, ContentTypeEnum::class)]
+    public ContentTypeEnum $contentType = ContentTypeEnum::RICH;
+
+    public string $content;
+
+    public ?string $image = null;
+
+    public ?string $description = null;
+
+    public ?string $keywords = null;
+
+    public ?int $categoryId = null;
+
+    public int $sort = 0;
+
+    public bool $isShow = false;
+
+    public array $tags = [];
+}
+```
+
+#### 复杂业务DTO
+##### 规范
+- **业务完整性**：DTO应包含完整的业务属性
+- **默认值策略**：为业务属性提供合理的默认值
+- **集合属性**：使用 Collection 或 array 类型处理集合数据
+- **值对象集成**：可包含值对象类型的属性
+- **构造函数初始化**：在构造函数中进行复杂的初始化逻辑
+- **静态工厂方法**：提供静态方法生成默认配置
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Domain\Product\Data;
+
+use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\Data;
+
+/**
+ * 产品数据类
+ * 该类用于表示产品的各种属性和信息
+ */
+class Product extends Data
+{
+    // 基础信息
+    public string $market = 'default';
+    public ProductTypeEnum $productType;
+    public UserInterface $owner;
+    public string $title;
+    public ?string $slogan;
+
+    // 状态和配置
+    public ProductStatusEnum $status = ProductStatusEnum::ON_SALE;
+    public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
+    public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
+
+    // 布尔属性
+    public bool $isAloneOrder = false;
+    public bool $isPreSale = false;
+    public bool $isBrandNew = false;
+    public bool $isMultipleSpec = false;
+    public bool $isCustomized = false;
+
+    // 数值属性
+    public int $unitQuantity = 1;
+    public int $deliveryTime = 0;
+    public ?int $sort = 0;
+    public int $stepLimit = 1;
+    public int $giftPoint = 0;
+
+    // ID关联
+    public int $categoryId = 0;
+    public int $brandId = 0;
+    public int $productGroupId = 0;
+
+    // 集合属性
+    public array $deliveryMethods = [];
+    public array $extendProductGroups = [];
+    public array $tags = [];
+    public array $services = [];
+
+    // 可选属性
+    public ?string $image = null;
+    public ?string $barcode = null;
+    public ?string $outerId = null;
+    public ?string $unit = null;
+    public ?string $productModel = null;
+    public ?int $freightTemplateId = null;
+
+    // 限制属性
+    public ?int $minLimit = 0;
+    public ?int $maxLimit = 0;
+    public OrderQuantityLimitTypeEnum $orderQuantityLimitType = OrderQuantityLimitTypeEnum::UNLIMITED;
+    public ?int $orderQuantityLimitNum = null;
+
+    // 供应商相关
+    public bool $isFromSupplier = false;
+    public ?UserInterface $supplier;
+    public ?int $supplierProductId = null;
+
+    // 内容属性
+    public ?string $tips = null;
+    public ?string $keywords = null;
+    public ?string $description = null;
+    public ?string $detail = null;
+
+    // 媒体资源
+    /** @var Medium[]|null */
+    public ?array $images = null;
+    /** @var Medium[]|null */
+    public ?array $videos = null;
+
+    // 售后服务
+    /** @var AfterSalesService[] */
+    public array $afterSalesServices = [];
+
+    // 基础属性
+    /** @var Collection<Property>|null */
+    public ?Collection $properties = null;
+
+    // 扩展属性
+    public ?array $tools;
+    public ?array $extra;
+    public ?string $remarks;
+
+    public function __construct()
+    {
+        $this->afterSalesServices = static::defaultAfterSalesServices();
+    }
+
+    public static function defaultAfterSalesServices(): array
+    {
+        return [
+            // 默认售后服务配置
+        ];
+    }
+}
+```
+
+#### 领域转换器
+##### 规范
+- **接口实现**：实现 `RedJasmine\Support\Domain\Transformer\TransformerInterface`
+- **方法定义**：`transform($data, $model): Model`
+- **命名规范**：转换器名格式为 `{Entity}Transformer`
+- **数据映射**：负责将DTO数据映射到领域模型
+- **关联处理**：处理模型关联关系的设置
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Domain\Transformer;
+
+use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Article\Domain\Data\ArticleData;
+use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+
+class ArticleTransformer implements TransformerInterface
+{
+    /**
+     * @param ArticleData $data
+     * @param Article $model
+     * @return Article
+     */
+    public function transform($data, $model): Article
+    {
+        $model->title = $data->title;
+        $model->image = $data->image;
+        $model->description = $data->description;
+        $model->keywords = $data->keywords;
+        $model->category_id = $data->categoryId ?? $model->category_id;
+        $model->sort = $data->sort;
+        $model->is_show = $data->isShow;
+        $model->extension->content_type = $data->contentType;
+        $model->extension->content = $data->content;
+        $model->setRelation('tags', collect($data->tags));
+
+        return $model;
+    }
+}
+```
+
+### 应用层 (Application)
+
+#### 应用服务
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Application\ApplicationService`
+- **依赖注入**：通过构造函数注入仓库和转换器，使用 public 可见性
+- **静态属性**：定义 `$modelClass`、`$macros` 和 `$hookNamePrefix`
+- **命名规范**：服务名格式为 `{Entity}ApplicationService`
+- **宏扩展**：使用 `$macros` 数组扩展自定义方法
+- **Hook机制**：使用 hook 方法实现扩展点管理
+- **PHPDoc注解**：使用 `@see` 和 `@method` 进行详细说明
+- **默认信息**：实现 `getDefaultModelWithInfo()` 方法配置默认加载关联
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Application\Product\Services;
+
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
+use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
+use RedJasmine\Support\Application\ApplicationService;
+
+/**
+ * 产品应用服务
+ * 
+ * 负责处理产品相关的业务逻辑，包括：
+ * - 产品创建
+ * - 产品更新
+ * - 状态管理
+ * 
+ * @see ProductCreateCommandHandler::handle()
+ * @method Product create(ProductCreateCommand $command)
+ * @see ProductUpdateCommandHandler::handle()
+ * @method void update(ProductUpdateCommand $command)
+ * @method void setStatus(ProductSetStatusCommand $command)
+ */
+class ProductApplicationService extends ApplicationService
+{
+    /**
+     * Hook前缀配置
+     * @var string
+     */
+    public static string $hookNamePrefix = 'product.application.product';
+
+    protected static string $modelClass = Product::class;
+
+    public function __construct(
+        public ProductRepositoryInterface $repository,
+        public ProductReadRepositoryInterface $readRepository
+    ) {
+    }
+
+    public function getDefaultModelWithInfo(): array
+    {
+        return ['extension', 'tags'];
+    }
+
+    protected static $macros = [
+        'create'    => ProductCreateCommandHandler::class,
+        'update'    => ProductUpdateCommandHandler::class,
+        'delete'    => ProductDeleteCommandHandler::class,
+        'setStatus' => ProductSetStatusCommandHandler::class,
+    ];
+}
+```
+
+#### 命令处理器
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Application\Commands\CommandHandler`
+- **依赖注入**：通过构造函数注入应用服务
+- **事务处理**：使用数据库事务确保数据一致性
+- **异常处理**：捕获并重新抛出异常，确保事务回滚
+- **命名规范**：处理器名格式为 `{Action}CommandHandler`
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Application\Services\Article\Commands;
+
+use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
+use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Exceptions\AbstractException;
+use Throwable;
+
+class ArticlePublishCommandHandler extends CommandHandler
+{
+    public function __construct(
+        protected ArticleApplicationService $service
+    ) {
+    }
+
+    /**
+     * @param ArticlePublishCommand $command
+     * @return bool
+     * @throws AbstractException
+     * @throws Throwable
+     */
+    public function handle(ArticlePublishCommand $command): bool
+    {
+        $this->beginDatabaseTransaction();
+
+        try {
+            $model = $this->service->repository->find($command->getKey());
+            $model->publish();
+            $this->service->repository->update($model);
+            
+            $this->commitDatabaseTransaction();
+        } catch (AbstractException $exception) {
+            $this->rollBackDatabaseTransaction();
+            throw $exception;
+        } catch (Throwable $throwable) {
+            $this->rollBackDatabaseTransaction();
+            throw $throwable;
+        }
+
+        return true;
+    }
+}
+```
+
+#### 查询处理器
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Application\Queries\QueryHandler`
+- **只读操作**：只进行数据查询，不进行写操作
+- **分页支持**：支持分页查询功能
+- **过滤器**：提供灵活的查询过滤器
+- **命名规范**：处理器名格式为 `{Action}QueryHandler`
+
+#### 命令处理器基类
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Application\Commands\CommandHandler`
+- **共享逻辑**：提供子类共用的验证和处理逻辑
+- **依赖注入**：注入相关的应用服务和领域服务
+- **命名规范**：基类名格式为 `{Entity}CommandHandler`
+- **验证方法**：提供统一的验证方法
+- **事务处理**：统一事务管理逻辑
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Application\Product\Services\Commands;
+
+use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
+use RedJasmine\Product\Domain\Product\PropertyFormatter;
+use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
+use RedJasmine\Product\Exceptions\ProductException;
+use RedJasmine\Support\Application\Commands\CommandHandler;
+use Throwable;
+
+/**
+ * 产品命令处理器基类
+ * 
+ * @method ProductApplicationService getService()
+ */
+class ProductCommandHandler extends CommandHandler
+{
+    public function __construct(
+        public ProductApplicationService $service,
+        protected BrandApplicationService $brandQueryService,
+        protected StockCommandService $stockCommandService,
+        protected PropertyFormatter $propertyFormatter,
+        protected PropertyValidateService $propertyValidateService,
+        protected ProductCategoryApplicationService $categoryQueryService,
+        protected ProductGroupApplicationService $groupQueryService,
+        protected ProductTransformer $productTransformer
+    ) {
+    }
+
+    /**
+     * 统一验证逻辑
+     *
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @return void
+     * @throws ProductException
+     */
+    protected function validate(\RedJasmine\Product\Domain\Product\Data\Product $command): void
+    {
+        $this->validateBrand($command);
+        $this->validateCategory($command);
+        $this->validateSellerCategory($command);
+    }
+
+    /**
+     * 品牌验证
+     *
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @return void
+     * @throws ProductException
+     */
+    protected function validateBrand(\RedJasmine\Product\Domain\Product\Data\Product $command): void
+    {
+        try {
+            if ($command->brandId && !$this->brandQueryService->isAllowUse($command->brandId)) {
+                throw new ProductException('品牌不可使用');
+            }
+        } catch (Throwable $exception) {
+            throw new ProductException('品牌不可使用');
+        }
+    }
+
+    /**
+     * 库存处理逻辑
+     *
+     * @param Product $product
+     * @param \RedJasmine\Product\Domain\Product\Data\Product $command
+     * @return void
+     * @throws Throwable
+     */
+    protected function handleStock(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command): void
+    {
+        $skuCommand = $command->skus?->keyBy('properties');
+
+        foreach ($product->skus as $sku) {
+            $stock = $sku->deleted_at ? 0 : ($skuCommand[$sku->properties]?->stock ?? $command->stock);
+
+            $stockCommand = new StockCommand();
+            $stockCommand->productId = $sku->product_id;
+            $stockCommand->actionType = ProductStockActionTypeEnum::RESET;
+            $stockCommand->skuId = $sku->id;
+            $stockCommand->actionStock = $stock;
+            $stockCommand->changeType = ProductStockChangeTypeEnum::SELLER;
+
+            $this->stockCommandService->reset($stockCommand);
+        }
+    }
+}
+```
 
 ### 基础设施层 (Infrastructure)
 
+#### 仓库实现 (Eloquent)
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository`
+- **接口实现**：实现对应的领域仓库接口
+- **静态属性**：定义 `$eloquentModelClass` 指定Eloquent模型
+- **命名规范**：实现类名格式为 `{Entity}Repository`
+- **职责专一**：只负责写操作的具体实现
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Infrastructure\Repositories\Eloquent;
+
+use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Article\Domain\Repositories\ArticleRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+
+class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
+{
+    protected static string $eloquentModelClass = Article::class;
+}
+```
+
+#### 只读仓库实现 (MySQL)
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository`
+- **接口实现**：实现对应的领域只读仓库接口
+- **静态属性**：定义 `$modelClass` 指定模型类
+- **过滤器配置**：实现 `allowedFilters()` 方法配置查询过滤器
+- **排序配置**：实现 `allowedSorts()` 方法配置允许的排序字段
+- **包含关联**：实现 `allowedIncludes()` 方法配置可包含的关联
+- **自定义查询**：可添加特定的查询方法，如 `findList()`
+- **命名规范**：实现类名格式为 `{Entity}ReadRepository`
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
+
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
+use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+
+class ProductReadRepository extends QueryBuilderReadRepository implements ProductReadRepositoryInterface
+{
+    public static $modelClass = Product::class;
+
+    /**
+     * 批量查询
+     *
+     * @param array $ids
+     * @return Product[]
+     */
+    public function findList(array $ids)
+    {
+        return $this->query()->whereIn('id', $ids)->get();
+    }
+
+    /**
+     * 允许的排序字段配置
+     */
+    public function allowedSorts(): array
+    {
+        return [
+            AllowedSort::field('price'),
+            AllowedSort::field('cost_price'),
+            AllowedSort::field('market_price'),
+            AllowedSort::field('sales'),
+            AllowedSort::field('stock'),
+            AllowedSort::field('on_sale_time'),
+            AllowedSort::field('modified_time'),
+        ];
+    }
+
+    /**
+     * 允许的过滤器配置
+     */
+    public function allowedFilters(): array
+    {
+        return [
+            AllowedFilter::partial('title'),
+            AllowedFilter::exact('id'),
+            AllowedFilter::exact('market'),
+            AllowedFilter::exact('owner_type'),
+            AllowedFilter::exact('owner_id'),
+            AllowedFilter::exact('product_type'),
+            AllowedFilter::exact('status'),
+            AllowedFilter::exact('brand_id'),
+            AllowedFilter::exact('category_id'),
+            AllowedFilter::exact('product_group_id'),
+            AllowedFilter::exact('barcode'),
+            AllowedFilter::exact('product_model'),
+        ];
+    }
+
+    /**
+     * 允许包含的关联配置
+     */
+    public function allowedIncludes(): array
+    {
+        return [
+            'extension',
+            'services',
+            'skus',
+            'brand',
+            'category',
+            'productGroups',
+            'extendProductGroups',
+            'series',
+            'tags',
+        ];
+    }
+}
+```
+
 ### 用户接口层 (UI)
+
+#### 控制器
+##### 规范
+- **基类继承**：继承适当的基础控制器类
+- **RestfulActions**：使用 `RestControllerActions` Trait 提供标准CRUD操作
+- **静态属性配置**：定义资源类、查询类、模型类和数据类
+- **依赖注入**：通过构造函数注入应用服务
+- **权限控制**：实现 `authorize()` 方法进行权限验证
+- **查询作用域**：在构造函数中设置查询作用域
+- **命名规范**：控制器名格式为 `{Entity}Controller`
+
+##### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\UI\Http\Admin\Api\Controllers;
+
+use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
+use RedJasmine\Article\Application\Services\Article\Queries\PaginateQuery;
+use RedJasmine\Article\Domain\Data\ArticleData as Data;
+use RedJasmine\Article\Domain\Models\Article as Model;
+use RedJasmine\Article\UI\Http\User\Api\Resources\ArticleResource as Resource;
+use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
+
+class ArticleController extends Controller
+{
+    protected static string $resourceClass      = Resource::class;
+    protected static string $paginateQueryClass = PaginateQuery::class;
+    protected static string $modelClass         = Model::class;
+    protected static string $dataClass          = Data::class;
+
+    use RestControllerActions;
+
+    public function __construct(
+        protected ArticleApplicationService $service,
+    ) {
+        $this->service->readRepository->withQuery(function ($query) {
+            $query->onlyOwner($this->getOwner());
+        });
+    }
+
+    public function authorize($ability, $arguments = []): bool
+    {
+        return true;
+    }
+}
+```
+
+#### API资源
+##### 规范
+- **基类继承**：继承 `JsonResource` 或框架提供的基础资源类
+- **数据转换**：将模型数据转换为API响应格式
+- **关联加载**：合理处理关联数据的加载和展示
+- **条件字段**：根据条件显示不同的字段
+- **命名规范**：资源类名格式为 `{Entity}Resource`
+
+#### 请求验证
+##### 规范
+- **基类继承**：继承 `FormRequest` 或框架提供的基础请求类
+- **验证规则**：定义 `rules()` 方法返回验证规则
+- **错误消息**：定义 `messages()` 方法返回自定义错误消息
+- **数据准备**：实现 `prepareForValidation()` 方法准备验证数据
+- **命名规范**：请求类名格式为 `{Action}{Entity}Request`
+
+## 异常处理规范
+
+### 领域异常
+#### 规范
+- **基类继承**：继承 `RedJasmine\Support\Exceptions\AbstractException`
+- **命名规范**：异常类名格式为 `{Entity}Exception`
+- **错误码**：定义明确的错误码
+- **错误消息**：提供清晰的错误描述
+- **语言支持**：支持多语言错误消息
+
+#### 代码示例
+```php
+<?php
+
+namespace RedJasmine\Article\Exceptions;
+
+use RedJasmine\Support\Exceptions\AbstractException;
+
+class ArticleException extends AbstractException
+{
+    // 可添加特定的异常处理逻辑
+}
+```
 
 
 ## 文档规范
@@ -434,239 +1316,4 @@ docs/
 
 #### 3.1 命名规范
 - **类名**：必须使用中文，如 `分销员`、`佣金`、`推广订单`
-- **属性名**：必须使用中文，如 `用户ID`、`佣金金额-CommissionAmount`、`申请时间-ApplyTime`
-- **方法名**：必须使用中文，如 `计算佣金-CalculateCommission()`、`审核申请-ReviewApplication()`
-- **UML关键字**：必须在注释中使用英文，如 `<< Promoter >>`、`<< Commission >>`
-
-#### 3.2 文件组织规则
-- **文件格式**：使用.puml扩展名
-- **文件命名**：使用英文小写，如 `model.puml`、`events.puml`
-- **样式配置**：必须配置背景色、边框色、字体色等样式
-- **主题设置**：使用plain主题，确保清晰可读
-
-#### 3.3 引用方式规则
-- **引用格式**：使用 `<!--@include: ./filename.puml-->` 格式
-- **路径规范**：使用相对路径，避免绝对路径
-- **文件位置**：UML文件与引用文档在同一目录或子目录
-
-### 4. 子模块文档规范
-
-#### 4.1 子模块介绍文档规则
-- **文档结构**：必须包含概述、核心功能、业务流程、核心规则
-- **概述要求**：说明子模块的职责和重要性
-- **功能列表**：列出3-5个核心功能
-- **流程描述**：使用步骤列表描述主要业务流程
-- **规则说明**：列出3-5个核心业务规则
-
-#### 4.2 领域事件文档规则
-- **事件列表**：列出所有重要的领域事件
-- **事件命名**：使用中文命名，格式为"实体+动作+事件"
-- **事件处理**：说明每个事件的处理方式
-- **触发条件**：说明事件的触发条件
-
-#### 4.3 核心规则文档规则
-- **规则分类**：按业务类型分类规则
-- **规则格式**：使用编号列表，每个规则包含标题和详细说明
-- **规则数量**：每个分类控制在3-5个规则
-- **规则描述**：规则描述必须清晰、可执行
-
-### 5. 文档质量要求
-
-#### 5.1 内容要求
-- **准确性**：文档内容必须准确反映实际业务逻辑
-- **完整性**：覆盖所有重要的业务场景和规则
-- **一致性**：术语使用保持一致，避免歧义
-- **可读性**：使用清晰的语言，结构合理
-
-#### 5.2 更新要求
-- **及时性**：业务变更时及时更新文档
-- **版本控制**：记录文档的版本变更历史
-- **审核机制**：重要文档需要经过审核确认
-- **反馈机制**：建立文档反馈和改进机制
-
-#### 5.3 维护要求
-- **定期检查**：定期检查文档的准确性和完整性
-- **依赖管理**：及时更新文档中的依赖关系
-- **链接检查**：确保文档中的链接和引用有效
-- **格式统一**：保持文档格式的统一性
-
-## 测试规范
-
-### 1. 测试目录结构
-```
-tests/
-├── Feature/                    # 功能测试
-│   ├── {domain}/              # 按领域分组
-│   │   ├── {submodule}/       # 按子模块分组
-│   │   │   ├── Commands/      # 命令测试
-│   │   │   ├── Queries/       # 查询测试
-│   │   │   └── Services/      # 服务测试
-│   │   └── Integration/       # 集成测试
-└── Unit/                      # 单元测试
-    ├── Domain/                # 领域层测试
-    ├── Application/           # 应用层测试
-    └── Infrastructure/        # 基础设施层测试
-```
-
-### 2. 测试命名规范
-```php
-// 功能测试
-class PromoterApplyApprovalTest extends TestCase
-{
-    public function test_can_approve_promoter_apply(): void
-    {
-        // 测试实现
-    }
-    
-    public function test_cannot_approve_already_approved_apply(): void
-    {
-        // 测试实现
-    }
-}
-```
-
-## 代码质量规范
-
-### 1. 编码标准
-- 遵循 PSR-12 编码标准
-- 使用 PHP 8.3+ 新特性
-- 强制类型声明
-- 使用严格类型模式
-
-### 2. 命名规范
-- 类名：PascalCase
-- 方法名：camelCase
-- 属性名：camelCase
-- 常量：UPPER_SNAKE_CASE
-- 数据库字段：snake_case
-
-### 3. 注释规范
-```php
-/**
- * 分销员申请应用服务
- * 
- * 负责处理分销员申请相关的业务逻辑，包括：
- * - 申请提交
- * - 申请审核
- * - 申请查询
- * 
- * @see PromoterApplyApprovalCommandHandler::handle()
- * @method approval(PromoterApplyApprovalCommand $command)
- */
-class PromoterApplyApplicationService extends ApplicationService
-{
-    // 实现代码
-}
-```
-
-### 4. 异常处理规范
-```php
-/**
- * 自定义异常应该继承 AbstractException
- */
-class PromoterApplyNotFoundException extends AbstractException
-{
-   
-}
-```
-
-## 性能优化规范
-
-### 1. 数据库优化
-- 合理使用索引
-- 避免 N+1 查询问题
-- 使用查询构建器优化复杂查询
-- 合理使用数据库事务
-
-### 2. 缓存策略
-- 使用 Redis 缓存热点数据
-- 实现缓存失效策略
-- 合理使用缓存标签
-
-### 3. 队列处理
-- 异步处理耗时操作
-- 使用 Laravel Horizon 监控队列
-- 实现失败重试机制
-
-## 安全规范
-
-### 1. 数据验证
-- 使用 Form Request 进行请求验证
-- 实现数据净化
-- 防止 SQL 注入和 XSS 攻击
-
-### 2. 权限控制
-- 使用 Laravel Policy 进行权限管理
-- 实现基于角色的访问控制
-- 记录操作日志
-
-### 3. 敏感数据处理
-- 加密敏感信息
-- 使用环境变量存储配置
-- 实现数据脱敏
-
-## 部署规范
-
-### 1. 环境配置
-- 使用 .env 文件管理环境变量
-- 区分开发、测试、生产环境
-- 使用 Docker 容器化部署
-
-### 2. 数据库迁移
-- 使用 Laravel Migration 管理数据库结构
-- 实现数据迁移脚本
-- 备份重要数据
-
-### 3. 监控和日志
-- 使用 Laravel Telescope 进行调试
-- 实现应用性能监控
-- 记录错误日志和访问日志
-
-## 版本管理规范
-
-### 1. Git 工作流
-- 使用 Git Flow 工作流
-- 创建功能分支进行开发
-- 使用 Pull Request 进行代码审查
-
-### 2. 版本号规范
-- 遵循语义化版本控制
-- 主版本号：不兼容的 API 修改
-- 次版本号：向下兼容的功能性新增
-- 修订号：向下兼容的问题修正
-
-### 3. 发布流程
-- 自动化测试
-- 代码质量检查
-- 文档更新
-- 版本标签创建
-
-## 最佳实践
-
-### 1. 领域建模
-- 深入理解业务领域
-- 识别核心概念和边界
-- 建立统一语言
-- 持续重构和优化
-
-### 2. 代码组织
-- 保持模块间的低耦合
-- 遵循单一职责原则
-- 使用依赖注入
-- 实现接口隔离
-
-### 3. 错误处理
-- 使用异常处理机制
-- 提供有意义的错误信息
-- 记录详细的错误日志
-- 实现优雅的降级策略
-
-### 4. 性能考虑
-- 合理使用缓存
-- 优化数据库查询
-- 使用异步处理
-- 监控系统性能
-
-这个规则说明书为 Red Jasmine Framework 项目提供了全面的开发规范和最佳实践指导，确保代码质量、可维护性和可扩展性。
-
-
+- **属性名**：必须使用中文，如 `用户ID`、`佣金金额-CommissionAmount`
