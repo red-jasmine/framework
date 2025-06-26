@@ -20,8 +20,8 @@ class UserRegisterData extends Data
 
     /**
      * 更多上下文参数
-     * @var array
+     * @var array|null
      */
-    public array $context = [];
+    public ?array $context = [];
 
 }
