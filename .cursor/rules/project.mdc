@@ -1711,6 +1711,44 @@ class ProductApplicationService extends ApplicationService
 }
 ```
 
+
+#### 命令
+##### 规范
+- **基类继承**：继承领域层的基础DTO 或者 继承 `RedJasmine\Support\Data\Data`
+- **人员对象类属性**：类型定义为  `RedJasmine\Support\Contracts\UserInterface` 即可
+
+##### 示例
+```php
+use RedJasmine\Article\Domain\Data\ArticleData;
+
+class ArticleCreateCommand extends ArticleData
+{
+    public UserInterface $owner;
+}
+```
+
+
+#### 查询
+##### 规范
+- **基类继承**：继承 `RedJasmine\Support\Application\Queries\Query`
+- **分页查询继承**：继承 `RedJasmine\Support\Application\Queries\PaginationQuery`
+- **查找单个查询继承**：继承 `RedJasmine\Support\Application\Queries\FindQuery`
+- **命名规范**：查询名格式为 `{Entity}Query`
+
+#### 示例
+```php
+<?php
+
+namespace RedJasmine\Article\Application\Services\Article\Queries;
+
+use RedJasmine\Support\Application\Queries\PaginationQuery;
+
+class ArticleListQuery extends PaginationQuery
+{
+    
+}
+```
+
 #### 命令处理器
 ##### 规范
 - **基类继承**：继承 `RedJasmine\Support\Application\Commands\CommandHandler`
