@@ -7,22 +7,20 @@ use RedJasmine\Invitation\UI\Http\User\Api\Controllers\InvitationCodeController;
 
 class InvitationUserRoute
 {
-    public static function api(): void
+    public static function api() : void
     {
         Route::group(['prefix' => 'invitation'], function () {
             // 邀请码基础CRUD操作
-            Route::apiResource('codes', InvitationCodeController::class);
-            
-            // 邀请码使用相关
-            Route::post('codes/use', [InvitationCodeController::class, 'use']);
+            Route::apiResource('codes', InvitationCodeController::class)
+            ->only(['index', 'store', 'show']);
+
             Route::post('codes/generate-url', [InvitationCodeController::class, 'generateUrl']);
-            
-            // 邀请统计
-            Route::get('statistics', [InvitationCodeController::class, 'statistics']);
+
+
         });
     }
 
-    public static function web(): void
+    public static function web() : void
     {
         // Web路由定义（如果需要）
     }

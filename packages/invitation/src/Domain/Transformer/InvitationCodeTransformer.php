@@ -21,11 +21,10 @@ class InvitationCodeTransformer implements TransformerInterface
         $model->code_type   = $data->codeType;
         $model->status      = $data->status;
         $model->max_usage   = $data->maxUsage;
-        $model->used_count  = $data->usedCount;
         $model->expired_at  = $data->expiredAt;
-        $model->extra_data  = $data->extraData;
+        $model->extra       = $data->extra;
         $model->description = $data->description;
-        $model->owner     = $data->owner;
+        $model->owner       = $data->owner;
 
         return $model;
     }

@@ -15,11 +15,14 @@ use Throwable;
 /**
  * 创建邀请码命令处理器
  */
-class CreateInvitationCodeCommandHandler extends CommandHandler
+class InvitationCodeCreateCommandHandler extends CommandHandler
 {
     public function __construct(
         protected InvitationCodeApplicationService $service
-    ) {
+    )
+    {
+
+        $this->context = new HandleContext();
 
     }
 
@@ -32,23 +35,23 @@ class CreateInvitationCodeCommandHandler extends CommandHandler
     public function handle(InvitationCodeData $command): InvitationCode
     {
         $this->context->setCommand($command);
-        
+
         $this->beginDatabaseTransaction();
-        
+
         try {
             // 验证命令
             $this->service->hook('create.validate', $this->context, fn() => $this->validate($this->context));
-            
+
             // 创建模型
             $model = $this->newModel($command);
             $this->context->setModel($model);
-            
+
             // 填充数据
             $this->service->hook('create.fill', $this->context, fn() => $this->fill($this->context));
-            
+
             // 保存模型
             $this->service->repository->store($this->context->getModel());
-            
+
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
@@ -110,7 +113,7 @@ class CreateInvitationCodeCommandHandler extends CommandHandler
         }
 
         $context->setModel($model);
-        
+
         return $model;
     }
 

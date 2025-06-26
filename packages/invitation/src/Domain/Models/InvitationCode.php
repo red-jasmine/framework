@@ -4,6 +4,7 @@ namespace RedJasmine\Invitation\Domain\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +23,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * 邀请码领域模型
- * 
+ *
  * @property int $id
  * @property string $code
  * @property InvitationCodeTypeEnum $code_type
@@ -30,7 +31,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property int $max_usage
  * @property int $used_count
  * @property Carbon|null $expired_at
- * @property array|null $extra_data
+ * @property array|null $extra
  * @property string|null $description
  */
 class InvitationCode extends Model implements OwnerInterface, OperatorInterface
@@ -39,7 +40,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     use HasOwner;
     use HasOperator;
     use HasDateTimeFormatter;
-    use SoftDeletes;
+
 
     public $incrementing = false;
 
@@ -57,12 +58,12 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 类型转换配置
      */
-    protected function casts(): array
+    protected function casts() : array
     {
         return [
-            'code_type' => InvitationCodeTypeEnum::class,
-            'status' => InvitationCodeStatusEnum::class,
-            'max_usage' => 'integer',
+            'code_type'  => InvitationCodeTypeEnum::class,
+            'status'     => InvitationCodeStatusEnum::class,
+            'max_usage'  => 'integer',
             'used_count' => 'integer',
             'expired_at' => 'datetime',
             'extra_data' => 'array',
@@ -72,13 +73,13 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 模型初始化
      */
-    public function newInstance($attributes = [], $exists = false): static
+    public function newInstance($attributes = [], $exists = false) : static
     {
         $instance = parent::newInstance($attributes, $exists);
 
         if (!$instance->exists) {
-            $instance->status = InvitationCodeStatusEnum::ACTIVE;
-            $instance->max_usage = 0;
+            $instance->status     = InvitationCodeStatusEnum::ACTIVE;
+            $instance->max_usage  = 0;
             $instance->used_count = 0;
             $instance->setUniqueIds();
         }
@@ -89,7 +90,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 生命周期钩子
      */
-    protected static function boot(): void
+    protected static function boot() : void
     {
         parent::boot();
 
@@ -98,9 +99,9 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
             // 验证邀请码唯一性
             if ($invitationCode->isDirty('code')) {
                 $exists = static::where('code', $invitationCode->code)
-                    ->where('id', '!=', $invitationCode->id)
-                    ->exists();
-                
+                                ->where('id', '!=', $invitationCode->id)
+                                ->exists();
+
                 if ($exists) {
                     throw new InvitationException('邀请码已存在');
                 }
@@ -114,7 +115,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 关联：邀请记录
      */
-    public function records(): HasMany
+    public function records() : HasMany
     {
         return $this->hasMany(InvitationRecord::class, 'invitation_code_id');
     }
@@ -122,7 +123,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 查询作用域：激活状态
      */
-    public function scopeActive(Builder $query): Builder
+    public function scopeActive(Builder $query) : Builder
     {
         return $query->where('status', InvitationCodeStatusEnum::ACTIVE);
     }
@@ -130,7 +131,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 查询作用域：未过期
      */
-    public function scopeNotExpired(Builder $query): Builder
+    public function scopeNotExpired(Builder $query) : Builder
     {
         return $query->where(function (Builder $q) {
             $q->whereNull('expired_at')
@@ -141,7 +142,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 查询作用域：可用
      */
-    public function scopeAvailable(Builder $query): Builder
+    public function scopeAvailable(Builder $query) : Builder
     {
         return $query->active()->notExpired();
     }
@@ -149,14 +150,19 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 使用邀请码
      */
-    public function use(UserInterface $invitee, ?array $context = null, ?string $targetUrl = null, ?string $targetType = null): InvitationRecord
-    {
+    public function use(
+        UserInterface $invitee,
+        ?array $context = null,
+        ?string $targetUrl = null,
+        ?string $targetType = null
+    ) : InvitationRecord {
         if (!$this->canUse()) {
             throw new InvitationException('邀请码不可使用');
         }
 
         // 增加使用次数
-        $this->increment('used_count');
+
+        $this->used_count = $this->used_count + 1;
 
         // 检查是否用尽
         if ($this->max_usage > 0 && $this->used_count >= $this->max_usage) {
@@ -165,14 +171,16 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
         }
 
         // 创建邀请记录
-        $record = new InvitationRecord();
+        $record                     = new InvitationRecord();
         $record->invitation_code_id = $this->id;
-        $record->inviter = $this->owner;
-        $record->invitee = $invitee;
-        $record->context = $context;
-        $record->target_url = $targetUrl;
-        $record->target_type = $targetType;
-        $record->invited_at = Carbon::now();
+        $record->invitation_code    = $this->code;
+        $record->invitee            = $invitee;
+        $record->context            = $context;
+        $record->target_url         = $targetUrl;
+        $record->target_type        = $targetType;
+        $record->invited_at         = Carbon::now();
+        $this->setRelation('records', Collection::make());
+        $this->records->add($record);
 
         return $record;
     }
@@ -180,14 +188,14 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 生成邀请链接
      */
-    public function generateInvitationUrl(string $targetUrl, ?string $targetType = null): string
+    public function generateInvitationUrl(string $targetUrl, ?string $targetType = null) : string
     {
-        $config = config('invitation.link');
+        $config  = config('invitation.link');
         $baseUrl = rtrim($config['base_url'], '/');
-        $path = trim($config['path'], '/');
-        
+        $path    = trim($config['path'], '/');
+
         $params = [
-            'code' => $this->code,
+            'code'   => $this->code,
             'target' => $targetUrl,
         ];
 
@@ -211,7 +219,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 检查邀请码是否可用
      */
-    public function canUse(): bool
+    public function canUse() : bool
     {
         // 检查状态
         if ($this->status !== InvitationCodeStatusEnum::ACTIVE) {
@@ -234,7 +242,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 更新状态
      */
-    public function updateStatus(): void
+    public function updateStatus() : void
     {
         // 检查是否过期
         if ($this->expired_at && $this->expired_at->isPast()) {
@@ -257,7 +265,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 获取剩余使用次数
      */
-    public function getRemainingUsage(): int
+    public function getRemainingUsage() : int
     {
         if ($this->max_usage <= 0) {
             return -1; // 无限制
@@ -269,7 +277,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 检查是否无限制使用
      */
-    public function isUnlimited(): bool
+    public function isUnlimited() : bool
     {
         return $this->max_usage <= 0;
     }
@@ -277,7 +285,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 检查是否永久有效
      */
-    public function isPermanent(): bool
+    public function isPermanent() : bool
     {
         return $this->expired_at === null;
     }
@@ -285,16 +293,16 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 生成系统邀请码
      */
-    public static function generateSystemCode(): string
+    public static function generateSystemCode() : string
     {
-        $config = config('invitation.code');
-        $length = $config['length'] ?? 8;
+        $config     = config('invitation.code');
+        $length     = $config['length'] ?? 8;
         $characters = $config['characters'] ?? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $prefix = $config['prefix'] ?? '';
-        $suffix = $config['suffix'] ?? '';
+        $prefix     = $config['prefix'] ?? '';
+        $suffix     = $config['suffix'] ?? '';
 
         do {
-            $code = $prefix . Str::random($length, $characters) . $suffix;
+            $code = $prefix.Str::random($length, $characters).$suffix;
         } while (static::where('code', $code)->exists());
 
         return $code;
@@ -303,16 +311,16 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 根据配置创建邀请码
      */
-    public static function createFromConfig(InvitationCodeConfig $config, UserInterface $inviter, ?UserInterface $operator = null): static
+    public static function createFromConfig(InvitationCodeConfig $config, UserInterface $inviter, ?UserInterface $operator = null) : static
     {
-        $invitationCode = new static();
-        $invitationCode->code_type = $config->codeType;
-        $invitationCode->max_usage = $config->maxUsage;
-        $invitationCode->expired_at = $config->expiredAt;
-        $invitationCode->extra_data = $config->extraData;
+        $invitationCode              = new static();
+        $invitationCode->code_type   = $config->codeType;
+        $invitationCode->max_usage   = $config->maxUsage;
+        $invitationCode->expired_at  = $config->expiredAt;
+        $invitationCode->extra_data  = $config->extraData;
         $invitationCode->description = $config->description;
-        $invitationCode->inviter = $inviter;
-        
+        $invitationCode->inviter     = $inviter;
+
         if ($operator) {
             $invitationCode->operator = $operator;
         }
@@ -330,32 +338,32 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 生成签名
      */
-    protected function generateSignature(array $params): string
+    protected function generateSignature(array $params) : string
     {
         $signatureKey = config('invitation.link.signature_key', config('app.key'));
-        
+
         // 移除签名参数
         unset($params['sig']);
-        
+
         // 排序参数
         ksort($params);
-        
+
         // 生成签名字符串
-        $signString = http_build_query($params) . $signatureKey;
-        
+        $signString = http_build_query($params).$signatureKey;
+
         return hash('sha256', $signString);
     }
 
     /**
      * 验证签名
      */
-    public function validateSignature(array $params): bool
+    public function validateSignature(array $params) : bool
     {
         if (!isset($params['sig'])) {
             return false;
         }
 
-        $signature = $params['sig'];
+        $signature         = $params['sig'];
         $expectedSignature = $this->generateSignature($params);
 
         return hash_equals($expectedSignature, $signature);
@@ -364,7 +372,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 是否已过期
      */
-    public function isExpired(): bool
+    public function isExpired() : bool
     {
         return $this->expired_at && $this->expired_at->isPast();
     }
@@ -372,7 +380,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 是否已用尽
      */
-    public function isExhausted(): bool
+    public function isExhausted() : bool
     {
         return $this->max_usage > 0 && $this->used_count >= $this->max_usage;
     }
@@ -380,7 +388,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 获取使用率
      */
-    public function getUsageRate(): float
+    public function getUsageRate() : float
     {
         if ($this->max_usage <= 0) {
             return 0.0;
@@ -392,7 +400,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 禁用邀请码
      */
-    public function disable(): void
+    public function disable() : void
     {
         $this->status = InvitationCodeStatusEnum::DISABLED;
     }
@@ -400,7 +408,7 @@ class InvitationCode extends Model implements OwnerInterface, OperatorInterface
     /**
      * 启用邀请码
      */
-    public function enable(): void
+    public function enable() : void
     {
         if ($this->isExpired()) {
             $this->status = InvitationCodeStatusEnum::EXPIRED;

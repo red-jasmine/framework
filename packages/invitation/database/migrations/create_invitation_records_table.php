@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('invitation_records', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('invitation_code_id')->comment('邀请码ID');
+            $table->string('invitation_code', 32)->comment('邀请码');
 
 
             // 被邀请人信息
@@ -33,12 +34,7 @@ return new class extends Migration {
             // 操作人信息
             $table->operator();
 
-            // 索引
-            $table->index('invitation_code_id', 'idx_invitation_code');
-            $table->index(['inviter_type', 'inviter_id'], 'idx_inviter');
-            $table->index(['invitee_type', 'invitee_id'], 'idx_invitee');
-            $table->index('invited_at', 'idx_invited_at');
-            $table->index('target_type', 'idx_target_type');
+           
         });
     }
 

@@ -11,13 +11,13 @@ class UseInvitationCodeData extends Data
 
     public UserInterface $invitee;
 
-    public ?array $context = null;
+    public ?array $context = [];
 
     public ?string $targetUrl = null;
 
     public ?string $targetType = null;
 
-    public ?UserInterface $operator = null;
+
 
     /**
      * 获取邀请渠道/来源

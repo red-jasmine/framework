@@ -21,17 +21,17 @@ return new class extends Migration
             $table->string('owner_type', 100)->comment('邀请人类型');
             $table->unsignedBigInteger('owner_id')->comment('邀请人ID');
             $table->string('owner_nickname', 100)->nullable()->comment('邀请人昵称');
-            $table->string('owner_avatar', 500)->nullable()->comment('邀请人头像');
-            
+           
+        
             // 使用控制
             $table->unsignedInteger('max_usage')->default(0)->comment('最大使用次数');
             $table->unsignedInteger('used_count')->default(0)->comment('已使用次数');
             $table->timestamp('expired_at')->nullable()->comment('过期时间');
-            
+            $table->string('description')->nullable()->comment('描述');
             // 扩展信息
             $table->json('extra')->nullable()->comment('扩展数据');
-            $table->string('description', 500)->nullable()->comment('描述');
             
+        
             // 操作人信息
 
             $table->operator();

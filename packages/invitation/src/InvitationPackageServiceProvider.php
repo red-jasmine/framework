@@ -4,12 +4,6 @@ namespace RedJasmine\Invitation;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RedJasmine\Invitation\Domain\Repositories\InvitationCodeReadRepositoryInterface;
-use RedJasmine\Invitation\Domain\Repositories\InvitationCodeRepositoryInterface;
-use RedJasmine\Invitation\Domain\Repositories\InvitationRecordRepositoryInterface;
-use RedJasmine\Invitation\Infrastructure\ReadRepositories\Mysql\InvitationCodeReadRepository;
-use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationCodeRepository;
-use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationRecordRepository;
 
 /**
  * 邀请包服务提供者
@@ -28,6 +22,10 @@ class InvitationPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-invitation')
             ->hasConfigFile()
+            ->hasRoutes([
+                'api',
+                'web',
+            ])
             ->hasTranslations()
             ->hasMigrations([
                 'create_invitation_codes_table',

@@ -14,30 +14,31 @@ use Throwable;
 /**
  * 使用邀请码命令处理器
  */
-class UseInvitationCodeCommandHandler extends CommandHandler
+class InvitationCodeUseCommandHandler extends CommandHandler
 {
     public function __construct(
         protected InvitationCodeApplicationService $service
     ) {
-
+        $this->context = new HandleContext();
     }
 
     /**
-     * @param UseInvitationCodeData $command
+     * @param  UseInvitationCodeData  $command
+     *
      * @return InvitationRecord
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(UseInvitationCodeData $command): InvitationRecord
+    public function handle(UseInvitationCodeData $command) : InvitationRecord
     {
         $this->context->setCommand($command);
-        
+
         $this->beginDatabaseTransaction();
-        
+
         try {
             // 验证命令
             $this->service->hook('use.validate', $this->context, fn() => $this->validate($this->context));
-            
+
             // 查找邀请码
             $invitationCode = $this->service->findByCode($command->code);
             if (!$invitationCode) {
@@ -52,6 +53,7 @@ class UseInvitationCodeCommandHandler extends CommandHandler
                 $command->targetType
             );
 
+            $this->service->repository->update($invitationCode);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();
@@ -67,7 +69,7 @@ class UseInvitationCodeCommandHandler extends CommandHandler
     /**
      * 验证命令
      */
-    protected function validate(HandleContext $context): void
+    protected function validate(HandleContext $context) : void
     {
         /** @var UseInvitationCodeData $command */
         $command = $context->getCommand();

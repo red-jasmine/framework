@@ -7,22 +7,8 @@ use RedJasmine\Support\Data\Data;
 /**
  * 分页查询
  */
-class PaginateQuery extends Data
+class PaginateQuery extends \RedJasmine\Support\Domain\Data\Queries\PaginateQuery
 {
-    public int $page = 1;
 
-    public int $perPage = 15;
 
-    public bool $withCount = true;
-
-    public ?array $with = null;
-
-    public ?array $filters = null;
-
-    public ?array $sorts = null;
-
-    public function isWithCount(): bool
-    {
-        return $this->withCount;
-    }
 } 

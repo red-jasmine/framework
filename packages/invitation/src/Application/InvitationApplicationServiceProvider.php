@@ -3,12 +3,15 @@
 namespace RedJasmine\Invitation\Application;
 
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Invitation\Application\Pipelines\UserRegister\UserRegisterPipeline;
 use RedJasmine\Invitation\Domain\Repositories\InvitationCodeReadRepositoryInterface;
 use RedJasmine\Invitation\Domain\Repositories\InvitationCodeRepositoryInterface;
 use RedJasmine\Invitation\Domain\Repositories\InvitationRecordRepositoryInterface;
 use RedJasmine\Invitation\Infrastructure\ReadRepositories\Mysql\InvitationCodeReadRepository;
 use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationCodeRepository;
 use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationRecordRepository;
+use RedJasmine\Support\Facades\Hook;
+
 
 /**
  * 邀请应用层服务提供者
@@ -23,6 +26,8 @@ class InvitationApplicationServiceProvider extends ServiceProvider
         $this->app->bind(InvitationCodeRepositoryInterface::class, InvitationCodeRepository::class);
         $this->app->bind(InvitationCodeReadRepositoryInterface::class, InvitationCodeReadRepository::class);
         $this->app->bind(InvitationRecordRepositoryInterface::class, InvitationRecordRepository::class);
+
+
     }
 
     /**
@@ -30,6 +35,6 @@ class InvitationApplicationServiceProvider extends ServiceProvider
      */
     public function boot() : void
     {
-        //
+        Hook::register('user.register.makeUser',UserRegisterPipeline::class);
     }
 } 

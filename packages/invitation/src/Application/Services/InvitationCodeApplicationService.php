@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Invitation\Application\Services;
 
-use RedJasmine\Invitation\Application\Services\Commands\CreateInvitationCodeCommandHandler;
-use RedJasmine\Invitation\Application\Services\Commands\UseInvitationCodeCommandHandler;
+use RedJasmine\Invitation\Application\Services\Commands\InvitationCodeCreateCommandHandler;
+use RedJasmine\Invitation\Application\Services\Commands\InvitationCodeUseCommandHandler;
 use RedJasmine\Invitation\Domain\Data\InvitationCodeData;
 use RedJasmine\Invitation\Domain\Data\UseInvitationCodeData;
 use RedJasmine\Invitation\Domain\Models\InvitationCode;
@@ -23,9 +23,9 @@ use RedJasmine\Support\Application\ApplicationService;
  * - 邀请链接生成
  * - 邀请统计查询
  * 
- * @see CreateInvitationCodeCommandHandler::handle()
+ * @see InvitationCodeCreateCommandHandler::handle()
  * @method InvitationCode create(InvitationCodeData $command)
- * @see UseInvitationCodeCommandHandler::handle()
+ * @see InvitationCodeUseCommandHandler::handle()
  * @method InvitationRecord use(UseInvitationCodeData $command)
  */
 class InvitationCodeApplicationService extends ApplicationService
@@ -50,8 +50,8 @@ class InvitationCodeApplicationService extends ApplicationService
     }
 
     protected static $macros = [
-        'create' => CreateInvitationCodeCommandHandler::class,
-        'use' => UseInvitationCodeCommandHandler::class,
+        'create' => InvitationCodeCreateCommandHandler::class,
+        'use' => InvitationCodeUseCommandHandler::class,
     ];
 
     /**
