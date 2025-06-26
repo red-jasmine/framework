@@ -1,11 +1,12 @@
 <?php
 
-namespace RedJasmine\Distribution\Application\PromoterBindUser;
+namespace RedJasmine\Distribution\Application\PromoterBindUser\Services;
 
-use RedJasmine\Distribution\Application\PromoterBindUser\Commands\PromoterBindUserCommand;
-use RedJasmine\Distribution\Application\PromoterBindUser\Commands\PromoterUnbindUserCommand;
-use RedJasmine\Distribution\Application\PromoterBindUser\Commands\PromoterBindUserCommandHandler;
-use RedJasmine\Distribution\Application\PromoterBindUser\Commands\PromoterUnbindUserCommandHandler;
+use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterBindUserCommand;
+use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterBindUserCommandHandler;
+use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterUnbindUserCommand;
+use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterUnbindUserCommandHandler;
+use RedJasmine\Distribution\Domain\Models\PromoterBindUs\Serviceser;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;

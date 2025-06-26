@@ -8,6 +8,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class DistributionPackageServiceProvider extends PackageServiceProvider
 {
+    public static string $name = 'red-jasmine-distribution';
     public function configurePackage(Package $package): void
     {
         /*

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Distribution\Application\PromoterBindUser\Commands;
+namespace RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands;
 
 use RedJasmine\Distribution\Application\PromoterBindUser\PromoterBindUserApplicationService;
 use RedJasmine\Distribution\Domain\Events\PromoterBindUser\PromoterUnbindUserEvent;

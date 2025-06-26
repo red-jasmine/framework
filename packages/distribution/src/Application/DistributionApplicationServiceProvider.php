@@ -2,9 +2,13 @@
 
 namespace RedJasmine\Distribution\Application;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use RedJasmine\Distribution\Application\PromoterBindUser\Listeners\UserRegisteredListener;
 use RedJasmine\Distribution\Domain\Repositories\PromoterApplyReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterApplyRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserReadRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
@@ -15,8 +19,6 @@ use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamRepositoryInterface;
-use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserReadRepositoryInterface;
-use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterApplyReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterBindUserReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterGroupReadRepository;
@@ -25,41 +27,46 @@ use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterOrderR
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterReadRepository;
 use RedJasmine\Distribution\Infrastructure\ReadRepositories\Mysql\PromoterTeamReadRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterApplyRepository;
+use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterBindUserRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterGroupRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterLevelRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterOrderRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterRepository;
 use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterTeamRepository;
-use RedJasmine\Distribution\Infrastructure\Repositories\Eloquent\PromoterBindUserRepository;
+use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 
-class DistributionApplicationServiceProvider extends ServiceProvider {
+class DistributionApplicationServiceProvider extends ServiceProvider
+{
 
     public function register() : void
     {
 
-        $this->app->bind(PromoterReadRepositoryInterface::class,PromoterReadRepository::class);
-        $this->app->bind(PromoterRepositoryInterface::class,PromoterRepository::class);
+        $this->app->bind(PromoterReadRepositoryInterface::class, PromoterReadRepository::class);
+        $this->app->bind(PromoterRepositoryInterface::class, PromoterRepository::class);
 
-        $this->app->bind(PromoterGroupReadRepositoryInterface::class,PromoterGroupReadRepository::class);
-        $this->app->bind(PromoterGroupRepositoryInterface::class,PromoterGroupRepository::class);
+        $this->app->bind(PromoterGroupReadRepositoryInterface::class, PromoterGroupReadRepository::class);
+        $this->app->bind(PromoterGroupRepositoryInterface::class, PromoterGroupRepository::class);
 
-        $this->app->bind(PromoterLevelReadRepositoryInterface::class,PromoterLevelReadRepository::class);
-        $this->app->bind(PromoterLevelRepositoryInterface::class,PromoterLevelRepository::class);
+        $this->app->bind(PromoterLevelReadRepositoryInterface::class, PromoterLevelReadRepository::class);
+        $this->app->bind(PromoterLevelRepositoryInterface::class, PromoterLevelRepository::class);
 
-        $this->app->bind(PromoterTeamReadRepositoryInterface::class,PromoterTeamReadRepository::class);
-        $this->app->bind(PromoterTeamRepositoryInterface::class,PromoterTeamRepository::class);
+        $this->app->bind(PromoterTeamReadRepositoryInterface::class, PromoterTeamReadRepository::class);
+        $this->app->bind(PromoterTeamRepositoryInterface::class, PromoterTeamRepository::class);
 
-        $this->app->bind(PromoterOrderReadRepositoryInterface::class,PromoterOrderReadRepository::class);
-        $this->app->bind(PromoterOrderRepositoryInterface::class,PromoterOrderRepository::class);
+        $this->app->bind(PromoterOrderReadRepositoryInterface::class, PromoterOrderReadRepository::class);
+        $this->app->bind(PromoterOrderRepositoryInterface::class, PromoterOrderRepository::class);
 
-        $this->app->bind(PromoterApplyReadRepositoryInterface::class,PromoterApplyReadRepository::class);
-        $this->app->bind(PromoterApplyRepositoryInterface::class,PromoterApplyRepository::class);
+        $this->app->bind(PromoterApplyReadRepositoryInterface::class, PromoterApplyReadRepository::class);
+        $this->app->bind(PromoterApplyRepositoryInterface::class, PromoterApplyRepository::class);
 
-        $this->app->bind(PromoterBindUserReadRepositoryInterface::class,PromoterBindUserReadRepository::class);
-        $this->app->bind(PromoterBindUserRepositoryInterface::class,PromoterBindUserRepository::class);
+        $this->app->bind(PromoterBindUserReadRepositoryInterface::class, PromoterBindUserReadRepository::class);
+        $this->app->bind(PromoterBindUserRepositoryInterface::class, PromoterBindUserRepository::class);
     }
 
-    public function boot(){
+    public function boot() : void
+    {
+
+        Event::listen(UserRegisteredEvent::class, UserRegisteredListener::class);
 
     }
 

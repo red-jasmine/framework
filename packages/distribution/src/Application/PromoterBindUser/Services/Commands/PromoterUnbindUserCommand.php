@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Distribution\Application\PromoterBindUser\Commands;
+namespace RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands;
 
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Contracts\UserInterface;

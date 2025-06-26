@@ -25,7 +25,7 @@ use RedJasmine\Support\Application\ApplicationService;
  * @see PromoterUpgradeCommandHandler::handle()
  * @method upgrade(PromoterUpgradeCommand $command)
  * @method findPromoterById(FindPromoterByIdQuery $query)
- * @method findByOwner(FindByOwnerQuery $query)
+ * @method Promoter  findByOwner(FindByOwnerQuery $query)
  */
 class PromoterApplicationService extends ApplicationService
 {

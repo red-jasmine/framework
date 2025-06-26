@@ -14,14 +14,14 @@ class PromoterBindUserReadRepository extends QueryBuilderReadRepository implemen
 {
     protected static string $modelClass = PromoterBindUser::class;
 
-    public function allowedIncludes(): array
+    public function allowedIncludes() : array
     {
         return [
             'promoter'
         ];
     }
 
-    public function allowedFilters(): array
+    public function allowedFilters() : array
     {
         return [
             AllowedFilter::exact('id'),
@@ -40,39 +40,49 @@ class PromoterBindUserReadRepository extends QueryBuilderReadRepository implemen
     /**
      * 查找用户与分销员的绑定关系
      */
-    public function findBindRelation(int $promoterId, UserInterface $user): ?PromoterBindUser
+    public function findBindRelation(int $promoterId, UserInterface $user) : ?PromoterBindUser
     {
         return $this->query()
-            ->where('promoter_id', $promoterId)
-            ->where('user_type', $user->getType())
-            ->where('user_id', $user->getID())
-            ->first();
+                    ->where('promoter_id', $promoterId)
+                    ->where('user_type', $user->getType())
+                    ->where('user_id', $user->getID())
+                    ->first();
     }
-    
+
     /**
      * 查找用户与分销员的有效绑定关系
      */
-    public function findActiveBind(int $promoterId, UserInterface $user): ?PromoterBindUser
+    public function findActiveBind(int $promoterId, UserInterface $user) : ?PromoterBindUser
     {
         return $this->query()
-            ->where('promoter_id', $promoterId)
-            ->where('user_type', $user->getType())
-            ->where('user_id', $user->getID())
-            ->where('status', PromoterBindUserStatusEnum::BOUND)
-            ->where('expires_at', '>', now())
-            ->first();
+                    ->where('promoter_id', $promoterId)
+                    ->where('user_type', $user->getType())
+                    ->where('user_id', $user->getID())
+                    ->where('status', PromoterBindUserStatusEnum::BOUND)
+                    ->where('expiration_time', '>', now())
+                    ->first();
     }
-    
+
     /**
      * 查找用户的当前有效绑定关系（不指定分销员）
      */
-    public function findUserActiveBind(UserInterface $user): ?PromoterBindUser
+    public function findUserActiveBind(UserInterface $user) : ?PromoterBindUser
     {
         return $this->query()
-            ->where('user_type', $user->getType())
-            ->where('user_id', $user->getID())
-            ->where('status', PromoterBindUserStatusEnum::BOUND)
-            ->where('expires_at', '>', now())
-            ->first();
+                    ->where('user_type', $user->getType())
+                    ->where('user_id', $user->getID())
+                    ->where('status', PromoterBindUserStatusEnum::BOUND)
+                    ->where('expiration_time', '>', now())
+                    ->first();
     }
+
+    public function findUser(UserInterface $user) : ?PromoterBindUser
+    {
+        return $this->query()
+                    ->where('user_type', $user->getType())
+                    ->where('user_id', $user->getID())
+                    ->first();
+    }
+
+
 } 

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Distribution\Application\PromoterBindUser\Commands;
+namespace RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands;
 
 use RedJasmine\Distribution\Domain\Data\PromoterBindUserData;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -21,9 +21,4 @@ class PromoterBindUserCommand extends PromoterBindUserData
      * 绑定原因/来源
      */
     public ?string $bindReason = null;
-
-    /**
-     * 邀请码
-     */
-    public ?string $invitationCode = null;
 } 

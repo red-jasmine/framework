@@ -17,10 +17,6 @@ return new class extends Migration {
             $table->timestamp('bind_time')->comment('绑定时间');
             $table->timestamp('protection_time')->comment('保护时间');// 保护期
             $table->timestamp('expiration_time')->comment('过期时间');// 到期时间
-            $table->string('bind_reason')->nullable()->comment('绑定原因');
-            $table->string('invitation_code')->nullable()->comment('邀请码');
-            $table->string('unbind_reason')->nullable()->comment('解绑原因');
-            $table->timestamp('unbind_time')->nullable()->comment('解绑时间');
             $table->operator();
             $table->comment('分销绑定用户');
         });
