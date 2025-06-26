@@ -3,6 +3,7 @@
 namespace RedJasmine\User\Domain\Services\Register;
 
 use Illuminate\Support\Str;
+use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
@@ -12,9 +13,10 @@ use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider
 /**
  * 注册服务
  */
-class UserRegisterService
+class UserRegisterService extends Service
 {
 
+    public static string $hookNamePrefix = 'user.register';
 
     public function captcha(UserRegisterData $data) : void
     {
@@ -29,8 +31,7 @@ class UserRegisterService
 
         $userData = $provider->register($data);
 
-
-        $user = $this->makeUser($userData);
+        $user = $this->hook('makeUser', $data, fn() => $this->makeUser($userData));
 
         $user->register();
 
@@ -57,8 +58,6 @@ class UserRegisterService
         $user->birthday = $data->birthday ?? null;
         // 验证是否允许注册
 
-        // 邀请码
-        $user->invitation_code = $data->invitationCode;
         // 渠道 TODO
 
         return $user;

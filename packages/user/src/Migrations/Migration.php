@@ -36,23 +36,17 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
             $table->string('city')->nullable()->comment('城市');
             $table->string('district')->nullable()->comment('区县');
             $table->string('school')->nullable()->comment('学校');
-            $table->string('invitation_code', 64)->comment('邀请码')->nullable();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
             $table->string('ip')->nullable()->comment('IP');
             $table->timestamp('cancel_time')->nullable()->comment('注销时间');
             $table->rememberToken();
             $table->unsignedBigInteger('group_id')->nullable()->comment('分组ID');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('updater_type', 64)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->string('updater_nickname', 64)->nullable();
-            $table->timestamps();
 
-
+            $table->string('invitation_code', 64)->comment('邀请码')->nullable();
+            $table->userMorphs('inviter', '邀请人');
+            $table->operator();
 
 
             $table->index(['name'], 'idx_name');
