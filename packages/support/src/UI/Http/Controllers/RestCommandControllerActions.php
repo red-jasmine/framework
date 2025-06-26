@@ -44,6 +44,7 @@ trait RestCommandControllerActions
         $command = $dataClass::from($request);
 
         $result = $this->service->create($command);
+
         return new static::$resourceClass($result);
     }
 

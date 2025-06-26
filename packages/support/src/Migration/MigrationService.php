@@ -10,13 +10,15 @@ class MigrationService
     public static function register() : void
     {
 
-        Blueprint::macro('userMorphs', function (string $name = 'user', string $comment = '用户') {
 
-
-            $this->string($name.'_type', 32)->nullable()->comment($comment.'类型');
-            $this->string($name.'_id', 64)->nullable()->comment($comment.'ID');
+        Blueprint::macro('userMorphs', function (
+            string $name = 'user',
+            string $comment = '用户',
+            bool $nullable = true
+        ) {
+            $this->string($name.'_type', 32)->nullable($nullable)->comment($comment.'类型');
+            $this->string($name.'_id', 64)->nullable($nullable)->comment($comment.'ID');
             $this->string($name.'_nickname', 64)->nullable()->comment($comment.'昵称');
-
         });
 
         Blueprint::macro('operator', function () {
