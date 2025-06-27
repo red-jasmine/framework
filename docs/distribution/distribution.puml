@@ -105,13 +105,12 @@ Downgrade 降级
 PromoterApply ---> PromoterApplyType
 PromoterApply -> Promoter
 PromoterApply -> PromoterLevel
+
 class 推广关系{
 - 分销员
 - 用户
-- 关系状态 待确认、确认中、成功、失败
-- 创建时间
-- 更新时间
-- 有效期
+- 关系状态 绑定中/生效/已失效
+- 有效期 决定关系状态 超过即为关系失效
 - 保护期
 }
 
@@ -154,7 +153,7 @@ Promoter . 推广订单记录:推广
 
 }
 用户 . 推广订单记录:下单
-推广关系 . 用户:点击|下单
+推广关系 . 用户:注册/下单
 
 推广订单记录 .. 电子钱包:结算
 package 用户{
