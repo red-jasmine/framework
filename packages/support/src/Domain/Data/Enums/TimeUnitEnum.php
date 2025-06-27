@@ -20,6 +20,7 @@ enum TimeUnitEnum: string
     case  QUARTER = 'quarter';
     case  YEAR = 'year';
     case  FOREVER = 'forever';
+    case  NEVER = 'never';
 
 
     public static function labels() : array
@@ -33,6 +34,7 @@ enum TimeUnitEnum: string
             self::QUARTER->value => '季度',
             self::YEAR->value    => '年',
             self::FOREVER->value => '永久',
+            self::NEVER->value   => '无',
         ];
     }
 
