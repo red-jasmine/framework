@@ -11,12 +11,18 @@ class UserLoginCommandHandler extends CommandHandler
 {
     public function __construct(
         public BaseUserApplicationService $service,
-        public UserLoginService $loginService
+
     ) {
+
+        $this->loginService = new UserLoginService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+        );
     }
 
     public function handle(UserLoginCommand $command) : UserTokenData
     {
+
         return $this->loginService->login($command);
     }
 

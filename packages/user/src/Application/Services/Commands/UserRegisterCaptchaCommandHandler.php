@@ -5,15 +5,27 @@ namespace RedJasmine\User\Application\Services\Commands;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
+use RedJasmine\User\Domain\Services\Login\UserLoginService;
 use RedJasmine\User\Domain\Services\Register\UserRegisterService;
 use Throwable;
 
 class UserRegisterCaptchaCommandHandler extends CommandHandler
 {
+    public UserLoginService    $loginService;
+    public UserRegisterService $userRegisterService;
+
     public function __construct(
         public BaseUserApplicationService $service,
-        public UserRegisterService $userRegisterService
     ) {
+        $this->userRegisterService = new UserRegisterService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+            $this->service->newModel()
+        );
+        $this->loginService        = new UserLoginService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+        );
     }
 
     /**

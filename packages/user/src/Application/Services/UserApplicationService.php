@@ -87,5 +87,10 @@ class UserApplicationService extends BaseUserApplicationService
     ) {
     }
 
+    public function getGuard() : string
+    {
+        return 'user';
+    }
+
 
 }

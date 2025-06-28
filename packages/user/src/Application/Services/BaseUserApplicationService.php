@@ -78,7 +78,11 @@ abstract class BaseUserApplicationService extends ApplicationService
 
     public static string    $hookNamePrefix = 'user.application.user';
     protected static string $modelClass     = User::class;
-    protected static        $macros         = [
+
+    abstract public function getGuard() : string;
+
+
+    protected static $macros = [
         'update'                => UserUpdateBaseInfoCommandHandler::class,
         'getSocialites'         => GetSocialitesQueryHandler::class,
         'registerCaptcha'       => UserRegisterCaptchaCommandHandler::class,
@@ -102,7 +106,6 @@ abstract class BaseUserApplicationService extends ApplicationService
 
 
     ];
-
 
 
 }

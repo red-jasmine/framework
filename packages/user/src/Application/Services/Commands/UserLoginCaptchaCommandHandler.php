@@ -10,9 +10,15 @@ class UserLoginCaptchaCommandHandler extends CommandHandler
 {
     public function __construct(
         public BaseUserApplicationService $service,
-        public UserLoginService $loginService
+
     ) {
+
+        $this->loginService = new UserLoginService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+        );
     }
+
 
     public function handle(UserLoginCaptchaCommand $command) : bool
     {

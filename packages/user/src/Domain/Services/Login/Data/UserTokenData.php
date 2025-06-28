@@ -6,6 +6,8 @@ use RedJasmine\Support\Data\Data;
 
 class UserTokenData extends Data
 {
+
+    public string $guard;
     public string $accessToken;
     public string $refreshToken;
     public string $tokenType = 'bearer';

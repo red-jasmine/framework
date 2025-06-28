@@ -12,40 +12,49 @@ use RedJasmine\User\UI\Http\User\Api\Controllers\LoginController;
 class UserRoute
 {
 
+    public static string $name      = 'user';
+    public static string $guard     = 'user';
+    public static string $namespace = 'RedJasmine\User\UI\Http\User';
 
-    public static function api(string $guard = 'api') : void
+
+    protected static function getApiNamespace(string $controllerClass) : string
     {
-        Route::group([
-            'prefix' => 'auth'
-        ], function () use ($guard) {
+        return static::$namespace.'\Api\Controllers\\'.$controllerClass;
+    }
 
-            // 无需登录
-            Route::post('login/captcha', [LoginController::class, 'captcha'])->name('user.user.api.login.captcha');
-            Route::post('login/login', [LoginController::class, 'login'])->name('user.user.api.login.login');
-
-
-            Route::post('register/captcha', [RegisterController::class, 'captcha'])->name('user.user.api.register.captcha');
-            Route::post('register/register', [RegisterController::class, 'register'])->name('user.user.api.register.register');
-
-
-            Route::post('forgot-password/captcha', [ForgotPasswordController::class, 'captcha'])
-                 ->name('user.user.api.forgot-password.captcha');
-            Route::post('forgot-password/forgot-password', [ForgotPasswordController::class, 'resetPassword'])
-                 ->name('user.user.api.forgot-password.forgot-password');
+    public static function api() : void
+    {
+        Route::prefix('auth')
+             ->name(static::$name.'.')
+             ->group(function () {
+                 // TODO 通过配置 命名空间直接修改
+                 // 无需登录
+                 Route::post('login/captcha', [static::getApiNamespace('LoginController'), 'captcha'])->name('user.api.login.captcha');
+                 Route::post('login/login', [static::getApiNamespace('LoginController'), 'login'])->name('user.api.login.login');
 
 
-            // 需要登录
-            Route::group([
-                'middleware' => 'auth:'.$guard
-            ], function () {
-                Route::get('info', [UserController::class, 'info'])->name('user.user.api.info');
-            });
+                 Route::post('register/captcha', [RegisterController::class, 'captcha'])->name('user.api.register.captcha');
+                 Route::post('register/register', [RegisterController::class, 'register'])->name('user.api.register.register');
 
-        });
+
+                 Route::post('forgot-password/captcha', [ForgotPasswordController::class, 'captcha'])
+                      ->name('user.user.api.forgot-password.captcha');
+                 Route::post('forgot-password/forgot-password', [ForgotPasswordController::class, 'resetPassword'])
+                      ->name('user.user.api.forgot-password.forgot-password');
+
+
+                 // 需要登录
+                 Route::group([
+                     'middleware' => 'auth:'.static::$guard,
+                 ], function () {
+                     Route::get('info', [UserController::class, 'info'])->name('user.user.api.info');
+                 });
+
+             });
 
         Route::group([
             'prefix'     => 'user',
-            'middleware' => 'auth:'.$guard
+            'middleware' => 'auth:'.static::$guard,
         ], function () {
             Route::get('info', [UserController::class, 'info'])->name('user.api.user.info');
             // 查询

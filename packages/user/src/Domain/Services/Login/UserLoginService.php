@@ -6,17 +6,25 @@ namespace RedJasmine\User\Domain\Services\Login;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\Facades\UserLoginServiceProvider;
 
 class UserLoginService
 {
 
+    public function __construct(
+        protected UserReadRepositoryInterface $readRepository,
+        protected string $guard
+    ) {
+    }
+
 
     public function captcha(Data\UserLoginData $data) : bool
     {
         $provider = UserLoginServiceProvider::create($data->provider);
-        $provider->captcha($data);
+        $provider->init($this->readRepository, $this->guard)->captcha($data);
         return true;
     }
 
@@ -25,7 +33,7 @@ class UserLoginService
         // 使用服务提供者的登陆方法 进行登陆
         $provider = UserLoginServiceProvider::create($data->provider);
 
-        return $provider->login($data);
+        return $provider->init($this->readRepository, $this->guard)->login($data);
 
     }
 
@@ -51,8 +59,9 @@ class UserLoginService
 
     public function token(User $user) : UserTokenData
     {
-        $token                  = Auth::guard('api')->login($user);
+        $token                  = Auth::guard($this->guard)->login($user);
         $userToken              = new UserTokenData();
+        $userToken->guard       = (string) $this->guard;
         $userToken->accessToken = (string) $token;
         $userToken->expire      = (int) (config('jwt.ttl') * 60);
         return $userToken;

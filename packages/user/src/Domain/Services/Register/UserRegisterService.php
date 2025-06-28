@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
+use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider;
 
@@ -16,20 +16,28 @@ use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider
 class UserRegisterService extends Service
 {
 
+    public function __construct(
+        protected UserReadRepositoryInterface $readRepository,
+        protected string $guard,
+        protected User $newUser,
+    ) {
+    }
+
+
     public static string $hookNamePrefix = 'user.register';
 
     public function captcha(UserRegisterData $data) : void
     {
         $provider = UserRegisterServiceProvider::create($data->provider);
 
-        $provider->captcha($data);
+        $provider->init($this->readRepository, $this->guard)->captcha($data);
     }
 
     public function register(UserRegisterData $data) : User
     {
         $provider = UserRegisterServiceProvider::create($data->provider);
 
-        $userData = $provider->register($data);
+        $userData = $provider->init($this->readRepository, $this->guard)->register($data);
 
         $user = $this->hook('makeUser', $data, fn() => $this->makeUser($userData));
 
@@ -41,7 +49,10 @@ class UserRegisterService extends Service
 
     public function makeUser(UserData $data) : User
     {
-        $user = User::make();
+        /**
+         * @var User $user
+         */
+        $user = $this->newUser;
 
         // 用户注册功能呢
 

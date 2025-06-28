@@ -14,6 +14,19 @@ class NameRegisterServiceProvider implements UserRegisterServiceProviderInterfac
 
     public const string NAME = 'name';
 
+
+    protected UserReadRepositoryInterface $readRepository;
+    protected string                      $guard;
+
+    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    {
+        $this->readRepository = $readRepository;
+
+        $this->guard = $guard;
+
+        return $this;
+    }
+
     /**
      * @param  UserRegisterData  $data
      *
@@ -23,7 +36,7 @@ class NameRegisterServiceProvider implements UserRegisterServiceProviderInterfac
     public function captcha(UserRegisterData $data) : UserData
     {
         //严重用户名是否已经注册
-        if (app(UserReadRepositoryInterface::class)->findByName($data->data['account'])) {
+        if ($this->readRepository->findByName($data->data['account'])) {
             throw new UserRegisterException('用户名已存在');
         }
 

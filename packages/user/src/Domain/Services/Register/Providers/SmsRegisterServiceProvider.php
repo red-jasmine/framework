@@ -14,15 +14,28 @@ use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 
 class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {
-    protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserReadRepositoryInterface $userReadRepository;
+    protected CaptchaApplicationService $captchaApplicationService;
+
 
     public function __construct()
     {
 
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
-        $this->userReadRepository        = app(UserReadRepositoryInterface::class);
+
     }
+
+    protected UserReadRepositoryInterface $readRepository;
+    protected string                      $guard;
+
+    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    {
+        $this->readRepository = $readRepository;
+
+        $this->guard = $guard;
+
+        return $this;
+    }
+
 
     public const string NAME = 'sms';
 
@@ -34,7 +47,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
         $command = CaptchaCreateCommand::from([
             'type'            => 'register',
             'app'             => 'app',
-            'method'         => 'sms',
+            'method'          => 'sms',
             'notifiable_type' => NotifiableTypeEnum::MOBILE->value,
             'notifiable_id'   => $data->data['phone'],
         ]);
@@ -71,7 +84,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
 
         $phone = $data->data['phone'] ?? null;
 
-        $hasUser = $this->userReadRepository->findByPhone($phone);
+        $hasUser = $this->readRepository->findByPhone($phone);
         if ($hasUser) {
             throw  new UserRegisterException('手机号已经注册');
         }

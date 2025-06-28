@@ -14,6 +14,19 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
 
     public const string NAME = 'password';
 
+
+    protected UserReadRepositoryInterface $readRepository;
+    protected string                      $guard;
+
+    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    {
+        $this->readRepository = $readRepository;
+
+        $this->guard = $guard;
+
+        return $this;
+    }
+
     /**
      * @param  UserRegisterData  $data
      *
@@ -48,15 +61,15 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
             throw new UserRegisterException('密码不能为空');
         }
         //严重用户名是否已经注册
-        if (filled($data->data['name'] ?? null) && app(UserReadRepositoryInterface::class)->findByName($data->data['name'])) {
+        if (filled($data->data['name'] ?? null) && $this->readRepository->findByName($data->data['name'])) {
             throw new UserRegisterException('用户名已存在');
         }
 
-        if (filled($data->data['email'] ?? null) && app(UserReadRepositoryInterface::class)->findByEmail($data->data['email'])) {
+        if (filled($data->data['email'] ?? null) && $this->readRepository->findByEmail($data->data['email'])) {
             throw new UserRegisterException('邮箱已存在');
         }
 
-        if (filled($data->data['phone'] ?? null) && app(UserReadRepositoryInterface::class)->findByEmail($data->data['phone'])) {
+        if (filled($data->data['phone'] ?? null) && $this->readRepository->findByEmail($data->data['phone'])) {
             throw new UserRegisterException('邮箱已存在');
         }
 

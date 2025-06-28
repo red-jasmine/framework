@@ -4,7 +4,7 @@
 use RedJasmine\User\UI\Http\User\UserRoute;
 
 \Illuminate\Support\Facades\Route::group([
-    'prefix'     => 'api',
+    'prefix'     => 'api/user',
     'middleware' => ['api']
 ], function () {
 

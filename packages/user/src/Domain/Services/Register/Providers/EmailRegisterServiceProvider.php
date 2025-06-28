@@ -10,11 +10,21 @@ use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 class EmailRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {
 
-    public function __construct(
-        protected UserReadRepositoryInterface $userReadRepository
 
-    ) {
+
+
+    protected UserReadRepositoryInterface $readRepository;
+    protected string                      $guard;
+
+    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    {
+        $this->readRepository = $readRepository;
+
+        $this->guard = $guard;
+
+        return $this;
     }
+
 
     public const string NAME = 'email';
 

@@ -16,11 +16,21 @@ use Throwable;
 
 class UserLoginOrRegisterCommandHandler extends CommandHandler
 {
+    public UserLoginService    $loginService;
+    public UserRegisterService $userRegisterService;
+
     public function __construct(
         public BaseUserApplicationService $service,
-        public UserLoginService $loginService,
-        public UserRegisterService $userRegisterService
     ) {
+        $this->userRegisterService = new UserRegisterService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+            $this->service->newModel()
+        );
+        $this->loginService        = new UserLoginService(
+            $this->service->readRepository,
+            $this->service->getGuard(),
+        );
     }
 
     public function handle(UserLoginOrRegisterCommand $command) : UserTokenData

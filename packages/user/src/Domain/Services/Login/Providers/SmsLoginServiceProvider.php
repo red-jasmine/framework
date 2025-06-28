@@ -17,11 +17,20 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
     protected CaptchaApplicationService   $captchaApplicationService;
     protected UserReadRepositoryInterface $userReadRepository;
 
+    protected UserReadRepositoryInterface $readRepository;
+    protected string                      $guard;
+
+    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    {
+        $this->readRepository = $readRepository;
+
+        $this->guard = $guard;
+
+        return $this;
+    }
     public function __construct()
     {
-
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
-        $this->userReadRepository        = app(UserReadRepositoryInterface::class);
     }
 
     public const string NAME = 'sms';
@@ -38,7 +47,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $phone = $data->data['phone'];
         // TODO 验证手机号 格式
 
-        $user = app(UserReadRepositoryInterface::class)->findByPhone($phone);
+        $user = $this->userReadRepository->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
@@ -83,7 +92,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->captchaApplicationService->verify($command);
 
         // 查询用户信息
-        return app(UserReadRepositoryInterface::class)->findByPhone($phone);
+        return $this->userReadRepository->findByPhone($phone);
 
     }
 
