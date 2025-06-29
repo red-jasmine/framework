@@ -7,7 +7,7 @@ use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 /**
  * 用户类型
  */
-enum UserTypeEnum: string
+enum AccountTypeEnum: string
 {
 
     use EnumsHelper;

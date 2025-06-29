@@ -18,7 +18,7 @@ use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use RedJasmine\User\Domain\Enums\UserTypeEnum;
+use RedJasmine\User\Domain\Enums\AccountTypeEnum;
 use RedJasmine\User\Domain\Models\User;
 
 class UserResource extends Resource implements HasShieldPermissions
@@ -108,8 +108,8 @@ class UserResource extends Resource implements HasShieldPermissions
                         Forms\Components\ToggleButtons::make('type')
                                                       ->label(__('red-jasmine-user::user.fields.type'))
                                                       ->inline()
-                                                      ->default(UserTypeEnum::PERSONAL)
-                                                      ->useEnum(UserTypeEnum::class),
+                                                      ->default(AccountTypeEnum::PERSONAL)
+                                                      ->useEnum(AccountTypeEnum::class),
                         Forms\Components\ToggleButtons::make('status')
                                                       ->label(__('red-jasmine-user::user.fields.status'))
                                                       ->inline()
@@ -198,10 +198,10 @@ class UserResource extends Resource implements HasShieldPermissions
                 ...static::operateTableColumns(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
+                Tables\Filters\SelectFilter::make('account_type')
                                            ->multiple()
                                            ->label(__('red-jasmine-user::user.fields.type'))
-                                           ->options(UserTypeEnum::options()),
+                                           ->options(AccountTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('status')
                                            ->multiple()
                                            ->label(__('red-jasmine-user::user.fields.status'))

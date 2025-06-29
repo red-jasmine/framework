@@ -37,11 +37,11 @@ class UserTransformer implements TransformerInterface
 
         }
         if ($data instanceof UserData) {
-            $model->type     = $data->type;
-            $model->phone    = $data->phone;
-            $model->email    = $data->email;
-            $model->name     = $data->name;
-            $model->password = $data->password;
+            $model->account_type = $data->accountType;
+            $model->phone        = $data->phone;
+            $model->email        = $data->email;
+            $model->name         = $data->name;
+            $model->password     = $data->password;
         }
 
         return $model;

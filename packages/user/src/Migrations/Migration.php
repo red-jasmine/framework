@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use RedJasmine\User\Domain\Enums\UserTypeEnum;
+use RedJasmine\User\Domain\Enums\AccountTypeEnum;
 
 abstract class Migration extends \Illuminate\Database\Migrations\Migration
 {
@@ -20,7 +20,7 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
 
         Schema::create(Str::plural($this->name), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('type', 64)->nullable()->comment(UserTypeEnum::comments('类型'));
+            $table->string('account_type', 64)->nullable()->comment(AccountTypeEnum::comments('账号类型'));
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
             $table->string('name', 64)->unique()->comment('帐号');
             $table->string('phone')->nullable()->comment('*手机号');

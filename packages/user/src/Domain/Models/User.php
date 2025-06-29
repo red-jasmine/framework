@@ -18,7 +18,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasTags;
 use RedJasmine\User\Domain\Data\UserBaseInfoData;
 use RedJasmine\User\Domain\Enums\UserGenderEnum;
 use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use RedJasmine\User\Domain\Enums\UserTypeEnum;
+use RedJasmine\User\Domain\Enums\AccountTypeEnum;
 use RedJasmine\User\Domain\Events\UseCancelEvent;
 use RedJasmine\User\Domain\Events\UserLoginEvent;
 use RedJasmine\User\Domain\Events\UserRegisteredEvent;
@@ -55,7 +55,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         'cancel'   => UseCancelEvent::class,
     ];
 
-    protected $fillable         = [
+    protected $fillable = [
         'email',
         'name',
         'nickname',
@@ -235,13 +235,13 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
     {
 
         return [
-            'phone'       => AesEncrypted::class,
-            'email'       => AesEncrypted::class,
-            'gender'      => UserGenderEnum::class,
-            'type'        => UserTypeEnum::class,
-            'status'      => UserStatusEnum::class,
-            'password'    => 'hashed',
-            'cancel_time' => 'datetime',
+            'phone'        => AesEncrypted::class,
+            'email'        => AesEncrypted::class,
+            'gender'       => UserGenderEnum::class,
+            'account_type' => AccountTypeEnum::class,
+            'status'       => UserStatusEnum::class,
+            'password'     => 'hashed',
+            'cancel_time'  => 'datetime',
         ];
     }
 

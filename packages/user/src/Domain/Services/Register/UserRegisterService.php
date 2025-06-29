@@ -58,7 +58,7 @@ class UserRegisterService extends Service
 
         // 验证是否允许注册
 
-        $user->type     = $data->type;
+        $user->account_type     = $data->accountType;
         $user->name     = $data->name ?? $this->buildUserName();
         $user->nickname = $data->nickname ?? $this->buildNickname();
         $user->email    = $data->email ?? null;
