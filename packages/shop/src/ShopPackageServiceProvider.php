@@ -26,7 +26,7 @@ class ShopPackageServiceProvider extends PackageServiceProvider
             ->runsMigrations();
     }
 
-    public function packageBooted()
+    public function packageRegistered() : void
     {
         // 注册应用服务提供者
         $this->app->register(Application\ShopApplicationServiceProvider::class);
