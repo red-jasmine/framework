@@ -18,8 +18,8 @@ class SocialitePackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-socialite')
             ->hasConfigFile()
-            ->hasViews()//->runsMigrations()
-        ;
+            ->hasViews()
+            ->runsMigrations();
 
 
         if (file_exists($package->basePath('/../database/migrations'))) {

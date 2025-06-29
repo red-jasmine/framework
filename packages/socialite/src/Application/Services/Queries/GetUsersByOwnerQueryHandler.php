@@ -4,14 +4,14 @@ namespace RedJasmine\Socialite\Application\Services\Queries;
 
 
 use Illuminate\Database\Eloquent\Collection;
-use RedJasmine\Socialite\Application\Services\SocialiteUserQueryService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 
 class GetUsersByOwnerQueryHandler extends QueryHandler
 {
 
     public function __construct(
-        protected SocialiteUserQueryService $service
+        protected SocialiteUserApplicationService $service
 
     ) {
     }

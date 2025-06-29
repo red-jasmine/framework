@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Socialite\Application\Services\Commands;
 
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
@@ -13,7 +13,7 @@ class SocialiteUserUnbindCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected SocialiteUserCommandService $service,
+        protected SocialiteUserApplicationService $service,
 
     ) {
     }

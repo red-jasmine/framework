@@ -9,10 +9,14 @@ use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserLoginCommand
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserLoginCommandHandler;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindCommand;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindCommandHandler;
+use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQuery;
+use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQueryHandler;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Application\Queries\FindQueryHandler;
+use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
 
 /**
  * @see SocialiteUserBindCommandHandler::handle()
@@ -26,8 +30,10 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  *
  * @see SocialiteUserClearCommandHandler::handle()
  * @method bool  clear(SocialiteUserClearCommand $command)
+ *
+ * @method getUsersByOwner(GetUsersByOwnerQuery $query)
  */
-class SocialiteUserCommandService extends ApplicationCommandService
+class SocialiteUserApplicationService extends ApplicationService
 {
 
     public function __construct(
@@ -40,9 +46,12 @@ class SocialiteUserCommandService extends ApplicationCommandService
 
 
     protected static $macros = [
-        'bind'   => SocialiteUserBindCommandHandler::class,
-        'unbind' => SocialiteUserUnbindCommandHandler::class,
-        'login'  => SocialiteUserLoginCommandHandler::class,
-        'clear'  => SocialiteUserClearCommandHandler::class
+        'bind'            => SocialiteUserBindCommandHandler::class,
+        'unbind'          => SocialiteUserUnbindCommandHandler::class,
+        'login'           => SocialiteUserLoginCommandHandler::class,
+        'clear'           => SocialiteUserClearCommandHandler::class,
+        'findById'        => FindQueryHandler::class,
+        'paginate'        => PaginateQueryHandler::class,
+        'getUsersByOwner' => GetUsersByOwnerQueryHandler::class
     ];
 }

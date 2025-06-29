@@ -4,7 +4,7 @@ namespace RedJasmine\Socialite\Application\Services\Commands;
 
 use Overtrue\LaravelSocialite\Socialite;
 use Overtrue\Socialite\Contracts\ProviderInterface;
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
@@ -15,7 +15,7 @@ class SocialiteUserLoginCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected SocialiteUserCommandService $service,
+        protected SocialiteUserApplicationService $service,
 
     ) {
     }

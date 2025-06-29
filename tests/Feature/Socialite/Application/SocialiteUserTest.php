@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserBindCommand;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindCommand;
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
@@ -12,7 +12,7 @@ use RedJasmine\Support\Data\UserData;
 
 beforeEach(function () {
 
-    $this->commandService = app(SocialiteUserCommandService::class);
+    $this->commandService = app(SocialiteUserApplicationService::class);
     $this->repository     = app(SocialiteUserRepositoryInterface::class);
     $this->readRepository = app(SocialiteUserReadRepositoryInterface::class);
 
