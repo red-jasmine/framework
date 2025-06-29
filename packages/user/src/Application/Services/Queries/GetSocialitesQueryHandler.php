@@ -22,6 +22,7 @@ class GetSocialitesQueryHandler extends QueryHandler
     {
         $user = $this->service->readRepository->find(FindQuery::from(['id' => $query->id]));
 
+
         return $this->userSocialiteService->getBinds($user);
     }
 }

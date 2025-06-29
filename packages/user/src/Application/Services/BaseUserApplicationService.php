@@ -40,9 +40,6 @@ use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommandHandler;
 use RedJasmine\User\Application\Services\Queries\GetSocialitesQuery;
 use RedJasmine\User\Application\Services\Queries\GetSocialitesQueryHandler;
-use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
-use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 
 /**
@@ -75,8 +72,6 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
  */
 abstract class BaseUserApplicationService extends ApplicationService
 {
-
-
 
 
     abstract public function getGuard() : string;

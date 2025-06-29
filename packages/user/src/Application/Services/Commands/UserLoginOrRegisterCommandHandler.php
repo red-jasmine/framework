@@ -3,7 +3,7 @@
 namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserBindCommand;
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
@@ -63,7 +63,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
                 $socialiteUserBindCommand->identity = $socialiteUser->identity;
                 $socialiteUserBindCommand->appId    = 'UserCenter';
 
-                app(SocialiteUserCommandService::class)->bind($socialiteUserBindCommand);
+                app(SocialiteUserApplicationService::class)->bind($socialiteUserBindCommand);
 
                 $userTokenData = $this->loginService->token($user);
 

@@ -3,7 +3,7 @@
 namespace RedJasmine\User\Domain\Services\Login\Providers;
 
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserLoginCommand;
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
@@ -50,7 +50,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
         $data->data['appId'] = 'UserCenter';
         $command             = SocialiteUserLoginCommand::from($data->data);
         // 获取社交账号信息
-        $socialiteUser = app(SocialiteUserCommandService::class)->login($command);
+        $socialiteUser = app(SocialiteUserApplicationService::class)->login($command);
         // 根据社交账号绑定的信息 查询用户信息
         try {
             $user = app(UserRepositoryInterface::class)->find($socialiteUser->owner_id);

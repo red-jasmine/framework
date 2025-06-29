@@ -3,10 +3,8 @@
 namespace RedJasmine\User\Domain\Services;
 
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserClearCommand;
-use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindCommand;
 use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQuery;
-use RedJasmine\Socialite\Application\Services\SocialiteUserCommandService;
-use RedJasmine\Socialite\Application\Services\SocialiteUserQueryService;
+use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\User\Domain\Models\User;
 
 class UserSocialiteService
@@ -14,10 +12,7 @@ class UserSocialiteService
 
 
     public function __construct(
-        protected SocialiteUserCommandService $socialiteUserCommandService,
-        protected SocialiteUserQueryService $socialiteUserQueryService,
-
-
+        protected SocialiteUserApplicationService $socialiteUserService,
     ) {
     }
 
@@ -31,7 +26,8 @@ class UserSocialiteService
         $query->owner    = $user;
         $query->appId    = static::APP_ID;
         $query->provider = null;
-        return $this->socialiteUserQueryService->getUsersByOwner($query);
+
+        return $this->socialiteUserService->getUsersByOwner($query);
 
     }
 
@@ -49,6 +45,6 @@ class UserSocialiteService
         $command->provider = $provider;
         $command->appId    = static::APP_ID;
 
-        return $this->socialiteUserCommandService->clear($command);
+        return $this->socialiteUserService->clear($command);
     }
 }
