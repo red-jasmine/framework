@@ -1,0 +1,33 @@
+{
+    "name": "red-jasmine/shop",
+    "description": "Shop domain package for Red Jasmine Framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Red Jasmine Team",
+            "email": "team@red-jasmine.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "red-jasmine/user": "^1.0",
+        "red-jasmine/support": "^1.0",
+        "spatie/laravel-permission": "^6.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Shop\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Shop\\ShopPackageServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+} 
