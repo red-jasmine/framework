@@ -4,9 +4,4 @@
 return [
 
 
-    'services' => [
-        'login'    => [],
-        'register' => []
-    ],
-
 ];
