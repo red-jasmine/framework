@@ -76,8 +76,8 @@ use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 abstract class BaseUserApplicationService extends ApplicationService
 {
 
-    public static string    $hookNamePrefix = 'user.application.user';
-    protected static string $modelClass     = User::class;
+
+
 
     abstract public function getGuard() : string;
 

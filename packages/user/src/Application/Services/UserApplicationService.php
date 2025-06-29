@@ -78,6 +78,8 @@ use RedJasmine\User\Domain\Transformers\UserTransformer;
 class UserApplicationService extends BaseUserApplicationService
 {
 
+    public static string    $hookNamePrefix = 'user.application.user';
+    protected static string $modelClass     = User::class;
 
     public function __construct(
         public UserRepositoryInterface $repository,

@@ -48,12 +48,14 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
     public static string $groupModelClass      = UserGroup::class;
     public               $incrementing         = false;
     protected            $withOperatorNickname = true;
-    protected            $dispatchesEvents     = [
+
+    protected $dispatchesEvents = [
         'login'    => UserLoginEvent::class,
         'register' => UserRegisteredEvent::class,
         'cancel'   => UseCancelEvent::class,
     ];
-    protected            $fillable             = [
+
+    protected $fillable         = [
         'email',
         'name',
         'nickname',
@@ -212,9 +214,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         $this->invitation_code = $invitation_code;
         return $this;
     }
-
-
-
 
 
     public function getType() : string
