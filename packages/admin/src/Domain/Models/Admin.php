@@ -3,9 +3,12 @@
 namespace RedJasmine\Admin\Domain\Models;
 
 
+use RedJasmine\Admin\Domain\Events\AdminCancelEvent;
+use RedJasmine\Admin\Domain\Events\AdminLoginEvent;
+use RedJasmine\Admin\Domain\Events\AdminRegisteredEvent;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Data\System;
 use RedJasmine\User\Domain\Models\User;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -22,13 +25,15 @@ class Admin extends User implements BelongsToOwnerInterface
 
     use HasRoles;
 
+    protected $dispatchesEvents = [
+        'login'    => AdminLoginEvent::class,
+        'register' => AdminRegisteredEvent::class,
+        'cancel'   => AdminCancelEvent::class,
+    ];
 
     public function owner() : UserInterface
     {
-        return UserData::from([
-            'type' => 'system',
-            'id'   => 'system',
-        ]);
+        return System::make();
     }
 
     // 超级管理员

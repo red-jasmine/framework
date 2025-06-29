@@ -19,5 +19,14 @@ class AdminApplicationService extends BaseUserApplicationService
     ) {
     }
 
+    public static string $hookNamePrefix = 'admin.application.admin';
+
     protected static string $modelClass = Admin::class;
+
+
+    public function getGuard() : string
+    {
+        return 'admin';
+    }
+
 }
