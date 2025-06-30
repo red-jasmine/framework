@@ -105,8 +105,8 @@ class UserResource extends Resource implements HasShieldPermissions
                                                   ->maxLength(255)
                         ,
 
-                        Forms\Components\ToggleButtons::make('type')
-                                                      ->label(__('red-jasmine-user::user.fields.type'))
+                        Forms\Components\ToggleButtons::make('account_type')
+                                                      ->label(__('red-jasmine-user::user.fields.account_type'))
                                                       ->inline()
                                                       ->default(AccountTypeEnum::PERSONAL)
                                                       ->useEnum(AccountTypeEnum::class),
@@ -162,8 +162,8 @@ class UserResource extends Resource implements HasShieldPermissions
                                          ->date('Y-m-d')
                 ,
 
-                Tables\Columns\TextColumn::make('type')
-                                         ->label(__('red-jasmine-user::user.fields.type'))
+                Tables\Columns\TextColumn::make('account_type')
+                                         ->label(__('red-jasmine-user::user.fields.account_type'))
                                          ->useEnum()
                 ,
 

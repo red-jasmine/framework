@@ -7,8 +7,8 @@ return [
 
 
     'fields' => [
-        'id'                => '用户ID',
-        'name'              => '用户名',
+        'id'                => 'ID',
+        'name'              => '账号',
         'email'             => '邮箱',
         'phone'             => '手机号',
         'password'          => '密码',
@@ -23,7 +23,7 @@ return [
         'gender'            => '性别',
         'birthday'          => '生日',
         'biography'         => '个人介绍',
-        'type'              => '类型',
+        'account_type'      => '账号类型',
         'status'            => '状态',
         'email_verified_at' => '邮箱验证时间',
         'last_active_at'    => '活跃时间',
