@@ -20,9 +20,8 @@
         }
     ],
     "require": {
-        "php": "^8.1",
         "red-jasmine/filament-core": "1.0.x-dev",
-        "spatie/laravel-package-tools": "^1.15.0"
+        "red-jasmine/order": "1.0.x-dev"
     },
     "require-dev": {
         "nunomaduro/collision": "^7.9",

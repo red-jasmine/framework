@@ -11,25 +11,19 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/order": "1.0.x-dev",
         "red-jasmine/user": "1.0.x-dev",
         "red-jasmine/distribution": "1.0.x-dev"
     },
     "require-dev": {
-        "pestphp/pest": "^2.30",
-        "pestphp/pest-plugin-arch": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "brianium/paratest": "^7.3",
-        "orchestra/testbench": "9.x-dev"
+        "orchestra/testbench": "10.x",
+        "pestphp/pest": "4.x-dev"
     },
     "autoload-dev": {
         "psr-4": {
-            "RedJasmine\\Tests\\": "tests",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "RedJasmine\\Tests\\": "tests"
         }
     },
     "repositories": [
@@ -43,13 +37,8 @@
     ],
     "scripts": {
         "post-autoload-dump": [
-            "@clear",
-            "@prepare",
-            "@dusk:install-chromedriver"
         ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
+    
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "@build",
