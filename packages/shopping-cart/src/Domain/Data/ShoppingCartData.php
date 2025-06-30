@@ -11,6 +11,10 @@ class ShoppingCartData extends Data
 
     public UserInterface $owner;
 
-    public float $discountAmount = 0;
+    /**
+     * @var ShoppingCartProductData[]
+     */
+    public array $products;
+
 
 } 

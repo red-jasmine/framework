@@ -32,16 +32,17 @@ class AddProductCommandHandler extends CommandHandler
         try {
             // 1. 校验商品信息
             $this->validateProduct($command);
-            
+
             // 2. 校验库存
             $this->validateStock($command);
-            
+
             // 3. 获取价格信息
             $priceInfo = $this->getPriceInfo($command);
-            
+
             // 4. 查找或创建购物车
-            $cart = $this->service->repository->findActiveByUser($command->owner) ?? new ShoppingCart([
+            $cart = $this->service->repository->findActiveByUser($command->owner,$command->market) ?? new ShoppingCart([
                 'owner' => $command->owner,
+                'market' => $command->market
             ]);
             $cart->loadMissing('products');
 
@@ -60,7 +61,7 @@ class AddProductCommandHandler extends CommandHandler
             // 6. 添加到购物车
             $cart->addProduct($product);
             $this->service->repository->store($cart);
-            
+
             $this->commitDatabaseTransaction();
         } catch (Throwable $e) {
             $this->rollBackDatabaseTransaction();
@@ -78,7 +79,7 @@ class AddProductCommandHandler extends CommandHandler
         if (!$productInfo) {
             throw new \InvalidArgumentException('商品不存在');
         }
-        
+
         if (!$this->productService->isProductAvailable($command->identity)) {
             throw new \InvalidArgumentException('商品不可购买');
         }
@@ -104,17 +105,17 @@ class AddProductCommandHandler extends CommandHandler
         if (!$priceInfo) {
             throw new \InvalidArgumentException('无法获取商品价格信息');
         }
-        
+
         // 应用营销优惠
         $promotionInfo = $this->promotionService->getProductPromotion(
-            $command->identity, 
+            $command->identity,
             $priceInfo->originalPrice->getAmount() / 100 // 转换为元
         );
-        
+
         if ($promotionInfo) {
             $priceInfo = $promotionInfo;
         }
-        
+
         return $priceInfo;
     }
 } 

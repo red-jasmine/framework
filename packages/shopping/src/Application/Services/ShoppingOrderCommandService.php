@@ -10,6 +10,7 @@ use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommandHandler;
 use RedJasmine\Shopping\Application\Services\Commands\ProductCalculateCommandHandler;
 use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
 use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see ProductBuyCommandHandler::handle()
@@ -17,7 +18,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see OrderPayCommandHandler::handle()
  * @method pay(OrderPayCommand $command)
  */
-class ShoppingOrderCommandService extends ApplicationCommandService
+class ShoppingOrderCommandService extends ApplicationService
 {
 
     protected static $macros = [

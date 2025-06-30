@@ -11,10 +11,10 @@ use RedJasmine\Product\Application\Stock\Services\Commands\StockSubCommandHandle
 use RedJasmine\Product\Application\Stock\Services\Commands\StockUnlockCommandHandler;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 
-class StockCommandService extends ApplicationCommandService
+class StockCommandService extends ApplicationService
 {
 
     /**
@@ -36,9 +36,8 @@ class StockCommandService extends ApplicationCommandService
 
     public function __construct(
         protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService            $domainService
-    )
-    {
+        protected StockDomainService $domainService
+    ) {
 
     }
 

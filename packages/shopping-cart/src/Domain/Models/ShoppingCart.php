@@ -133,10 +133,9 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
 
         if ($existingProduct) {
             $existingProduct->updateQuantity($existingProduct->quantity + $product->quantity);
-            $existingProduct->save();
         } else {
             $product->cart_id = $this->id;
-            $product->save();
+
         }
         $this->load('products');
         $this->calculateAmount();

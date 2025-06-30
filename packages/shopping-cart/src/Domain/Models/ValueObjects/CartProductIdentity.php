@@ -9,25 +9,24 @@ use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
  */
 class CartProductIdentity extends ValueObject
 {
-    public string $market;
-    public string $shopType;
-    public int $shopId;
-    public string $productType;
-    public int $productId;
-    public int $skuId;
 
-    public function equals(self $other): bool
+    public string $shopType;
+    public string $shopId;
+    public string $productType;
+    public string $productId;
+    public string $skuId;
+
+    public function equals(self $other) : bool
     {
-        return $this->market === $other->market
-            && $this->shopType === $other->shopType
-            && $this->shopId === $other->shopId
-            && $this->productType === $other->productType
-            && $this->productId === $other->productId
-            && $this->skuId === $other->skuId;
+        return $this->shopType === $other->shopType
+               && $this->shopId === $other->shopId
+               && $this->productType === $other->productType
+               && $this->productId === $other->productId
+               && $this->skuId === $other->skuId;
     }
 
-    public function __toString(): string
+    public function __toString() : string
     {
-        return implode(':', [$this->market,$this->shopType, $this->shopId, $this->productType, $this->productId, $this->skuId]);
+        return implode(':', [$this->shopType, $this->shopId, $this->productType, $this->productId, $this->skuId]);
     }
 }

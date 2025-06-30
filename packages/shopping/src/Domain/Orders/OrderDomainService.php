@@ -105,7 +105,7 @@ class OrderDomainService extends Service
      */
     public function split(OrderData $orderData) : OrdersData
     {
-        return (new OrderSplitService())->split($orderData);
+        return new OrderSplitService()->split($orderData);
     }
 
 
@@ -124,7 +124,15 @@ class OrderDomainService extends Service
         return $this->orderCalculationService->calculates($orders);
     }
 
-    protected function validate(OrderData $orderData)
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return void
+     * @throws ProductException
+     * @throws ShoppingException
+     * @throws StockException
+     */
+    protected function validate(OrderData $orderData) : void
     {
         // 商品验证
         $this->product($orderData);

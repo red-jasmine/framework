@@ -12,30 +12,32 @@ class ShoppingCartRepository extends EloquentRepository implements ShoppingCartR
 {
     protected static string $eloquentModelClass = ShoppingCart::class;
 
-    public function findByUser(UserInterface $user): ?ShoppingCart
+    public function findByUser(UserInterface $user, string $market) : ?ShoppingCart
     {
-        return ShoppingCart::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->first();
+        return static::$eloquentModelClass::query()
+                                          ->where('owner_type', $user->getType())
+                                          ->where('owner_id', $user->getID())
+                                          ->where('market', $market)
+                                          ->first();
     }
 
-    public function findActiveByUser(UserInterface $user): ?ShoppingCart
+    public function findActiveByUser(UserInterface $user, string $market) : ?ShoppingCart
     {
-        return ShoppingCart::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->where('status', 'active')
-            ->first();
+        return static::$eloquentModelClass::query()
+                                          ->where('owner_type', $user->getType())
+                                          ->where('owner_id', $user->getID())
+                                          ->where('status', 'active')
+                                          ->where('market', $market)
+                                          ->first();
     }
 
-    public function findExpiredCarts(): Collection
+    public function findExpiredCarts() : Collection
     {
-        return ShoppingCart::query()->where('status', 'expired')->get();
+        return static::$eloquentModelClass::query()->where('status', 'expired')->get();
     }
 
-    public function clearExpiredCarts(): int
+    public function clearExpiredCarts() : int
     {
-        return ShoppingCart::query()->where('status', 'expired')->delete();
+        return static::$eloquentModelClass::query()->where('status', 'expired')->delete();
     }
 } 

@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->comment('购物车商品表');
 
             $table->index(['cart_id']);
-            $table->index(['selected']);
+
         });
     }
 
