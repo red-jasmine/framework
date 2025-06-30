@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Application\Services\Withdrawal;
 
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalApprovalCommand;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalApprovalCommandHandler;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalCreateCommand;
@@ -12,14 +12,13 @@ use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalP
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
-use RedJasmine\Wallet\Infrastructure\ReadRepositories\Mysql\WalletWithdrawalReadRepository;
 
 /**
  * @method WalletWithdrawal create(WalletWithdrawalCreateCommand $command)
  * @method bool approval(WalletWithdrawalApprovalCommand $command)
  * @method bool payment(WalletWithdrawalPaymentCommand $command)
  */
-class WalletWithdrawalApplicationService extends ApplicationCommandService
+class WalletWithdrawalApplicationService extends ApplicationService
 {
     public static string $hookNamePrefix = 'wallet.application.withdrawal';
 
