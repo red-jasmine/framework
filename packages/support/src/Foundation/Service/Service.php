@@ -28,29 +28,6 @@ abstract class Service
 
 
     /**
-     * @template T
-     * @param  T  $macro
-     * @param   $method
-     * @param   $parameters
-     *
-     * @return T
-     */
-    public function makeMacro(mixed $macro, $method, $parameters) : mixed
-    {
-
-        if (is_string($macro)) {
-            $macro = app($macro, ['service' => $this]);
-        }
-
-        if ($macro instanceof MacroAwareService) {
-            $macro->setService($this);
-        }
-
-
-        return $macro;
-    }
-
-    /**
      * @param $macro
      * @param $method
      * @param $parameters

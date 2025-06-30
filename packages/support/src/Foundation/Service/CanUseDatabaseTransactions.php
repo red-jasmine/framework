@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Foundation\Service;
 
 use Closure;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * 提供数据库事务处理能力的trait。
@@ -31,6 +32,8 @@ trait CanUseDatabaseTransactions
     /**
      * 开始一个新的数据库事务。
      * 如果事务未启用，则不执行任何操作。
+     * @return void
+     * @throws Throwable
      */
     public function beginDatabaseTransaction() : void
     {
@@ -66,6 +69,8 @@ trait CanUseDatabaseTransactions
     /**
      * 提交当前的数据库事务。
      * 如果事务未启用，则不执行任何操作。
+     * @return void
+     * @throws Throwable
      */
     public function commitDatabaseTransaction() : void
     {
@@ -79,6 +84,8 @@ trait CanUseDatabaseTransactions
     /**
      * 回滚当前的数据库事务。
      * 如果事务未启用，则不执行任何操作。
+     * @return void
+     * @throws Throwable
      */
     public function rollBackDatabaseTransaction() : void
     {

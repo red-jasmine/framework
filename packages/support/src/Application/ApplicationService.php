@@ -20,6 +20,7 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
+use RedJasmine\Support\Foundation\Service\Service;
 use ReflectionClass;
 
 /**
@@ -32,17 +33,8 @@ use ReflectionClass;
  * @property ReadRepositoryInterface $readRepository
  * @property TransformerInterface $transformer
  */
-class ApplicationService
+class ApplicationService extends Service
 {
-
-    use HasHooks;
-
-    use Macroable {
-        Macroable::__call as macroCall;
-        Macroable::hasMacro as macroHasMacro;
-        Macroable::__callStatic as macroCallStatic;
-    }
-
 
     protected static array $handlers = [
         'create'   => CreateCommandHandler::class,
@@ -52,44 +44,21 @@ class ApplicationService
         'paginate' => PaginateQueryHandler::class
     ];
 
+
     public static function getMacros() : array
     {
         return array_merge(static::$handlers, static::$macros);
     }
 
-
-    public function __call($method, $parameters)
+    protected function makeMacro($macro, $method, $parameters)
     {
-
-        if (!isset(static::getMacros()[$method])) {
-            throw new BadMethodCallException(sprintf(
-                'Method %s::%s does not exist.', static::class, $method
-            ));
+        if (is_string($macro) && class_exists($macro)) {
+            // 反射类  获取 构造函数参数
+            return app($macro, ['service' => $this]);
         }
-
-        $macro = static::getMacros()[$method];
-
-
-        if ($macro instanceof Closure) {
-            $macro = $macro->bindTo($this, static::class);
-        }
-        $macro = $this->makeHandler($macro);
-        if (method_exists($macro, 'handle')) {
-            return $this->callHandler($macro, $method, $parameters);
-        }
-        return $macro(...$parameters);
-
+        return $macro;
     }
 
-    public function callHandler($macro, $method, $parameters) : mixed
-    {
-
-        return $this->hook(
-            $method,
-            count($parameters) === 1 ? $parameters[0] : $parameters,
-            fn() => $macro->handle(...$parameters));
-
-    }
     /**
      * @var string
      */
@@ -107,12 +76,4 @@ class ApplicationService
     }
 
 
-    protected function makeHandler($macro)
-    {
-        if (is_string($macro) && class_exists($macro)) {
-            // 反射类  获取 构造函数参数
-            return app($macro, ['service' => $this]);
-        }
-        return $macro;
-    }
 }

@@ -10,7 +10,6 @@
         }
     ],
     "require": {
-        "php": "^8.3",
         "red-jasmine/support": "^1.0",
         "red-jasmine/product": "^1.0",
         "red-jasmine/user": "^1.0"
