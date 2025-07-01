@@ -9,7 +9,7 @@ use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
 use RedJasmine\Product\Application\Stock\Services\Commands\BulkStockCommand;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
@@ -106,7 +106,7 @@ class StockTableAction extends Action
                      foreach ($data['skus'] ?? [] as $index => $sku) {
                          $data['skus'][$index]['sku_id'] = $sku['id'];
                      }
-                     $service = app(StockCommandService::class);
+                     $service = app(StockApplicationService::class);
 
                      $service->bulk(BulkStockCommand::from($data));
 

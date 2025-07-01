@@ -173,7 +173,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function newInstance($attributes = [], $exists = false) : static
     {
-        $instance = parent::newInstance($attributes, $exists); 
+        $instance = parent::newInstance($attributes, $exists);
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
@@ -370,11 +370,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      */
     public function isAllowSale() : bool
     {
-        if (!in_array($this->status, [
-            ProductStatusEnum::ON_SALE,
-        ], true)) {
+        if ($this->status !== ProductStatusEnum::ON_SALE) {
 
-
+            return false;
             throw  ProductException::newFromCodes(ProductException::PRODUCT_FORBID_SALE);
         }
 
@@ -410,6 +408,12 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     public function freightTemplate() : BelongsTo
     {
         return $this->belongsTo(LogisticsFreightTemplate::class, 'freight_template_id', 'id');
+    }
+
+
+    public function getSkuBySkuId(int $skuId) : ?ProductSku
+    {
+        return $this->skus->where('id', $skuId)->firstOrFail();
     }
 
 }

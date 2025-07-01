@@ -14,18 +14,19 @@ class StockDomainService extends Service
 
     public function init(int $skuId, int $productId, int $stock) : void
     {
-        ProductSku::where('id', $skuId)->update([ 'stock' => $stock ]);
+        // TODO 改造
+        ProductSku::where('id', $skuId)->update(['stock' => $stock]);
         $stockUpdate = DB::raw("stock + $stock");
-        Product::where('id', $productId)->update([ 'stock' => $stockUpdate ]);
+        Product::where('id', $productId)->update(['stock' => $stockUpdate]);
     }
 
 
     /**
      * 重置库存
      *
-     * @param int $skuId
-     * @param int $productId
-     * @param int $stock
+     * @param  int  $skuId
+     * @param  int  $productId
+     * @param  int  $stock
      *
      * @return int
      * @throws StockException|\Throwable
@@ -33,7 +34,7 @@ class StockDomainService extends Service
     public function reset(int $skuId, int $productId, int $stock) : int
     {
         $sku = ProductSku::withTrashed()
-                         ->select([ 'id', 'product_id', 'stock', 'channel_stock', 'lock_stock' ])
+                         ->select(['id', 'product_id', 'stock', 'channel_stock', 'lock_stock'])
                          ->lockForUpdate()
                          ->find($skuId);
         if (bccomp($sku->stock, $stock, 0) === 0) {
@@ -45,8 +46,8 @@ class StockDomainService extends Service
         }
         $quantity    = bcsub($stock, $sku->stock, 0);
         $stockUpdate = DB::raw("stock + $quantity");
-        ProductSku::withTrashed()->where('id', $sku->id)->update([ 'stock' => $stockUpdate ]);
-        Product::withTrashed()->where('id', $productId)->update([ 'stock' => $stockUpdate ]);
+        ProductSku::withTrashed()->where('id', $sku->id)->update(['stock' => $stockUpdate]);
+        Product::withTrashed()->where('id', $productId)->update(['stock' => $stockUpdate]);
 
         return $quantity;
 

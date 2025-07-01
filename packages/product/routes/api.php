@@ -4,7 +4,7 @@
 use RedJasmine\Product\UI\Http\Buyer\ProductBuyerRoute;
 
 \Illuminate\Support\Facades\Route::group([
-    'prefix'     => 'api',
+    'prefix'     => 'api/user',
     'middleware' => ['api']
 ], function () {
 

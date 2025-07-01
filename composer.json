@@ -12,6 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^8.4",
+        "red-jasmine/filament-admin": "1.0.x-dev",
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/order": "1.0.x-dev",
         "red-jasmine/user": "1.0.x-dev",

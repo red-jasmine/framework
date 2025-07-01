@@ -9,22 +9,26 @@ use RedJasmine\Product\Application\Stock\Services\Commands\StockLockCommandHandl
 use RedJasmine\Product\Application\Stock\Services\Commands\StockResetCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockSubCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockUnlockCommandHandler;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuReadRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
 use RedJasmine\Support\Application\ApplicationService;
 
 
-class StockCommandService extends ApplicationService
+class StockApplicationService extends ApplicationService
 {
 
     /**
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix = 'product.application.stock.command';
+    public static string $hookNamePrefix = 'product.application.stock';
 
 
     protected static $macros = [
+        'create'  => null,
+        'update'  => null,
+        'delete'  => null,
         'bulk'    => BulkStockCommandHandler::class,
         'reset'   => StockResetCommandHandler::class,
         'add'     => StockAddCommandHandler::class,
@@ -35,8 +39,9 @@ class StockCommandService extends ApplicationService
     ];
 
     public function __construct(
-        protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService $domainService
+        public ProductSkuRepositoryInterface $repository,
+        public ProductSkuReadRepositoryInterface $readRepository,
+        public StockDomainService $domainService
     ) {
 
     }

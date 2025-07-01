@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\Queries\ProductStockLogPaginateQuery;
 use RedJasmine\Product\Application\Stock\Services\Queries\ProductStockPaginateQuery;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockLogQueryService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Exceptions\StockException;
@@ -19,7 +19,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 class SkuController extends Controller
 {
     public function __construct(
-        protected StockCommandService  $commandService,
+        protected StockApplicationService  $commandService,
         protected StockQueryService    $queryService,
         protected StockLogQueryService $logQueryService,
     )

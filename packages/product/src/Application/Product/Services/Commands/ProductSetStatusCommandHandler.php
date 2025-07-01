@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationS
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
@@ -26,7 +26,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
 
     public function __construct(
         protected ProductApplicationService $service,
-        protected StockCommandService $stockCommandService,
+        protected StockApplicationService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
         protected PropertyValidateService $propertyValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,

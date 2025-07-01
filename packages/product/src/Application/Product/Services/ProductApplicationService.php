@@ -12,11 +12,13 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateComman
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 
 /**
+ * @method Product find(FindQuery $query)
  * @see ProductCreateCommandHandler::handle()
  * @method Product create(ProductCreateCommand $command)
  * @see ProductUpdateCommandHandler::handle()
