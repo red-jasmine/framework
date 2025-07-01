@@ -34,7 +34,7 @@ class ArticleResource extends Resource
     /**
      * @var class-string<ProductApplicationService::class>
      */
-    protected static ?string $service       = ArticleApplicationService::class;
+    protected static string $service       = ArticleApplicationService::class;
     protected static ?string $createCommand = ArticleData::class;
     protected static ?string $updateCommand = ArticleData::class;
     protected static bool    $onlyOwner     = true;
