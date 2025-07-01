@@ -25,7 +25,7 @@ trait ServiceMacroAble
     {
         // 怕断是否有 getMacris 静态方法
         if (method_exists(static::class, 'getMacros')) {
-            return in_array($name, static::getMacros());
+            return isset(static::getMacros()[$name]);
         }
         return isset(static::$macros[$name]);
     }
@@ -40,6 +40,7 @@ trait ServiceMacroAble
      */
     public function __call($method, $parameters)
     {
+
         if (!static::hasMacro($method)) {
 
             throw new BadMethodCallException(sprintf(
@@ -51,6 +52,7 @@ trait ServiceMacroAble
         } else {
             $macro = static::$macros[$method];
         }
+
 
 
         if ($macro instanceof Closure) {
