@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart;
+namespace RedJasmine\ShoppingCart\Application;
 
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
@@ -17,7 +17,5 @@ class ShoppingCartApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ShoppingCartRepositoryInterface::class, ShoppingCartRepository::class);
         $this->app->bind(ShoppingCartReadRepositoryInterface::class, ShoppingCartReadRepository::class);
 
-        // 应用服务绑定
-        $this->app->bind(ShoppingCartApplicationService::class, ShoppingCartApplicationService::class);
     }
 } 

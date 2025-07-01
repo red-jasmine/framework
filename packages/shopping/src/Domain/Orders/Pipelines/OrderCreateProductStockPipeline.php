@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\Domain\Orders\Pipelines;
 
 use Closure;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
 
@@ -12,7 +12,7 @@ class OrderCreateProductStockPipeline
 {
 
     public function __construct(
-        protected StockCommandService $stockCommandService,
+        protected StockApplicationService $stockCommandService,
 
     )
     {

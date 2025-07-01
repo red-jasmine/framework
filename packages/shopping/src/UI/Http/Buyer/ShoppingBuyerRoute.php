@@ -4,8 +4,9 @@ namespace RedJasmine\Shopping\UI\Http\Buyer;
 
 use Illuminate\Support\Facades\Route;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers\OrderController;
+use RedJasmine\ShoppingCart\UI\Http\ShoppingCartRoute;
 
-class ShopingBuyerRoute
+class ShoppingBuyerRoute
 {
 
 
@@ -13,13 +14,17 @@ class ShopingBuyerRoute
     {
 
         Route::group([
-                         'prefix' => 'shopping'
-                     ], function () {
+            'prefix' => 'shopping'
+        ], function () {
 
 
-            Route::post('buy', [ OrderController::class, 'buy' ]);
+            Route::post('buy', [OrderController::class, 'buy']);
+
 
         });
+
+        ShoppingCartRoute::api();
+
 
     }
 }

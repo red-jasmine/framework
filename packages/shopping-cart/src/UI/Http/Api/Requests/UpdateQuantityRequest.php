@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\ShoppingCart\UI\Http\Requests;
+namespace RedJasmine\ShoppingCart\UI\Http\Api\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

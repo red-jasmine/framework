@@ -20,8 +20,8 @@ class SelectProductsCommandHandler extends CommandHandler
             $cart = $this->service->repository->findActiveByUser($command->owner);
             if ($cart) {
                 $cart->loadMissing('products');
-                foreach ($command->identities as $identity) {
-                    $cart->selectProduct($identity, $command->selected);
+                foreach ($command->identities as $product) {
+                    $cart->selectProduct($product, $command->selected);
                 }
                 $this->service->repository->store($cart);
             }

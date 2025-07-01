@@ -3,7 +3,7 @@
 namespace RedJasmine\ShoppingCart\Domain\Contracts;
 
 use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\PriceInfo;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProductIdentity;
+use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
 use Cknow\Money\Money;
 
 interface PromotionServiceInterface
@@ -11,11 +11,12 @@ interface PromotionServiceInterface
     /**
      * 获取商品优惠信息
      *
-     * @param CartProductIdentity $identity
+     * @param CartProduct  $product
      * @param Money $originalPrice
+     *
      * @return PriceInfo|null
      */
-    public function getProductPromotion(CartProductIdentity $identity, Money $originalPrice): ?PriceInfo;
+    public function getProductPromotion(CartProduct $product, Money $originalPrice): ?PriceInfo;
 
     /**
      * 获取购物车级优惠

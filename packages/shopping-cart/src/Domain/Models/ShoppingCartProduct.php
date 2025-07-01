@@ -4,26 +4,14 @@ namespace RedJasmine\ShoppingCart\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use Carbon\Carbon;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProductIdentity;
+use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
 
 /**
  * 购物车商品项实体
  *
- * @property int $id
- * @property int $cart_id
- * @property CartProductIdentity $identity
- * @property int $quantity
- * @property float $price
- * @property float $original_price
- * @property float $discount_amount
- * @property float $subtotal
- * @property bool $selected
- * @property array $properties
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property ShoppingCart $cart
  */
 class ShoppingCartProduct extends Model
 {
@@ -32,13 +20,11 @@ class ShoppingCartProduct extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'price'           => 'decimal:2',
-        'original_price'  => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'subtotal'        => 'decimal:2',
-        'selected'        => 'boolean',
-        'properties'      => 'array',
-        'identity'        => CartProductIdentity::class,
+        'price' => MoneyCast::class,
+
+    ];
+    protected $fillable  = [
+        'cart_id'
     ];
 
     /**
@@ -50,7 +36,7 @@ class ShoppingCartProduct extends Model
 
         // 保存时计算小计
         static::saving(function (ShoppingCartProduct $product) {
-            $product->calculateSubtotal();
+
         });
     }
 
@@ -77,13 +63,13 @@ class ShoppingCartProduct extends Model
         }
 
         $this->quantity = $quantity;
-        $this->calculateSubtotal();
+
     }
 
     public function isAvailable() : bool
     {
         // 这里应该调用库存服务检查库存
-        // 使用 $this->identity 调用 StockServiceInterface::checkStock($identity, $this->quantity)
+        // 使用 $this->identity 调用 StockServiceInterface::checkStock($product, $this->quantity)
         // 暂时返回true，实际实现时需要集成库存服务
         return true;
     }
@@ -115,5 +101,15 @@ class ShoppingCartProduct extends Model
         }
 
         return implode(';', $texts);
+    }
+
+
+    public function setProduct(CartProduct $cartProduct) : void
+    {
+        $this->shop_type    = $cartProduct->shopType;
+        $this->shop_id      = $cartProduct->shopId;
+        $this->product_type = $cartProduct->productType;
+        $this->product_id   = $cartProduct->productId;
+        $this->sku_id       = $cartProduct->skuId;
     }
 } 

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\ShoppingCart\UI\Http\Resources;
+namespace RedJasmine\ShoppingCart\UI\Http\Api\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

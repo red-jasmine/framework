@@ -10,13 +10,10 @@
         }
     ],
     "require": {
-        "red-jasmine/support": "^1.0",
-        "red-jasmine/product": "^1.0",
-        "red-jasmine/user": "^1.0"
+        "red-jasmine/support": "^1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "phpunit/phpunit": "^10.0"
+
     },
     "autoload": {
         "psr-4": {
@@ -33,6 +30,10 @@
             "providers": [
                 "RedJasmine\\ShoppingCart\\ShoppingCartServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     },
     "config": {

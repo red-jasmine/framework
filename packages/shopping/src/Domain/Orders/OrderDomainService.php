@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\Domain\Orders;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Application\Stock\Services\StockCommandService;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Exceptions\ProductException;
@@ -23,7 +23,7 @@ class OrderDomainService extends Service
     public function __construct(
         protected ProductApplicationService $productCommandService,
         protected StockQueryService $stockQueryService,
-        protected StockCommandService $stockCommandService,
+        protected StockApplicationService $stockCommandService,
         protected ShoppingOrderCommandService $orderCommandService,
         protected ProductPriceDomainService $productPriceDomainService,
         protected OrderCalculationService $orderCalculationService,

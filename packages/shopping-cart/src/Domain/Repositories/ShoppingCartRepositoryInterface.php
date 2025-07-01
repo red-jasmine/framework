@@ -12,7 +12,6 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface ShoppingCartRepositoryInterface extends RepositoryInterface
 {
-    public function findByUser(UserInterface $user, string $market) : ?ShoppingCart;
 
     public function findActiveByUser(UserInterface $user, string $market) : ?ShoppingCart;
 

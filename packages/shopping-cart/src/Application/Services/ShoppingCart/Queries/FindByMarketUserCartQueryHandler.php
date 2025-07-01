@@ -6,19 +6,17 @@ use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplic
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 
-class FindCartQueryHandler extends QueryHandler
+class FindByMarketUserCartQueryHandler extends QueryHandler
 {
     public function __construct(
         protected ShoppingCartApplicationService $service
     ) {
     }
 
-    public function handle(FindCartQuery $query): ?ShoppingCart
+    public function handle(FindByMarketUserCartQuery $query) : ?ShoppingCart
     {
-        $cart = $this->service->readRepository->findActiveByUser($query->owner);
-        if ($cart) {
-            $cart->load('products');
-        }
-        return $cart;
+        $cart = $this->service->readRepository->findByMarketUser($query->owner, $query->market);
+
+        return $cart ?? $this->service->newModel($query);
     }
 } 

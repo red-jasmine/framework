@@ -2,6 +2,9 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart;
 
+use Illuminate\Database\Eloquent\Model;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQueryHandler;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
 use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartReadRepositoryInterface;
@@ -12,16 +15,18 @@ use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\UpdateQua
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\SelectProductsCommandHandler;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\CalculateAmountCommandHandler;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Data\Data;
 
 /**
  * 购物车应用服务
- * 
+ *
  * 负责处理购物车相关的业务逻辑，包括：
  * - 购物车商品管理
  * - 价格计算
  * - 库存校验
  * - 购物车状态管理
- * 
+ *
+ * @method findByMarketUser(FindByMarketUserCartQuery $query)
  * @method ShoppingCart addProduct(AddProductCommand $command)
  * @method bool removeProduct(RemoveProductCommand $command)
  * @method ShoppingCartProduct updateQuantity(UpdateQuantityCommand $command)
@@ -44,16 +49,27 @@ class ShoppingCartApplicationService extends ApplicationService
     ) {
     }
 
-    public function getDefaultModelWithInfo(): array
+    public function newModel(?Data $data = null) : Model
+    {
+        return ShoppingCart::make([
+            'market' => $data->market,
+            'owner'  => $data->owner,
+        ]);
+    }
+
+    public function getDefaultModelWithInfo() : array
     {
         return ['products'];
     }
 
     protected static $macros = [
-        'addProduct' => AddProductCommandHandler::class,
-        'removeProduct' => RemoveProductCommandHandler::class,
-        'updateQuantity' => UpdateQuantityCommandHandler::class,
-        'selectProducts' => SelectProductsCommandHandler::class,
+        'findByMarketUser' => FindByMarketUserCartQueryHandler::class,
+
+
+        'addProduct'      => AddProductCommandHandler::class,
+        'removeProduct'   => RemoveProductCommandHandler::class,
+        'updateQuantity'  => UpdateQuantityCommandHandler::class,
+        'selectProducts'  => SelectProductsCommandHandler::class,
         'calculateAmount' => CalculateAmountCommandHandler::class,
     ];
 } 

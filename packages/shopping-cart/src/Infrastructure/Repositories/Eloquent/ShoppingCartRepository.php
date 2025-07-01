@@ -12,14 +12,6 @@ class ShoppingCartRepository extends EloquentRepository implements ShoppingCartR
 {
     protected static string $eloquentModelClass = ShoppingCart::class;
 
-    public function findByUser(UserInterface $user, string $market) : ?ShoppingCart
-    {
-        return static::$eloquentModelClass::query()
-                                          ->where('owner_type', $user->getType())
-                                          ->where('owner_id', $user->getID())
-                                          ->where('market', $market)
-                                          ->first();
-    }
 
     public function findActiveByUser(UserInterface $user, string $market) : ?ShoppingCart
     {

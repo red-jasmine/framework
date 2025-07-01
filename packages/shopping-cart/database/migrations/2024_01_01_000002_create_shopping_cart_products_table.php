@@ -17,11 +17,10 @@ return new class extends Migration {
             $table->string('sku_id', 64)->comment('SKU ID');
             $table->integer('quantity')->default(1)->comment('数量');
             $table->string('currency', 3)->default('CNY')->comment('货币');
-            $table->decimal('price', 12)->default(0)->comment('销售单价');
-            $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
+            $table->string('price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('price_amount', 10)->default(0)->comment('销售价');
             $table->operator();
             $table->comment('购物车商品表');
-
             $table->index(['cart_id']);
 
         });

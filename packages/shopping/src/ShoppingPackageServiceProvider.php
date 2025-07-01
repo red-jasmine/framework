@@ -18,6 +18,7 @@ class ShoppingPackageServiceProvider extends PackageServiceProvider
         $package
             ->name('red-jasmine-shopping')
             ->hasConfigFile()
+            ->hasRoutes(['api'])
             ->hasViews();
     }
 }

@@ -7,7 +7,7 @@ use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
 /**
  * 购物车商品唯一标识值对象
  */
-class CartProductIdentity extends ValueObject
+class CartProduct extends ValueObject
 {
 
     public string $shopType;

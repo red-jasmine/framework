@@ -2,16 +2,13 @@
 
 namespace RedJasmine\ShoppingCart;
 
+use RedJasmine\ShoppingCart\Application\ShoppingCartApplicationServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartReadRepositoryInterface;
-use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
-use RedJasmine\ShoppingCart\Infrastructure\ReadRepositories\Mysql\ShoppingCartReadRepository;
-use RedJasmine\ShoppingCart\Infrastructure\Repositories\Eloquent\ShoppingCartRepository;
 
 class ShoppingCartServiceProvider extends PackageServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         $package
             ->name('red-jasmine-shopping-cart')
@@ -25,10 +22,10 @@ class ShoppingCartServiceProvider extends PackageServiceProvider
             ->runsMigrations();
     }
 
-    public function packageRegistered(): void
+    public function packageRegistered() : void
     {
         // 注册应用服务提供者
-        $this->app->register(Application\Services\ShoppingCart\ShoppingCartApplicationServiceProvider::class);
+        $this->app->register(ShoppingCartApplicationServiceProvider::class);
     }
 
 } 
