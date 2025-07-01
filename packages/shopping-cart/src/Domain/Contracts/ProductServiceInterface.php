@@ -2,45 +2,29 @@
 
 namespace RedJasmine\ShoppingCart\Domain\Contracts;
 
+use Cknow\Money\Money;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
 use RedJasmine\ShoppingCart\Domain\Data\ProductInfo;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\PriceInfo;
 
 interface ProductServiceInterface
 {
     /**
      * 获取商品信息
      *
-     * @param CartProduct  $product
+     * @param  ProductPurchaseFactors  $productPurchaseFactors
      *
      * @return array|null
      */
-    public function getProductInfo(CartProduct $product): ?ProductInfo;
+    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ?ProductInfo;
 
     /**
      * 获取商品价格信息
      *
-     * @param  CartProduct $product
+     * @param  ProductPurchaseFactors  $productPurchaseFactors
      *
-     * @return PriceInfo|null
+     * @return Money|null
      */
-    public function getProductPrice(CartProduct $product): ?PriceInfo;
+    public function getProductPrice(ProductPurchaseFactors $productPurchaseFactors) : ?Money;
 
-    /**
-     * 校验商品是否可购买
-     *
-     * @param  CartProduct $product
-     *
-     * @return bool
-     */
-    public function isProductAvailable(CartProduct $product): bool;
 
-    /**
-     * 获取商品规格属性
-     *
-     * @param CartProduct $product
-     *
-     * @return array
-     */
-    public function getSkuProperties(CartProduct $product): array;
-} 
+}

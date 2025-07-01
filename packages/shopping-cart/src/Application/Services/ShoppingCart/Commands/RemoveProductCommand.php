@@ -2,12 +2,12 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
 class RemoveProductCommand extends Data
 {
-    public UserInterface $owner;
-    public CartProduct   $product;
+    public UserInterface   $owner;
+    public ProductIdentity $product;
 } 

@@ -4,10 +4,10 @@ namespace RedJasmine\ShoppingCart\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use Carbon\Carbon;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
+use InvalidArgumentException;
 
 /**
  * 购物车商品项实体
@@ -19,11 +19,11 @@ class ShoppingCartProduct extends Model
 
     public $incrementing = false;
 
-    protected $casts = [
+    protected $casts    = [
         'price' => MoneyCast::class,
 
     ];
-    protected $fillable  = [
+    protected $fillable = [
         'cart_id'
     ];
 
@@ -59,7 +59,7 @@ class ShoppingCartProduct extends Model
     public function updateQuantity(int $quantity) : void
     {
         if ($quantity <= 0) {
-            throw new \InvalidArgumentException('商品数量必须大于0');
+            throw new InvalidArgumentException('商品数量必须大于0');
         }
 
         $this->quantity = $quantity;
@@ -104,12 +104,23 @@ class ShoppingCartProduct extends Model
     }
 
 
-    public function setProduct(CartProduct $cartProduct) : void
+    public function setProduct(ProductIdentity $cartProduct) : void
     {
-        $this->shop_type    = $cartProduct->shopType;
-        $this->shop_id      = $cartProduct->shopId;
+        $this->seller_type  = $cartProduct->seller->getType();
+        $this->seller_id    = $cartProduct->seller->getID();
         $this->product_type = $cartProduct->productType;
         $this->product_id   = $cartProduct->productId;
         $this->sku_id       = $cartProduct->skuId;
+    }
+
+    public function getProduct() : ProductIdentity
+    {
+        return ProductIdentity::from([
+            'seller_type'  => $this->seller_type,
+            'seller_id'    => $this->seller_id,
+            'product_type' => $this->product_type,
+            'product_id'   => $this->product_id,
+            'sku_id'       => $this->sku_id,
+        ]);
     }
 } 

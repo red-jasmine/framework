@@ -2,19 +2,10 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
 
-class AddProductCommand extends Data
+class AddProductCommand extends ProductPurchaseFactors
 {
-    public string $market = 'default';
 
-    public UserInterface $owner;
 
-    public CartProduct $product;
-
-    public int $quantity = 1;
-
-    public array $properties = [];
 } 

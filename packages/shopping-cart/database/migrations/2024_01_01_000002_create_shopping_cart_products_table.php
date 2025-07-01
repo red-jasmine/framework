@@ -10,8 +10,7 @@ return new class extends Migration {
         Schema::create('shopping_cart_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cart_id')->comment('购物车ID');
-            $table->string('shop_type', 32)->comment('店铺类型');
-            $table->string('shop_id', 64)->comment('店铺ID');
+            $table->userMorphs('seller','卖家',false);
             $table->string('product_type', 32)->comment('商品类型');
             $table->string('product_id', 64)->comment('商品ID');
             $table->string('sku_id', 64)->comment('SKU ID');

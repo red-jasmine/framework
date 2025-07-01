@@ -2,14 +2,14 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
 class SelectProductsCommand extends Data
 {
     public UserInterface $owner;
-    /** @var CartProduct[] */
-    public array $identities;
-    public bool $selected = true;
+    /** @var ProductIdentity[] */
+    public array $products;
+    public bool  $selected = true;
 } 

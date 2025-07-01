@@ -2,14 +2,15 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
+use Cknow\Money\Money;
+use InvalidArgumentException;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\ShoppingCart\Domain\Contracts\StockServiceInterface;
 use RedJasmine\ShoppingCart\Domain\Data\ProductInfo;
 use RedJasmine\ShoppingCart\Domain\Models\Enums\ShoppingCartStatusEnum;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
-use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\ShoppingCart\Domain\Contracts\StockServiceInterface;
-use RedJasmine\ShoppingCart\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
@@ -34,35 +35,34 @@ class AddProductCommandHandler extends CommandHandler
     {
         $this->beginDatabaseTransaction();
         try {
-            // 1. 校验商品信息
-            // TODO 需要验证 添加购物车后，最大的购买数量等限制
-            $productInfo = $this->validateProduct($command);
 
-            // 2. 校验库存
-            $this->validateStock($command);
-
-
-            // 4. 查找或创建购物车
+            // 1. 查找或创建购物车
             $cart = $this->service->repository
-                        ->findActiveByUser($command->owner, $command->market)
+                        ->findActiveByUser($command->buyer, $command->market)
                     ?? ShoppingCart::make([
-                    'owner'  => $command->owner,
+                    'owner'  => $command->buyer,
                     'market' => $command->market,
                     'status' => ShoppingCartStatusEnum::ACTIVE,
                 ]);
-
             $cart->products;
-            // 5. 构建购物车商品项
+
+            // 2. 构建购物车商品项
             $shoppingCartProduct = ShoppingCartProduct::make(['cart_id' => $cart->id]);
-            $shoppingCartProduct->setProduct($productInfo->product);
+            $shoppingCartProduct->setProduct($command->product);
             $shoppingCartProduct->quantity = $command->quantity;
-            $shoppingCartProduct->price    = $productInfo->price;
-
-
-            // 6. 添加到购物车
-
+            // 3. 添加到购物车
             $cart->addProduct($shoppingCartProduct);
 
+
+            $command->quantity = $shoppingCartProduct->quantity;
+            // 5. 校验商品信息
+            $productInfo = $this->validateProduct($command);
+
+            // 6. 校验库存
+            $this->validateStock($command);
+
+            // 7. 获取价格 已最终的数量 获取价格
+            $shoppingCartProduct->price = $this->getPriceInfo($command);
 
 
             $this->service->repository->store($cart);
@@ -80,14 +80,14 @@ class AddProductCommandHandler extends CommandHandler
      */
     private function validateProduct(AddProductCommand $command) : ProductInfo
     {
-        $productInfo = $this->productService->getProductInfo($command->product);
+        $productInfo = $this->productService->getProductInfo($command);
 
         if (!$productInfo) {
-            throw new \InvalidArgumentException('商品不存在');
+            throw new InvalidArgumentException('商品不存在');
         }
 
         if (!$productInfo->isAvailable) {
-            throw new \InvalidArgumentException('商品不可购买');
+            throw new InvalidArgumentException('商品不可购买');
         }
 
         return $productInfo;
@@ -100,19 +100,20 @@ class AddProductCommandHandler extends CommandHandler
     {
         $stockInfo = $this->stockService->getAvailableStock($command->product, $command->quantity);
         if (!$stockInfo->isAvailable) {
-            throw new \InvalidArgumentException("库存不足，可用库存：{$stockInfo->stock}");
+            throw new InvalidArgumentException("库存不足，可用库存：{$stockInfo->stock}");
         }
     }
 
     /**
      * 获取价格信息
      */
-    private function getPriceInfo(AddProductCommand $command) : \RedJasmine\ShoppingCart\Domain\Models\ValueObjects\PriceInfo
+    private function getPriceInfo(AddProductCommand $command) : Money
     {
-        $priceInfo = $this->productService->getProductPrice($command->identity);
-        if (!$priceInfo) {
-            throw new \InvalidArgumentException('无法获取商品价格信息');
+        $price = $this->productService->getProductPrice($command);
+        if (!$price) {
+            throw new InvalidArgumentException('无法获取商品价格信息');
         }
+        return $price;
 
         // 应用营销优惠
         $promotionInfo = $this->promotionService->getProductPromotion(

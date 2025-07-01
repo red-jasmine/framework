@@ -15,8 +15,8 @@ class AddProductRequest extends FormRequest
     {
         return [
             'market'               => 'required|string',
-            'product.shop_type'    => 'required|string',
-            'product.shop_id'      => 'required|string',
+            'product.seller_type'    => 'required|string',
+            'product.seller_id'      => 'required|string',
             'product.product_type' => 'required|string',
             'product.product_id'   => 'required|string',
             'product.sku_id'       => 'required|string',

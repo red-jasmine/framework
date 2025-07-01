@@ -4,6 +4,7 @@ namespace RedJasmine\ShoppingCart\UI\Http\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\AddProductCommand;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\CalculateAmountCommand;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\RemoveProductCommand;
@@ -12,12 +13,12 @@ use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\UpdateQua
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\ListCartProductsQuery;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
 use RedJasmine\ShoppingCart\UI\Http\Api\Requests\AddProductRequest;
 use RedJasmine\ShoppingCart\UI\Http\Api\Requests\SelectProductsRequest;
 use RedJasmine\ShoppingCart\UI\Http\Api\Requests\UpdateQuantityRequest;
 use RedJasmine\ShoppingCart\UI\Http\Api\Resources\ShoppingCartProductResource;
 use RedJasmine\ShoppingCart\UI\Http\Api\Resources\ShoppingCartResource;
+use Throwable;
 
 
 class ShoppingCartController extends Controller
@@ -34,7 +35,7 @@ class ShoppingCartController extends Controller
             $query = FindByMarketUserCartQuery::from(['owner' => $request->user()]);
             $cart  = $this->service->findByMarketUser($query);
             return new ShoppingCartResource($cart);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
@@ -47,7 +48,7 @@ class ShoppingCartController extends Controller
             $cart     = $this->service->readRepository->findActiveByUser($query->owner);
             $products = $cart ? $cart->products : collect();
             return response()->json(ShoppingCartProductResource::collection($products));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 422);
         }
     }
@@ -56,9 +57,10 @@ class ShoppingCartController extends Controller
     public function add(AddProductRequest $request) : JsonResponse
     {
         $request->validated();
-        $request->offsetSet('owner', $this->getOwner());
+        $request->offsetSet('buyer', $this->getOwner());
 
         $command = AddProductCommand::from($request);
+
 
         $cart = $this->service->addProduct($command);
         return response()->json(new ShoppingCartResource($cart));
@@ -67,7 +69,7 @@ class ShoppingCartController extends Controller
     // 移除商品
     public function remove(Request $request) : JsonResponse
     {
-        $product = CartProduct::from($request->all());
+        $product = ProductIdentity::from($request->all());
         $command = RemoveProductCommand::from([
             'owner'    => $request->user(),
             'identity' => $product,
@@ -79,13 +81,9 @@ class ShoppingCartController extends Controller
     // 更新商品数量
     public function updateQuantity(UpdateQuantityRequest $request) : JsonResponse
     {
-        $data    = $request->validated();
-        $product = CartProduct::from($data);
-        $command = UpdateQuantityCommand::from([
-            'owner'    => $request->user(),
-            'identity' => $product,
-            'quantity' => $data['quantity'],
-        ]);
+        $data = $request->validated();
+
+        $command = UpdateQuantityCommand::from($request);
         $cart    = $this->service->updateQuantity($command);
         return response()->json(new ShoppingCartResource($cart));
     }
@@ -94,7 +92,7 @@ class ShoppingCartController extends Controller
     public function selectProducts(SelectProductsRequest $request) : JsonResponse
     {
         $data       = $request->validated();
-        $identities = array_map(fn($item) => CartProduct::fromArray($item), $data['identities'] ?? []);
+        $identities = array_map(fn($item) => ProductIdentity::fromArray($item), $data['identities'] ?? []);
         $command    = SelectProductsCommand::from([
             'owner'      => $request->user(),
             'identities' => $identities,

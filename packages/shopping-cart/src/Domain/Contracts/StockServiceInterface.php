@@ -2,8 +2,8 @@
 
 namespace RedJasmine\ShoppingCart\Domain\Contracts;
 
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\ShoppingCart\Domain\Data\CartStockInfo;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
 
 interface StockServiceInterface
 {
@@ -12,32 +12,32 @@ interface StockServiceInterface
     /**
      * 获取可用库存数量
      *
-     * @param  CartProduct  $product
+     * @param  ProductIdentity  $product
      * @param  int  $quantity
      *
      * @return CartStockInfo
      */
-    public function getAvailableStock(CartProduct $product, int $quantity) : CartStockInfo;
+    public function getAvailableStock(ProductIdentity $product, int $quantity) : CartStockInfo;
 
     /**
      * 预占库存
      *
-     * @param  CartProduct  $product
+     * @param  ProductIdentity  $product
      * @param  int  $quantity
      * @param  string  $orderId
      *
      * @return bool
      */
-    public function reserveStock(CartProduct $product, int $quantity, string $orderId) : bool;
+    public function reserveStock(ProductIdentity $product, int $quantity, string $orderId) : bool;
 
     /**
      * 释放预占库存
      *
-     * @param  CartProduct  $product
+     * @param  ProductIdentity  $product
      * @param  int  $quantity
      * @param  string  $orderId
      *
      * @return bool
      */
-    public function releaseStock(CartProduct $product, int $quantity, string $orderId) : bool;
+    public function releaseStock(ProductIdentity $product, int $quantity, string $orderId) : bool;
 } 

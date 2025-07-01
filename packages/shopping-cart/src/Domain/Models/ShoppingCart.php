@@ -2,18 +2,18 @@
 
 namespace RedJasmine\ShoppingCart\Domain\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\ShoppingCart\Domain\Models\Enums\ShoppingCartStatusEnum;
-use RedJasmine\ShoppingCart\Domain\Models\ValueObjects\CartProduct;
 use RedJasmine\ShoppingCart\Exceptions\ShoppingCartException;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
-use Carbon\Carbon;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * 购物车聚合根
@@ -29,7 +29,7 @@ use Carbon\Carbon;
  * @property Carbon $expired_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Collection|ShoppingCartProduct[] $products
+ * @property Collection|ProductIdentity[] $products
  */
 class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
 {
@@ -131,7 +131,7 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
 
         if ($existingProduct) {
             $existingProduct->updateQuantity($existingProduct->quantity + $product->quantity);
-
+            $product->quantity = $existingProduct->quantity;
         } else {
 
             $product->cart_id = $this->id;
@@ -139,7 +139,7 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         }
     }
 
-    public function removeProduct(CartProduct $product) : void
+    public function removeProduct(ProductIdentity $product) : void
     {
         $product = $this->products()->where([
             'shop_type'    => $product->shopType,
@@ -155,7 +155,7 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         $this->calculateAmount();
     }
 
-    public function updateQuantity(CartProduct $product, int $quantity) : void
+    public function updateQuantity(ProductIdentity $product, int $quantity) : void
     {
         $product = $this->products()->where([
             'shop_type'    => $product->shopType,
@@ -173,7 +173,7 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         $this->calculateAmount();
     }
 
-    public function selectProduct(CartProduct $product, bool $selected) : void
+    public function selectProduct(ProductIdentity $product, bool $selected) : void
     {
         $product = $this->products()->where([
             'shop_type'    => $product->shopType,

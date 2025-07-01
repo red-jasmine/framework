@@ -2,20 +2,38 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 
 class FindByMarketUserCartQueryHandler extends QueryHandler
 {
     public function __construct(
-        protected ShoppingCartApplicationService $service
+        protected ShoppingCartApplicationService $service,
+        protected ProductServiceInterface $productService,
     ) {
     }
 
     public function handle(FindByMarketUserCartQuery $query) : ?ShoppingCart
     {
         $cart = $this->service->readRepository->findByMarketUser($query->owner, $query->market);
+
+        foreach ($cart->products as $product) {
+            $factors           = new ProductPurchaseFactors();
+            $factors->product  = $product->getProduct();
+            $factors->market   = $cart->market;
+            $factors->quantity = $product->quantity;
+            $factors->buyer    = $cart->owner;
+            $productInfo       = $this->productService->getProductInfo($factors);
+            $price             = $this->productService->getProductPrice($factors);
+
+            $product->price = $price;
+
+            // 返回更多的产品信息 TODO
+        }
+
 
         return $cart ?? $this->service->newModel($query);
     }
