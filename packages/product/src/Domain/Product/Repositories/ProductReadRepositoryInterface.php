@@ -9,4 +9,6 @@ interface ProductReadRepositoryInterface extends ReadRepositoryInterface
 
     public function findList(array $ids);
 
+
+    public function findSkuById(int $skuId);
 }

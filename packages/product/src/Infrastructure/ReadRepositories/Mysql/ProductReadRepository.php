@@ -14,13 +14,18 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
     public static $modelClass = Product::class;
 
     /**
-     * @param array $ids
+     * @param  array  $ids
      *
      * @return Product[]
      */
     public function findList(array $ids)
     {
-       return $this->query()->whereIn('id', $ids)->get();
+        return $this->query()->whereIn('id', $ids)->get();
+    }
+
+    public function findSkuById(int $skuId)
+    {
+        return $this->query()->findOrFail($skuId);
     }
 
 
@@ -61,7 +66,6 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
     }
 
 
-
     public function allowedIncludes() : array
     {
         return [
@@ -76,7 +80,6 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
             'tags',
         ];
     }
-
 
 
 }

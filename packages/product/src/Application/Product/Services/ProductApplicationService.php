@@ -9,10 +9,11 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCom
 use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCommandHandler;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommandHandler;
+use RedJasmine\Product\Application\Product\Services\Queries\GetProductPurchaseQuery;
+use RedJasmine\Product\Application\Product\Services\Queries\GetProductPriceQueryHandler;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
-
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
@@ -24,6 +25,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
  * @see ProductUpdateCommandHandler::handle()
  * @method void update(ProductUpdateCommand $command)
  * @method void setStatus(ProductSetStatusCommand $command)
+ * @method  getProductPrice(GetProductPurchaseQuery $query)
  */
 class ProductApplicationService extends ApplicationService
 {
@@ -52,10 +54,13 @@ class ProductApplicationService extends ApplicationService
     }
 
     protected static $macros = [
-        'create'    => ProductCreateCommandHandler::class,
-        'update'    => ProductUpdateCommandHandler::class,
-        'delete'    => ProductDeleteCommandHandler::class,
-        'setStatus' => ProductSetStatusCommandHandler::class,
+        'create'          => ProductCreateCommandHandler::class,
+        'update'          => ProductUpdateCommandHandler::class,
+        'delete'          => ProductDeleteCommandHandler::class,
+        'setStatus'       => ProductSetStatusCommandHandler::class,
+
+        // 查询器
+        'getProductPrice' => GetProductPriceQueryHandler::class,
     ];
 
 
