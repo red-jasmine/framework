@@ -3521,12 +3521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d493d6f6ed042c0b13621627a12df87429982ed4"
+                "reference": "74811d462fe6ff9ed762c2b924ec1594d84d4742"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d493d6f6ed042c0b13621627a12df87429982ed4",
-                "reference": "d493d6f6ed042c0b13621627a12df87429982ed4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/74811d462fe6ff9ed762c2b924ec1594d84d4742",
+                "reference": "74811d462fe6ff9ed762c2b924ec1594d84d4742",
                 "shasum": ""
             },
             "require": {
@@ -3729,7 +3729,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-06-28T17:31:12+00:00"
+            "time": "2025-07-01T16:49:44+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7706,13 +7706,13 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/user",
-                "reference": "71b9709366f58167bd5f2e877bb50bc28fee3fe5"
+                "reference": "834fc8521063b4025cf105a0a14aa3654c818e79"
             },
             "require": {
                 "red-jasmine/captcha": "1.0.x-dev",
                 "red-jasmine/socialite": "1.0.x-dev",
                 "red-jasmine/support": "1.0.x-dev",
-                "tymon/jwt-auth": "^2.1"
+                "tymon/jwt-auth": "^2.2"
             },
             "type": "library",
             "extra": {
@@ -8509,12 +8509,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "1ac16d431edc1978c29a462e0589e49e1fa4c928"
+                "reference": "cbe5c7289b5d88c4290ea535d68202ef4dd7efd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/1ac16d431edc1978c29a462e0589e49e1fa4c928",
-                "reference": "1ac16d431edc1978c29a462e0589e49e1fa4c928",
+                "url": "https://api.github.com/repos/symfony/console/zipball/cbe5c7289b5d88c4290ea535d68202ef4dd7efd6",
+                "reference": "cbe5c7289b5d88c4290ea535d68202ef4dd7efd6",
                 "shasum": ""
             },
             "require": {
@@ -8595,7 +8595,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-28T08:02:13+00:00"
+            "time": "2025-07-01T08:42:49+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -10417,12 +10417,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "39660b53dc7bac204663d08075a578d9df849a07"
+                "reference": "b1975de4521089d31d833c169987242e206a8833"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/39660b53dc7bac204663d08075a578d9df849a07",
-                "reference": "39660b53dc7bac204663d08075a578d9df849a07",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/b1975de4521089d31d833c169987242e206a8833",
+                "reference": "b1975de4521089d31d833c169987242e206a8833",
                 "shasum": ""
             },
             "require": {
@@ -10505,7 +10505,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-27T19:57:42+00:00"
+            "time": "2025-07-01T07:43:28+00:00"
         },
         {
             "name": "symfony/translation-contracts",
