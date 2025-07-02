@@ -7,8 +7,8 @@ use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\ShoppingCart\Domain\Data\ProductInfo;
+use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\Shopping\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class ProductServiceIntegration implements ProductServiceInterface

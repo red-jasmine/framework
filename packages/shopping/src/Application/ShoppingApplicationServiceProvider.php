@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Shopping\Application\Listeners\PaymentTradeListener;
+use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
 use RedJasmine\Shopping\Infrastructure\Services\ProductServiceIntegration;
 use RedJasmine\Shopping\Infrastructure\Services\StockServiceIntegration;
-use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\ShoppingCart\Domain\Contracts\StockServiceInterface;
 
 class ShoppingApplicationServiceProvider extends ServiceProvider
 {

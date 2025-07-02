@@ -6,8 +6,8 @@ use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
 use RedJasmine\Product\Application\Stock\Services\Queries\FindSkuStockQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
-use RedJasmine\ShoppingCart\Domain\Contracts\StockServiceInterface;
-use RedJasmine\ShoppingCart\Domain\Data\CartStockInfo;
+use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
+use RedJasmine\Shopping\Domain\Data\CartStockInfo;
 
 class StockServiceIntegration implements StockServiceInterface
 {
