@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Domain\Data;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Support\Data\Data;
 
 class ProductInfo extends Data
@@ -16,6 +16,7 @@ class ProductInfo extends Data
     public string          $title;
     public string          $propertiesName;
     public ?string         $image = null;
+
 
     // 价格信息
 

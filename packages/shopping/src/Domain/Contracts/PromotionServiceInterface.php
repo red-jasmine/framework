@@ -2,20 +2,23 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
-use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Shopping\Domain\Data\ProductAmountData;
 
 interface PromotionServiceInterface
 {
     /**
      * 获取商品优惠信息
      *
-     * @param  ProductPurchaseFactors  $productPurchaseFactors
-     * @param  Money  $price  优惠金额
+     * @param  ProductPurchaseFactor  $productPurchaseFactors
+     * @param  ProductAmountData  $productAmount  优惠金额
      *
-     * @return Money|null
+     * @return ProductAmountData
      */
-    public function getProductPromotion(ProductPurchaseFactors $productPurchaseFactors, Money $price) : ?Money;
+    public function getProductPromotion(
+        ProductPurchaseFactor $productPurchaseFactors,
+        ProductAmountData $productAmount
+    ) : ProductAmountData;
 
     /**
      * 获取购物车级优惠
@@ -25,7 +28,7 @@ interface PromotionServiceInterface
      *
      * @return array
      */
-    public function getCartPromotion(array $cartItems, float $totalAmount) : array;
+    public function getOrderPromotion(array $cartItems, float $totalAmount) : array;
 
     /**
      * 获取用户优惠券

@@ -2,17 +2,19 @@
 
 namespace RedJasmine\Shopping\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Shopping\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * 购物车商品项实体
- *
+ * @property int $quantity
+ * @property Money $price
  */
 class ShoppingCartProduct extends Model
 {

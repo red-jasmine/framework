@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Shopping\Domain\Orders;
 
-use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
-use RedJasmine\Shopping\Domain\Orders\Data\OrdersData;
-use RedJasmine\Shopping\Domain\Orders\Data\ProductData;
+use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Data\ProductData;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderSplitProductHook;
 use RedJasmine\Support\Foundation\Service\Service;
 

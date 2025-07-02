@@ -5,7 +5,7 @@ namespace RedJasmine\Shopping\Domain\Orders\Transformers;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrderCreateCommandTransformer

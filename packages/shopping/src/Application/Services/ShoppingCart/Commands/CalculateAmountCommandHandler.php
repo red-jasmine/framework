@@ -5,7 +5,9 @@ namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Commands;
 use Cknow\Money\Money;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
+use RedJasmine\Shopping\Domain\Data\OrderAmountData;
 use RedJasmine\Shopping\Domain\Services\ShoppingCartDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 
@@ -18,15 +20,18 @@ class CalculateAmountCommandHandler extends CommandHandler
         protected ShoppingCartApplicationService $service,
         protected ProductServiceInterface $productService,
         protected StockServiceInterface $stockService,
+        protected PromotionServiceInterface $promotionService
     ) {
         $this->shoppingCartDomainService = new ShoppingCartDomainService(
             $this->productService,
-            $this->stockService
+            $this->stockService,
+            $this->promotionService,
         );
     }
 
-    public function handle(CalculateAmountCommand $command) : ?Money
+    public function handle(CalculateAmountCommand $command) : ?OrderAmountData
     {
+
 
         // 获取购物车
         // 获取购物车中的商品
@@ -42,21 +47,8 @@ class CalculateAmountCommandHandler extends CommandHandler
             $product->selected = true;
         }
 
-        // TODO 验证数量是否一致
-        //$selectProducts = $cart->products->whereIn('id', $command->cartProducts)->all();
-
-        $this->shoppingCartDomainService->calculates($cart, $command);
-
-        dd($selectProducts);
+        return $this->shoppingCartDomainService->calculates($cart, $command);
 
 
-
-
-        if ($cart) {
-            $cart->loadMissing('products');
-            $cart->calculateAmount();
-
-        }
-        return $cart;
     }
 } 

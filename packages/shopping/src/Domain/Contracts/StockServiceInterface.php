@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Shopping\Domain\Data\CartStockInfo;
 
 interface StockServiceInterface

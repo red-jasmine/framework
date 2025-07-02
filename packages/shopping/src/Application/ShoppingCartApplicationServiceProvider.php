@@ -10,11 +10,12 @@ use RedJasmine\Shopping\Infrastructure\Repositories\Eloquent\ShoppingCartReposit
 
 class ShoppingCartApplicationServiceProvider extends ServiceProvider
 {
-    public function register(): void
+    public function register() : void
     {
         // 仓库绑定
         $this->app->bind(ShoppingCartRepositoryInterface::class, ShoppingCartRepository::class);
         $this->app->bind(ShoppingCartReadRepositoryInterface::class, ShoppingCartReadRepository::class);
+
 
     }
 } 

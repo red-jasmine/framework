@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Product\Application\Stock\Services\Queries\FindSkuStockQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;

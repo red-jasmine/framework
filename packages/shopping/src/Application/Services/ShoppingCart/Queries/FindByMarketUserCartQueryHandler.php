@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Queries;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
@@ -21,7 +21,7 @@ class FindByMarketUserCartQueryHandler extends QueryHandler
         $cart = $this->service->readRepository->findByMarketUser($query->owner, $query->market);
 
         foreach ($cart->products as $product) {
-            $factors           = new ProductPurchaseFactors();
+            $factors           = new ProductPurchaseFactor();
             $factors->product  = $product->getProduct();
             $factors->market   = $cart->market;
             $factors->quantity = $product->quantity;
@@ -29,8 +29,9 @@ class FindByMarketUserCartQueryHandler extends QueryHandler
             $productInfo       = $this->productService->getProductInfo($factors);
 
             if ($productInfo->isAvailable) {
-                $price          = $this->productService->getProductPrice($factors);
-                $product->price = $price;
+                $productAmount          = $this->productService->getProductAmount($factors);
+
+                $product->price = $productAmount->price;
             }
             $product->productInfo = $productInfo;
         }

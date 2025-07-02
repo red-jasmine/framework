@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
-use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Shopping\Domain\Data\ProductAmountData;
 use RedJasmine\Shopping\Domain\Data\ProductInfo;
 
 interface ProductServiceInterface
@@ -11,22 +11,20 @@ interface ProductServiceInterface
     /**
      * 获取商品信息
      *
-     * @param  ProductPurchaseFactors  $productPurchaseFactors
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
      *
      * @return ProductInfo
      */
-    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ProductInfo;
+    public function getProductInfo(ProductPurchaseFactor $productPurchaseFactor) : ProductInfo;
 
     /**
      * 获取商品价格信息
      *
-     * @param  ProductPurchaseFactors  $productPurchaseFactors
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
      *
-     * @return Money|null
+     * @return ProductAmountData
      */
-    public function getProductPrice(ProductPurchaseFactors $productPurchaseFactors) : ?Money;
-
-
+    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmountData;
 
 
 }

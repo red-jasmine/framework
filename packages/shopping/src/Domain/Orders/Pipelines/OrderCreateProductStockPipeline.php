@@ -6,7 +6,7 @@ use Closure;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
-use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\OrderData;
 
 class OrderCreateProductStockPipeline
 {

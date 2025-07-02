@@ -1,12 +1,13 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders;
+namespace RedJasmine\Shopping\Domain\Services;
 
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
-use RedJasmine\Shopping\Domain\Orders\Data\OrderData;
-use RedJasmine\Shopping\Domain\Orders\Data\OrdersData;
-use RedJasmine\Shopping\Domain\Orders\Data\ProductData;
+use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Data\ProductData;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductDiscountHook;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderProductPriceHook;
 use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
@@ -19,7 +20,8 @@ class OrderCalculationService extends Service
 {
 
     public function __construct(
-        protected ProductPriceDomainService $productPriceDomainService
+        protected ProductPriceDomainService $productPriceDomainService,
+        protected ProductServiceInterface $productService,
     ) {
     }
 

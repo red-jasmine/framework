@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 
-class AddProductCommand extends ProductPurchaseFactors
+class AddProductCommand extends ProductPurchaseFactor
 {
 
 

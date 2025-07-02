@@ -1,19 +1,19 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders\Data;
+namespace RedJasmine\Shopping\Domain\Data;
 
+use Cknow\Money\Money;
 use Illuminate\Support\Collection;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class OrdersData extends Data
 {
 
     /**
      * 应付总金额
-     * @var MoneyOld
+     * @var Money
      */
-    public MoneyOld $total;
+    public Money $total;
     /**
      * @var Collection<OrderData>
      */
@@ -21,7 +21,7 @@ class OrdersData extends Data
 
     public function __construct()
     {
-        $this->total = MoneyOld::make(0);
+        $this->total = Money::parse(0);
 
     }
 
@@ -31,14 +31,14 @@ class OrdersData extends Data
 
     }
 
-    public function total() : MoneyOld
+    public function total() : Money
     {
-        $this->total = MoneyOld::make(0);
+        $this->total = Money::parse(0);
 
 
         foreach ($this->orders as $order) {
 
-            $this->total->add($order->getAdditionalData()['payable_amount'] ?? MoneyOld::make(0));
+            $this->total->add($order->getAdditionalData()['payable_amount'] ?? Money::parse(0));
         }
 
 

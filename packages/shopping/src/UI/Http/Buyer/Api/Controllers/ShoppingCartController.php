@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\CalculateAmountCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\RemoveProductCommand;
@@ -109,8 +109,8 @@ class ShoppingCartController extends Controller
         $command = CalculateAmountCommand::from($request);
 
 
+        $orderAmount = $this->service->calculateAmount($command);
 
-        $cart    = $this->service->calculateAmount($command);
-        return response()->json(new ShoppingCartResource($cart));
+        return static::success($orderAmount);
     }
 } 

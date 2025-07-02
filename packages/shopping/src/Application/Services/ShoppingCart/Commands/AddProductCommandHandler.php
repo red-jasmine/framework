@@ -111,11 +111,11 @@ class AddProductCommandHandler extends CommandHandler
      */
     private function getPriceInfo(AddProductCommand $command) : Money
     {
-        $price = $this->productService->getProductPrice($command);
-        if (!$price) {
+        $productAmount = $this->productService->getProductAmount($command);
+        if (!$productAmount) {
             throw new InvalidArgumentException('无法获取商品价格信息');
         }
-        return $price;
+        return $productAmount->price;
 
         // 应用营销优惠
         $promotionInfo = $this->promotionService->getProductPromotion(

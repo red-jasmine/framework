@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders\Data;
+namespace RedJasmine\Shopping\Domain\Data;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
@@ -49,7 +49,7 @@ class OrderData extends Data
     public ?string $clientIp           = null;
     public ?string $sourceType         = null;
     public ?string $sourceId           = null;
-    public ?string $outerOrderId       = null;
+
     public ?string $sellerCustomStatus = null;
     public ?string $contact            = null;
     public ?string $password           = null;
@@ -62,7 +62,7 @@ class OrderData extends Data
     public ?array  $otherExtra       = null;
     public ?array  $tools              = null;
 
-
+    public ?string $outerOrderId       = null;
     /**
      * 地址
      * @var OrderAddressData|null
