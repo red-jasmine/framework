@@ -58,7 +58,7 @@ class ProductResource extends Resource
     /**
      * @var class-string<ProductApplicationService::class>
      */
-    protected static ?string $service = ProductApplicationService::class;
+    protected static string $service = ProductApplicationService::class;
 
     protected static ?string $createCommand = ProductCreateCommand::class;
     protected static ?string $updateCommand = ProductUpdateCommand::class;
