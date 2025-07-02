@@ -162,8 +162,10 @@ class ProductTransformer
 
                 // 加入默认规格
                 $defaultSku = $product->skus->where('properties_sequence',
-                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
+                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product);
+                $this->setDefaultSku($product,$defaultSku);
                 $defaultSku->setDeleted();
+
                 $product->addSku($defaultSku);
 
                 break;
@@ -173,8 +175,14 @@ class ProductTransformer
                 $product->market_price          = $command->marketPrice;
                 $product->safety_stock          = $command->safetyStock;
                 $product->extension->sale_props = [];
-                $defaultSku                     = $product->skus->where('properties_sequence',
-                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product, $command);
+
+
+                $defaultSku = $product->skus
+                                  ->where('properties_sequence', $product::$defaultPropertiesSequence)
+                                  ->first()
+                              ?? $this->defaultSku($product);
+
+                $this->setDefaultSku($product,$defaultSku);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;
@@ -202,33 +210,36 @@ class ProductTransformer
         $sku->deleted_at          = null;
     }
 
-    protected function defaultSku(Product $product, Command $command) : ProductSku
+    protected function defaultSku(Product $product) : ProductSku
     {
 
         $sku                      = new ProductSku();
         $sku->id                  = $product->id;
         $sku->properties_sequence = $product::$defaultPropertiesSequence;
         $sku->properties_name     = $product::$defaultPropertiesName;
-        $sku->image               = $product->image;
-        $sku->barcode             = $product->barcode;
-        $sku->outer_id            = $product->outer_id;
-        $sku->price               = $product->price ?? 0;
-        $sku->cost_price          = $product->cost_price ?? null;
-        $sku->market_price        = $product->market_price ?? null;
-        $sku->safety_stock        = $product->safety_stock ?? 0;
-        $sku->image               = $product->image;
-        $sku->barcode             = $product->barcode;
-        $sku->outer_id            = $product->outer_id;
-        $sku->supplier_sku_id     = null;
-        $sku->weight              = $command->weight;
-        $sku->width               = $command->width;
-        $sku->height              = $command->height;
-        $sku->length              = $command->length;
-        $sku->size                = $command->size;
-
-
-        $sku->status     = ProductStatusEnum::ON_SALE;
-        $sku->deleted_at = null;
         return $sku;
+    }
+
+
+    protected function setDefaultSku(Product $product, ProductSku $sku)
+    {
+        $sku->status          = ProductStatusEnum::ON_SALE;
+        $sku->deleted_at      = null;
+        $sku->image           = $product->image;
+        $sku->barcode         = $product->barcode;
+        $sku->outer_id        = $product->outer_id;
+        $sku->price           = $product->price ?? 0;
+        $sku->cost_price      = $product->cost_price ?? null;
+        $sku->market_price    = $product->market_price ?? null;
+        $sku->safety_stock    = $product->safety_stock ?? 0;
+        $sku->image           = $product->image;
+        $sku->barcode         = $product->barcode;
+        $sku->outer_id        = $product->outer_id;
+        $sku->supplier_sku_id = null;
+        $sku->weight          = $product->extension->weight;
+        $sku->width           = $product->extension->width;
+        $sku->height          = $product->extension->height;
+        $sku->length          = $product->extension->length;
+        $sku->size            = $product->extension->size;
     }
 }

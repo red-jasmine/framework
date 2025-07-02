@@ -36,9 +36,6 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
 
         $this->beginDatabaseTransaction();
         try {
-            /**
-             * @var $product Product
-             */
             $product = $this->service->repository->find($command->id);
             $product->setRelation('skus', $product->skus()->withTrashed()->get());
 

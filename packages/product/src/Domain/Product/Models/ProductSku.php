@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,11 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-
+/**
+ * @property Money $price
+ * @property ?Money $market_price
+ * @property ?Money $cost_price
+ */
 class ProductSku extends Model implements OperatorInterface
 {
 
