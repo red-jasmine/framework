@@ -19,7 +19,7 @@
         "red-jasmine/support":  "1.0.x-dev",
         "red-jasmine/socialite": "1.0.x-dev",
         "red-jasmine/captcha": "1.0.x-dev",
-        "tymon/jwt-auth": "^2.1"
+        "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
 
