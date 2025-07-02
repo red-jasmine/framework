@@ -2,10 +2,15 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactors;
 
-class CalculateAmountCommand extends Data
+class CalculateAmountCommand extends PurchaseFactors
 {
-    public UserInterface $owner;
+
+    /**
+     * 选择的购物车中商品
+     * @var array
+     */
+    public array $cartProducts;
+
 } 

@@ -3,17 +3,19 @@
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\AddProductCommandHandler;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\CalculateAmountCommandHandler;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\RemoveProductCommandHandler;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\SelectProductsCommandHandler;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\UpdateQuantityCommandHandler;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
 use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQueryHandler;
+use RedJasmine\ShoppingCart\Domain\Contracts\ProductServiceInterface;
+use RedJasmine\ShoppingCart\Domain\Contracts\StockServiceInterface;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
 use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartReadRepositoryInterface;
 use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\AddProductCommandHandler;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\RemoveProductCommandHandler;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\UpdateQuantityCommandHandler;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\SelectProductsCommandHandler;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\CalculateAmountCommandHandler;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Data\Data;
 
@@ -30,7 +32,6 @@ use RedJasmine\Support\Data\Data;
  * @method ShoppingCart addProduct(AddProductCommand $command)
  * @method bool removeProduct(RemoveProductCommand $command)
  * @method ShoppingCartProduct updateQuantity(UpdateQuantityCommand $command)
- * @method void selectProducts(SelectProductsCommand $command)
  * @method ShoppingCart calculateAmount(CalculateAmountCommand $command)
  */
 class ShoppingCartApplicationService extends ApplicationService
@@ -45,7 +46,7 @@ class ShoppingCartApplicationService extends ApplicationService
 
     public function __construct(
         public ShoppingCartRepositoryInterface $repository,
-        public ShoppingCartReadRepositoryInterface $readRepository
+        public ShoppingCartReadRepositoryInterface $readRepository,
     ) {
     }
 
@@ -69,7 +70,6 @@ class ShoppingCartApplicationService extends ApplicationService
         'addProduct'      => AddProductCommandHandler::class,
         'removeProduct'   => RemoveProductCommandHandler::class,
         'updateQuantity'  => UpdateQuantityCommandHandler::class,
-        'selectProducts'  => SelectProductsCommandHandler::class,
         'calculateAmount' => CalculateAmountCommandHandler::class,
     ];
 } 

@@ -27,11 +27,12 @@ class FindByMarketUserCartQueryHandler extends QueryHandler
             $factors->quantity = $product->quantity;
             $factors->buyer    = $cart->owner;
             $productInfo       = $this->productService->getProductInfo($factors);
-            $price             = $this->productService->getProductPrice($factors);
 
-            $product->price = $price;
-
-            // 返回更多的产品信息 TODO
+            if ($productInfo->isAvailable) {
+                $price          = $this->productService->getProductPrice($factors);
+                $product->price = $price;
+            }
+            $product->productInfo = $productInfo;
         }
 
 

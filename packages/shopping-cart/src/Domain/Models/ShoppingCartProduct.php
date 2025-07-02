@@ -5,6 +5,7 @@ namespace RedJasmine\ShoppingCart\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
+use RedJasmine\ShoppingCart\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use InvalidArgumentException;
@@ -19,10 +20,16 @@ class ShoppingCartProduct extends Model
 
     public $incrementing = false;
 
-    protected $casts    = [
-        'price' => MoneyCast::class,
 
-    ];
+    protected function casts() : array
+    {
+        return [
+            'price'      => MoneyCast::class,
+            'extra'      => 'array',
+            'customized' => 'array',
+        ];
+    }
+
     protected $fillable = [
         'cart_id'
     ];
@@ -103,6 +110,19 @@ class ShoppingCartProduct extends Model
         return implode(';', $texts);
     }
 
+    public function setProductInfo(ProductInfo $productInfo)
+    {
+        $this->seller_type  = $productInfo->product->seller->getType();
+        $this->seller_id    = $productInfo->product->seller->getID();
+        $this->product_type = $productInfo->product->productType;
+        $this->product_id   = $productInfo->product->productId;
+        $this->sku_id       = $productInfo->product->skuId;
+
+
+        $this->title           = $productInfo->title;
+        $this->image           = $productInfo->image;
+        $this->properties_name = $productInfo->propertiesName;
+    }
 
     public function setProduct(ProductIdentity $cartProduct) : void
     {

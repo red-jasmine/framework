@@ -105,7 +105,11 @@ class ShoppingCartController extends Controller
     // 重新计算金额
     public function calculateAmount(Request $request) : JsonResponse
     {
-        $command = CalculateAmountCommand::from(['owner' => $request->user()]);
+        $request->offsetSet('buyer', $this->getOwner());
+        $command = CalculateAmountCommand::from($request);
+
+
+
         $cart    = $this->service->calculateAmount($command);
         return response()->json(new ShoppingCartResource($cart));
     }

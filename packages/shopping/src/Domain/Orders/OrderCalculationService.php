@@ -13,7 +13,7 @@ use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**
- * 商城订单金额计算服务
+ * 订单结算服务
  */
 class OrderCalculationService extends Service
 {

@@ -9,14 +9,20 @@ use RedJasmine\Support\Data\Data;
 /**
  * 商品价格因子
  */
-class ProductPurchaseFactors extends Data
+class ProductPurchaseFactors extends PurchaseFactors
 {
 
+
     /**
-     * 市场
-     * @var string
+     * 商品
+     * @var ProductIdentity
      */
-    public string $market = 'default';
+    public ProductIdentity $product;
+    /**
+     * 定制信息
+     * @var array|null
+     */
+    public ?array $customized = [];
 
     /**
      * 数量
@@ -24,46 +30,5 @@ class ProductPurchaseFactors extends Data
      */
     public int $quantity = 1;
 
-
-    public ProductIdentity $product;
-
-
-    /**
-     * 买家
-     * @var UserInterface|null
-     */
-    public ?UserInterface $buyer;
-
-
-    /**
-     * 渠道
-     * @var UserInterface|null
-     */
-    public ?UserInterface $channel;
-
-    /**
-     * 门店
-     * @var UserInterface|null
-     */
-    public ?UserInterface $store;
-
-    /**
-     * 导购
-     * @var UserInterface|null
-     */
-    public ?UserInterface $guide;
-
-    // 国家
-    public ?string $country;
-
-    // 货币
-    public ?string $currency;
-
-
-    // 定制信息
-    // 国家、区域
-    // 货币
-    // 时间
-    // 会员
 
 }

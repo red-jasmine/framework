@@ -13,9 +13,9 @@ interface ProductServiceInterface
      *
      * @param  ProductPurchaseFactors  $productPurchaseFactors
      *
-     * @return array|null
+     * @return ProductInfo
      */
-    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ?ProductInfo;
+    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ProductInfo;
 
     /**
      * 获取商品价格信息
@@ -25,6 +25,8 @@ interface ProductServiceInterface
      * @return Money|null
      */
     public function getProductPrice(ProductPurchaseFactors $productPurchaseFactors) : ?Money;
+
+
 
 
 }

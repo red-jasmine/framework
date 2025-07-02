@@ -49,21 +49,23 @@ class AddProductCommandHandler extends CommandHandler
             // 2. 构建购物车商品项
             $shoppingCartProduct = ShoppingCartProduct::make(['cart_id' => $cart->id]);
             $shoppingCartProduct->setProduct($command->product);
-            $shoppingCartProduct->quantity = $command->quantity;
+            $shoppingCartProduct->quantity   = $command->quantity;
+            $shoppingCartProduct->customized = $command->customized;
             // 3. 添加到购物车
             $cart->addProduct($shoppingCartProduct);
 
-
             $command->quantity = $shoppingCartProduct->quantity;
+
+            // TODO 存储一些 购买因素信息 如：渠道、导购、国家、区域、语言、货币、
+
             // 5. 校验商品信息
             $productInfo = $this->validateProduct($command);
-
+            $shoppingCartProduct->setProductInfo($productInfo);
             // 6. 校验库存
             $this->validateStock($command);
 
             // 7. 获取价格 已最终的数量 获取价格
             $shoppingCartProduct->price = $this->getPriceInfo($command);
-
 
             $this->service->repository->store($cart);
 
@@ -127,4 +129,6 @@ class AddProductCommandHandler extends CommandHandler
 
         return $priceInfo;
     }
+
+
 } 

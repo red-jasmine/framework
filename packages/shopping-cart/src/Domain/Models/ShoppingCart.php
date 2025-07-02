@@ -105,15 +105,16 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         return $query->where('status', ShoppingCartStatusEnum::EXPIRED);
     }
 
-    public function getSimilarProduct(ShoppingCartProduct $product)
+    public function getSimilarProduct(ShoppingCartProduct $cartProduct)
     {
         // TODO 还需要更具定制信息 匹配
+        $cartProduct->customized;
         return $this->products
-            ->where('shop_type', $product->shop_type)
-            ->where('shop_id', $product->shop_id)
-            ->where('product_type', $product->product_type)
-            ->where('product_id', $product->product_id)
-            ->where('sku_id', $product->sku_id)
+            ->where('shop_type', $cartProduct->shop_type)
+            ->where('shop_id', $cartProduct->shop_id)
+            ->where('product_type', $cartProduct->product_type)
+            ->where('product_id', $cartProduct->product_id)
+            ->where('sku_id', $cartProduct->sku_id)
             ->first();
 
     }

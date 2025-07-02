@@ -27,17 +27,21 @@ class ProductServiceIntegration implements ProductServiceInterface
         return $this->productApplicationService->find($query);
     }
 
-    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ?ProductInfo
+    public function getProductInfo(ProductPurchaseFactors $productPurchaseFactors) : ProductInfo
     {
+        $productInfo              = new ProductInfo();
+        $productInfo->product     = $productPurchaseFactors->product;
+        $productInfo->isAvailable = false;
+        try {
+            $productModel                = $this->getProduct($productPurchaseFactors->product);
+            $sku                         = $productModel->getSkuBySkuId($productPurchaseFactors->product->skuId);
+            $productInfo->title          = $productModel->title;
+            $productInfo->image          = $productModel->image;
+            $productInfo->propertiesName = $sku->properties_name;
+            $productInfo->isAvailable    = $productModel->isAllowSale();
+        } catch (\Throwable $throwable) {
 
-        $productModel                = $this->getProduct($productPurchaseFactors->product);
-        $sku                         = $productModel->getSkuBySkuId($productPurchaseFactors->product->skuId);
-        $productInfo                 = new ProductInfo();
-        $productInfo->product        = $productPurchaseFactors->product;
-        $productInfo->title          = $productModel->title;
-        $productInfo->image          = $productModel->image;
-        $productInfo->propertiesName = $sku->properties_name;
-        $productInfo->isAvailable    = $productModel->isAllowSale();
+        }
 
         return $productInfo;
 
