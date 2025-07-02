@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\Queries;
 
 use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Support\Application\Queries\QueryHandler;
@@ -22,7 +22,7 @@ class GetProductPriceQueryHandler extends QueryHandler
         ]);
     }
 
-    public function handle(ProductPurchaseFactors $query) : ?Money
+    public function handle(ProductPurchaseFactor $query) : ?Money
     {
 
         return $this->productPriceDomainService->getPrice($query);

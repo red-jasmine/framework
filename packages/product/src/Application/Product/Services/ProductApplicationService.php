@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
+use Cknow\Money\Money;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommandHandler;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommandHandler;
@@ -25,7 +26,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
  * @see ProductUpdateCommandHandler::handle()
  * @method void update(ProductUpdateCommand $command)
  * @method void setStatus(ProductSetStatusCommand $command)
- * @method  getProductPrice(GetProductPurchaseQuery $query)
+ * @method Money  getProductPrice(GetProductPurchaseQuery $query)
  */
 class ProductApplicationService extends ApplicationService
 {

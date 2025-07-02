@@ -8,7 +8,7 @@ use RedJasmine\Support\Data\Data;
 /**
  * 商品价格因子
  */
-class PurchaseFactors extends Data
+class PurchaseFactor extends Data
 {
 
     /**

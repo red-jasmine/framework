@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Price;
 
 use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactors;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -20,11 +20,11 @@ class ProductPriceDomainService extends Service
     /**
      * 获取商品价格
      *
-     * @param  ProductPurchaseFactors  $data
+     * @param  ProductPurchaseFactor  $data
      *
      * @return Money
      */
-    public function getPrice(ProductPurchaseFactors $data) : Money
+    public function getPrice(ProductPurchaseFactor $data) : Money
     {
 
         // 获取商品

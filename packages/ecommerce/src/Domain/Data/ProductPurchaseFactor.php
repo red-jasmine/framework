@@ -2,14 +2,10 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data;
 
-use RedJasmine\Ecommerce\Domain\Models\ValueObjects\ProductIdentity;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
-
 /**
  * 商品价格因子
  */
-class ProductPurchaseFactors extends PurchaseFactors
+class ProductPurchaseFactor extends PurchaseFactor
 {
 
 

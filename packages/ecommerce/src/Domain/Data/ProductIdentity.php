@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Ecommerce\Domain\Models\ValueObjects;
+namespace RedJasmine\Ecommerce\Domain\Data;
 
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
