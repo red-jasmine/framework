@@ -12,11 +12,10 @@ class OrderCreateCommandTransformer
 {
     public function transform(OrderData $orderData) : OrderCreateCommand
     {
-        $order                = new OrderCreateCommand();
-        $order->buyer         = $orderData->buyer;
-        $order->seller        = $orderData->products->first()->getProduct()->owner;
-        $order->contact       = $orderData->contact;
-        $order->password      = $orderData->password;
+        $order         = new OrderCreateCommand();
+        $order->buyer  = $orderData->buyer;
+        $order->seller = $orderData->products->first()->getProduct()->owner;
+
         $order->title         = ''; // TODO 订单标题
         $order->outerOrderId  = $orderData->outerOrderId;
         $order->clientIp      = $orderData->clientIp;

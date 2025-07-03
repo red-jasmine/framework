@@ -3,9 +3,9 @@
 namespace RedJasmine\Vip\Application\Services;
 
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
-use RedJasmine\Shopping\Application\Services\Commands\OrderPayCommand;
-use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
-use RedJasmine\Shopping\Application\Services\ShoppingOrderCommandService;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\OrderPayCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Vip\Application\Services\Commands\UserPurchaseVipCommand;
 

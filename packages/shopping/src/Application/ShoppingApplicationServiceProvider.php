@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Shopping\Application\Listeners\PaymentTradeListener;
+use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
+use RedJasmine\Shopping\Infrastructure\Services\OrderServiceIntegration;
 use RedJasmine\Shopping\Infrastructure\Services\ProductServiceIntegration;
 use RedJasmine\Shopping\Infrastructure\Services\PromotionServiceIntegration;
 use RedJasmine\Shopping\Infrastructure\Services\StockServiceIntegration;
@@ -23,6 +25,7 @@ class ShoppingApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductServiceInterface::class, ProductServiceIntegration::class);
         $this->app->bind(StockServiceInterface::class, StockServiceIntegration::class);
         $this->app->bind(PromotionServiceInterface::class, PromotionServiceIntegration::class);
+        $this->app->bind(OrderServiceInterface::class, OrderServiceIntegration::class);
     }
 
     public function boot() : void

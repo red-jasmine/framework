@@ -77,7 +77,7 @@ class ShoppingCartDomainService extends AmountCalculationService
     }
 
 
-    public function getOrderAmount(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
+    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
     {
 
         $selectProducts         = $cart->products->where('selected', true)->all();
@@ -103,7 +103,7 @@ class ShoppingCartDomainService extends AmountCalculationService
             $productPurchaseFactors[] = $productPurchaseFactor;
         }
 
-        return $this->calculates($productPurchaseFactors);
+        return $this->getOrderAmount($productPurchaseFactors);
     }
 
 

@@ -1,15 +1,14 @@
 <?php
 
-namespace RedJasmine\Shopping\Application\Services;
+namespace RedJasmine\Shopping\Application\Services\Orders;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Shopping\Application\Services\Commands\OrderPayCommand;
-use RedJasmine\Shopping\Application\Services\Commands\OrderPayCommandHandler;
-use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommandHandler;
-use RedJasmine\Shopping\Application\Services\Commands\ProductCalculateCommandHandler;
-use RedJasmine\Shopping\Application\Services\Commands\ProductBuyCommand;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\OrderPayCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\OrderPayCommandHandler;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductBuyCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductBuyCommandHandler;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductCalculateCommandHandler;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**

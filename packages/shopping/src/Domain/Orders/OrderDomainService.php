@@ -9,10 +9,9 @@ use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
-use RedJasmine\Shopping\Application\Services\ShoppingOrderCommandService;
+use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
-use RedJasmine\Shopping\Domain\Services\OrderCalculationService;
 use RedJasmine\Shopping\Exceptions\ShoppingException;
 use RedJasmine\Support\Foundation\Service\Service;
 use Throwable;
@@ -27,11 +26,14 @@ class OrderDomainService extends Service
         protected StockApplicationService $stockCommandService,
         protected ShoppingOrderCommandService $orderCommandService,
         protected ProductPriceDomainService $productPriceDomainService,
-        protected OrderCalculationService $orderCalculationService,
+        // protected OrderDomainService $orderCalculationService,
         protected OrderBuyService $orderBuyService,
     ) {
 
     }
+
+
+
 
     /**
      * @param  OrderData  $orderData

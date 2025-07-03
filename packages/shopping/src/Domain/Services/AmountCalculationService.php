@@ -19,7 +19,6 @@ class AmountCalculationService extends Service
         protected ProductServiceInterface $productService,
         protected StockServiceInterface $stockService,
         protected PromotionServiceInterface $promotionService
-
     ) {
     }
 
@@ -28,7 +27,7 @@ class AmountCalculationService extends Service
      *
      * @return OrderAmountData
      */
-    protected function calculates(array $productPurchaseFactors) : OrderAmountData
+    protected function getOrderAmount(array $productPurchaseFactors) : OrderAmountData
     {
         $orderAmount = new OrderAmountData(new Currency('CNY'));
 
@@ -44,9 +43,9 @@ class AmountCalculationService extends Service
             $productAmount = $this->promotionService->getProductPromotion($productPurchaseFactor, $productAmount);
             // 把商品金额信息加入订单金额信息
 
-            $productInfo->productAmount                              = $productAmount;
-            $productInfo->stockInfo                                  = $cartStockInfo;
-            $orderAmount->products[$productPurchaseFactor->getKey()] = $productInfo;
+            $productInfo->productAmount                                        = $productAmount;
+            $productInfo->stockInfo                                            = $cartStockInfo;
+            $orderAmount->products[$productPurchaseFactor->getKey() ?? $index] = $productInfo;
         }
         // 通过下单因子 TODO
         // 查询邮费信息 TODO
