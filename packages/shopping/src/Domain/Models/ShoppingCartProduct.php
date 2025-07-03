@@ -112,7 +112,7 @@ class ShoppingCartProduct extends Model
         return implode(';', $texts);
     }
 
-    public function setProductInfo(ProductInfo $productInfo)
+    public function setProductInfo(ProductInfo $productInfo) : void
     {
         $this->seller_type  = $productInfo->product->seller->getType();
         $this->seller_id    = $productInfo->product->seller->getID();

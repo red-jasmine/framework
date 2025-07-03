@@ -31,13 +31,10 @@ class ShoppingCartController extends Controller
     // 获取当前用户购物车
     public function show(Request $request) : ShoppingCartResource
     {
-        try {
-            $query = FindByMarketUserCartQuery::from(['owner' => $request->user()]);
-            $cart  = $this->service->findByMarketUser($query);
-            return new ShoppingCartResource($cart);
-        } catch (Throwable $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
-        }
+        $query = FindByMarketUserCartQuery::from(['buyer' => $request->user()]);
+
+        $cart  = $this->service->findByMarketUser($query);
+        return new ShoppingCartResource($cart);
     }
 
     // 获取购物车商品列表

@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
 
-class CartStockInfo extends Data
+class StockInfo extends Data
 {
 
     /**

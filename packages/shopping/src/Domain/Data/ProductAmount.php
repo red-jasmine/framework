@@ -10,7 +10,7 @@ use RedJasmine\Support\Data\Data;
 /**
  * 商品金额信息
  */
-class ProductAmountData extends Data
+class ProductAmount extends Data
 {
 
     public int $quantity;
@@ -18,6 +18,12 @@ class ProductAmountData extends Data
     public Money $price;
 
     public Money $totalPrice;
+
+    /**
+     * 税率
+     * @var float
+     */
+    public float $taxRate = 0;
 
     protected ?Money $costPrice {
         get {

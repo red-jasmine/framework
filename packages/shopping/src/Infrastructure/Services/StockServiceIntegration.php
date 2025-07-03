@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Stock\Services\Queries\FindSkuStockQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
-use RedJasmine\Shopping\Domain\Data\CartStockInfo;
+use RedJasmine\Shopping\Domain\Data\StockInfo;
 
 class StockServiceIntegration implements StockServiceInterface
 {
@@ -26,10 +26,10 @@ class StockServiceIntegration implements StockServiceInterface
     }
 
 
-    public function getAvailableStock(ProductIdentity $product, int $quantity) : CartStockInfo
+    public function getStockInfo(ProductIdentity $product, int $quantity) : StockInfo
     {
         $sku                        = $this->getSku($product);
-        $cartStockInfo              = new CartStockInfo();
+        $cartStockInfo              = new StockInfo();
         $cartStockInfo->stock       = $sku->getSaleStock();
         $cartStockInfo->isAvailable = $cartStockInfo->stock > $quantity;
 

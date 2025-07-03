@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Shopping\Domain\Data\CartStockInfo;
+use RedJasmine\Shopping\Domain\Data\StockInfo;
 
 interface StockServiceInterface
 {
@@ -15,9 +15,9 @@ interface StockServiceInterface
      * @param  ProductIdentity  $product
      * @param  int  $quantity
      *
-     * @return CartStockInfo
+     * @return StockInfo
      */
-    public function getAvailableStock(ProductIdentity $product, int $quantity) : CartStockInfo;
+    public function getStockInfo(ProductIdentity $product, int $quantity) : StockInfo;
 
     /**
      * 预占库存

@@ -60,7 +60,7 @@ return new class extends Migration {
             $table->decimal('market_price_amount')->nullable()->comment('市场价');
             $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');
             $table->decimal('cost_price_amount')->nullable()->comment('成本价');
-
+            $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
@@ -99,6 +99,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
             $table->unsignedBigInteger('likes')->default(0)->comment('喜欢量');
             $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
+
 
             // 时间
             $table->timestamp('on_sale_time')->nullable()->comment('上架时间');

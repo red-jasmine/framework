@@ -7,7 +7,7 @@ use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\Shopping\Domain\Data\ProductAmountData;
+use RedJasmine\Shopping\Domain\Data\ProductAmount;
 use RedJasmine\Shopping\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Throwable;
@@ -38,6 +38,9 @@ class ProductServiceIntegration implements ProductServiceInterface
             $sku                         = $productModel->getSkuBySkuId($productPurchaseFactor->product->skuId);
             $productInfo->title          = $productModel->title;
             $productInfo->image          = $productModel->image;
+            $productInfo->maxLimit       = $productModel->max_limit;
+            $productInfo->minLimit       = $productModel->min_limit;
+            $productInfo->stepLimit      = $productModel->step_limit;
             $productInfo->propertiesName = $sku->properties_name;
             $productInfo->isAvailable    = $productModel->isAllowSale();
         } catch (Throwable $throwable) {
@@ -49,11 +52,11 @@ class ProductServiceIntegration implements ProductServiceInterface
     }
 
 
-    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmountData
+    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmount
     {
         $price = $this->productApplicationService->getProductPrice($productPurchaseFactor);
 
-        $productAmount           = new  ProductAmountData($price->getCurrency());
+        $productAmount           = new  ProductAmount($price->getCurrency());
         $productAmount->quantity = $productPurchaseFactor->quantity;
 
         $productAmount->price      = $price;

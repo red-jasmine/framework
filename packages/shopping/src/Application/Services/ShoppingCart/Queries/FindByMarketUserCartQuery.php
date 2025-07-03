@@ -2,12 +2,11 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Queries;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 
-class FindByMarketUserCartQuery extends FindQuery
+
+class FindByMarketUserCartQuery extends PurchaseFactor
 {
-    public UserInterface $owner;
 
-    public string $market = 'default';
+
 } 

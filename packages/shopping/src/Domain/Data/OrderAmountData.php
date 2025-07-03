@@ -44,15 +44,16 @@ class OrderAmountData extends Data
 
 
     /**
-     * @var ProductAmountData[]
-     */
-    public array $productAmounts;
-
-    /**
      * 优惠明细
      * @var DiscountBreakdown[]
      */
     public array $discountBreakdowns = [];
+
+
+    /**
+     * @var ProductInfo[]
+     */
+    public array $products;
 
     public function __construct(public Currency $currency)
     {
@@ -75,7 +76,8 @@ class OrderAmountData extends Data
     {
         $this->initialize();
 
-        foreach ($this->productAmounts as $productAmount) {
+        foreach ($this->products as $product) {
+            $productAmount       = $product->productAmount;
             $this->serviceAmount = $this->serviceAmount->add($productAmount->serviceAmount);
             $this->taxAmount     = $this->taxAmount->add($productAmount->taxAmount);
             $this->productAmount = $this->productAmount->add($productAmount->getProductAmount());

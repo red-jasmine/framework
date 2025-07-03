@@ -9,13 +9,24 @@ class ShoppingCartProductResource extends JsonResource
     public function toArray($request) : array
     {
         return [
-            'id'       => $this->id,
-            'cart_id'  => $this->cart_id,
-            'quantity' => $this->quantity,
-            'price'    => $this->price,
-            'subtotal' => $this->subtotal,
-            'selected' => $this->selected,
-            'product'  => $this->productInfo,
+            // 购物车中的商品信息
+            'id'              => $this->id,
+            'cart_id'         => $this->cart_id,
+            'quantity'        => $this->quantity,
+            'seller_type'     => $this->seller_type,
+            'seller_id'       => $this->seller_id,
+            'seller_nickname' => $this->seller_nickname,
+            'product_type'    => $this->product_type,
+            'product_id'      => $this->product_id,
+            'sku_id'          => $this->sku_id,
+            'customized'      => $this->customized,
+            'currency'        => $this->currency,
+            'title'           => $this->title,
+            'properties_name' => $this->properties_name,
+            'image'           => $this->image,
+            'price'           => $this->price,
+            // 最新的商品信息
+            'product'         => $this->product,
         ];
     }
 } 

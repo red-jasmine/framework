@@ -246,6 +246,12 @@ class Product extends Data
     // 成本价格
     public ?Money $costPrice;
 
+    /**
+     * 税率
+     * @var float
+     */
+    public float $taxRate = 0;
+
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $startSaleTime = null;
     #[WithCast(DateTimeInterfaceCast::class)]

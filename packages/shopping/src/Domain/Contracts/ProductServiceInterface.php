@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\ProductAmountData;
+use RedJasmine\Shopping\Domain\Data\ProductAmount;
 use RedJasmine\Shopping\Domain\Data\ProductInfo;
 
 interface ProductServiceInterface
@@ -22,9 +22,9 @@ interface ProductServiceInterface
      *
      * @param  ProductPurchaseFactor  $productPurchaseFactor
      *
-     * @return ProductAmountData
+     * @return ProductAmount
      */
-    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmountData;
+    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmount;
 
 
 }

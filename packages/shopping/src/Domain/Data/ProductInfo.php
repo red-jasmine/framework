@@ -7,6 +7,12 @@ use RedJasmine\Support\Data\Data;
 
 class ProductInfo extends Data
 {
+
+    /**
+     * 是否允许购买 = 失效
+     * @var bool
+     */
+    public bool $isAvailable;
     // 商品身份信息
     // 商品基本信息
     // 商品价格信息
@@ -15,15 +21,24 @@ class ProductInfo extends Data
     public ProductIdentity $product;
     public string          $title;
     public string          $propertiesName;
-    public ?string         $image = null;
+    public ?string         $image    = null;
+    public int             $minLimit = 1;
+    // 数量步幅
+    public int $stepLimit = 1;
+    // 0 表示不限制
+    public int $maxLimit = 0;
 
 
     // 价格信息
-
+    public ProductAmount $productAmount;
 
     /**
-     * 是否可用
-     * @var bool
+     * 库存信息
+     * @var StockInfo
      */
-    public bool $isAvailable;
+    public StockInfo $stockInfo;
+
+    // 优惠信息
+
+
 }

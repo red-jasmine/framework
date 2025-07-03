@@ -47,7 +47,7 @@ class CalculateAmountCommandHandler extends CommandHandler
             $product->selected = true;
         }
 
-        return $this->shoppingCartDomainService->calculates($cart, $command);
+        return $this->shoppingCartDomainService->getOrderAmount($cart, $command);
 
 
     }

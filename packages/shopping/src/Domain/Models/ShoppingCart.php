@@ -123,22 +123,23 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
     /**
      * 业务方法
      */
-    public function addProduct(ShoppingCartProduct $product) : void
+    public function addProduct(ShoppingCartProduct $product) : ShoppingCartProduct
     {
         if ($this->status !== ShoppingCartStatusEnum::ACTIVE) {
             throw new ShoppingCartException('购物车状态不允许添加商品');
         }
-
         $existingProduct = $this->getSimilarProduct($product);
 
         if ($existingProduct) {
             $existingProduct->updateQuantity($existingProduct->quantity + $product->quantity);
-            $product->quantity = $existingProduct->quantity;
+            $existingProduct->quantity = $existingProduct->quantity;
+            return $existingProduct;
         } else {
-
             $product->cart_id = $this->id;
             $this->products->add($product);
+            return $product;
         }
+
     }
 
     public function removeProduct(ProductIdentity $product) : void
