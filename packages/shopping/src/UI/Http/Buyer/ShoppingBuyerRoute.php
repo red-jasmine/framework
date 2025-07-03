@@ -12,15 +12,15 @@ class ShoppingBuyerRoute
     public static function api()
     {
 
-        Route::group([
-            'prefix' => 'shopping'
-        ], function () {
+        Route::prefix('shopping')
+             ->middleware(['auth:user'])
+             ->group(function () {
 
 
-            Route::post('buy', [OrderController::class, 'buy']);
+                 Route::post('buy', [OrderController::class, 'buy']);
 
 
-        });
+             });
 
         ShoppingCartRoute::api();
 
