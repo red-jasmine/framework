@@ -10,7 +10,7 @@ use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\CalculateAmou
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\RemoveProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\SelectProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\UpdateQuantityCommand;
-use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
+use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQuery;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\AddProductRequest;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\SelectProductsRequest;
@@ -29,9 +29,9 @@ class ShoppingCartController extends Controller
     // 获取当前用户购物车
     public function show(Request $request) : ShoppingCartResource
     {
-        $query = FindByMarketUserCartQuery::from(['buyer' => $request->user()]);
+        $query = FindBuyerCartQuery::from(['buyer' => $request->user()]);
 
-        $cart = $this->service->findByMarketUser($query);
+        $cart = $this->service->findBuyerCart($query);
         return new ShoppingCartResource($cart);
     }
 

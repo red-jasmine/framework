@@ -13,8 +13,8 @@ use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\SelectProduct
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\SelectProductCommandHandler;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\UpdateQuantityCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\UpdateQuantityCommandHandler;
-use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
-use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQueryHandler;
+use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQuery;
+use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQueryHandler;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Shopping\Domain\Repositories\ShoppingCartReadRepositoryInterface;
@@ -31,7 +31,7 @@ use RedJasmine\Support\Data\Data;
  * - 库存校验
  * - 购物车状态管理
  *
- * @method findByMarketUser(FindByMarketUserCartQuery $query)
+ * @method findBuyerCart(FindBuyerCartQuery $query)
  * @method ShoppingCart addProduct(AddProductCommand $command)
  * @method bool removeProduct(RemoveProductCommand $command)
  * @method bool selectProduct(SelectProductCommand $command)
@@ -58,7 +58,7 @@ class ShoppingCartApplicationService extends ApplicationService
     {
         return ShoppingCart::make([
             'market' => $data->market,
-            'owner'  => $data->owner,
+            'owner'  => $data->buyer,
         ]);
     }
 
@@ -68,7 +68,7 @@ class ShoppingCartApplicationService extends ApplicationService
     }
 
     protected static $macros = [
-        'findByMarketUser' => FindByMarketUserCartQueryHandler::class,
+        'findBuyerCart' => FindBuyerCartQueryHandler::class,
 
 
         'selectProduct'   => SelectProductCommandHandler::class,

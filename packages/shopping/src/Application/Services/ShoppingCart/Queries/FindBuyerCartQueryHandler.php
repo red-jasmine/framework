@@ -12,7 +12,7 @@ use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Services\ShoppingCartDomainService;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 
-class FindByMarketUserCartQueryHandler extends QueryHandler
+class FindBuyerCartQueryHandler extends QueryHandler
 {
     public function __construct(
         protected ShoppingCartApplicationService $service,
@@ -27,23 +27,25 @@ class FindByMarketUserCartQueryHandler extends QueryHandler
         );
     }
 
-    public function handle(FindByMarketUserCartQuery $query) : ?ShoppingCart
+    public function handle(FindBuyerCartQuery $query) : ?ShoppingCart
     {
         $cart = $this->service->readRepository->findByMarketUser($query->buyer, $query->market);
-        $cart->loadMissing('products');
+        if ($cart) {
+            // 还需要获取商品信息
+            foreach ($cart->products as $product) {
+                $product->selected = true;
+            }
+            $orderAmount = $this->shoppingCartDomainService->getOrderAmount($cart, $query);
 
-        foreach ($cart->products as $product) {
-            $product->selected = true;
+            foreach ($cart->products as $product) {
+
+                $productInfo = $orderAmount->products[$product->id];
+
+                $product->product = $productInfo;
+            }
         }
 
-        // 还需要获取商品信息
-        $orderAmount = $this->shoppingCartDomainService->getOrderAmount($cart, $query);
 
-        foreach ($cart->products as $product) {
-            $productInfo = $orderAmount->products[$product->id];
-
-            $product->product = $productInfo;
-        }
         return $cart ?? $this->service->newModel($query);
     }
 } 
