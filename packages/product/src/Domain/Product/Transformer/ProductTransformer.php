@@ -90,6 +90,7 @@ class ProductTransformer
         $product->supplier_product_id             = $command->supplierProductId;
         $product->start_sale_time                 = $command->startSaleTime;
         $product->end_sale_time                   = $command->endSaleTime;
+        $product->tax_rate                        = $command->taxRate;
         $product->extension->id                   = $product->id;
         $product->extension->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
         $product->extension->videos               = $command->videos;
@@ -163,7 +164,7 @@ class ProductTransformer
                 // 加入默认规格
                 $defaultSku = $product->skus->where('properties_sequence',
                     $product::$defaultPropertiesSequence)->first() ?? $this->defaultSku($product);
-                $this->setDefaultSku($product,$defaultSku);
+                $this->setDefaultSku($product, $defaultSku);
                 $defaultSku->setDeleted();
 
                 $product->addSku($defaultSku);
@@ -182,7 +183,7 @@ class ProductTransformer
                                   ->first()
                               ?? $this->defaultSku($product);
 
-                $this->setDefaultSku($product,$defaultSku);
+                $this->setDefaultSku($product, $defaultSku);
                 $defaultSku->setOnSale();
                 $product->addSku($defaultSku);
                 break;

@@ -6,7 +6,7 @@ use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
 /**
- * 商品价格因子
+ * 购买因子
  */
 class PurchaseFactor extends Data
 {
@@ -49,11 +49,5 @@ class PurchaseFactor extends Data
     // 货币
     public ?string $currency;
 
-
-    // 定制信息
-    // 国家、区域
-    // 货币
-    // 时间
-    // 会员
 
 }

@@ -27,4 +27,7 @@ class ProductPurchaseFactor extends PurchaseFactor
     public int $quantity = 1;
 
 
+
+
+
 }
