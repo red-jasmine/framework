@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
+use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
@@ -18,4 +19,6 @@ interface ShoppingCartRepositoryInterface extends RepositoryInterface
     public function findExpiredCarts() : Collection;
 
     public function clearExpiredCarts() : int;
+
+    public function deleteProduct(ShoppingCartProduct $product) : bool;
 } 

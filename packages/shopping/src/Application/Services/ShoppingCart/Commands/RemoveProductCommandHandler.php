@@ -13,15 +13,20 @@ class RemoveProductCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(RemoveProductCommand $command): bool
+    /**
+     * @param  RemoveProductCommand  $command
+     *
+     * @return bool
+     * @throws Throwable
+     */
+    public function handle(RemoveProductCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
         try {
-            $cart = $this->service->repository->findActiveByUser($command->owner);
+            $cart = $this->service->repository->findActiveByUser($command->buyer, $command->market);
             if ($cart) {
                 $cart->loadMissing('products');
-                $cart->removeProduct($command->identity);
-                $this->service->repository->store($cart);
+                $this->service->repository->deleteProduct($cart->getProduct($command->getKey()));
             }
             $this->commitDatabaseTransaction();
         } catch (Throwable $e) {

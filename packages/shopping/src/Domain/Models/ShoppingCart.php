@@ -142,15 +142,14 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
 
     }
 
-    public function removeProduct(ProductIdentity $product) : void
+    public function getProduct(int $id)
     {
-        $product = $this->products()->where([
-            'shop_type'    => $product->shopType,
-            'shop_id'      => $product->shopId,
-            'product_type' => $product->productType,
-            'product_id'   => $product->productId,
-            'sku_id'       => $product->skuId,
-        ])->first();
+        return $this->products->where('id', $id)->firstOrFail();
+    }
+
+    public function removeProduct(int $id) : void
+    {
+        $product = $this->products->where('id', $id)->firstOrFail();
         if ($product) {
             $product->delete();
         }
@@ -158,40 +157,17 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         $this->calculateAmount();
     }
 
-    public function updateQuantity(ProductIdentity $product, int $quantity) : void
+    public function updateQuantity(int $id, int $quantity) : void
     {
-        $product = $this->products()->where([
-            'shop_type'    => $product->shopType,
-            'shop_id'      => $product->shopId,
-            'product_type' => $product->productType,
-            'product_id'   => $product->productId,
-            'sku_id'       => $product->skuId,
-        ])->first();
-        if (!$product) {
-            throw new ShoppingCartException('购物车商品不存在');
-        }
-        $product->updateQuantity($quantity);
+        $product = $this->getProduct($id);
 
-        $this->load('products');
-        $this->calculateAmount();
+        $product->updateQuantity($quantity);
     }
 
-    public function selectProduct(ProductIdentity $product, bool $selected) : void
+    public function selectProduct(int $id, bool $selected) : void
     {
-        $product = $this->products()->where([
-            'shop_type'    => $product->shopType,
-            'shop_id'      => $product->shopId,
-            'product_type' => $product->productType,
-            'product_id'   => $product->productId,
-            'sku_id'       => $product->skuId,
-        ])->first();
-        if (!$product) {
-            throw new ShoppingCartException('购物车商品不存在');
-        }
+        $product           = $this->getProduct($id);
         $product->selected = $selected;
-        $product->save();
-        $this->load('products');
-        $this->calculateAmount();
     }
 
     public function calculateAmount() : void

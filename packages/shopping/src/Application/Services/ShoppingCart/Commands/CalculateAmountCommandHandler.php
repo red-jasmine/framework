@@ -32,7 +32,6 @@ class CalculateAmountCommandHandler extends CommandHandler
     public function handle(CalculateAmountCommand $command) : ?OrderAmountData
     {
 
-
         // 获取购物车
         // 获取购物车中的商品
         $cart = $this->service->repository->findActiveByUser($command->buyer, $command->market);
@@ -43,9 +42,6 @@ class CalculateAmountCommandHandler extends CommandHandler
         }
         $cart->loadMissing('products');
 
-        foreach ($cart->products as $product) {
-            $product->selected = true;
-        }
 
         return $this->shoppingCartDomainService->getOrderAmount($cart, $command);
 

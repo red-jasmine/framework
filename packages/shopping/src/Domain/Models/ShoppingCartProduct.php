@@ -70,9 +70,7 @@ class ShoppingCartProduct extends Model
         if ($quantity <= 0) {
             throw new InvalidArgumentException('商品数量必须大于0');
         }
-
         $this->quantity = $quantity;
-
     }
 
     public function isAvailable() : bool

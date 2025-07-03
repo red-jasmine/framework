@@ -6,23 +6,28 @@ use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicatio
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
-class UpdateQuantityCommandHandler extends CommandHandler
+class SelectProductCommandHandler extends CommandHandler
 {
     public function __construct(
         protected ShoppingCartApplicationService $service
     ) {
     }
 
-    public function handle(UpdateQuantityCommand $command)
+    /**
+     * @param  SelectProductCommand  $command
+     *
+     * @return bool
+     * @throws Throwable
+     */
+    public function handle(SelectProductCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
         try {
-            $cart = $this->service->repository->findActiveByUser($command->buyer,$command->market);
+            // 查询购物车
+            $cart = $this->service->repository->findActiveByUser($command->buyer, $command->market);
             if ($cart) {
-                $cart->loadMissing('products');
-
-                $cart->updateQuantity($command->getKey(), $command->quantity);
-
+                $cart->load('products');
+                $cart->selectProduct($command->getKey(), $command->selected);
                 $this->service->repository->store($cart);
             }
             $this->commitDatabaseTransaction();
@@ -30,6 +35,6 @@ class UpdateQuantityCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw $e;
         }
-        return $cart;
+        return true;
     }
 } 

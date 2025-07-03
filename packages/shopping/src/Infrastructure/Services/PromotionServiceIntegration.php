@@ -23,7 +23,7 @@ class PromotionServiceIntegration implements PromotionServiceInterface
 
         // 根据 促销 系统 获取优惠金额
         // 添加优惠
-        $productAmount->discountAmount = $productAmount->totalPrice->multiply(0.1);
+        //$productAmount->discountAmount = $productAmount->totalPrice->multiply(0.1);
         // 可以免服务费
         //$productAmount->serviceAmount = $productAmount->serviceAmount->subtract($productAmount->serviceAmount);
         // 可以免税

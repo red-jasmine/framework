@@ -62,8 +62,8 @@ class ProductServiceIntegration implements ProductServiceInterface
         $productAmount->price      = $price;
         $productAmount->totalPrice = $productAmount->price->multiply($productPurchaseFactor->quantity);
         // TODO
-        $productAmount->taxAmount     = $productAmount->totalPrice->multiply('0.06');
-        $productAmount->serviceAmount = $productAmount->totalPrice->multiply('0.1');
+        //$productAmount->taxAmount     = $productAmount->totalPrice->multiply('0.06');
+        //$productAmount->serviceAmount = $productAmount->totalPrice->multiply('0.1');
 
         return $productAmount;
     }

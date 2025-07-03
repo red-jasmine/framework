@@ -53,7 +53,7 @@ class OrderAmountData extends Data
     /**
      * @var ProductInfo[]
      */
-    public array $products;
+    public array $products = [];
 
     public function __construct(public Currency $currency)
     {

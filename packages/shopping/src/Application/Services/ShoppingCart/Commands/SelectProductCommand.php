@@ -2,18 +2,17 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\ProductIdentity;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
-class UpdateQuantityCommand extends Data
+class SelectProductCommand extends Data
 {
-
     /**
      * 市场
      * @var string
      */
     public string $market = 'default';
+
 
     /**
      * 买家
@@ -21,5 +20,6 @@ class UpdateQuantityCommand extends Data
      */
     public ?UserInterface $buyer;
 
-    public int $quantity;
-} 
+
+    public bool $selected = true;
+}

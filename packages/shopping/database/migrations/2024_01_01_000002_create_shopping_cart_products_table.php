@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('product_id', 64)->comment('商品ID');
             $table->string('sku_id', 64)->comment('SKU ID');
             $table->integer('quantity')->default(1)->comment('数量');
+            $table->boolean('selected')->default(false)->comment('是否选中');
             // 商品信息
             $table->string('currency', 3)->default('CNY')->comment('货币');
             $table->string('price_currency', 3)->default('CNY')->comment('货币');

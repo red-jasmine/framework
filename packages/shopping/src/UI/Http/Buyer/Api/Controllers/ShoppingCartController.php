@@ -8,16 +8,14 @@ use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\CalculateAmountCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\RemoveProductCommand;
+use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\SelectProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\UpdateQuantityCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindByMarketUserCartQuery;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\AddProductRequest;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\SelectProductsRequest;
-use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\UpdateQuantityRequest;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\ShoppingCartProductResource;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\ShoppingCartResource;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands\SelectProductsCommand;
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Queries\ListCartProductsQuery;
 use Throwable;
 
 
@@ -33,7 +31,7 @@ class ShoppingCartController extends Controller
     {
         $query = FindByMarketUserCartQuery::from(['buyer' => $request->user()]);
 
-        $cart  = $this->service->findByMarketUser($query);
+        $cart = $this->service->findByMarketUser($query);
         return new ShoppingCartResource($cart);
     }
 
@@ -64,48 +62,50 @@ class ShoppingCartController extends Controller
     }
 
     // 移除商品
-    public function remove(Request $request) : JsonResponse
+    public function destroy($id, Request $request) : JsonResponse
     {
-        $product = ProductIdentity::from($request->all());
         $command = RemoveProductCommand::from([
-            'owner'    => $request->user(),
-            'identity' => $product,
+            'buyer' => $this->getOwner(),
         ]);
+        $command->setKey($id);
         $this->service->removeProduct($command);
-        return response()->json(['success' => true]);
+        return static::success();
     }
 
+
     // 更新商品数量
-    public function updateQuantity(UpdateQuantityRequest $request) : JsonResponse
+    public function updateQuantity($id, Request $request) : JsonResponse
     {
-        $data = $request->validated();
+        $request->offsetSet('buyer', $this->getOwner());
 
         $command = UpdateQuantityCommand::from($request);
-        $cart    = $this->service->updateQuantity($command);
+        $command->setKey($id);
+        $cart = $this->service->updateQuantity($command);
+        return static::success();
         return response()->json(new ShoppingCartResource($cart));
     }
 
     // 选择/取消选择商品
-    public function selectProducts(SelectProductsRequest $request) : JsonResponse
+    public function selected($id, SelectProductsRequest $request) : JsonResponse
     {
-        $data       = $request->validated();
-        $identities = array_map(fn($item) => ProductIdentity::fromArray($item), $data['identities'] ?? []);
-        $command    = SelectProductsCommand::from([
-            'owner'      => $request->user(),
-            'identities' => $identities,
-            'selected'   => $data['selected'],
-        ]);
-        $this->service->selectProducts($command);
-        return response()->json(['success' => true]);
+        $request->offsetSet('buyer', $this->getOwner());
+        $command = SelectProductCommand::from($request);
+        $command->setKey($id);
+        $this->service->selectProduct($command);
+
+
+        $calculateAmountCommand = CalculateAmountCommand::from($request);
+        $orderAmount            = $this->service->calculateAmount($calculateAmountCommand);
+
+        return static::success($orderAmount);
+
     }
 
     // 重新计算金额
     public function calculateAmount(Request $request) : JsonResponse
     {
         $request->offsetSet('buyer', $this->getOwner());
-        $command = CalculateAmountCommand::from($request);
-
-
+        $command     = CalculateAmountCommand::from($request);
         $orderAmount = $this->service->calculateAmount($command);
 
         return static::success($orderAmount);
