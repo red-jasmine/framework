@@ -60,7 +60,7 @@ return new class extends Migration {
             $table->decimal('market_price_amount')->nullable()->comment('市场价');
             $table->string('cost_price_currency', 3)->nullable()->comment('成本价货币');
             $table->decimal('cost_price_amount')->nullable()->comment('成本价');
-            $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+            $table->decimal('tax_rate')->default(0)->comment('税率%');
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');

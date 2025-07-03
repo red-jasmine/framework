@@ -68,7 +68,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
             $table->unsignedBigInteger('gift_point')->default(0)->comment('赠送积分');
             $table->string('warehouse_code', 64)->nullable()->comment('仓库编码');
-            $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+            $table->decimal('tax_rate')->default(0)->comment('税率%');
             // 销售总价  = 销售单价 * 数量
             // 商品金额  = 销售总价 - 优惠
             // 税费金额  = ( 商品金额 + (?运费)  ) * 税率 // TODO 是否加运费计算 如果是 海外直购 那么需要计算 如果是 国内直购 那么不需要计算

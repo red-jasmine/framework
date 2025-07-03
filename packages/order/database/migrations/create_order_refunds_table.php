@@ -67,7 +67,7 @@ return new class extends Migration {
                 $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
                 $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
                 $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组ID');
-                $table->decimal('tax_rate', 8, 4)->default(0)->comment('税率%');
+                $table->decimal('tax_rate')->default(0)->comment('税率%');
 
 
                 // 金额
