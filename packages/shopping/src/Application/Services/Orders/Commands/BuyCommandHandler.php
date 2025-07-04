@@ -18,7 +18,7 @@ use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 // 定义一个处理购买命令的类，继承自CommandHandler基类
-class ProductBuyCommandHandler extends CommandHandler
+class BuyCommandHandler extends CommandHandler
 {
 
     protected OrderDomainService $orderDomainService;
@@ -40,13 +40,13 @@ class ProductBuyCommandHandler extends CommandHandler
 
 
     /**
-     * @param  ProductBuyCommand  $command
+     * @param  BuyCommand  $command
      *
      * @return OrdersData
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(ProductBuyCommand $command) : OrdersData
+    public function handle(BuyCommand $command) : OrdersData
     {
         $this->beginDatabaseTransaction();
         try {

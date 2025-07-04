@@ -16,8 +16,12 @@ class ShoppingBuyerRoute
              ->middleware(['auth:user'])
              ->group(function () {
 
+                 Route::prefix('order')->group(function () {
+                     Route::post('check', [OrderController::class, 'check']);
+                     Route::post('buy', [OrderController::class, 'buy']);
 
-                 Route::post('buy', [OrderController::class, 'buy']);
+
+                 });
 
 
              });

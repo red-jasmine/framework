@@ -4,8 +4,8 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 
 use Illuminate\Http\Request;
-use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductBuyCommand;
-use RedJasmine\Shopping\Application\Services\Orders\Commands\ProductCalculateCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\CheckCommand;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Support\Http\Controllers\Controller;
 
@@ -36,14 +36,14 @@ class OrderController extends Controller
      *
      * @return mixed 返回计算后的订单信息
      */
-    public function calculate(Request $request)
+    public function check(Request $request)
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
-        $command = ProductCalculateCommand::from($request);
+        $command = CheckCommand::from($request);
 
         // 调用命令服务进行产品订单的计算
-        $orders = $this->commandService->calculates($command);
+        $orders = $this->commandService->check($command);
 
         // 返回计算后的订单信息
         return $orders;
@@ -54,7 +54,7 @@ class OrderController extends Controller
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
-        $command = ProductBuyCommand::from($request);
+        $command = BuyCommand::from($request);
 
 
         // 获取客户端信息 通过请求头部获取
@@ -64,10 +64,6 @@ class OrderController extends Controller
 
         $orders = $this->commandService->buy($command);
         return $orders;
-    }
-
-    public function store(Request $request)
-    {
     }
 
     public function show($id)

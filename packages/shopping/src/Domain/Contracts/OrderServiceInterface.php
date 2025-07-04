@@ -22,6 +22,7 @@ interface OrderServiceInterface
      * @param  OrderData  $orderData
      *
      * @return string 订单号
+     * TODO 不能简单返回订单号
      */
     public function create(OrderData $orderData) : string;
 }

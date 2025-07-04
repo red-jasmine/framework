@@ -20,7 +20,6 @@ class OrdersData extends Data
     public array $orders = [];
 
 
-
     public function __construct()
     {
         $this->total = Money::parse(0);
@@ -30,16 +29,15 @@ class OrdersData extends Data
     public function setOrders(array $orders) : void
     {
         $this->orders = $orders;
-
     }
 
     public function total() : Money
     {
         $this->total = Money::parse(0);
 
-        foreach ($this->orders as $order) {
 
-            $this->total->add($order->getOrderAmount()->payableAmount);
+        foreach ($this->orders as $order) {
+            $this->total = $this->total->add($order->getOrderAmount()->payableAmount);
         }
 
 

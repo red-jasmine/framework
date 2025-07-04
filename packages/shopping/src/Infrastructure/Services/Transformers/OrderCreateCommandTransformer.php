@@ -22,17 +22,17 @@ class OrderCreateCommandTransformer
         $order->clientVersion  = $orderData->clientVersion;
         $order->discountAmount = $orderData->getOrderAmount()->discountAmount;
         $order->freightAmount  = $orderData->getOrderAmount()->freightAmount;
+        $order->orderType      = OrderTypeEnum::STANDARD->value;
         // TODO
-        $order->orderType = OrderTypeEnum::STANDARD->value;
-
         $order->channel  = null;
         $order->store    = null;
-        $order->address  = null; // TODO
+        $order->address  = null;
         $order->products = [];
         foreach ($orderData->products as $productData) {
             // 获取价格
-            $order->currency              = $productData->getProductAmount()->price->getCurrency();
-            $product                      = new OrderProductData();
+            $order->currency = $productData->getProductAmount()->price->getCurrency();
+            $product         = new OrderProductData();
+            $product->setKey($productData->getKey());
             $product->quantity            = $productData->quantity;
             $product->orderProductType    = $productData->getProductInfo()->productType;
             $order->shippingType          = $productData->getProductInfo()->shippingTypes[0];// TODO 获取根据用户选择的配送方式

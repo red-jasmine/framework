@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders\Hooks;
+namespace RedJasmine\Shopping\Domain\Hooks;
 
 
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
@@ -10,16 +10,16 @@ use RedJasmine\Support\Foundation\Hook\Hookable;
 
 
 /**
- * 购物订单获取商品基础价格组件
+ * 获取商品优惠
  *
  * @method static MoneyOld hook(ProductPriceData $productPriceData, \Closure $closure)
  */
-class ShoppingOrderProductPriceHook
+class ShoppingOrderProductDiscountHook
 {
 
     use Hookable;
 
-    public static string $hook = 'shopping.domain.order.calculation.product.price';
+    public static string $hook = 'shopping.domain.order.calculation.product.discount';
 
 
 }

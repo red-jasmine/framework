@@ -9,6 +9,8 @@ use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
 use RedJasmine\Shopping\Domain\Data\OrderAmountData;
+use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderProductAmountHook;
+use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderSplitProductHook;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**
@@ -22,6 +24,7 @@ class AmountCalculationService extends Service
         protected PromotionServiceInterface $promotionService,
         protected OrderServiceInterface $orderService,
     ) {
+
     }
 
     /**
@@ -37,14 +40,27 @@ class AmountCalculationService extends Service
         foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
             // 获取商品信息
             $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
+            $productPurchaseFactor->setProductInfo($productInfo);
             // 查询库存信息
             $cartStockInfo = $this->stockService->getStockInfo($productPurchaseFactor->product, $productPurchaseFactor->quantity);
+            $productPurchaseFactor->setStockInfo($cartStockInfo);
             // 获取商品金额信息
-            $productAmount = $this->productService->getProductAmount($productPurchaseFactor);
+            $productAmount = ShoppingOrderProductAmountHook::hook($productPurchaseFactor,
+                fn() => $this->productService->getProductAmount($productPurchaseFactor)
+            );
+            $productPurchaseFactor->setProductAmount($productAmount);
             // 查询商品优惠信息
             $productAmount = $this->promotionService->getProductPromotion($productPurchaseFactor, $productAmount);
-            // 把商品金额信息加入订单金额信息
 
+            // 获取商品拆单信息
+            $productPurchaseFactor->setSplitKey(
+                ShoppingOrderSplitProductHook::hook(
+                    $productPurchaseFactor,
+                    fn() => $this->orderService->getOrderProductSplitKey($productPurchaseFactor)
+                )
+            );
+
+            // 把商品金额信息加入订单金额信息
             $productInfo->productAmount                                        = $productAmount;
             $productInfo->stockInfo                                            = $cartStockInfo;
             $orderAmount->products[$productPurchaseFactor->getKey() ?? $index] = $productInfo;

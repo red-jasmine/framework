@@ -1,13 +1,13 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders\Hooks;
+namespace RedJasmine\Shopping\Domain\Hooks;
 
-use RedJasmine\Order\Domain\Models\Order;
+use Closure;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Support\Foundation\Hook\Hookable;
 
 /**
- * @method static Order hook(OrderData $orderData, \Closure $closure)
+ * @method static string hook(OrderData $orderData, Closure $closure)
  */
 class ShoppingOrderCreateHook
 {

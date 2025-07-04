@@ -6,6 +6,7 @@ use RedJasmine\Shopping\Domain\Data\OrderAmountData;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrderProductData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderCreateHook;
 
 /**
  * 订单结算服务
@@ -37,6 +38,21 @@ class OrderDomainService extends AmountCalculationService
         return $ordersData;
     }
 
+
+    protected function init(OrderData $orderData) : OrdersData
+    {
+        // 获取商品信息
+        foreach ($orderData->products as $product) {
+
+            // 获取订单拆分key
+            $product->setSplitKey(
+                $this->orderService->getOrderProductSplitKey($product)
+            );
+        }
+
+        return $this->orderSplit($orderData);
+    }
+
     /**
      * @param  OrderData  $orderData
      *
@@ -44,43 +60,43 @@ class OrderDomainService extends AmountCalculationService
      */
     public function buy(OrderData $orderData) : OrdersData
     {
-        // 获取商品信息
-        foreach ($orderData->products as $product) {
-            // 获取商品信息
-            $productInfo = $this->productService->getProductInfo($product);
 
-            $product->setProductInfo($productInfo);
-            // 获取价格信息
-            $productAmount = $this->productService->getProductAmount($product);
-            $product->setProductAmount($productAmount);
-            // 获取库存信息
-            $stockInfo = $this->stockService->getStockInfo($product->product, $product->quantity);
-            $product->setStockInfo($stockInfo);
-
-            // 获取订单拆分key
-            $product->setSplitKey(
-                $this->orderService->getOrderProductSplitKey($product)
-            );
-            // 获取商品优惠信息 TODO
-
-        }
-
-        $ordersData = $this->orderSplit($orderData);
-
+        $ordersData = $this->init($orderData);
         foreach ($ordersData->orders as $orderDataItem) {
-
             $orderDataItem->setOrderAmount(
                 $this->calculates($orderDataItem)
             );
 
-            $orderNo = $this->orderService->create($orderDataItem);
+        }
+        foreach ($ordersData->orders as $orderDataItem) {
+
+            foreach ($orderDataItem->products as $productDataItem){
+                //$this->stockService->releaseStock();
+            }
+
+            // 调用库存服务 进行扣减
+            $orderNo = ShoppingOrderCreateHook::hook($orderDataItem, fn() => $this->orderService->create($orderDataItem));
             $orderDataItem->setKey($orderNo);
         }
 
+
+        $ordersData->total();
         return $ordersData;
     }
 
-    public function calculates(OrderData $orderData) : OrderAmountData
+    public function check(OrderData $orderData) : OrdersData
+    {
+        $ordersData = $this->init($orderData);
+        foreach ($ordersData->orders as $orderDataItem) {
+            $orderDataItem->setOrderAmount(
+                $this->calculates($orderDataItem)
+            );
+        }
+        $ordersData->total();
+        return $ordersData;
+    }
+
+    protected function calculates(OrderData $orderData) : OrderAmountData
     {
         foreach ($orderData->products as $index => $product) {
             $product->setKey($index);

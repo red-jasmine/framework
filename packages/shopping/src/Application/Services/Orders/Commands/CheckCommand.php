@@ -6,9 +6,9 @@ namespace RedJasmine\Shopping\Application\Services\Orders\Commands;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 
 /**
- * 商品立即购买
+ * 商品价格计算
  */
-class ProductBuyCommand extends OrderData
+class CheckCommand extends OrderData
 {
 
 

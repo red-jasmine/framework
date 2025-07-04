@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Orders\Hooks;
+namespace RedJasmine\Shopping\Domain\Hooks;
 
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Shopping\Domain\Data\OrderData;

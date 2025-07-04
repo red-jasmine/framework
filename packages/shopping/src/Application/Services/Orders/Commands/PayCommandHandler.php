@@ -12,7 +12,7 @@ use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
-class OrderPayCommandHandler extends CommandHandler
+class PayCommandHandler extends CommandHandler
 {
     public function __construct(
         public OrderRepositoryInterface $orderRepository,
@@ -23,7 +23,7 @@ class OrderPayCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(OrderPayCommand $command)
+    public function handle(PayCommand $command)
     {
 
 

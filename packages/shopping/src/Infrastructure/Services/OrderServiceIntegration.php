@@ -43,9 +43,9 @@ class OrderServiceIntegration implements OrderServiceInterface
     public function create(OrderData $orderData) : string
     {
         // 转换 DTO
-        $command = app(OrderCreateCommandTransformer::class)->transform($orderData);
-
+        $command = new OrderCreateCommandTransformer()->transform($orderData);
         // 创建订单
+        // TODO 如何关联 传入的订单项目
         $order = $this->orderApplicationService->create($command);
         return $order->order_no;
     }

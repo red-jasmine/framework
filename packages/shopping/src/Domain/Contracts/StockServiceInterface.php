@@ -30,6 +30,18 @@ interface StockServiceInterface
      */
     public function reserveStock(ProductIdentity $product, int $quantity, string $orderId) : bool;
 
+
+    /**
+     * 扣减库存
+     *
+     * @param  ProductIdentity  $product
+     * @param  int  $quantity
+     * @param  string  $orderProductNo
+     *
+     * @return bool
+     */
+    public function subStock(ProductIdentity $product, int $quantity, string $orderProductNo) : bool;
+
     /**
      * 释放预占库存
      *
