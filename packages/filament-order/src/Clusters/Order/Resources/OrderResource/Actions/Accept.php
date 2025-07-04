@@ -16,7 +16,7 @@ trait Accept
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::order.actions.' . $this->getName()));
+        $this->label(label: __('red-jasmine-order::order.commands.'.$this->getName()));
 
         if ($this->getName() === 'accept') {
             $this->color('success');
@@ -31,11 +31,10 @@ trait Accept
         $this->requiresConfirmation();
 
 
-
-
         $this->action(function ($data, $record) {
 
-            $data['id'] = $record->id;
+            $data['id']      = $record->id;
+            $data['orderNo']     = $record->order_no;
 
             try {
 

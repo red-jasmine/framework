@@ -17,7 +17,7 @@ class OrderCardKeys extends Component implements HasTable, HasForms
     use InteractsWithTable;
     use InteractsWithForms;
 
-    public int $orderId;
+    public string $orderNo;
 
     public ?string $entityType = null;
 
@@ -31,7 +31,7 @@ class OrderCardKeys extends Component implements HasTable, HasForms
             ->heading(__('red-jasmine-order::card-keys.labels.order-card-keys'))
             ->modelLabel(__('red-jasmine-order::card-keys.labels.order-card-keys'))
             ->query(OrderCardKey::query()
-                                ->where('order_id', $this->orderId)
+                                ->where('order_no', $this->order_no)
                                 ->when($this->entityType && $this->entityId, function ($query) {
                             $query->where('entity_type', $this->entityType)
                                   ->where('entity_id', $this->entityId);

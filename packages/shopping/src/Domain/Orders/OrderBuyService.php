@@ -14,7 +14,7 @@ use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderTransformHook;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderTranslateHook;
 use RedJasmine\Shopping\Domain\Orders\Hooks\ShoppingOrderTranslateOrderDomainCommandHook;
 use RedJasmine\Shopping\Domain\Orders\Pipelines\OrderCreateProductStockPipeline;
-use RedJasmine\Shopping\Domain\Orders\Transformers\OrderCreateCommandTransformer;
+use RedJasmine\Shopping\Infrastructure\Services\Transformers\OrderCreateCommandTransformer;
 use RedJasmine\Support\Foundation\Service\Service;
 use Throwable;
 

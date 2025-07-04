@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
 use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\Shopping\Domain\Data\ProductAmount;
-use RedJasmine\Shopping\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Throwable;
 
@@ -23,7 +23,7 @@ class ProductServiceIntegration implements ProductServiceInterface
     protected function getProduct(ProductIdentity $product) : Product
     {
         $query = FindQuery::from([]);
-        $query->setKey($product->productId);
+        $query->setKey($product->id);
         $query->include = ['skus'];
         return $this->productApplicationService->find($query);
     }
@@ -42,7 +42,11 @@ class ProductServiceIntegration implements ProductServiceInterface
             $productInfo->minLimit       = $productModel->min_limit;
             $productInfo->stepLimit      = $productModel->step_limit;
             $productInfo->propertiesName = $sku->properties_name;
-            $productInfo->isAvailable    = $productModel->isAllowSale();
+            // 获取可选的发货类型
+            $productInfo->productType   = $productModel->product_type;
+            $productInfo->shippingTypes = $productModel->getAllowShippingTypes();
+
+            $productInfo->isAvailable = $productModel->isAllowSale();
         } catch (Throwable $throwable) {
 
         }

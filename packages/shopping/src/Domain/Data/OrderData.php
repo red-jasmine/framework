@@ -4,10 +4,17 @@ namespace RedJasmine\Shopping\Domain\Data;
 
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
+use RedJasmine\Support\Contracts\UserInterface;
 
 class OrderData extends PurchaseFactor
 {
 
+
+    /**
+     * 卖家
+     * @var UserInterface|null
+     */
+    public ?UserInterface $seller;
     /**
      * 订单标题
      * @var string|null
@@ -48,6 +55,21 @@ class OrderData extends PurchaseFactor
      * @var OrderAddressData|null
      */
     public ?OrderAddressData $address;
+
+
+    protected OrderAmountData $orderAmount;
+
+    public function getOrderAmount() : OrderAmountData
+    {
+        return $this->orderAmount;
+    }
+
+    public function setOrderAmount(OrderAmountData $orderAmount) : OrderData
+    {
+        $this->orderAmount = $orderAmount;
+        return $this;
+    }
+
 
 
 }

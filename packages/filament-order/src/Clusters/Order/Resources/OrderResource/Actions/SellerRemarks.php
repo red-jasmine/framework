@@ -26,7 +26,7 @@ trait SellerRemarks
 
 
         $this->fillForm(fn($record) : array => [
-            'content' => $record->info->{$this->name}
+            'content' => $record->extension->{$this->name}
         ]);
         $this->form([
                         Forms\Components\Textarea::make('content')
@@ -37,6 +37,7 @@ trait SellerRemarks
         $this->action(function ($data, $record) {
 
             $data['id']          = $record->id;
+            $data['orderNo']     = $record->order_no;
             $orderCommandService = app(OrderApplicationService::class);
 
             switch ($this->name) {

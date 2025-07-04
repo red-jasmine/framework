@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Services;
 
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
@@ -18,7 +19,8 @@ class AmountCalculationService extends Service
     public function __construct(
         protected ProductServiceInterface $productService,
         protected StockServiceInterface $stockService,
-        protected PromotionServiceInterface $promotionService
+        protected PromotionServiceInterface $promotionService,
+        protected OrderServiceInterface $orderService,
     ) {
     }
 

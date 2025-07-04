@@ -12,7 +12,7 @@ class ProductIdentity extends Data
 {
 
     /**
-     * 买家
+     * 卖家
      * @var UserInterface|null
      */
     public ?UserInterface $seller;
@@ -20,12 +20,12 @@ class ProductIdentity extends Data
      * 产品源类型
      * @var string
      */
-    public string $productType;
+    public string $type;
     /**
      * 产品ID
      * @var string
      */
-    public string $productId;
+    public string $id;
     /**
      * 规格ID
      * @var string

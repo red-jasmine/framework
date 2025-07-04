@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
-use RedJasmine\Shopping\Domain\Data\ProductAmount;
 
 class PromotionServiceIntegration implements PromotionServiceInterface
 {

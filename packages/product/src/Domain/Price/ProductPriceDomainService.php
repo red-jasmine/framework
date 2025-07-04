@@ -28,7 +28,7 @@ class ProductPriceDomainService extends Service
     {
 
         // 获取商品
-        $product = $this->repository->find($data->product->productId);
+        $product = $this->repository->find($data->product->id);
         $sku     = $product->getSkuBySkuId($data->product->skuId);
 
         // TODO 根据参数获取更多的价格处理

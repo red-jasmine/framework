@@ -17,7 +17,7 @@ class OrderLogistics extends Component implements HasTable, HasForms
     use InteractsWithTable;
     use InteractsWithForms;
 
-    public int $orderId;
+    public string $orderNo;
 
     public ?string $entityType = null;
 
@@ -35,7 +35,7 @@ class OrderLogistics extends Component implements HasTable, HasForms
             ->heading(__('red-jasmine-order::logistics.labels.order-logistics'))
             ->modelLabel(__('red-jasmine-order::logistics.labels.order-logistics'))
             ->query(Model::query()
-                        ->where('order_id', $this->orderId)
+                        ->where('order_no', $this->orderNo)
                         ->when($this->entityType && $this->entityId, function ($query) {
                             $query->where('entity_type', $this->entityType)
                                   ->where('entity_id', $this->entityId);

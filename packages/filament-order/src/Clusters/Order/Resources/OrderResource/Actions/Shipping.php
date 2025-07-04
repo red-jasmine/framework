@@ -104,6 +104,7 @@ trait Shipping
     protected function cardKeyAction($data, $record) : void
     {
         $data['id'] = $record->id;
+        $data['orderNo']     = $record->order_no;
         $command    = OrderCardKeyShippingCommand::from($data);
         app(OrderApplicationService::class)->cardKeyShipping($command);
     }
@@ -132,6 +133,7 @@ trait Shipping
     {
 
         $data['id'] = $record->id;
+        $data['orderNo']     = $record->order_no;
         $command    = OrderDummyShippingCommand::from($data);
         app(OrderApplicationService::class)->dummyShipping($command);
 
@@ -141,7 +143,7 @@ trait Shipping
     protected function logisticsAction($data, $record) : void
     {
         $data['id'] = $record->id;
-
+        $data['orderNo']     = $record->order_no;
         $command    = OrderLogisticsShippingCommand::from($data);
 
         app(OrderApplicationService::class)->logisticsShipping($command);

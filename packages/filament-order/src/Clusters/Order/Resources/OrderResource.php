@@ -72,13 +72,13 @@ class OrderResource extends Resource
                                       OrderCluster\Resources\OrderResource\Actions\InfoList\OrderStarInfoListAction::make('star')
                                   )
                        ,
-                       TextEntry::make('info.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
+                       TextEntry::make('extension.buyer_message')->label(__('red-jasmine-order::order.fields.buyer_message'))
                        ,
-                       TextEntry::make('info.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
+                       TextEntry::make('extension.seller_message')->label(__('red-jasmine-order::order.fields.seller_message'))
                                 ->hintAction(
                                     OrderCluster\Resources\OrderResource\Actions\InfoList\SellerRemarksInfoListAction::make('seller_message')
                                 ),
-                       TextEntry::make('info.seller_remarks')
+                       TextEntry::make('extension.seller_remarks')
                                 ->hintColor('primary')
                                 ->hintIcon('heroicon-m-exclamation-circle')
                                 ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
@@ -117,7 +117,7 @@ class OrderResource extends Resource
                                ->schema([
                                    TextEntry::make('id')->copyable()->label(__('red-jasmine-order::order.fields.id')),
                                    TextEntry::make('shipping_type')->label(__('red-jasmine-order::order.fields.shipping_type'))->useEnum(),
-                                   TextEntry::make('order_type')->label(__('red-jasmine-order::order.fields.order_type'))->useEnum(),
+                                   TextEntry::make('order_type')->label(__('red-jasmine-order::order.fields.order_type')),
                                    TextEntry::make('created_time')->label(__('red-jasmine-order::order.fields.created_time')),
                                    TextEntry::make('payment_time')->label(__('red-jasmine-order::order.fields.payment_time')),
                                    TextEntry::make('confirm_time')->label(__('red-jasmine-order::order.fields.confirm_time')),
@@ -196,16 +196,16 @@ class OrderResource extends Resource
 
 
                                       Livewire::make(OrderCluster\Resources\Components\OrderPayments::class, fn(Model $record
-                                      ) : array => ['orderId' => $record->id,])->key('order-payments')->columnSpanFull(),
+                                      ) : array => ['orderNo' => $record->order_no,])->key('order-payments')->columnSpanFull(),
                                   ];
                                   if ($record->shipping_type === ShippingTypeEnum::LOGISTICS) {
                                       $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderLogistics::class, fn(Model $record
-                                      ) : array => ['orderId' => $record->id,])->key('order-logistics')->columnSpanFull();
+                                      ) : array => ['orderNo' => $record->order_no,])->key('order-logistics')->columnSpanFull();
 
                                   }
                                   if ($record->shipping_type === ShippingTypeEnum::CARD_KEY) {
                                       $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record
-                                      ) : array => ['orderId' => $record->id,])->key('order-card-keys')->columnSpanFull();
+                                      ) : array => ['orderNo' => $record->order_no,])->key('order-card-keys')->columnSpanFull();
 
                                   }
 
@@ -220,18 +220,18 @@ class OrderResource extends Resource
 
 
             Livewire::make(OrderCluster\Resources\OrderResource\Components\OrderProducts::class,
-                fn(Model $record) : array => ['id' => $record->id])->columnSpanFull(),
+                fn(Model $record) : array => ['orderNo' => $record->order_no])->columnSpanFull(),
 
             Fieldset::make('amount')
-                    ->label(__('red-jasmine-order::order.fields.amount'))
+                    ->label(__('red-jasmine-order::order.labels.amount'))
                     ->schema([
 
-                        TextEntry::make('product_payable_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.product_payable_amount')),
-                        TextEntry::make('freight_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.freight_amount')),
-                        TextEntry::make('discount_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.discount_amount')),
-                        TextEntry::make('payable_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.payable_amount')),
-                        TextEntry::make('payment_amount')->prefix('￥')->weight(FontWeight::Bold)->color('danger')->money('CNY')->label(__('red-jasmine-order::order.fields.payment_amount')),
-                        TextEntry::make('refund_amount')->prefix('￥')->money('CNY')->label(__('red-jasmine-order::order.fields.refund_amount')),
+                        TextEntry::make('product_payable_amount')->label(__('red-jasmine-order::order.fields.product_payable_amount')),
+                        TextEntry::make('freight_amount')->label(__('red-jasmine-order::order.fields.freight_amount')),
+                        TextEntry::make('discount_amount')->label(__('red-jasmine-order::order.fields.discount_amount')),
+                        TextEntry::make('payable_amount')->label(__('red-jasmine-order::order.fields.payable_amount')),
+                        TextEntry::make('payment_amount')->weight(FontWeight::Bold)->color('danger')->money('CNY')->label(__('red-jasmine-order::order.fields.payment_amount')),
+                        TextEntry::make('refund_amount')->label(__('red-jasmine-order::order.fields.refund_amount')),
                     ])
                     ->inlineLabel()
                     ->columns(1)
@@ -265,7 +265,7 @@ class OrderResource extends Resource
                                          ->copyable(),
                 OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products'),
                 //Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('order_type')->alignCenter()->useEnum(),
+                Tables\Columns\TextColumn::make('order_type')->alignCenter(),
                 Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum(),
                 UserAbleColumn::make('seller')
                               ->toggleable(isToggledHiddenByDefault: true),
@@ -274,7 +274,7 @@ class OrderResource extends Resource
                               ->grow(),
 
 
-                Tables\Columns\ColumnGroup::make('status')
+                Tables\Columns\ColumnGroup::make(__('red-jasmine-order::order.labels.status'))
                                           ->alignCenter()
                                           ->columns([
 
@@ -285,7 +285,7 @@ class OrderResource extends Resource
                                               Tables\Columns\TextColumn::make('seller_custom_status')->toggleable(isToggledHiddenByDefault: true),
                                           ]),
 
-                Tables\Columns\ColumnGroup::make('amount')
+                Tables\Columns\ColumnGroup::make(__('red-jasmine-order::order.labels.amount'))
                                           ->alignCenter()
                                           ->columns([
 //                                                                                  Tables\Columns\TextColumn::make('product_payable_amount')

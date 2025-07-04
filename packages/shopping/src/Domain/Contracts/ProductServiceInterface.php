@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
+use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\ProductAmount;
-use RedJasmine\Shopping\Domain\Data\ProductInfo;
 
 interface ProductServiceInterface
 {

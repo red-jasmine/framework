@@ -1,8 +1,8 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data;
 
-use App\DTO\ProductAmountDataDTO;
+
 use Cknow\Money\Money;
 use Money\Currency;
 use RedJasmine\Support\Data\Data;
@@ -25,22 +25,32 @@ class ProductAmount extends Data
      */
     public float $taxRate = 0;
 
-    protected ?Money $costPrice {
-        get {
-            return $this->costPrice;
-        }
-        set(?Money $value) {
-            $this->costPrice = $value;
-        }
+    protected ?Money $costPrice = null;
+
+    public function getCostPrice() : ?Money
+    {
+        return $this->costPrice;
     }
-    protected ?Money $totalCostPrice {
-        get {
-            return $this->totalCostPrice;
-        }
-        set(?Money $value) {
-            $this->totalCostPrice = $value;
-        }
+
+    public function setCostPrice(?Money $costPrice) : ProductAmount
+    {
+        $this->costPrice = $costPrice;
+        return $this;
     }
+
+    public function getTotalCostPrice() : ?Money
+    {
+        return $this->totalCostPrice;
+    }
+
+    public function setTotalCostPrice(?Money $totalCostPrice) : ProductAmount
+    {
+        $this->totalCostPrice = $totalCostPrice;
+        return $this;
+    }
+
+
+    protected ?Money $totalCostPrice = null;
 
 
     /**
@@ -62,6 +72,8 @@ class ProductAmount extends Data
     public function __construct(public Currency $currency)
     {
         $this->price          = Money::parse(0, $currency);
+        $this->costPrice      = Money::parse(0, $currency);
+        $this->totalCostPrice = Money::parse(0, $currency);
         $this->totalPrice     = Money::parse(0, $currency);
         $this->discountAmount = Money::parse(0, $currency);
         $this->taxAmount      = Money::parse(0, $currency);
@@ -78,8 +90,5 @@ class ProductAmount extends Data
         return $this->totalPrice->subtract($this->discountAmount);
     }
 
-    public function getDTO() : ProductAmountDataDTO
-    {
-        return new ProductAmountDataDTO();
-    }
+
 }

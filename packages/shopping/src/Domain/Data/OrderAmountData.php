@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Data;
 
 use Cknow\Money\Money;
 use Money\Currency;
+use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Support\Data\Data;
 
 class OrderAmountData extends Data

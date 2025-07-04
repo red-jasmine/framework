@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Shopping\Domain\Data\ProductInfo;
+use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
@@ -27,6 +27,7 @@ class ShoppingCartProduct extends Model
     {
         return [
             'price'      => MoneyCast::class,
+            'selected'   => 'bool',
             'extra'      => 'array',
             'customized' => 'array',
         ];
@@ -114,8 +115,8 @@ class ShoppingCartProduct extends Model
     {
         $this->seller_type  = $productInfo->product->seller->getType();
         $this->seller_id    = $productInfo->product->seller->getID();
-        $this->product_type = $productInfo->product->productType;
-        $this->product_id   = $productInfo->product->productId;
+        $this->product_type = $productInfo->product->type;
+        $this->product_id   = $productInfo->product->id;
         $this->sku_id       = $productInfo->product->skuId;
 
 
@@ -128,19 +129,19 @@ class ShoppingCartProduct extends Model
     {
         $this->seller_type  = $cartProduct->seller->getType();
         $this->seller_id    = $cartProduct->seller->getID();
-        $this->product_type = $cartProduct->productType;
-        $this->product_id   = $cartProduct->productId;
+        $this->product_type = $cartProduct->type;
+        $this->product_id   = $cartProduct->id;
         $this->sku_id       = $cartProduct->skuId;
     }
 
     public function getProduct() : ProductIdentity
     {
         return ProductIdentity::from([
-            'seller_type'  => $this->seller_type,
-            'seller_id'    => $this->seller_id,
-            'product_type' => $this->product_type,
-            'product_id'   => $this->product_id,
-            'sku_id'       => $this->sku_id,
+            'seller_type' => $this->seller_type,
+            'seller_id'   => $this->seller_id,
+            'type'        => $this->product_type,
+            'id'          => $this->product_id,
+            'sku_id'      => $this->sku_id,
         ]);
     }
 } 

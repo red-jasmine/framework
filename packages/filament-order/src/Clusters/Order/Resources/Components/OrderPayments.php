@@ -21,7 +21,7 @@ class OrderPayments extends Component implements HasTable, HasForms
     use InteractsWithForms;
 
 
-    public int $orderId;
+    public string $orderNo;
 
     public ?string $entityType = null;
 
@@ -35,7 +35,7 @@ class OrderPayments extends Component implements HasTable, HasForms
             ->heading(__('red-jasmine-order::payment.labels.order-payments'))
             ->modelLabel(__('red-jasmine-order::payment.labels.order-payments'))
             ->query(OrderPayment::query()
-                        ->where('order_id', $this->orderId)
+                        ->where('order_no', $this->orderNo)
                         ->when($this->entityType && $this->entityId, function ($query) {
                             $query->where('entity_type', $this->entityType)
                                   ->where('entity_id', $this->entityId);

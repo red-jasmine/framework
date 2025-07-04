@@ -20,7 +20,7 @@ class OrderProducts extends Component implements HasTable, HasForms
     use InteractsWithForms;
 
 
-    public $id;
+    public string $orderNo;
 
 
     public function table(Table $table) : Table
@@ -29,7 +29,7 @@ class OrderProducts extends Component implements HasTable, HasForms
         return $table
             ->heading(__('red-jasmine-order::order.labels.products'))
             ->modelLabel(__('red-jasmine-order::order.labels.products'))
-            ->query(OrderProduct::query()->where('order_id', $this->id))
+            ->query(OrderProduct::query()->where('order_no', $this->orderNo))
             ->paginated(false)
             ->columns([
                           TextColumn::make('id')->label(__('red-jasmine-order::order.fields.product.id')),

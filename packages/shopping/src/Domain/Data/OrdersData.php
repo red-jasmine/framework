@@ -15,9 +15,11 @@ class OrdersData extends Data
      */
     public Money $total;
     /**
-     * @var Collection<OrderData>
+     * @var OrderData[]
      */
-    public Collection $orders;
+    public array $orders = [];
+
+
 
     public function __construct()
     {
@@ -25,7 +27,7 @@ class OrdersData extends Data
 
     }
 
-    public function setOrders(Collection $orders) : void
+    public function setOrders(array $orders) : void
     {
         $this->orders = $orders;
 
@@ -35,10 +37,9 @@ class OrdersData extends Data
     {
         $this->total = Money::parse(0);
 
-
         foreach ($this->orders as $order) {
 
-            $this->total->add($order->getAdditionalData()['payable_amount'] ?? Money::parse(0));
+            $this->total->add($order->getOrderAmount()->payableAmount);
         }
 
 

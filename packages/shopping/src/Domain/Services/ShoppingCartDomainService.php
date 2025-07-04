@@ -2,20 +2,14 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
-use Money\Currency;
 use PHPUnit\Event\InvalidArgumentException;
+use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
-use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommand;
-use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
+use RedJasmine\Ecommerce\Domain\Data\StockInfo;
 use RedJasmine\Shopping\Domain\Data\OrderAmountData;
-use RedJasmine\Shopping\Domain\Data\ProductInfo;
-use RedJasmine\Shopping\Domain\Data\StockInfo;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
-use RedJasmine\Support\Foundation\Service\Service;
 
 class ShoppingCartDomainService extends AmountCalculationService
 {
@@ -77,15 +71,35 @@ class ShoppingCartDomainService extends AmountCalculationService
     }
 
 
+    public function show(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
+    {
+        $selectProducts = $cart->products->all();
+
+        return $this->getSelectProductsOrderAmount($selectProducts, $factor);
+    }
+
+
     public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
     {
 
-        $selectProducts         = $cart->products->where('selected', true)->all();
-        $productPurchaseFactors = [];
+        $selectProducts = $cart->products->where('selected', true)->all();
+
+
+        return $this->getSelectProductsOrderAmount($selectProducts, $factor);
+    }
+
+
+    /**
+     * @param  ShoppingCartProduct[]  $selectProducts
+     * @param  PurchaseFactor  $factor
+     *
+     * @return OrderAmountData
+     */
+    protected function getSelectProductsOrderAmount(array $selectProducts, PurchaseFactor $factor) : OrderAmountData
+    {
         // TODO 验证货币是否一致， 需要一致时才支持选择
-        /**
-         * @var ShoppingCartProduct $product
-         */
+
+        $productPurchaseFactors = [];
         foreach ($selectProducts as $product) {
 
             $productPurchaseFactor = ProductPurchaseFactor::from([

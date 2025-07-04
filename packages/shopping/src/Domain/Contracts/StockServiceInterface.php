@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Shopping\Domain\Data\StockInfo;
+use RedJasmine\Ecommerce\Domain\Data\StockInfo;
 
 interface StockServiceInterface
 {

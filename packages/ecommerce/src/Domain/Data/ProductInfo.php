@@ -1,8 +1,9 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Support\Data\Data;
 
 class ProductInfo extends Data
@@ -19,10 +20,18 @@ class ProductInfo extends Data
     // 商品规格属性
     // 商品图片
     public ProductIdentity $product;
-    public string          $title;
-    public string          $propertiesName;
-    public ?string         $image    = null;
-    public int             $minLimit = 1;
+
+
+    public ProductTypeEnum $productType;
+    /**
+     * 允许的发货方式
+     * @var ShippingTypeEnum[]
+     */
+    public array   $shippingTypes;
+    public string  $title;
+    public string  $propertiesName;
+    public ?string $image    = null;
+    public int     $minLimit = 1;
     // 数量步幅
     public int $stepLimit = 1;
     // 0 表示不限制

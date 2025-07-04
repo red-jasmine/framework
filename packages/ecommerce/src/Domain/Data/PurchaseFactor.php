@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
@@ -49,5 +50,7 @@ class PurchaseFactor extends Data
     // 货币
     public ?string $currency;
 
+    // 选择的配送方式
+    public ?ShippingTypeEnum $deliveryMethod;
 
 }

@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\ProductAmount;
 
 interface PromotionServiceInterface
 {

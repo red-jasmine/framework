@@ -34,6 +34,7 @@ trait OrderProductProgress
 
         $this->action(function ($data, $record) {
 
+            $data['orderNo']     = $record->order_no;
             $data['id']             = $record->order_id;
             $data['orderProductId'] = $record->id;
             try {

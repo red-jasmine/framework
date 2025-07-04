@@ -14,7 +14,7 @@ trait OrderStar
 
         $name = $this->name;
 
-        $this->label(__('red-jasmine-order::order.fields.' . $name));
+        $this->label(__('red-jasmine-order::order.fields.'.$name));
 
         $this->icon('heroicon-o-star');
         $this->fillForm(fn($record) : array => [
@@ -22,16 +22,17 @@ trait OrderStar
         ]);
         $this->form([
 
-                        Rating::make('star')
-                              ->allowZero()
-                              ->stars(10)
-                              ->label(__('red-jasmine-order::order.fields.' . $name)),
+            Rating::make('star')
+                  ->allowZero()
+                  ->stars(10)
+                  ->label(__('red-jasmine-order::order.fields.'.$name)),
 
-                    ]);
+        ]);
 
         $this->action(function ($data, $record) {
 
             $data['id']          = $record->id;
+            $data['orderNo']     = $record->order_no;
             $orderCommandService = app(OrderApplicationService::class);
             $command             = OrderStarCommand::from($data);
             $orderCommandService->star($command);

@@ -2,16 +2,13 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Commands;
 
-use Cknow\Money\Money;
-use InvalidArgumentException;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
-use RedJasmine\Shopping\Domain\Data\ProductInfo;
 use RedJasmine\Shopping\Domain\Models\Enums\ShoppingCartStatusEnum;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
-use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Shopping\Domain\Services\ShoppingCartDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
@@ -23,14 +20,12 @@ class AddProductCommandHandler extends CommandHandler
 
     public function __construct(
         protected ShoppingCartApplicationService $service,
-        protected ProductServiceInterface $productService,
-        protected StockServiceInterface $stockService,
-        protected PromotionServiceInterface $promotionService
     ) {
         $this->shoppingCartDomainService = new ShoppingCartDomainService(
-            $this->productService,
-            $this->stockService,
-            $this->promotionService,
+            app(ProductServiceInterface::class),
+            app(StockServiceInterface::class),
+            app(PromotionServiceInterface::class),
+            app(OrderServiceInterface::class),
         );
     }
 
