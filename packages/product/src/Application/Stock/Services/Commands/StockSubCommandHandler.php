@@ -13,7 +13,7 @@ class StockSubCommandHandler extends StockCommandHandler
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(StockCommand $command) : void
+    public function handle(StockCommand $command) : bool
     {
 
         $command->actionType = ProductStockActionTypeEnum::SUB;
@@ -39,6 +39,7 @@ class StockSubCommandHandler extends StockCommandHandler
             throw  $throwable;
         }
 
+        return true;
 
     }
 

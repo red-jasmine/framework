@@ -37,6 +37,14 @@ class ProductInfo extends Data
     // 0 表示不限制
     public int $maxLimit = 0;
 
+    /**
+     * 商品类目ID
+     * @var int
+     */
+    public int $categoryId     = 0;
+    public int $brandId        = 0;
+    public int $productGroupId = 0;
+    public int $barcode        = 0;
 
     // 价格信息
     public ProductAmount $productAmount;

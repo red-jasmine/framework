@@ -47,10 +47,10 @@ return new class extends Migration {
 
 
             // 商品基本信息
-            $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
+            $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
 
-            // 商品信息
+            // 商品身份信息
             $table->string('product_type', 32)->comment('商品源类型');
             $table->unsignedBigInteger('product_id')->comment('商品源ID');
             $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
@@ -98,6 +98,7 @@ return new class extends Migration {
             $table->decimal('cost_price', 12)->default(0)->comment('成本单价');
             $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
 
+            // 订单类型 决定流程
             $table->string('order_type', 32)->comment('订单类型');
             // 状态
             $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
@@ -123,8 +124,9 @@ return new class extends Migration {
             $table->timestamp('collect_time')->nullable()->comment('揽收时间');
             $table->timestamp('dispatch_time')->nullable()->comment('派送时间');
 
-            $table->timestamp('expiration_date')->nullable()->comment('过期时间');
             // 虚拟商品使用
+            $table->timestamp('expiration_date')->nullable()->comment('过期时间');
+
             $table->unsignedBigInteger('progress')->nullable()->comment('进度');
             $table->unsignedBigInteger('progress_total')->nullable()->comment('进度总数');
             // 卡密专用
@@ -133,9 +135,11 @@ return new class extends Migration {
 
             $table->string('last_refund_no')->nullable()->comment('最后退款单款单号');
 
-            // 供应商
+            // 买家外部单号
             $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
-            // 供应商
+
+
+            // 供应商 TODO
 
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');
             $table->operator();
