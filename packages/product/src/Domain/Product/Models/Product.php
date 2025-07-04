@@ -417,4 +417,25 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $this->skus->where('id', $skuId)->firstOrFail();
     }
 
+
+    /**
+     * 获取可选的发货类型
+     * @return array
+     */
+    public function getAllowShippingTypes() : array
+    {
+        $types = $this->product_type->getAllowShippingType();
+        if (!$this->product_type->isAllowDeliveryMethods()) {
+            return $types;
+        }
+        $allowShippingTypes = [];
+        foreach ($this->delivery_methods as $deliveryMethod) {
+            if (in_array(ShippingTypeEnum::from($deliveryMethod), $types)) {
+                $allowShippingTypes[] = ShippingTypeEnum::from($deliveryMethod);
+            }
+        }
+        return $allowShippingTypes;
+
+
+    }
 }
