@@ -66,11 +66,14 @@ class OrderStandardType implements OrderTypeInterface
     protected function calculateProductsAmount(Order $order) : void
     {
         foreach ($order->products as $product) {
+
             // 总价 = 价格 * 数量
             $product->total_price = $product->price->multiply($product->quantity);
+
             // 单品优惠
             $product->discount_amount;
             // 商品总金额   < 0
+
             $product->product_amount = $product->total_price->subtract($product->discount_amount);
             // 小计类
             // 成本总价 = 成本价格 * 数量

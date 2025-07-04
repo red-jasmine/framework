@@ -617,7 +617,7 @@ class Order extends Model implements OperatorInterface
         return OrderType::create($this->order_type);
     }
 
-    public function create() : static
+    public function createOrder() : static
     {
         // 计算金额
         $this->getOrderTypeStrategy()->calculateAmount($this);
@@ -625,7 +625,8 @@ class Order extends Model implements OperatorInterface
         $this->created_time = now();
         $order              = $this;
         // 小计项目
-        $order->quantity         = $order->products->sum('quantity');
+        $order->quantity = $order->products->sum('quantity');
+
         $order->price            = Money::avg(...$order->products->pluck('price'));
         $order->cost_price       = Money::avg(...$order->products->pluck('cost_price'));
         $order->total_price      = Money::sum(...$order->products->pluck('total_price'));

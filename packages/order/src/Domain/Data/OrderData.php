@@ -73,7 +73,7 @@ class OrderData extends Data
     public ?Money $discountAmount = null;
     /**
      * 商品集合
-     * @var array<OrderProductData>
+     * @var OrderProductData[]
      */
     public array $products;
 

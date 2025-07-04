@@ -51,7 +51,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
             $this->service->hook('create.fill', $command, fn() => null);
 
 
-            $order->create();
+            $order->createOrder();
 
             $this->service->repository->store($order);
 

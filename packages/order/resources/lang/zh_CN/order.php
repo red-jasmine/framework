@@ -176,7 +176,7 @@ return [
         'closed'                   => '已关闭',
         'cancel-closed'            => '已取消/关闭',
     ],
-    'actions' => [
+    'commands' => [
         'shipping' => '发货',
         'accept'   => '接单',
         'reject'   => '拒单',
