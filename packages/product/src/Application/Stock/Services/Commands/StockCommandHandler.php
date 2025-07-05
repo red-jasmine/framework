@@ -17,15 +17,14 @@ abstract class StockCommandHandler extends CommandHandler
 
     public function __construct(
         protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService            $domainService
-    )
-    {
+        protected StockDomainService $domainService
+    ) {
 
     }
 
 
     /**
-     * @param StockCommand $command
+     * @param  StockCommand  $command
      *
      * @return void
      * @throws StockException
@@ -40,7 +39,7 @@ abstract class StockCommandHandler extends CommandHandler
     /**
      * 验证库存
      *
-     * @param int $quantity
+     * @param  int  $quantity
      *
      * @return int
      * @throws StockException
@@ -57,19 +56,18 @@ abstract class StockCommandHandler extends CommandHandler
     /**
      * 记录
      *
-     * @param ProductSku $sku
-     * @param StockCommand $command
-     * @param int|null $restStock
+     * @param  ProductSku  $sku
+     * @param  StockCommand  $command
+     * @param  int|null  $restStock
      *
      * @return void
      * @throws Exception
      */
     protected function log(
-        ProductSku                 $sku,
-        StockCommand               $command,
-        ?int                       $restStock = 0
-    ) : void
-    {
+        ProductSku $sku,
+        StockCommand $command,
+        ?int $restStock = 0
+    ) : void {
 
         $log                = new ProductStockLog;
         $log->owner         = $sku->owner;
@@ -79,33 +77,38 @@ abstract class StockCommandHandler extends CommandHandler
         $log->change_detail = $command->changeDetail;
         //$log->channel_type  = $command->channelType;
         //$log->channel_id    = $command->channelId;
-        $log->action_type   = $command->actionType;
-        $log->creator       = ServiceContext::getOperator();
+        $log->action_type = $command->actionType;
+        $log->creator     = ServiceContext::getOperator();
+
+        $log->after_lock_stock  = $sku->lock_stock;
+        $log->before_lock_stock = $sku->getOriginal('lock_stock');
+        $log->after_stock       = $sku->stock;
+        $log->before_stock      = (int)$sku->getOriginal('stock');
 
         switch ($command->actionType) {
             case ProductStockActionTypeEnum::ADD:
-                $log->action_stock      = $command->actionStock;
-                $log->lock_stock = 0;
+                $log->action_stock = $command->actionStock;
+                $log->lock_stock   = 0;
                 break;
             case ProductStockActionTypeEnum::RESET:
-                $log->action_stock      = $restStock;
-                $log->lock_stock = 0;
+                $log->action_stock = $restStock;
+                $log->lock_stock   = 0;
                 break;
             case ProductStockActionTypeEnum::SUB:
-                $log->action_stock      = -$command->actionStock;
-                $log->lock_stock = 0;
+                $log->action_stock = -$command->actionStock;
+                $log->lock_stock   = 0;
                 break;
             case ProductStockActionTypeEnum::LOCK:
-                $log->action_stock      = -$command->actionStock;
-                $log->lock_stock = $command->actionStock;
+                $log->action_stock = -$command->actionStock;
+                $log->lock_stock   = $command->actionStock;
                 break;
             case ProductStockActionTypeEnum::UNLOCK:
-                $log->action_stock      = $command->actionStock;
-                $log->lock_stock = -$command->actionStock;
+                $log->action_stock = $command->actionStock;
+                $log->lock_stock   = -$command->actionStock;
                 break;
             case ProductStockActionTypeEnum::CONFIRM:
-                $log->action_stock      = 0;
-                $log->lock_stock = -$command->actionStock;
+                $log->action_stock = 0;
+                $log->lock_stock   = -$command->actionStock;
         }
 
         $hasLog = true;

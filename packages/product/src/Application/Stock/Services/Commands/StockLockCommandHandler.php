@@ -13,7 +13,7 @@ class StockLockCommandHandler extends StockCommandHandler
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(StockCommand $command) : void
+    public function handle(StockCommand $command) : bool
     {
         $command->actionType = ProductStockActionTypeEnum::LOCK;
         $this->setCommand($command);
@@ -22,11 +22,11 @@ class StockLockCommandHandler extends StockCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $sku   = $this->repository->find($command->skuId);
+            $sku = $this->repository->find($command->skuId);
 
-            $this->repository->lock($sku, $command->actionStock);
+            $sku = $this->repository->lock($sku, $command->actionStock);
 
-            $this->log($sku,  $command);
+            $this->log($sku, $command);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
@@ -36,7 +36,7 @@ class StockLockCommandHandler extends StockCommandHandler
             $this->rollBackDatabaseTransaction();
             throw  $throwable;
         }
-
+        return true;
 
     }
 

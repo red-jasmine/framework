@@ -20,20 +20,20 @@ interface ProductSkuRepositoryInterface
     public function add(ProductSku $sku, int $stock);
 
 
-    public function sub(ProductSku $sku, int $stock);
+    public function sub(ProductSku $sku, int $stock): ProductSku;
 
 
-    public function lock(ProductSku $sku, int $stock);
+    public function lock(ProductSku $sku, int $stock) : ProductSku;
 
-    public function unlock(ProductSku $sku, int $stock);
+    public function unlock(ProductSku $sku, int $stock) : ProductSku;
 
-    public function confirm(ProductSku $sku, int $stock);
+    public function confirm(ProductSku $sku, int $stock) : ProductSku;
 
 
     /**
      * 存储日志
      *
-     * @param ProductStockLog $log
+     * @param  ProductStockLog  $log
      *
      * @return void
      */
