@@ -45,20 +45,20 @@ class StockServiceIntegration implements StockServiceInterface
         $command->productId    = $product->id;
         $command->skuId        = $product->skuId;
         $command->actionStock  = $quantity;
-        $command->changeType   = ProductStockChangeTypeEnum::SELLER;
+        $command->changeType   = ProductStockChangeTypeEnum::SALE;
         $command->changeDetail = $orderProductNo;
         return $this->stockApplicationService->sub($command);
     }
 
-
-    public function reserveStock(ProductIdentity $product, int $quantity, string $orderId) : bool
+    public function lockStock(ProductIdentity $product, int $quantity, string $orderProductNo) : bool
     {
-       return true;
-    }
-
-    public function releaseStock(ProductIdentity $product, int $quantity, string $orderId) : bool
-    {
-        return true;
+        $command               = new  StockCommand;
+        $command->productId    = $product->id;
+        $command->skuId        = $product->skuId;
+        $command->actionStock  = $quantity;
+        $command->changeType   = ProductStockChangeTypeEnum::SALE;
+        $command->changeDetail = $orderProductNo;
+        return $this->stockApplicationService->lock($command);
     }
 
 

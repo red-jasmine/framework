@@ -2,11 +2,10 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Data\OrderData;
-use RedJasmine\Shopping\Domain\Data\OrderProductData;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Infrastructure\Services\Transformers\OrderCreateCommandTransformer;
 
 /**
@@ -21,7 +20,7 @@ class OrderServiceIntegration implements OrderServiceInterface
     ) {
     }
 
-    public function getOrderProductSplitKey(OrderProductData $orderProductData) : string
+    public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData) : string
     {
         return md5(implode('|',
             [
@@ -38,16 +37,28 @@ class OrderServiceIntegration implements OrderServiceInterface
      *
      * @param  OrderData  $orderData
      *
-     * @return mixed
+     * @return OrderData
      */
-    public function create(OrderData $orderData) : string
+    public function create(OrderData $orderData) : OrderData
     {
         // 转换 DTO
         $command = new OrderCreateCommandTransformer()->transform($orderData);
         // 创建订单
         // TODO 如何关联 传入的订单项目
         $order = $this->orderApplicationService->create($command);
-        return $order->order_no;
+
+
+        $orderData->setOrderNo($order->order_no);
+        foreach ($order->products as $product) {
+            $product->getSerialNumber();
+            foreach ($orderData->products as $productData) {
+                if ($productData->getSerialNumber() == $product->getSerialNumber()) {
+                    $productData->setOrderProductNo($product->order_product_no);
+                }
+            }
+        }
+
+        return $orderData;
     }
 
 

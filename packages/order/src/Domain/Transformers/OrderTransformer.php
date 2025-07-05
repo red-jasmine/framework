@@ -33,7 +33,7 @@ class OrderTransformer implements TransformerInterface
         $order->shipping_type             = $data->shippingType;
         $order->source                    = $data->source;
         $order->seller_custom_status      = $data->sellerCustomStatus;
-        $order->freight_amount        = $data->freightAmount;
+        $order->freight_amount            = $data->freightAmount;
         $order->discount_amount           = $data->discountAmount;
         $order->client_type               = $data->clientType;
         $order->client_version            = $data->clientVersion;
@@ -74,7 +74,7 @@ class OrderTransformer implements TransformerInterface
 
     public function transformProduct(OrderProductData $orderProductData, OrderProduct $orderProduct) : OrderProduct
     {
-
+        $orderProduct->setSerialNumber($orderProductData->getSerialNumber());
         $orderProduct->order_product_type              = $orderProductData->orderProductType;
         $orderProduct->shipping_type                   = $orderProductData->shippingType;
         $orderProduct->product_type                    = $orderProductData->productType;

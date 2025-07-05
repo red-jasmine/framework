@@ -19,17 +19,6 @@ interface StockServiceInterface
      */
     public function getStockInfo(ProductIdentity $product, int $quantity) : StockInfo;
 
-    /**
-     * 预占库存
-     *
-     * @param  ProductIdentity  $product
-     * @param  int  $quantity
-     * @param  string  $orderId
-     *
-     * @return bool
-     */
-    public function reserveStock(ProductIdentity $product, int $quantity, string $orderId) : bool;
-
 
     /**
      * 扣减库存
@@ -42,14 +31,7 @@ interface StockServiceInterface
      */
     public function subStock(ProductIdentity $product, int $quantity, string $orderProductNo) : bool;
 
-    /**
-     * 释放预占库存
-     *
-     * @param  ProductIdentity  $product
-     * @param  int  $quantity
-     * @param  string  $orderId
-     *
-     * @return bool
-     */
-    public function releaseStock(ProductIdentity $product, int $quantity, string $orderId) : bool;
+
+    public function lockStock(ProductIdentity $product, int $quantity, string $orderProductNo) : bool;
+
 } 

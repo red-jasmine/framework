@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
@@ -38,6 +39,7 @@ use Spatie\LaravelData\WithData;
  */
 class OrderProduct extends Model
 {
+    use HasSerialNumber;
 
     use HasSnowflakeId;
 

@@ -3,6 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Data;
 
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 
 class OrderProductData extends ProductPurchaseFactor
 {
@@ -26,5 +27,29 @@ class OrderProductData extends ProductPurchaseFactor
      */
     public ?string $contact  = null;
     public ?string $password = null;
+
+
+    protected string $orderProductNo;
+
+    public function getOrderProductNo() : string
+    {
+        return $this->orderProductNo;
+    }
+
+    public function setOrderProductNo(string $orderProductNo) : OrderProductData
+    {
+        $this->orderProductNo = $orderProductNo;
+        return $this;
+    }
+
+    use HasSerialNumber;
+
+
+
+
+
+
+
+
 
 }

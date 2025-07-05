@@ -72,4 +72,20 @@ class OrderData extends PurchaseFactor
 
 
 
+
+    protected string $orderNo;
+
+    public function getOrderNo() : string
+    {
+        return $this->orderNo;
+    }
+
+    public function setOrderNo(string $orderNo) : OrderData
+    {
+        $this->orderNo = $orderNo;
+        return $this;
+    }
+
+
+
 }

@@ -4,6 +4,7 @@ namespace RedJasmine\Order\Domain\Data;
 
 
 use Cknow\Money\Money;
+use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
@@ -13,6 +14,8 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class OrderProductData extends Data
 {
+
+    use HasSerialNumber;
     /**
      * 商品类型
      * @var ProductTypeEnum

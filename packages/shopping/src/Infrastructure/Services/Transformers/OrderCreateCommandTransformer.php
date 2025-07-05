@@ -29,13 +29,14 @@ class OrderCreateCommandTransformer
         $order->address  = null;
         $order->products = [];
         foreach ($orderData->products as $productData) {
+            $order->shippingType = $productData->getProductInfo()->shippingTypes[0];
+
             // 获取价格
             $order->currency = $productData->getProductAmount()->price->getCurrency();
             $product         = new OrderProductData();
-            $product->setKey($productData->getKey());
+            $product->setSerialNumber($productData->getSerialNumber()); // 设置序列号
             $product->quantity            = $productData->quantity;
             $product->orderProductType    = $productData->getProductInfo()->productType;
-            $order->shippingType          = $productData->getProductInfo()->shippingTypes[0];// TODO 获取根据用户选择的配送方式
             $product->shippingType        = $productData->getProductInfo()->shippingTypes[0];// TODO 获取根据用户选择的配送方式
             $product->title               = $productData->getProductInfo()->title;
             $product->skuName             = $productData->getProductInfo()->propertiesName;

@@ -43,7 +43,8 @@ class OrderDomainService extends AmountCalculationService
     {
         // 获取商品信息
         foreach ($orderData->products as $product) {
-
+            // 生成序列号
+            $product->buildSerialNumber();
             // 获取订单拆分key
             $product->setSplitKey(
                 $this->orderService->getOrderProductSplitKey($product)
@@ -66,17 +67,26 @@ class OrderDomainService extends AmountCalculationService
             $orderDataItem->setOrderAmount(
                 $this->calculates($orderDataItem)
             );
-
         }
+        // 对订单进行排序 TODO
+        // 对商品进行排序
+
         foreach ($ordersData->orders as $orderDataItem) {
 
-            foreach ($orderDataItem->products as $productDataItem){
-                //$this->stockService->releaseStock();
-            }
 
             // 调用库存服务 进行扣减
-            $orderNo = ShoppingOrderCreateHook::hook($orderDataItem, fn() => $this->orderService->create($orderDataItem));
-            $orderDataItem->setKey($orderNo);
+            $orderDataItem = ShoppingOrderCreateHook::hook($orderDataItem, fn() => $this->orderService->create($orderDataItem));
+            $orderDataItem->setKey($orderDataItem->getOrderNo());
+
+            // 扣减库存
+            /**
+             * @var OrderData $orderDataItem
+             */
+            foreach ($orderDataItem->products as $productDataItem) {
+                $this->stockService->lockStock($productDataItem->product, $productDataItem->quantity, $productDataItem->getOrderProductNo());
+            }
+
+
         }
 
 

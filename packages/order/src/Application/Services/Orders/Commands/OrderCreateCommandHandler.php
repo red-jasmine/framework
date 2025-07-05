@@ -39,12 +39,11 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
         $this->context->setCommand($command);
 
 
-        $this->service->transformer->transform($command, $order);
-
         $this->beginDatabaseTransaction();
 
         try {
 
+            $this->service->transformer->transform($command, $order);
 
             $this->service->hook('create.validate', $command, fn() => $this->validate($command));
 
