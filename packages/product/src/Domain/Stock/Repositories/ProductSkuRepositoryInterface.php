@@ -17,10 +17,10 @@ interface ProductSkuRepositoryInterface
     public function reset(ProductSku $sku, int $stock);
 
 
-    public function add(ProductSku $sku, int $stock);
+    public function add(ProductSku $sku, int $stock) : ProductSku;
 
 
-    public function sub(ProductSku $sku, int $stock): ProductSku;
+    public function sub(ProductSku $sku, int $stock) : ProductSku;
 
 
     public function lock(ProductSku $sku, int $stock) : ProductSku;

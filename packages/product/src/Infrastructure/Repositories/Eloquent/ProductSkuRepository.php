@@ -63,13 +63,17 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         return (int) $quantity;
     }
 
-    public function add(ProductSku $sku, int $stock) : void
+    public function add(ProductSku $sku, int $stock)  : ProductSku
     {
+        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku->stock = $sku->stock + $stock;
+
+
         $attributes = [
             'stock' => DB::raw("stock + $stock"),
         ];
-        ProductSku::where('id', $sku->id)->update($attributes);
         Product::where('id', $sku->product_id)->update($attributes);
+        return $sku;
     }
 
 
