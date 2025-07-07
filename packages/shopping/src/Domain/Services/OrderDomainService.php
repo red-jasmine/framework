@@ -26,7 +26,7 @@ class OrderDomainService extends AmountCalculationService
         $productGroup = collect($orderData->products)->groupBy(function (OrderProductData $product) {
             return $product->getSplitKey();
         });
-
+        // 对订单进行排序 TODO
         $ordersData = new OrdersData();
         foreach ($productGroup as $products) {
             $order           = clone $orderData;
@@ -39,17 +39,10 @@ class OrderDomainService extends AmountCalculationService
     }
 
 
-    protected function init(OrderData $orderData) : OrdersData
+    protected function initOrders(OrderData $orderData) : OrdersData
     {
-        // 获取商品信息
-        foreach ($orderData->products as $product) {
-            // 生成序列号
-            $product->buildSerialNumber();
-            // 获取订单拆分key
-            $product->setSplitKey(
-                $this->orderService->getOrderProductSplitKey($product)
-            );
-        }
+
+        $orderData->products = $this->init($orderData->products);
 
         return $this->orderSplit($orderData);
     }
@@ -62,18 +55,14 @@ class OrderDomainService extends AmountCalculationService
     public function buy(OrderData $orderData) : OrdersData
     {
 
-        $ordersData = $this->init($orderData);
+        $ordersData = $this->initOrders($orderData);
         foreach ($ordersData->orders as $orderDataItem) {
             $orderDataItem->setOrderAmount(
                 $this->calculates($orderDataItem)
             );
         }
-        // 对订单进行排序 TODO
-        // 对商品进行排序
 
         foreach ($ordersData->orders as $orderDataItem) {
-
-
             // 调用库存服务 进行扣减
             $orderDataItem = ShoppingOrderCreateHook::hook($orderDataItem, fn() => $this->orderService->create($orderDataItem));
             $orderDataItem->setKey($orderDataItem->getOrderNo());
@@ -83,32 +72,37 @@ class OrderDomainService extends AmountCalculationService
              * @var OrderData $orderDataItem
              */
             foreach ($orderDataItem->products as $productDataItem) {
-                $this->stockService->lockStock($productDataItem->product, $productDataItem->quantity, $productDataItem->getOrderProductNo());
+                $this->stockService->lockStock(
+                    $productDataItem->product,
+                    $productDataItem->quantity,
+                    $productDataItem->getOrderProductNo()
+                );
             }
 
 
         }
 
 
-        $ordersData->total();
+        $ordersData->statistics();
         return $ordersData;
     }
 
     public function check(OrderData $orderData) : OrdersData
     {
-        $ordersData = $this->init($orderData);
+        $ordersData = $this->initOrders($orderData);
         foreach ($ordersData->orders as $orderDataItem) {
             $orderDataItem->setOrderAmount(
                 $this->calculates($orderDataItem)
             );
         }
-        $ordersData->total();
+        $ordersData->statistics();
         return $ordersData;
     }
 
     protected function calculates(OrderData $orderData) : OrderAmountData
     {
         foreach ($orderData->products as $index => $product) {
+            // 对商品进行排序 TODO
             $product->setKey($index);
             $product->buyer = $orderData->buyer;
         }

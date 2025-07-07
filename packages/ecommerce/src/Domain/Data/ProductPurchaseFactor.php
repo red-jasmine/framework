@@ -2,12 +2,14 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data;
 
+use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
+
 /**
  * 商品价格因子
  */
 class ProductPurchaseFactor extends PurchaseFactor
 {
-
+    use HasSerialNumber;
 
     /**
      * 商品
@@ -36,6 +38,7 @@ class ProductPurchaseFactor extends PurchaseFactor
 
     public function setProductInfo(ProductInfo $productInfo) : void
     {
+        $this->product     = $productInfo->product;
         $this->productInfo = $productInfo;
     }
 

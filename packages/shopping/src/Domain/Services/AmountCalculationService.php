@@ -27,20 +27,47 @@ class AmountCalculationService extends Service
 
     }
 
+    protected function init(array $productPurchaseFactors) : array
+    {
+
+        foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
+            /**
+             * @var ProductPurchaseFactor $productPurchaseFactor
+             */
+            $productPurchaseFactor->buildSerialNumber();
+            // 获取商品信息
+            $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
+            $productPurchaseFactor->setProductInfo($productInfo);
+            // 获取商品拆单信息
+            $productPurchaseFactor->setSplitKey(
+                ShoppingOrderSplitProductHook::hook(
+                    $productPurchaseFactor,
+                    fn() => $this->orderService->getOrderProductSplitKey($productPurchaseFactor)
+                )
+            );
+        }
+
+        return $productPurchaseFactors;
+    }
+
     /**
-     * @param  array|ProductPurchaseFactor[]  $productPurchaseFactors
+     * @param  ProductPurchaseFactor[]  $productPurchaseFactors
      *
      * @return OrderAmountData
      */
     protected function getOrderAmount(array $productPurchaseFactors) : OrderAmountData
     {
+
         $orderAmount = new OrderAmountData(new Currency('CNY'));
+
+        $productPurchaseFactors = $this->init($productPurchaseFactors);
 
         // 通过购买商品因子
         foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
-            // 获取商品信息
-            $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
-            $productPurchaseFactor->setProductInfo($productInfo);
+            /**
+             * @var ProductPurchaseFactor $productPurchaseFactor
+             */
+
             // 查询库存信息
             $cartStockInfo = $this->stockService->getStockInfo($productPurchaseFactor->product, $productPurchaseFactor->quantity);
             $productPurchaseFactor->setStockInfo($cartStockInfo);
@@ -52,18 +79,11 @@ class AmountCalculationService extends Service
             // 查询商品优惠信息
             $productAmount = $this->promotionService->getProductPromotion($productPurchaseFactor, $productAmount);
 
-            // 获取商品拆单信息
-            $productPurchaseFactor->setSplitKey(
-                ShoppingOrderSplitProductHook::hook(
-                    $productPurchaseFactor,
-                    fn() => $this->orderService->getOrderProductSplitKey($productPurchaseFactor)
-                )
-            );
-
+            $productPurchaseFactor->getProductInfo()->productAmount = $productAmount;
+            $productPurchaseFactor->getProductInfo()->stockInfo     = $cartStockInfo;
             // 把商品金额信息加入订单金额信息
-            $productInfo->productAmount                                        = $productAmount;
-            $productInfo->stockInfo                                            = $cartStockInfo;
-            $orderAmount->products[$productPurchaseFactor->getKey() ?? $index] = $productInfo;
+
+            $orderAmount->products[$productPurchaseFactor->getKey() ?? $index] = $productPurchaseFactor->getProductInfo();
         }
         // 通过下单因子 TODO
         // 查询邮费信息 TODO

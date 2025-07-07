@@ -3,6 +3,7 @@
 namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\CheckCommand;
@@ -34,9 +35,9 @@ class OrderController extends Controller
      *
      * @param  Request  $request  请求对象，包含产品计算所需的数据
      *
-     * @return mixed 返回计算后的订单信息
+     * @return JsonResponse  返回计算后的订单信息
      */
-    public function check(Request $request)
+    public function check(Request $request) : JsonResponse
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
@@ -46,11 +47,11 @@ class OrderController extends Controller
         $orders = $this->commandService->check($command);
 
         // 返回计算后的订单信息
-        return $orders;
+        return static::success($orders);
     }
 
 
-    public function buy(Request $request)
+    public function buy(Request $request) : JsonResponse
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
@@ -63,7 +64,7 @@ class OrderController extends Controller
         $command->clientVersion = '1.0.0';
 
         $orders = $this->commandService->buy($command);
-        return $orders;
+        return static::success($orders);
     }
 
     public function show($id)

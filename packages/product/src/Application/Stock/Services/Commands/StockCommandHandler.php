@@ -81,9 +81,9 @@ abstract class StockCommandHandler extends CommandHandler
         $log->creator     = ServiceContext::getOperator();
 
         $log->after_lock_stock  = $sku->lock_stock;
-        $log->before_lock_stock = $sku->getOriginal('lock_stock');
+        $log->before_lock_stock = $sku->getOldLockStock();
         $log->after_stock       = $sku->stock;
-        $log->before_stock      = (int)$sku->getOriginal('stock');
+        $log->before_stock      = $sku->getOldStock();
 
         switch ($command->actionType) {
             case ProductStockActionTypeEnum::ADD:

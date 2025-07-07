@@ -14,7 +14,7 @@ interface ProductSkuRepositoryInterface
     public function init(ProductSku $sku, int $stock);
 
 
-    public function reset(ProductSku $sku, int $stock);
+    public function reset(ProductSku $sku, int $stock): ProductSku;
 
 
     public function add(ProductSku $sku, int $stock) : ProductSku;

@@ -17,7 +17,11 @@ class ProductAmount extends Data
 
     public Money $price;
 
+
     public Money $totalPrice;
+    // 市场价格
+    public ?Money $marketPrice;
+
 
     /**
      * 税率

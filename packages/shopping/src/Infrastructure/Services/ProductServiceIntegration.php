@@ -34,19 +34,24 @@ class ProductServiceIntegration implements ProductServiceInterface
         $productInfo->product     = $productPurchaseFactor->product;
         $productInfo->isAvailable = false;
         try {
-            $productModel                = $this->getProduct($productPurchaseFactor->product);
-            $sku                         = $productModel->getSkuBySkuId($productPurchaseFactor->product->skuId);
-            $productInfo->title          = $productModel->title;
-            $productInfo->image          = $productModel->image;
-            $productInfo->maxLimit       = $productModel->max_limit;
-            $productInfo->minLimit       = $productModel->min_limit;
-            $productInfo->stepLimit      = $productModel->step_limit;
-            $productInfo->propertiesName = $sku->properties_name;
+            $productModel                 = $this->getProduct($productPurchaseFactor->product);
+            $sku                          = $productModel->getSkuBySkuId($productPurchaseFactor->product->skuId);
+            $productInfo->product->seller = $productModel->owner;
+            $productInfo->title           = $productModel->title;
+            $productInfo->image           = $productModel->image;
+            $productInfo->maxLimit        = $productModel->max_limit;
+            $productInfo->minLimit        = $productModel->min_limit;
+            $productInfo->stepLimit       = $productModel->step_limit;
+            $productInfo->propertiesName  = $sku->properties_name;
             // 获取可选的发货类型
             $productInfo->productType   = $productModel->product_type;
             $productInfo->shippingTypes = $productModel->getAllowShippingTypes();
 
             $productInfo->isAvailable = $productModel->isAllowSale();
+
+            // TODO 商品的服务
+
+            // TODO 获取商户名称
         } catch (Throwable $throwable) {
 
         }
@@ -58,12 +63,8 @@ class ProductServiceIntegration implements ProductServiceInterface
 
     public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmount
     {
-        $price = $this->productApplicationService->getProductPrice($productPurchaseFactor);
-
-        $productAmount           = new  ProductAmount($price->getCurrency());
-        $productAmount->quantity = $productPurchaseFactor->quantity;
-
-        $productAmount->price      = $price;
+        $productAmount             = $this->productApplicationService->getProductPrice($productPurchaseFactor);
+        $productAmount->quantity   = $productPurchaseFactor->quantity;
         $productAmount->totalPrice = $productAmount->price->multiply($productPurchaseFactor->quantity);
         // TODO
         //$productAmount->taxAmount     = $productAmount->totalPrice->multiply('0.06');

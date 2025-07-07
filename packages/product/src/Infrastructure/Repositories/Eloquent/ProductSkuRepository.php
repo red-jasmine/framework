@@ -39,14 +39,13 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
      * @param  ProductSku  $sku
      * @param  int  $stock
      *
-     * @return int
+     * @return ProductSku
      * @throws StockException
      */
-    public function reset(ProductSku $sku, int $stock) : int
+    public function reset(ProductSku $sku, int $stock) : ProductSku
     {
-        // TODO 需要调整
+
         $sku = ProductSku::withTrashed()
-                         ->select(['id', 'product_id', 'stock', 'channel_stock', 'lock_stock'])
                          ->lockForUpdate()
                          ->find($sku->id);
         if (bccomp($sku->stock, $stock, 0) === 0) {
@@ -55,19 +54,27 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         if (bccomp($stock, $sku->channel_stock, 0) < 0) {
             throw new StockException('活动库存占用');
         }
-        $quantity    = (int) bcsub($stock, $sku->stock, 0);
+        $sku->setOldStock($sku->stock);
+        $sku->setOldLockStock($sku->lock_stock);
+
+        $quantity   = (int) bcsub($stock, $sku->stock, 0);
+        $sku->stock = $sku->stock + $quantity;
+        $sku->save();
+
+
         $stockUpdate = DB::raw("stock + $quantity");
-        ProductSku::withTrashed()->where('id', $sku->id)->update(['stock' => $stockUpdate]);
         Product::withTrashed()->where('id', $sku->product_id)->update(['stock' => $stockUpdate]);
 
-        return (int) $quantity;
+        return $sku;
     }
 
-    public function add(ProductSku $sku, int $stock)  : ProductSku
+    public function add(ProductSku $sku, int $stock) : ProductSku
     {
         $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku->setOldLockStock($sku->lock_stock);
+        $sku->setOldStock($sku->stock);
         $sku->stock = $sku->stock + $stock;
-
+        $sku->save();
 
         $attributes = [
             'stock' => DB::raw("stock + $stock"),
@@ -92,8 +99,10 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         if (bccomp($sku->stock, $stock, 0) < 0) {
             throw new StockException('库存不足');
         }
+        $sku->setOldLockStock($sku->lock_stock);
+        $sku->setOldStock($sku->stock);
         $sku->stock = $sku->stock - $stock;
-
+        $sku->save();
 
         // 同步中库存
         $attributes = [
@@ -117,9 +126,12 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         if (bccomp($sku->stock, $stock, 0) < 0) {
             throw new StockException('库存不足');
         }
-        $sku->stock      = $sku->stock - $stock;
-        $sku->lock_stock = $sku->lock_stock - $stock;
+        $sku->setOldLockStock($sku->lock_stock);
+        $sku->setOldStock($sku->stock);
 
+        $sku->stock      = $sku->stock - $stock;
+        $sku->lock_stock = $sku->lock_stock + $stock;
+        $sku->save();
         // 同步商品库存
         $attributes = [
             'stock'      => DB::raw("stock - $stock"),
@@ -144,9 +156,11 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         if (bccomp($sku->lock_stock, $stock, 0) <= 0) {
             throw new StockException('锁定库存不足');
         }
+        $sku->setOldLockStock($sku->lock_stock);
+        $sku->setOldStock($sku->stock);
         $sku->stock      = $sku->stock + $stock;
         $sku->lock_stock = $sku->lock_stock - $stock;
-
+        $sku->save();
         $attributes = [
             'stock'      => DB::raw("stock + $stock"),
             'lock_stock' => DB::raw("lock_stock - $stock"),
@@ -173,8 +187,13 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
         if (bccomp($sku->lock_stock, $stock, 0) <= 0) {
             throw new StockException('锁定库存不足');
         }
+        $sku->setOldLockStock($sku->lock_stock);
+        $sku->setOldStock($sku->stock);
         $sku->lock_stock = $sku->lock_stock - $stock;
-        $attributes      = [
+
+        $sku->save();
+
+        $attributes = [
             'lock_stock' => DB::raw("lock_stock - $stock"),
         ];
         Product::where('id', $sku->product_id)->update($attributes);

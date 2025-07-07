@@ -19,6 +19,8 @@ class OrdersData extends Data
      */
     public array $orders = [];
 
+    public int $count;
+
 
     public function __construct()
     {
@@ -31,7 +33,16 @@ class OrdersData extends Data
         $this->orders = $orders;
     }
 
-    public function total() : Money
+    public function statistics() : void
+    {
+
+        $this->total();
+
+        $this->count = count($this->orders);
+
+    }
+
+    protected function total() : Money
     {
         $this->total = Money::parse(0);
 

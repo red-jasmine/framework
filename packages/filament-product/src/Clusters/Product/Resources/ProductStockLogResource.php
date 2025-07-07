@@ -56,11 +56,22 @@ class ProductStockLogResource extends Resource
                     ->label(__('red-jasmine-product::product.fields.title')),
                 Tables\Columns\TextColumn::make('sku.properties_name')
                 ->label(__('red-jasmine-product::product.fields.properties_name')),
+                Tables\Columns\TextColumn::make('sku_id')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.sku_id')),
                 Tables\Columns\TextColumn::make('action_type')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.action_type'))
                                          ->useEnum(),
+
+                Tables\Columns\TextColumn::make('before_stock')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.before_stock'))
+                                         ->numeric()
+                ,
                 Tables\Columns\TextColumn::make('action_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.action_stock'))
+                                         ->numeric()
+                ,
+                Tables\Columns\TextColumn::make('after_stock')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.after_stock'))
                                          ->numeric()
                 ,
 
@@ -70,11 +81,18 @@ class ProductStockLogResource extends Resource
                 Tables\Columns\TextColumn::make('change_detail')
                     ->label(__('red-jasmine-product::product-stock-log.fields.change_detail'))
                     ,
-
+                Tables\Columns\TextColumn::make('before_lock_stock')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.before_lock_stock'))
+                                         ->numeric()
+                ,
                 Tables\Columns\TextColumn::make('lock_stock')
                     ->label(__('red-jasmine-product::product-stock-log.fields.lock_stock'))
                     ->numeric()
                    ,
+                Tables\Columns\TextColumn::make('after_lock_stock')
+                                         ->label(__('red-jasmine-product::product-stock-log.fields.after_lock_stock'))
+                                         ->numeric()
+                ,
                 Tables\Columns\TextColumn::make('channel_type')->badge()
 
                     ->label(__('red-jasmine-product::product-stock-log.fields.channel_type'))

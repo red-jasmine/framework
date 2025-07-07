@@ -261,7 +261,7 @@ class OrderResource extends Resource
         $table
             ->defaultSort('id', 'DESC')
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                Tables\Columns\TextColumn::make('order_no')
                                          ->copyable(),
                 OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products'),
                 //Tables\Columns\TextColumn::make('title'),

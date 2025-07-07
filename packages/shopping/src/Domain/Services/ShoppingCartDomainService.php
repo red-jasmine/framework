@@ -43,7 +43,11 @@ class ShoppingCartDomainService extends AmountCalculationService
     public function addProduct(ShoppingCart $cart, ProductPurchaseFactor $productPurchaseFactors) : ShoppingCartProduct
     {
 
+        // 获取商品信息
+        $productInfo = $this->productService->getProductInfo($productPurchaseFactors);
+
         $shoppingCartProduct = ShoppingCartProduct::make(['cart_id' => $cart->id]);
+
         $shoppingCartProduct->setProduct($productPurchaseFactors->product);
         $shoppingCartProduct->quantity   = $productPurchaseFactors->quantity;
         $shoppingCartProduct->customized = $productPurchaseFactors->customized;
@@ -52,8 +56,6 @@ class ShoppingCartDomainService extends AmountCalculationService
 
         $productPurchaseFactors->quantity = $shoppingCartProduct->quantity;
 
-        // 获取商品信息
-        $productInfo = $this->productService->getProductInfo($productPurchaseFactors);
         $this->validateProduct($productInfo);
 
         // 获取库存信息

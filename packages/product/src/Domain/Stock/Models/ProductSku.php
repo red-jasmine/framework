@@ -62,4 +62,32 @@ class ProductSku extends Model implements OperatorInterface
     {
         return $this->stock - $this->lock_stock;
     }
+
+
+    protected int $oldStock     = 0;
+    protected int $oldLockStock = 0;
+
+    public function getOldStock() : int
+    {
+        return $this->oldStock;
+    }
+
+    public function setOldStock(int $oldStock) : ProductSku
+    {
+        $this->oldStock = $oldStock;
+        return $this;
+    }
+
+    public function getOldLockStock() : int
+    {
+        return $this->oldLockStock;
+    }
+
+    public function setOldLockStock(int $oldLockStock) : ProductSku
+    {
+        $this->oldLockStock = $oldLockStock;
+        return $this;
+    }
+
+
 }

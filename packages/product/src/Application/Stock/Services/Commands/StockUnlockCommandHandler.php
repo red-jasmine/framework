@@ -24,7 +24,7 @@ class StockUnlockCommandHandler extends StockCommandHandler
         try {
             $sku = $this->repository->find($command->skuId);
 
-            $this->repository->unlock($sku, $command->actionStock);
+            $sku = $this->repository->unlock($sku, $command->actionStock);
 
             $this->log($sku, $command);
 

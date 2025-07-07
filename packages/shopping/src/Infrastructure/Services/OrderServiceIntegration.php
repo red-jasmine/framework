@@ -22,6 +22,9 @@ class OrderServiceIntegration implements OrderServiceInterface
 
     public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData) : string
     {
+        if (!isset($orderProductData->product->seller)) {
+            return '-';
+        }
         return md5(implode('|',
             [
                 $orderProductData->product->seller->getType(),

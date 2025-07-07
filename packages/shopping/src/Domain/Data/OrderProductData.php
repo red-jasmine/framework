@@ -42,7 +42,7 @@ class OrderProductData extends ProductPurchaseFactor
         return $this;
     }
 
-    use HasSerialNumber;
+
 
 
 

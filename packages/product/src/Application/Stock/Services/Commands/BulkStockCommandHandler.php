@@ -25,8 +25,10 @@ class BulkStockCommandHandler extends StockCommandHandler
 
         try {
             foreach ($command->skus as $stockCommand) {
+
                 $restStock = 0;
                 $sku       = $this->repository->find($stockCommand->skuId);
+
                 if ($stockCommand->actionStock < 0) {
                     throw new StockException('操作库存不能小于0');
                 }
@@ -40,7 +42,8 @@ class BulkStockCommandHandler extends StockCommandHandler
                         break;
                     case ProductStockActionTypeEnum::RESET:
 
-                        $restStock = $this->repository->reset($sku, $stockCommand->actionStock);
+                        $sku = $this->repository->reset($sku, $stockCommand->actionStock);
+                        $restStock = (int)bcsub($sku->stock,$sku->getOldStock(),0);
                         break;
                     case ProductStockActionTypeEnum::SUB:
                         if ($stockCommand->actionStock === 0) {
@@ -55,6 +58,7 @@ class BulkStockCommandHandler extends StockCommandHandler
                 }
 
                 $this->log($sku, $stockCommand, $restStock);
+
             }
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

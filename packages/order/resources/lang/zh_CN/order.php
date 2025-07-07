@@ -11,7 +11,8 @@ return [
         'products' => '商品',
     ],
     'fields' => [
-        'id'                     => '订单编号',
+        'id'                     => '订单ID',
+        'order_no'               => '订单编号',
         'title'                  => '标题',
         'order_type'             => '订单类型',
         'shipping_type'          => '发货类型',
@@ -165,7 +166,7 @@ return [
 
     ],
 
-    'scopes'  => [
+    'scopes'   => [
         'all'                      => '全部',
         'wait_buyer_pay'           => '待付款',
         'wait_seller_accept'       => '待接单',

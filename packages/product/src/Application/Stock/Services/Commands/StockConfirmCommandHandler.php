@@ -24,9 +24,9 @@ class StockConfirmCommandHandler extends StockCommandHandler
         try {
             $sku = $this->repository->find($command->skuId);
 
-            $this->repository->confirm($sku, $command->actionStock);
+            $sku = $this->repository->confirm($sku, $command->actionStock);
 
-            $this->log($sku,  $command);
+            $this->log($sku, $command);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

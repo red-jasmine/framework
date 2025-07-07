@@ -22,10 +22,10 @@ class StockResetCommandHandler extends StockCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $sku   = $this->repository->find($command->skuId);
-            $stock = $this->repository->reset($sku, $command->actionStock);
-
-            $this->log($sku,  $command, $stock);
+            $sku       = $this->repository->find($command->skuId);
+            $sku       = $this->repository->reset($sku, $command->actionStock);
+            $restStock = (int) bcsub($sku->stock, $sku->getOldStock(), 0);
+            $this->log($sku, $command, $restStock);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

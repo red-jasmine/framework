@@ -3,6 +3,8 @@
 namespace RedJasmine\Product\Domain\Price;
 
 use Cknow\Money\Money;
+use Money\Currency;
+use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
@@ -18,22 +20,32 @@ class ProductPriceDomainService extends Service
     }
 
     /**
-     * 获取商品价格
+     * 获取商品价格信息
+     * - 价格
+     * - 市场价格
+     * - 税率
      *
      * @param  ProductPurchaseFactor  $data
      *
-     * @return Money
+     * @return ProductAmount
      */
-    public function getPrice(ProductPurchaseFactor $data) : Money
+    public function getProductAmount(ProductPurchaseFactor $data) : ProductAmount
     {
+        $product       = $this->repository->find($data->product->id);
+        $productAmount = new ProductAmount(new Currency($product->price_currency));
 
         // 获取商品
-        $product = $this->repository->find($data->product->id);
-        $sku     = $product->getSkuBySkuId($data->product->skuId);
 
-        // TODO 根据参数获取更多的价格处理
+        $sku = $product->getSkuBySkuId($data->product->skuId);
 
-        return $sku->price;
+        $productAmount->price       = $sku->price;
+        $productAmount->marketPrice = $sku->market_price;
+
+        $productAmount->setCostPrice($sku->cost_price ?? Money::parse(0));
+        $productAmount->taxRate = $product->tax_rate;
+
+
+        return $productAmount;
 
 
     }

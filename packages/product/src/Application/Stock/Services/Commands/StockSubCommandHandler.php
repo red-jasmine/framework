@@ -25,7 +25,7 @@ class StockSubCommandHandler extends StockCommandHandler
         try {
             $sku = $this->repository->find($command->skuId);
 
-            $this->repository->sub($sku, $command->actionStock);
+            $sku = $this->repository->sub($sku, $command->actionStock);
 
             $this->log($sku, $command);
 
