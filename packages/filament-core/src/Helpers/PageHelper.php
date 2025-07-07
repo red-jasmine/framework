@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use RedJasmine\FilamentCore\Filters\TreeParent;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
@@ -85,38 +86,32 @@ trait PageHelper
 
     public static function ownerQueryUsing(string $name = 'owner') : callable
     {
-        return static fn( $query, Forms\Get $get) => $query->onlyOwner(UserData::from([
+        return static fn($query, Forms\Get $get) => $query->onlyOwner(UserData::from([
             'type' => $get('owner_type'), 'id' => $get('owner_id')
         ]));
     }
 
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
-
+        $user     = auth()->user();
+        $owner    = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+        $disabled = true;
+        if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            $disabled = false;
+        }
         return [
-
-            // Forms\Components\MorphToSelect::make($name)
-            //                               ->label(__('red-jasmine-support::support.owner'))
-            //                               ->types([
-            //                                           // TODO 更具当前 model 动态
-            //                                           Forms\Components\MorphToSelect\Type::make(User::class)->titleAttribute('nickname')
-            //                                       ])
-            //                               ->live()
-            //                               ->columns(2)
-            //                               ->default([ $name . '_type' => auth()->user()->getType(), $name . '_id' => auth()->user()->getID() ])
-            //                               ->hidden(!auth()->user()->isAdmin())
-            // ,
-
             Forms\Components\TextInput::make($name.'_type')
                                       ->label(__('red-jasmine-support::support.owner_type'))
-                                      ->default(auth()->user()->owner()->getType())
+                                      ->default($owner->getType())
                                       ->required()
                                       ->maxLength(64)
+                                      ->disabled($disabled)
                                       ->live(),
             Forms\Components\TextInput::make($name.'_id')
                                       ->label(__('red-jasmine-support::support.owner_id'))
                                       ->required()
-                                      ->default(auth()->user()->owner()->getID())
+                                      ->default($owner->getID())
+                                      ->disabled($disabled)
                                       ->live(),
 
         ];

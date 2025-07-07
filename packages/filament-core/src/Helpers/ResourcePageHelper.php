@@ -29,13 +29,14 @@ trait ResourcePageHelper
 
         $query = app(static::$service)->readRepository->modelQuery();
 
-        if (static::onlyOwner()) {
-            if (auth()->user() instanceof BelongsToOwnerInterface) {
-                $query->onlyOwner(auth()->user()->owner());
-            } else {
-                $query->onlyOwner(auth()->user());
-            }
 
+        if (static::onlyOwner()) {
+            $user = auth()->user();
+            if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            } else {
+                $owner = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+                $query->onlyOwner($owner);
+            }
         }
         return $query;
     }
@@ -77,12 +78,16 @@ trait ResourcePageHelper
 
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
-            $owner = auth()->user();
-            if (auth()->user() instanceof BelongsToOwnerInterface) {
-                $owner = auth()->user()->owner();
+
+            $user = auth()->user();
+            if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            } else {
+                $owner              = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+                $data['owner_type'] = $owner->getType();
+                $data['owner_id']   = $owner->getID();
+                //$query->onlyOwner($owner);
             }
-            $data['owner_type'] = $owner->getType();
-            $data['owner_id']   = $owner->getID();
+
         }
 
 
@@ -91,14 +96,17 @@ trait ResourcePageHelper
 
     protected function mutateFormDataBeforeSave(array $data) : array
     {
+        // TODO 如果是总后台那么允许自定义
         $resource = static::getResource();
         if ($resource::onlyOwner()) {
-            $owner = auth()->user();
-            if (auth()->user() instanceof BelongsToOwnerInterface) {
-                $owner = auth()->user()->owner();
+            $user = auth()->user();
+            if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            } else {
+                $owner              = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+                $data['owner_type'] = $owner->getType();
+                $data['owner_id']   = $owner->getID();
+                //$query->onlyOwner($owner);
             }
-            $data['owner_type'] = $owner->getType();
-            $data['owner_id']   = $owner->getID();
         }
 
 
@@ -159,8 +167,8 @@ trait ResourcePageHelper
             if (auth()->user() instanceof BelongsToOwnerInterface) {
                 $owner = auth()->user()->owner();
             }
-
-            $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
+            // TODO 如果是总后台那么允许自定义
+            // $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
 
