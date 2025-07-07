@@ -23,7 +23,7 @@ CREATE TABLE `coupons` (
   `id` bigint unsigned NOT NULL COMMENT '优惠券ID',
   `name` varchar(100) NOT NULL COMMENT '优惠券名称',
   `description` text COMMENT '优惠券描述',
-  `coupon_type` enum('PLATFORM','MERCHANT','ANCHOR') NOT NULL COMMENT '优惠券类型：平台券/商家券/主播券',
+  `coupon_type` enum('DISCOUNT','FULL_REDUCTION','FREE_SHIPPING') NOT NULL COMMENT '优惠券类型：折扣券/满减券/包邮券',
   `cost_bearer` enum('PLATFORM','MERCHANT','ANCHOR') NOT NULL COMMENT '成本承担方',
   `status` enum('DRAFT','PUBLISHED','DISABLED','DELETED') NOT NULL DEFAULT 'DRAFT' COMMENT '状态',
   `owner_type` varchar(50) NOT NULL COMMENT '所有者类型',

@@ -123,9 +123,9 @@ package "统计分析" {
 
 package "枚举定义" {
   enum CouponType {
-    平台券 (PLATFORM)
-    商家券 (MERCHANT)
-    主播券 (ANCHOR)
+    折扣券 (DISCOUNT)
+    满减券 (FULL_REDUCTION)
+    包邮券 (FREE_SHIPPING)
   }
 
   enum CostBearer {
