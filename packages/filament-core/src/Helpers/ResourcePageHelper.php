@@ -162,13 +162,14 @@ trait ResourcePageHelper
         $queryService = app($resource::getService());
 
 
-        if ($resource::onlyOwner()) {
-            $owner = auth()->user();
-            if (auth()->user() instanceof BelongsToOwnerInterface) {
-                $owner = auth()->user()->owner();
+
+        if (static::onlyOwner()) {
+            $user = auth()->user();
+            $owner = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+            if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            } else {
+                $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
             }
-            // TODO 如果是总后台那么允许自定义
-            // $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
 
