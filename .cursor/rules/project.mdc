@@ -2125,6 +2125,11 @@ class ArticleController extends Controller
 - **数据准备**：实现 `prepareForValidation()` 方法准备验证数据
 - **命名规范**：请求类名格式为 `{Action}{Entity}Request`
 
+
+### 数据库设计
+### 表名
+- **前缀**：一般使用领域名称作为公共前缀
+
 ## 异常处理规范
 
 ### 领域异常
