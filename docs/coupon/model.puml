@@ -1,0 +1,203 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam classFontName Microsoft YaHei
+skinparam packageFontSize 14
+skinparam packageFontName Microsoft YaHei
+
+title 优惠券领域模型
+
+package "优惠券核心" {
+  class 优惠券 {
+    +优惠券ID: Long
+    +名称: String
+    +描述: String
+    +类型: CouponType
+    +成本承担方: CostBearer
+    +状态: CouponStatus
+    +创建时间: DateTime
+    +修改时间: DateTime
+    --
+    +创建()
+    +更新()
+    +发布()
+    +停用()
+    +删除()
+  }
+
+  class 优惠券配置 {
+    +配置ID: Long
+    +优惠券ID: Long
+    +使用门槛: Money
+    +优惠金额: Money
+    +折扣比例: Decimal
+    +有效期类型: ValidityType
+    +开始时间: DateTime
+    +结束时间: DateTime
+    +相对天数: Integer
+    --
+    +计算优惠金额()
+    +验证使用条件()
+    +检查有效期()
+  }
+
+  class 发放策略 {
+    +策略ID: Long
+    +优惠券ID: Long
+    +发放方式: IssueMethod
+    +发放数量: Integer
+    +每日限量: Integer
+    +个人限领: Integer
+    +开始时间: DateTime
+    +结束时间: DateTime
+    --
+    +执行发放()
+    +检查发放限制()
+    +更新发放统计()
+  }
+
+  class 使用限制 {
+    +限制ID: Long
+    +优惠券ID: Long
+    +用户限制: UserRestriction
+    +商品限制: ProductRestriction
+    +订单限制: OrderRestriction
+    +叠加规则: OverlayRule
+    --
+    +验证用户资格()
+    +验证商品资格()
+    +验证订单条件()
+    +检查叠加规则()
+  }
+}
+
+package "用户优惠券" {
+  class 用户优惠券 {
+    +用户优惠券ID: Long
+    +用户ID: Long
+    +优惠券ID: Long
+    +优惠券码: String
+    +状态: UserCouponStatus
+    +领取时间: DateTime
+    +使用时间: DateTime
+    +过期时间: DateTime
+    --
+    +领取()
+    +使用()
+    +过期()
+    +退款()
+  }
+
+  class 优惠券使用记录 {
+    +记录ID: Long
+    +用户优惠券ID: Long
+    +订单ID: Long
+    +使用金额: Money
+    +优惠金额: Money
+    +使用时间: DateTime
+    +核销时间: DateTime
+    --
+    +记录使用()
+    +核销()
+    +退款处理()
+  }
+}
+
+package "统计分析" {
+  class 优惠券统计 {
+    +统计ID: Long
+    +优惠券ID: Long
+    +发放数量: Integer
+    +使用数量: Integer
+    +使用率: Decimal
+    +转化率: Decimal
+    +总优惠金额: Money
+    +成本金额: Money
+    +ROI: Decimal
+    --
+    +更新统计()
+    +计算指标()
+    +生成报告()
+  }
+}
+
+package "枚举定义" {
+  enum CouponType {
+    平台券 (PLATFORM)
+    商家券 (MERCHANT)
+    主播券 (ANCHOR)
+  }
+
+  enum CostBearer {
+    平台承担 (PLATFORM)
+    商家承担 (MERCHANT)
+    主播承担 (ANCHOR)
+  }
+
+  enum CouponStatus {
+    草稿 (DRAFT)
+    已发布 (PUBLISHED)
+    已停用 (DISABLED)
+    已删除 (DELETED)
+  }
+
+  enum ValidityType {
+    绝对时间 (ABSOLUTE)
+    相对时间 (RELATIVE)
+  }
+
+  enum IssueMethod {
+    自动发放 (AUTO)
+    手动发放 (MANUAL)
+    活动发放 (ACTIVITY)
+  }
+
+  enum UserCouponStatus {
+    未使用 (UNUSED)
+    已使用 (USED)
+    已过期 (EXPIRED)
+    已退款 (REFUNDED)
+  }
+
+  enum UserRestriction {
+    全部用户 (ALL)
+    新用户 (NEW_USER)
+    会员用户 (MEMBER)
+    指定用户 (SPECIFIC_USER)
+  }
+
+  enum ProductRestriction {
+    全部商品 (ALL)
+    指定商品 (SPECIFIC_PRODUCT)
+    指定类目 (SPECIFIC_CATEGORY)
+    排除商品 (EXCLUDE_PRODUCT)
+    排除类目 (EXCLUDE_CATEGORY)
+  }
+
+  enum OverlayRule {
+    允许叠加 (ALLOW)
+    禁止叠加 (DISALLOW)
+    限制叠加 (LIMIT)
+  }
+}
+
+' 关系定义
+优惠券 ||--|| 优惠券配置
+优惠券 ||--|| 发放策略
+优惠券 ||--|| 使用限制
+优惠券 ||--o{ 用户优惠券
+用户优惠券 ||--o{ 优惠券使用记录
+优惠券 ||--|| 优惠券统计
+
+' 枚举关系
+优惠券 --> CouponType
+优惠券 --> CostBearer
+优惠券 --> CouponStatus
+优惠券配置 --> ValidityType
+发放策略 --> IssueMethod
+用户优惠券 --> UserCouponStatus
+使用限制 --> UserRestriction
+使用限制 --> ProductRestriction
+使用限制 --> OverlayRule
+
+@enduml 
