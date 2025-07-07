@@ -30,24 +30,6 @@ CREATE TABLE `coupons` (
   `owner_id` bigint unsigned NOT NULL COMMENT '所有者ID',
   `operator_type` varchar(50) DEFAULT NULL COMMENT '操作者类型',
   `operator_id` bigint unsigned DEFAULT NULL COMMENT '操作者ID',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  `deleted_at` timestamp NULL DEFAULT NULL COMMENT '删除时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_owner` (`owner_type`,`owner_id`),
-  KEY `idx_status` (`status`),
-  KEY `idx_coupon_type` (`coupon_type`),
-  KEY `idx_cost_bearer` (`cost_bearer`),
-  KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券主表';
-```
-
-### 2. 优惠券配置表 (coupon_configs)
-
-```sql
-CREATE TABLE `coupon_configs` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '配置ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
   `threshold_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '使用门槛金额',
   `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
   `discount_rate` decimal(5,4) DEFAULT NULL COMMENT '折扣比例',
@@ -60,11 +42,24 @@ CREATE TABLE `coupon_configs` (
   `max_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最大订单金额',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` timestamp NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_coupon_id` (`coupon_id`),
+  KEY `idx_owner` (`owner_type`,`owner_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_coupon_type` (`coupon_type`),
+  KEY `idx_cost_bearer` (`cost_bearer`),
+  KEY `idx_created_at` (`created_at`),
   KEY `idx_start_time` (`start_time`),
-  KEY `idx_end_time` (`end_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券配置表';
+  KEY `idx_end_time` (`end_time`),
+  KEY `idx_validity_type` (`validity_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券主表（含配置信息）';
+```
+
+### 2. 删除独立的配置表
+
+```sql
+-- 优惠券配置表已合并到主表，不再需要独立的配置表
+-- DROP TABLE `coupon_configs`;
 ```
 
 ### 3. 发放策略表 (issue_strategies)
@@ -222,7 +217,6 @@ CREATE TABLE `coupon_issue_logs` (
 - 优惠券主表使用雪花ID，其他表使用自增ID
 
 ### 2. 唯一索引
-- `coupon_configs.coupon_id`：确保每个优惠券只有一个配置
 - `issue_strategies.coupon_id`：确保每个优惠券只有一个发放策略
 - `usage_restrictions.coupon_id`：确保每个优惠券只有一个使用限制
 - `user_coupons.coupon_code`：确保优惠券码唯一性
@@ -235,6 +229,9 @@ CREATE TABLE `coupon_issue_logs` (
   - `idx_coupon_type`：按类型查询
   - `idx_cost_bearer`：按成本承担方查询
   - `idx_created_at`：按创建时间查询
+  - `idx_start_time`：按开始时间查询
+  - `idx_end_time`：按结束时间查询
+  - `idx_validity_type`：按有效期类型查询
 
 - **用户优惠券表**：
   - `idx_user_id`：按用户查询
@@ -364,4 +361,128 @@ Value: 当日发放数量
 - 监控连接池使用情况
 - 及时释放空闲连接
 
-这个存储设计方案为优惠券领域提供了高效、可扩展的数据存储支持，能够满足大规模电商平台的优惠券业务需求。 
+## 数据迁移方案
+
+### 1. 迁移步骤
+
+#### 步骤1：备份现有数据
+```sql
+-- 备份优惠券主表
+CREATE TABLE `coupons_backup` AS SELECT * FROM `coupons`;
+
+-- 备份优惠券配置表
+CREATE TABLE `coupon_configs_backup` AS SELECT * FROM `coupon_configs`;
+```
+
+#### 步骤2：修改主表结构
+```sql
+-- 为优惠券主表添加配置字段
+ALTER TABLE `coupons` 
+ADD COLUMN `threshold_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '使用门槛金额' AFTER `operator_id`,
+ADD COLUMN `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额' AFTER `threshold_amount`,
+ADD COLUMN `discount_rate` decimal(5,4) DEFAULT NULL COMMENT '折扣比例' AFTER `discount_amount`,
+ADD COLUMN `validity_type` enum('ABSOLUTE','RELATIVE') NOT NULL COMMENT '有效期类型' AFTER `discount_rate`,
+ADD COLUMN `start_time` timestamp NULL DEFAULT NULL COMMENT '开始时间' AFTER `validity_type`,
+ADD COLUMN `end_time` timestamp NULL DEFAULT NULL COMMENT '结束时间' AFTER `start_time`,
+ADD COLUMN `relative_days` int DEFAULT NULL COMMENT '相对天数' AFTER `end_time`,
+ADD COLUMN `max_discount_amount` decimal(10,2) DEFAULT NULL COMMENT '最大优惠金额' AFTER `relative_days`,
+ADD COLUMN `min_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最小订单金额' AFTER `max_discount_amount`,
+ADD COLUMN `max_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最大订单金额' AFTER `min_order_amount`;
+```
+
+#### 步骤3：迁移配置数据
+```sql
+-- 将配置表数据迁移到主表
+UPDATE `coupons` c 
+INNER JOIN `coupon_configs` cc ON c.id = cc.coupon_id 
+SET 
+  c.threshold_amount = cc.threshold_amount,
+  c.discount_amount = cc.discount_amount,
+  c.discount_rate = cc.discount_rate,
+  c.validity_type = cc.validity_type,
+  c.start_time = cc.start_time,
+  c.end_time = cc.end_time,
+  c.relative_days = cc.relative_days,
+  c.max_discount_amount = cc.max_discount_amount,
+  c.min_order_amount = cc.min_order_amount,
+  c.max_order_amount = cc.max_order_amount;
+```
+
+#### 步骤4：添加索引
+```sql
+-- 为新增字段添加索引
+ALTER TABLE `coupons` 
+ADD KEY `idx_start_time` (`start_time`),
+ADD KEY `idx_end_time` (`end_time`),
+ADD KEY `idx_validity_type` (`validity_type`);
+```
+
+#### 步骤5：验证数据完整性
+```sql
+-- 检查数据迁移完整性
+SELECT 
+  COUNT(*) as total_coupons,
+  COUNT(CASE WHEN threshold_amount IS NOT NULL THEN 1 END) as migrated_configs
+FROM `coupons`;
+
+-- 检查是否有遗漏的配置数据
+SELECT c.id, c.name 
+FROM `coupons` c 
+LEFT JOIN `coupon_configs` cc ON c.id = cc.coupon_id 
+WHERE cc.coupon_id IS NULL;
+```
+
+#### 步骤6：删除配置表（谨慎操作）
+```sql
+-- 确认数据迁移无误后，删除配置表
+-- DROP TABLE `coupon_configs`;
+```
+
+### 2. 回滚方案
+
+如果迁移过程中出现问题，可以使用以下方案回滚：
+
+```sql
+-- 恢复主表结构
+DROP TABLE `coupons`;
+RENAME TABLE `coupons_backup` TO `coupons`;
+
+-- 恢复配置表
+CREATE TABLE `coupon_configs` AS SELECT * FROM `coupon_configs_backup`;
+```
+
+### 3. 代码适配
+
+#### 模型层修改
+```php
+// 优惠券模型不再需要配置关联
+class Coupon extends Model
+{
+    // 移除配置关联
+    // public function config() { ... }
+    
+    // 直接访问配置字段
+    protected $casts = [
+        'threshold_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'discount_rate' => 'decimal:4',
+        'validity_type' => ValidityType::class,
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'max_discount_amount' => 'decimal:2',
+        'min_order_amount' => 'decimal:2',
+        'max_order_amount' => 'decimal:2',
+    ];
+}
+```
+
+#### 查询优化
+```php
+// 原来需要JOIN查询
+$coupons = Coupon::with('config')->get();
+
+// 现在直接查询主表
+$coupons = Coupon::all();
+```
+
+这个存储设计方案为优惠券领域提供了高效、可扩展的数据存储支持，通过合并配置表简化了数据结构，提升了查询性能，能够满足大规模电商平台的优惠券业务需求。 

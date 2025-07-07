@@ -15,6 +15,16 @@ package "优惠券核心" {
     +类型: CouponType
     +成本承担方: CostBearer
     +状态: CouponStatus
+    +使用门槛: Money
+    +优惠金额: Money
+    +折扣比例: Decimal
+    +有效期类型: ValidityType
+    +开始时间: DateTime
+    +结束时间: DateTime
+    +相对天数: Integer
+    +最大优惠金额: Money
+    +最小订单金额: Money
+    +最大订单金额: Money
     +创建时间: DateTime
     +修改时间: DateTime
     --
@@ -23,19 +33,6 @@ package "优惠券核心" {
     +发布()
     +停用()
     +删除()
-  }
-
-  class 优惠券配置 {
-    +配置ID: Long
-    +优惠券ID: Long
-    +使用门槛: Money
-    +优惠金额: Money
-    +折扣比例: Decimal
-    +有效期类型: ValidityType
-    +开始时间: DateTime
-    +结束时间: DateTime
-    +相对天数: Integer
-    --
     +计算优惠金额()
     +验证使用条件()
     +检查有效期()
@@ -182,7 +179,6 @@ package "枚举定义" {
 }
 
 ' 关系定义
-优惠券 ||--|| 优惠券配置
 优惠券 ||--|| 发放策略
 优惠券 ||--|| 使用限制
 优惠券 ||--o{ 用户优惠券
@@ -193,7 +189,7 @@ package "枚举定义" {
 优惠券 --> CouponType
 优惠券 --> CostBearer
 优惠券 --> CouponStatus
-优惠券配置 --> ValidityType
+优惠券 --> ValidityType
 发放策略 --> IssueMethod
 用户优惠券 --> UserCouponStatus
 使用限制 --> UserRestriction
