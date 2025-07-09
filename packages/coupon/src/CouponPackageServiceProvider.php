@@ -17,7 +17,7 @@ use RedJasmine\Coupon\Infrastructure\Repositories\Eloquent\UserCouponRepository;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class CouponServiceProvider extends PackageServiceProvider
+class CouponPackageServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -32,10 +32,10 @@ class CouponServiceProvider extends PackageServiceProvider
             ->hasRoutes(['api'])
             ->hasTranslations()
             ->hasMigrations([
-                'create_coupons_table',
-                'create_user_coupons_table',
-                'create_coupon_usages_table',
-                'create_coupon_issue_stats_table',
+                '2024_01_01_000001_create_coupons_table',
+                '2024_01_01_000002_create_user_coupons_table',
+                '2024_01_01_000003_create_coupon_usages_table',
+                '2024_01_01_000004_create_coupon_issue_stats_table',
             ])
             ->runsMigrations();
     }

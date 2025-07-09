@@ -5,12 +5,11 @@ namespace RedJasmine\Coupon\Domain\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Coupon\Domain\Models\Enums\CostBearerTypeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class CouponUsage extends Model implements OperatorInterface, OwnerInterface
 {
@@ -37,23 +36,22 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
         'cost_bearer_name',
     ];
 
-    protected function casts(): array
+    protected function casts() : array
     {
         return [
-            'coupon_id' => 'integer',
-            'user_coupon_id' => 'integer',
-            'user_id' => 'integer',
-            'order_id' => 'integer',
+            'coupon_id'        => 'integer',
+            'user_coupon_id'   => 'integer',
+            'user_id'          => 'integer',
+            'order_id'         => 'integer',
             'threshold_amount' => 'decimal:2',
-            'original_amount' => 'decimal:2',
-            'discount_amount' => 'decimal:2',
-            'final_amount' => 'decimal:2',
-            'used_at' => 'datetime',
-            'cost_bearer_type' => CostBearerTypeEnum::class,
+            'original_amount'  => 'decimal:2',
+            'discount_amount'  => 'decimal:2',
+            'final_amount'     => 'decimal:2',
+            'used_at'          => 'datetime',
         ];
     }
 
-    protected static function boot(): void
+    protected static function boot() : void
     {
         parent::boot();
 
@@ -63,7 +61,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
         });
     }
 
-    public function newInstance($attributes = [], $exists = false): static
+    public function newInstance($attributes = [], $exists = false) : static
     {
         $instance = parent::newInstance($attributes, $exists);
 
@@ -78,7 +76,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 优惠券关联
      */
-    public function coupon(): BelongsTo
+    public function coupon() : BelongsTo
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
     }
@@ -86,7 +84,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 用户优惠券关联
      */
-    public function userCoupon(): BelongsTo
+    public function userCoupon() : BelongsTo
     {
         return $this->belongsTo(UserCoupon::class, 'user_coupon_id');
     }
@@ -94,7 +92,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 计算优惠比例
      */
-    public function getDiscountRatio(): float
+    public function getDiscountRatio() : float
     {
         if ($this->original_amount <= 0) {
             return 0;
@@ -106,7 +104,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 计算节省金额
      */
-    public function getSavedAmount(): float
+    public function getSavedAmount() : float
     {
         return $this->discount_amount;
     }
@@ -114,11 +112,11 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取成本承担方信息
      */
-    public function getCostBearerInfo(): array
+    public function getCostBearerInfo() : array
     {
         return [
             'type' => $this->cost_bearer_type->value,
-            'id' => $this->cost_bearer_id,
+            'id'   => $this->cost_bearer_id,
             'name' => $this->cost_bearer_name,
         ];
     }
@@ -126,7 +124,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取使用摘要
      */
-    public function getUsageSummary(): string
+    public function getUsageSummary() : string
     {
         return "订单{$this->order_id}使用优惠券节省{$this->discount_amount}元";
     }
@@ -155,14 +153,6 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
         return $query->where('order_id', $orderId);
     }
 
-    /**
-     * 作用域：按成本承担方筛选
-     */
-    public function scopeByCostBearer($query, CostBearerTypeEnum $type, string $id)
-    {
-        return $query->where('cost_bearer_type', $type)
-                    ->where('cost_bearer_id', $id);
-    }
 
     /**
      * 作用域：按时间范围筛选

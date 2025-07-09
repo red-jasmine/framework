@@ -11,7 +11,7 @@ enum RuleTypeEnum: string
     case INCLUDE = 'include';
     case EXCLUDE = 'exclude';
 
-    public static function labels(): array
+    public static function labels() : array
     {
         return [
             self::INCLUDE->value => __('red-jasmine-coupon::rule.enums.type.include'),
@@ -19,7 +19,7 @@ enum RuleTypeEnum: string
         ];
     }
 
-    public static function colors(): array
+    public static function colors() : array
     {
         return [
             self::INCLUDE->value => 'success',
@@ -27,7 +27,7 @@ enum RuleTypeEnum: string
         ];
     }
 
-    public static function icons(): array
+    public static function icons() : array
     {
         return [
             self::INCLUDE->value => 'heroicon-o-check-circle',

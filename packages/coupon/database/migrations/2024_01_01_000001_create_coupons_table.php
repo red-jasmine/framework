@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('owner_type', 64)->comment('所有者类型');
             $table->string('owner_id', 32)->comment('所有者ID');
             $table->string('name', 100)->comment('优惠券名称');
-            $table->text('description')->nullable()->comment('优惠券描述');
+            $table->string('description')->nullable()->comment('优惠券描述');
             $table->string('image')->nullable()->comment('优惠券图片');
             $table->enum('status', ['draft', 'published', 'paused', 'expired'])
                   ->default('draft')
@@ -29,8 +29,8 @@ return new class extends Migration {
             $table->enum('discount_type', ['fixed_amount', 'percentage'])->comment('优惠类型 折扣、满减');
 
             $table->decimal('threshold_amount', 10)->default(0)->comment('门槛金额');
-            $table->decimal('discount_value', 10, 2)->comment('优惠值');
-            $table->decimal('max_discount_amount', 10, 2)->nullable()->comment('最大优惠金额');
+            $table->decimal('discount_value', 10)->comment('优惠值');
+            $table->decimal('max_discount_amount', 10)->nullable()->comment('最大优惠金额');
             $table->boolean('is_ladder')->default(false)->comment('是否阶梯优惠');
             $table->json('ladder_rules')->nullable()->comment('更多阶梯规则配置');
 
@@ -39,9 +39,8 @@ return new class extends Migration {
             $table->enum('validity_type', ['absolute', 'relative'])->comment('有效期类型');
             $table->dateTime('start_time')->nullable()->comment('开始时间');
             $table->dateTime('end_time')->nullable()->comment('结束时间');
-            $table->string('relative_time_type',32)->nullable()->comment('相对时间类型');
+            $table->string('relative_time_type', 32)->nullable()->comment('相对时间类型');
             $table->integer('relative_time_value')->nullable()->comment('相对时间值');
-
 
 
             $table->integer('user_max_receive_quantity')->default(1)->comment('用户最大领取数量');

@@ -10,12 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
-        "red-jasmine/support": "^1.0",
-        "illuminate/database": "^12.0",
-        "illuminate/support": "^12.0",
-        "spatie/laravel-data": "^3.0",
-        "spatie/query-builder": "^5.0"
+        "red-jasmine/support": "1.0.x-dev"
     },
     "require-dev": {
      
@@ -33,8 +28,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\Coupon\\CouponServiceProvider"
+              "RedJasmine\\Coupon\\CouponPackageServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     },
     "config": {

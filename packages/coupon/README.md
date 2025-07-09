@@ -81,11 +81,12 @@ packages/coupon/
 ## 安装使用
 
 ### 1. 服务提供者注册
+
 ```php
 // config/app.php
 'providers' => [
     // ...
-    RedJasmine\Coupon\CouponServiceProvider::class,
+    RedJasmine\Coupon\CouponPackageServiceProvider::class,
 ];
 ```
 
