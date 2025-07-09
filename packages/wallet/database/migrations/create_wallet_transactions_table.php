@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->decimal('freeze', 12)->comment('冻结');
             $table->string('status')->default(TransactionStatusEnum::SUCCESS)->comment(TransactionStatusEnum::comments('状态'));
             $table->timestamp('trade_time')->comment('交易时间');
-
+            $table->boolean('is_hidden')->default(false)->comment('是否隐藏');
 
             $table->string('app_id', 64)->comment('应用ID');
             $table->string('transaction_type', 32)->comment(TransactionTypeEnum::comments('交易类型'));
