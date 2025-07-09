@@ -120,8 +120,6 @@ class 优惠券 <<entity>> {
     -发放策略: 发放策略
     -总发放限制: Integer
     -当前发放数量: Integer
-    -单用户最大使用次数: Integer
-    -总使用次数限制: Integer
     -创建时间: LocalDateTime
     -更新时间: LocalDateTime
     ..

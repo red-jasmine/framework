@@ -44,9 +44,7 @@ return new class extends Migration {
 
 
 
-            // 使用限制
-            $table->integer('max_usage_per_user')->default(1)->comment('每用户最大使用次数');
-            $table->integer('max_usage_total')->nullable()->comment('总使用次数限制');
+            $table->integer('user_max_receive_quantity')->default(1)->comment('用户最大领取数量');
 
             // 使用规则
             $table->json('usage_rules')->nullable()->comment('使用规则配置');

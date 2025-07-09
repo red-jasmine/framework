@@ -21,7 +21,11 @@ return new class extends Migration
             
             $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
             $table->unsignedBigInteger('user_coupon_id')->comment('用户优惠券ID');
-            $table->unsignedBigInteger('user_id')->comment('用户ID');
+            
+            $table->string('user_type', 32)->comment('用户类型');
+            $table->string('user_id', 64)->comment('用户ID');
+
+
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->decimal('threshold_amount', 10, 2)->comment('门槛金额');
             $table->decimal('original_amount', 10, 2)->comment('原始金额');
