@@ -2129,7 +2129,7 @@ class ArticleController extends Controller
 ### 数据库设计
 ### 表名
 - **前缀**：一般使用领域名称作为公共前缀
-
+- **外键**：强制不使用外键
 ## 异常处理规范
 
 ### 领域异常
