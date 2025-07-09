@@ -1,199 +1,317 @@
-@startuml
-skinparam classAttributeIconSize 0
-skinparam classFontSize 12
-skinparam classFontName Microsoft YaHei
-skinparam packageFontSize 14
-skinparam packageFontName Microsoft YaHei
+@startuml 优惠券领域模型
 
-title 优惠券领域模型
-
-package "优惠券核心" {
-  class 优惠券 {
-    +优惠券ID: Long
-    +名称: String
-    +描述: String
-    +类型: CouponType
-    +成本承担方: CostBearer
-    +状态: CouponStatus
-    +使用门槛: Money
-    +优惠金额: Money
-    +折扣比例: Decimal
-    +有效期类型: ValidityType
-    +开始时间: DateTime
-    +结束时间: DateTime
-    +相对天数: Integer
-    +最大优惠金额: Money
-    +最小订单金额: Money
-    +最大订单金额: Money
-    +创建时间: DateTime
-    +修改时间: DateTime
-    --
-    +创建()
-    +更新()
-    +发布()
-    +停用()
-    +删除()
-    +计算优惠金额()
-    +验证使用条件()
-    +检查有效期()
-  }
-
-  class 发放策略 {
-    +策略ID: Long
-    +优惠券ID: Long
-    +发放方式: IssueMethod
-    +发放数量: Integer
-    +每日限量: Integer
-    +个人限领: Integer
-    +开始时间: DateTime
-    +结束时间: DateTime
-    --
-    +执行发放()
-    +检查发放限制()
-    +更新发放统计()
-  }
-
-  class 使用限制 {
-    +限制ID: Long
-    +优惠券ID: Long
-    +用户限制: UserRestriction
-    +商品限制: ProductRestriction
-    +订单限制: OrderRestriction
-    +叠加规则: OverlayRule
-    --
-    +验证用户资格()
-    +验证商品资格()
-    +验证订单条件()
-    +检查叠加规则()
-  }
+' 枚举定义
+enum 优惠券状态 <<enumeration>> {
+    草稿
+    已发布
+    已暂停
+    已过期
 }
 
-package "用户优惠券" {
-  class 用户优惠券 {
-    +用户优惠券ID: Long
-    +用户ID: Long
-    +优惠券ID: Long
-    +优惠券码: String
-    +状态: UserCouponStatus
-    +领取时间: DateTime
-    +使用时间: DateTime
-    +过期时间: DateTime
-    --
-    +领取()
-    +使用()
-    +过期()
-    +退款()
-  }
-
-  class 优惠券使用记录 {
-    +记录ID: Long
-    +用户优惠券ID: Long
-    +订单ID: Long
-    +使用金额: Money
-    +优惠金额: Money
-    +使用时间: DateTime
-    +核销时间: DateTime
-    --
-    +记录使用()
-    +核销()
-    +退款处理()
-  }
+enum 用户优惠券状态 <<enumeration>> {
+    可用
+    已使用
+    已过期
 }
 
-package "统计分析" {
-  class 优惠券统计 {
-    +统计ID: Long
-    +优惠券ID: Long
-    +发放数量: Integer
-    +使用数量: Integer
-    +使用率: Decimal
-    +转化率: Decimal
-    +总优惠金额: Money
-    +成本金额: Money
-    +ROI: Decimal
-    --
-    +更新统计()
-    +计算指标()
-    +生成报告()
-  }
+enum 优惠计算方式 <<enumeration>> {
+    固定金额
+    百分比折扣
 }
 
-package "枚举定义" {
-  enum CouponType {
-    折扣券 (DISCOUNT)
-    满减券 (FULL_REDUCTION)
-    包邮券 (FREE_SHIPPING)
-  }
+enum 门槛类型 <<enumeration>> {
+    订单金额
+    商品金额
+    邮费金额
+    跨店结算金额
+}
 
-  enum CostBearer {
-    平台承担 (PLATFORM)
-    商家承担 (MERCHANT)
-    主播承担 (ANCHOR)
-  }
+enum 有效期类型 <<enumeration>> {
+    绝对时间
+    相对时间
+}
 
-  enum CouponStatus {
-    草稿 (DRAFT)
-    已发布 (PUBLISHED)
-    已停用 (DISABLED)
-    已删除 (DELETED)
-  }
+enum 成本承担方类型 <<enumeration>> {
+    平台
+    商家
+    主播
+}
 
-  enum ValidityType {
-    绝对时间 (ABSOLUTE)
-    相对时间 (RELATIVE)
-  }
+enum 发放策略 <<enumeration>> {
+    自动发放
+    手动发放
+    兑换码
+}
 
-  enum IssueMethod {
-    自动发放 (AUTO)
-    手动发放 (MANUAL)
-    活动发放 (ACTIVITY)
-  }
+enum 规则对象类型 <<enumeration>> {
+    商品
+    分类
+    人群
+}
 
-  enum UserCouponStatus {
-    未使用 (UNUSED)
-    已使用 (USED)
-    已过期 (EXPIRED)
-    已退款 (REFUNDED)
-  }
+enum 规则类型 <<enumeration>> {
+    适用
+    排除
+}
 
-  enum UserRestriction {
-    全部用户 (ALL)
-    新用户 (NEW_USER)
-    会员用户 (MEMBER)
-    指定用户 (SPECIFIC_USER)
-  }
+' 值对象
+class 优惠规则 <<value object>> {
+    -门槛类型: 门槛类型
+    -门槛金额: BigDecimal
+    -是否需要门槛: Boolean
+    -优惠计算方式: 优惠计算方式
+    -优惠值: BigDecimal
+    -最大优惠金额: BigDecimal
+    -是否阶梯优惠: Boolean
+    -阶梯规则列表: List<阶梯规则>
+    ..
+    +检查门槛(金额: BigDecimal): Boolean
+    +计算优惠(金额: BigDecimal): BigDecimal
+    +验证规则(金额: BigDecimal): Boolean
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
 
-  enum ProductRestriction {
-    全部商品 (ALL)
-    指定商品 (SPECIFIC_PRODUCT)
-    指定类目 (SPECIFIC_CATEGORY)
-    排除商品 (EXCLUDE_PRODUCT)
-    排除类目 (EXCLUDE_CATEGORY)
-  }
+class 阶梯规则 <<value object>> {
+    -门槛金额: BigDecimal
+    -优惠金额: BigDecimal
+    -优惠计算方式: 优惠计算方式
+    ..
+    +适用于(金额: BigDecimal): Boolean
+    +计算优惠(金额: BigDecimal): BigDecimal
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
 
-  enum OverlayRule {
-    允许叠加 (ALLOW)
-    禁止叠加 (DISALLOW)
-    限制叠加 (LIMIT)
-  }
+class 有效期规则 <<value object>> {
+    -有效期类型: 有效期类型
+    -开始时间: LocalDateTime
+    -结束时间: LocalDateTime
+    -相对天数: Integer
+    ..
+    +是否有效(检查时间: LocalDateTime): Boolean
+    +获取生效时间(发放时间: LocalDateTime): LocalDateTime
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 成本承担方 <<value object>> {
+    -承担方类型: 成本承担方类型
+    -承担方ID: String
+    -承担方名称: String
+    ..
+    +获取承担方信息(): Map<String, Object>
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+' 实体
+class 优惠券 <<entity>> {
+    -ID: String
+    -名称: String
+    -描述: String
+    -图片: String
+    -状态: 优惠券状态
+    -优惠规则: 优惠规则
+    -有效期规则: 有效期规则
+    -使用规则: 使用规则
+    -领取规则: 领取规则
+    -成本承担方: 成本承担方
+    -发放策略: 发放策略
+    -总发放限制: Integer
+    -当前发放数量: Integer
+    -单用户最大使用次数: Integer
+    -总使用次数限制: Integer
+    -创建时间: LocalDateTime
+    -更新时间: LocalDateTime
+    ..
+    +可以发放(): Boolean
+    +可以使用(用户: 用户, 订单: 订单): Boolean
+    +计算优惠(金额: BigDecimal): BigDecimal
+    +发放给用户(用户: 用户): 用户优惠券
+    +更新状态(状态: 优惠券状态): void
+    +增加发放数量(): void
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 使用规则 <<value object>> {
+    -商品适用规则: List<规则项>
+    -商品排除规则: List<规则项>
+    -分类适用规则: List<规则项>
+    -分类排除规则: List<规则项>
+    -人群适用规则: List<规则项>
+    -人群排除规则: List<规则项>
+    ..
+    +可以使用(用户: 用户, 商品列表: List<商品>): Boolean
+    +匹配商品规则(商品ID: String): Boolean
+    +匹配分类规则(分类ID: String): Boolean
+    +匹配人群规则(用户: 用户): Boolean
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 领取规则 <<value object>> {
+    -商品适用规则: List<规则项>
+    -商品排除规则: List<规则项>
+    -分类适用规则: List<规则项>
+    -分类排除规则: List<规则项>
+    -人群适用规则: List<规则项>
+    -人群排除规则: List<规则项>
+    ..
+    +可以领取(用户: 用户, 商品列表: List<商品>): Boolean
+    +匹配商品规则(商品ID: String): Boolean
+    +匹配分类规则(分类ID: String): Boolean
+    +匹配人群规则(用户: 用户): Boolean
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 规则项 <<value object>> {
+    -对象类型: 规则对象类型
+    -规则类型: 规则类型
+    -对象值: String
+    ..
+    +匹配(对象类型: 规则对象类型, 对象值: String): Boolean
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 用户优惠券 <<entity>> {
+    -ID: String
+    -优惠券ID: String
+    -用户ID: String
+    -状态: 用户优惠券状态
+    -发放时间: LocalDateTime
+    -过期时间: LocalDateTime
+    -使用时间: LocalDateTime
+    -订单ID: String
+    ..
+    +是否可用(): Boolean
+    +是否过期(): Boolean
+    +使用(订单ID: String): void
+    +过期(): void
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 优惠券使用记录 <<entity>> {
+    -ID: String
+    -优惠券ID: String
+    -用户优惠券ID: String
+    -用户ID: String
+    -订单ID: String
+    -门槛金额: BigDecimal
+    -原始金额: BigDecimal
+    -优惠金额: BigDecimal
+    -最终金额: BigDecimal
+    -使用时间: LocalDateTime
+    -成本承担方: 成本承担方
+    ..
+    +获取成本金额(): BigDecimal
+    +获取成本承担方(): 成本承担方
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+class 优惠券发放统计 <<entity>> {
+    -优惠券ID: String
+    -总发放数量: Integer
+    -总使用数量: Integer
+    -总过期数量: Integer
+    -总成本: BigDecimal
+    -最后更新时间: LocalDateTime
+    ..
+    +更新统计(): void
+    +获取使用率(): BigDecimal
+    +增加发放数量(): void
+    +增加使用数量(): void
+    +增加过期数量(): void
+    +增加成本(金额: BigDecimal): void
+    +equals(other: Object): Boolean
+    +hashCode(): Integer
+}
+
+' 外部实体引用
+class 用户 <<external>> {
+    +获取ID(): String
+    +获取类型(): String
+    +获取VIP等级(): Integer
+    +是否新用户(): Boolean
+}
+
+class 订单 <<external>> {
+    +获取ID(): String
+    +获取金额(): BigDecimal
+    +获取商品列表(): List<商品>
+}
+
+class 商品 <<external>> {
+    +获取ID(): String
+    +获取分类ID(): String
+    +获取价格(): BigDecimal
 }
 
 ' 关系定义
-优惠券 ||--|| 发放策略
-优惠券 ||--|| 使用限制
-优惠券 ||--o{ 用户优惠券
-用户优惠券 ||--o{ 优惠券使用记录
-优惠券 ||--|| 优惠券统计
+优惠券 ||--|| 优惠规则 : 包含
+优惠券 ||--|| 有效期规则 : 包含
+优惠券 ||--|| 使用规则 : 包含
+优惠券 ||--|| 领取规则 : 包含
+优惠券 ||--|| 成本承担方 : 包含
+优惠券 ||--o{ 用户优惠券 : 发放
+用户优惠券 ||--o{ 优惠券使用记录 : 生成
+优惠券 ||--|| 优惠券发放统计 : 跟踪
+
+优惠券使用记录 ||--|| 成本承担方 : 记录
+
+优惠规则 ||--o{ 阶梯规则 : 包含
+使用规则 ||--o{ 规则项 : 包含
+领取规则 ||--o{ 规则项 : 包含
+
+' 依赖关系
+优惠券 ..> 用户 : 使用
+优惠券 ..> 订单 : 使用
+使用规则 ..> 用户 : 验证
+使用规则 ..> 商品 : 验证
+领取规则 ..> 用户 : 验证
 
 ' 枚举关系
-优惠券 --> CouponType
-优惠券 --> CostBearer
-优惠券 --> CouponStatus
-优惠券 --> ValidityType
-发放策略 --> IssueMethod
-用户优惠券 --> UserCouponStatus
-使用限制 --> UserRestriction
-使用限制 --> ProductRestriction
-使用限制 --> OverlayRule
+优惠规则 ||--|| 优惠计算方式 : 使用
+优惠规则 ||--|| 门槛类型 : 使用
+阶梯规则 ||--|| 优惠计算方式 : 使用
+有效期规则 ||--|| 有效期类型 : 使用
+成本承担方 ||--|| 成本承担方类型 : 使用
+优惠券 ||--|| 优惠券状态 : 使用
+优惠券 ||--|| 发放策略 : 使用
+用户优惠券 ||--|| 用户优惠券状态 : 使用
+规则项 ||--|| 规则对象类型 : 使用
+规则项 ||--|| 规则类型 : 使用
+
+' 样式定义
+优惠券状态 -[hidden]- 用户优惠券状态
+用户优惠券状态 -[hidden]- 优惠计算方式
+优惠计算方式 -[hidden]- 门槛类型
+门槛类型 -[hidden]- 有效期类型
+有效期类型 -[hidden]- 成本承担方类型
+成本承担方类型 -[hidden]- 发放策略
+发放策略 -[hidden]- 规则对象类型
+规则对象类型 -[hidden]- 规则类型
+
+' 注释
+note top of 优惠券 : 优惠券聚合根<br/>管理优惠券完整生命周期<br/>通过值对象和规则实体组合<br/>实现复杂业务规则
+
+note top of 使用规则 : 使用规则值对象<br/>封装使用条件逻辑<br/>支持商品、分类、人群规则<br/>通过规则项组合实现复杂逻辑
+
+note top of 领取规则 : 领取规则值对象<br/>封装领取条件逻辑<br/>控制用户领取资格<br/>通过规则项组合实现灵活配置
+
+note top of 规则项 : 规则项值对象<br/>最小规则单元<br/>封装单个规则的匹配逻辑<br/>支持适用和排除两种类型
+
+note top of 用户优惠券 : 用户优惠券实体<br/>管理用户优惠券状态<br/>记录领取和使用过程
+
+note top of 优惠券使用记录 : 优惠券使用记录<br/>记录详细使用信息<br/>包含门槛和优惠金额<br/>用于成本核算和审计
+
+note top of 优惠规则 : 优惠规则值对象<br/>统一管理门槛和优惠逻辑<br/>支持单一和阶梯优惠<br/>达到门槛即可享受优惠
+
+note top of 阶梯规则 : 阶梯规则值对象<br/>定义不同门槛对应的优惠<br/>支持复杂的阶梯优惠策略
 
 @enduml 

@@ -1,488 +1,676 @@
 ---
-title: 优惠券领域存储设计
-description: 优惠券领域数据库表结构设计和索引优化方案
+title: 优惠券存储设计
+description: 优惠券领域的数据存储结构设计，包括数据库表结构、索引设计和数据分区策略
 outline: deep
-order: 2
+order: 3
 lastUpdated: true
-tags: [优惠券, 存储设计, 数据库]
-author: Red Jasmine Team
 ---
 
-# 优惠券领域存储设计
-
-## 概述
-
-优惠券领域的存储设计采用关系型数据库作为主要存储方案，结合Redis缓存提升性能。数据库设计遵循第三范式，同时考虑查询性能优化，为优惠券的创建、发放、使用、统计等核心功能提供高效的数据存储支持。
+# 优惠券存储设计
 
 ## 数据库表结构
 
-### 1. 优惠券主表 (coupons)
+### 1. 优惠券表 (coupons)
 
 ```sql
 CREATE TABLE `coupons` (
-  `id` bigint unsigned NOT NULL COMMENT '优惠券ID',
+  `id` bigint(20) unsigned NOT NULL COMMENT '优惠券ID',
   `name` varchar(100) NOT NULL COMMENT '优惠券名称',
   `description` text COMMENT '优惠券描述',
-  `coupon_type` enum('DISCOUNT','FULL_REDUCTION','FREE_SHIPPING') NOT NULL COMMENT '优惠券类型：折扣券/满减券/包邮券',
-  `cost_bearer` enum('PLATFORM','MERCHANT','ANCHOR') NOT NULL COMMENT '成本承担方',
-  `status` enum('DRAFT','PUBLISHED','DISABLED','DELETED') NOT NULL DEFAULT 'DRAFT' COMMENT '状态',
-  `owner_type` varchar(50) NOT NULL COMMENT '所有者类型',
-  `owner_id` bigint unsigned NOT NULL COMMENT '所有者ID',
-  `operator_type` varchar(50) DEFAULT NULL COMMENT '操作者类型',
-  `operator_id` bigint unsigned DEFAULT NULL COMMENT '操作者ID',
-  `threshold_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '使用门槛金额',
-  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
-  `discount_rate` decimal(5,4) DEFAULT NULL COMMENT '折扣比例',
-  `validity_type` enum('ABSOLUTE','RELATIVE') NOT NULL COMMENT '有效期类型',
-  `start_time` timestamp NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` timestamp NULL DEFAULT NULL COMMENT '结束时间',
-  `relative_days` int DEFAULT NULL COMMENT '相对天数',
-  `max_discount_amount` decimal(10,2) DEFAULT NULL COMMENT '最大优惠金额',
-  `min_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最小订单金额',
-  `max_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最大订单金额',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  `deleted_at` timestamp NULL DEFAULT NULL COMMENT '删除时间',
+  `image` varchar(255) COMMENT '优惠券图片',
+  `status` enum('draft','published','paused','expired') NOT NULL DEFAULT 'draft' COMMENT '状态',
+  
+  -- 优惠规则
+  `discount_type` enum('fixed_amount','percentage','free_shipping') NOT NULL COMMENT '优惠类型',
+  `discount_value` decimal(10,2) NOT NULL COMMENT '优惠值',
+  `max_discount_amount` decimal(10,2) COMMENT '最大优惠金额',
+  `is_ladder` tinyint(1) DEFAULT 0 COMMENT '是否阶梯优惠',
+  `ladder_rules` json COMMENT '阶梯规则配置',
+  
+  -- 门槛规则
+  `threshold_type` enum('order_amount','product_amount','shipping_amount','cross_store_amount') NOT NULL COMMENT '门槛类型',
+  `threshold_value` decimal(10,2) NOT NULL DEFAULT 0 COMMENT '门槛值',
+  `is_threshold_required` tinyint(1) DEFAULT 1 COMMENT '是否需要门槛',
+  
+  -- 有效期规则
+  `validity_type` enum('absolute','relative') NOT NULL COMMENT '有效期类型',
+  `start_time` datetime COMMENT '开始时间',
+  `end_time` datetime COMMENT '结束时间',
+  `relative_days` int COMMENT '相对天数',
+  
+  -- 使用限制
+  `max_usage_per_user` int DEFAULT 1 COMMENT '每用户最大使用次数',
+  `max_usage_total` int COMMENT '总使用次数限制',
+  
+  -- 使用规则
+  `usage_rules` json COMMENT '使用规则配置',
+  
+  -- 领取规则
+  `collect_rules` json COMMENT '领取规则配置',
+  
+  -- 成本承担方
+  `cost_bearer_type` enum('platform','merchant','broadcaster') NOT NULL COMMENT '成本承担方类型',
+  `cost_bearer_id` varchar(50) NOT NULL COMMENT '成本承担方ID',
+  `cost_bearer_name` varchar(100) NOT NULL COMMENT '成本承担方名称',
+  
+  -- 发放控制
+  `issue_strategy` enum('auto','manual','code') NOT NULL DEFAULT 'manual' COMMENT '发放策略',
+  `total_issue_limit` int COMMENT '总发放限制',
+  `current_issue_count` int DEFAULT 0 COMMENT '当前发放数量',
+  
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  
   PRIMARY KEY (`id`),
-  KEY `idx_owner` (`owner_type`,`owner_id`),
-  KEY `idx_status` (`status`),
-  KEY `idx_coupon_type` (`coupon_type`),
-  KEY `idx_cost_bearer` (`cost_bearer`),
-  KEY `idx_created_at` (`created_at`),
-  KEY `idx_start_time` (`start_time`),
-  KEY `idx_end_time` (`end_time`),
-  KEY `idx_validity_type` (`validity_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券主表（含配置信息）';
+  KEY `idx_status_time` (`status`, `start_time`, `end_time`),
+  KEY `idx_cost_bearer` (`cost_bearer_type`, `cost_bearer_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券表';
 ```
 
-### 2. 删除独立的配置表
-
-```sql
--- 优惠券配置表已合并到主表，不再需要独立的配置表
--- DROP TABLE `coupon_configs`;
-```
-
-### 3. 发放策略表 (issue_strategies)
-
-```sql
-CREATE TABLE `issue_strategies` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '策略ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
-  `issue_method` enum('AUTO','MANUAL','ACTIVITY') NOT NULL COMMENT '发放方式',
-  `total_quantity` int NOT NULL DEFAULT '0' COMMENT '总发放数量',
-  `issued_quantity` int NOT NULL DEFAULT '0' COMMENT '已发放数量',
-  `daily_limit` int DEFAULT NULL COMMENT '每日限量',
-  `personal_limit` int NOT NULL DEFAULT '1' COMMENT '个人限领数量',
-  `start_time` timestamp NULL DEFAULT NULL COMMENT '发放开始时间',
-  `end_time` timestamp NULL DEFAULT NULL COMMENT '发放结束时间',
-  `auto_issue_condition` json DEFAULT NULL COMMENT '自动发放条件',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_coupon_id` (`coupon_id`),
-  KEY `idx_start_time` (`start_time`),
-  KEY `idx_end_time` (`end_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='发放策略表';
-```
-
-### 4. 使用限制表 (usage_restrictions)
-
-```sql
-CREATE TABLE `usage_restrictions` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '限制ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
-  `user_restriction` enum('ALL','NEW_USER','MEMBER','SPECIFIC_USER') NOT NULL DEFAULT 'ALL' COMMENT '用户限制',
-  `product_restriction` enum('ALL','SPECIFIC_PRODUCT','SPECIFIC_CATEGORY','EXCLUDE_PRODUCT','EXCLUDE_CATEGORY') NOT NULL DEFAULT 'ALL' COMMENT '商品限制',
-  `overlay_rule` enum('ALLOW','DISALLOW','LIMIT') NOT NULL DEFAULT 'DISALLOW' COMMENT '叠加规则',
-  `user_level_min` int DEFAULT NULL COMMENT '用户等级最小值',
-  `user_level_max` int DEFAULT NULL COMMENT '用户等级最大值',
-  `register_days_min` int DEFAULT NULL COMMENT '注册天数最小值',
-  `register_days_max` int DEFAULT NULL COMMENT '注册天数最大值',
-  `consumption_amount_min` decimal(10,2) DEFAULT NULL COMMENT '消费金额最小值',
-  `consumption_amount_max` decimal(10,2) DEFAULT NULL COMMENT '消费金额最大值',
-  `specific_user_ids` json DEFAULT NULL COMMENT '指定用户ID列表',
-  `specific_product_ids` json DEFAULT NULL COMMENT '指定商品ID列表',
-  `specific_category_ids` json DEFAULT NULL COMMENT '指定类目ID列表',
-  `exclude_product_ids` json DEFAULT NULL COMMENT '排除商品ID列表',
-  `exclude_category_ids` json DEFAULT NULL COMMENT '排除类目ID列表',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_coupon_id` (`coupon_id`),
-  KEY `idx_user_restriction` (`user_restriction`),
-  KEY `idx_product_restriction` (`product_restriction`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用限制表';
-```
-
-### 5. 用户优惠券表 (user_coupons)
+### 2. 用户优惠券表 (user_coupons)
 
 ```sql
 CREATE TABLE `user_coupons` (
-  `id` bigint unsigned NOT NULL COMMENT '用户优惠券ID',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
-  `coupon_code` varchar(50) NOT NULL COMMENT '优惠券码',
-  `status` enum('UNUSED','USED','EXPIRED','REFUNDED') NOT NULL DEFAULT 'UNUSED' COMMENT '状态',
+  `id` bigint(20) unsigned NOT NULL COMMENT '用户优惠券ID',
+  `coupon_id` bigint(20) unsigned NOT NULL COMMENT '优惠券ID',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户ID',
+  `status` enum('available','used','expired') NOT NULL DEFAULT 'available' COMMENT '状态',
   `issue_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发放时间',
-  `use_time` timestamp NULL DEFAULT NULL COMMENT '使用时间',
   `expire_time` timestamp NOT NULL COMMENT '过期时间',
-  `order_id` bigint unsigned DEFAULT NULL COMMENT '使用订单ID',
-  `use_amount` decimal(10,2) DEFAULT NULL COMMENT '使用金额',
-  `discount_amount` decimal(10,2) DEFAULT NULL COMMENT '优惠金额',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `used_time` timestamp NULL COMMENT '使用时间',
+  `order_id` bigint(20) unsigned COMMENT '使用订单ID',
+  
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_coupon_code` (`coupon_code`),
-  KEY `idx_user_id` (`user_id`),
-  KEY `idx_coupon_id` (`coupon_id`),
-  KEY `idx_status` (`status`),
+  UNIQUE KEY `uk_coupon_user` (`coupon_id`, `user_id`),
+  KEY `idx_user_status` (`user_id`, `status`),
   KEY `idx_expire_time` (`expire_time`),
-  KEY `idx_issue_time` (`issue_time`),
+  KEY `idx_used_time` (`used_time`),
   KEY `idx_order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户优惠券表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户优惠券表';
 ```
 
-### 6. 优惠券使用记录表 (coupon_usage_records)
+### 3. 优惠券使用记录表 (coupon_usages)
 
 ```sql
-CREATE TABLE `coupon_usage_records` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '记录ID',
-  `user_coupon_id` bigint unsigned NOT NULL COMMENT '用户优惠券ID',
-  `order_id` bigint unsigned NOT NULL COMMENT '订单ID',
-  `use_amount` decimal(10,2) NOT NULL COMMENT '使用金额',
+CREATE TABLE `coupon_usages` (
+  `id` bigint(20) unsigned NOT NULL COMMENT '使用记录ID',
+  `coupon_id` bigint(20) unsigned NOT NULL COMMENT '优惠券ID',
+  `user_coupon_id` bigint(20) unsigned NOT NULL COMMENT '用户优惠券ID',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户ID',
+  `order_id` bigint(20) unsigned NOT NULL COMMENT '订单ID',
+  `threshold_amount` decimal(10,2) NOT NULL COMMENT '门槛金额',
+  `original_amount` decimal(10,2) NOT NULL COMMENT '原始金额',
   `discount_amount` decimal(10,2) NOT NULL COMMENT '优惠金额',
-  `use_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '使用时间',
-  `verify_time` timestamp NULL DEFAULT NULL COMMENT '核销时间',
-  `refund_time` timestamp NULL DEFAULT NULL COMMENT '退款时间',
-  `refund_amount` decimal(10,2) DEFAULT NULL COMMENT '退款金额',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_user_coupon_id` (`user_coupon_id`),
-  KEY `idx_order_id` (`order_id`),
-  KEY `idx_use_time` (`use_time`),
-  KEY `idx_verify_time` (`verify_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券使用记录表';
-```
-
-### 7. 优惠券统计表 (coupon_statistics)
-
-```sql
-CREATE TABLE `coupon_statistics` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '统计ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
-  `issued_quantity` int NOT NULL DEFAULT '0' COMMENT '发放数量',
-  `used_quantity` int NOT NULL DEFAULT '0' COMMENT '使用数量',
-  `usage_rate` decimal(5,4) NOT NULL DEFAULT '0.0000' COMMENT '使用率',
-  `conversion_rate` decimal(5,4) NOT NULL DEFAULT '0.0000' COMMENT '转化率',
-  `total_discount_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '总优惠金额',
-  `total_cost_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '总成本金额',
-  `roi` decimal(8,4) NOT NULL DEFAULT '0.0000' COMMENT '投资回报率',
-  `daily_stats` json DEFAULT NULL COMMENT '每日统计数据',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_coupon_id` (`coupon_id`),
-  KEY `idx_usage_rate` (`usage_rate`),
-  KEY `idx_conversion_rate` (`conversion_rate`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券统计表';
-```
-
-### 8. 优惠券发放日志表 (coupon_issue_logs)
-
-```sql
-CREATE TABLE `coupon_issue_logs` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '日志ID',
-  `coupon_id` bigint unsigned NOT NULL COMMENT '优惠券ID',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `issue_method` enum('AUTO','MANUAL','ACTIVITY') NOT NULL COMMENT '发放方式',
-  `issue_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发放时间',
-  `operator_type` varchar(50) DEFAULT NULL COMMENT '操作者类型',
-  `operator_id` bigint unsigned DEFAULT NULL COMMENT '操作者ID',
-  `ip_address` varchar(45) DEFAULT NULL COMMENT 'IP地址',
-  `user_agent` text DEFAULT NULL COMMENT '用户代理',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `final_amount` decimal(10,2) NOT NULL COMMENT '最终金额',
+  `used_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '使用时间',
+  
+  -- 成本承担方信息
+  `cost_bearer_type` enum('platform','merchant','broadcaster') NOT NULL COMMENT '成本承担方类型',
+  `cost_bearer_id` varchar(50) NOT NULL COMMENT '成本承担方ID',
+  `cost_bearer_name` varchar(100) NOT NULL COMMENT '成本承担方名称',
+  
   PRIMARY KEY (`id`),
   KEY `idx_coupon_id` (`coupon_id`),
   KEY `idx_user_id` (`user_id`),
-  KEY `idx_issue_time` (`issue_time`),
-  KEY `idx_issue_method` (`issue_method`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='优惠券发放日志表';
+  KEY `idx_order_id` (`order_id`),
+  KEY `idx_used_at` (`used_at`),
+  KEY `idx_cost_bearer` (`cost_bearer_type`, `cost_bearer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券使用记录表';
+```
+
+### 4. 优惠券发放统计表 (coupon_issue_stats)
+
+```sql
+CREATE TABLE `coupon_issue_stats` (
+  `coupon_id` bigint(20) unsigned NOT NULL COMMENT '优惠券ID',
+  `total_issued` int NOT NULL DEFAULT 0 COMMENT '总发放数量',
+  `total_used` int NOT NULL DEFAULT 0 COMMENT '总使用数量',
+  `total_expired` int NOT NULL DEFAULT 0 COMMENT '总过期数量',
+  `total_cost` decimal(12,2) NOT NULL DEFAULT 0.00 COMMENT '总成本',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  
+  PRIMARY KEY (`coupon_id`),
+  KEY `idx_last_updated` (`last_updated`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券发放统计表';
 ```
 
 ## 索引设计
 
-### 1. 主键索引
-- 所有表都使用自增ID或雪花ID作为主键
-- 优惠券主表使用雪花ID，其他表使用自增ID
+### 主要索引说明
 
-### 2. 唯一索引
-- `issue_strategies.coupon_id`：确保每个优惠券只有一个发放策略
-- `usage_restrictions.coupon_id`：确保每个优惠券只有一个使用限制
-- `user_coupons.coupon_code`：确保优惠券码唯一性
-- `coupon_statistics.coupon_id`：确保每个优惠券只有一个统计记录
+1. **优惠券表索引**
+   - `idx_status_time`: 支持按状态和时间范围查询可用优惠券
+   - `idx_cost_bearer`: 支持按成本承担方查询优惠券
+   - `idx_created_at`: 支持按创建时间排序
 
-### 3. 普通索引
-- **优惠券主表**：
-  - `idx_owner`：按所有者查询
-  - `idx_status`：按状态查询
-  - `idx_coupon_type`：按类型查询
-  - `idx_cost_bearer`：按成本承担方查询
-  - `idx_created_at`：按创建时间查询
-  - `idx_start_time`：按开始时间查询
-  - `idx_end_time`：按结束时间查询
-  - `idx_validity_type`：按有效期类型查询
+2. **用户优惠券表索引**
+   - `uk_coupon_user`: 确保用户对同一优惠券只能领取一次
+   - `idx_user_status`: 支持查询用户的可用优惠券
+   - `idx_expire_time`: 支持过期优惠券的清理
+   - `idx_used_time`: 支持使用时间统计
 
-- **用户优惠券表**：
-  - `idx_user_id`：按用户查询
-  - `idx_coupon_id`：按优惠券查询
-  - `idx_status`：按状态查询
-  - `idx_expire_time`：按过期时间查询
-  - `idx_issue_time`：按发放时间查询
-  - `idx_order_id`：按订单查询
+3. **使用记录表索引**
+   - `idx_coupon_id`: 支持按优惠券查询使用记录
+   - `idx_user_id`: 支持按用户查询使用历史
+   - `idx_order_id`: 支持按订单查询优惠券使用
+   - `idx_used_at`: 支持按时间统计使用情况
+   - `idx_cost_bearer`: 支持按成本承担方统计成本
 
-- **使用记录表**：
-  - `idx_user_coupon_id`：按用户优惠券查询
-  - `idx_order_id`：按订单查询
-  - `idx_use_time`：按使用时间查询
-  - `idx_verify_time`：按核销时间查询
-
-### 4. 复合索引
-- `idx_owner_status`：按所有者和状态组合查询
-- `idx_user_status_expire`：按用户、状态、过期时间组合查询
-- `idx_coupon_status_time`：按优惠券、状态、时间组合查询
-
-## 分表策略
-
-### 1. 用户优惠券表分表
-由于用户优惠券表数据量较大，采用按用户ID分表：
+### 复合索引优化
 
 ```sql
--- 分表规则：user_id % 100
--- 表名：user_coupons_00 到 user_coupons_99
+-- 优惠券查询优化
+ALTER TABLE `coupons` ADD INDEX `idx_status_time_bearer` (`status`, `start_time`, `end_time`, `cost_bearer_type`);
+
+-- 使用规则查询优化
+ALTER TABLE `coupon_usage_rules` ADD INDEX `idx_coupon_object_rule` (`coupon_id`, `object_type`, `rule_type`);
+
+-- 领取规则查询优化
+ALTER TABLE `coupon_collect_rules` ADD INDEX `idx_coupon_object_rule` (`coupon_id`, `object_type`, `rule_type`);
+
+-- 用户优惠券查询优化
+ALTER TABLE `user_coupons` ADD INDEX `idx_user_status_expire` (`user_id`, `status`, `expire_time`);
+
+-- 使用记录统计优化
+ALTER TABLE `coupon_usages` ADD INDEX `idx_bearer_used_at` (`cost_bearer_type`, `cost_bearer_id`, `used_at`);
 ```
 
-### 2. 使用记录表分表
-优惠券使用记录表按时间分表：
+## 数据分区策略
+
+### 1. 用户优惠券表分区
 
 ```sql
--- 分表规则：按月份分表
--- 表名：coupon_usage_records_202401, coupon_usage_records_202402, ...
+-- 按用户ID哈希分区
+ALTER TABLE `user_coupons` PARTITION BY HASH(`user_id`) PARTITIONS 16;
 ```
 
-### 3. 发放日志表分表
-发放日志表按时间分表：
+### 2. 使用记录表分区
 
 ```sql
--- 分表规则：按月份分表
--- 表名：coupon_issue_logs_202401, coupon_issue_logs_202402, ...
+-- 按使用时间范围分区
+ALTER TABLE `coupon_usages` PARTITION BY RANGE (YEAR(`used_at`)) (
+    PARTITION p2023 VALUES LESS THAN (2024),
+    PARTITION p2024 VALUES LESS THAN (2025),
+    PARTITION p2025 VALUES LESS THAN (2026),
+    PARTITION p_future VALUES LESS THAN MAXVALUE
+);
 ```
 
-## 缓存策略
+## 数据迁移
 
-### 1. Redis缓存设计
-
-#### 优惠券基本信息缓存
-```
-Key: coupon:info:{coupon_id}
-TTL: 1小时
-Value: JSON格式的优惠券信息
-```
-
-#### 用户优惠券列表缓存
-```
-Key: user:coupons:{user_id}:{status}
-TTL: 30分钟
-Value: 用户优惠券列表
-```
-
-#### 发放数量计数器缓存
-```
-Key: coupon:issued_count:{coupon_id}
-TTL: 永久
-Value: 已发放数量
-```
-
-#### 每日发放计数器缓存
-```
-Key: coupon:daily_issued:{coupon_id}:{date}
-TTL: 24小时
-Value: 当日发放数量
-```
-
-### 2. 缓存更新策略
-
-#### 写入时更新
-- 优惠券创建/更新时，清除相关缓存
-- 用户领取优惠券时，更新用户优惠券缓存
-- 优惠券使用时，更新使用统计缓存
-
-#### 定时更新
-- 每日凌晨更新过期优惠券状态
-- 每小时更新优惠券统计数据
-- 每5分钟更新热门优惠券缓存
-
-## 数据备份策略
-
-### 1. 全量备份
-- 每日凌晨进行全量备份
-- 保留最近30天的备份文件
-- 使用压缩存储节省空间
-
-### 2. 增量备份
-- 每小时进行增量备份
-- 记录binlog用于数据恢复
-- 保留最近7天的增量备份
-
-### 3. 备份验证
-- 定期进行备份恢复测试
-- 验证备份数据的完整性
-- 记录备份和恢复时间
-
-## 性能优化建议
-
-### 1. 查询优化
-- 使用覆盖索引减少回表查询
-- 避免使用SELECT *，只查询需要的字段
-- 合理使用LIMIT限制查询结果数量
-
-### 2. 写入优化
-- 批量插入减少数据库连接次数
-- 使用INSERT IGNORE避免重复插入
-- 合理设置自增ID步长
-
-### 3. 索引优化
-- 定期分析慢查询日志
-- 根据查询模式调整索引
-- 删除不必要的索引
-
-### 4. 连接池优化
-- 合理设置连接池大小
-- 监控连接池使用情况
-- 及时释放空闲连接
-
-## 数据迁移方案
-
-### 1. 迁移步骤
-
-#### 步骤1：备份现有数据
-```sql
--- 备份优惠券主表
-CREATE TABLE `coupons_backup` AS SELECT * FROM `coupons`;
-
--- 备份优惠券配置表
-CREATE TABLE `coupon_configs_backup` AS SELECT * FROM `coupon_configs`;
-```
-
-#### 步骤2：修改主表结构
-```sql
--- 为优惠券主表添加配置字段
-ALTER TABLE `coupons` 
-ADD COLUMN `threshold_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '使用门槛金额' AFTER `operator_id`,
-ADD COLUMN `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额' AFTER `threshold_amount`,
-ADD COLUMN `discount_rate` decimal(5,4) DEFAULT NULL COMMENT '折扣比例' AFTER `discount_amount`,
-ADD COLUMN `validity_type` enum('ABSOLUTE','RELATIVE') NOT NULL COMMENT '有效期类型' AFTER `discount_rate`,
-ADD COLUMN `start_time` timestamp NULL DEFAULT NULL COMMENT '开始时间' AFTER `validity_type`,
-ADD COLUMN `end_time` timestamp NULL DEFAULT NULL COMMENT '结束时间' AFTER `start_time`,
-ADD COLUMN `relative_days` int DEFAULT NULL COMMENT '相对天数' AFTER `end_time`,
-ADD COLUMN `max_discount_amount` decimal(10,2) DEFAULT NULL COMMENT '最大优惠金额' AFTER `relative_days`,
-ADD COLUMN `min_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最小订单金额' AFTER `max_discount_amount`,
-ADD COLUMN `max_order_amount` decimal(10,2) DEFAULT NULL COMMENT '最大订单金额' AFTER `min_order_amount`;
-```
-
-#### 步骤3：迁移配置数据
-```sql
--- 将配置表数据迁移到主表
-UPDATE `coupons` c 
-INNER JOIN `coupon_configs` cc ON c.id = cc.coupon_id 
-SET 
-  c.threshold_amount = cc.threshold_amount,
-  c.discount_amount = cc.discount_amount,
-  c.discount_rate = cc.discount_rate,
-  c.validity_type = cc.validity_type,
-  c.start_time = cc.start_time,
-  c.end_time = cc.end_time,
-  c.relative_days = cc.relative_days,
-  c.max_discount_amount = cc.max_discount_amount,
-  c.min_order_amount = cc.min_order_amount,
-  c.max_order_amount = cc.max_order_amount;
-```
-
-#### 步骤4：添加索引
-```sql
--- 为新增字段添加索引
-ALTER TABLE `coupons` 
-ADD KEY `idx_start_time` (`start_time`),
-ADD KEY `idx_end_time` (`end_time`),
-ADD KEY `idx_validity_type` (`validity_type`);
-```
-
-#### 步骤5：验证数据完整性
-```sql
--- 检查数据迁移完整性
-SELECT 
-  COUNT(*) as total_coupons,
-  COUNT(CASE WHEN threshold_amount IS NOT NULL THEN 1 END) as migrated_configs
-FROM `coupons`;
-
--- 检查是否有遗漏的配置数据
-SELECT c.id, c.name 
-FROM `coupons` c 
-LEFT JOIN `coupon_configs` cc ON c.id = cc.coupon_id 
-WHERE cc.coupon_id IS NULL;
-```
-
-#### 步骤6：删除配置表（谨慎操作）
-```sql
--- 确认数据迁移无误后，删除配置表
--- DROP TABLE `coupon_configs`;
-```
-
-### 2. 回滚方案
-
-如果迁移过程中出现问题，可以使用以下方案回滚：
+### 1. 创建表结构
 
 ```sql
--- 恢复主表结构
-DROP TABLE `coupons`;
-RENAME TABLE `coupons_backup` TO `coupons`;
+-- 创建所有表结构
+SOURCE create_coupon_tables.sql;
 
--- 恢复配置表
-CREATE TABLE `coupon_configs` AS SELECT * FROM `coupon_configs_backup`;
+-- 创建索引
+SOURCE create_coupon_indexes.sql;
+
+-- 设置分区
+SOURCE create_coupon_partitions.sql;
 ```
 
-### 3. 代码适配
+### 2. 数据初始化
 
-#### 模型层修改
-```php
-// 优惠券模型不再需要配置关联
-class Coupon extends Model
+```sql
+-- 初始化优惠券状态枚举
+INSERT INTO `system_enums` (`type`, `code`, `name`, `sort`) VALUES
+('coupon_status', 'draft', '草稿', 1),
+('coupon_status', 'published', '已发布', 2),
+('coupon_status', 'paused', '已暂停', 3),
+('coupon_status', 'expired', '已过期', 4);
+
+-- 初始化优惠类型枚举
+INSERT INTO `system_enums` (`type`, `code`, `name`, `sort`) VALUES
+('discount_type', 'fixed_amount', '固定金额', 1),
+('discount_type', 'percentage', '百分比折扣', 2),
+('discount_type', 'free_shipping', '包邮', 3);
+```
+
+### 3. JSON规则数据格式
+
+#### 使用规则数据格式 (usage_rules)
+```json
 {
-    // 移除配置关联
-    // public function config() { ... }
-    
-    // 直接访问配置字段
-    protected $casts = [
-        'threshold_amount' => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'discount_rate' => 'decimal:4',
-        'validity_type' => ValidityType::class,
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-        'max_discount_amount' => 'decimal:2',
-        'min_order_amount' => 'decimal:2',
-        'max_order_amount' => 'decimal:2',
-    ];
+  "product_include": ["product_001", "product_002"],
+  "product_exclude": ["product_003"],
+  "category_include": ["category_001"],
+  "category_exclude": ["category_002"],
+  "user_group_include": ["vip", "new_user"],
+  "user_group_exclude": ["blacklist"]
 }
 ```
 
-#### 查询优化
-```php
-// 原来需要JOIN查询
-$coupons = Coupon::with('config')->get();
-
-// 现在直接查询主表
-$coupons = Coupon::all();
+#### 领取规则数据格式 (collect_rules)
+```json
+{
+  "product_include": ["product_001", "product_002"],
+  "product_exclude": ["product_003"],
+  "category_include": ["category_001"],
+  "category_exclude": ["category_002"],
+  "user_group_include": ["vip", "new_user"],
+  "user_group_exclude": ["blacklist"]
+}
 ```
 
-这个存储设计方案为优惠券领域提供了高效、可扩展的数据存储支持，通过合并配置表简化了数据结构，提升了查询性能，能够满足大规模电商平台的优惠券业务需求。 
+#### 规则数据示例
+```sql
+-- 插入带有规则的优惠券示例
+INSERT INTO coupons (
+    id, name, description, status, 
+    discount_type, discount_value, threshold_type, threshold_value,
+    usage_rules, collect_rules,
+    cost_bearer_type, cost_bearer_id, cost_bearer_name
+) VALUES (
+    1, '新人专享券', '新用户专享满100减20', 'published',
+    'fixed_amount', 20.00, 'order_amount', 100.00,
+    '{"product_include": ["electronics", "books"], "user_group_include": ["new_user"]}',
+    '{"user_group_include": ["new_user"], "user_group_exclude": ["blacklist"]}',
+    'platform', 'platform_001', '平台'
+);
+```
+
+## 性能优化策略
+
+### 1. 查询优化
+
+```sql
+-- 优化用户可用优惠券查询（避免JOIN，使用子查询）
+SELECT c.*, uc.id as user_coupon_id, uc.expire_time
+FROM coupons c
+INNER JOIN user_coupons uc ON c.id = uc.coupon_id
+WHERE uc.user_id = ? 
+  AND uc.status = 'available'
+  AND uc.expire_time > NOW()
+  AND c.status = 'published'
+ORDER BY uc.expire_time ASC;
+
+-- 优化优惠券使用统计查询
+SELECT 
+    cost_bearer_type,
+    cost_bearer_id,
+    SUM(discount_amount) as total_cost,
+    COUNT(*) as usage_count
+FROM coupon_usages
+WHERE used_at BETWEEN ? AND ?
+GROUP BY cost_bearer_type, cost_bearer_id;
+```
+
+### 2. 索引优化策略
+
+```sql
+-- 优化用户优惠券查询
+ALTER TABLE user_coupons 
+ADD INDEX idx_user_status_expire_coupon (user_id, status, expire_time, coupon_id);
+
+-- 优化统计查询
+ALTER TABLE coupon_usages 
+ADD INDEX idx_time_bearer_amount (used_at, cost_bearer_type, cost_bearer_id, discount_amount);
+```
+
+### 3. 缓存策略
+
+```sql
+-- 优惠券基础信息缓存
+-- Key: coupon:info:{coupon_id}
+-- TTL: 1小时
+-- 包含：基础信息、优惠规则、有效期规则
+
+-- 优惠券规则缓存
+-- Key: coupon:rules:{coupon_id}
+-- TTL: 2小时
+-- 包含：使用规则和领取规则
+
+-- 用户优惠券列表缓存
+-- Key: user:coupons:{user_id}
+-- TTL: 30分钟
+-- 包含：用户可用优惠券列表
+
+-- 优惠券使用统计缓存
+-- Key: coupon:stats:{coupon_id}
+-- TTL: 5分钟
+-- 包含：发放数量、使用数量、成本统计
+```
+
+### 4. 读写分离优化
+
+```sql
+-- 写操作（主库）
+-- 优惠券创建、更新、删除
+-- 用户优惠券发放、使用
+-- 使用记录创建
+
+-- 读操作（从库）
+-- 优惠券列表查询
+-- 用户优惠券查询
+-- 规则验证查询
+-- 统计报表查询
+```
+
+### 5. 数据清理与维护
+
+```sql
+-- 清理过期的用户优惠券
+UPDATE user_coupons 
+SET status = 'expired' 
+WHERE status = 'available' 
+  AND expire_time < NOW();
+
+-- 清理历史使用记录（保留1年）
+DELETE FROM coupon_usages 
+WHERE used_at < DATE_SUB(NOW(), INTERVAL 1 YEAR);
+
+-- 清理无效的JSON规则数据（定期执行）
+UPDATE coupons 
+SET usage_rules = NULL 
+WHERE usage_rules = '{}' OR usage_rules = '' OR usage_rules IS NULL;
+
+UPDATE coupons 
+SET collect_rules = NULL 
+WHERE collect_rules = '{}' OR collect_rules = '' OR collect_rules IS NULL;
+
+-- 重建统计数据
+INSERT INTO coupon_issue_stats (coupon_id, total_issued, total_used, total_cost)
+SELECT 
+    c.id,
+    COALESCE(issued.cnt, 0) as total_issued,
+    COALESCE(used.cnt, 0) as total_used,
+    COALESCE(cost.amount, 0) as total_cost
+FROM coupons c
+LEFT JOIN (
+    SELECT coupon_id, COUNT(*) as cnt 
+    FROM user_coupons 
+    GROUP BY coupon_id
+) issued ON c.id = issued.coupon_id
+LEFT JOIN (
+    SELECT coupon_id, COUNT(*) as cnt 
+    FROM user_coupons 
+    WHERE status = 'used' 
+    GROUP BY coupon_id
+) used ON c.id = used.coupon_id
+LEFT JOIN (
+    SELECT coupon_id, SUM(discount_amount) as amount 
+    FROM coupon_usages 
+    GROUP BY coupon_id
+) cost ON c.id = cost.coupon_id
+ON DUPLICATE KEY UPDATE
+    total_issued = VALUES(total_issued),
+    total_used = VALUES(total_used),
+    total_cost = VALUES(total_cost);
+```
+
+### 6. 分库分表策略
+
+```sql
+-- 按业务维度分库
+-- coupon_core: 优惠券核心数据（coupons）
+-- coupon_user: 用户相关数据（user_coupons）
+-- coupon_log: 日志数据（coupon_usages, coupon_issue_stats）
+
+-- 大表分表策略
+-- user_coupons: 按user_id哈希分表
+-- coupon_usages: 按used_at时间分表
+```
+
+## 数据一致性保证
+
+### 1. 逻辑外键约束
+由于不使用物理外键，需要在应用层保证数据一致性：
+
+```sql
+-- 优惠券删除时的级联处理（应用层实现）
+-- 1. 处理用户优惠券（软删除或状态更新）
+UPDATE user_coupons SET status = 'expired' WHERE coupon_id = ? AND status = 'available';
+
+-- 2. 删除统计信息
+DELETE FROM coupon_issue_stats WHERE coupon_id = ?;
+
+-- 3. 最后删除优惠券
+DELETE FROM coupons WHERE id = ?;
+```
+
+### 2. 事务控制
+
+```sql
+-- 优惠券使用事务
+START TRANSACTION;
+
+-- 检查优惠券状态
+SELECT status FROM user_coupons WHERE id = ? FOR UPDATE;
+
+-- 验证优惠券关联存在性
+SELECT COUNT(*) FROM coupons WHERE id = ? AND status = 'published';
+
+-- 更新优惠券状态
+UPDATE user_coupons SET status = 'used', used_time = NOW(), order_id = ? WHERE id = ?;
+
+-- 创建使用记录
+INSERT INTO coupon_usages (...) VALUES (...);
+
+-- 更新统计信息
+UPDATE coupon_issue_stats SET total_used = total_used + 1, total_cost = total_cost + ? WHERE coupon_id = ?;
+
+COMMIT;
+```
+
+### 3. 数据完整性检查
+
+```sql
+-- 定期数据一致性检查脚本
+
+-- 检查无效的规则数据
+SELECT COUNT(*) FROM coupons 
+WHERE (usage_rules IS NOT NULL AND JSON_VALID(usage_rules) = 0)
+   OR (collect_rules IS NOT NULL AND JSON_VALID(collect_rules) = 0);
+
+-- 检查孤立的用户优惠券
+SELECT COUNT(*) FROM user_coupons uc 
+LEFT JOIN coupons c ON uc.coupon_id = c.id 
+WHERE c.id IS NULL;
+
+-- 检查孤立的使用记录
+SELECT COUNT(*) FROM coupon_usages cu 
+LEFT JOIN coupons c ON cu.coupon_id = c.id 
+WHERE c.id IS NULL;
+
+-- 检查孤立的统计记录
+SELECT COUNT(*) FROM coupon_issue_stats cis 
+LEFT JOIN coupons c ON cis.coupon_id = c.id 
+WHERE c.id IS NULL;
+```
+
+### 4. 数据约束
+
+```sql
+-- 添加检查约束
+ALTER TABLE coupons ADD CONSTRAINT chk_discount_value CHECK (discount_value > 0);
+ALTER TABLE coupons ADD CONSTRAINT chk_threshold_value CHECK (threshold_value >= 0);
+ALTER TABLE user_coupons ADD CONSTRAINT chk_expire_time CHECK (expire_time > issue_time);
+ALTER TABLE coupon_usages ADD CONSTRAINT chk_amounts CHECK (discount_amount <= original_amount);
+
+-- 添加唯一约束
+ALTER TABLE coupon_usage_rules ADD CONSTRAINT uk_coupon_object_value UNIQUE (coupon_id, object_type, object_value, rule_type);
+ALTER TABLE coupon_collect_rules ADD CONSTRAINT uk_coupon_object_value UNIQUE (coupon_id, object_type, object_value, rule_type);
+```
+
+### 5. 应用层数据验证
+
+```php
+// 应用层数据一致性验证示例
+class CouponDataValidator 
+{
+    public function validateCouponExists($couponId): bool 
+    {
+        return DB::table('coupons')->where('id', $couponId)->exists();
+    }
+    
+    public function validateUserCouponConsistency($userCouponId): bool 
+    {
+        $userCoupon = DB::table('user_coupons')->find($userCouponId);
+        if (!$userCoupon) return false;
+        
+        return DB::table('coupons')
+            ->where('id', $userCoupon->coupon_id)
+            ->exists();
+    }
+    
+    public function cleanupInvalidRules(): void 
+    {
+        // 清理无效的JSON规则数据
+        DB::table('coupons')
+            ->where(function($query) {
+                $query->whereRaw('usage_rules IS NOT NULL AND JSON_VALID(usage_rules) = 0')
+                      ->orWhereRaw('collect_rules IS NOT NULL AND JSON_VALID(collect_rules) = 0');
+            })
+            ->update([
+                'usage_rules' => null,
+                'collect_rules' => null
+            ]);
+    }
+}
+```
+
+## 监控指标与运维
+
+### 1. 性能监控
+
+- **查询响应时间**
+  - 优惠券查询平均响应时间 < 100ms
+  - 用户优惠券列表查询响应时间 < 200ms
+  - 优惠券使用事务响应时间 < 500ms
+  - 规则验证查询响应时间 < 50ms
+
+- **数据库性能**
+  - 数据库连接池使用率 < 80%
+  - 慢查询数量监控
+  - 索引使用率监控
+  - 表锁等待时间监控
+
+### 2. 业务监控
+
+- **优惠券发放统计**
+  - 每日优惠券发放数量
+  - 优惠券领取转化率
+  - 不同类型优惠券发放占比
+
+- **优惠券使用统计**
+  - 优惠券使用率
+  - 平均优惠金额
+  - 成本承担方成本统计
+  - 过期优惠券清理数量
+
+- **规则配置监控**
+  - 规则数量统计
+  - 规则匹配成功率
+  - 规则配置变更频率
+
+### 3. 异常监控
+
+- **数据一致性监控**
+  - 孤立数据检查（每日）
+  - 数据完整性校验
+  - 统计数据准确性验证
+
+- **业务异常监控**
+  - 优惠券重复使用检测
+  - 成本计算异常
+  - 规则验证失败率
+  - 并发冲突检测
+
+### 4. 运维自动化
+
+```sql
+-- 自动化数据清理脚本
+-- 每日执行：清理过期优惠券
+CREATE EVENT IF NOT EXISTS cleanup_expired_coupons
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+UPDATE user_coupons 
+SET status = 'expired' 
+WHERE status = 'available' 
+  AND expire_time < NOW();
+
+-- 每周执行：清理无效规则数据
+CREATE EVENT IF NOT EXISTS cleanup_invalid_rules
+ON SCHEDULE EVERY 1 WEEK
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+  UPDATE coupons 
+  SET usage_rules = NULL 
+  WHERE usage_rules IS NOT NULL AND JSON_VALID(usage_rules) = 0;
+  
+  UPDATE coupons 
+  SET collect_rules = NULL 
+  WHERE collect_rules IS NOT NULL AND JSON_VALID(collect_rules) = 0;
+END;
+
+-- 每月执行：清理历史数据
+CREATE EVENT IF NOT EXISTS cleanup_historical_data
+ON SCHEDULE EVERY 1 MONTH
+STARTS CURRENT_TIMESTAMP
+DO
+DELETE FROM coupon_usages 
+WHERE used_at < DATE_SUB(NOW(), INTERVAL 12 MONTH);
+```
+
+### 5. 备份与恢复策略
+
+```sql
+-- 核心数据备份（每日）
+-- 优惠券基础数据
+mysqldump --single-transaction coupon_db coupons coupon_usage_rules coupon_collect_rules > coupons_core_backup.sql
+
+-- 用户数据备份（每日）
+mysqldump --single-transaction coupon_db user_coupons > user_coupons_backup.sql
+
+-- 日志数据备份（每周）
+mysqldump --single-transaction coupon_db coupon_usages coupon_issue_stats > coupon_logs_backup.sql
+
+-- 增量备份策略
+mysqlbinlog --start-datetime="2024-01-01 00:00:00" --stop-datetime="2024-01-02 00:00:00" mysql-bin.000001 > incremental_backup.sql
+```
+
+### 6. 容灾方案
+
+```sql
+-- 主从复制配置
+-- 主库：负责写操作
+-- 从库：负责读操作和备份
+
+-- 读写分离配置
+-- 应用层配置读写分离
+-- 写操作路由到主库
+-- 读操作路由到从库
+
+-- 故障切换策略
+-- 主库故障时自动切换到从库
+-- 数据同步延迟监控
+-- 故障恢复后的数据一致性校验
+```
+
+### 7. 性能调优建议
+
+```sql
+-- MySQL配置优化
+-- innodb_buffer_pool_size = 70% of RAM
+-- innodb_log_file_size = 256MB
+-- innodb_flush_log_at_trx_commit = 2
+-- query_cache_size = 128MB
+-- max_connections = 1000
+
+-- 表结构优化建议
+-- 使用适当的数据类型
+-- 避免NULL值
+-- 合理设置字符集
+-- 定期分析表统计信息
+
+ANALYZE TABLE coupons;
+ANALYZE TABLE user_coupons;
+ANALYZE TABLE coupon_usage_rules;
+ANALYZE TABLE coupon_collect_rules;
+ANALYZE TABLE coupon_usages;
+``` 
