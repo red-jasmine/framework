@@ -3,35 +3,35 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up() : void
     {
         Schema::create('user_coupons', function (Blueprint $table) {
-            $table->id()->comment('用户优惠券ID');
-            
-            // 所有者信息
+            $table->unsignedBigInteger('id')->primary()->comment('ID');
+            $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
             $table->string('owner_type', 32)->comment('所有者类型');
             $table->string('owner_id', 64)->comment('所有者ID');
-            $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
-            
+            $table->string('coupon_no')->unique()->comment('券码');
+            $table->userMorphs('user', '用户', false);
+            // 所有者信息
 
-            
-            $table->string('user_type', 32)->comment('用户类型');
-            $table->string('user_id', 64)->comment('用户ID');
-        
-            $table->enum('status', ['available', 'used', 'expired'])
-                ->default('available')
-                ->comment('状态');
+
+            $table->enum('status', UserCouponStatusEnum::values())
+                  ->default(UserCouponStatusEnum::AVAILABLE)
+                  ->comment(UserCouponStatusEnum::comments('状态'));
             $table->timestamp('issue_time')->useCurrent()->comment('发放时间');
             $table->timestamp('expire_time')->comment('过期时间');
             $table->timestamp('used_time')->nullable()->comment('使用时间');
+
+
             $table->unsignedBigInteger('order_id')->nullable()->comment('使用订单ID');
 
+            // TODO 领域信息预留
             $table->operator();
 
             // 索引
@@ -46,7 +46,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down() : void
     {
         Schema::dropIfExists('user_coupons');
     }

@@ -10,7 +10,7 @@ use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
-class CouponIssueStat extends Model implements OperatorInterface, OwnerInterface
+class CouponIssueStatistic extends Model implements OperatorInterface, OwnerInterface
 {
     use HasOwner;
     use HasOperator;
@@ -46,11 +46,11 @@ class CouponIssueStat extends Model implements OperatorInterface, OwnerInterface
     {
         parent::boot();
 
-        static::creating(function (CouponIssueStat $stat) {
+        static::creating(function (CouponIssueStatistic $stat) {
             $stat->last_updated = Carbon::now();
         });
 
-        static::updating(function (CouponIssueStat $stat) {
+        static::updating(function (CouponIssueStatistic $stat) {
             $stat->last_updated = Carbon::now();
         });
     }

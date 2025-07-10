@@ -6,17 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Coupon\Domain\Models\Casts\CollectRuleCast;
-use RedJasmine\Coupon\Domain\Models\Casts\LadderRulesCast;
-use RedJasmine\Coupon\Domain\Models\Casts\UsageRuleCast;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\IssueStrategyEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\DiscountRule;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\ValidityRule;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -66,38 +63,27 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     protected function casts() : array
     {
         return [
-            'status'                => CouponStatusEnum::class,
-            'discount_type'         => DiscountTypeEnum::class,
-            'discount_value'        => 'decimal:2',
-            'max_discount_amount'   => 'decimal:2',
-            'is_ladder'             => 'boolean',
-            'ladder_rules'          => LadderRulesCast::class,
-            'threshold_type'        => ThresholdTypeEnum::class,
-            'threshold_value'       => 'decimal:2',
-            'is_threshold_required' => 'boolean',
-            'validity_type'         => ValidityTypeEnum::class,
-            'start_time'            => 'datetime',
-            'end_time'              => 'datetime',
-            'max_usage_per_user'    => 'integer',
-            'max_usage_total'       => 'integer',
-            'usage_rules'           => UsageRuleCast::class,
-            'collect_rules'         => CollectRuleCast::class,
-            'issue_strategy'        => IssueStrategyEnum::class,
-            'total_issue_limit'     => 'integer',
-            'current_issue_count'   => 'integer',
+            'status'                      => CouponStatusEnum::class,
+            'is_show'                     => 'boolean',
+            'discount_target'             => DiscountTargetEnum::class,
+            'threshold_type'              => ThresholdTypeEnum::class,
+            'threshold_value'             => 'decimal:2',
+            'discount_type'               => DiscountAmountTypeEnum::class,
+            'discount_value'              => 'decimal:2',
+            'max_discount_amount'         => 'decimal:2',
+            'validity_type'               => ValidityTypeEnum::class,
+            'validity_start_time'         => 'datetime',
+            'validity_end_time'           => 'datetime',
+            'validity_time_type'          => TimeUnitEnum::class,
+            'delayed_effective_time_type' => TimeUnitEnum::class,
+            'usage_rules'                 => 'array',
+            'receive_rules'               => 'array',
+            'total_quantity'              => 'integer',
+            'total_issued'                => 'integer',
+            'total_used'                  => 'integer',
         ];
     }
 
-    protected static function boot() : void
-    {
-        parent::boot();
-
-        static::creating(function (Coupon $coupon) {
-            $coupon->setUniqueIds();
-            $coupon->status              = CouponStatusEnum::DRAFT;
-            $coupon->current_issue_count = 0;
-        });
-    }
 
     public function newInstance($attributes = [], $exists = false) : static
     {
@@ -105,8 +91,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
-            $instance->status              = CouponStatusEnum::DRAFT;
-            $instance->current_issue_count = 0;
         }
 
         return $instance;
@@ -126,37 +110,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     public function usages() : HasMany
     {
         return $this->hasMany(CouponUsage::class, 'coupon_id');
-    }
-
-
-    /**
-     * 优惠规则访问器
-     */
-    public function getDiscountRuleAttribute() : DiscountRule
-    {
-        return new DiscountRule([
-            'thresholdType'       => $this->threshold_type,
-            'thresholdValue'      => $this->threshold_value,
-            'isThresholdRequired' => $this->is_threshold_required,
-            'discountType'        => $this->discount_type,
-            'discountValue'       => $this->discount_value,
-            'maxDiscountAmount'   => $this->max_discount_amount,
-            'isLadder'            => $this->is_ladder,
-            'ladderRules'         => $this->ladder_rules ?? [],
-        ]);
-    }
-
-    /**
-     * 有效期规则访问器
-     */
-    public function getValidityRuleAttribute() : ValidityRule
-    {
-        return new ValidityRule([
-            'validityType' => $this->validity_type,
-            'startTime'    => $this->start_time,
-            'endTime'      => $this->end_time,
-            'relativeDays' => $this->relative_days,
-        ]);
     }
 
 
@@ -224,13 +177,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return true;
     }
 
-    /**
-     * 计算优惠金额
-     */
-    public function calculateDiscount(float $amount) : float
-    {
-        return $this->discountRule->calculateDiscount($amount);
-    }
 
     /**
      * 发放给用户
@@ -266,7 +212,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         $this->status = $status;
-        $this->save();
+
     }
 
     /**
@@ -306,13 +252,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         $this->updateStatus(CouponStatusEnum::EXPIRED);
     }
 
-    /**
-     * 获取显示名称
-     */
-    public function getDisplayName() : string
-    {
-        return $this->name.' - '.$this->discountRule->getDisplayText();
-    }
 
     /**
      * 获取剩余可发放数量

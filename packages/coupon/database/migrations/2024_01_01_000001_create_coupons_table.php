@@ -3,6 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
+use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 
 return new class extends Migration {
     /**
@@ -17,62 +23,56 @@ return new class extends Migration {
             $table->string('owner_type', 64)->comment('所有者类型');
             $table->string('owner_id', 32)->comment('所有者ID');
             $table->string('name', 100)->comment('优惠券名称');
-            $table->string('description')->nullable()->comment('优惠券描述');
+            $table->string('description')->nullable()->comment('描述');
             $table->string('image')->nullable()->comment('优惠券图片');
-            $table->enum('status', ['draft', 'published', 'paused', 'expired'])
-                  ->default('draft')
-                  ->comment('状态');
+            $table->boolean('is_show')->default(true)->comment('是否显示');
+            $table->enum('status', CouponStatusEnum::values())
+                  ->default(CouponStatusEnum::DRAFT)
+                  ->comment(CouponStatusEnum::comments('状态'));
 
             // 优惠规则
-            $table->enum('discount_target', ['order_amount', 'product_amount', 'shipping_amount', 'cross_store_amount'])
-                  ->comment('优惠目标');
-            $table->enum('discount_type', ['fixed_amount', 'percentage'])->comment('优惠类型 折扣、满减');
+            $table->enum('discount_target', DiscountTargetEnum::values())->comment(DiscountTargetEnum::comments('优惠目标类型'));
 
-            $table->decimal('threshold_amount', 10)->default(0)->comment('门槛金额');
-            $table->decimal('discount_value', 10)->comment('优惠值');
+            $table->enum('discount_amount_type', DiscountAmountTypeEnum::values())
+                  ->comment(DiscountAmountTypeEnum::comments('优惠金额类型'));
+            $table->enum('threshold_type', ThresholdTypeEnum::values())->comment(ThresholdTypeEnum::comments('门槛类型'));
+            $table->decimal('threshold_value', 10)->comment('门槛值');
+            $table->decimal('discount_amount_value', 10)->comment('优惠金额值');
             $table->decimal('max_discount_amount', 10)->nullable()->comment('最大优惠金额');
-            $table->boolean('is_ladder')->default(false)->comment('是否阶梯优惠');
-            $table->json('ladder_rules')->nullable()->comment('更多阶梯规则配置');
+
+            // 使用时间限制
+            $table->enum('validity_type', ValidityTypeEnum::values())->comment(ValidityTypeEnum::comments('有效期类型'));
+            $table->timestamp('validity_start_time')->nullable()->comment('开始时间');
+            $table->timestamp('validity_end_time')->nullable()->comment('结束时间');
+
+            $table->enum('delayed_effective_time_type',
+                TimeUnitEnum::values())->default(TimeUnitEnum::DAY)->comment(TimeUnitEnum::comments('延迟生效时间类型'));
+            $table->unsignedBigInteger('delayed_effective_time_value')->default(0)->comment('延迟生效时间值');
+
+            $table->enum('validity_time_type',
+                TimeUnitEnum::values())->default(TimeUnitEnum::FOREVER)->comment(TimeUnitEnum::comments('相对生效时间类型'));
+            $table->unsignedBigInteger('validity_time_value')->default(0)->comment('相对生效时间');
 
 
-            // 有效期规则
-            $table->enum('validity_type', ['absolute', 'relative'])->comment('有效期类型');
-            $table->dateTime('start_time')->nullable()->comment('开始时间');
-            $table->dateTime('end_time')->nullable()->comment('结束时间');
-            $table->string('relative_time_type', 32)->nullable()->comment('相对时间类型');
-            $table->integer('relative_time_value')->nullable()->comment('相对时间值');
-
-
-            $table->integer('user_max_receive_quantity')->default(1)->comment('用户最大领取数量');
-
-            // 使用规则
+            // 使用规则 如: 正对于 部分商品、部分分类、部分用户、部分渠道等。。。
             $table->json('usage_rules')->nullable()->comment('使用规则配置');
 
-            // 领取规则
-            $table->json('collect_rules')->nullable()->comment('领取规则配置');
+            // 领取规则 如：限制用户领域
+            $table->json('receive_rules')->nullable()->comment('领取规则配置');
 
+            $table->bigInteger('sort')->default(0)->comment('排序');
+            $table->string('remarks')->nullable()->comment('备注');
             // 成本承担方
-            $table->enum('cost_bearer_type', ['platform', 'merchant', 'broadcaster'])
-                  ->comment('成本承担方类型');
-            $table->string('cost_bearer_id', 50)->comment('成本承担方ID');
-            $table->string('cost_bearer_name', 100)->comment('成本承担方名称');
-
+            $table->userMorphs('cost_bearer', '成本承担方');
             // 发放控制
-            $table->enum('issue_strategy', ['auto', 'manual', 'code'])
-                  ->default('manual')
-                  ->comment('发放策略');
-            $table->integer('total_issue_limit')->nullable()->comment('总发放限制');
-            $table->integer('current_issue_count')->default(0)->comment('当前发放数量');
-
-
+            $table->unsignedBigInteger('total_quantity')->comment('总数量');
+            $table->unsignedBigInteger('total_issued')->default(0)->comment('总发放数量');
+            $table->unsignedBigInteger('total_used')->default(0)->comment('总使用数量');
             $table->operator();
-            $table->timestamps();
+
 
             // 索引
             $table->index(['owner_type', 'owner_id'], 'idx_owner');
-            $table->index(['status', 'start_time', 'end_time'], 'idx_status_time');
-            $table->index(['cost_bearer_type', 'cost_bearer_id'], 'idx_cost_bearer');
-            $table->index('created_at');
         });
     }
 
@@ -83,4 +83,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('coupons');
     }
-}; 
+};

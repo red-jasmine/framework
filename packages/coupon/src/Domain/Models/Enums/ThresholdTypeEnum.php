@@ -4,42 +4,38 @@ namespace RedJasmine\Coupon\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
+/**
+ * 门槛类型枚举
+ */
 enum ThresholdTypeEnum: string
 {
     use EnumsHelper;
 
-    case ORDER_AMOUNT = 'order_amount';
-    case PRODUCT_AMOUNT = 'product_amount';
-    case SHIPPING_AMOUNT = 'shipping_amount';
-    case CROSS_STORE_AMOUNT = 'cross_store_amount';
 
-    public static function labels(): array
+    case AMOUNT = 'amount';
+    case QUANTITY = 'quantity';
+
+    public static function labels() : array
     {
         return [
-            self::ORDER_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.order_amount'),
-            self::PRODUCT_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.product_amount'),
-            self::SHIPPING_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.shipping_amount'),
-            self::CROSS_STORE_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.cross_store_amount'),
+            self::AMOUNT->value   => __('red-jasmine-coupon::discount.enums.threshold_type.amount'),
+            self::QUANTITY->value => __('red-jasmine-coupon::discount.enums.threshold_type.quantity'),
         ];
     }
 
-    public static function colors(): array
+    public static function colors() : array
     {
         return [
-            self::ORDER_AMOUNT->value => 'primary',
-            self::PRODUCT_AMOUNT->value => 'secondary',
-            self::SHIPPING_AMOUNT->value => 'info',
-            self::CROSS_STORE_AMOUNT->value => 'warning',
+            self::AMOUNT->value   => 'primary',
+            self::QUANTITY->value => 'secondary',
         ];
     }
 
-    public static function icons(): array
+    public static function icons() : array
     {
         return [
-            self::ORDER_AMOUNT->value => 'heroicon-o-shopping-cart',
-            self::PRODUCT_AMOUNT->value => 'heroicon-o-cube',
-            self::SHIPPING_AMOUNT->value => 'heroicon-o-truck',
-            self::CROSS_STORE_AMOUNT->value => 'heroicon-o-building-storefront',
+            self::AMOUNT->value   => 'heroicon-o-currency-dollar',
+            self::QUANTITY->value => 'heroicon-o-percent-badge',
         ];
     }
-} 
+}

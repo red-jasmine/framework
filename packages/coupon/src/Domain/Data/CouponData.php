@@ -3,22 +3,23 @@
 namespace RedJasmine\Coupon\Domain\Data;
 
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\IssueStrategyEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\CollectRule;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\DiscountRule;
+use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\UsageRule;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\ValidityRule;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
 class CouponData extends Data
 {
-    public ?int $id = null;
+
 
     public UserInterface $owner;
 
@@ -28,61 +29,96 @@ class CouponData extends Data
 
     public ?string $image = null;
 
+    public bool $isShow = true;
+    /**
+     * 总数量
+     * @var int
+     */
+    public int $totalQuantity;
+
+
     #[WithCast(EnumCast::class, CouponStatusEnum::class)]
     public CouponStatusEnum $status = CouponStatusEnum::DRAFT;
 
-    #[WithCast(EnumCast::class, DiscountTypeEnum::class)]
-    public DiscountTypeEnum $discountType = DiscountTypeEnum::PERCENTAGE;
+    /**
+     * 优惠目标
+     * @var DiscountTargetEnum
+     */
+    #[WithCast(EnumCast::class, DiscountTargetEnum::class)]
+    public DiscountTargetEnum $discountTarget = DiscountTargetEnum::ORDER_AMOUNT;
 
-    public float $discountValue = 0;
+    /**
+     * 优惠金额类型
+     * @var DiscountAmountTypeEnum
+     */
+    #[WithCast(EnumCast::class, DiscountAmountTypeEnum::class)]
+    public DiscountAmountTypeEnum $discountAmountType = DiscountAmountTypeEnum::PERCENTAGE;
 
-    public ?float $maxDiscountAmount = null;
+    /**
+     * 优惠金额值
+     * @var float
+     */
+    public float $discountAmountValue = 0;
+    /**
+     * 门槛 类型
+     * @var ThresholdTypeEnum
+     */
+    public ThresholdTypeEnum $thresholdType = ThresholdTypeEnum::AMOUNT;
 
-    public bool $isLadder = false;
-
-    public ?array $ladderRules = null;
-
-    #[WithCast(EnumCast::class, ThresholdTypeEnum::class)]
-    public ThresholdTypeEnum $thresholdType = ThresholdTypeEnum::ORDER_AMOUNT;
-
+    /**
+     * 门槛值
+     * @var float
+     */
     public float $thresholdValue = 0;
 
-    public bool $isThresholdRequired = true;
 
+    /**
+     * 最大优惠金额
+     * @var float
+     */
+    public float $maxDiscountAmount = 0;
+
+
+    // 时间限制
     #[WithCast(EnumCast::class, ValidityTypeEnum::class)]
     public ValidityTypeEnum $validityType = ValidityTypeEnum::ABSOLUTE;
+    // 绝对生效时间
+    public ?string $validityStartTime = null;
+    public ?string $validityEndTime   = null;
 
-    public ?string $startTime = null;
+    // 生效时间
+    #[WithCast(EnumCast::class, TimeUnitEnum::class)]
+    public ?TimeUnitEnum $delayedEffectiveTimeType;
+    public ?int          $delayedEffectiveTimeValue = null;
+    // 相对有效期
+    #[WithCast(EnumCast::class, TimeUnitEnum::class)]
+    public ?TimeUnitEnum $validityTimeType;
+    public ?int          $validityTimeValue = null;
 
-    public ?string $endTime = null;
 
-    public ?int $relativeDays = null;
+    // 使用规则
+    /**
+     * @var RuleItem[]
+     */
+    public array $usageRules = [];
 
-    public int $maxUsagePerUser = 1;
 
-    public ?int $maxUsageTotal = null;
+    /**
+     * 领取规则
+     * @var RuleItem[]
+     */
+    public array $receiveRules = [];
 
-    public ?UsageRule $usageRule = null;
 
-    public ?CollectRule $collectRule = null;
-
+    /**
+     * 成本承担方
+     * @var UserInterface
+     */
     public UserInterface $costBearer;
 
-
-    #[WithCast(EnumCast::class, IssueStrategyEnum::class)]
-    public IssueStrategyEnum $issueStrategy = IssueStrategyEnum::MANUAL;
-
-    public ?int $totalIssueLimit = null;
-
-    public int $currentIssueCount = 0;
 
     public int $sort = 0;
 
     public ?string $remark = null;
 
-    public ?string $link = null;
-
-    public array $tags = [];
-
-    public ?string $extendData = null;
-} 
+}

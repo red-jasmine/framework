@@ -10,42 +10,48 @@ use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 class CouponTransformer implements TransformerInterface
 {
     /**
-     * @param CouponData $data
-     * @param Coupon $model
+     * @param  CouponData  $data
+     * @param  Coupon  $model
+     *
      * @return Coupon
      */
-    public function transform($data, $model): Coupon
+    public function transform($data, $model) : Coupon
     {
         /**
          * @var Coupon $model
          * @var CouponData $data
          */
-        $model->name = $data->name;
-        $model->description = $data->description;
-        $model->image = $data->image;
-        $model->status = $data->status;
-        $model->discount_type = $data->discountType;
-        $model->discount_value = $data->discountValue;
+        $model->name                 = $data->name;
+        $model->description          = $data->description;
+        $model->image                = $data->image;
+        $model->discount_target      = $data->discountTarget;
+        $model->threshold_type       = $data->thresholdType;
+        $model->threshold_value      = $data->thresholdValue;
+        $model->discount_amount_type = $data->discountAmountType;
+        $model->discount_amount_type = $data->discountAmountValue;
+
         $model->max_discount_amount = $data->maxDiscountAmount;
-        $model->is_ladder = $data->isLadder;
-        $model->ladder_rules = $data->ladderRules;
-        $model->threshold_type = $data->thresholdType;
-        $model->threshold_value = $data->thresholdValue;
-        $model->is_threshold_required = $data->isThresholdRequired;
-        $model->validity_type = $data->validityType;
-        $model->start_time = $data->startTime;
-        $model->end_time = $data->endTime;
-        $model->relative_days = $data->relativeDays;
-        $model->max_usage_per_user = $data->maxUsagePerUser;
-        $model->max_usage_total = $data->maxUsageTotal;
-        $model->usage_rules = $data->usageRule;
-        $model->collect_rules = $data->collectRule;
-        $model->cost_bearer_type = $data->costBearerType;
-        $model->cost_bearer_id = $data->costBearerId;
-        $model->cost_bearer_name = $data->costBearerName;
-        $model->issue_strategy = $data->issueStrategy;
-        $model->total_issue_limit = $data->totalIssueLimit;
-        $model->current_issue_count = $data->currentIssueCount;
+
+        $model->status = $data->status;
+
+        $model->validity_type       = $data->validityType;
+        $model->validity_start_time = $data->validityStartTime;
+        $model->validity_end_time   = $data->validityEndTime;
+
+        $model->delayed_effective_time_type  = $data->delayedEffectiveTimeType;
+        $model->delayed_effective_time_value = $data->delayedEffectiveTimeValue;
+        $model->validity_time_type           = $data->validityTimeType;
+        $model->validity_time_value          = $data->validityTimeValue;
+
+
+        $model->usage_rules   = $data->usageRule;
+        $model->receive_rules = $data->receiveRules;
+
+        $model->total_quantity = $data->totalQuantity;
+        $model->is_show        = $data->isShow;
+        $model->sort           = $data->sort;
+        $model->remarks        = $data->remarks;
+
 
         return $model;
     }
