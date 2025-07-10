@@ -1,3 +1,392 @@
+---
+alwaysApply: true
+---
+
+# Support包核心组件规则
+
+## 核心服务基础
+
+### Service 服务基类
+- **基础功能**: 所有服务的基类，提供钩子机制和宏扩展能力
+- **Trait组合**: 使用 `HasHooks` 和 `ServiceMacroAble` Trait
+- **钩子集成**: 在 `callMacro` 方法中集成钩子机制
+- **抽象设计**: 作为抽象基类，不直接实例化
+
+```php
+abstract class Service
+{
+    use HasHooks;
+    use ServiceMacroAble;
+
+    public function callMacro($macro, $method, $parameters): mixed
+    {
+        return $this->hook(
+            $method,
+            count($parameters) === 1 ? $parameters[0] : $parameters,
+            fn() => $macro->handle(...$parameters)
+        );
+    }
+}
+```
+
+### ApplicationService 应用服务基类
+- **继承关系**: 继承 `RedJasmine\Support\Foundation\Service\Service`
+- **预定义处理器**: 提供标准的CRUD操作处理器
+- **动态方法**: 通过 `getMacros()` 方法组合处理器和宏
+- **模型管理**: 支持模型类配置和实例创建
+- **依赖注入**: 支持仓库、转换器等依赖注入
+
+```php
+class ApplicationService extends Service
+{
+    protected static array $handlers = [
+        'create'   => CreateCommandHandler::class,
+        'update'   => UpdateCommandHandler::class,
+        'delete'   => DeleteCommandHandler::class,
+        'find'     => FindQueryHandler::class,
+        'paginate' => PaginateQueryHandler::class
+    ];
+
+    protected static string $modelClass = Model::class;
+
+    public static function getMacros(): array
+    {
+        return array_merge(static::$handlers, static::$macros);
+    }
+
+    protected function makeMacro($macro, $method, $parameters)
+    {
+        if (is_string($macro) && class_exists($macro)) {
+            return app($macro, ['service' => $this]);
+        }
+        return $macro;
+    }
+}
+```
+
+## 数据传输对象基础
+
+### Data 数据传输对象基类
+- **基类继承**: 继承 `Spatie\LaravelData\Data`
+- **映射配置**: 使用 `SnakeCaseMapper` 进行输入输出映射
+- **主键管理**: 提供主键相关操作方法
+- **管道处理**: 集成 `UserInterfacePipeline` 处理管道
+- **类型安全**: 支持强类型声明
+
+```php
+#[MapInputName(SnakeCaseMapper::class)]
+#[MapOutputName(SnakeCaseMapper::class)]
+class Data extends \Spatie\LaravelData\Data
+{
+    protected string $primaryKey = 'id';
+
+    public function getPrimaryKey(): string
+    public function getKey()
+    public function setKey($key): void
+    
+    public static function pipeline(): DataPipeline
+    {
+        $pipeline = parent::pipeline();
+        $pipeline->firstThrough(UserInterfacePipeline::class);
+        return $pipeline;
+    }
+}
+```
+
+### UserData 用户数据传输对象
+- **用户信息**: 专门处理用户相关数据传输
+- **类型定义**: 强类型的用户信息字段
+- **验证支持**: 集成数据验证机制
+
+### System 系统数据传输对象
+- **系统信息**: 处理系统级别的数据传输
+- **元数据管理**: 管理系统相关的元数据信息
+
+## 钩子机制
+
+### HasHooks 钩子能力
+- **Trait设计**: 为类提供钩子执行能力
+- **前缀管理**: 支持钩子名称前缀配置
+- **动态注册**: 支持运行时注册钩子
+- **管道执行**: 通过 Hook Facade 执行钩子管道
+- **扩展点**: 为业务逻辑提供扩展点
+
+```php
+trait HasHooks
+{
+    public static string $hookNamePrefix;
+
+    public function hook(string $hook, mixed $passable, Closure $destination): mixed
+    {
+        $this->registerDefaultHooks();
+        return Hook::hook(
+            $this->getHookName($hook),
+            $passable,
+            $destination
+        );
+    }
+
+    public static function getHookName(string $hook): string
+    {
+        $prefix = static::class;
+        if (method_exists(static::class, 'hookNamePrefix')) {
+            $prefix = (string) static::hookNamePrefix();
+        } elseif (isset(static::$hookNamePrefix)) {
+            $prefix = static::$hookNamePrefix;
+        }
+        return $prefix.'.'.$hook;
+    }
+}
+```
+
+### ServiceMacroAble 宏功能
+- **动态扩展**: 为服务类提供动态方法扩展能力
+- **类型检查**: 支持宏方法存在性检查
+- **依赖注入**: 支持宏处理器的依赖注入
+- **闭包绑定**: 支持闭包宏的上下文绑定
+
+```php
+trait ServiceMacroAble
+{
+    use Macroable {
+        Macroable::__call as macroCall;
+        Macroable::hasMacro as macroHasMacro;
+    }
+
+    public static function hasMacro($name): bool
+    {
+        if (method_exists(static::class, 'getMacros')) {
+            return isset(static::getMacros()[$name]);
+        }
+        return isset(static::$macros[$name]);
+    }
+
+    public function __call($method, $parameters)
+    {
+        if (!static::hasMacro($method)) {
+            throw new BadMethodCallException(sprintf(
+                'Method %s::%s does not exist.', static::class, $method
+            ));
+        }
+
+        $macro = static::getMacros()[$method] ?? static::$macros[$method];
+
+        if ($macro instanceof Closure) {
+            $macro = $macro->bindTo($this, static::class);
+        }
+
+        if (method_exists($this, 'makeMacro')) {
+            $macro = $this->makeMacro($macro, $method, $parameters);
+        }
+
+        if (method_exists($this, 'callMacro')) {
+            return $this->callMacro($macro, $method, $parameters);
+        }
+
+        return $macro(...$parameters);
+    }
+}
+```
+
+## 命令处理基础
+
+### CommandHandler 命令处理器基类
+- **基础功能**: 所有命令处理器的基类
+- **钩子集成**: 使用 `HasHooks` Trait 提供扩展点
+- **事务管理**: 使用 `CanUseDatabaseTransactions` Trait
+- **上下文管理**: 使用 `HandleContext` 管理处理上下文
+
+```php
+abstract class CommandHandler
+{
+    use HasHooks;
+    use CanUseDatabaseTransactions;
+
+    protected HandleContext $context;
+}
+```
+
+### 预定义命令处理器
+- **CreateCommandHandler**: 创建实体命令处理器
+- **UpdateCommandHandler**: 更新实体命令处理器
+- **DeleteCommandHandler**: 删除实体命令处理器
+- **ApprovalCommandHandler**: 审批命令处理器
+- **SubmitApprovalCommandHandler**: 提交审批命令处理器
+
+## 仓库模式
+
+### RepositoryInterface 写操作仓库接口
+- **基础操作**: 定义增删改查的基本接口
+- **类型安全**: 使用强类型参数和返回值
+- **统一规范**: 为所有写操作仓库提供统一接口
+
+```php
+interface RepositoryInterface
+{
+    public function find($id);
+    public function store(Model $model);
+    public function update(Model $model);
+    public function delete(Model $model);
+}
+```
+
+### ReadRepositoryInterface 只读仓库接口
+- **查询构建**: 提供查询构建器支持
+- **查询回调**: 支持查询回调函数扩展
+- **分页支持**: 内置分页查询功能
+- **灵活过滤**: 支持复杂查询条件
+
+```php
+interface ReadRepositoryInterface
+{
+    public function modelQuery(?Query $query = null): Builder;
+    public function query(?Query $query = null);
+    public function withQuery(Closure $queryCallback): static;
+    public function find(FindQuery $query): ?Model;
+    public function paginate(PaginateQuery $query): LengthAwarePaginator|Paginator;
+}
+```
+
+## UI 组件
+
+### RestControllerActions 控制器动作
+- **组合设计**: 组合查询和命令动作Trait
+- **RESTful规范**: 提供标准的RESTful API操作
+- **资源转换**: 支持API资源自动转换
+- **权限集成**: 集成权限验证机制
+
+```php
+trait RestControllerActions
+{
+    use RestQueryControllerActions;
+    use RestCommandControllerActions;
+
+    // 必需的静态属性配置
+    protected static string $resourceClass;
+    protected static string $modelClass;
+    protected static string $dataClass;
+    protected static string $paginateQueryClass;
+}
+```
+
+### RestQueryControllerActions 查询动作
+- **查询操作**: 提供index、show等查询操作
+- **分页支持**: 内置分页查询功能
+- **资源转换**: 自动进行资源转换
+
+### RestCommandControllerActions 命令动作
+- **命令操作**: 提供store、update、destroy等命令操作
+- **数据验证**: 集成请求数据验证
+- **事务支持**: 自动进行事务管理
+
+## 辅助工具
+
+### EnumsHelper 枚举辅助
+- **标签管理**: 提供枚举标签映射功能
+- **颜色配置**: 支持枚举值颜色配置
+- **图标支持**: 支持枚举值图标配置
+- **选项转换**: 提供多种格式的选项转换
+
+```php
+trait EnumsHelper
+{
+    public static function labels(): array; // 必须实现
+    public static function colors(): array;
+    public static function icons(): array;
+    
+    public static function options(): array;
+    public static function lists(): array;
+    public function label(): string;
+    public function color(): string;
+    public function getIcon(): ?string;
+}
+```
+
+### ID生成器
+- **Snowflake**: 雪花算法ID生成器
+- **DatetimeIdGenerator**: 基于时间的ID生成器
+- **NoCheckNumber**: 无校验数字生成器
+
+### 事务管理
+- **CanUseDatabaseTransactions**: 数据库事务管理Trait
+- **自动事务**: 支持自动事务开启、提交、回滚
+- **嵌套事务**: 支持嵌套事务处理
+
+```php
+trait CanUseDatabaseTransactions
+{
+    protected function beginDatabaseTransaction(): void;
+    protected function commitDatabaseTransaction(): void;
+    protected function rollBackDatabaseTransaction(): void;
+}
+```
+
+## 契约接口
+
+### UserInterface 用户契约
+- **用户标识**: 定义用户基本信息接口
+- **类型规范**: 为用户相关操作提供类型约束
+
+### BelongsToOwnerInterface 所属者契约
+- **所属关系**: 定义实体所属者关系接口
+- **权限控制**: 为权限控制提供基础
+
+### ClientInterface 客户端契约
+- **客户端信息**: 定义客户端相关接口
+- **多端支持**: 支持多客户端类型
+
+## 使用规范
+
+### 应用服务实现
+```php
+class ArticleApplicationService extends ApplicationService
+{
+    protected static string $modelClass = Article::class;
+    
+    public function __construct(
+        public ArticleRepositoryInterface $repository,
+        public ArticleReadRepositoryInterface $readRepository,
+        public ArticleTransformer $transformer
+    ) {
+    }
+
+    protected static $macros = [
+        'publish' => ArticlePublishCommandHandler::class,
+    ];
+}
+```
+
+### 数据传输对象实现
+```php
+class ArticleData extends Data
+{
+    public UserInterface $owner;
+    public string $title;
+    public string $content;
+    
+    #[WithCast(EnumCast::class, ArticleStatus::class)]
+    public ArticleStatus $status = ArticleStatus::DRAFT;
+}
+```
+
+### 枚举实现
+```php
+enum ArticleStatus: string
+{
+    use EnumsHelper;
+    
+    case DRAFT = 'draft';
+    case PUBLISHED = 'published';
+    
+    public static function labels(): array
+    {
+        return [
+            self::DRAFT->value => '草稿',
+            self::PUBLISHED->value => '已发布',
+        ];
+    }
+}
+```
 # Support包核心组件规则
 
 ## 核心服务基础
