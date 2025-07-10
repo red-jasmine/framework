@@ -11,15 +11,23 @@ use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\DiscountRule;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Casts\TimeConfigCast;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
+use RedJasmine\Support\Domain\Data\TimeConfigData;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
+/**
+ * @property ?TimeConfigCast $delayed_effective_time
+ * @property ?TimeConfigCast $validity_time
+ * @property ?UserInterface $cost_bearer
+ */
 class Coupon extends Model implements OperatorInterface, OwnerInterface
 {
     use HasSnowflakeId;
@@ -35,55 +43,69 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         'name',
         'description',
         'image',
+        'is_show',
         'status',
-        'discount_type',
-        'discount_value',
-        'max_discount_amount',
-        'is_ladder',
-        'ladder_rules',
+        'discount_target',
+        'discount_amount_type',
+        'discount_amount_value',
         'threshold_type',
         'threshold_value',
-        'is_threshold_required',
+        'max_discount_amount',
         'validity_type',
-        'start_time',
-        'end_time',
-        'relative_days',
-        'max_usage_per_user',
-        'max_usage_total',
+        'validity_start_time',
+        'validity_end_time',
+        'delayed_effective_time_type',
+        'delayed_effective_time_value',
+        'validity_time_type',
+        'validity_time_value',
         'usage_rules',
-        'collect_rules',
-        'cost_bearer_type',
-        'cost_bearer_id',
-        'cost_bearer_name',
-        'issue_strategy',
-        'total_issue_limit',
-        'current_issue_count',
+        'receive_rules',
+        'sort',
+        'remarks',
+        'total_quantity',
+        'total_issued',
+        'total_used',
     ];
 
     protected function casts() : array
     {
         return [
-            'status'                      => CouponStatusEnum::class,
-            'is_show'                     => 'boolean',
-            'discount_target'             => DiscountTargetEnum::class,
-            'threshold_type'              => ThresholdTypeEnum::class,
-            'threshold_value'             => 'decimal:2',
-            'discount_type'               => DiscountAmountTypeEnum::class,
-            'discount_value'              => 'decimal:2',
-            'max_discount_amount'         => 'decimal:2',
-            'validity_type'               => ValidityTypeEnum::class,
-            'validity_start_time'         => 'datetime',
-            'validity_end_time'           => 'datetime',
-            'validity_time_type'          => TimeUnitEnum::class,
-            'delayed_effective_time_type' => TimeUnitEnum::class,
-            'usage_rules'                 => 'array',
-            'receive_rules'               => 'array',
-            'total_quantity'              => 'integer',
-            'total_issued'                => 'integer',
-            'total_used'                  => 'integer',
+            'status'                 => CouponStatusEnum::class,
+            'is_show'                => 'boolean',
+            'discount_target'        => DiscountTargetEnum::class,
+            'discount_amount_type'   => DiscountAmountTypeEnum::class,
+            'discount_amount_value'  => 'decimal:2',
+            'threshold_type'         => ThresholdTypeEnum::class,
+            'threshold_value'        => 'decimal:2',
+            'max_discount_amount'    => 'decimal:2',
+            'validity_type'          => ValidityTypeEnum::class,
+            'validity_start_time'    => 'datetime',
+            'validity_end_time'      => 'datetime',
+            'delayed_effective_time' => TimeConfigCast::class,
+            'validity_time'          => TimeConfigCast::class,
+            'usage_rules'            => 'array',
+            'receive_rules'          => 'array',
+            'sort'                   => 'integer',
+            'total_quantity'         => 'integer',
+            'total_issued'           => 'integer',
+            'total_used'             => 'integer',
+            'cost_bearer'            => UserInterfaceCast::class,
         ];
     }
 
+    protected static function boot() : void
+    {
+        parent::boot();
+
+        // 保存时处理关联关系
+        static::saving(function (Coupon $coupon) {
+            // 处理成本承担方关联
+            if ($coupon->relationLoaded('costBearer')) {
+                $coupon->cost_bearer_type = $coupon->costBearer?->getType();
+                $coupon->cost_bearer_id   = $coupon->costBearer?->getID();
+            }
+        });
+    }
 
     public function newInstance($attributes = [], $exists = false) : static
     {
@@ -91,6 +113,8 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
+            $instance->total_issued = 0;
+            $instance->total_used   = 0;
         }
 
         return $instance;
@@ -112,6 +136,13 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(CouponUsage::class, 'coupon_id');
     }
 
+    /**
+     * 发放统计关联
+     */
+    public function issueStatistics() : HasMany
+    {
+        return $this->hasMany(CouponIssueStatistic::class, 'coupon_id');
+    }
 
     /**
      * 检查是否可以发放
@@ -124,12 +155,12 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         // 检查有效期
-        if (!$this->validityRule->isValid()) {
+        if (!$this->isValid()) {
             return false;
         }
 
         // 检查发放限制
-        if ($this->total_issue_limit && $this->current_issue_count >= $this->total_issue_limit) {
+        if ($this->total_quantity && $this->total_issued >= $this->total_quantity) {
             return false;
         }
 
@@ -147,12 +178,12 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         // 检查有效期
-        if (!$this->validityRule->isValid()) {
+        if (!$this->isValid()) {
             return false;
         }
 
         // 检查使用规则
-        if ($this->usage_rules && !$this->usage_rules->canUse($context)) {
+        if ($this->usage_rules && !$this->checkUsageRules($context)) {
             return false;
         }
 
@@ -170,13 +201,49 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         // 检查领取规则
-        if ($this->collect_rules && !$this->collect_rules->canCollect($context)) {
+        if ($this->receive_rules && !$this->checkReceiveRules($context)) {
             return false;
         }
 
         return true;
     }
 
+    /**
+     * 检查是否在有效期内
+     */
+    public function isValid() : bool
+    {
+        $now = Carbon::now();
+
+        if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
+            if ($this->validity_start_time && $now->lt($this->validity_start_time)) {
+                return false;
+            }
+            if ($this->validity_end_time && $now->gt($this->validity_end_time)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查使用规则
+     */
+    protected function checkUsageRules(array $context) : bool
+    {
+        // TODO: 实现使用规则检查逻辑
+        return true;
+    }
+
+    /**
+     * 检查领取规则
+     */
+    protected function checkReceiveRules(array $context) : bool
+    {
+        // TODO: 实现领取规则检查逻辑
+        return true;
+    }
 
     /**
      * 发放给用户
@@ -191,15 +258,37 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             'coupon_id'   => $this->id,
             'user_id'     => $userId,
             'issue_time'  => Carbon::now(),
-            'expire_time' => $this->validityRule->getExpireTime(),
+            'expire_time' => $this->getExpireTime(),
         ]);
 
         $userCoupon->save();
 
         // 更新发放数量
-        $this->increment('current_issue_count');
+        $this->increment('total_issued');
 
         return $userCoupon;
+    }
+
+    /**
+     * 获取过期时间
+     */
+    public function getExpireTime() : Carbon
+    {
+        if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
+            return $this->validity_end_time ?? Carbon::now()->addDays(30);
+        }
+
+        // 相对时间计算
+        $now = Carbon::now();
+        if ($this->validity_time_type === TimeUnitEnum::DAY) {
+            return $now->addDays($this->validity_time_value);
+        } elseif ($this->validity_time_type === TimeUnitEnum::HOUR) {
+            return $now->addHours($this->validity_time_value);
+        } elseif ($this->validity_time_type === TimeUnitEnum::MINUTE) {
+            return $now->addMinutes($this->validity_time_value);
+        }
+
+        return $now->addDays(30);
     }
 
     /**
@@ -212,7 +301,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         $this->status = $status;
-
     }
 
     /**
@@ -252,17 +340,16 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         $this->updateStatus(CouponStatusEnum::EXPIRED);
     }
 
-
     /**
      * 获取剩余可发放数量
      */
     public function getRemainingIssueCount() : ?int
     {
-        if (!$this->total_issue_limit) {
+        if (!$this->total_quantity) {
             return null;
         }
 
-        return max(0, $this->total_issue_limit - $this->current_issue_count);
+        return max(0, $this->total_quantity - $this->total_issued);
     }
 
     /**
@@ -270,6 +357,27 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
      */
     public function isIssueLimitReached() : bool
     {
-        return $this->total_issue_limit && $this->current_issue_count >= $this->total_issue_limit;
+        return $this->total_quantity && $this->total_issued >= $this->total_quantity;
+    }
+
+    /**
+     * 计算优惠金额
+     */
+    public function calculateDiscount(float $amount) : float
+    {
+        if ($amount < $this->threshold_value) {
+            return 0;
+        }
+
+        $discount = match ($this->discount_amount_type) {
+            DiscountAmountTypeEnum::FIXED_AMOUNT => $this->discount_amount_value,
+            DiscountAmountTypeEnum::PERCENTAGE => $amount * ($this->discount_amount_value / 100),
+        };
+
+        if ($this->max_discount_amount) {
+            $discount = min($discount, $this->max_discount_amount);
+        }
+
+        return $discount;
     }
 } 

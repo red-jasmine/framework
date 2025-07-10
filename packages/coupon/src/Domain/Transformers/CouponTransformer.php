@@ -21,36 +21,32 @@ class CouponTransformer implements TransformerInterface
          * @var Coupon $model
          * @var CouponData $data
          */
-        $model->name                 = $data->name;
-        $model->description          = $data->description;
-        $model->image                = $data->image;
-        $model->discount_target      = $data->discountTarget;
-        $model->threshold_type       = $data->thresholdType;
-        $model->threshold_value      = $data->thresholdValue;
-        $model->discount_amount_type = $data->discountAmountType;
-        $model->discount_amount_type = $data->discountAmountValue;
+        $model->name        = $data->name;
+        $model->description = $data->description;
+        $model->image       = $data->image;
+        $model->is_show     = $data->isShow;
+        $model->status      = $data->status;
+        $model->owner       = $data->owner;
 
-        $model->max_discount_amount = $data->maxDiscountAmount;
-
-        $model->status = $data->status;
-
-        $model->validity_type       = $data->validityType;
-        $model->validity_start_time = $data->validityStartTime;
-        $model->validity_end_time   = $data->validityEndTime;
-
-        $model->delayed_effective_time_type  = $data->delayedEffectiveTimeType;
-        $model->delayed_effective_time_value = $data->delayedEffectiveTimeValue;
-        $model->validity_time_type           = $data->validityTimeType;
-        $model->validity_time_value          = $data->validityTimeValue;
-
-
-        $model->usage_rules   = $data->usageRule;
-        $model->receive_rules = $data->receiveRules;
-
-        $model->total_quantity = $data->totalQuantity;
-        $model->is_show        = $data->isShow;
-        $model->sort           = $data->sort;
-        $model->remarks        = $data->remarks;
+        $model->discount_target        = $data->discountTarget;
+        $model->discount_amount_type   = $data->discountAmountType;
+        $model->discount_amount_value  = $data->discountAmountValue;
+        $model->threshold_type         = $data->thresholdType;
+        $model->threshold_value        = $data->thresholdValue;
+        $model->max_discount_amount    = $data->maxDiscountAmount;
+        $model->validity_type          = $data->validityType;
+        $model->validity_start_time    = $data->validityStartTime;
+        $model->validity_end_time      = $data->validityEndTime;
+        $model->delayed_effective_time = $data->delayedEffectiveTime;
+        $model->validity_time          = $data->validityTime;
+        $model->usage_rules            = $data->usageRules;
+        $model->receive_rules          = $data->receiveRules;
+        $model->start_time             = $data->startTime;
+        $model->end_time               = $data->endTime;
+        $model->sort                   = $data->sort;
+        $model->remarks                = $data->remarks;
+        $model->total_quantity         = $data->totalQuantity;
+        $model->cost_bearer            = $data->costBearer;
 
 
         return $model;

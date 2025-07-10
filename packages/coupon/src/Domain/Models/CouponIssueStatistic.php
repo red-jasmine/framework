@@ -17,15 +17,16 @@ class CouponIssueStatistic extends Model implements OperatorInterface, OwnerInte
 
     public $incrementing = false;
 
-    protected $table = 'coupon_issue_stats';
-
-    protected $primaryKey = 'coupon_id';
+    protected $table = 'coupon_issue_statistics';
 
     protected $fillable = [
         'coupon_id',
+        'date',
+        'owner_type',
+        'owner_id',
         'total_issued',
-        'total_used',
         'total_expired',
+        'total_used',
         'total_cost',
         'last_updated',
     ];
@@ -34,9 +35,10 @@ class CouponIssueStatistic extends Model implements OperatorInterface, OwnerInte
     {
         return [
             'coupon_id' => 'integer',
+            'date' => 'date',
             'total_issued' => 'integer',
-            'total_used' => 'integer',
             'total_expired' => 'integer',
+            'total_used' => 'integer',
             'total_cost' => 'decimal:2',
             'last_updated' => 'datetime',
         ];
@@ -61,8 +63,8 @@ class CouponIssueStatistic extends Model implements OperatorInterface, OwnerInte
 
         if (!$instance->exists) {
             $instance->total_issued = 0;
-            $instance->total_used = 0;
             $instance->total_expired = 0;
+            $instance->total_used = 0;
             $instance->total_cost = 0;
             $instance->last_updated = Carbon::now();
         }
@@ -171,10 +173,35 @@ class CouponIssueStatistic extends Model implements OperatorInterface, OwnerInte
     public function reset(): void
     {
         $this->total_issued = 0;
-        $this->total_used = 0;
         $this->total_expired = 0;
+        $this->total_used = 0;
         $this->total_cost = 0;
         $this->last_updated = Carbon::now();
         $this->save();
+    }
+
+    /**
+     * 作用域：按日期筛选
+     */
+    public function scopeByDate($query, Carbon $date)
+    {
+        return $query->where('date', $date->format('Y-m-d'));
+    }
+
+    /**
+     * 作用域：按日期范围筛选
+     */
+    public function scopeByDateRange($query, Carbon $startDate, Carbon $endDate)
+    {
+        return $query->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')]);
+    }
+
+    /**
+     * 作用域：按所有者筛选
+     */
+    public function scopeByOwner($query, string $ownerType, string $ownerId)
+    {
+        return $query->where('owner_type', $ownerType)
+                    ->where('owner_id', $ownerId);
     }
 } 

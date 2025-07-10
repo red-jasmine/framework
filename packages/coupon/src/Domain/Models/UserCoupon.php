@@ -25,6 +25,10 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 
     protected $fillable = [
         'coupon_id',
+        'owner_type',
+        'owner_id',
+        'coupon_no',
+        'user_type',
         'user_id',
         'status',
         'issue_time',
@@ -41,7 +45,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             'expire_time' => 'datetime',
             'used_time' => 'datetime',
             'coupon_id' => 'integer',
-            'user_id' => 'integer',
             'order_id' => 'integer',
         ];
     }
@@ -53,6 +56,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         static::creating(function (UserCoupon $userCoupon) {
             $userCoupon->setUniqueIds();
             $userCoupon->status = UserCouponStatusEnum::AVAILABLE;
+            $userCoupon->issue_time = Carbon::now();
         });
     }
 
@@ -63,6 +67,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         if (!$instance->exists) {
             $instance->setUniqueIds();
             $instance->status = UserCouponStatusEnum::AVAILABLE;
+            $instance->issue_time = Carbon::now();
         }
 
         return $instance;
@@ -208,5 +213,14 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function scopeByUser($query, int $userId)
     {
         return $query->where('user_id', $userId);
+    }
+
+    /**
+     * 作用域：按所有者筛选
+     */
+    public function scopeByOwner($query, string $ownerType, string $ownerId)
+    {
+        return $query->where('owner_type', $ownerType)
+                    ->where('owner_id', $ownerId);
     }
 } 

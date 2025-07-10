@@ -1,182 +1,193 @@
-# 优惠券领域 (Coupon Domain)
+# Red Jasmine Coupon Package
 
-Red Jasmine Framework 优惠券领域实现，基于 DDD 架构设计的电商优惠券系统。
+## 概述
+
+Red Jasmine Coupon Package 是一个基于 Laravel 的优惠券管理包，提供完整的优惠券创建、发放、使用和统计功能。
 
 ## 功能特性
 
-### 核心能力
-- **优惠券管理**：创建、编辑、发布、暂停优惠券
-- **用户优惠券管理**：用户优惠券的发放、使用、过期处理
-- **优惠计算引擎**：支持多种优惠类型和门槛规则
-- **营销策略支持**：支持不同的发放策略和使用规则
+- 优惠券创建和管理
+- 用户优惠券发放
+- 优惠券使用记录
+- 发放统计
+- 多种优惠类型支持（固定金额、百分比）
+- 灵活的使用规则配置
+- 有效期管理
 
-### 优惠类型
-- **百分比优惠**：按订单金额百分比计算优惠
-- **固定金额优惠**：固定金额减免
-- **运费优惠**：运费减免或免运费
+## 数据库结构
 
-### 门槛类型
-- **订单金额门槛**：订单总金额达到指定金额
-- **商品金额门槛**：商品金额达到指定金额
-- **运费金额门槛**：运费金额达到指定金额
-- **跨店铺金额门槛**：跨店铺订单金额门槛
+### 主要表结构
 
-### 有效期规则
-- **绝对有效期**：指定具体的开始和结束时间
-- **相对有效期**：相对于领取时间的有效期
+1. **coupons** - 优惠券主表
+   - 基础信息：名称、描述、图片
+   - 优惠规则：目标类型、金额类型、门槛值、优惠金额
+   - 有效期配置：绝对时间、相对时间
+   - 使用规则：JSON格式存储
+   - 发放控制：总数量、已发放、已使用
 
-### 发放策略
-- **手动发放**：管理员手动发放给用户
-- **自动发放**：满足条件自动发放
-- **兑换码发放**：用户通过兑换码领取
+2. **user_coupons** - 用户优惠券表
+   - 关联优惠券和用户
+   - 状态管理：可用、已使用、已过期
+   - 时间记录：发放时间、过期时间、使用时间
 
-## 架构设计
+3. **coupon_usages** - 使用记录表
+   - 详细的使用记录
+   - 金额信息：门槛金额、优惠金额、最终优惠金额
+   - 成本承担方信息
 
-### 目录结构
-```
-packages/coupon/
-├── src/
-│   ├── Domain/                 # 领域层
-│   │   ├── Models/             # 领域模型
-│   │   ├── Data/               # 数据传输对象
-│   │   ├── Repositories/       # 仓库接口
-│   │   └── Transformers/       # 转换器
-│   ├── Application/            # 应用层
-│   │   └── Services/           # 应用服务
-│   ├── Infrastructure/         # 基础设施层
-│   │   ├── Repositories/       # 仓库实现
-│   │   └── ReadRepositories/   # 只读仓库实现
-│   └── UI/                     # 用户接口层
-│       └── Http/               # HTTP接口
-├── database/                   # 数据库
-│   └── migrations/             # 迁移文件
-├── routes/                     # 路由配置
-├── config/                     # 配置文件
-└── README.md                   # 文档
-```
+4. **coupon_issue_statistics** - 发放统计表
+   - 按日期统计发放情况
+   - 统计指标：发放数量、使用数量、过期数量、总成本
 
-### 核心模型
+## Domain层架构
 
-#### 优惠券 (Coupon)
-- 优惠券基本信息管理
-- 优惠规则配置
-- 使用规则限制
-- 发放策略设置
+### 领域模型
 
-#### 用户优惠券 (UserCoupon)
-- 用户优惠券实例
-- 状态管理（可用、已使用、已过期）
-- 使用记录关联
+#### Coupon（优惠券）
+- 继承：`HasSnowflakeId`、`HasOwner`、`HasOperator`、`SoftDeletes`
+- 主要功能：
+  - 优惠券状态管理（草稿、发布、暂停、过期）
+  - 发放控制（检查可发放性、更新发放数量）
+  - 使用验证（检查可用性、有效期验证）
+  - 优惠金额计算
+  - 关联管理（用户优惠券、使用记录、统计）
 
-#### 优惠券使用记录 (CouponUsage)
-- 优惠券使用历史
-- 优惠金额记录
-- 成本承担方信息
+#### UserCoupon（用户优惠券）
+- 继承：`HasSnowflakeId`、`HasOwner`、`HasOperator`
+- 主要功能：
+  - 状态管理（可用、已使用、已过期）
+  - 时间管理（发放时间、过期时间、使用时间）
+  - 使用操作（标记为已使用）
+  - 查询作用域（按用户、按状态、按所有者）
 
-#### 发放统计 (CouponIssueStat)
-- 发放数量统计
-- 使用数量统计
-- 过期数量统计
+#### CouponUsage（使用记录）
+- 继承：`HasSnowflakeId`、`HasOwner`、`HasOperator`
+- 主要功能：
+  - 使用记录存储
+  - 金额计算（优惠比例、节省金额）
+  - 成本承担方信息
+  - 查询作用域（按优惠券、按用户、按订单、按所有者）
 
-## 安装使用
+#### CouponIssueStatistic（发放统计）
+- 继承：`HasOwner`、`HasOperator`
+- 主要功能：
+  - 统计数据管理（发放、使用、过期、成本）
+  - 比率计算（使用率、过期率、平均成本）
+  - 统计重置
+  - 查询作用域（按日期、按所有者）
 
-### 1. 服务提供者注册
+### 枚举类型
+
+#### CouponStatusEnum（优惠券状态）
+- `DRAFT` - 草稿
+- `PUBLISHED` - 已发布
+- `PAUSED` - 已暂停
+- `EXPIRED` - 已过期
+
+#### UserCouponStatusEnum（用户优惠券状态）
+- `AVAILABLE` - 可用
+- `USED` - 已使用
+- `EXPIRED` - 已过期
+
+#### DiscountAmountTypeEnum（优惠金额类型）
+- `FIXED_AMOUNT` - 固定金额
+- `PERCENTAGE` - 百分比
+
+#### DiscountTargetEnum（优惠目标类型）
+- `ORDER_AMOUNT` - 订单金额
+- `PRODUCT_AMOUNT` - 商品金额
+- `SHIPPING_AMOUNT` - 运费金额
+- `CROSS_STORE_AMOUNT` - 跨店金额
+
+#### ThresholdTypeEnum（门槛类型）
+- `AMOUNT` - 金额门槛
+- `QUANTITY` - 数量门槛
+
+#### ValidityTypeEnum（有效期类型）
+- `ABSOLUTE` - 绝对时间
+- `RELATIVE` - 相对时间
+
+### 数据传输对象
+
+#### CouponData
+- 包含优惠券的所有属性
+- 支持枚举类型转换
+- 包含所有者、成本承担方信息
+
+#### UserCouponData
+- 包含用户优惠券的所有属性
+- 支持用户接口类型
+
+### 转换器
+
+#### CouponTransformer
+- 将CouponData转换为Coupon模型
+- 处理所有者、成本承担方信息映射
+
+#### UserCouponTransformer
+- 将UserCouponData转换为UserCoupon模型
+- 处理用户信息映射
+
+### 值对象
+
+#### RuleItem
+- 规则项值对象
+- 包含规则对象类型、规则类型、对象值
+- 提供匹配和显示功能
+
+## 使用示例
+
+### 创建优惠券
 
 ```php
-// config/app.php
-'providers' => [
-    // ...
-    RedJasmine\Coupon\CouponPackageServiceProvider::class,
-];
+use RedJasmine\Coupon\Domain\Data\CouponData;
+use RedJasmine\Coupon\Domain\Models\Coupon;
+
+$couponData = new CouponData([
+    'name' => '满100减10',
+    'discountTarget' => DiscountTargetEnum::ORDER_AMOUNT,
+    'discountAmountType' => DiscountAmountTypeEnum::FIXED_AMOUNT,
+    'discountAmountValue' => 10,
+    'thresholdType' => ThresholdTypeEnum::AMOUNT,
+    'thresholdValue' => 100,
+    'validityType' => ValidityTypeEnum::ABSOLUTE,
+    'validityStartTime' => '2024-01-01 00:00:00',
+    'validityEndTime' => '2024-12-31 23:59:59',
+    'totalQuantity' => 1000,
+]);
+
+$coupon = new Coupon();
+$transformer = new CouponTransformer();
+$coupon = $transformer->transform($couponData, $coupon);
+$coupon->save();
 ```
 
-### 2. 发布资源文件
+### 发放优惠券
+
+```php
+$userCoupon = $coupon->issueToUser($userId);
+```
+
+### 使用优惠券
+
+```php
+$userCoupon->use($orderId);
+```
+
+## 安装
+
 ```bash
-# 发布配置文件
+composer require red-jasmine/coupon
+```
+
+## 配置
+
+发布配置文件：
+
+```bash
 php artisan vendor:publish --tag=coupon-config
-
-# 发布迁移文件
-php artisan vendor:publish --tag=coupon-migrations
 ```
-
-### 3. 运行迁移
-```bash
-php artisan migrate
-```
-
-### 4. 配置文件
-编辑 `config/coupon.php` 配置文件以适应您的需求。
-
-## API 接口
-
-### 管理员接口
-- `GET /admin/coupons` - 获取优惠券列表
-- `POST /admin/coupons` - 创建优惠券
-- `GET /admin/coupons/{id}` - 获取优惠券详情
-- `PUT /admin/coupons/{id}` - 更新优惠券
-- `DELETE /admin/coupons/{id}` - 删除优惠券
-- `POST /admin/coupons/{id}/publish` - 发布优惠券
-- `POST /admin/coupons/{id}/pause` - 暂停优惠券
-
-### 用户接口
-- `GET /user/user-coupons` - 获取用户优惠券列表
-- `GET /user/user-coupons/{id}` - 获取用户优惠券详情
-- `POST /user/user-coupons/{id}/use` - 使用优惠券
-
-## 扩展开发
-
-### 自定义优惠类型
-```php
-// 创建自定义优惠类型枚举
-enum CustomDiscountTypeEnum: string
-{
-    case CUSTOM = 'custom';
-    // ...
-}
-
-// 实现自定义优惠计算逻辑
-class CustomDiscountCalculator
-{
-    public function calculate($coupon, $order)
-    {
-        // 自定义优惠计算逻辑
-    }
-}
-```
-
-### 自定义发放策略
-```php
-// 创建自定义发放策略
-class CustomIssueStrategy
-{
-    public function issue($coupon, $user)
-    {
-        // 自定义发放逻辑
-    }
-}
-```
-
-### Hook 扩展点
-```php
-// 注册Hook扩展
-Hook::register('coupon.application.coupon.create.validate', function($context) {
-    // 自定义验证逻辑
-});
-
-Hook::register('coupon.application.coupon.create.fill', function($context) {
-    // 自定义填充逻辑
-});
-```
-
-## 技术特性
-
-- **DDD 架构**：采用领域驱动设计，清晰的分层架构
-- **充血模型**：业务逻辑封装在领域模型中
-- **CQRS 模式**：命令查询职责分离
-- **事件驱动**：支持领域事件和扩展点
-- **类型安全**：使用 PHP 8.3+ 强类型系统
-- **可扩展性**：丰富的扩展点和Hook机制
 
 ## 许可证
 
-本项目基于 MIT 许可证开源。 
+MIT License 

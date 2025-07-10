@@ -10,28 +10,18 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class UserCouponData extends Data
 {
-    public ?int $id = null;
-    
-    public UserInterface $owner;
-    
-    public int $couponId;
-    
+    public int           $couponId;
+
     public UserInterface $user;
-    
+
     #[WithCast(EnumCast::class, UserCouponStatusEnum::class)]
     public UserCouponStatusEnum $status = UserCouponStatusEnum::AVAILABLE;
-    
-    public ?string $startAt = null;
-    
-    public ?string $endAt = null;
-    
+
+    public ?string $issueTime = null;
+
+    public ?string $expireTime = null;
+
+    public ?string $usedTime = null;
+
     public ?int $orderId = null;
-    
-    public ?string $orderType = null;
-    
-    public ?string $usedAt = null;
-    
-    public ?string $expiredAt = null;
-    
-    public ?string $remark = null;
 } 

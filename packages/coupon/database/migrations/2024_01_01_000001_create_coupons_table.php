@@ -42,16 +42,16 @@ return new class extends Migration {
 
             // 使用时间限制
             $table->enum('validity_type', ValidityTypeEnum::values())->comment(ValidityTypeEnum::comments('有效期类型'));
-            $table->timestamp('validity_start_time')->nullable()->comment('开始时间');
-            $table->timestamp('validity_end_time')->nullable()->comment('结束时间');
+            $table->timestamp('validity_start_time')->nullable()->comment('绝对有效期开始时间');
+            $table->timestamp('validity_end_time')->nullable()->comment('绝对有效期结束时间');
 
             $table->enum('delayed_effective_time_type',
                 TimeUnitEnum::values())->default(TimeUnitEnum::DAY)->comment(TimeUnitEnum::comments('延迟生效时间类型'));
             $table->unsignedBigInteger('delayed_effective_time_value')->default(0)->comment('延迟生效时间值');
 
             $table->enum('validity_time_type',
-                TimeUnitEnum::values())->default(TimeUnitEnum::FOREVER)->comment(TimeUnitEnum::comments('相对生效时间类型'));
-            $table->unsignedBigInteger('validity_time_value')->default(0)->comment('相对生效时间');
+                TimeUnitEnum::values())->default(TimeUnitEnum::FOREVER)->comment(TimeUnitEnum::comments('相对有效期时间类型'));
+            $table->unsignedBigInteger('validity_time_value')->default(0)->comment('相对有效期时间值');
 
 
             // 使用规则 如: 正对于 部分商品、部分分类、部分用户、部分渠道等。。。
@@ -68,6 +68,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('total_quantity')->comment('总数量');
             $table->unsignedBigInteger('total_issued')->default(0)->comment('总发放数量');
             $table->unsignedBigInteger('total_used')->default(0)->comment('总使用数量');
+
+
+            // 优惠券
+            $table->timestamp('start_time')->comment('开始时间');
+            $table->timestamp('end_time')->comment('结束时间');
+            $table->timestamp('published_time')->nullable()->comment('发布时间');
+
             $table->operator();
 
 
