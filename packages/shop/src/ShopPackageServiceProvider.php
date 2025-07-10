@@ -21,7 +21,7 @@ class ShopPackageServiceProvider extends PackageServiceProvider
             ->hasRoutes(['api'])
             //->hasViews()
             ->hasMigrations([
-                'create_shop_table'
+                'create_shops_table'
             ])
             ->runsMigrations();
     }

@@ -13,3 +13,10 @@ Route::group([
 
     CouponShopRoute::api();
 });
+Route::group([
+    'prefix'     => 'api/shop',
+    'middleware' => ['api', 'auth:shop']
+], function () {
+
+    CouponShopRoute::api();
+});

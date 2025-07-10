@@ -30,6 +30,7 @@ class CouponUsageReadRepository extends QueryBuilderReadRepository implements Co
             AllowedFilter::exact('user_id'),
             AllowedFilter::exact('order_id'),
             AllowedFilter::exact('order_type'),
+            AllowedFilter::exact('order_no'),
             AllowedFilter::exact('cost_bearer_type'),
             AllowedFilter::exact('cost_bearer_id'),
             AllowedFilter::callback('used_at_between', function ($query, $value) {
