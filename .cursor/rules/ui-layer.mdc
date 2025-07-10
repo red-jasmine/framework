@@ -13,7 +13,7 @@ alwaysApply: true
 - **依赖注入**: 通过构造函数注入应用服务
 - **权限控制**: 实现 `authorize()` 方法进行权限验证
 - **查询作用域**: 在构造函数中设置查询作用域
-
+- **当前Owner**: 使用 `RedJasmine\Support\Http\Controllers\UserOwnerTools` Trait 的 getOwner 获取当前登录的 Owner
 ### 代码示例
 ```php
 class ArticleController extends Controller
@@ -42,7 +42,7 @@ class ArticleController extends Controller
 }
 ```
 
-### 必需静态属性
+### 资料控制器必需静态属性
 ```php
 protected static string $resourceClass;      // API资源类
 protected static string $paginateQueryClass; // 分页查询类
