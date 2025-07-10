@@ -1,6 +1,6 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
 # Red Jasmine Framework 项目规则说明书
@@ -2036,7 +2036,7 @@ class ProductReadRepository extends QueryBuilderReadRepository implements Produc
 
 ### 用户接口层 (UI)
 
-#### Http 
+#### Http
 - **目录结构**：按角色划分，每个角色对应一个目录
 - **命名规范**：路由格式为 `{role}`
 - **路由文件**：定义路由文件 `{Domain}{Role}Route`
@@ -2124,6 +2124,16 @@ class ArticleController extends Controller
 - **错误消息**：定义 `messages()` 方法返回自定义错误消息
 - **数据准备**：实现 `prepareForValidation()` 方法准备验证数据
 - **命名规范**：请求类名格式为 `{Action}{Entity}Request`
+
+
+### 数据库设计
+### 表名
+- **前缀**：一般使用领域名称作为公共前缀
+- **统计相关表示**：使用 `_statistics` 后缀
+-
+### 表设计
+- **外键**：强制不使用外键
+
 
 ## 异常处理规范
 
@@ -2233,8 +2243,14 @@ docs/
 - **实体数量**：核心实体控制在5-8个
 - **关系描述**：说明实体间的主要关系
 
+示例:
+```plantuml
+<!--@include: ./model.puml-->
+```
+
 ### 3. UML 规范
 
 #### 3.1 命名规范
 - **类名**：必须使用中文，如 `分销员`、`佣金`、`推广订单`
-- **属性名**：必须使用中文，如 `用户ID`、`佣金金额-CommissionAmount`
+- **属性名**：必须使用中文和英文描述，如 `佣金金额-CommissionAmount`
+- **枚举值**：必须使用中文和英文描述，如 `启用-ENABLE`
