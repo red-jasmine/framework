@@ -1,0 +1,117 @@
+# PHP文件编码规范
+
+## 基本要求
+- 使用 `<?php` 开始标签，不使用 `<?` 短标签
+- 文件末尾不要使用 `?>` 结束标签
+- 使用UTF-8编码，无BOM
+- 行尾使用Unix LF (\\n)
+- 文件末尾必须有一个空行
+
+## 命名空间和类
+- 每个文件必须有命名空间声明
+- 类名使用PascalCase
+- 方法名使用camelCase
+- 属性名使用camelCase
+- 常量名使用UPPER_SNAKE_CASE
+
+## 严格类型声明
+每个PHP文件开头必须包含严格类型声明：
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Your\Namespace;
+```
+
+## 类结构顺序
+1. 类常量
+2. 属性（按可见性排序：public, protected, private）
+3. 构造函数
+4. 魔术方法（__toString, __invoke等）
+5. 公共方法
+6. 受保护方法
+7. 私有方法
+
+## 类型声明
+- 所有方法参数必须有类型声明
+- 所有方法必须有返回类型声明
+- 使用nullable类型时使用 `?Type` 格式
+- 使用联合类型时使用 `Type1|Type2` 格式
+
+## 错误处理
+- 使用具体的异常类型
+- 异常消息使用中文
+- 记录错误日志
+- 优雅处理异常
+
+## 注释规范
+- 类和方法必须有完整的PHPDoc注释
+- 复杂逻辑必须有行内注释
+- 使用中文注释
+- 注释与代码保持同步
+
+## 代码格式
+- 使用4个空格缩进
+- 左花括号独占一行
+- 方法之间空一行
+- 逻辑块之间空一行
+
+## 示例代码
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace RedJasmine\Article\Application\Services;
+
+use RedJasmine\Article\Domain\Models\Article;
+use RedJasmine\Article\Domain\Repositories\ArticleRepositoryInterface;
+use RedJasmine\Support\Application\ApplicationService;
+
+/**
+ * 文章应用服务
+ * 
+ * 负责处理文章相关的业务逻辑
+ * 
+ * @package RedJasmine\Article\Application\Services
+ */
+final class ArticleApplicationService extends ApplicationService
+{
+    /**
+     * 应用服务构造函数
+     * 
+     * @param ArticleRepositoryInterface $repository 文章仓库
+     */
+    public function __construct(
+        public readonly ArticleRepositoryInterface $repository
+    ) {
+    }
+
+    /**
+     * 发布文章
+     * 
+     * @param int $id 文章ID
+     * @return Article 发布后的文章
+     * @throws ArticleNotFoundException 当文章不存在时
+     * @throws ArticleException 当文章状态不允许发布时
+     */
+    public function publish(int $id): Article
+    {
+        $article = $this->repository->find($id);
+        
+        if (!$article) {
+            throw new ArticleNotFoundException($id);
+        }
+        
+        if (!$article->canPublish()) {
+            throw new ArticleException('文章状态不允许发布');
+        }
+        
+        $article->publish();
+        $this->repository->save($article);
+        
+        return $article;
+    }
+}
+```
