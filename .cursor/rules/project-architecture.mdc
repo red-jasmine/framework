@@ -1,4 +1,9 @@
 
+---
+alwaysApply: true
+description: "Red Jasmine Framework 项目架构规则和DDD设计原则"
+---
+
 # Red Jasmine Framework 项目架构规则
 
 ## 项目概述

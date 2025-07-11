@@ -1,4 +1,9 @@
 
+---
+alwaysApply: true
+description: "PHP和Laravel代码规范，包括编码原则、最佳实践和命名规范"
+---
+
 # PHP和Laravel代码规范
 
 ## 核心原则

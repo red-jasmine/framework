@@ -82,7 +82,7 @@
 
 ### 8. PHP 文件专用规则
 - **文件**: `php-files.mdc`
-- **适用范围**: PHP 文件 (globs: *.php)
+- **适用范围**: PHP 文件 (globs: ["*.php"])
 - **内容**: 
   - PHP 文件基本要求
   - 文件结构规范
@@ -95,7 +95,7 @@
 
 ### 9. 文档规范规则
 - **文件**: `documentation.mdc`
-- **适用范围**: 手动应用 (description: "文档规范和UML图标准")
+- **适用范围**: 手动应用 (description: "文档规范和UML图标准，用于编写项目文档时手动应用")
 - **内容**: 
   - 文档结构要求
   - 文档格式规范
@@ -104,6 +104,20 @@
   - 代码文档规范
   - 数据库设计文档
   - 文档维护规范
+
+### 10. Filament 管理界面规范
+- **文件**: `filament-admin.mdc`
+- **适用范围**: Filament 包文件 (globs: ["packages/filament-*/src/**/*.php"])
+- **内容**: 
+  - 包结构和命名规范
+  - 核心类实现规范 (ServiceProvider, Plugin, Cluster)
+  - 资源类和页面类规范
+  - 组件开发规范
+  - 编码和命名规范
+  - 国际化规范
+  - 架构集成规范
+  - 扩展功能规范
+  - 测试和性能优化规范
 
 ## 规则应用机制
 
@@ -118,10 +132,11 @@
 - coding-standards.mdc
 
 ### 文件类型特定规则
-- `php-files.mdc`: 只适用于 .php 文件
+- `php-files.mdc`: 只适用于 .php 文件 (globs: ["*.php"])
+- `filament-admin.mdc`: 只适用于 Filament 包文件 (globs: ["packages/filament-*/src/**/*.php"])
 
 ### 手动应用规则
-- `documentation.mdc`: 需要手动应用，用于文档编写时
+- `documentation.mdc`: 需要手动应用，用于文档编写时 (description: "文档规范和UML图标准，用于编写项目文档时手动应用")
 
 ## 最近优化
 
@@ -130,12 +145,14 @@
 2. **版本统一**: 统一PHP版本为8.4+，Laravel版本为12.0+
 3. **规则应用范围调整**: 调整了 `documentation.mdc` 的应用范围为手动应用
 4. **项目架构文件修复**: 修复了 `project-architecture.mdc` 中的重复内容
+5. **Filament 规范新增**: 新增了 `filament-admin.mdc` 规范，专门针对 Filament 管理界面开发
 
 ### 优化效果
 - **编码标准文件**: 专注于整体编码原则、Laravel最佳实践、命名规范等
 - **PHP文件规范**: 专注于PHP文件的格式、结构、声明等具体要求
 - **版本一致性**: 确保所有文件中的技术栈要求保持一致
 - **规则精确性**: 确保规则在正确的时机和范围内应用
+- **Filament 专用规范**: 针对 Filament 管理界面开发的专门规范，确保管理界面的一致性和可维护性
 
 ## 使用建议
 
@@ -159,6 +176,10 @@
 ### 编写文档时
 重点关注：
 - documentation.mdc
+
+### 开发 Filament 管理界面时
+重点关注：
+- filament-admin.mdc
 
 ## 维护说明
 
