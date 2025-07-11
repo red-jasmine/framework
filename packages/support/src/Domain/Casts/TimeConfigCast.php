@@ -9,10 +9,12 @@ use RedJasmine\Support\Domain\Data\TimeConfigData;
 
 class TimeConfigCast implements CastsAttributes
 {
-    protected function getTypeKey($key) : string
+
+    protected function getUnitKey($key) : string
     {
-        return $key.'_type';
+        return $key.'_unit';
     }
+
 
     protected function getValueKey($key) : string
     {
@@ -23,13 +25,13 @@ class TimeConfigCast implements CastsAttributes
     {
         $key = Str::snake($key);
 
-        $type  = $attributes[$this->getTypeKey($key)] ?? null;
+        $unit  = $attributes[$this->getUnitKey($key)] ?? null;
         $value = $attributes[$this->getValueKey($key)] ?? null;
-        if (blank($type) && blank($value)) {
+        if (blank($unit) && blank($value)) {
             return null;
         }
         return TimeConfigData::from([
-            'type'  => $type,
+            'unit'  => $unit,
             'value' => $value,
         ]);
     }
@@ -39,7 +41,7 @@ class TimeConfigCast implements CastsAttributes
         $key = Str::snake($key);
         if (blank($value)) {
             return [
-                $this->getTypeKey($key)  => null,
+                $this->getUnitKey($key)  => null,
                 $this->getValueKey($key) => null,
             ];
         }
@@ -48,12 +50,12 @@ class TimeConfigCast implements CastsAttributes
         }
         if ($value instanceof TimeConfigData) {
             return [
-                $this->getTypeKey($key)  => $value->type,
+                $this->getUnitKey($key)  => $value->unit,
                 $this->getValueKey($key) => $value->value,
             ];
         }
         return [
-            $this->getTypeKey($key)  => null,
+            $this->getUnitKey($key)  => null,
             $this->getValueKey($key) => null,
         ];
 
