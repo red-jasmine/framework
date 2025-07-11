@@ -31,6 +31,10 @@ class UpdateCommandHandler extends RestCommandHandler
 
     protected function validate(HandleContext $context) : void
     {
+        // 业务逻辑验证
+        if(method_exists($context->getCommand(), 'validateBusinessRules')){
+            $context->getCommand()->validateBusinessRules();
+        }
 
     }
 

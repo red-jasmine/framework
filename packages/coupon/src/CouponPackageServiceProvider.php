@@ -19,6 +19,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class CouponPackageServiceProvider extends PackageServiceProvider
 {
+    public static string $name = 'red-jasmine-coupon';
     public function configurePackage(Package $package): void
     {
         /*

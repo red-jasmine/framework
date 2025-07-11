@@ -383,5 +383,93 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return $discount;
     }
 
+    /**
+     * 获取优惠券标签描述
+     * 
+     * @return string
+     */
+    public function getLabelAttribute(): string
+    {
+        // 门槛描述
+        $thresholdText = match ($this->threshold_type) {
+            ThresholdTypeEnum::AMOUNT => __('red-jasmine-coupon::coupon.label.threshold.amount_over', [
+                'amount' => $this->formatNumber($this->threshold_value)
+            ]),
+            ThresholdTypeEnum::QUANTITY => __('red-jasmine-coupon::coupon.label.threshold.quantity_over', [
+                'quantity' => $this->formatNumber($this->threshold_value)
+            ]),
+        };
+
+        // 优惠描述
+        $discountText = match ($this->discount_amount_type) {
+            DiscountAmountTypeEnum::FIXED_AMOUNT => match ($this->threshold_type) {
+                ThresholdTypeEnum::AMOUNT => __('red-jasmine-coupon::coupon.label.discount.fixed_amount', [
+                    'amount' => $this->formatNumber($this->discount_amount_value)
+                ]),
+                ThresholdTypeEnum::QUANTITY => __('red-jasmine-coupon::coupon.label.discount.fixed_amount_yuan', [
+                    'amount' => $this->formatNumber($this->discount_amount_value)
+                ]),
+            },
+            DiscountAmountTypeEnum::PERCENTAGE => __('red-jasmine-coupon::coupon.label.discount.percentage', [
+                'rate' => $this->getDiscountDisplayValue()
+            ]),
+        };
+
+        return $thresholdText . $discountText;
+    }
+
+    /**
+     * 获取折扣率（用于显示）
+     * 
+     * @return string
+     */
+    protected function getDiscountRate(): string
+    {
+        $rate = (100 - $this->discount_amount_value) / 10;
+        
+        // 如果是整数，不显示小数点
+        if ($rate == floor($rate)) {
+            return (string) (int) $rate;
+        }
+        
+        // 保留一位小数
+        return number_format($rate, 1);
+    }
+
+    /**
+     * 获取折扣显示值（根据语言环境返回不同格式）
+     * 
+     * @return string
+     */
+    protected function getDiscountDisplayValue(): string
+    {
+        $locale = app()->getLocale();
+        
+        // 中文环境：打8折
+        if (in_array($locale, ['zh', 'zh-CN', 'zh-TW'])) {
+            return $this->getDiscountRate();
+        }
+        
+        // 英文环境：20% off  
+        return $this->formatNumber($this->discount_amount_value);
+    }
+
+    /**
+     * 格式化数字显示（去除不必要的小数0）
+     * 
+     * @param float $number
+     * @return string
+     */
+    protected function formatNumber(float $number): string
+    {
+        // 如果是整数（小数部分为0），只显示整数部分
+        if ($number == floor($number)) {
+            return (string) (int) $number;
+        }
+        
+        // 保留两位小数，但去除尾部的0
+        return rtrim(rtrim(number_format($number, 2), '0'), '.');
+    }
+
 
 }

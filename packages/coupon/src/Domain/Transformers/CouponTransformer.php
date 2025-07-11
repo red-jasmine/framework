@@ -17,6 +17,7 @@ class CouponTransformer implements TransformerInterface
      */
     public function transform($data, $model) : Coupon
     {
+    
 
         /**
          * @var Coupon $model
@@ -53,13 +54,5 @@ class CouponTransformer implements TransformerInterface
     }
 
 
-    protected function validate($data, $model)
-    {
-        /**
-         * @var Coupon $model
-         * @var CouponData $data
-         */
-      
-
-    }
+    
 }

@@ -18,6 +18,7 @@ class CouponResource extends JsonResource
             'owner_id'              => $this->owner_id,
             'name'                  => $this->name,
             'description'           => $this->description,
+            'label'                 => $this->label,
             'image'                 => $this->image,
             'is_show'               => $this->is_show,
             'status'                => $this->status,

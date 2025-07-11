@@ -38,6 +38,17 @@ return [
             'expired'   => '已过期',
         ],
     ],
+    'label' => [
+        'threshold' => [
+            'amount_over' => '满:amount',
+            'quantity_over' => '满:quantity件',
+        ],
+        'discount' => [
+            'fixed_amount' => '减:amount',
+            'fixed_amount_yuan' => '减:amount元',
+            'percentage' => '打:rate折',
+        ],
+    ],
     'messages' => [
         'created'         => '优惠券创建成功',
         'updated'         => '优惠券更新成功',

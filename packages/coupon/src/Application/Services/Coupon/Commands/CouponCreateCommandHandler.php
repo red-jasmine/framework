@@ -12,9 +12,4 @@ use RedJasmine\Support\Application\HandleContext;
 class CouponCreateCommandHandler extends CreateCommandHandler
 {
 
-
-    protected function validate(HandleContext $context) : void
-    {
-
-    }
 }
