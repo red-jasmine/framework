@@ -1,11 +1,8 @@
----
-alwaysApply: true
----
 
 # Red Jasmine Framework 项目架构规则
 
 ## 项目概述
-Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.3+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
+Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.4+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
 
 ## 技术栈要求
 - PHP 8.4+
@@ -24,30 +21,6 @@ Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.3+ 的现代化电
 - 使用短横线分隔多个单词
 - 体现业务领域概念
 - 例如：`article`、`user`、`order`、`product`等
-# Red Jasmine Framework 项目架构规则
-
-## 项目概述
-Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.3+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
-
-## 技术栈要求
-- PHP 8.4+
-- Laravel 12.0+
-- 依赖管理编辑器: Composer
-- 遵循PSR-12编码标准
-
-## DDD 架构原则
-- **领域优先**: 领域模型是系统的核心，业务逻辑应该在领域层实现
-- **依赖倒置**: 外层依赖内层，基础设施层依赖领域层
-- **职责清晰**: 每层都有明确的职责边界
-- **模块化**: 每个领域包都是独立的模块，可以单独开发和部署
-
-## 包命名规范
-- 使用英文小写命名
-- 使用短横线分隔多个单词
-- 体现业务领域概念
-- 例如：`article`、`user`、`order`、`product`等
-
-
 
 ## 目录结构
 
