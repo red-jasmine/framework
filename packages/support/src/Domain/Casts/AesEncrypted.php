@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Casts;
+namespace RedJasmine\Support\Domain\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Casts;
+namespace RedJasmine\Support\Domain\Casts;
 
 use http\Exception\InvalidArgumentException;
 use RedJasmine\Support\Contracts\UserInterface;

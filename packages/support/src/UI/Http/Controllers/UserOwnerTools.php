@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Http\Controllers;
+namespace RedJasmine\Support\UI\Http\Controllers;
 
 
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
@@ -8,6 +8,7 @@ use RedJasmine\Support\Contracts\ClientInterface;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Helpers\ClientObjectBuilder;
+use RedJasmine\Support\Http\Controllers\User;
 
 trait UserOwnerTools
 {

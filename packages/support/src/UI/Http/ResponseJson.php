@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Http;
+namespace RedJasmine\Support\UI\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;

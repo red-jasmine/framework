@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Migration;
+namespace RedJasmine\Support\Services;
 
 use Illuminate\Database\Schema\Blueprint;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;

@@ -17,7 +17,7 @@ use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
-use RedJasmine\Support\Migration\MigrationService;
+use RedJasmine\Support\Services\MigrationService;
 use RedJasmine\Support\Services\SQLLogService;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
