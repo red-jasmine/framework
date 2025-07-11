@@ -1,6 +1,24 @@
 ---
 alwaysApply: true
 ---
+
+
+### 目录结构规范
+```
+docs/
+├── {domain}/                    # 领域文档目录
+│   ├── index.md                # 领域介绍文档（必需）
+│   ├── storage.md              # 存储层设计文档（必需）
+│   ├── {submodule}/            # 子模块文档目录
+│   │   ├── index.md            # 子模块介绍（必需）
+│   │   ├── model.puml          # 领域模型UML（必需）
+│   │   ├── events.puml         # 领域事件UML（可选）
+│   │   ├── sequence.puml       # 时序图UML（可选）
+│   │   └── rules.md            # 核心规则说明（可选）
+│   ├── *.puml                  # 领域级UML图（可选）
+│   └── assets/                 # 静态资源目录（可选）
+│       ├── images/             # 图片资源
+│       └── diagrams/           # 图表资源
 ```
 
 ### 必需配置项
