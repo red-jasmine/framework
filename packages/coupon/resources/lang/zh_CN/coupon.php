@@ -8,11 +8,15 @@ return [
             'paused'    => '已暂停',
             'expired'   => '已过期',
         ],
-        'discount_type'      => [
+        'discount_amount_type'      => [
             'fixed_amount' => '固定金额',
             'percentage'   => '百分比',
         ],
-        'threshold_type'     => [
+        'threshold_type' => [
+            'amount' => '金额',
+            'quantity' => '数量',
+        ],
+        'discount_target'     => [
             'order_amount'       => '订单金额',
             'product_amount'     => '商品金额',
             'shipping_amount'    => '运费金额',
@@ -38,15 +42,20 @@ return [
             'expired'   => '已过期',
         ],
     ],
+    'labels'=>[
+        'coupon'=>'优惠券',
+        'discount'=>'优惠',
+
+    ],
     'label' => [
         'threshold' => [
-            'amount_over' => '满:amount',
+            'amount_over'   => '满:amount',
             'quantity_over' => '满:quantity件',
         ],
-        'discount' => [
-            'fixed_amount' => '减:amount',
+        'discount'  => [
+            'fixed_amount'      => '减:amount',
             'fixed_amount_yuan' => '减:amount元',
-            'percentage' => '打:rate折',
+            'percentage'        => '打:rate折',
         ],
     ],
     'messages' => [

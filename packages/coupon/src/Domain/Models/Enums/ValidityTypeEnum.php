@@ -14,8 +14,8 @@ enum ValidityTypeEnum: string
     public static function labels(): array
     {
         return [
-            self::ABSOLUTE->value => __('red-jasmine-coupon::validity.enums.type.absolute'),
-            self::RELATIVE->value => __('red-jasmine-coupon::validity.enums.type.relative'),
+            self::ABSOLUTE->value => __('red-jasmine-coupon::coupon.enums.validity_type.absolute'),
+            self::RELATIVE->value => __('red-jasmine-coupon::coupon.enums.validity_type.relative'),
         ];
     }
 

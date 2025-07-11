@@ -136,6 +136,7 @@ trait ResourcePageHelper
                         ->send();
             throw $exception;
         } catch (AbstractException $abstractException) {
+
             Notification::make()
                         ->title($abstractException->getMessage())
                         ->danger()
@@ -196,6 +197,7 @@ trait ResourcePageHelper
 
         try {
             $resource       = static::getResource();
+
             $commandService = app($resource::getService());
             $command        = ($resource::getUpdateCommand())::from($data);
             $command->setKey($record->getKey());

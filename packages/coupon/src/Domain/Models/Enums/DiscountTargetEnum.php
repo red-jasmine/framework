@@ -16,10 +16,10 @@ enum DiscountTargetEnum: string
     public static function labels(): array
     {
         return [
-            self::ORDER_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.order_amount'),
-            self::PRODUCT_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.product_amount'),
-            self::SHIPPING_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.shipping_amount'),
-            self::CROSS_STORE_AMOUNT->value => __('red-jasmine-coupon::threshold.enums.type.cross_store_amount'),
+            self::ORDER_AMOUNT->value => __('red-jasmine-coupon::coupon.enums.discount_target.order_amount'),
+            self::PRODUCT_AMOUNT->value => __('red-jasmine-coupon::coupon.enums.discount_target.product_amount'),
+            self::SHIPPING_AMOUNT->value => __('red-jasmine-coupon::coupon.enums.discount_target.shipping_amount'),
+            self::CROSS_STORE_AMOUNT->value => __('red-jasmine-coupon::coupon.enums.discount_target.cross_store_amount'),
         ];
     }
 

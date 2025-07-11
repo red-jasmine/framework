@@ -67,6 +67,10 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         'total_used',
     ];
 
+  protected $appends  = [
+      'validity_time','delayed_effective_time'
+  ];
+
     protected function casts() : array
     {
         return [

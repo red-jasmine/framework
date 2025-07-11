@@ -20,8 +20,8 @@ enum DiscountAmountTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::FIXED_AMOUNT->value => __('red-jasmine-coupon::discount.enums.type.fixed_amount'),
-            self::PERCENTAGE->value   => __('red-jasmine-coupon::discount.enums.type.percentage'),
+            self::FIXED_AMOUNT->value => __('red-jasmine-coupon::coupon.enums.discount_amount_type.fixed_amount'),
+            self::PERCENTAGE->value   => __('red-jasmine-coupon::coupon.enums.discount_amount_type.percentage'),
         ];
     }
 

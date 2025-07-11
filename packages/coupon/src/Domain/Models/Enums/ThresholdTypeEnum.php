@@ -18,8 +18,8 @@ enum ThresholdTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::AMOUNT->value   => __('red-jasmine-coupon::discount.enums.threshold_type.amount'),
-            self::QUANTITY->value => __('red-jasmine-coupon::discount.enums.threshold_type.quantity'),
+            self::AMOUNT->value   => __('red-jasmine-coupon::coupon.enums.threshold_type.amount'),
+            self::QUANTITY->value => __('red-jasmine-coupon::coupon.enums.threshold_type.quantity'),
         ];
     }
 
