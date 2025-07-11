@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RedJasmine\Coupon\Application\Services\UserCoupon;
 
 use RedJasmine\Coupon\Application\Services\UserCoupon\Commands\UserCouponReceiveCommand;
@@ -17,7 +19,7 @@ use RedJasmine\Support\Application\ApplicationService;
  * @see UserCouponUseCommandHandler::handle()
  * @method bool use(UserCouponUseCommand $command)
  * @see UserCouponReceiveCommandHandler::handle()
- * @method bool receive(UserCouponReceiveCommand $command)
+ * @method UserCoupon receive(UserCouponReceiveCommand $command)
  */
 class UserCouponApplicationService extends ApplicationService
 {
