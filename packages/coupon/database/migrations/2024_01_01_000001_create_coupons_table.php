@@ -45,13 +45,12 @@ return new class extends Migration {
             $table->timestamp('validity_start_time')->nullable()->comment('绝对有效期开始时间');
             $table->timestamp('validity_end_time')->nullable()->comment('绝对有效期结束时间');
 
-            $table->enum('delayed_effective_time_type',
-                TimeUnitEnum::values())->default(TimeUnitEnum::DAY)->comment(TimeUnitEnum::comments('延迟生效时间类型'));
-            $table->unsignedBigInteger('delayed_effective_time_value')->default(0)->comment('延迟生效时间值');
+            $table->enum('delayed_effective_time_unit',
+                TimeUnitEnum::values())->nullable()->comment(TimeUnitEnum::comments('延迟生效时间类型'));
+            $table->unsignedBigInteger('delayed_effective_time_value')->nullable()->comment('延迟生效时间值');
 
-            $table->enum('validity_time_type',
-                TimeUnitEnum::values())->default(TimeUnitEnum::FOREVER)->comment(TimeUnitEnum::comments('相对有效期时间类型'));
-            $table->unsignedBigInteger('validity_time_value')->default(0)->comment('相对有效期时间值');
+            $table->enum('validity_time_unit', TimeUnitEnum::values())->nullable()->comment(TimeUnitEnum::comments('相对有效期时间类型'));
+            $table->unsignedBigInteger('validity_time_value')->nullable()->comment('相对有效期时间值');
 
 
             // 使用规则 如: 正对于 部分商品、部分分类、部分用户、部分渠道等。。。

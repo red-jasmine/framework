@@ -16,7 +16,7 @@ use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * 优惠券应用服务
- * 
+ *
  * @see CouponCreateCommandHandler::handle()
  * @method Coupon create(CouponCreateCommand $command)
  * @see CouponUpdateCommandHandler::handle()
@@ -47,17 +47,17 @@ class CouponApplicationService extends ApplicationService
     ) {
     }
 
-    public function getDefaultModelWithInfo(): array
+    public function getDefaultModelWithInfo() : array
     {
         return ['issueStat'];
     }
 
     protected static $macros = [
-        'create' => CouponCreateCommandHandler::class,
-        'update' => CouponUpdateCommandHandler::class,
-        'delete' => CouponDeleteCommandHandler::class,
+        'create'  => CouponCreateCommandHandler::class,
+        'update'  => CouponUpdateCommandHandler::class,
+        'delete'  => CouponDeleteCommandHandler::class,
         'publish' => CouponPublishCommandHandler::class,
-        'pause' => CouponPauseCommandHandler::class,
-        'issue' => CouponIssueCommandHandler::class,
+        'pause'   => CouponPauseCommandHandler::class,
+        'issue'   => CouponIssueCommandHandler::class,
     ];
 } 

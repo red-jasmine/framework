@@ -17,17 +17,17 @@ class CouponTransformer implements TransformerInterface
      */
     public function transform($data, $model) : Coupon
     {
+
         /**
          * @var Coupon $model
          * @var CouponData $data
          */
-        $model->name        = $data->name;
-        $model->description = $data->description;
-        $model->image       = $data->image;
-        $model->is_show     = $data->isShow;
-        $model->status      = $data->status;
-        $model->owner       = $data->owner;
-
+        $model->name                   = $data->name;
+        $model->description            = $data->description;
+        $model->image                  = $data->image;
+        $model->is_show                = $data->isShow;
+        $model->status                 = $data->status;
+        $model->owner                  = $data->owner;
         $model->discount_target        = $data->discountTarget;
         $model->discount_amount_type   = $data->discountAmountType;
         $model->discount_amount_value  = $data->discountAmountValue;
@@ -50,5 +50,16 @@ class CouponTransformer implements TransformerInterface
 
 
         return $model;
+    }
+
+
+    protected function validate($data, $model)
+    {
+        /**
+         * @var Coupon $model
+         * @var CouponData $data
+         */
+      
+
     }
 }

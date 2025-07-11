@@ -13,6 +13,7 @@ use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Data\TimeConfigData;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
 
 class CouponData extends Data
@@ -30,12 +31,14 @@ class CouponData extends Data
     /**
      * 开始时间
      */
+    #[WithCast(DateTimeInterfaceCast::class, 'Y-m-d H:i:s')]
     public ?Carbon $startTime = null;
 
     /**
      * 发布时间
      * @var Carbon|null
      */
+    #[WithCast(DateTimeInterfaceCast::class, 'Y-m-d H:i:s')]
     public ?Carbon $endTime = null;
 
 
@@ -84,8 +87,9 @@ class CouponData extends Data
     /**
      * 绝对生效时间
      */
+    #[WithCast(DateTimeInterfaceCast::class, 'Y-m-d H:i:s')]
     public ?Carbon $validityStartTime = null;
-
+    #[WithCast(DateTimeInterfaceCast::class, 'Y-m-d H:i:s')]
     public ?Carbon $validityEndTime = null;
 
 
@@ -114,7 +118,7 @@ class CouponData extends Data
     /**
      * 成本承担方
      */
-    public UserInterface $costBearer;
+    public ?UserInterface $costBearer = null;
 
     public int $sort = 0;
 

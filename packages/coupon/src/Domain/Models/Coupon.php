@@ -33,7 +33,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     use HasSnowflakeId;
     use HasOwner;
     use HasOperator;
-    use SoftDeletes;
+
 
     public $incrementing = false;
 
@@ -81,6 +81,8 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             'validity_type'          => ValidityTypeEnum::class,
             'validity_start_time'    => 'datetime',
             'validity_end_time'      => 'datetime',
+            'start_time'             => 'datetime',
+            'end_time'               => 'datetime',
             'delayed_effective_time' => TimeConfigCast::class,
             'validity_time'          => TimeConfigCast::class,
             'usage_rules'            => 'array',
@@ -380,4 +382,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
         return $discount;
     }
-} 
+
+
+}
