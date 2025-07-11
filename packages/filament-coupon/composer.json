@@ -1,0 +1,66 @@
+{
+    "name": "red-jasmine/filament-coupon",
+    "description": "This is my package filament-coupon",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament-coupon"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-coupon",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-coupon/issues",
+        "source": "https://github.com/red-jasmine/filament-coupon"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/coupon": "1.0.x-dev"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentCoupon\\": "src/",
+            "RedJasmine\\FilamentCoupon\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentCoupon\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentCoupon\\FilamentCouponServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+} 

@@ -1,0 +1,22 @@
+<?php
+
+namespace RedJasmine\FilamentCoupon\Clusters;
+
+use Filament\Clusters\Cluster;
+
+class Coupons extends Cluster
+{
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+
+    protected static ?int $navigationSort = 5;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('red-jasmine-filament-coupon::coupon.cluster.label');
+    }
+
+    public static function getClusterBreadcrumb(): ?string
+    {
+        return __('red-jasmine-filament-coupon::coupon.cluster.breadcrumb');
+    }
+} 
