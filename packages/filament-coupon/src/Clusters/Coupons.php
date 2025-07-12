@@ -12,11 +12,11 @@ class Coupons extends Cluster
 
     public static function getNavigationLabel(): string
     {
-        return __('red-jasmine-coupon::coupon.cluster.label');
+        return __('red-jasmine-filament-coupon::coupon.label');
     }
 
     public static function getClusterBreadcrumb(): ?string
     {
-        return __('red-jasmine-coupon::coupon.cluster.breadcrumb');
+        return __('red-jasmine-filament-coupon::coupon.label');
     }
 } 

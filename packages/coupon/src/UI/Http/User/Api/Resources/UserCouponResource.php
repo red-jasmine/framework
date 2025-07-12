@@ -2,35 +2,42 @@
 
 namespace RedJasmine\Coupon\UI\Http\User\Api\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Request;
 
+use RedJasmine\Coupon\Domain\Models\UserCoupon;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
+
+/**
+ * @mixin UserCoupon
+ */
 class UserCouponResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  Request  $request
+     *
      * @return array
      */
-    public function toArray($request)
+    public function toArray(Request $request) : array
     {
         return [
-            'id' => $this->id,
-            'owner' => $this->owner,
-            'operator' => $this->operator,
-            'coupon_id' => $this->coupon_id,
-            'user' => $this->user,
-            'status' => $this->status,
-            'start_at' => $this->start_at,
-            'end_at' => $this->end_at,
-            'used_at' => $this->used_at,
-            'expired_at' => $this->expired_at,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            
+            'id'                  => $this->id,
+            'coupon_id'           => $this->coupon_id,
+            'coupon_no'           => $this->coupon_no,
+            'user'                => $this->user,
+            'status'              => $this->status,
+            'validity_start_time' => $this->validity_start_time,
+            'validity_end_time'   => $this->validity_end_time,
+            'issue_time'          => $this->issue_time,
+            'used_time'           => $this->used_time,
+            'created_at'          => $this->created_at,
+            'updated_at'          => $this->updated_at,
             // 关联数据
-            'coupon' => $this->whenLoaded('coupon'),
-            'usage' => $this->whenLoaded('usage'),
+            'coupon'              => $this->whenLoaded('coupon', function () {
+                return CouponResource::make($this->coupon);
+            }),
+
         ];
     }
 }

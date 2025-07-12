@@ -7,15 +7,6 @@ use RedJasmine\Support\Data\Data;
 
 class UserCouponReceiveCommand extends Data
 {
-    /**
-     * 所有者信息
-     */
-    public UserInterface $owner;
-
-    /**
-     * 优惠券ID
-     */
-    public int $couponId;
 
     /**
      * 用户信息

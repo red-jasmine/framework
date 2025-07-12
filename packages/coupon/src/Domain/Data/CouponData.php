@@ -110,12 +110,12 @@ class CouponData extends Data
     /**
      * 使用规则
      */
-    public array $usageRules = [];
+    public ?array $usageRules = [];
 
     /**
      * 领取规则
      */
-    public array $receiveRules = [];
+    public ?array $receiveRules = [];
 
     /**
      * 成本承担方

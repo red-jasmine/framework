@@ -46,7 +46,7 @@ class CouponResource extends Resource
 
     public static function getPluralModelLabel() : string
     {
-        return __('red-jasmine-coupon::coupon.labels.coupons');
+        return __('red-jasmine-coupon::coupon.labels.coupon');
     }
 
     public static function form(Form $form) : Form
@@ -151,16 +151,16 @@ class CouponResource extends Resource
                                                                                                                                     ->numeric()
                                                                                                                                     ->required()
                                                                                                                                     ->minValue(0)
-                                                                                                              ->prefix(fn(
-                                                                                                                  Forms\Get $get
-                                                                                                              ) => $get('discount_amount_type') === 'percentage' ? '打' : '减')
+                                                                                                                                    ->prefix(fn(
+                                                                                                                                        Forms\Get $get
+                                                                                                                                    ) => $get('discount_amount_type') === 'percentage' ? '打' : '减')
                                                                                                                                     ->suffix(fn(
                                                                                                                                         Forms\Get $get
                                                                                                                                     ) => $get('discount_amount_type') === 'percentage' ? '%' : '元'),
 
 
                                                                                                       ]
-                                                                                                  ) ->label(__('red-jasmine-coupon::coupon.labels.discount')),
+                                                                                                  )->label(__('red-jasmine-coupon::coupon.labels.discount')),
 
 
                                                                                                   Forms\Components\TextInput::make('max_discount_amount')
@@ -310,6 +310,7 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                                          ->label(__('red-jasmine-coupon::coupon.fields.status'))
                                          ->badge()
+                                         ->useEnum()
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('validity_start_time')
@@ -352,7 +353,7 @@ class CouponResource extends Resource
                 Tables\Actions\DeleteAction::make(),
 
                 Tables\Actions\Action::make('publish')
-                                     ->label(__('red-jasmine-coupon::coupon.actions.publish'))
+                                     ->label(__('red-jasmine-coupon::coupon.commands.publish'))
                                      ->icon('heroicon-o-play')
                                      ->color('success')
                                      ->requiresConfirmation()
@@ -363,7 +364,7 @@ class CouponResource extends Resource
                                      ->visible(fn(Coupon $record) => $record->status === CouponStatusEnum::DRAFT),
 
                 Tables\Actions\Action::make('pause')
-                                     ->label(__('red-jasmine-coupon::coupon.actions.pause'))
+                                     ->label(__('red-jasmine-coupon::coupon.commands.pause'))
                                      ->icon('heroicon-o-pause')
                                      ->color('warning')
                                      ->requiresConfirmation()
@@ -374,7 +375,7 @@ class CouponResource extends Resource
                                      ->visible(fn(Coupon $record) => $record->status === CouponStatusEnum::PUBLISHED),
 
                 Tables\Actions\Action::make('expire')
-                                     ->label(__('red-jasmine-coupon::coupon.actions.expire'))
+                                     ->label(__('red-jasmine-coupon::coupon.commands.expire'))
                                      ->icon('heroicon-o-x-circle')
                                      ->color('danger')
                                      ->requiresConfirmation()

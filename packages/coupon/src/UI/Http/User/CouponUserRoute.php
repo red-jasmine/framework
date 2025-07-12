@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace RedJasmine\Coupon\UI\Http\User;
 
@@ -10,22 +10,25 @@ use RedJasmine\Coupon\UI\Http\User\Api\Controllers\UserCouponController;
 
 class CouponUserRoute
 {
-    public static function api(): void
+    public static function api() : void
     {
-        Route::group(['prefix' => 'coupon'], function () {
-            // 优惠券相关路由（查看、领取、使用）
-            Route::get('coupons', [CouponController::class, 'index']);
-            Route::get('coupons/{id}', [CouponController::class, 'show']);
-            Route::post('coupons/{id}/receive', [CouponController::class, 'receive']);
-            Route::post('coupons/consume/{userCouponId}', [CouponController::class, 'consume']);
-            
-            // 用户优惠券相关路由（只读查询）
-            Route::get('user-coupons', [UserCouponController::class, 'index']);
-            Route::get('user-coupons/{id}', [UserCouponController::class, 'show']);
-        });
+        Route::prefix('coupon')
+             ->name('coupon.api.user.')
+             ->middleware('auth:user')
+             ->group(function () {
+                 // 优惠券相关路由（查看、领取、使用）
+                 Route::get('coupons', [CouponController::class, 'index']);
+                 Route::get('coupons/{id}', [CouponController::class, 'show']);
+                 Route::post('coupons/{id}/receive', [CouponController::class, 'receive']);
+
+
+                 // 用户优惠券相关路由（只读查询）
+                 Route::apiResource('user-coupons', UserCouponController::class)->only(['index', 'show']);
+
+             });
     }
 
-    public static function web(): void
+    public static function web() : void
     {
         Route::group(['prefix' => 'coupon'], function () {
             // 用户端 Web 路由（如果需要）

@@ -3,16 +3,26 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
+use RedJasmine\Coupon\Domain\Models\Generator\CouponNoGenerator;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
+/**
+ * @property UserCouponStatusEnum $status
+ * @property UserInterface $user
+ * @property UserInterface $owner
+ * @property string $user_id
+ */
 class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 {
     use HasSnowflakeId;
@@ -21,7 +31,17 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 
     public $incrementing = false;
 
-    protected $table = 'user_coupons';
+
+    public function scopeOnlyUser(Builder $query, UserInterface $user) : Builder
+    {
+        return $query->where(
+            [
+                'user_id'   => $user->getID(),
+                'user_type' => $user->getType(),
+            ]
+        );
+    }
+
 
     protected $fillable = [
         'coupon_id',
@@ -35,48 +55,64 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         'expire_time',
         'used_time',
         'order_id',
+        'owner',
+        'user',
     ];
 
-    protected function casts(): array
+    protected function casts() : array
     {
         return [
-            'status' => UserCouponStatusEnum::class,
-            'issue_time' => 'datetime',
-            'expire_time' => 'datetime',
-            'used_time' => 'datetime',
-            'coupon_id' => 'integer',
-            'order_id' => 'integer',
+            'status'              => UserCouponStatusEnum::class,
+            'user'                => UserInterfaceCast::class,
+            'issue_time'          => 'datetime',
+            'validity_start_time' => 'datetime',
+            'validity_end_time'   => 'datetime',
+            'used_time'           => 'datetime',
+            'coupon_id'           => 'integer',
+            'order_id'            => 'integer',
         ];
     }
 
-    protected static function boot(): void
+    protected static function boot() : void
     {
         parent::boot();
 
         static::creating(function (UserCoupon $userCoupon) {
             $userCoupon->setUniqueIds();
-            $userCoupon->status = UserCouponStatusEnum::AVAILABLE;
+            $userCoupon->status     = UserCouponStatusEnum::AVAILABLE;
             $userCoupon->issue_time = Carbon::now();
         });
     }
 
-    public function newInstance($attributes = [], $exists = false): static
+    public function newInstance($attributes = [], $exists = false) : static
     {
         $instance = parent::newInstance($attributes, $exists);
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
-            $instance->status = UserCouponStatusEnum::AVAILABLE;
+            $instance->status     = UserCouponStatusEnum::AVAILABLE;
             $instance->issue_time = Carbon::now();
+        }
+        if (!$instance->exists && !empty($attributes)) {
+            $instance->generateNo();
         }
 
         return $instance;
     }
 
+    protected function generateNo() : void
+    {
+
+        if (!$this->coupon_no) {
+            $this->coupon_no = new CouponNoGenerator()->generator($this);
+        }
+
+    }
+
     /**
      * 优惠券关联
      */
-    public function coupon(): BelongsTo
+    public function coupon() : BelongsTo
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
     }
@@ -84,7 +120,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 检查是否可用
      */
-    public function isAvailable(): bool
+    public function isAvailable() : bool
     {
         return $this->status === UserCouponStatusEnum::AVAILABLE && !$this->isExpired();
     }
@@ -92,15 +128,15 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 检查是否已过期
      */
-    public function isExpired(): bool
+    public function isExpired() : bool
     {
-        return Carbon::now()->isAfter($this->expire_time);
+        return Carbon::now()->isAfter($this->validity_end_time);
     }
 
     /**
      * 检查是否已使用
      */
-    public function isUsed(): bool
+    public function isUsed() : bool
     {
         return $this->status === UserCouponStatusEnum::USED;
     }
@@ -108,22 +144,22 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 使用优惠券
      */
-    public function use(int $orderId): void
+    public function use(int $orderId) : void
     {
         if (!$this->isAvailable()) {
             throw new CouponException('优惠券不可用');
         }
 
-        $this->status = UserCouponStatusEnum::USED;
+        $this->status    = UserCouponStatusEnum::USED;
         $this->used_time = Carbon::now();
-        $this->order_id = $orderId;
+        $this->order_id  = $orderId;
         $this->save();
     }
 
     /**
      * 过期优惠券
      */
-    public function expire(): void
+    public function expire() : void
     {
         if ($this->status !== UserCouponStatusEnum::AVAILABLE) {
             return;
@@ -136,7 +172,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取剩余天数
      */
-    public function getRemainingDays(): int
+    public function getRemainingDays() : int
     {
         if ($this->isExpired()) {
             return 0;
@@ -148,7 +184,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取剩余小时数
      */
-    public function getRemainingHours(): int
+    public function getRemainingHours() : int
     {
         if ($this->isExpired()) {
             return 0;
@@ -160,7 +196,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取状态文本
      */
-    public function getStatusText(): string
+    public function getStatusText() : string
     {
         if ($this->isExpired()) {
             return '已过期';
@@ -176,9 +212,9 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取显示名称
      */
-    public function getDisplayName(): string
+    public function getDisplayName() : string
     {
-        return $this->coupon->name . ' - ' . $this->getStatusText();
+        return $this->coupon->name.' - '.$this->getStatusText();
     }
 
     /**
@@ -187,7 +223,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function scopeAvailable($query)
     {
         return $query->where('status', UserCouponStatusEnum::AVAILABLE)
-                    ->where('expire_time', '>', Carbon::now());
+                     ->where('expire_time', '>', Carbon::now());
     }
 
     /**
@@ -196,7 +232,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function scopeExpired($query)
     {
         return $query->where('status', UserCouponStatusEnum::EXPIRED)
-                    ->orWhere('expire_time', '<=', Carbon::now());
+                     ->orWhere('expire_time', '<=', Carbon::now());
     }
 
     /**
@@ -221,6 +257,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function scopeByOwner($query, string $ownerType, string $ownerId)
     {
         return $query->where('owner_type', $ownerType)
-                    ->where('owner_id', $ownerId);
+                     ->where('owner_id', $ownerId);
     }
 } 

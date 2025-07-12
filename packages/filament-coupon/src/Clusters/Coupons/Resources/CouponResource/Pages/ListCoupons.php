@@ -27,26 +27,26 @@ class ListCoupons extends ListRecords
     {
         return [
             'all' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.all'))
+                ->label(__('red-jasmine-coupon::coupon.tabs.all'))
                 ->badge(static::getResource()::getEloquentQuery()->count()),
 
             'draft' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.draft'))
+                ->label(__('red-jasmine-coupon::coupon.tabs.draft'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', CouponStatusEnum::DRAFT)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', CouponStatusEnum::DRAFT)),
 
             'published' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.published'))
+                ->label(__('red-jasmine-coupon::coupon.tabs.published'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', CouponStatusEnum::PUBLISHED)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', CouponStatusEnum::PUBLISHED)),
 
             'paused' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.paused'))
+                ->label(__('red-jasmine-coupon::coupon.tabs.paused'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', CouponStatusEnum::PAUSED)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', CouponStatusEnum::PAUSED)),
 
             'expired' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.expired'))
+                ->label(__('red-jasmine-coupon::coupon.tabs.expired'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', CouponStatusEnum::EXPIRED)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', CouponStatusEnum::EXPIRED)),
         ];

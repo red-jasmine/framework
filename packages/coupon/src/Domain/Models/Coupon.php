@@ -3,9 +3,9 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
@@ -24,8 +24,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
- * @property ?TimeConfigCast $delayed_effective_time
- * @property ?TimeConfigCast $validity_time
+ * @property ?TimeConfigData $delayed_effective_time
+ * @property ?TimeConfigData $validity_time
  * @property ?UserInterface $cost_bearer
  */
 class Coupon extends Model implements OperatorInterface, OwnerInterface
@@ -67,37 +67,9 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         'total_used',
     ];
 
-  protected $appends  = [
-      'validity_time','delayed_effective_time'
-  ];
-
-    protected function casts() : array
-    {
-        return [
-            'status'                 => CouponStatusEnum::class,
-            'is_show'                => 'boolean',
-            'discount_target'        => DiscountTargetEnum::class,
-            'discount_amount_type'   => DiscountAmountTypeEnum::class,
-            'discount_amount_value'  => 'decimal:2',
-            'threshold_type'         => ThresholdTypeEnum::class,
-            'threshold_value'        => 'decimal:2',
-            'max_discount_amount'    => 'decimal:2',
-            'validity_type'          => ValidityTypeEnum::class,
-            'validity_start_time'    => 'datetime',
-            'validity_end_time'      => 'datetime',
-            'start_time'             => 'datetime',
-            'end_time'               => 'datetime',
-            'delayed_effective_time' => TimeConfigCast::class,
-            'validity_time'          => TimeConfigCast::class,
-            'usage_rules'            => 'array',
-            'receive_rules'          => 'array',
-            'sort'                   => 'integer',
-            'total_quantity'         => 'integer',
-            'total_issued'           => 'integer',
-            'total_used'             => 'integer',
-            'cost_bearer'            => UserInterfaceCast::class,
-        ];
-    }
+    protected $appends = [
+        'validity_time', 'delayed_effective_time'
+    ];
 
     protected static function boot() : void
     {
@@ -151,29 +123,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
-     * 检查是否可以发放
-     */
-    public function canIssue() : bool
-    {
-        // 检查状态
-        if ($this->status !== CouponStatusEnum::PUBLISHED) {
-            return false;
-        }
-
-        // 检查有效期
-        if (!$this->isValid()) {
-            return false;
-        }
-
-        // 检查发放限制
-        if ($this->total_quantity && $this->total_issued >= $this->total_quantity) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * 检查是否可以使用
      */
     public function canUse(array $context = []) : bool
@@ -190,24 +139,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
         // 检查使用规则
         if ($this->usage_rules && !$this->checkUsageRules($context)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 检查是否可以领取
-     */
-    public function canCollect(array $context = []) : bool
-    {
-        // 检查是否可以发放
-        if (!$this->canIssue()) {
-            return false;
-        }
-
-        // 检查领取规则
-        if ($this->receive_rules && !$this->checkReceiveRules($context)) {
             return false;
         }
 
@@ -239,6 +170,47 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     protected function checkUsageRules(array $context) : bool
     {
         // TODO: 实现使用规则检查逻辑
+        return true;
+    }
+
+    /**
+     * 检查是否可以领取
+     */
+    public function canReceive(array $context = []) : bool
+    {
+        // 检查是否可以发放
+        if (!$this->canIssue()) {
+            return false;
+        }
+
+        // 检查领取规则
+        if ($this->receive_rules && !$this->checkReceiveRules($context)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查是否可以发放
+     */
+    public function canIssue() : bool
+    {
+        // 检查状态
+        if ($this->status !== CouponStatusEnum::PUBLISHED) {
+            return false;
+        }
+
+        // 检查有效期
+        if (!$this->isValid()) {
+            return false;
+        }
+
+        // 检查发放限制
+        if ($this->total_quantity && $this->total_issued >= $this->total_quantity) {
+            return false;
+        }
+
         return true;
     }
 
@@ -298,6 +270,36 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
+     * @return \Illuminate\Support\Carbon[]
+     */
+    public function getValidityTimes() : array
+    {
+        if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
+
+            return [
+                $this->validity_start_time,
+                $this->validity_end_time,
+            ];
+        }
+        $startTime = $now = \Illuminate\Support\Carbon::now();
+        if (!$this->delayed_effective_time) {
+            $startTime = $this->delayed_effective_time->afterAt($now);
+        }
+
+
+        $endTime = $this->validity_time->afterAt($startTime);
+        return [$startTime, $endTime];
+    }
+
+    /**
+     * 发布优惠券
+     */
+    public function publish() : void
+    {
+        $this->updateStatus(CouponStatusEnum::PUBLISHED);
+    }
+
+    /**
      * 更新状态
      */
     public function updateStatus(CouponStatusEnum $status) : void
@@ -320,14 +322,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             CouponStatusEnum::PAUSED => in_array($status, [CouponStatusEnum::PUBLISHED, CouponStatusEnum::EXPIRED]),
             CouponStatusEnum::EXPIRED => false,
         };
-    }
-
-    /**
-     * 发布优惠券
-     */
-    public function publish() : void
-    {
-        $this->updateStatus(CouponStatusEnum::PUBLISHED);
     }
 
     /**
@@ -389,10 +383,10 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
     /**
      * 获取优惠券标签描述
-     * 
+     *
      * @return string
      */
-    public function getLabelAttribute(): string
+    public function getLabelAttribute() : string
     {
         // 门槛描述
         $thresholdText = match ($this->threshold_type) {
@@ -419,61 +413,95 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             ]),
         };
 
-        return $thresholdText . $discountText;
-    }
-
-    /**
-     * 获取折扣率（用于显示）
-     * 
-     * @return string
-     */
-    protected function getDiscountRate(): string
-    {
-        $rate = (100 - $this->discount_amount_value) / 10;
-        
-        // 如果是整数，不显示小数点
-        if ($rate == floor($rate)) {
-            return (string) (int) $rate;
-        }
-        
-        // 保留一位小数
-        return number_format($rate, 1);
-    }
-
-    /**
-     * 获取折扣显示值（根据语言环境返回不同格式）
-     * 
-     * @return string
-     */
-    protected function getDiscountDisplayValue(): string
-    {
-        $locale = app()->getLocale();
-        
-        // 中文环境：打8折
-        if (in_array($locale, ['zh', 'zh-CN', 'zh-TW'])) {
-            return $this->getDiscountRate();
-        }
-        
-        // 英文环境：20% off  
-        return $this->formatNumber($this->discount_amount_value);
+        return $thresholdText.$discountText;
     }
 
     /**
      * 格式化数字显示（去除不必要的小数0）
-     * 
-     * @param float $number
+     *
+     * @param  float  $number
+     *
      * @return string
      */
-    protected function formatNumber(float $number): string
+    protected function formatNumber(float $number) : string
     {
         // 如果是整数（小数部分为0），只显示整数部分
         if ($number == floor($number)) {
             return (string) (int) $number;
         }
-        
+
         // 保留两位小数，但去除尾部的0
         return rtrim(rtrim(number_format($number, 2), '0'), '.');
     }
 
+    /**
+     * 获取折扣显示值（根据语言环境返回不同格式）
+     *
+     * @return string
+     */
+    protected function getDiscountDisplayValue() : string
+    {
+        $locale = app()->getLocale();
+
+        // 中文环境：打8折
+        if (in_array($locale, ['zh', 'zh-CN', 'zh-TW'])) {
+            return $this->getDiscountRate();
+        }
+
+        // 英文环境：20% off
+        return $this->formatNumber($this->discount_amount_value);
+    }
+
+    /**
+     * 获取折扣率（用于显示）
+     *
+     * @return string
+     */
+    protected function getDiscountRate() : string
+    {
+        $rate = (100 - $this->discount_amount_value) / 10;
+
+        // 如果是整数，不显示小数点
+        if ($rate == floor($rate)) {
+            return (string) (int) $rate;
+        }
+
+        // 保留一位小数
+        return number_format($rate, 1);
+    }
+
+    public function scopeUserVisible(Builder $query)
+    {
+        return $query->where('status', CouponStatusEnum::PAUSED)
+                     ->where('is_show', true);
+    }
+
+    protected function casts() : array
+    {
+        return [
+            'status'                 => CouponStatusEnum::class,
+            'is_show'                => 'boolean',
+            'discount_target'        => DiscountTargetEnum::class,
+            'discount_amount_type'   => DiscountAmountTypeEnum::class,
+            'discount_amount_value'  => 'decimal:2',
+            'threshold_type'         => ThresholdTypeEnum::class,
+            'threshold_value'        => 'decimal:2',
+            'max_discount_amount'    => 'decimal:2',
+            'validity_type'          => ValidityTypeEnum::class,
+            'validity_start_time'    => 'datetime',
+            'validity_end_time'      => 'datetime',
+            'start_time'             => 'datetime',
+            'end_time'               => 'datetime',
+            'delayed_effective_time' => TimeConfigCast::class,
+            'validity_time'          => TimeConfigCast::class,
+            'usage_rules'            => 'array',
+            'receive_rules'          => 'array',
+            'sort'                   => 'integer',
+            'total_quantity'         => 'integer',
+            'total_issued'           => 'integer',
+            'total_used'             => 'integer',
+            'cost_bearer'            => UserInterfaceCast::class,
+        ];
+    }
 
 }

@@ -27,21 +27,21 @@ class ListUserCoupons extends ListRecords
     {
         return [
             'all' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.all'))
+                ->label(__('red-jasmine-coupon::user_coupon.tabs.all'))
                 ->badge(static::getResource()::getEloquentQuery()->count()),
 
             'available' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.available'))
+                ->label(__('red-jasmine-coupon::user_coupon.tabs.available'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', UserCouponStatusEnum::AVAILABLE)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', UserCouponStatusEnum::AVAILABLE)),
 
             'used' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.used'))
+                ->label(__('red-jasmine-coupon::user_coupon.tabs.used'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', UserCouponStatusEnum::USED)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', UserCouponStatusEnum::USED)),
 
             'expired' => Tab::make()
-                ->label(__('red-jasmine-filament-coupon::coupon.tabs.expired'))
+                ->label(__('red-jasmine-coupon::user_coupon.tabs.expired'))
                 ->badge(static::getResource()::getEloquentQuery()->where('status', UserCouponStatusEnum::EXPIRED)->count())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', UserCouponStatusEnum::EXPIRED)),
         ];

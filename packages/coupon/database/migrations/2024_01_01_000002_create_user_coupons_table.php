@@ -25,7 +25,8 @@ return new class extends Migration {
                   ->default(UserCouponStatusEnum::AVAILABLE)
                   ->comment(UserCouponStatusEnum::comments('状态'));
             $table->timestamp('issue_time')->useCurrent()->comment('发放时间');
-            $table->timestamp('expire_time')->comment('过期时间');
+            $table->timestamp('validity_start_time')->comment('有效期开始时间');
+            $table->timestamp('validity_end_time')->comment('有效期结束时间');
             $table->timestamp('used_time')->nullable()->comment('使用时间');
 
 
@@ -37,7 +38,7 @@ return new class extends Migration {
             // 索引
             $table->index(['owner_type', 'owner_id'], 'idx_owner');
             $table->index(['user_id', 'status'], 'idx_user_status');
-            $table->index('expire_time');
+            $table->index('validity_end_time');
             $table->index('used_time');
             $table->index('order_id');
         });

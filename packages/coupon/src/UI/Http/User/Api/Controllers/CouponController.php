@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace RedJasmine\Coupon\UI\Http\User\Api\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RedJasmine\Coupon\Application\Services\Coupon\Queries\CouponPaginateQuery;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
+use RedJasmine\Coupon\Application\Services\Coupon\Queries\UserCouponPaginateQuery;
 use RedJasmine\Coupon\Application\Services\UserCoupon\Commands\UserCouponReceiveCommand;
-use RedJasmine\Coupon\Application\Services\UserCoupon\Commands\UserCouponUseCommand;
 use RedJasmine\Coupon\Application\Services\UserCoupon\UserCouponApplicationService;
 use RedJasmine\Coupon\Domain\Data\CouponData as Data;
 use RedJasmine\Coupon\Domain\Models\Coupon as Model;
@@ -21,9 +21,10 @@ use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 class CouponController extends Controller
 {
     protected static string $resourceClass = Resource::class;
-    protected static string $paginateQueryClass = CouponPaginateQuery::class;
-    protected static string $modelClass = Model::class;
-    protected static string $dataClass = Data::class;
+    protected static string $modelClass    = Model::class;
+    protected static string $dataClass     = Data::class;
+
+    protected static string $paginateQueryClass = UserCouponPaginateQuery::class;
 
     use RestControllerActions;
 
@@ -31,15 +32,10 @@ class CouponController extends Controller
         protected CouponApplicationService $service,
         protected UserCouponApplicationService $userCouponService,
     ) {
-        // 设置查询作用域 - 只显示已发布且可显示的优惠券
-        $this->service->readRepository->withQuery(function ($query) {
-            $query->onlyOwner($this->getOwner());
-            $query->where('status', 'published');
-            $query->where('is_show', true);
-        });
+
     }
 
-    public function authorize($ability, $arguments = []): bool
+    public function authorize($ability, $arguments = []) : bool
     {
         return true;
     }
@@ -47,30 +43,19 @@ class CouponController extends Controller
     /**
      * 领取优惠券
      */
-    public function receive(int $id, Request $request)
+    public function receive(int $id, Request $request) : JsonResponse
     {
-        $request->offsetSet('couponId', $id);
-        $request->offsetSet('owner', $this->getOwner());
-        $request->offsetSet('user', $this->getOwner());
-        
+        $request->offsetSet('coupon_id', $id);
+
+        $request->offsetSet('user', $this->getOwner()->getUserData());
+
         $command = UserCouponReceiveCommand::from($request);
+        $command->setKey($id);
+
         $result = $this->userCouponService->receive($command);
-        
-        return static::success($result);
+
+        return static::success();
     }
 
-    /**
-     * 使用优惠券
-     */
-    public function consume(int $userCouponId, Request $request)
-    {
-        $request->offsetSet('userCouponId', $userCouponId);
-        $request->offsetSet('owner', $this->getOwner());
-        $request->offsetSet('user', $this->getOwner());
-        
-        $command = UserCouponUseCommand::from($request);
-        $result = $this->userCouponService->use($command);
-        
-        return static::success($result);
-    }
+
 } 
