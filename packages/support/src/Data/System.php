@@ -41,5 +41,10 @@ class System extends Data implements UserInterface
         return $this->avatar;
     }
 
+    public function getUserData() : array
+    {
+        return $this->toArray();
+    }
+
 
 }

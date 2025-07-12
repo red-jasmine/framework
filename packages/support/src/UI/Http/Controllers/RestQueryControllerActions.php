@@ -33,9 +33,10 @@ trait RestQueryControllerActions
 
     public function show($id, Request $request) : JsonResource
     {
-
-        $query = property_exists($this, 'findQueryClass') ? ($this->findQueryClass)::from($request) : FindQuery::from($request);
+        $queryClass = static::$findQueryClass ?? FindQuery::class;
+        $query      = $queryClass::from($request);
         $query->setKey($id);
+
         $model = $this->service->find($query);
         if (method_exists($this, 'authorize')) {
             $this->authorize('view', $model);

@@ -37,4 +37,6 @@ interface UserInterface
     public function getAvatar() : ?string;
 
 
+    public function getUserData() : array;
+
 }

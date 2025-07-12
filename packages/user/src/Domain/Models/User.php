@@ -245,4 +245,15 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         ];
     }
 
+    public function getUserData() : array
+    {
+        return [
+            'type'     => $this->getType(),
+            'id'       => $this->getID(),
+            'nickname' => $this->getNickname(),
+            'avatar'   => $this->getAvatar(),
+        ];
+    }
+
+
 }

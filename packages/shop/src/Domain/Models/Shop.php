@@ -11,7 +11,7 @@ use RedJasmine\Support\Data\System;
 use RedJasmine\User\Domain\Models\User;
 use Spatie\Permission\Traits\HasRoles;
 
-class Shop extends User implements BelongsToOwnerInterface
+class Shop extends User
 {
     public static string $tagModelClass   = ShopTag::class;
     public static string $tagTable        = 'shop_tag_pivot';
@@ -26,18 +26,13 @@ class Shop extends User implements BelongsToOwnerInterface
         'cancel'   => ShopCancelEvent::class,
     ];
 
-    public function owner(): UserInterface
-    {
-        return System::make();
-    }
-
     // 店铺管理员
-    public function isShopManager(): bool
+    public function isShopManager() : bool
     {
         return true;
     }
 
-    public function getType(): string
+    public function getType() : string
     {
         return 'shop';
     }
