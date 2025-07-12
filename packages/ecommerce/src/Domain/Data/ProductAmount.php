@@ -5,6 +5,7 @@ namespace RedJasmine\Ecommerce\Domain\Data;
 
 use Cknow\Money\Money;
 use Money\Currency;
+use RedJasmine\Shopping\Domain\Data\CouponInfoData;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -28,8 +29,39 @@ class ProductAmount extends Data
      * @var float
      */
     public float $taxRate = 0;
-
+    /**
+     * @var CouponInfoData[]
+     */
+    public array $coupons = [];
+    /**
+     * 优惠金额
+     * @var Money
+     */
+    public Money $discountAmount;
+    /**
+     * 税费
+     * @var Money
+     */
+    public Money $taxAmount;
+    /**
+     * 服务费
+     * @var Money
+     */
+    public Money $serviceAmount;
     protected ?Money $costPrice = null;
+    protected ?Money $totalCostPrice = null;
+
+    public function __construct(public Currency $currency)
+    {
+        $this->price          = Money::parse(0, $currency);
+        $this->costPrice      = Money::parse(0, $currency);
+        $this->totalCostPrice = Money::parse(0, $currency);
+        $this->totalPrice     = Money::parse(0, $currency);
+        $this->discountAmount = Money::parse(0, $currency);
+        $this->taxAmount      = Money::parse(0, $currency);
+        $this->serviceAmount  = Money::parse(0, $currency);
+
+    }
 
     public function getCostPrice() : ?Money
     {
@@ -51,38 +83,6 @@ class ProductAmount extends Data
     {
         $this->totalCostPrice = $totalCostPrice;
         return $this;
-    }
-
-
-    protected ?Money $totalCostPrice = null;
-
-
-    /**
-     * 优惠金额
-     * @var Money
-     */
-    public Money $discountAmount;
-    /**
-     * 税费
-     * @var Money
-     */
-    public Money $taxAmount;
-    /**
-     * 服务费
-     * @var Money
-     */
-    public Money $serviceAmount;
-
-    public function __construct(public Currency $currency)
-    {
-        $this->price          = Money::parse(0, $currency);
-        $this->costPrice      = Money::parse(0, $currency);
-        $this->totalCostPrice = Money::parse(0, $currency);
-        $this->totalPrice     = Money::parse(0, $currency);
-        $this->discountAmount = Money::parse(0, $currency);
-        $this->taxAmount      = Money::parse(0, $currency);
-        $this->serviceAmount  = Money::parse(0, $currency);
-
     }
 
     /**

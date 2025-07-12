@@ -20,38 +20,6 @@ class OrderDomainService extends AmountCalculationService
      *
      * @return OrdersData
      */
-    protected function orderSplit(OrderData $orderData) : OrdersData
-    {
-        $orders       = [];
-        $productGroup = collect($orderData->products)->groupBy(function (OrderProductData $product) {
-            return $product->getSplitKey();
-        });
-        // 对订单进行排序 TODO
-        $ordersData = new OrdersData();
-        foreach ($productGroup as $products) {
-            $order           = clone $orderData;
-            $order->seller   = $products[0]->product->seller;
-            $order->products = [...$products];
-            $orders[]        = $order;
-        }
-        $ordersData->setOrders($orders);
-        return $ordersData;
-    }
-
-
-    protected function initOrders(OrderData $orderData) : OrdersData
-    {
-
-        $orderData->products = $this->init($orderData->products);
-
-        return $this->orderSplit($orderData);
-    }
-
-    /**
-     * @param  OrderData  $orderData
-     *
-     * @return OrdersData
-     */
     public function buy(OrderData $orderData) : OrdersData
     {
 
@@ -79,6 +47,7 @@ class OrderDomainService extends AmountCalculationService
                 );
             }
 
+            // TODO 优惠券的扣减
 
         }
 
@@ -87,15 +56,34 @@ class OrderDomainService extends AmountCalculationService
         return $ordersData;
     }
 
-    public function check(OrderData $orderData) : OrdersData
+    protected function initOrders(OrderData $orderData) : OrdersData
     {
-        $ordersData = $this->initOrders($orderData);
-        foreach ($ordersData->orders as $orderDataItem) {
-            $orderDataItem->setOrderAmount(
-                $this->calculates($orderDataItem)
-            );
+
+        $orderData->products = $this->init($orderData->products);
+
+        return $this->orderSplit($orderData);
+    }
+
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return OrdersData
+     */
+    protected function orderSplit(OrderData $orderData) : OrdersData
+    {
+        $orders       = [];
+        $productGroup = collect($orderData->products)->groupBy(function (OrderProductData $product) {
+            return $product->getSplitKey();
+        });
+        // 对订单进行排序 TODO
+        $ordersData = new OrdersData();
+        foreach ($productGroup as $products) {
+            $order           = clone $orderData;
+            $order->seller   = $products[0]->product->seller;
+            $order->products = [...$products];
+            $orders[]        = $order;
         }
-        $ordersData->statistics();
+        $ordersData->setOrders($orders);
         return $ordersData;
     }
 
@@ -108,5 +96,17 @@ class OrderDomainService extends AmountCalculationService
         }
         return $this->getOrderAmount($orderData->products);
 
+    }
+
+    public function check(OrderData $orderData) : OrdersData
+    {
+        $ordersData = $this->initOrders($orderData);
+        foreach ($ordersData->orders as $orderDataItem) {
+            $orderDataItem->setOrderAmount(
+                $this->calculates($orderDataItem)
+            );
+        }
+        $ordersData->statistics();
+        return $ordersData;
     }
 }

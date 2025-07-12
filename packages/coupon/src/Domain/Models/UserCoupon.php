@@ -2,13 +2,18 @@
 
 namespace RedJasmine\Coupon\Domain\Models;
 
-use Carbon\Carbon;
+
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Generator\CouponNoGenerator;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -29,21 +34,8 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     use HasOwner;
     use HasOperator;
 
-    public $incrementing = false;
-
-
-    public function scopeOnlyUser(Builder $query, UserInterface $user) : Builder
-    {
-        return $query->where(
-            [
-                'user_id'   => $user->getID(),
-                'user_type' => $user->getType(),
-            ]
-        );
-    }
-
-
-    protected $fillable = [
+    public    $incrementing = false;
+    protected $fillable     = [
         'coupon_id',
         'owner_type',
         'owner_id',
@@ -59,20 +51,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         'user',
     ];
 
-    protected function casts() : array
-    {
-        return [
-            'status'              => UserCouponStatusEnum::class,
-            'user'                => UserInterfaceCast::class,
-            'issue_time'          => 'datetime',
-            'validity_start_time' => 'datetime',
-            'validity_end_time'   => 'datetime',
-            'used_time'           => 'datetime',
-            'coupon_id'           => 'integer',
-            'order_id'            => 'integer',
-        ];
-    }
-
     protected static function boot() : void
     {
         parent::boot();
@@ -82,6 +60,16 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             $userCoupon->status     = UserCouponStatusEnum::AVAILABLE;
             $userCoupon->issue_time = Carbon::now();
         });
+    }
+
+    public function scopeOnlyUser(Builder $query, UserInterface $user) : Builder
+    {
+        return $query->where(
+            [
+                'user_id'   => $user->getID(),
+                'user_type' => $user->getType(),
+            ]
+        );
     }
 
     public function newInstance($attributes = [], $exists = false) : static
@@ -118,22 +106,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
-     * 检查是否可用
-     */
-    public function isAvailable() : bool
-    {
-        return $this->status === UserCouponStatusEnum::AVAILABLE && !$this->isExpired();
-    }
-
-    /**
-     * 检查是否已过期
-     */
-    public function isExpired() : bool
-    {
-        return Carbon::now()->isAfter($this->validity_end_time);
-    }
-
-    /**
      * 检查是否已使用
      */
     public function isUsed() : bool
@@ -154,6 +126,22 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         $this->used_time = Carbon::now();
         $this->order_id  = $orderId;
         $this->save();
+    }
+
+    /**
+     * 检查是否可用
+     */
+    public function isAvailable() : bool
+    {
+        return $this->status === UserCouponStatusEnum::AVAILABLE && !$this->isExpired();
+    }
+
+    /**
+     * 检查是否已过期
+     */
+    public function isExpired() : bool
+    {
+        return Carbon::now()->isAfter($this->validity_end_time);
     }
 
     /**
@@ -194,6 +182,14 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
+     * 获取显示名称
+     */
+    public function getDisplayName() : string
+    {
+        return $this->coupon->name.' - '.$this->getStatusText();
+    }
+
+    /**
      * 获取状态文本
      */
     public function getStatusText() : string
@@ -210,20 +206,13 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
-     * 获取显示名称
-     */
-    public function getDisplayName() : string
-    {
-        return $this->coupon->name.' - '.$this->getStatusText();
-    }
-
-    /**
      * 作用域：可用的优惠券
      */
     public function scopeAvailable($query)
     {
         return $query->where('status', UserCouponStatusEnum::AVAILABLE)
-                     ->where('expire_time', '>', Carbon::now());
+                     ->where('validity_start_time', '<=', Carbon::now())
+                     ->where('validity_end_time', '>', Carbon::now());
     }
 
     /**
@@ -232,7 +221,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function scopeExpired($query)
     {
         return $query->where('status', UserCouponStatusEnum::EXPIRED)
-                     ->orWhere('expire_time', '<=', Carbon::now());
+                     ->orWhere('validity_end_time', '<=', Carbon::now());
     }
 
     /**
@@ -258,5 +247,57 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
         return $query->where('owner_type', $ownerType)
                      ->where('owner_id', $ownerId);
+    }
+
+    /**
+     * 是否可以使用
+     *
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
+     *
+     * @return bool
+     */
+    public function canUse(ProductPurchaseFactor $productPurchaseFactor) : bool
+    {
+        // 验证门槛
+        if ($this->coupon->threshold_type === ThresholdTypeEnum::QUANTITY) {
+            if ($productPurchaseFactor->quantity < $this->coupon->threshold_value) {
+                return false;
+            }
+        }
+        if ($this->coupon->threshold_type === ThresholdTypeEnum::AMOUNT) {
+            if ($productPurchaseFactor->getProductAmount()->getProductAmount() < $this->coupon->threshold_value) {
+                return false;
+            }
+        }
+        // TODO 验证 使用规则
+        return true;
+    }
+
+    // 获取优惠金额
+    public function calculateDiscountAmount(ProductPurchaseFactor $productPurchaseFactor) : Money
+    {
+
+        if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::FIXED_AMOUNT) {
+
+            return Money::parse($this->coupon->discount_amount_value, $productPurchaseFactor->getProductAmount()->price->getCurrency());
+        }
+        if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
+            return $productPurchaseFactor->getProductAmount()->getProductAmount()->multiply(bcdiv($this->coupon->discount_amount_value, 100, 4));
+        }
+        return Money::parse(0, $productPurchaseFactor->getProductAmount()->price->getCurrency());
+    }
+
+    protected function casts() : array
+    {
+        return [
+            'status'              => UserCouponStatusEnum::class,
+            'user'                => UserInterfaceCast::class,
+            'issue_time'          => 'datetime',
+            'validity_start_time' => 'datetime',
+            'validity_end_time'   => 'datetime',
+            'used_time'           => 'datetime',
+            'coupon_id'           => 'integer',
+            'order_id'            => 'integer',
+        ];
     }
 } 

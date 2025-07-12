@@ -5,12 +5,10 @@ namespace RedJasmine\FilamentCore\Helpers;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
 use Filament\Support\Components\ViewComponent;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Data\UserData;
@@ -45,95 +43,12 @@ trait PageHelper
 
     }
 
-    public static function operateTableColumns() : array
-    {
-        return [
-            Tables\Columns\TextColumn::make('creator')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname())
-                                     ->label(__('red-jasmine-support::support.creator'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
-            // Tables\Columns\TextColumn::make('creator_type')
-            //                          ->label(__('red-jasmine-support::support.creator_type'))
-            //                          ->toggleable(isToggledHiddenByDefault: true),
-            // Tables\Columns\TextColumn::make('creator_id')
-            //                          ->label(__('red-jasmine-support::support.creator_id'))
-            //                          ->toggleable(isToggledHiddenByDefault: true),
-
-            Tables\Columns\TextColumn::make('updater')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname() ?? $state?->getId())
-                                     ->label(__('red-jasmine-support::support.updater'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
-            // Tables\Columns\TextColumn::make('updater_type')
-            //                          ->label(__('red-jasmine-support::support.updater_type'))
-            //                          ->toggleable(isToggledHiddenByDefault: true),
-            // Tables\Columns\TextColumn::make('updater_id')
-            //                          ->label(__('red-jasmine-support::support.updater_id'))
-            //
-            //                          ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('created_at')
-                                     ->label(__('red-jasmine-support::support.created_at'))
-                                     ->dateTime()
-                                     ->sortable()
-                                     ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('updated_at')
-                                     ->label(__('red-jasmine-support::support.updated_at'))
-                                     ->dateTime()
-                                     ->sortable()
-                                     ->toggleable(isToggledHiddenByDefault: true),
-
-        ];
-    }
-
     public static function ownerQueryUsing(string $name = 'owner') : callable
     {
         return static fn($query, Forms\Get $get) => $query->onlyOwner(UserData::from([
             'type' => $get('owner_type'), 'id' => $get('owner_id')
         ]));
     }
-
-    public static function ownerFormSchemas(string $name = 'owner') : array
-    {
-        $user     = auth()->user();
-        $owner    = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
-        $disabled = true;
-        if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
-            $disabled = false;
-        }
-        return [
-            Forms\Components\TextInput::make($name.'_type')
-                                      ->label(__('red-jasmine-support::support.owner_type'))
-                                      ->default($owner->getType())
-                                      ->required()
-                                      ->maxLength(64)
-                                      ->disabled($disabled)
-                                      ->live(),
-            Forms\Components\TextInput::make($name.'_id')
-                                      ->label(__('red-jasmine-support::support.owner_id'))
-                                      ->required()
-                                      ->default($owner->getID())
-                                      ->disabled($disabled)
-                                      ->live(),
-
-        ];
-
-
-    }
-
-
-    public static function ownerTableColumns(string $name = 'owner') : array
-    {
-        // 定义 组件
-        return [
-            Tables\Columns\TextColumn::make($name)
-                                     ->formatStateUsing(fn($state) => $state?->getNickname())
-                                     ->label(__('red-jasmine-support::support.owner'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
-
-            Tables\Columns\TextColumn::make($name.'_type')->label(__('red-jasmine-support::support.owner_type'))->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make($name.'_id')->label(__('red-jasmine-support::support.owner_id'))->numeric()->copyable()->toggleable(isToggledHiddenByDefault: true),
-        ];
-    }
-
 
     public static function translationLabels(ViewComponent $component, array $parent = []) : ViewComponent
     {
@@ -203,7 +118,6 @@ trait PageHelper
         return $component;
 
     }
-
 
     public static function categoryForm(Form $form, bool $hasOwner = false) : Form
     {
@@ -296,6 +210,34 @@ trait PageHelper
             ]);
     }
 
+    public static function ownerFormSchemas(string $name = 'owner') : array
+    {
+        $user     = auth()->user();
+        $owner    = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
+        $disabled = true;
+        if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
+            $disabled = false;
+        }
+        return [
+            Forms\Components\TextInput::make($name.'_type')
+                                      ->label(__('red-jasmine-support::support.owner_type'))
+                                      ->default($owner->getType())
+                                      ->required()
+                                      ->maxLength(64)
+                                      ->disabled($disabled)
+                                      ->live(),
+            Forms\Components\TextInput::make($name.'_id')
+                                      ->label(__('red-jasmine-support::support.owner_id'))
+                                      ->required()
+                                      ->default($owner->getID())
+                                      ->disabled($disabled)
+                                      ->live(),
+
+        ];
+
+
+    }
+
     public static function categoryTable(Table $table, bool $hasOwner = false) : Table
     {
         $owner = $hasOwner ? static::ownerTableColumns() : [];
@@ -353,5 +295,62 @@ trait PageHelper
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function ownerTableColumns(string $name = 'owner') : array
+    {
+        // 定义 组件
+        return [
+            // Tables\Columns\TextColumn::make($name)
+            //                          ->formatStateUsing(fn($state) => $state?->getNickname())
+            //                          ->label(__('red-jasmine-support::support.owner'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
+
+            Tables\Columns\TextColumn::make($name.'_type')
+                                     ->label(__('red-jasmine-support::support.owner_type'))
+                                     ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make($name.'_id')
+                                     ->label(__('red-jasmine-support::support.owner_id'))
+                                     ->copyable()->toggleable(isToggledHiddenByDefault: true),
+        ];
+    }
+
+    public static function operateTableColumns() : array
+    {
+        return [
+            Tables\Columns\TextColumn::make('creator')
+                                     ->formatStateUsing(fn($state) => $state?->getNickname())
+                                     ->label(__('red-jasmine-support::support.creator'))
+                                     ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('creator_type')
+            //                          ->label(__('red-jasmine-support::support.creator_type'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('creator_id')
+            //                          ->label(__('red-jasmine-support::support.creator_id'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
+
+            Tables\Columns\TextColumn::make('updater')
+                                     ->formatStateUsing(fn($state) => $state?->getNickname() ?? $state?->getId())
+                                     ->label(__('red-jasmine-support::support.updater'))
+                                     ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('updater_type')
+            //                          ->label(__('red-jasmine-support::support.updater_type'))
+            //                          ->toggleable(isToggledHiddenByDefault: true),
+            // Tables\Columns\TextColumn::make('updater_id')
+            //                          ->label(__('red-jasmine-support::support.updater_id'))
+            //
+            //                          ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('created_at')
+                                     ->label(__('red-jasmine-support::support.created_at'))
+                                     ->dateTime()
+                                     ->sortable()
+                                     ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                                     ->label(__('red-jasmine-support::support.updated_at'))
+                                     ->dateTime()
+                                     ->sortable()
+                                     ->toggleable(isToggledHiddenByDefault: true),
+
+        ];
     }
 }

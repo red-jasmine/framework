@@ -64,6 +64,8 @@ class OrderCreateCommandTransformer
             //$product->otherExtra      = null; // TODO
             $product->customized = $productData->customized ?? [];
 
+            // TODO 优惠信息的存储
+
             $order->products[] = $product;
 
         }

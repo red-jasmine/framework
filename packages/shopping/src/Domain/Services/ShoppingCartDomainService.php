@@ -10,42 +10,28 @@ use RedJasmine\Ecommerce\Domain\Data\StockInfo;
 use RedJasmine\Shopping\Domain\Data\OrderAmountData;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
+use RedJasmine\Shopping\Exceptions\ShoppingCartException;
 
 class ShoppingCartDomainService extends AmountCalculationService
 {
 
 
     /**
-     * 校验商品信息
+     * @param  ShoppingCart  $cart
+     * @param  ProductPurchaseFactor  $productPurchaseFactors
+     *
+     * @return ShoppingCartProduct
+     * @throws ShoppingCartException
      */
-    protected function validateProduct(ProductInfo $productInfo) : bool
-    {
-
-        if (!$productInfo->isAvailable) {
-            throw new InvalidArgumentException('商品不可购买');
-        }
-
-        return true;
-    }
-
-    /**
-     * 校验库存
-     */
-    protected function validateStock(StockInfo $stockInfo) : bool
-    {
-        if (!$stockInfo->isAvailable) {
-            throw new InvalidArgumentException("库存不足，可用库存：{$stockInfo->stock}");
-        }
-        return true;
-    }
-
-
     public function addProduct(ShoppingCart $cart, ProductPurchaseFactor $productPurchaseFactors) : ShoppingCartProduct
     {
 
         // 获取商品信息
         $productInfo = $this->productService->getProductInfo($productPurchaseFactors);
 
+        /**
+         * @var ShoppingCartProduct $shoppingCartProduct
+         */
         $shoppingCartProduct = ShoppingCartProduct::make(['cart_id' => $cart->id]);
 
         $shoppingCartProduct->setProduct($productPurchaseFactors->product);
@@ -72,6 +58,29 @@ class ShoppingCartDomainService extends AmountCalculationService
         return $shoppingCartProduct;
     }
 
+    /**
+     * 校验商品信息
+     */
+    protected function validateProduct(ProductInfo $productInfo) : bool
+    {
+
+        if (!$productInfo->isAvailable) {
+            throw new InvalidArgumentException('商品不可购买');
+        }
+
+        return true;
+    }
+
+    /**
+     * 校验库存
+     */
+    protected function validateStock(StockInfo $stockInfo) : bool
+    {
+        if (!$stockInfo->isAvailable) {
+            throw new InvalidArgumentException("库存不足，可用库存：{$stockInfo->stock}");
+        }
+        return true;
+    }
 
     public function show(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
     {
@@ -79,17 +88,6 @@ class ShoppingCartDomainService extends AmountCalculationService
 
         return $this->getSelectProductsOrderAmount($selectProducts, $factor);
     }
-
-
-    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
-    {
-
-        $selectProducts = $cart->products->where('selected', true)->all();
-
-
-        return $this->getSelectProductsOrderAmount($selectProducts, $factor);
-    }
-
 
     /**
      * @param  ShoppingCartProduct[]  $selectProducts
@@ -120,6 +118,15 @@ class ShoppingCartDomainService extends AmountCalculationService
         }
 
         return $this->getOrderAmount($productPurchaseFactors);
+    }
+
+    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
+    {
+
+        $selectProducts = $cart->products->where('selected', true)->all();
+
+
+        return $this->getSelectProductsOrderAmount($selectProducts, $factor);
     }
 
 

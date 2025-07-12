@@ -3,6 +3,7 @@
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Commands;
 
 use Cknow\Money\Money;
+use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
@@ -15,18 +16,14 @@ use RedJasmine\Support\Application\Commands\CommandHandler;
 class CalculateAmountCommandHandler extends CommandHandler
 {
 
+    use HasDomainService;
     protected ShoppingCartDomainService $shoppingCartDomainService;
 
     public function __construct(
         protected ShoppingCartApplicationService $service,
 
     ) {
-        $this->shoppingCartDomainService = new ShoppingCartDomainService(
-            app(ProductServiceInterface::class),
-            app(StockServiceInterface::class),
-            app(PromotionServiceInterface::class),
-            app(OrderServiceInterface::class),
-        );
+        $this->shoppingCartDomainService = $this->makeDomainService(ShoppingCartDomainService::class);
     }
 
     public function handle(CalculateAmountCommand $command) : ?OrderAmountData

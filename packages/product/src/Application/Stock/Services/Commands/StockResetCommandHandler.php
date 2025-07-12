@@ -24,6 +24,7 @@ class StockResetCommandHandler extends StockCommandHandler
         try {
             $sku       = $this->repository->find($command->skuId);
             $sku       = $this->repository->reset($sku, $command->actionStock);
+
             $restStock = (int) bcsub($sku->stock, $sku->getOldStock(), 0);
             $this->log($sku, $command, $restStock);
 

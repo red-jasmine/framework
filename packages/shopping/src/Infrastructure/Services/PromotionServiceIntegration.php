@@ -9,7 +9,7 @@ use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 class PromotionServiceIntegration implements PromotionServiceInterface
 {
     /**
-     * 获取商品优惠信息
+     * 获取商品级别优惠信息
      *
      * @param  ProductPurchaseFactor  $productPurchaseFactor  商品购买因子
      * @param  ProductAmount  $productAmount  优惠金额

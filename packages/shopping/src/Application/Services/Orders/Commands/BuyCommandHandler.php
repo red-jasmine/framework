@@ -5,8 +5,10 @@ namespace RedJasmine\Shopping\Application\Services\Orders\Commands;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
+use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
@@ -20,6 +22,7 @@ use Throwable;
 // 定义一个处理购买命令的类，继承自CommandHandler基类
 class BuyCommandHandler extends CommandHandler
 {
+    use HasDomainService;
 
     protected OrderDomainService $orderDomainService;
     // 构造函数
@@ -28,12 +31,7 @@ class BuyCommandHandler extends CommandHandler
         protected ShoppingOrderCommandService $service,
     ) {
 
-        $this->orderDomainService = new OrderDomainService(
-            app(ProductServiceInterface::class),
-            app(StockServiceInterface::class),
-            app(PromotionServiceInterface::class),
-            app(OrderServiceInterface::class),
-        );
+        $this->orderDomainService = $this->makeDomainService(OrderDomainService::class);
 
 
     }

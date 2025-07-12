@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Services;
 
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
@@ -23,31 +24,9 @@ class AmountCalculationService extends Service
         protected StockServiceInterface $stockService,
         protected PromotionServiceInterface $promotionService,
         protected OrderServiceInterface $orderService,
+        protected CouponServiceInterface $couponService,
     ) {
 
-    }
-
-    protected function init(array $productPurchaseFactors) : array
-    {
-
-        foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
-            /**
-             * @var ProductPurchaseFactor $productPurchaseFactor
-             */
-            $productPurchaseFactor->buildSerialNumber();
-            // 获取商品信息
-            $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
-            $productPurchaseFactor->setProductInfo($productInfo);
-            // 获取商品拆单信息
-            $productPurchaseFactor->setSplitKey(
-                ShoppingOrderSplitProductHook::hook(
-                    $productPurchaseFactor,
-                    fn() => $this->orderService->getOrderProductSplitKey($productPurchaseFactor)
-                )
-            );
-        }
-
-        return $productPurchaseFactors;
     }
 
     /**
@@ -79,6 +58,16 @@ class AmountCalculationService extends Service
             // 查询商品优惠信息
             $productAmount = $this->promotionService->getProductPromotion($productPurchaseFactor, $productAmount);
 
+            // 查询优惠券信息
+            $productCoupons = $this->couponService->getUserCouponsByProduct($productPurchaseFactor);
+
+            if (count($productCoupons)) {
+                foreach ($productCoupons as $productCoupon) {
+                    $productAmount->discountAmount = $productAmount->discountAmount->add($productCoupon->discountAmount);
+                    $productAmount->coupons[]      = $productCoupon;
+                }
+            }
+
             $productPurchaseFactor->getProductInfo()->productAmount = $productAmount;
             $productPurchaseFactor->getProductInfo()->stockInfo     = $cartStockInfo;
             // 把商品金额信息加入订单金额信息
@@ -92,6 +81,34 @@ class AmountCalculationService extends Service
         $orderAmount->calculate();
 
         return $orderAmount;
+    }
+
+    /**
+     * @param  array  $productPurchaseFactors
+     *
+     * @return array|ProductPurchaseFactor[]
+     */
+    protected function init(array $productPurchaseFactors) : array
+    {
+
+        foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
+            /**
+             * @var ProductPurchaseFactor $productPurchaseFactor
+             */
+            $productPurchaseFactor->buildSerialNumber();
+            // 获取商品信息
+            $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
+            $productPurchaseFactor->setProductInfo($productInfo);
+            // 获取商品拆单信息
+            $productPurchaseFactor->setSplitKey(
+                ShoppingOrderSplitProductHook::hook(
+                    $productPurchaseFactor,
+                    fn() => $this->orderService->getOrderProductSplitKey($productPurchaseFactor)
+                )
+            );
+        }
+
+        return $productPurchaseFactors;
     }
 
 

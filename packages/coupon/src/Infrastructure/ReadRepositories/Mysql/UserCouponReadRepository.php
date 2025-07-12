@@ -37,6 +37,7 @@ class UserCouponReadRepository extends QueryBuilderReadRepository implements Use
             AllowedFilter::exact('status'),
             AllowedFilter::exact('order_id'),
             AllowedFilter::scope('userVisible'),
+            AllowedFilter::scope('available'),
             AllowedFilter::scope('availableAt'),
             AllowedFilter::scope('usable'),
         ];

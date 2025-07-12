@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "red-jasmine/support": "1.0.x-dev"
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/ecommerce": "1.0.x-dev"
     },
     "require-dev": {
      

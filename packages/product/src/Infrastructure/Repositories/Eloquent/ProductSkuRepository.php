@@ -49,7 +49,7 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
                          ->lockForUpdate()
                          ->find($sku->id);
         if (bccomp($sku->stock, $stock, 0) === 0) {
-            return 0;
+            return $sku;
         }
         if (bccomp($stock, $sku->channel_stock, 0) < 0) {
             throw new StockException('活动库存占用');
@@ -64,7 +64,7 @@ class ProductSkuRepository implements ProductSkuRepositoryInterface
 
         $stockUpdate = DB::raw("stock + $quantity");
         Product::withTrashed()->where('id', $sku->product_id)->update(['stock' => $stockUpdate]);
-
+    
         return $sku;
     }
 

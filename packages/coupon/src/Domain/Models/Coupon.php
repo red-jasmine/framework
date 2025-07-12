@@ -214,6 +214,9 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return true;
     }
 
+
+
+
     /**
      * 检查领取规则
      */

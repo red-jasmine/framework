@@ -2,28 +2,22 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Queries;
 
+use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
-use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Services\ShoppingCartDomainService;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 
 class FindBuyerCartQueryHandler extends QueryHandler
 {
+    use HasDomainService;
+
     protected ShoppingCartDomainService $shoppingCartDomainService;
 
     public function __construct(
         protected ShoppingCartApplicationService $service,
     ) {
-        $this->shoppingCartDomainService = new ShoppingCartDomainService(
-            app(ProductServiceInterface::class),
-            app(StockServiceInterface::class),
-            app(PromotionServiceInterface::class),
-            app(OrderServiceInterface::class),
-        );
+        $this->shoppingCartDomainService = $this->makeDomainService(ShoppingCartDomainService::class);
     }
 
     public function handle(FindBuyerCartQuery $query) : ?ShoppingCart

@@ -42,19 +42,19 @@ class PaginateQuery extends Query
      * 附加字段，用于指定查询结果中需要附加的额外字段
      * @var mixed
      */
-    public mixed $append;
+    public mixed $append = [];
 
     /**
      * 排序字段，用于指定查询结果的排序依据
      * @var mixed
      */
-    public mixed $sort;
+    public mixed $sort = [];
 
 
     /**
      * 搜索字段
      * @var string|null
      */
-    public ?string $search;
+    public ?string $search = null;
 
 }
