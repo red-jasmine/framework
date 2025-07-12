@@ -1,6 +1,28 @@
 <?php
 
 return [
+
+    
+    'label' => [
+        'threshold' => [
+            'amount_over' => 'Over $:amount',
+            'quantity_over' => 'Over :quantity items',
+        ],
+        'discount' => [
+            'fixed_amount' => 'Save $:amount',
+            'fixed_amount_yuan' => 'Save $:amount',
+            'percentage' => ':rate% off',
+        ],
+    ],
+    
+
+    
+
+    
+
+    
+
+    
     'enums'    => [
         'status'             => [
             'draft'     => 'Draft',
@@ -8,11 +30,15 @@ return [
             'paused'    => 'Paused',
             'expired'   => 'Expired',
         ],
-        'discount_type'      => [
+        'discount_amount_type'      => [
             'fixed_amount' => 'Fixed Amount',
             'percentage'   => 'Percentage',
         ],
         'threshold_type'     => [
+            'amount' => 'Amount',
+            'quantity' => 'Quantity',
+        ],
+        'discount_target'     => [
             'order_amount'       => 'Order Amount',
             'product_amount'     => 'Product Amount',
             'shipping_amount'    => 'Shipping Amount',
@@ -38,17 +64,7 @@ return [
             'expired'   => 'Expired',
         ],
     ],
-    'label' => [
-        'threshold' => [
-            'amount_over' => 'Over $:amount',
-            'quantity_over' => 'Over :quantity items',
-        ],
-        'discount' => [
-            'fixed_amount' => 'Save $:amount',
-            'fixed_amount_yuan' => 'Save $:amount',
-            'percentage' => ':rate% off',
-        ],
-    ],
+    
     'messages' => [
         'created'         => 'Coupon created successfully',
         'updated'         => 'Coupon updated successfully',

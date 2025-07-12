@@ -41,12 +41,12 @@ class CouponResource extends Resource
 
     public static function getModelLabel() : string
     {
-        return __('red-jasmine-filament-coupon::coupon.labels.coupon');
+        return __('red-jasmine-coupon::coupon.labels.coupon');
     }
 
     public static function getPluralModelLabel() : string
     {
-        return __('red-jasmine-filament-coupon::coupon.labels.coupons');
+        return __('red-jasmine-coupon::coupon.labels.coupons');
     }
 
     public static function form(Form $form) : Form
@@ -57,74 +57,74 @@ class CouponResource extends Resource
                                      ->tabs([
                                          // 基础信息标签页
                                          Forms\Components\Tabs\Tab::make('basic_info')
-                                                                  ->label(__('red-jasmine-filament-coupon::coupon.labels.basic_info'))
+                                                                  ->label(__('red-jasmine-coupon::coupon.labels.basic_info'))
                                                                   ->schema([
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
                                                                                                   ...static::ownerFormSchemas(),
 
                                                                                                   Forms\Components\TextInput::make('name')
-                                                                                                                            ->label(__('red-jasmine-filament-coupon::coupon.fields.name'))
+                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.name'))
                                                                                                                             ->required()
                                                                                                                             ->maxLength(255),
 
                                                                                                   Forms\Components\Textarea::make('description')
-                                                                                                                           ->label(__('red-jasmine-filament-coupon::coupon.fields.description'))
+                                                                                                                           ->label(__('red-jasmine-coupon::coupon.fields.description'))
                                                                                                                            ->rows(3),
 
                                                                                                   Forms\Components\FileUpload::make('image')
-                                                                                                                             ->label(__('red-jasmine-filament-coupon::coupon.fields.image'))
+                                                                                                                             ->label(__('red-jasmine-coupon::coupon.fields.image'))
                                                                                                                              ->image()
                                                                                                                              ->directory('coupons'),
 
                                                                                                   Forms\Components\Toggle::make('is_show')
-                                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.is_show'))
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.is_show'))
                                                                                                                          ->default(true),
 
                                                                                                   Forms\Components\Select::make('status')
-                                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.status'))
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.status'))
                                                                                                                          ->options(CouponStatusEnum::options())
                                                                                                                          ->default(CouponStatusEnum::DRAFT)
                                                                                                                          ->required(),
 
                                                                                                   Forms\Components\TextInput::make('total_quantity')
-                                                                                                                            ->label(__('red-jasmine-filament-coupon::coupon.fields.total_quantity'))
+                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.total_quantity'))
                                                                                                                             ->numeric()
                                                                                                                             ->default(100)
                                                                                                                             ->required(),
 
                                                                                                   Forms\Components\TextInput::make('sort')
-                                                                                                                            ->label(__('red-jasmine-filament-coupon::coupon.fields.sort'))
+                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.sort'))
                                                                                                                             ->numeric()
                                                                                                                             ->default(0),
 
                                                                                                   Forms\Components\Textarea::make('remarks')
-                                                                                                                           ->label(__('red-jasmine-filament-coupon::coupon.fields.remarks'))
+                                                                                                                           ->label(__('red-jasmine-coupon::coupon.fields.remarks'))
                                                                                                                            ->rows(3),
 
                                                                                                   Forms\Components\DateTimePicker::make('start_time')
-                                                                                                                                 ->label(__('red-jasmine-filament-coupon::coupon.fields.start_time')),
+                                                                                                                                 ->label(__('red-jasmine-coupon::coupon.fields.start_time')),
 
                                                                                                   Forms\Components\DateTimePicker::make('end_time')
-                                                                                                                                 ->label(__('red-jasmine-filament-coupon::coupon.fields.end_time')),
+                                                                                                                                 ->label(__('red-jasmine-coupon::coupon.fields.end_time')),
                                                                                               ])
                                                                                               ->columns(2),
                                                                   ]),
 
                                          // 优惠设置标签页
                                          Forms\Components\Tabs\Tab::make('discount_settings')
-                                                                  ->label(__('red-jasmine-filament-coupon::coupon.labels.discount_settings'))
+                                                                  ->label(__('red-jasmine-coupon::coupon.labels.discount_settings'))
                                                                   ->schema([
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
                                                                                                   Forms\Components\Select::make('discount_target')
-                                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_target'))
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_target'))
                                                                                                                          ->options(DiscountTargetEnum::options())
                                                                                                                          ->default(DiscountTargetEnum::ORDER_AMOUNT)
                                                                                                                          ->required(),
 
                                                                                                   Forms\Components\Select::make('discount_amount_type')
-                                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount_type'))
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_type'))
                                                                                                                          ->options(DiscountAmountTypeEnum::options())
                                                                                                                          ->default(DiscountAmountTypeEnum::PERCENTAGE)
                                                                                                                          ->required()
@@ -134,20 +134,20 @@ class CouponResource extends Resource
                                                                                                   Cluster::make(
                                                                                                       [
                                                                                                           Forms\Components\TextInput::make('threshold_value')
-                                                                                                                                    ->label(__('red-jasmine-filament-coupon::coupon.fields.threshold_value'))
+                                                                                                                                    ->label(__('red-jasmine-coupon::coupon.fields.threshold_value'))
                                                                                                                                     ->numeric()
                                                                                                                                     ->required()
                                                                                                                                     ->prefix('满')
                                                                                                                                     ->minValue(0),
 
                                                                                                           Forms\Components\Select::make('threshold_type')
-                                                                                                                                 ->label(__('red-jasmine-filament-coupon::coupon.fields.threshold_type'))
+                                                                                                                                 ->label(__('red-jasmine-coupon::coupon.fields.threshold_type'))
                                                                                                                                  ->options(ThresholdTypeEnum::options())
                                                                                                                                  ->default(ThresholdTypeEnum::AMOUNT)
                                                                                                                                  ->required(),
 
                                                                                                           Forms\Components\TextInput::make('discount_amount_value')
-                                                                                                                                    ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount_value'))
+                                                                                                                                    ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_value'))
                                                                                                                                     ->numeric()
                                                                                                                                     ->required()
                                                                                                                                     ->minValue(0)
@@ -164,7 +164,7 @@ class CouponResource extends Resource
 
 
                                                                                                   Forms\Components\TextInput::make('max_discount_amount')
-                                                                                                                            ->label(__('red-jasmine-filament-coupon::coupon.fields.max_discount_amount'))
+                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.max_discount_amount'))
                                                                                                                             ->numeric()
                                                                                                                             ->minValue(0)
                                                                                                                             ->visible(fn(
@@ -178,12 +178,12 @@ class CouponResource extends Resource
 
                                          // 有效期设置标签页
                                          Forms\Components\Tabs\Tab::make('validity_settings')
-                                                                  ->label(__('red-jasmine-filament-coupon::coupon.labels.validity_settings'))
+                                                                  ->label(__('red-jasmine-coupon::coupon.labels.validity_settings'))
                                                                   ->schema([
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
                                                                                                   Forms\Components\Select::make('validity_type')
-                                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_type'))
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.validity_type'))
                                                                                                                          ->options(ValidityTypeEnum::options())
                                                                                                                          ->default(ValidityTypeEnum::ABSOLUTE)
                                                                                                                          ->required()
@@ -191,13 +191,13 @@ class CouponResource extends Resource
 
                                                                                                   // 绝对时间设置
                                                                                                   Forms\Components\DateTimePicker::make('validity_start_time')
-                                                                                                                                 ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_start_time'))
+                                                                                                                                 ->label(__('red-jasmine-coupon::coupon.fields.validity_start_time'))
                                                                                                                                  ->visible(fn(
                                                                                                                                      Forms\Get $get
                                                                                                                                  ) => $get('validity_type') === 'absolute'),
 
                                                                                                   Forms\Components\DateTimePicker::make('validity_end_time')
-                                                                                                                                 ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_end_time'))
+                                                                                                                                 ->label(__('red-jasmine-coupon::coupon.fields.validity_end_time'))
                                                                                                                                  ->visible(fn(
                                                                                                                                      Forms\Get $get
                                                                                                                                  ) => $get('validity_type') === 'absolute'),
@@ -216,7 +216,7 @@ class CouponResource extends Resource
                                                                                                                                  ->default(TimeUnitEnum::DAY)
                                                                                                                                  ->required(),
                                                                                                       ])
-                                                                                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_time'))
+                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.validity_time'))
                                                                                                          ->name('validity_time'),
 
 
@@ -226,17 +226,17 @@ class CouponResource extends Resource
 
                                          // 规则设置标签页
                                          Forms\Components\Tabs\Tab::make('rules_settings')
-                                                                  ->label(__('red-jasmine-filament-coupon::coupon.labels.rules_settings'))
+                                                                  ->label(__('red-jasmine-coupon::coupon.labels.rules_settings'))
                                                                   ->schema([
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
                                                                                                   Forms\Components\Repeater::make('usage_rules')
-                                                                                                                           ->label(__('red-jasmine-filament-coupon::coupon.fields.usage_rules'))
+                                                                                                                           ->label(__('red-jasmine-coupon::coupon.fields.usage_rules'))
 
                                                                                                   ,
 
                                                                                                   Forms\Components\Repeater::make('receive_rules')
-                                                                                                                           ->label(__('red-jasmine-filament-coupon::coupon.fields.receive_rules'))
+                                                                                                                           ->label(__('red-jasmine-coupon::coupon.fields.receive_rules'))
 
                                                                                                   ,
                                                                                               ]),
@@ -253,29 +253,29 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.id'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.id'))
                                          ->sortable()
                                          ->copyable(),
 
                 ...static::ownerTableColumns(),
 
                 Tables\Columns\TextColumn::make('name')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.name'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.name'))
                                          ->searchable()
                                          ->sortable(),
 
                 Tables\Columns\ImageColumn::make('image')
-                                          ->label(__('red-jasmine-filament-coupon::coupon.fields.image'))
+                                          ->label(__('red-jasmine-coupon::coupon.fields.image'))
                                           ->circular()
                                           ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('discount_amount_type')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount_type'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_type'))
                                          ->badge()
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('discount_amount_value')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount_value'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_value'))
                                          ->formatStateUsing(fn(
                                              $state,
                                              $record
@@ -286,40 +286,40 @@ class CouponResource extends Resource
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('threshold_value')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.threshold_value'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.threshold_value'))
                                          ->formatStateUsing(fn($state) => '¥'.$state)
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('total_quantity')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.total_quantity'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.total_quantity'))
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('total_issued')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.total_issued'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.total_issued'))
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('total_used')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.total_used'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.total_used'))
                                          ->sortable(),
 
                 Tables\Columns\IconColumn::make('is_show')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.is_show'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.is_show'))
                                          ->boolean()
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('status')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.status'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.status'))
                                          ->badge()
                                          ->sortable(),
 
                 Tables\Columns\TextColumn::make('validity_start_time')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_start_time'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.validity_start_time'))
                                          ->dateTime()
                                          ->sortable()
                                          ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('validity_end_time')
-                                         ->label(__('red-jasmine-filament-coupon::coupon.fields.validity_end_time'))
+                                         ->label(__('red-jasmine-coupon::coupon.fields.validity_end_time'))
                                          ->dateTime()
                                          ->sortable()
                                          ->toggleable(isToggledHiddenByDefault: true),
@@ -328,22 +328,22 @@ class CouponResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                                           ->label(__('red-jasmine-filament-coupon::coupon.filters.status'))
+                                           ->label(__('red-jasmine-coupon::coupon.filters.status'))
                                            ->options(CouponStatusEnum::options())
                                            ->multiple(),
 
                 Tables\Filters\SelectFilter::make('validity_type')
-                                           ->label(__('red-jasmine-filament-coupon::coupon.filters.validity_type'))
+                                           ->label(__('red-jasmine-coupon::coupon.filters.validity_type'))
                                            ->options(ValidityTypeEnum::options())
                                            ->multiple(),
 
                 Tables\Filters\SelectFilter::make('discount_amount_type')
-                                           ->label(__('red-jasmine-filament-coupon::coupon.filters.discount_amount_type'))
+                                           ->label(__('red-jasmine-coupon::coupon.filters.discount_amount_type'))
                                            ->options(DiscountAmountTypeEnum::options())
                                            ->multiple(),
 
                 Tables\Filters\Filter::make('is_show')
-                                     ->label(__('red-jasmine-filament-coupon::coupon.fields.is_show'))
+                                     ->label(__('red-jasmine-coupon::coupon.fields.is_show'))
                                      ->toggle(),
             ])
             ->actions([
@@ -352,7 +352,7 @@ class CouponResource extends Resource
                 Tables\Actions\DeleteAction::make(),
 
                 Tables\Actions\Action::make('publish')
-                                     ->label(__('red-jasmine-filament-coupon::coupon.actions.publish'))
+                                     ->label(__('red-jasmine-coupon::coupon.actions.publish'))
                                      ->icon('heroicon-o-play')
                                      ->color('success')
                                      ->requiresConfirmation()
@@ -363,7 +363,7 @@ class CouponResource extends Resource
                                      ->visible(fn(Coupon $record) => $record->status === CouponStatusEnum::DRAFT),
 
                 Tables\Actions\Action::make('pause')
-                                     ->label(__('red-jasmine-filament-coupon::coupon.actions.pause'))
+                                     ->label(__('red-jasmine-coupon::coupon.actions.pause'))
                                      ->icon('heroicon-o-pause')
                                      ->color('warning')
                                      ->requiresConfirmation()
@@ -374,7 +374,7 @@ class CouponResource extends Resource
                                      ->visible(fn(Coupon $record) => $record->status === CouponStatusEnum::PUBLISHED),
 
                 Tables\Actions\Action::make('expire')
-                                     ->label(__('red-jasmine-filament-coupon::coupon.actions.expire'))
+                                     ->label(__('red-jasmine-coupon::coupon.actions.expire'))
                                      ->icon('heroicon-o-x-circle')
                                      ->color('danger')
                                      ->requiresConfirmation()
