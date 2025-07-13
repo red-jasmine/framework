@@ -13,6 +13,9 @@ class CouponInfoData extends Data
 {
 
 
+    public int $couponId;
+
+
     public string $label;
 
     public string $couponNo;

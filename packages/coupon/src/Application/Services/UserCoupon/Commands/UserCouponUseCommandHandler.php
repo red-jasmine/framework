@@ -25,9 +25,10 @@ class UserCouponUseCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
+
             // 1. 查找用户优惠券
-            $userCoupon = $this->service->repository->find($command->userCouponId);
-            
+            $userCoupon = $this->service->repository->findByNo($command->getKey());
+
             // 2. 验证优惠券可用性
             $this->validateCouponUsability($userCoupon, $command);
             
@@ -35,7 +36,7 @@ class UserCouponUseCommandHandler extends CommandHandler
             $this->createUsageRecord($userCoupon, $command);
             
             // 4. 更新优惠券状态
-            $userCoupon->use($command->orderId);
+            $userCoupon->use($command->orderNo);
             $this->service->repository->update($userCoupon);
             
             $this->commitDatabaseTransaction();

@@ -24,11 +24,14 @@ class OrderDomainService extends AmountCalculationService
     {
 
         $ordersData = $this->initOrders($orderData);
+
         foreach ($ordersData->orders as $orderDataItem) {
             $orderDataItem->setOrderAmount(
                 $this->calculates($orderDataItem)
             );
         }
+
+        // 扣减跨店铺优惠券 TODO
 
         foreach ($ordersData->orders as $orderDataItem) {
             // 调用库存服务 进行扣减
@@ -47,7 +50,14 @@ class OrderDomainService extends AmountCalculationService
                 );
             }
 
-            // TODO 优惠券的扣减
+            //  优惠券的扣减
+            foreach ($orderDataItem->products as $productDataItem) {
+                // 扣减商品优惠券
+                foreach ($productDataItem->getProductInfo()->getProductAmountInfo()->coupons as $coupon) {
+                    $this->couponService->useCoupon($coupon->couponNo, $productDataItem->getOrderProductNo());
+                }
+                // 扣减订单优惠券 TODO
+            }
 
         }
 
@@ -58,7 +68,9 @@ class OrderDomainService extends AmountCalculationService
 
     protected function initOrders(OrderData $orderData) : OrdersData
     {
-
+        foreach ($orderData->products as $productDataItem) {
+            $productDataItem->buyer = $orderData->buyer;
+        }
         $orderData->products = $this->init($orderData->products);
 
         return $this->orderSplit($orderData);
@@ -73,7 +85,7 @@ class OrderDomainService extends AmountCalculationService
     {
         $orders       = [];
         $productGroup = collect($orderData->products)->groupBy(function (OrderProductData $product) {
-            return $product->getSplitKey();
+            return $product->getProductInfo()->getSplitKey();
         });
         // 对订单进行排序 TODO
         $ordersData = new OrdersData();
@@ -89,22 +101,19 @@ class OrderDomainService extends AmountCalculationService
 
     protected function calculates(OrderData $orderData) : OrderAmountData
     {
-        foreach ($orderData->products as $index => $product) {
-            // 对商品进行排序 TODO
-            $product->setKey($index);
-            $product->buyer = $orderData->buyer;
-        }
+
         return $this->getOrderAmount($orderData->products);
 
     }
 
     public function check(OrderData $orderData) : OrdersData
     {
+
+        // 拆分订单
         $ordersData = $this->initOrders($orderData);
+
         foreach ($ordersData->orders as $orderDataItem) {
-            $orderDataItem->setOrderAmount(
-                $this->calculates($orderDataItem)
-            );
+            $orderDataItem->setOrderAmount($this->calculates($orderDataItem));
         }
         $ordersData->statistics();
         return $ordersData;

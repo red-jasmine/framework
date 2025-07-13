@@ -11,7 +11,7 @@ use RedJasmine\Support\Data\Data;
 /**
  * 商品金额信息
  */
-class ProductAmount extends Data
+class ProductAmountInfo extends Data
 {
 
     public int $quantity;
@@ -30,9 +30,17 @@ class ProductAmount extends Data
      */
     public float $taxRate = 0;
     /**
+     * 使用的优惠券
      * @var CouponInfoData[]
      */
     public array $coupons = [];
+
+    /**
+     * 可用的优惠券
+     * @var CouponInfoData[]
+     */
+    public array $availableCoupons = [];
+
     /**
      * 优惠金额
      * @var Money
@@ -43,12 +51,13 @@ class ProductAmount extends Data
      * @var Money
      */
     public Money $taxAmount;
+    public Money $productAmount;
     /**
      * 服务费
      * @var Money
      */
-    public Money $serviceAmount;
-    protected ?Money $costPrice = null;
+    public Money     $serviceAmount;
+    protected ?Money $costPrice      = null;
     protected ?Money $totalCostPrice = null;
 
     public function __construct(public Currency $currency)
@@ -68,7 +77,7 @@ class ProductAmount extends Data
         return $this->costPrice;
     }
 
-    public function setCostPrice(?Money $costPrice) : ProductAmount
+    public function setCostPrice(?Money $costPrice) : ProductAmountInfo
     {
         $this->costPrice = $costPrice;
         return $this;
@@ -79,7 +88,7 @@ class ProductAmount extends Data
         return $this->totalCostPrice;
     }
 
-    public function setTotalCostPrice(?Money $totalCostPrice) : ProductAmount
+    public function setTotalCostPrice(?Money $totalCostPrice) : ProductAmountInfo
     {
         $this->totalCostPrice = $totalCostPrice;
         return $this;
@@ -91,8 +100,12 @@ class ProductAmount extends Data
      */
     public function getProductAmount() : Money
     {
-        return $this->totalPrice->subtract($this->discountAmount);
+        $this->productAmount =  $this->totalPrice->subtract($this->discountAmount);
+
+        return  $this->productAmount;
     }
+
+
 
 
 }

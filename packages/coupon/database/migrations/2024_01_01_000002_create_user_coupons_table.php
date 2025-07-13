@@ -30,7 +30,8 @@ return new class extends Migration {
             $table->timestamp('used_time')->nullable()->comment('使用时间');
 
 
-            $table->unsignedBigInteger('order_id')->nullable()->comment('使用订单ID');
+            $table->string('order_no',64)->nullable()->comment('订单号');
+            $table->string('order_product_no',64)->nullable()->comment('订单商品项');
 
             // TODO 领域信息预留
             $table->operator();

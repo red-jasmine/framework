@@ -78,11 +78,10 @@ class OrderAmountData extends Data
         $this->initialize();
 
         foreach ($this->products as $product) {
-            $productAmount       = $product->productAmount;
-            $this->serviceAmount = $this->serviceAmount->add($productAmount->serviceAmount);
-            $this->taxAmount     = $this->taxAmount->add($productAmount->taxAmount);
-            $this->productAmount = $this->productAmount->add($productAmount->getProductAmount());
-
+            $productAmountInfo   = $product->getProductAmountInfo();
+            $this->serviceAmount = $this->serviceAmount->add($productAmountInfo->serviceAmount);
+            $this->taxAmount     = $this->taxAmount->add($productAmountInfo->taxAmount);
+            $this->productAmount = $this->productAmount->add($productAmountInfo->getProductAmount());
         }
 
         $this->payableAmount = $this->productAmount

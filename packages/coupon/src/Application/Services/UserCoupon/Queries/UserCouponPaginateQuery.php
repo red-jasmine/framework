@@ -15,7 +15,7 @@ class UserCouponPaginateQuery extends PaginateQuery
 {
 
 
-    public UserInterface         $user;
+    public ?UserInterface        $user;
     public ?UserCouponStatusEnum $status    = null;
     public ?int                  $coupon_id = null;
 

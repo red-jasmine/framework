@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
+use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
@@ -61,7 +61,7 @@ class ProductServiceIntegration implements ProductServiceInterface
     }
 
 
-    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmount
+    public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmountInfo
     {
         $productAmount             = $this->productApplicationService->getProductPrice($productPurchaseFactor);
         $productAmount->quantity   = $productPurchaseFactor->quantity;

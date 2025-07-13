@@ -2,35 +2,23 @@
 
 namespace RedJasmine\Coupon\Application\Services\UserCoupon\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
 
 class UserCouponUseCommand extends Data
 {
-    /**
-     * 所有者信息
-     */
-    public UserInterface $owner;
 
-    /**
-     * 用户优惠券ID
-     */
-    public int $userCouponId;
-
+    protected string $primaryKey = 'coupon_no';
     /**
      * 订单ID
      */
-    public int $orderId;
+    public string $orderNo;
 
     /**
      * 订单金额
      */
-    public float $orderAmount;
+    public ?Money $discountAmount = null;
 
-    /**
-     * 用户信息
-     */
-    public UserInterface $user;
 
     /**
      * 使用场景

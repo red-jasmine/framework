@@ -101,7 +101,6 @@ class ShoppingCartDomainService extends AmountCalculationService
 
         $productPurchaseFactors = [];
         foreach ($selectProducts as $product) {
-
             $productPurchaseFactor = ProductPurchaseFactor::from([
                 'product'    => $product->getProduct(),
                 'quantity'   => $product->quantity,
@@ -113,7 +112,6 @@ class ShoppingCartDomainService extends AmountCalculationService
                 'market'     => $factor->market,
             ]);
             $productPurchaseFactor->setKey($product->id);
-
             $productPurchaseFactors[] = $productPurchaseFactor;
         }
 

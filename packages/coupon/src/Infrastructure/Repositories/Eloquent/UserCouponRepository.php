@@ -9,4 +9,11 @@ use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
 class UserCouponRepository extends EloquentRepository implements UserCouponRepositoryInterface
 {
     protected static string $eloquentModelClass = UserCoupon::class;
+
+    public function findByNo(string $no) : UserCoupon
+    {
+        return static::$eloquentModelClass::where('coupon_no', $no)->firstOrFail();
+    }
+
+
 } 

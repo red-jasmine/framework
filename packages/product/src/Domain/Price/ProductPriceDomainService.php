@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Price;
 
 use Cknow\Money\Money;
 use Money\Currency;
-use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
+use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
@@ -27,12 +27,12 @@ class ProductPriceDomainService extends Service
      *
      * @param  ProductPurchaseFactor  $data
      *
-     * @return ProductAmount
+     * @return ProductAmountInfo
      */
-    public function getProductAmount(ProductPurchaseFactor $data) : ProductAmount
+    public function getProductAmount(ProductPurchaseFactor $data) : ProductAmountInfo
     {
         $product       = $this->repository->find($data->product->id);
-        $productAmount = new ProductAmount(new Currency($product->price_currency));
+        $productAmount = new ProductAmountInfo(new Currency($product->price_currency));
 
         // 获取商品
 

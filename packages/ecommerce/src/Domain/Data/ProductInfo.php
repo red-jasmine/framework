@@ -10,16 +10,20 @@ class ProductInfo extends Data
 {
 
     /**
+     * 商品身份信息
+     * @var ProductIdentity
+     */
+    public ProductIdentity $product;
+
+
+    // 通过商品身份信息 获取的 基础信息
+
+
+    /**
      * 是否允许购买 = 失效
      * @var bool
      */
     public bool $isAvailable;
-    // 商品身份信息
-    // 商品基本信息
-    // 商品价格信息
-    // 商品规格属性
-    // 商品图片
-    public ProductIdentity $product;
 
 
     public ProductTypeEnum $productType;
@@ -46,14 +50,56 @@ class ProductInfo extends Data
     public int $productGroupId = 0;
     public int $barcode        = 0;
 
+    public ?string $outerId = null;
+
+
     // 价格信息
-    public ProductAmount $productAmount;
+
+
+    public ProductAmountInfo $productAmountInfo;
+
 
     /**
      * 库存信息
      * @var StockInfo
      */
     public StockInfo $stockInfo;
+    /**
+     * 拆分key
+     * @var string
+     */
+    protected string $splitKey;
+
+    public function getStockInfo() : StockInfo
+    {
+        return $this->stockInfo;
+    }
+
+    public function setStockInfo(StockInfo $stockInfo) : void
+    {
+        $this->stockInfo = $stockInfo;
+    }
+
+    public function getProductAmountInfo() : ProductAmountInfo
+    {
+        return $this->productAmountInfo;
+    }
+
+    public function setProductAmountInfo(ProductAmountInfo $productAmount) : void
+    {
+        $this->productAmountInfo = $productAmount;
+    }
+
+    public function getSplitKey() : string
+    {
+        return $this->splitKey;
+    }
+
+    public function setSplitKey(string $splitKey) : static
+    {
+        $this->splitKey = $splitKey;
+        return $this;
+    }
 
     // 优惠信息
 

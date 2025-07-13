@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductAmount;
+use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 
@@ -12,14 +12,14 @@ class PromotionServiceIntegration implements PromotionServiceInterface
      * 获取商品级别优惠信息
      *
      * @param  ProductPurchaseFactor  $productPurchaseFactor  商品购买因子
-     * @param  ProductAmount  $productAmount  优惠金额
+     * @param  ProductAmountInfo  $productAmount  优惠金额
      *
-     * @return ProductAmount
+     * @return ProductAmountInfo
      */
     public function getProductPromotion(
         ProductPurchaseFactor $productPurchaseFactor,
-        ProductAmount $productAmount
-    ) : ProductAmount {
+        ProductAmountInfo $productAmount
+    ) : ProductAmountInfo {
 
         // 根据 促销 系统 获取优惠金额
         // 添加优惠

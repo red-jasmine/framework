@@ -11,4 +11,6 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 interface UserCouponRepositoryInterface extends RepositoryInterface
 {
     // 可添加特定的写操作方法
+
+    public function findByNo(string $no) : UserCoupon;
 } 

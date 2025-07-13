@@ -27,6 +27,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
  * @property UserInterface $user
  * @property UserInterface $owner
  * @property string $user_id
+ * @property string $coupon_no
  */
 class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 {
@@ -116,7 +117,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 使用优惠券
      */
-    public function use(int $orderId) : void
+    public function use(string $orderNo) : void
     {
         if (!$this->isAvailable()) {
             throw new CouponException('优惠券不可用');
@@ -124,8 +125,8 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 
         $this->status    = UserCouponStatusEnum::USED;
         $this->used_time = Carbon::now();
-        $this->order_id  = $orderId;
-        $this->save();
+        $this->order_no  = $orderNo;
+
     }
 
     /**
@@ -265,7 +266,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             }
         }
         if ($this->coupon->threshold_type === ThresholdTypeEnum::AMOUNT) {
-            if ($productPurchaseFactor->getProductAmount()->getProductAmount() < $this->coupon->threshold_value) {
+            if ($productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice->getAmount() < $this->coupon->threshold_value) {
                 return false;
             }
         }
@@ -278,11 +279,15 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
 
         if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::FIXED_AMOUNT) {
-
-            return Money::parse($this->coupon->discount_amount_value, $productPurchaseFactor->getProductAmount()->price->getCurrency());
+            return Money::parse($this->coupon->discount_amount_value,
+                $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->price->getCurrency());
         }
         if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
-            return $productPurchaseFactor->getProductAmount()->getProductAmount()->multiply(bcdiv($this->coupon->discount_amount_value, 100, 4));
+            return $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice
+                ->multiply(
+                    bcsub(1,
+                        bcdiv($this->coupon->discount_amount_value, 100, 4), 4)
+                );
         }
         return Money::parse(0, $productPurchaseFactor->getProductAmount()->price->getCurrency());
     }

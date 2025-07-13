@@ -21,10 +21,6 @@ class OrderData extends PurchaseFactor
      */
     public ?string $title = null;
 
-    /**
-     * @var OrderProductData[]
-     */
-    public array $products;
 
     /**
      * 客户端类型
@@ -55,9 +51,13 @@ class OrderData extends PurchaseFactor
      * @var OrderAddressData|null
      */
     public ?OrderAddressData $address;
-
+    /**
+     * @var OrderProductData[]
+     */
+    public array              $products;
 
     protected OrderAmountData $orderAmount;
+    protected string          $orderNo;
 
     public function getOrderAmount() : OrderAmountData
     {
@@ -70,11 +70,6 @@ class OrderData extends PurchaseFactor
         return $this;
     }
 
-
-
-
-    protected string $orderNo;
-
     public function getOrderNo() : string
     {
         return $this->orderNo;
@@ -85,7 +80,6 @@ class OrderData extends PurchaseFactor
         $this->orderNo = $orderNo;
         return $this;
     }
-
 
 
 }

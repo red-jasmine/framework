@@ -32,7 +32,7 @@ class OrderCreateCommandTransformer
             $order->shippingType = $productData->getProductInfo()->shippingTypes[0];
 
             // 获取价格
-            $order->currency = $productData->getProductAmount()->price->getCurrency();
+            $order->currency = $productData->getProductInfo()->getProductAmountInfo()->price->getCurrency();
             $product         = new OrderProductData();
             $product->setSerialNumber($productData->getSerialNumber()); // 设置序列号
             $product->quantity            = $productData->quantity;
@@ -43,17 +43,19 @@ class OrderCreateCommandTransformer
             $product->productType         = $productData->getProductInfo()->product->type;
             $product->productId           = $productData->getProductInfo()->product->id;
             $product->skuId               = $productData->getProductInfo()->product->skuId;
-            $product->price               = $productData->getProductAmount()->price;
-            $product->discountAmount      = $productData->getProductAmount()->discountAmount;
-            $product->costPrice           = $productData->getProductAmount()->getCostPrice();
+            $product->price               = $productData->getProductInfo()->getProductAmountInfo()->price;
+            $product->discountAmount      = $productData->getProductInfo()->getProductAmountInfo()->discountAmount;
+            $product->costPrice           = $productData->getProductInfo()->getProductAmountInfo()->getCostPrice();
             $product->image               = $productData->getProductInfo()->image;
-            $product->outerProductId      = $product->outerProductId;
-            $product->outerOrderProductId = $product->outerOrderProductId;
-            $product->buyerRemarks        = $product->buyerRemarks;
-            $product->buyerMessage        = $product->buyerMessage;
-            //$product->categoryId      = $productData->getProduct()->category_id;
-            //$product->brandId         = $productData->getProduct()->brand_id;
-            //$product->productGroupId  = $productData->getProduct()->product_group_id;
+            $product->outerProductId      = $productData->outerOrderProductId;
+            $product->outerOrderProductId = $productData->outerOrderProductId;
+            $product->buyerRemarks        = $productData->buyerRemarks;
+            $product->buyerMessage        = $productData->buyerMessage;
+            $product->categoryId          = $productData->getProductInfo()->categoryId;
+            $product->brandId             = $productData->getProductInfo()->brandId;
+            $product->productGroupId      = $productData->getProductInfo()->productGroupId;
+            $product->outerProductId      = $productData->getProductInfo()->outerId;
+            // TODO
             //$product->outerProductId  = $productData->getProduct()->outer_id;
             //$product->outerSkuId      = $productData->getSku()->outer_id;
             //$product->barcode         = $productData->getSku()->barcode ?? $productData->getProduct()->barcode ?? null;

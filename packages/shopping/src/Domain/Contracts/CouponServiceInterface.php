@@ -17,4 +17,7 @@ interface CouponServiceInterface
      */
     public function getUserCouponsByProduct(ProductPurchaseFactor $productPurchaseFactor) : array;
 
+
+    // 核销优惠券
+    public function useCoupon(string $couponNo, string $orderNo) : bool;
 }
