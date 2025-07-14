@@ -90,6 +90,7 @@ class OrderProductData extends Data
     public ?string $barcode             = null;
     public ?string $sellerCustomStatus  = null;
     public ?string $outerOrderProductId = null;
+    public ?string $shoppingCartId      = null;
     /**
      * 赠送积分
      * @var int

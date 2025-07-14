@@ -14,12 +14,12 @@ class OrdersData extends Data
      * @var Money
      */
     public Money $total;
+
+    public int $count;
     /**
      * @var OrderData[]
      */
     public array $orders = [];
-
-    public int $count;
 
 
     public function __construct()
@@ -46,12 +46,9 @@ class OrdersData extends Data
     {
         $this->total = Money::parse(0);
 
-
         foreach ($this->orders as $order) {
             $this->total = $this->total->add($order->getOrderAmountInfo()->payableAmount);
         }
-
-
         return $this->total;
     }
 

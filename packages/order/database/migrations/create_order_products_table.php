@@ -71,7 +71,7 @@ return new class extends Migration {
             $table->decimal('tax_rate')->default(0)->comment('税率%');
             // 销售总价  = 销售单价 * 数量
             // 商品金额  = 销售总价 - 优惠
-            // 税费金额  = ( 商品金额 + (?运费)  ) * 税率 // TODO 是否加运费计算 如果是 海外直购 那么需要计算 如果是 国内直购 那么不需要计算
+            // 税费金额  = ( 商品金额  ) * 税率
             // 应付金额  = 商品金额 + 服务费 + 运费金额 + 商品税费 - 分摊优惠金额  = 最大退款金额
 
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
@@ -138,7 +138,7 @@ return new class extends Migration {
             // 买家外部单号
             $table->string('outer_order_product_id', 64)->nullable()->comment('外部商品单号');
 
-
+            $table->string('shopping_cart_id', 64)->nullable()->comment('购物车ID');
             // 供应商 TODO
 
             $table->unsignedBigInteger('batch_no')->default(0)->comment('批次号');

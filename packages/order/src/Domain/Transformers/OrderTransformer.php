@@ -74,7 +74,7 @@ class OrderTransformer implements TransformerInterface
 
     public function transformProduct(OrderProductData $orderProductData, OrderProduct $orderProduct) : OrderProduct
     {
-        $orderProduct->setSerialNumber($orderProductData->getSerialNumber());
+        $orderProduct->setSerialNumber($orderProductData->getSerialNumber() ?? $orderProductData->buildSerialNumber());
         $orderProduct->order_product_type              = $orderProductData->orderProductType;
         $orderProduct->shipping_type                   = $orderProductData->shippingType;
         $orderProduct->product_type                    = $orderProductData->productType;
@@ -84,6 +84,7 @@ class OrderTransformer implements TransformerInterface
         $orderProduct->sku_name                        = $orderProductData->skuName;
         $orderProduct->price                           = $orderProductData->price;
         $orderProduct->tax_rate                        = $orderProductData->texRate;
+        $orderProduct->tax_amount                      = $orderProductData->taxAmount;
         $orderProduct->cost_price                      = $orderProductData->costPrice;
         $orderProduct->quantity                        = $orderProductData->quantity;
         $orderProduct->unit                            = $orderProductData->unit;
@@ -98,6 +99,7 @@ class OrderTransformer implements TransformerInterface
         $orderProduct->gift_point                      = $orderProductData->giftPoint;
         $orderProduct->seller_custom_status            = $orderProductData->sellerCustomStatus;
         $orderProduct->outer_order_product_id          = $orderProductData->outerOrderProductId;
+        $orderProduct->shopping_cart_id                = $orderProductData->shoppingCartId;
         $orderProduct->extension->seller_remarks       = $orderProductData->sellerRemarks;
         $orderProduct->extension->seller_message       = $orderProductData->sellerMessage;
         $orderProduct->extension->buyer_remarks        = $orderProductData->buyerRemarks;

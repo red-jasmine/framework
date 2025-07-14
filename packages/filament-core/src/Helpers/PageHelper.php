@@ -210,6 +210,7 @@ trait PageHelper
             ]);
     }
 
+    // 做成表单组件
     public static function ownerFormSchemas(string $name = 'owner') : array
     {
         $user     = auth()->user();

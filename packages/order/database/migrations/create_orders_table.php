@@ -78,12 +78,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('quantity')->default(0)->comment('数量');
             $table->string('currency', 3)->default('CNY')->comment('货币');
             $table->decimal('price', 12)->default(0)->comment('销售单价');
-            $table->decimal('total_price', 12)->default(0)->comment('销售总价');// 汇总
-            $table->decimal('discount_amount', 12)->default(0)->comment('优惠金额');
-            $table->decimal('product_amount', 12)->default(0)->comment('商品金额'); // 汇总
-            $table->decimal('tax_amount', 12)->default(0)->comment('税费金额'); // 汇总
-            $table->decimal('service_amount', 12)->default(0)->comment('服务费金额'); // 汇总
-            $table->decimal('freight_amount', 12)->default(0)->comment('运费金额'); // 需要分摊
+            $table->decimal('total_price', 12)->default(0)->comment('总销售总价');// 汇总
+            $table->decimal('product_amount', 12)->default(0)->comment('总商品金额'); // 汇总
+            $table->decimal('service_amount', 12)->default(0)->comment('总服务费金额'); // 汇总
+            $table->decimal('tax_amount', 12)->default(0)->comment('总税费金额'); // 汇总
+            $table->decimal('discount_amount', 12)->default(0)->comment('订单优惠金额');
+            $table->decimal('freight_amount', 12)->default(0)->comment('订单运费金额'); // 需要分摊
             $table->decimal('divided_discount_amount', 12)->default(0)->comment('分摊优惠金额');
             $table->decimal('payable_amount', 12)->default(0)->comment('买家应付金额');
             $table->decimal('payment_amount', 12)->default(0)->comment('买家实付金额');

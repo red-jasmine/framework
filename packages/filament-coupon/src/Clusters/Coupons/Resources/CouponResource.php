@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
@@ -62,6 +63,7 @@ class CouponResource extends Resource
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
                                                                                                   ...static::ownerFormSchemas(),
+                                                                                                  ...static::ownerFormSchemas('cost_bearer'),
 
                                                                                                   Forms\Components\TextInput::make('name')
                                                                                                                             ->label(__('red-jasmine-coupon::coupon.fields.name'))
@@ -103,9 +105,11 @@ class CouponResource extends Resource
                                                                                                                            ->rows(3),
 
                                                                                                   Forms\Components\DateTimePicker::make('start_time')
+                                                                                                                                 ->default(Carbon::now()->startOfDay())
                                                                                                                                  ->label(__('red-jasmine-coupon::coupon.fields.start_time')),
 
                                                                                                   Forms\Components\DateTimePicker::make('end_time')
+                                                                                                                                 ->default(Carbon::now()->addMonth()->endOfDay())
                                                                                                                                  ->label(__('red-jasmine-coupon::coupon.fields.end_time')),
                                                                                               ])
                                                                                               ->columns(2),
@@ -125,7 +129,7 @@ class CouponResource extends Resource
 
                                                                                                   Forms\Components\Select::make('discount_amount_type')
                                                                                                                          ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_type'))
-                                                                                                                         ->options(DiscountAmountTypeEnum::options())
+                                                                                                                         ->useEnum(DiscountAmountTypeEnum::class)
                                                                                                                          ->default(DiscountAmountTypeEnum::PERCENTAGE)
                                                                                                                          ->required()
                                                                                                                          ->live(),
@@ -142,7 +146,7 @@ class CouponResource extends Resource
 
                                                                                                           Forms\Components\Select::make('threshold_type')
                                                                                                                                  ->label(__('red-jasmine-coupon::coupon.fields.threshold_type'))
-                                                                                                                                 ->options(ThresholdTypeEnum::options())
+                                                                                                                                 ->useEnum(ThresholdTypeEnum::class)
                                                                                                                                  ->default(ThresholdTypeEnum::AMOUNT)
                                                                                                                                  ->required(),
 
@@ -153,10 +157,10 @@ class CouponResource extends Resource
                                                                                                                                     ->minValue(0)
                                                                                                                                     ->prefix(fn(
                                                                                                                                         Forms\Get $get
-                                                                                                                                    ) => $get('discount_amount_type') === 'percentage' ? '打' : '减')
+                                                                                                                                    ) => $get('discount_amount_type') === DiscountAmountTypeEnum::PERCENTAGE)
                                                                                                                                     ->suffix(fn(
                                                                                                                                         Forms\Get $get
-                                                                                                                                    ) => $get('discount_amount_type') === 'percentage' ? '%' : '元'),
+                                                                                                                                    ) => $get('discount_amount_type') === DiscountAmountTypeEnum::PERCENTAGE ? '%' : '金额'),
 
 
                                                                                                       ]
@@ -184,7 +188,7 @@ class CouponResource extends Resource
                                                                                               ->schema([
                                                                                                   Forms\Components\Select::make('validity_type')
                                                                                                                          ->label(__('red-jasmine-coupon::coupon.fields.validity_type'))
-                                                                                                                         ->options(ValidityTypeEnum::options())
+                                                                                                                         ->useEnum(ValidityTypeEnum::class)
                                                                                                                          ->default(ValidityTypeEnum::ABSOLUTE)
                                                                                                                          ->required()
                                                                                                                          ->live(),
@@ -194,34 +198,57 @@ class CouponResource extends Resource
                                                                                                                                  ->label(__('red-jasmine-coupon::coupon.fields.validity_start_time'))
                                                                                                                                  ->visible(fn(
                                                                                                                                      Forms\Get $get
-                                                                                                                                 ) => $get('validity_type') === 'absolute'),
+                                                                                                                                 ) => $get('validity_type') === ValidityTypeEnum::ABSOLUTE),
 
                                                                                                   Forms\Components\DateTimePicker::make('validity_end_time')
                                                                                                                                  ->label(__('red-jasmine-coupon::coupon.fields.validity_end_time'))
                                                                                                                                  ->visible(fn(
                                                                                                                                      Forms\Get $get
-                                                                                                                                 ) => $get('validity_type') === 'absolute'),
+                                                                                                                                 ) => $get('validity_type') === ValidityTypeEnum::ABSOLUTE),
                                                                                                   // Forms\Components\Group::make(
                                                                                                   // 相对时间设置
+
+                                                                                                  Cluster::make(
+                                                                                                      [
+                                                                                                          Forms\Components\TextInput::make('delayed_effective_time.value')
+                                                                                                                                    ->label('时长')
+                                                                                                                                    ->numeric()
+                                                                                                                                    ->required()
+                                                                                                                                    ->default(0)
+                                                                                                                                    ->minValue(0),
+                                                                                                          Forms\Components\Select::make('delayed_effective_time.unit')
+                                                                                                                                 ->label('单位')
+                                                                                                                                 ->useEnum(TimeUnitEnum::class)
+                                                                                                                                 ->default(TimeUnitEnum::DAY)
+                                                                                                                                 ->required(),
+                                                                                                      ])
+                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.delayed_effective_time'))
+                                                                                                         ->name('delayed_effective_time')
+                                                                                                         ->visible(fn(Forms\Get $get
+                                                                                                         ) => $get('validity_type') === ValidityTypeEnum::RELATIVE),
+
                                                                                                   Cluster::make(
                                                                                                       [
                                                                                                           Forms\Components\TextInput::make('validity_time.value')
                                                                                                                                     ->label('时长')
                                                                                                                                     ->numeric()
                                                                                                                                     ->required()
-                                                                                                                                    ->minValue(1),
+                                                                                                                                    ->default(1)
+                                                                                                                                    ->minValue(0),
                                                                                                           Forms\Components\Select::make('validity_time.unit')
                                                                                                                                  ->label('单位')
-                                                                                                                                 ->options(TimeUnitEnum::options())
+                                                                                                                                 ->useEnum(TimeUnitEnum::class)
                                                                                                                                  ->default(TimeUnitEnum::DAY)
                                                                                                                                  ->required(),
                                                                                                       ])
                                                                                                          ->label(__('red-jasmine-coupon::coupon.fields.validity_time'))
-                                                                                                         ->name('validity_time'),
+                                                                                                         ->name('validity_time')
+                                                                                                         ->visible(fn(Forms\Get $get
+                                                                                                         ) => $get('validity_type') === ValidityTypeEnum::RELATIVE),
 
 
                                                                                               ])
-                                                                                              ->columns(2),
+                                                                                              ->columns(3),
                                                                   ]),
 
                                          // 规则设置标签页
@@ -232,11 +259,13 @@ class CouponResource extends Resource
                                                                                               ->schema([
                                                                                                   Forms\Components\Repeater::make('usage_rules')
                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.usage_rules'))
+                                                                                                  ->default([])
 
                                                                                                   ,
 
                                                                                                   Forms\Components\Repeater::make('receive_rules')
                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.receive_rules'))
+                                                                                                      ->default([])
 
                                                                                                   ,
                                                                                               ]),
@@ -254,7 +283,6 @@ class CouponResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                                          ->label(__('red-jasmine-coupon::coupon.fields.id'))
-                                         ->sortable()
                                          ->copyable(),
 
                 ...static::ownerTableColumns(),
@@ -262,7 +290,7 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                                          ->label(__('red-jasmine-coupon::coupon.fields.name'))
                                          ->searchable()
-                                         ->sortable(),
+                ,
 
                 Tables\Columns\ImageColumn::make('image')
                                           ->label(__('red-jasmine-coupon::coupon.fields.image'))
@@ -272,46 +300,30 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('discount_amount_type')
                                          ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_type'))
                                          ->badge()
-                                         ->sortable(),
+                                         ->useEnum(),
 
-                Tables\Columns\TextColumn::make('discount_amount_value')
-                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_value'))
-                                         ->formatStateUsing(fn(
-                                             $state,
-                                             $record
-                                         ) => $record->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE
-                                             ? $state.'%'
-                                             : '¥'.$state
-                                         )
-                                         ->sortable(),
+                Tables\Columns\TextColumn::make('label')
+                                         ->label(__('red-jasmine-coupon::coupon.fields.label')),
 
-                Tables\Columns\TextColumn::make('threshold_value')
-                                         ->label(__('red-jasmine-coupon::coupon.fields.threshold_value'))
-                                         ->formatStateUsing(fn($state) => '¥'.$state)
-                                         ->sortable(),
-
-                Tables\Columns\TextColumn::make('total_quantity')
-                                         ->label(__('red-jasmine-coupon::coupon.fields.total_quantity'))
-                                         ->sortable(),
 
                 Tables\Columns\TextColumn::make('total_issued')
                                          ->label(__('red-jasmine-coupon::coupon.fields.total_issued'))
-                                         ->sortable(),
+                ,
 
                 Tables\Columns\TextColumn::make('total_used')
                                          ->label(__('red-jasmine-coupon::coupon.fields.total_used'))
-                                         ->sortable(),
+                ,
 
                 Tables\Columns\IconColumn::make('is_show')
                                          ->label(__('red-jasmine-coupon::coupon.fields.is_show'))
                                          ->boolean()
-                                         ->sortable(),
+                ,
 
                 Tables\Columns\TextColumn::make('status')
                                          ->label(__('red-jasmine-coupon::coupon.fields.status'))
                                          ->badge()
                                          ->useEnum()
-                                         ->sortable(),
+                ,
 
                 Tables\Columns\TextColumn::make('validity_start_time')
                                          ->label(__('red-jasmine-coupon::coupon.fields.validity_start_time'))

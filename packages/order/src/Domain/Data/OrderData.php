@@ -61,7 +61,7 @@ class OrderData extends Data
     public ?UserInterface $source = null;
 
     /**
-     * 整体邮费
+     * 邮费
      * @var Money|null
      */
     public ?Money $freightAmount = null;
