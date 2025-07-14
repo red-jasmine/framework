@@ -16,6 +16,7 @@ class OrderProductData extends Data
 {
 
     use HasSerialNumber;
+
     /**
      * 商品类型
      * @var ProductTypeEnum
@@ -72,6 +73,11 @@ class OrderProductData extends Data
      * @var Money|null
      */
     public ?Money $serviceAmount = null;
+    /**
+     * 税费
+     * @var Money|null
+     */
+    public ?Money $taxAmount = null;
 
     public string|int|float $texRate = 0;
 

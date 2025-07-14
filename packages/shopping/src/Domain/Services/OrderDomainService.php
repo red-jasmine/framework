@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
-use RedJasmine\Shopping\Domain\Data\CouponUsageData;
-use RedJasmine\Shopping\Domain\Data\OrderAmountData;
-use RedJasmine\Shopping\Domain\Data\OrderData;
-use RedJasmine\Shopping\Domain\Data\OrderProductData;
+use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponUsageData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderAmountInfoData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderCreateHook;
 
@@ -27,13 +27,10 @@ class OrderDomainService extends AmountCalculationService
         $ordersData = $this->initOrders($orderData);
 
         foreach ($ordersData->orders as $orderDataItem) {
-            $orderDataItem->setOrderAmount(
-                $this->calculates($orderDataItem)
-            );
+            $this->calculateOrderAmount($orderDataItem);
         }
 
         // 扣减跨店铺优惠券 TODO
-
         foreach ($ordersData->orders as $orderDataItem) {
             // 调用库存服务 进行扣减
             $orderDataItem = ShoppingOrderCreateHook::hook($orderDataItem, fn() => $this->orderService->create($orderDataItem));
@@ -51,7 +48,7 @@ class OrderDomainService extends AmountCalculationService
                 );
             }
 
-            //  优惠券的扣减
+            //  核销商品级别使用的优惠券
             foreach ($orderDataItem->products as $productDataItem) {
                 // 扣减商品优惠券
                 foreach ($productDataItem->getProductInfo()->getProductAmountInfo()->coupons as $coupon) {
@@ -65,12 +62,20 @@ class OrderDomainService extends AmountCalculationService
 
                     $this->couponService->useCoupon($coupon->couponNo, $usages);
                 }
-                // 扣减订单优惠券 TODO
+
             }
-
+            // 核销订单级别使用的优惠券
+            foreach ($orderDataItem->getOrderAmountInfo()->coupons as $coupon) {
+                $usages   = [];
+                $usages[] = CouponUsageData::from([
+                    'orderType'      => 'order',
+                    'orderNo'        => $orderDataItem->getOrderNo(),
+                    'orderProductNo' => null,
+                    'discountAmount' => $coupon->discountAmount
+                ]);
+                $this->couponService->useCoupon($coupon->couponNo, $usages);
+            }
         }
-
-
         $ordersData->statistics();
         return $ordersData;
     }
@@ -108,12 +113,6 @@ class OrderDomainService extends AmountCalculationService
         return $ordersData;
     }
 
-    protected function calculates(OrderData $orderData) : OrderAmountData
-    {
-
-        return $this->getOrderAmount($orderData->products);
-
-    }
 
     public function check(OrderData $orderData) : OrdersData
     {
@@ -122,9 +121,11 @@ class OrderDomainService extends AmountCalculationService
         $ordersData = $this->initOrders($orderData);
 
         foreach ($ordersData->orders as $orderDataItem) {
-            $orderDataItem->setOrderAmount($this->calculates($orderDataItem));
+            $this->calculateOrderAmount($orderDataItem);
         }
         $ordersData->statistics();
         return $ordersData;
     }
+
+
 }

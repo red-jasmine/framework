@@ -30,7 +30,7 @@ return new class extends Migration {
                   ->default(CouponStatusEnum::DRAFT)
                   ->comment(CouponStatusEnum::comments('状态'));
 
-            // 优惠规则
+
             $table->enum('discount_target', DiscountTargetEnum::values())->comment(DiscountTargetEnum::comments('优惠目标类型'));
 
             $table->enum('discount_amount_type', DiscountAmountTypeEnum::values())

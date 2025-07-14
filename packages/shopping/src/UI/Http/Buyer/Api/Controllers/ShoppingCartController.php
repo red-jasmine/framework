@@ -4,7 +4,6 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\CalculateAmountCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\RemoveProductCommand;

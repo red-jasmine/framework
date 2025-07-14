@@ -20,7 +20,7 @@ class CouponUsageReadRepository extends QueryBuilderReadRepository implements Co
      * 过滤器
      * @return array
      */
-    protected function allowedFilters(?Query $query = null): array
+    protected function allowedFilters(?Query $query = null) : array
     {
         return [
             AllowedFilter::exact('id'),
@@ -33,6 +33,7 @@ class CouponUsageReadRepository extends QueryBuilderReadRepository implements Co
             AllowedFilter::exact('order_no'),
             AllowedFilter::exact('cost_bearer_type'),
             AllowedFilter::exact('cost_bearer_id'),
+
             AllowedFilter::callback('used_at_between', function ($query, $value) {
                 if (is_array($value) && count($value) === 2) {
                     $query->whereBetween('used_at', $value);
@@ -45,7 +46,7 @@ class CouponUsageReadRepository extends QueryBuilderReadRepository implements Co
      * 允许的排序字段
      * @return array
      */
-    protected function allowedSorts(?Query $query = null): array
+    protected function allowedSorts(?Query $query = null) : array
     {
         return [
             AllowedSort::field('created_at'),
@@ -59,7 +60,7 @@ class CouponUsageReadRepository extends QueryBuilderReadRepository implements Co
      * 允许包含的关联
      * @return array
      */
-    protected function allowedIncludes(?Query $query = null): ?array
+    protected function allowedIncludes(?Query $query = null) : ?array
     {
         return ['coupon', 'userCoupon'];
     }

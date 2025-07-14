@@ -1,7 +1,8 @@
 <?php
 
-namespace RedJasmine\Ecommerce\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 
 /**
@@ -29,6 +30,13 @@ class ProductPurchaseFactor extends PurchaseFactor
     public int $quantity = 1;
 
 
+    /**
+     * 购物车ID
+     * @var string|null
+     */
+    public ?string $shoppingCartId = null;
+
+    // 通过商品身份信息获取的 商品信息
     protected ProductInfo $productInfo;
 
 

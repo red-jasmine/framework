@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
-use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Infrastructure\Services\Transformers\OrderCreateCommandTransformer;
 
 /**

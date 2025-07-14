@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Data;
 
 use Cknow\Money\Money;
-use Illuminate\Support\Collection;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Support\Data\Data;
 
 class OrdersData extends Data
@@ -48,7 +48,7 @@ class OrdersData extends Data
 
 
         foreach ($this->orders as $order) {
-            $this->total = $this->total->add($order->getOrderAmount()->payableAmount);
+            $this->total = $this->total->add($order->getOrderAmountInfo()->payableAmount);
         }
 
 

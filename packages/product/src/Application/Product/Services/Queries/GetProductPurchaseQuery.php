@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Product\Services\Queries;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 
 class GetProductPurchaseQuery extends ProductPurchaseFactor
 {

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\Shopping\Domain\Models\Enums\ShoppingCartStatusEnum;
 use RedJasmine\Shopping\Exceptions\ShoppingCartException;
 use RedJasmine\ShoppingCart\Domain\Models\UserInterface;

@@ -4,8 +4,8 @@ namespace RedJasmine\Product\Domain\Price;
 
 use Cknow\Money\Money;
 use Money\Currency;
-use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;

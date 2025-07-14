@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services\Transformers;
 
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Domain\Data\OrderProductData;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Shopping\Domain\Data\OrderData;
 
 class OrderCreateCommandTransformer
 {
@@ -20,8 +20,8 @@ class OrderCreateCommandTransformer
         $order->clientIp       = $orderData->clientIp;
         $order->clientType     = $orderData->clientType;
         $order->clientVersion  = $orderData->clientVersion;
-        $order->discountAmount = $orderData->getOrderAmount()->discountAmount;
-        $order->freightAmount  = $orderData->getOrderAmount()->freightAmount;
+        $order->discountAmount = $orderData->getOrderAmountInfo()->discountAmount;
+        $order->freightAmount  = $orderData->getOrderAmountInfo()->freightAmount;
         $order->orderType      = OrderTypeEnum::STANDARD->value;
         // TODO
         $order->channel  = null;

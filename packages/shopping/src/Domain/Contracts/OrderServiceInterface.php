@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 
 /**
  * 订单服务接口

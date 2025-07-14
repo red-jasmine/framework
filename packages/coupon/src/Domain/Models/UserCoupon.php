@@ -10,18 +10,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Generator\CouponNoGenerator;
 use RedJasmine\Coupon\Exceptions\CouponException;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property UserCouponStatusEnum $status
@@ -264,35 +266,98 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     public function canUse(ProductPurchaseFactor $productPurchaseFactor) : bool
     {
         // 验证门槛
+        if (!$this->isReachedThreshold(
+            $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice, $productPurchaseFactor->quantity)) // TODO 验证 使用规则
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 是否可以达到门槛值
+     *
+     * @param  Money  $money
+     * @param  int  $quantity
+     *
+     * @return bool
+     */
+    protected function isReachedThreshold(Money $money, int $quantity) : bool
+    {
         if ($this->coupon->threshold_type === ThresholdTypeEnum::QUANTITY) {
-            if ($productPurchaseFactor->quantity < $this->coupon->threshold_value) {
+            if ($quantity < $this->coupon->threshold_value) {
                 return false;
             }
         }
+
         if ($this->coupon->threshold_type === ThresholdTypeEnum::AMOUNT) {
-            $productAmountValue   = $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice->getAmount();
+            $productAmountValue   = $money->getAmount();
             $thresholdAmountValue = bcmul($this->coupon->threshold_value, 100, 2);
             if (bccomp($productAmountValue, $thresholdAmountValue, 2) < 0) {
                 return false;
             }
         }
-        // TODO 验证 使用规则
         return true;
     }
 
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return array{amount:Money,quantity:int}
+     */
+    public function getOrderMeetRulesAmountAndQuantity(OrderData $orderData) : array
+    {
+        $amount   = Money::parse(0, $orderData->getOrderAmountInfo()->productAmount->getCurrency());
+        $quantity = 0;
+        foreach ($orderData->products as $productPurchaseFactor) {
+            /**
+             * @var ProductPurchaseFactor $product
+             */
+            // TODO 符合使用规则验证  验证规则, 商品规则、品牌规则、分类规则、用户分组规则等
+            $amount = $amount->add($productPurchaseFactor->getProductInfo()
+                                                         ->getProductAmountInfo()
+                                                         ->getProductAmount());
+
+            $quantity = $quantity + $productPurchaseFactor->quantity;
+        }
+
+        return [
+            'amount'   => $amount,
+            'quantity' => $quantity,
+        ];
+    }
+
+    /**
+     * @param  OrderData  $orderData
+     *
+     * @return array{amount:Money,quantity:int,is_can_use:bool}
+     */
+    public function canUseOrder(OrderData $orderData) : array
+    {
+        $result = $this->getOrderMeetRulesAmountAndQuantity($orderData);
+        // 验证门槛
+        // 判断订单商品是否符合规则，计算出符合规则的金额和数量
+        $amount               = $result['amount'];
+        $quantity             = $result['quantity'];
+        $result['is_can_use'] = true;
+        // 判断是否使用门槛
+        if (!$this->isReachedThreshold($amount, $quantity)) {
+            $result['is_can_use'] = false;
+            return $result;
+        }
+
+        return $result;
+    }
+
     // 获取优惠金额
-    public function calculateDiscountAmount(ProductPurchaseFactor $productPurchaseFactor) : Money
+    public function calculateDiscountAmount(Money $amount) : Money
     {
 
         if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::FIXED_AMOUNT) {
-            return Money::parse($this->coupon->discount_amount_value,
-                $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->price->getCurrency());
+            return Money::parse($this->coupon->discount_amount_value, $amount->getCurrency());
         }
         if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
-            $discountAmount = $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice
-                ->multiply(
-                    bcsub(1, bcdiv($this->coupon->discount_amount_value, 100, 4), 4)
-                );
+            $discountAmount = $amount->multiply(bcsub(1, bcdiv($this->coupon->discount_amount_value, 100, 4), 4));
 
             // 如果设置最大优惠金额
             if (bccomp($this->coupon->max_discount_amount, 0, 2) > 0) {
@@ -303,7 +368,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             }
             return $discountAmount;
         }
-        return Money::parse(0, $productPurchaseFactor->getProductAmount()->price->getCurrency());
+        return Money::parse(0, $amount->getCurrency());
     }
 
     protected function casts() : array
@@ -311,6 +376,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         return [
             'status'              => UserCouponStatusEnum::class,
             'user'                => UserInterfaceCast::class,
+            'discount_target'     => DiscountTargetEnum::class,
             'issue_time'          => 'datetime',
             'validity_start_time' => 'datetime',
             'validity_end_time'   => 'datetime',
@@ -325,4 +391,4 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
         return $this->hasMany(CouponUsage::class, 'coupon_no', 'coupon_no');
     }
-} 
+}

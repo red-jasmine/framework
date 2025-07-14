@@ -2,12 +2,11 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Ecommerce\Domain\Data\StockInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\Product\StockInfo;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\Queries\FindSkuStockQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductSku;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;

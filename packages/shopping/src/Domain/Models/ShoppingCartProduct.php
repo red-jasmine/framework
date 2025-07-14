@@ -6,8 +6,8 @@ use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 

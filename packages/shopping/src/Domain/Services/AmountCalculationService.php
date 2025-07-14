@@ -3,14 +3,15 @@
 namespace RedJasmine\Shopping\Domain\Services;
 
 use Money\Currency;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderAmountInfoData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
-use RedJasmine\Shopping\Domain\Data\CouponInfoData;
-use RedJasmine\Shopping\Domain\Data\OrderAmountData;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderProductAmountHook;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderSplitProductHook;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -32,23 +33,26 @@ class AmountCalculationService extends Service
 
     }
 
+
     /**
-     * @param  ProductPurchaseFactor[]  $productPurchaseFactors
+     * 计算订单基恩
      *
-     * @return OrderAmountData
+     * @param  OrderData  $orderData
+     *
+     * @return OrderData
      */
-    protected function getOrderAmount(array $productPurchaseFactors) : OrderAmountData
+    protected function calculateOrderAmount(OrderData $orderData) : OrderData
     {
 
+        $productPurchaseFactors = $orderData->products;
 
         // 商品基础流程
 
         $productPurchaseFactors = $this->init($productPurchaseFactors);
-
+        $orderAmountInfo        = new OrderAmountInfoData(new Currency('CNY'));
+        $orderData->setOrderAmountInfo($orderAmountInfo);
         // 通过购买商品因子
         foreach ($productPurchaseFactors as $productPurchaseFactor) {
-
-
             $productInfo = $productPurchaseFactor->getProductInfo();
             // 查询库存信息
             $productInfo->setStockInfo(
@@ -62,29 +66,27 @@ class AmountCalculationService extends Service
                 )
             );
             // 查询商品优惠信息
-            $productAmount = $this->promotionService->getProductPromotion($productPurchaseFactor, $productInfo->getProductAmountInfo());
+            $productAmountInfo = $this->promotionService->getProductPromotion($productPurchaseFactor, $productInfo->getProductAmountInfo());
 
             // 查询商品可用的优惠券
-            $productAmount->availableCoupons = $this->couponService->getUserCouponsByProduct($productPurchaseFactor);
-            $productInfo->setProductAmountInfo($productAmount);
+            $productAmountInfo->availableCoupons = $this->couponService->getUserCouponsByProduct($productPurchaseFactor);
+            $productInfo->setProductAmountInfo($productAmountInfo);
+
+            $orderAmountInfo->productAmountInfos[] = $productAmountInfo;
         }
+
+        // 设置订单金额 的货币
+
 
         // 处理优惠券
-        $productPurchaseFactors = $this->handleCoupons($productPurchaseFactors);
-        $orderAmount            = new OrderAmountData(new Currency('CNY'));
-        foreach ($productPurchaseFactors as $index => $productPurchaseFactor) {
-            $orderAmount->products[$productPurchaseFactor->getKey() ?? $index] = $productPurchaseFactor->getProductInfo();
-        }
+        $this->handleCoupons($orderData);
+
+        // 处理订单级别优惠券
+
+        $orderData->getOrderAmountInfo()->calculate();
 
 
-        // 通过下单因子 TODO
-        // 查询邮费信息 TODO
-        // 查询订单优惠信息 TODO
-
-        $orderAmount->calculate();
-
-
-        return $orderAmount;
+        return $orderData;
     }
 
     /**
@@ -101,10 +103,10 @@ class AmountCalculationService extends Service
              * @var ProductPurchaseFactor $productPurchaseFactor
              */
             if (!$productPurchaseFactor->getSerialNumber()) {
-                continue;
+                // 生成序列号
+                $productPurchaseFactor->buildSerialNumber();
             }
-            // 生成序列号
-            $productPurchaseFactor->buildSerialNumber();
+
             // 获取商品信息
             $productPurchaseFactor->setProductInfo(
                 $this->productService->getProductInfo($productPurchaseFactor)
@@ -121,11 +123,22 @@ class AmountCalculationService extends Service
         return $productPurchaseFactors;
     }
 
-    protected function handleCoupons(array $productPurchaseFactors) : array
+    protected function handleCoupons(OrderData $orderData) : OrderData
     {
 
+        $this->handleProductCoupons($orderData);
+
+        $this->handleOrderCoupons($orderData);
+
+        return $orderData;
+
+    }
+
+
+    protected function handleProductCoupons(OrderData $orderData) : void
+    {
         // 匹配优惠券
-        $productPurchaseFactors = $this->matchCoupons($productPurchaseFactors);
+        $productPurchaseFactors = $this->matchBestProductCoupons($orderData->products);
 
         // 计算商品优惠
         foreach ($productPurchaseFactors as $productPurchaseFactor) {
@@ -149,12 +162,41 @@ class AmountCalculationService extends Service
 
 
         }
+    }
 
-        return $productPurchaseFactors;
+    protected function handleOrderCoupons(OrderData $orderData) : void
+    {
+        // 获取订单级可用优惠券
+        $orderAmountInfo = $orderData->getOrderAmountInfo();
+
+        $orderAmountInfo->availableCoupons = $this->couponService->getUserCouponsByOrder($orderData);
+
+        // 匹配做好优惠券
+        $this->matchBestOrderCoupons($orderData);
+
 
     }
 
-    protected function matchCoupons(array &$productPurchaseFactors) : array
+    protected function matchBestOrderCoupons(OrderData $orderData) : void
+    {
+        $orderAmountInfo = $orderData->getOrderAmountInfo();
+        // 对优惠券进行排序
+        $availableCoupons = collect($orderAmountInfo->availableCoupons)
+            ->sort(function ($a, $b) {
+                return $b->discountAmount->getAmount() <=> $a->discountAmount->getAmount();
+            });
+
+        if (count($availableCoupons) > 0) {
+            // 订单级别优惠券
+            $bestCoupon                      = $availableCoupons->first();
+            $orderAmountInfo->coupons[]      = $bestCoupon;
+            $orderAmountInfo->discountAmount = $bestCoupon->discountAmount;
+
+        }
+    }
+
+    // 匹配 最薄
+    protected function matchBestProductCoupons(array &$productPurchaseFactors) : array
     {
         // 最优优惠券
         $bestCoupons = [];
@@ -201,7 +243,7 @@ class AmountCalculationService extends Service
 
                         $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->coupons[] = $availableProductCoupon;
 
-                        $this->matchCoupons($productPurchaseFactors);
+                        $this->matchBestProductCoupons($productPurchaseFactors);
                         break;
                     }
 

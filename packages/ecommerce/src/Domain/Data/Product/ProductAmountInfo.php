@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Ecommerce\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
 
 use Cknow\Money\Money;
 use Money\Currency;
-use RedJasmine\Shopping\Domain\Data\CouponInfoData;
+use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Support\Data\Data;
 
 /**
@@ -46,17 +46,31 @@ class ProductAmountInfo extends Data
      * @var Money
      */
     public Money $discountAmount;
+
+    /**
+     * 商品金额 = 单价 * 数量 - 商品优惠
+     * @var Money
+     */
+    public Money $productAmount;
+
+
     /**
      * 税费
      * @var Money
      */
     public Money $taxAmount;
-    public Money $productAmount;
+    /**
+     * 税率
+     * @var string|int|float
+     */
+    public string|int|float $texRate = 0;
     /**
      * 服务费
      * @var Money
      */
-    public Money     $serviceAmount;
+    public Money $serviceAmount;
+
+
     protected ?Money $costPrice      = null;
     protected ?Money $totalCostPrice = null;
 
@@ -100,12 +114,10 @@ class ProductAmountInfo extends Data
      */
     public function getProductAmount() : Money
     {
-        $this->productAmount =  $this->totalPrice->subtract($this->discountAmount);
+        $this->productAmount = $this->totalPrice->subtract($this->discountAmount);
 
-        return  $this->productAmount;
+        return $this->productAmount;
     }
-
-
 
 
 }

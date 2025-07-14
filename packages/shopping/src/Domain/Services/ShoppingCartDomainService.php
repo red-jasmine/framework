@@ -3,11 +3,14 @@
 namespace RedJasmine\Shopping\Domain\Services;
 
 use PHPUnit\Event\InvalidArgumentException;
-use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderAmountInfoData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\StockInfo;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
-use RedJasmine\Ecommerce\Domain\Data\StockInfo;
-use RedJasmine\Shopping\Domain\Data\OrderAmountData;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Shopping\Exceptions\ShoppingCartException;
@@ -82,7 +85,7 @@ class ShoppingCartDomainService extends AmountCalculationService
         return true;
     }
 
-    public function show(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
+    public function show(ShoppingCart $cart, PurchaseFactor $factor) : OrderData
     {
         $selectProducts = $cart->products->all();
 
@@ -93,32 +96,34 @@ class ShoppingCartDomainService extends AmountCalculationService
      * @param  ShoppingCartProduct[]  $selectProducts
      * @param  PurchaseFactor  $factor
      *
-     * @return OrderAmountData
+     * @return OrderData
      */
-    protected function getSelectProductsOrderAmount(array $selectProducts, PurchaseFactor $factor) : OrderAmountData
+    protected function getSelectProductsOrderAmount(array $selectProducts, PurchaseFactor $factor) : OrderData
     {
         // TODO 验证货币是否一致， 需要一致时才支持选择
 
-        $productPurchaseFactors = [];
+        $orderData = OrderData::from($factor->toArray());
         foreach ($selectProducts as $product) {
-            $productPurchaseFactor = ProductPurchaseFactor::from([
-                'product'    => $product->getProduct(),
-                'quantity'   => $product->quantity,
-                'customized' => $product->customized,
-                'buyer'      => $factor->buyer,
-                'channel'    => $factor->channel,
-                'currency'   => $factor->currency,
-                'country'    => $factor->country,
-                'market'     => $factor->market,
+            $productPurchaseFactor = OrderProductData::from([
+                'product'          => $product->getProduct(),
+                'quantity'         => $product->quantity,
+                'customized'       => $product->customized,
+                'buyer'            => $factor->buyer,
+                'channel'          => $factor->channel,
+                'currency'         => $factor->currency,
+                'country'          => $factor->country,
+                'market'           => $factor->market,
+                'shopping_cart_id' => $product->id,
             ]);
-            $productPurchaseFactor->setKey($product->id);
-            $productPurchaseFactors[] = $productPurchaseFactor;
+
+            $orderData->products[] = $productPurchaseFactor;
         }
 
-        return $this->getOrderAmount($productPurchaseFactors);
+
+        return $this->calculateOrderAmount($orderData);
     }
 
-    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderAmountData
+    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderData
     {
 
         $selectProducts = $cart->products->where('selected', true)->all();

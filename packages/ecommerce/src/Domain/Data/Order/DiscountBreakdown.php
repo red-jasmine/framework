@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
 use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;

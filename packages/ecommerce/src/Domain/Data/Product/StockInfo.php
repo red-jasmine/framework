@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Ecommerce\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
 use RedJasmine\Support\Data\Data;
 

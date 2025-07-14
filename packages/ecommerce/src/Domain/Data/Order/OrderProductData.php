@@ -1,8 +1,8 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 
 class OrderProductData extends ProductPurchaseFactor
 {

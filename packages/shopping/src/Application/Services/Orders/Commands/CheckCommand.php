@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Application\Services\Orders\Commands;
 
 
-use RedJasmine\Shopping\Domain\Data\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 
 /**
  * 商品价格计算

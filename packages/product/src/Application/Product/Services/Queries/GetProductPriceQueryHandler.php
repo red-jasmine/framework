@@ -2,9 +2,8 @@
 
 namespace RedJasmine\Product\Application\Product\Services\Queries;
 
-use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Support\Application\Queries\QueryHandler;

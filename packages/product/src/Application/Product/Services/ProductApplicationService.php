@@ -2,8 +2,7 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
-use Cknow\Money\Money;
-use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommandHandler;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommandHandler;
@@ -11,8 +10,8 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCom
 use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCommandHandler;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommandHandler;
-use RedJasmine\Product\Application\Product\Services\Queries\GetProductPurchaseQuery;
 use RedJasmine\Product\Application\Product\Services\Queries\GetProductPriceQueryHandler;
+use RedJasmine\Product\Application\Product\Services\Queries\GetProductPurchaseQuery;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;

@@ -49,7 +49,6 @@ class OrderStandardType implements OrderTypeInterface
         //  计算税费
         $this->calculateTaxAmount($order);
         // 计算订单商品项应付金额
-
         $this->calculateOrderProductAmount($order);
         //  汇总订单金额
         $this->calculateOrderAmount($order);
@@ -184,8 +183,7 @@ class OrderStandardType implements OrderTypeInterface
         // 计算商品 分摊后商品金额
         foreach ($order->products as $product) {
             // 商品计税价格 =  商品金额 +  运费 TODO 分期情况是否添加运费 计算税费
-
-            $productTaxPrice = $product->product_amount->add($product->freight_amount);
+            $productTaxPrice = $product->product_amount;
             // 税费计算 = 商品计税价格 * 税率
             $product->tax_amount = $productTaxPrice->multiply(bcdiv($product->tax_rate, 100, 8));
         }

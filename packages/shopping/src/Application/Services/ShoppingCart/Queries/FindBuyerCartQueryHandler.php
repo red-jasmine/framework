@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart\Queries;
 
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
@@ -26,11 +27,15 @@ class FindBuyerCartQueryHandler extends QueryHandler
         if ($cart) {
             // 还需要获取商品信息
 
-            $orderAmount = $this->shoppingCartDomainService->show($cart, $query);
+            $orderData     = $this->shoppingCartDomainService->show($cart, $query);
+            $orderProducts = collect($orderData->products)->keyBy('shoppingCartId');
 
             foreach ($cart->products as $product) {
-                $productInfo      = $orderAmount->products[$product->id];
-                $product->product = $productInfo;
+                /**
+                 * @var OrderProductData $orderProduct
+                 */
+                $orderProduct     = $orderProducts[$product->id];
+                $product->product = $orderProduct->getProductInfo();
             }
         }
 

@@ -49,6 +49,7 @@ class CouponUserService extends Service
             'user'  => $user,
         ]);
         $userCoupon->coupon_id           = $coupon->id;
+        $userCoupon->discount_target     = $coupon->discount_target;
         $userCoupon->issue_time          = Carbon::now();
         $userCoupon->validity_start_time = $validityStartTime;
         $userCoupon->validity_end_time   = $validityEndTime;

@@ -3,7 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Hooks;
 
 use Closure;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Support\Foundation\Hook\Hookable;
 
 /**

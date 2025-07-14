@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
-use RedJasmine\Ecommerce\Domain\Data\ProductAmountInfo;
-use RedJasmine\Ecommerce\Domain\Data\ProductIdentity;
-use RedJasmine\Ecommerce\Domain\Data\ProductInfo;
-use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
