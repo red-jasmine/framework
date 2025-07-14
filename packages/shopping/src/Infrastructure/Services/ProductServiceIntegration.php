@@ -11,6 +11,7 @@ use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Throwable;
+use RedJasmine\Product\Exceptions\ProductException;
 
 class ProductServiceIntegration implements ProductServiceInterface
 {
@@ -19,23 +20,24 @@ class ProductServiceIntegration implements ProductServiceInterface
     ) {
     }
 
-
-    protected function getProduct(ProductIdentity $product) : Product
-    {
-        $query = FindQuery::from([]);
-        $query->setKey($product->id);
-        $query->include = ['skus'];
-        return $this->productApplicationService->find($query);
-    }
-
+    /**
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
+     *
+     * @return ProductInfo
+     * @throws Throwable
+     * @throws ProductException
+     */
     public function getProductInfo(ProductPurchaseFactor $productPurchaseFactor) : ProductInfo
     {
         $productInfo              = new ProductInfo();
         $productInfo->product     = $productPurchaseFactor->product;
         $productInfo->isAvailable = false;
+
         try {
-            $productModel                 = $this->getProduct($productPurchaseFactor->product);
-            $sku                          = $productModel->getSkuBySkuId($productPurchaseFactor->product->skuId);
+            $productModel = $this->getProduct($productPurchaseFactor->product);
+
+            $sku = $productModel->getSkuBySkuId($productPurchaseFactor->product->skuId);
+
             $productInfo->product->seller = $productModel->owner;
             $productInfo->title           = $productModel->title;
             $productInfo->image           = $productModel->image;
@@ -53,6 +55,7 @@ class ProductServiceIntegration implements ProductServiceInterface
 
             // TODO 获取商户名称
         } catch (Throwable $throwable) {
+            throw $throwable;
 
         }
 
@@ -60,6 +63,13 @@ class ProductServiceIntegration implements ProductServiceInterface
 
     }
 
+    protected function getProduct(ProductIdentity $product) : Product
+    {
+        $query = FindQuery::from([]);
+        $query->setKey($product->id);
+        $query->include = ['skus'];
+        return $this->productApplicationService->find($query);
+    }
 
     public function getProductAmount(ProductPurchaseFactor $productPurchaseFactor) : ProductAmountInfo
     {

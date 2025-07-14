@@ -21,39 +21,39 @@ class ShoppingCartDomainService extends AmountCalculationService
 
     /**
      * @param  ShoppingCart  $cart
-     * @param  ProductPurchaseFactor  $productPurchaseFactors
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
      *
      * @return ShoppingCartProduct
      * @throws ShoppingCartException
      */
-    public function addProduct(ShoppingCart $cart, ProductPurchaseFactor $productPurchaseFactors) : ShoppingCartProduct
+    public function addProduct(ShoppingCart $cart, ProductPurchaseFactor $productPurchaseFactor) : ShoppingCartProduct
     {
 
         // 获取商品信息
-        $productInfo = $this->productService->getProductInfo($productPurchaseFactors);
-
+        $productInfo = $this->productService->getProductInfo($productPurchaseFactor);
+        $productPurchaseFactor->setProductInfo($productInfo);
         /**
          * @var ShoppingCartProduct $shoppingCartProduct
          */
         $shoppingCartProduct = ShoppingCartProduct::make(['cart_id' => $cart->id]);
 
-        $shoppingCartProduct->setProduct($productPurchaseFactors->product);
-        $shoppingCartProduct->quantity   = $productPurchaseFactors->quantity;
-        $shoppingCartProduct->customized = $productPurchaseFactors->customized;
+        $shoppingCartProduct->setProduct($productPurchaseFactor->getProductInfo()->product);
+        $shoppingCartProduct->quantity   = $productPurchaseFactor->quantity;
+        $shoppingCartProduct->customized = $productPurchaseFactor->customized;
 
         $shoppingCartProduct = $cart->addProduct($shoppingCartProduct);
 
-        $productPurchaseFactors->quantity = $shoppingCartProduct->quantity;
+        $productPurchaseFactor->quantity = $shoppingCartProduct->quantity;
 
         $this->validateProduct($productInfo);
 
         // 获取库存信息
         // 6. 校验库存
-        $stockInfo = $this->stockService->getStockInfo($productPurchaseFactors->product, $shoppingCartProduct->quantity);
+        $stockInfo = $this->stockService->getStockInfo($productPurchaseFactor->product, $shoppingCartProduct->quantity);
         $this->validateStock($stockInfo);
 
         // 7. 获取价格 已最终的数量 获取价格
-        $priceInfo = $this->productService->getProductAmount($productPurchaseFactors);
+        $priceInfo = $this->productService->getProductAmount($productPurchaseFactor);
 
         $shoppingCartProduct->setProductInfo($productInfo);
         $shoppingCartProduct->price = $priceInfo->price;
@@ -102,7 +102,11 @@ class ShoppingCartDomainService extends AmountCalculationService
     {
         // TODO 验证货币是否一致， 需要一致时才支持选择
 
-        $orderData = OrderData::from($factor->toArray());
+        $orderData = OrderData::from([
+            'buyer'   => $factor->buyer,
+            'channel' => $factor->channel,
+            'market'  => $factor->market
+        ]);
         foreach ($selectProducts as $product) {
             $productPurchaseFactor = OrderProductData::from([
                 'product'          => $product->getProduct(),
