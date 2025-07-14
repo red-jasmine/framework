@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Data\CouponInfoData;
+use RedJasmine\Shopping\Domain\Data\CouponUsageData;
 
 interface CouponServiceInterface
 {
@@ -18,6 +19,11 @@ interface CouponServiceInterface
     public function getUserCouponsByProduct(ProductPurchaseFactor $productPurchaseFactor) : array;
 
 
-    // 核销优惠券
-    public function useCoupon(string $couponNo, string $orderNo) : bool;
+    /**
+     * @param  string  $couponNo
+     * @param  CouponUsageData[]  $usages
+     *
+     * @return bool
+     */
+    public function useCoupon(string $couponNo, array $usages) : bool;
 }

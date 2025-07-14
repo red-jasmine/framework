@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Money\Currency;
 
+/**
+ * @deprecated
+ * @see  \RedJasmine\Support\Domain\Casts\MoneyCast
+ */
 class MoneyCast implements CastsAttributes
 {
     protected string $valueSuffix    = 'amount';

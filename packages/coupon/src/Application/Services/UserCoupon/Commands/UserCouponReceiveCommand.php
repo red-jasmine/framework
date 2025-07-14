@@ -18,10 +18,6 @@ class UserCouponReceiveCommand extends Data
      */
     public ?string $channel = null;
 
-    /**
-     * 邀请码
-     */
-    public ?string $inviteCode = null;
 
     /**
      * 扩展参数

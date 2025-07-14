@@ -15,5 +15,12 @@ class UserCouponRepository extends EloquentRepository implements UserCouponRepos
         return static::$eloquentModelClass::where('coupon_no', $no)->firstOrFail();
     }
 
+    public function findByNoLock(string $no) : UserCoupon
+    {
+        return static::$eloquentModelClass::where('coupon_no', $no)
+                                          ->lockForUpdate()
+                                          ->firstOrFail();
+    }
+
 
 } 

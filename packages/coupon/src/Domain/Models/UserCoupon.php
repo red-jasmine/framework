@@ -7,6 +7,7 @@ use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
@@ -116,8 +117,9 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 
     /**
      * 使用优惠券
+     * @throws CouponException
      */
-    public function use(string $orderNo) : void
+    public function use() : void
     {
         if (!$this->isAvailable()) {
             throw new CouponException('优惠券不可用');
@@ -125,7 +127,9 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 
         $this->status    = UserCouponStatusEnum::USED;
         $this->used_time = Carbon::now();
-        $this->order_no  = $orderNo;
+
+
+        $this->coupon->use();
 
     }
 
@@ -266,7 +270,9 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             }
         }
         if ($this->coupon->threshold_type === ThresholdTypeEnum::AMOUNT) {
-            if ($productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice->getAmount() < $this->coupon->threshold_value) {
+            $productAmountValue   = $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice->getAmount();
+            $thresholdAmountValue = bcmul($this->coupon->threshold_value, 100, 2);
+            if (bccomp($productAmountValue, $thresholdAmountValue, 2) < 0) {
                 return false;
             }
         }
@@ -283,11 +289,19 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
                 $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->price->getCurrency());
         }
         if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
-            return $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice
+            $discountAmount = $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->totalPrice
                 ->multiply(
-                    bcsub(1,
-                        bcdiv($this->coupon->discount_amount_value, 100, 4), 4)
+                    bcsub(1, bcdiv($this->coupon->discount_amount_value, 100, 4), 4)
                 );
+
+            // 如果设置最大优惠金额
+            if (bccomp($this->coupon->max_discount_amount, 0, 2) > 0) {
+                $maxDiscountAmount = Money::parse($this->coupon->max_discount_amount, $discountAmount->getCurrency());
+                if ($maxDiscountAmount < $discountAmount) {
+                    $discountAmount = $maxDiscountAmount;
+                }
+            }
+            return $discountAmount;
         }
         return Money::parse(0, $productPurchaseFactor->getProductAmount()->price->getCurrency());
     }
@@ -304,5 +318,11 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
             'coupon_id'           => 'integer',
             'order_id'            => 'integer',
         ];
+    }
+
+
+    public function usages() : HasMany
+    {
+        return $this->hasMany(CouponUsage::class, 'coupon_no', 'coupon_no');
     }
 } 

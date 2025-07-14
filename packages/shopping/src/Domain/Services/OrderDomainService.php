@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
+use RedJasmine\Shopping\Domain\Data\CouponUsageData;
 use RedJasmine\Shopping\Domain\Data\OrderAmountData;
 use RedJasmine\Shopping\Domain\Data\OrderData;
 use RedJasmine\Shopping\Domain\Data\OrderProductData;
@@ -54,7 +55,15 @@ class OrderDomainService extends AmountCalculationService
             foreach ($orderDataItem->products as $productDataItem) {
                 // 扣减商品优惠券
                 foreach ($productDataItem->getProductInfo()->getProductAmountInfo()->coupons as $coupon) {
-                    $this->couponService->useCoupon($coupon->couponNo, $productDataItem->getOrderProductNo());
+                    $usages   = [];
+                    $usages[] = CouponUsageData::from([
+                        'orderType'      => 'order',
+                        'orderNo'        => $orderDataItem->getOrderNo(),
+                        'orderProductNo' => $productDataItem->getOrderProductNo(),
+                        'discountAmount' => $coupon->discountAmount
+                    ]);
+
+                    $this->couponService->useCoupon($coupon->couponNo, $usages);
                 }
                 // 扣减订单优惠券 TODO
             }

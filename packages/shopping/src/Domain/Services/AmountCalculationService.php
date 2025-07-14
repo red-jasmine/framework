@@ -135,12 +135,16 @@ class AmountCalculationService extends Service
             /**
              * @var CouponInfoData $couponInfoData
              */
-            $couponInfoData = $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->coupons[0] ?? null;
-            if ($couponInfoData) {
-                $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->discountAmount =
-
-                    $productPurchaseFactor->getProductInfo()->getProductAmountInfo()->discountAmount->add($couponInfoData->discountAmount);
-
+            foreach ($productPurchaseFactor->getProductInfo()->getProductAmountInfo()->coupons as $couponInfoData) {
+                $productPurchaseFactor
+                    ->getProductInfo()
+                    ->getProductAmountInfo()
+                    ->discountAmount =
+                    $productPurchaseFactor
+                        ->getProductInfo()
+                        ->getProductAmountInfo()
+                        ->discountAmount
+                        ->add($couponInfoData->discountAmount);
             }
 
 
@@ -169,6 +173,7 @@ class AmountCalculationService extends Service
                 return $b->discountAmount->getAmount() <=> $a->discountAmount->getAmount();
             });
 
+
             // 选出最优优惠券
             /**
              * @var CouponInfoData $availableProductCoupon
@@ -185,7 +190,7 @@ class AmountCalculationService extends Service
                         // 更新最优优惠券
                         $bestCoupons[$availableProductCoupon->couponNo]['product']
                             ->getProductInfo()
-                            ->getProductAmount()
+                            ->getProductAmountInfo()
                             ->coupons[] = [];
 
                         $bestCoupons[$availableProductCoupon->couponNo] = [

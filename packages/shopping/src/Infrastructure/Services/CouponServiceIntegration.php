@@ -7,9 +7,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use RedJasmine\Coupon\Application\Services\UserCoupon\Commands\UserCouponUseCommand;
 use RedJasmine\Coupon\Application\Services\UserCoupon\Queries\UserCouponPaginateQuery;
 use RedJasmine\Coupon\Application\Services\UserCoupon\UserCouponApplicationService;
+use RedJasmine\Coupon\Domain\Data\UserCouponUseData;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Ecommerce\Domain\Data\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
+use RedJasmine\Shopping\Domain\Contracts\CouponUsageData;
 use RedJasmine\Shopping\Domain\Data\CouponInfoData;
 use RedJasmine\Support\Contracts\UserInterface;
 
@@ -76,15 +78,28 @@ class CouponServiceIntegration implements CouponServiceInterface
 
     }
 
-
-    // 获取用户有效优惠券
-
-    public function useCoupon(string $couponNo, string $orderNo) : bool
+    /**
+     * @param  string  $couponNo
+     * @param  \RedJasmine\Shopping\Domain\Data\CouponUsageData[]  $usages
+     *
+     * @return bool
+     */
+    public function useCoupon(string $couponNo, array $usages) : bool
     {
         $command = new UserCouponUseCommand;
         $command->setKey($couponNo);
-        $command->orderNo        = $orderNo;
-        $command->discountAmount = null;
+        $userCouponUseDatas = [];
+        foreach ($usages as $usage) {
+
+            $userCouponUseData                 = new UserCouponUseData();
+            $userCouponUseData->discountAmount = $usage->discountAmount;
+            $userCouponUseData->orderType      = $usage->orderType;
+            $userCouponUseData->orderNo        = $usage->orderNo;
+            $userCouponUseData->orderProductNo = $usage->orderProductNo;
+            $userCouponUseDatas[]              = $userCouponUseData;
+
+        }
+        $command->usages = $userCouponUseDatas;
         return $this->service->use($command);
     }
 

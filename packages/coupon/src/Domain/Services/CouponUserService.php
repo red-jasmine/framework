@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Coupon\Domain\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use RedJasmine\Coupon\Domain\Data\UserCouponUseData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
+use RedJasmine\Coupon\Domain\Models\CouponUsage;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Coupon\Exceptions\CouponException;
@@ -52,6 +55,58 @@ class CouponUserService extends Service
         $userCoupon->status              = UserCouponStatusEnum::AVAILABLE;
 
         return $userCoupon;
+    }
+
+
+    /**
+     * @param  UserCoupon  $userCoupon
+     * @param  array  $usages
+     *
+     * @return true
+     * @throws CouponException
+     */
+    public function use(UserCoupon $userCoupon, array $usages) : true
+    {
+        // 验证优惠券的是否可用
+        if (!$userCoupon->isAvailable()) {
+            throw new CouponException('优惠券不可用');
+        }
+        // 标记为已使用
+        $userCoupon->use();
+        // 添加使用记录
+        $this->addUsages($userCoupon, $usages);
+
+        return true;
+    }
+
+    /**
+     * @param  UserCoupon  $userCoupon
+     * @param  UserCouponUseData[]  $usages
+     *
+     * @return void
+     */
+    protected function addUsages(UserCoupon $userCoupon, array $usages) : void
+    {
+        $userCoupon->setRelation('usages', Collection::make());
+        $userCoupon->coupon;
+        foreach ($usages as $usage) {
+            /**
+             * @var UserCouponUseData $usage
+             */
+            $couponUsage                   = CouponUsage::make();
+            $couponUsage->coupon_no        = $userCoupon->coupon_no;
+            $couponUsage->coupon_id        = $userCoupon->coupon_id;
+            $couponUsage->owner            = $userCoupon->owner;
+            $couponUsage->user             = $userCoupon->user;
+            $couponUsage->cost_bearer      = $userCoupon->coupon->cost_bearer;
+            $couponUsage->order_type       = $usage->orderType;
+            $couponUsage->order_no         = $usage->orderNo;
+            $couponUsage->order_product_no = $usage->orderProductNo;
+            $couponUsage->discount_amount  = $usage->discountAmount;
+            $couponUsage->used_at          = Carbon::now();
+            $userCoupon->usages->add($couponUsage);
+        }
+
     }
 
 }

@@ -20,7 +20,6 @@ return new class extends Migration {
             $table->userMorphs('user', '用户', false);
             // 所有者信息
 
-
             $table->enum('status', UserCouponStatusEnum::values())
                   ->default(UserCouponStatusEnum::AVAILABLE)
                   ->comment(UserCouponStatusEnum::comments('状态'));
@@ -28,11 +27,6 @@ return new class extends Migration {
             $table->timestamp('validity_start_time')->comment('有效期开始时间');
             $table->timestamp('validity_end_time')->comment('有效期结束时间');
             $table->timestamp('used_time')->nullable()->comment('使用时间');
-
-
-            $table->string('order_no',64)->nullable()->comment('订单号');
-            $table->string('order_product_no',64)->nullable()->comment('订单商品项');
-
             // TODO 领域信息预留
             $table->operator();
 
@@ -41,7 +35,6 @@ return new class extends Migration {
             $table->index(['user_id', 'status'], 'idx_user_status');
             $table->index('validity_end_time');
             $table->index('used_time');
-            $table->index('order_id');
         });
     }
 

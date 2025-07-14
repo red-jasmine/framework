@@ -215,8 +215,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-
-
     /**
      * 检查领取规则
      */
@@ -226,51 +224,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return true;
     }
 
-    /**
-     * 发放给用户
-     */
-    public function issueToUser(int $userId) : UserCoupon
-    {
-        if (!$this->canIssue()) {
-            throw new CouponException('优惠券不能发放');
-        }
-
-        $userCoupon = new UserCoupon([
-            'coupon_id'   => $this->id,
-            'user_id'     => $userId,
-            'issue_time'  => Carbon::now(),
-            'expire_time' => $this->getExpireTime(),
-        ]);
-
-        $userCoupon->save();
-
-        // 更新发放数量
-        $this->increment('total_issued');
-
-        return $userCoupon;
-    }
-
-    /**
-     * 获取过期时间
-     */
-    public function getExpireTime() : Carbon
-    {
-        if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
-            return $this->validity_end_time ?? Carbon::now()->addDays(30);
-        }
-
-        // 相对时间计算
-        $now = Carbon::now();
-        if ($this->validity_time_type === TimeUnitEnum::DAY) {
-            return $now->addDays($this->validity_time_value);
-        } elseif ($this->validity_time_type === TimeUnitEnum::HOUR) {
-            return $now->addHours($this->validity_time_value);
-        } elseif ($this->validity_time_type === TimeUnitEnum::MINUTE) {
-            return $now->addMinutes($this->validity_time_value);
-        }
-
-        return $now->addDays(30);
-    }
 
     /**
      * @return \Illuminate\Support\Carbon[]
@@ -505,6 +458,14 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             'total_used'             => 'integer',
             'cost_bearer'            => UserInterfaceCast::class,
         ];
+    }
+
+
+    public function use() : void
+    {
+        $this->increment('total_used');
+
+
     }
 
 }
