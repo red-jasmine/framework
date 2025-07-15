@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 
 return new class extends Migration {

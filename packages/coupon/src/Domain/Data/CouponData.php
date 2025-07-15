@@ -3,16 +3,14 @@
 namespace RedJasmine\Coupon\Domain\Data;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\ValidationException;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Data\TimeConfigData;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;

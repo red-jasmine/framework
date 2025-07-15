@@ -3,14 +3,12 @@
 namespace RedJasmine\Shopping\Domain\Services;
 
 use PHPUnit\Event\InvalidArgumentException;
-use RedJasmine\Ecommerce\Domain\Data\Order\OrderAmountInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Data\Product\StockInfo;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Shopping\Exceptions\ShoppingCartException;

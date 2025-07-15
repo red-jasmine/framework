@@ -8,19 +8,18 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Guava\FilamentClusters\Forms\Cluster;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCoupon\Clusters\Coupons;
 use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages;
-use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 
 class CouponResource extends Resource

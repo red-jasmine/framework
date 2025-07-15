@@ -2,12 +2,11 @@
 
 namespace RedJasmine\Shopping\Domain\Services;
 
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponUsageData;
-use RedJasmine\Ecommerce\Domain\Data\Order\OrderAmountInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
+use RedJasmine\Ecommerce\Domain\Data\OrdersData;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderCreateHook;
 
 /**

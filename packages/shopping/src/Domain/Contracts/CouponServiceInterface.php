@@ -5,8 +5,8 @@ namespace RedJasmine\Shopping\Domain\Contracts;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponUsageData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
 
 interface CouponServiceInterface
 {

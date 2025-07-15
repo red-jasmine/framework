@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 
 return new class extends Migration {
     /**

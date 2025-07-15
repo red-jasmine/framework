@@ -3,7 +3,7 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Coupon;
 
 use Cknow\Money\Money;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 

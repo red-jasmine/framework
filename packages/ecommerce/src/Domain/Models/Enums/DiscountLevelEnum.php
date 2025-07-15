@@ -1,12 +1,10 @@
 <?php
 
-namespace RedJasmine\Coupon\Domain\Models\Enums;
+namespace RedJasmine\Ecommerce\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-/**
- * TODO 把优惠券等下 放到 电子商务共享模块中
- */
+
 enum DiscountLevelEnum: string
 {
     use EnumsHelper;

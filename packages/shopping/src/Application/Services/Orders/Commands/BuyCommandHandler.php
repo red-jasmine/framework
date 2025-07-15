@@ -2,18 +2,11 @@
 
 namespace RedJasmine\Shopping\Application\Services\Orders\Commands;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
-use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
-use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
-use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Services\OrderDomainService;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
