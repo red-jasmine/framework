@@ -35,7 +35,7 @@ class CouponUserService extends Service
         // TODO 验证领取条件
 
 
-        [$validityStartTime, $validityEndTime] = $coupon->getValidityTimes();
+        [$validityStartTime, $validityEndTime] = $coupon->buildUserCouponValidityTimes();
 
 
         // 增加一次领域记录

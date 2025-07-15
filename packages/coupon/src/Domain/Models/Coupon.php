@@ -17,6 +17,7 @@ use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleValue;
 use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\System;
@@ -135,14 +136,11 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     public function isValid() : bool
     {
         $now = Carbon::now();
-
-        if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
-            if ($this->validity_start_time && $now->lt($this->validity_start_time)) {
-                return false;
-            }
-            if ($this->validity_end_time && $now->gt($this->validity_end_time)) {
-                return false;
-            }
+        if ($this->start_time && $now->lt($this->start_time)) {
+            return false;
+        }
+        if ($this->end_time && $now->gt($this->end_time)) {
+            return false;
         }
 
         return true;
@@ -322,7 +320,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     /**
      * 检查是否可以领取
      */
-    public function canReceive(array $context = []) : bool
+    public function canReceive(PurchaseFactor $purchaseFactor) : bool
     {
         // 检查是否可以发放
         if (!$this->canIssue()) {
@@ -330,7 +328,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         }
 
         // 检查领取规则
-        if ($this->receive_rules && !$this->checkReceiveRules($context)) {
+        if ($this->receive_rules && !$this->checkReceiveRules($purchaseFactor)) {
             return false;
         }
 
@@ -362,19 +360,28 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
 
     /**
-     * 检查领取规则
+     * @param  PurchaseFactor  $purchaseFactor
+     *
+     * @return bool
      */
-    protected function checkReceiveRules(array $context) : bool
+    protected function checkReceiveRules(PurchaseFactor $purchaseFactor) : bool
     {
-        // TODO: 实现领取规则检查逻辑
+        // TODO
+        // 领取规则的验证
+        // 每人总数量
+        // 每人当前数量
+        // 必须为  VIP
+
+
         return true;
     }
 
 
     /**
+     * 获取优惠券的有效期
      * @return \Illuminate\Support\Carbon[]
      */
-    public function getValidityTimes() : array
+    public function buildUserCouponValidityTimes() : array
     {
         if ($this->validity_type === ValidityTypeEnum::ABSOLUTE) {
 
