@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Domain\Policies;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
 
 trait HasDefaultPolicy
@@ -9,6 +10,7 @@ trait HasDefaultPolicy
 
     public function before($user, string $ability) : bool|null
     {
+        // 超级管理员
         if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
             return true;
         }
@@ -20,10 +22,15 @@ trait HasDefaultPolicy
         return '';
     }
 
+    protected function defaultPermission(string $function) : string
+    {
+        return static::getModel().'.'.$function;
+    }
+
     protected function buildPermissions(string $function) : array
     {
         return [
-            $function.'_'.static::getModel(),
+            $this->defaultPermission($function),
             Str::of($function)->snake()->lower().'_'.static::getModel(),
             Str::of($function)->snake('-')->lower().'_'.static::getModel(),
         ];
@@ -32,7 +39,8 @@ trait HasDefaultPolicy
 
     public function viewAny($user) : bool
     {
-        return $user->canany($this->buildPermissions(__FUNCTION__));
+        // 当前登录用户
+        return $user->can($this->defaultPermission(__FUNCTION__));
     }
 
     public function view($user, $model) : bool

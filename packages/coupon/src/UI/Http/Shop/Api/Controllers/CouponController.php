@@ -2,7 +2,9 @@
 
 namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
 
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Application\Services\Coupon\Queries\CouponPaginateQuery as PaginateQuery;
 use RedJasmine\Coupon\Domain\Data\CouponData as Data;
@@ -21,11 +23,6 @@ class CouponController extends Controller
     protected static string $dataClass          = Data::class;
 
 
-    public function authorize($ability, $arguments = [])
-    {
-
-        return true;
-    }
 
 
 
