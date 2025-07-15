@@ -18,10 +18,10 @@ enum DiscountLevelEnum: string
     public static function labels() : array
     {
         return [
-            self::ORDER->value    => __('red-jasmine-coupon::ecommerce.enums.discount_level.order_amount'),
-            self::PRODUCT->value  => __('red-jasmine-coupon::ecommerce.enums.discount_level.product_amount'),
-            self::CHECKOUT->value => __('red-jasmine-coupon::ecommerce.enums.discount_level.checkout_amount'),
-            self::SHIPPING->value => __('red-jasmine-coupon::ecommerce.enums.discount_level.shipping_amount'),
+            self::ORDER->value    => __('red-jasmine-ecommerce::ecommerce.enums.discount_level.order'),
+            self::PRODUCT->value  => __('red-jasmine-ecommerce::ecommerce.enums.discount_level.product'),
+            self::CHECKOUT->value => __('red-jasmine-ecommerce::ecommerce.enums.discount_level.checkout'),
+            self::SHIPPING->value => __('red-jasmine-ecommerce::ecommerce.enums.discount_level.shipping'),
 
         ];
     }

@@ -35,8 +35,7 @@ class CouponPackageServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 '2024_01_01_000001_create_coupons_table',
                 '2024_01_01_000002_create_user_coupons_table',
-                '2024_01_01_000003_create_coupon_usages_table',
-                '2024_01_01_000004_create_coupon_issue_statistics_table',
+                '2024_01_01_000003_create_coupon_usages_table'
             ])
             ->runsMigrations();
     }

@@ -31,7 +31,7 @@ return [
         'image'                  => '图片',
         'is_show'                => '是否显示',
         'status'                 => '状态',
-        'discount_level'        => '优惠目标',
+        'discount_level'         => '优惠券级别',
         'discount_amount_type'   => '优惠类型',
         'discount_amount_value'  => '优惠值',
         'threshold_type'         => '门槛类型',
@@ -115,14 +115,14 @@ return [
             'expired'   => '已过期',
         ],
         'discount_amount_type' => [
-            'fixed_amount' => '固定金额',
-            'percentage'   => '百分比',
+            'fixed_amount' => '满减',
+            'percentage'   => '折扣',
         ],
         'threshold_type'       => [
             'amount'   => '金额',
-            'quantity' => '数量',
+            'quantity' => '件数',
         ],
-        'discount_level' => [
+        'discount_level'       => [
             'order'    => '订单',
             'product'  => '商品',
             'shipping' => '运费',

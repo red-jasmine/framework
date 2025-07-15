@@ -84,7 +84,7 @@ class CouponResource extends Resource
 
                                                                                                   Forms\Components\Select::make('status')
                                                                                                                          ->label(__('red-jasmine-coupon::coupon.fields.status'))
-                                                                                                                         ->options(CouponStatusEnum::options())
+                                                                                                                         ->useEnum(CouponStatusEnum::class)
                                                                                                                          ->default(CouponStatusEnum::DRAFT)
                                                                                                                          ->required(),
 
@@ -122,7 +122,7 @@ class CouponResource extends Resource
                                                                                               ->schema([
                                                                                                   Forms\Components\Select::make('discount_level')
                                                                                                                          ->label(__('red-jasmine-coupon::coupon.fields.discount_level'))
-                                                                                                                         ->options(DiscountLevelEnum::options())
+                                                                                                                         ->useEnum(DiscountLevelEnum::class)
                                                                                                                          ->default(DiscountLevelEnum::ORDER)
                                                                                                                          ->required(),
 
@@ -156,7 +156,7 @@ class CouponResource extends Resource
                                                                                                                                     ->minValue(0)
                                                                                                                                     ->prefix(fn(
                                                                                                                                         Forms\Get $get
-                                                                                                                                    ) => $get('discount_amount_type') === DiscountAmountTypeEnum::PERCENTAGE)
+                                                                                                                                    ) => $get('discount_amount_type') === DiscountAmountTypeEnum::PERCENTAGE ?'打':'减')
                                                                                                                                     ->suffix(fn(
                                                                                                                                         Forms\Get $get
                                                                                                                                     ) => $get('discount_amount_type') === DiscountAmountTypeEnum::PERCENTAGE ? '%' : '金额'),
@@ -295,6 +295,11 @@ class CouponResource extends Resource
                                           ->label(__('red-jasmine-coupon::coupon.fields.image'))
                                           ->circular()
                                           ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('discount_level')
+                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_level'))
+                                         ->badge()
+                                         ->useEnum(),
 
                 Tables\Columns\TextColumn::make('discount_amount_type')
                                          ->label(__('red-jasmine-coupon::coupon.fields.discount_amount_type'))

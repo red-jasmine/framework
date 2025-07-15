@@ -33,12 +33,12 @@ class CouponUsageResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('red-jasmine-filament-coupon::coupon.labels.coupon_usage');
+        return __('red-jasmine-coupon::coupon_usage.labels.coupon_usage');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('red-jasmine-filament-coupon::coupon.labels.coupon_usages');
+        return __('red-jasmine-coupon::coupon_usage.labels.coupon_usage');
     }
 
     public static function canCreate(): bool
@@ -65,45 +65,45 @@ class CouponUsageResource extends Resource
                         ...static::ownerFormSchemas(),
                         
                         Forms\Components\Select::make('coupon_id')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.coupon_id'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.coupon_id'))
                             ->relationship('coupon', 'name')
                             ->searchable()
                             ->preload()
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('user_id')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.user_id'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.user_id'))
                             ->numeric()
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('order_no')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.order_no'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.order_no'))
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('threshold_amount')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.threshold_amount'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.threshold_amount'))
                             ->numeric()
                             ->prefix('¥')
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('discount_amount')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.discount_amount'))
                             ->numeric()
                             ->prefix('¥')
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('final_discount_amount')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.final_discount_amount'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.final_discount_amount'))
                             ->numeric()
                             ->prefix('¥')
                             ->disabled(),
                             
                         Forms\Components\DateTimePicker::make('used_at')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.used_at'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.used_at'))
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('cost_bearer_type')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.cost_bearer'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.cost_bearer'))
                             ->disabled(),
                             
                         Forms\Components\TextInput::make('cost_bearer_id')
@@ -121,50 +121,37 @@ class CouponUsageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.id'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.id'))
                     ->sortable()
                     ->copyable(),
                     
                 ...static::ownerTableColumns(),
                 
                 Tables\Columns\TextColumn::make('coupon.name')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.coupon_name'))
-                    ->searchable()
-                    ->sortable(),
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.coupon_name'))
+                    ,
                     
                 Tables\Columns\TextColumn::make('user_id')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.user_id'))
-                    ->sortable()
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.user_id'))
+
                     ->copyable(),
                     
                 Tables\Columns\TextColumn::make('order_no')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.order_no'))
-                    ->searchable()
-                    ->sortable()
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.order_no'))
                     ->copyable(),
                     
-                Tables\Columns\TextColumn::make('threshold_amount')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.threshold_amount'))
-                    ->money('CNY')
-                    ->sortable(),
-                    
+
                 Tables\Columns\TextColumn::make('discount_amount')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.discount_amount'))
-                    ->money('CNY')
-                    ->sortable(),
-                    
-                Tables\Columns\TextColumn::make('final_discount_amount')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.final_discount_amount'))
-                    ->money('CNY')
-                    ->sortable(),
-                    
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.discount_amount'))
+                ,
+
                 Tables\Columns\TextColumn::make('used_at')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.used_at'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.used_at'))
                     ->dateTime()
-                    ->sortable(),
+                    ,
                     
                 Tables\Columns\TextColumn::make('cost_bearer_type')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.cost_bearer'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.cost_bearer'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                     
@@ -177,17 +164,17 @@ class CouponUsageResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('coupon_id')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.coupon_id'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.coupon_id'))
                     ->relationship('coupon', 'name')
                     ->searchable()
                     ->preload()
                     ->multiple(),
                     
                 Tables\Filters\Filter::make('user_id')
-                    ->label(__('red-jasmine-filament-coupon::coupon.filters.user_id'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.filters.user_id'))
                     ->form([
                         Forms\Components\TextInput::make('user_id')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.user_id'))
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.user_id'))
                             ->numeric(),
                     ])
                     ->query(function ($query, array $data) {
@@ -198,10 +185,10 @@ class CouponUsageResource extends Resource
                     }),
                     
                 Tables\Filters\Filter::make('order_no')
-                    ->label(__('red-jasmine-filament-coupon::coupon.fields.order_no'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.fields.order_no'))
                     ->form([
                         Forms\Components\TextInput::make('order_no')
-                            ->label(__('red-jasmine-filament-coupon::coupon.fields.order_no')),
+                            ->label(__('red-jasmine-coupon::coupon_usage.fields.order_no')),
                     ])
                     ->query(function ($query, array $data) {
                         return $query->when(
@@ -211,7 +198,7 @@ class CouponUsageResource extends Resource
                     }),
                     
                 Tables\Filters\Filter::make('used_at')
-                    ->label(__('red-jasmine-filament-coupon::coupon.filters.date_range'))
+                    ->label(__('red-jasmine-coupon::coupon_usage.filters.date_range'))
                     ->form([
                         Forms\Components\DatePicker::make('used_from')
                             ->label('使用时间从'),
@@ -260,7 +247,7 @@ class CouponUsageResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\Action::make('export')
-                        ->label(__('red-jasmine-filament-coupon::coupon.actions.export'))
+                        ->label(__('red-jasmine-coupon::coupon_usage.actions.export'))
                         ->icon('heroicon-o-document-arrow-down')
                         ->action(function ($records) {
                             // 导出逻辑
