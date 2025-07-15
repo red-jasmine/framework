@@ -14,6 +14,8 @@ use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
@@ -258,6 +260,22 @@ class CouponResource extends Resource
                                                                                               ->schema([
                                                                                                   Forms\Components\Repeater::make('usage_rules')
                                                                                                                            ->label(__('red-jasmine-coupon::coupon.fields.usage_rules'))
+
+                                                                                                      ->schema([
+                                                                                                          Forms\Components\Select::make('rule_type')
+                                                                                                                                 ->label('规则类型')
+                                                                                                                                 ->useEnum(RuleTypeEnum::class)
+                                                                                                                                 ->default(RuleTypeEnum::INCLUDE)
+                                                                                                                                 ->required(),
+                                                                                                          Forms\Components\Select::make('object_type')
+                                                                                                                                 ->label('规则类型')
+                                                                                                                                 ->useEnum(RuleObjectTypeEnum::class)
+                                                                                                                                 ->default(RuleObjectTypeEnum::PRODUCT)
+                                                                                                                                 ->required(),
+                                                                                                          Forms\Components\TextInput::make('object_value')
+                                                                                                                                    ->label('对象值')
+                                                                                                                                    ->required(),
+                                                                                                      ])
                                                                                                   ->default([])
 
                                                                                                   ,

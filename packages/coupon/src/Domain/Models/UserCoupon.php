@@ -10,9 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Generator\CouponNoGenerator;
+use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
@@ -253,65 +256,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
         return $query->where('owner_type', $ownerType)
                      ->where('owner_id', $ownerId);
-    }
-
-
-    public function isMeetRules(ProductPurchaseFactor $productPurchaseFactor) : bool
-    {
-        // TODO 对规则进行验证
-        // 获取当前规格
-        $this->coupon->usage_rules;
-
-        return true;
-    }
-
-    /**
-     * 是否可以达到门槛值
-     *
-     * @param  Money  $money
-     * @param  int  $quantity
-     *
-     * @return bool
-     */
-    public function isReachedThreshold(Money $money, int $quantity) : bool
-    {
-        if ($this->coupon->threshold_type === ThresholdTypeEnum::QUANTITY) {
-            if ($quantity < $this->coupon->threshold_value) {
-                return false;
-            }
-        }
-
-        if ($this->coupon->threshold_type === ThresholdTypeEnum::AMOUNT) {
-            $productAmountValue   = $money->getAmount();
-            $thresholdAmountValue = bcmul($this->coupon->threshold_value, 100, 2);
-            if (bccomp($productAmountValue, $thresholdAmountValue, 2) < 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    // 获取优惠金额
-    public function calculateDiscountAmount(Money $amount) : Money
-    {
-
-        if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::FIXED_AMOUNT) {
-            return Money::parse($this->coupon->discount_amount_value, $amount->getCurrency());
-        }
-        if ($this->coupon->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
-            $discountAmount = $amount->multiply(bcsub(1, bcdiv($this->coupon->discount_amount_value, 100, 4), 4));
-
-            // 如果设置最大优惠金额
-            if (bccomp($this->coupon->max_discount_amount, 0, 2) > 0) {
-                $maxDiscountAmount = Money::parse($this->coupon->max_discount_amount, $discountAmount->getCurrency());
-                if ($maxDiscountAmount < $discountAmount) {
-                    $discountAmount = $maxDiscountAmount;
-                }
-            }
-            return $discountAmount;
-        }
-        return Money::parse(0, $amount->getCurrency());
     }
 
     protected function casts() : array

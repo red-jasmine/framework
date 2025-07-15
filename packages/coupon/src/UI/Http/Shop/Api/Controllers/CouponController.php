@@ -2,16 +2,12 @@
 
 namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
 
-use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Application\Services\Coupon\Queries\CouponPaginateQuery as PaginateQuery;
 use RedJasmine\Coupon\Domain\Data\CouponData as Data;
 use RedJasmine\Coupon\Domain\Models\Coupon as Model;
 use RedJasmine\Coupon\UI\Http\Shop\Api\Resources\CouponResource as Resource;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
-use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 class CouponController extends Controller
 {
@@ -21,10 +17,6 @@ class CouponController extends Controller
     protected static string $paginateQueryClass = PaginateQuery::class;
     protected static string $modelClass         = Model::class;
     protected static string $dataClass          = Data::class;
-
-
-
-
 
 
     public function __construct(

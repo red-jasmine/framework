@@ -72,6 +72,7 @@ class AmountCalculationService extends Service
 
             // 查询商品可用的优惠券
             $productAmountInfo->availableCoupons = $this->couponService->getUserCouponsByProduct($productPurchaseFactor);
+
             $productInfo->setProductAmountInfo($productAmountInfo);
 
             $orderAmountInfo->productAmountInfos[] = $productAmountInfo;

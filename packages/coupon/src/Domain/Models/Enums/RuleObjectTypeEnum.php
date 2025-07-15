@@ -8,6 +8,7 @@ enum RuleObjectTypeEnum: string
 {
     use EnumsHelper;
 
+    case SELLER = 'seller';
     case PRODUCT = 'product';
     case CATEGORY = 'category';
     case BRAND = 'brand';
@@ -16,10 +17,10 @@ enum RuleObjectTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::PRODUCT->value    => __('red-jasmine-coupon::rule.enums.object_type.product'),
-            self::CATEGORY->value   => __('red-jasmine-coupon::rule.enums.object_type.category'),
-            self::BRAND->value      => __('red-jasmine-coupon::rule.enums.object_type.brand'),
-            self::USER_GROUP->value => __('red-jasmine-coupon::rule.enums.object_type.user_group'),
+            self::PRODUCT->value    => __('red-jasmine-coupon::coupon.enums.rule_object_type.product'),
+            self::CATEGORY->value   => __('red-jasmine-coupon::coupon.enums.rule_object_type.category'),
+            self::BRAND->value      => __('red-jasmine-coupon::coupon.enums.rule_object_type.brand'),
+            self::USER_GROUP->value => __('red-jasmine-coupon::coupon.enums.rule_object_type.user_group'),
         ];
     }
 

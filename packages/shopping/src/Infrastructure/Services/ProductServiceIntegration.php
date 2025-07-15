@@ -46,10 +46,12 @@ class ProductServiceIntegration implements ProductServiceInterface
             $productInfo->stepLimit       = $productModel->step_limit;
             $productInfo->propertiesName  = $sku->properties_name;
             // 获取可选的发货类型
-            $productInfo->productType   = $productModel->product_type;
-            $productInfo->shippingTypes = $productModel->getAllowShippingTypes();
-
-            $productInfo->isAvailable = $productModel->isAllowSale();
+            $productInfo->productType      = $productModel->product_type;
+            $productInfo->shippingTypes    = $productModel->getAllowShippingTypes();
+            $productInfo->brandId          = $productModel->brand_id;
+            $productInfo->categoryId       = $productModel->category_id;
+            $productInfo->product_group_id = $productModel->product_group_id;
+            $productInfo->isAvailable      = $productModel->isAllowSale();
 
             // TODO 商品的服务
 

@@ -8,14 +8,15 @@ enum RuleTypeEnum: string
 {
     use EnumsHelper;
 
-    case INCLUDE = 'include';
     case EXCLUDE = 'exclude';
+    case INCLUDE = 'include';
+
 
     public static function labels() : array
     {
         return [
-            self::INCLUDE->value => __('red-jasmine-coupon::rule.enums.type.include'),
-            self::EXCLUDE->value => __('red-jasmine-coupon::rule.enums.type.exclude'),
+            self::INCLUDE->value => __('red-jasmine-coupon::coupon.enums.rule_type.include'),
+            self::EXCLUDE->value => __('red-jasmine-coupon::coupon.enums.rule_type.exclude'),
         ];
     }
 

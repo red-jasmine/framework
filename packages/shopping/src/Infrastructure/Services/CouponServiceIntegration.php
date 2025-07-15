@@ -117,12 +117,11 @@ class CouponServiceIntegration implements CouponServiceInterface
                 $productFactor = $factor;
                 $money         = $productFactor->getProductInfo()->getProductAmountInfo()->totalPrice;
                 $quantity      = $productFactor->quantity;
-                if ($userCoupon->isMeetRules($productFactor)) {
-                    if ($userCoupon->isReachedThreshold($money, $quantity)) {
-                        $couponInfoData->discountAmount = $userCoupon->calculateDiscountAmount($money);
+                if ($userCoupon->coupon->checkUsageRules($productFactor)) {
+                    if ($userCoupon->coupon->isReachedThreshold($money, $quantity)) {
+                        $couponInfoData->discountAmount = $userCoupon->coupon->calculateDiscountAmount($money);
                     }
                 }
-
                 break;
             case DiscountLevelEnum::ORDER:
                 if (($factor instanceof OrderData) === false) {
@@ -134,7 +133,7 @@ class CouponServiceIntegration implements CouponServiceInterface
                 $proportions = [];
                 foreach ($orderData->products as $product) {
                     $proportions[$product->getSerialNumber()] = 0;
-                    if ($userCoupon->isMeetRules($product)) {
+                    if ($userCoupon->coupon->checkUsageRules($product)) {
                         $productAmount = $product->getProductInfo()->getProductAmountInfo()->getProductAmount();
                         $quantity      = $quantity + $product->quantity;
                         $money         = $money ? $money->add($productAmount) : $productAmount;
@@ -148,8 +147,8 @@ class CouponServiceIntegration implements CouponServiceInterface
                     }
 
                 }
-                if ($userCoupon->isReachedThreshold($money, $quantity)) {
-                    $couponInfoData->discountAmount = $userCoupon->calculateDiscountAmount($money);
+                if ($userCoupon->coupon->isReachedThreshold($money, $quantity)) {
+                    $couponInfoData->discountAmount = $userCoupon->coupon->calculateDiscountAmount($money);
                 }
                 $couponInfoData->proportions = $proportions;
                 break;
@@ -164,7 +163,7 @@ class CouponServiceIntegration implements CouponServiceInterface
                 foreach ($ordersData->orders as $orderData) {
                     $proportions[$orderData->getSerialNumber()] = 0;
                     foreach ($orderData->products as $product) {
-                        if ($userCoupon->isMeetRules($product)) {
+                        if ($userCoupon->coupon->checkUsageRules($product)) {
                             $productAmount = $product->getProductInfo()->getProductAmountInfo()->getProductAmount();
                             $quantity      = $quantity + $product->quantity;
                             $money         = $money ? $money->add($productAmount) : $productAmount;
@@ -180,8 +179,8 @@ class CouponServiceIntegration implements CouponServiceInterface
                     }
                 }
 
-                if ($userCoupon->isReachedThreshold($money, $quantity)) {
-                    $couponInfoData->discountAmount = $userCoupon->calculateDiscountAmount($money);
+                if ($userCoupon->coupon->isReachedThreshold($money, $quantity)) {
+                    $couponInfoData->discountAmount = $userCoupon->coupon->calculateDiscountAmount($money);
                 }
                 $couponInfoData->proportions = $proportions;
 

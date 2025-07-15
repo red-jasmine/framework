@@ -3,16 +3,23 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
+use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
+use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleValue;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\System;
 use RedJasmine\Support\Domain\Casts\TimeConfigCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Data\TimeConfigData;
@@ -121,28 +128,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(CouponIssueStatistic::class, 'coupon_id');
     }
 
-    /**
-     * 检查是否可以使用
-     */
-    public function canUse(array $context = []) : bool
-    {
-        // 检查状态
-        if ($this->status !== CouponStatusEnum::PUBLISHED) {
-            return false;
-        }
-
-        // 检查有效期
-        if (!$this->isValid()) {
-            return false;
-        }
-
-        // 检查使用规则
-        if ($this->usage_rules && !$this->checkUsageRules($context)) {
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * 检查是否在有效期内
@@ -163,13 +148,175 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return true;
     }
 
+
+    /**
+     * 判断是否为系统优惠券
+     * @return bool
+     */
+    public function isSystem() : bool
+    {
+        $system = System::make();
+        return $this->owner_type === $system->getType();
+    }
+
+    /**
+     * 满足规则
+     *
+     * @param  array  $rules
+     * @param  array  $factors
+     *
+     * @return bool
+     */
+    protected function meetRules(array $rules, array $factors) : bool
+    {
+        $ruleItems    = collect(RuleItem::collect($rules));
+        $factors      = collect(RuleValue::collect($factors));
+        $factorGroups = $factors->groupBy('objectType')->all();
+
+
+        // 命中排除规则
+        /**
+         * @var RuleItem $ruleItem
+         */
+
+        if (array_any($ruleItems->where('ruleType', RuleTypeEnum::EXCLUDE)->all(),
+            fn($ruleItem) => array_any($factorGroups[$ruleItem->objectType->value]?->all() ?? [],
+                fn($ruleFactor) => $ruleItem->matches($ruleFactor->objectType, $ruleFactor->objectValue)))) {
+            return false;
+        }
+
+        // 然后对包含规则再次分组
+        $includeRules = $ruleItems->where('ruleType', RuleTypeEnum::INCLUDE)->groupBy('objectType')->all();
+
+        // 同  objectType 下  或的关系、 不同  objectType 下 需 全部满足
+        $isMeet = true;
+
+        foreach ($includeRules as $objectType => $objectTypeRules) {
+            $objectTypeMet = false;
+            foreach ($objectTypeRules as $ruleItem) {
+                foreach ($factorGroups[$objectType] ?? [] as $factor) {
+                    if ($ruleItem->matches($factor->objectType, $factor->objectValue)) {
+                        $objectTypeMet = true;
+                        break; // 找到匹配项后跳出内层循环
+                    }
+                }
+
+                if ($objectTypeMet) {
+                    break; // 找到匹配规则后跳出当前 objectType 的处理
+                }
+            }
+
+            if (!$objectTypeMet) {
+                $isMeet = false;
+                break; // 只要有一个 objectType 不满足条件，整体就不满足
+            }
+        }
+        return $isMeet;
+    }
+
+    protected function getSellerUsageRules() : array
+    {
+        return [
+            [
+                'ruleType'    => RuleTypeEnum::INCLUDE,
+                'objectType'  => RuleObjectTypeEnum::SELLER,
+                'objectValue' => $this->coupon->owner_type.'|'.$this->coupon->owner_id,
+            ]
+        ];
+    }
+
     /**
      * 检查使用规则
+     *
+     * @param  ProductPurchaseFactor  $productPurchaseFactor
+     *
+     * @return bool
      */
-    protected function checkUsageRules(array $context) : bool
+    public function checkUsageRules(ProductPurchaseFactor $productPurchaseFactor) : bool
     {
-        // TODO: 实现使用规则检查逻辑
+        // TODO 对规则进行验证
+        // 获取当前规格
+        $this->usage_rules;
+
+
+        // 如果不是系统券时
+        if (!$this->isSystem()) {
+            $shopRules         = RuleItem::collect($this->getSellerUsageRules());
+            $factorSellerValue = $productPurchaseFactor->getProductInfo()->product->seller->getType()
+                                 .'|'.
+                                 $productPurchaseFactor->getProductInfo()->product->seller->getID();
+            if (!$this->meetRules($shopRules, [['objectType' => RuleObjectTypeEnum::SELLER, 'objectValue' => $factorSellerValue,]])) {
+                return false;
+            }
+        }
+
+        $ruleFactors = [];
+
+        $ruleFactors[] = [
+            'objectType'  => RuleObjectTypeEnum::PRODUCT,
+            'objectValue' => $productPurchaseFactor->getProductInfo()->product->id,
+        ];
+        $ruleFactors[] = [
+            'objectType'  => RuleObjectTypeEnum::BRAND,
+            'objectValue' => $productPurchaseFactor->getProductInfo()->brandId,
+        ];
+        $ruleFactors[] = [
+            'objectType'  => RuleObjectTypeEnum::CATEGORY,
+            'objectValue' => $productPurchaseFactor->getProductInfo()->categoryId,
+        ];
+
+
+        return $this->meetRules($this->usage_rules, $ruleFactors);
+
+    }
+
+
+    /**
+     * 是否可以达到门槛值
+     *
+     * @param  Money  $money
+     * @param  int  $quantity
+     *
+     * @return bool
+     */
+    public function isReachedThreshold(Money $money, int $quantity) : bool
+    {
+        if ($this->threshold_type === ThresholdTypeEnum::QUANTITY) {
+            if ($quantity < $this->coupon->threshold_value) {
+                return false;
+            }
+        }
+
+        if ($this->threshold_type === ThresholdTypeEnum::AMOUNT) {
+            $productAmountValue   = $money->getAmount();
+            $thresholdAmountValue = bcmul($this->threshold_value, 100, 2);
+            if (bccomp($productAmountValue, $thresholdAmountValue, 2) < 0) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    // 获取优惠金额
+    public function calculateDiscountAmount(Money $amount) : Money
+    {
+
+        if ($this->discount_amount_type === DiscountAmountTypeEnum::FIXED_AMOUNT) {
+            return Money::parse($this->discount_amount_value, $amount->getCurrency());
+        }
+        if ($this->discount_amount_type === DiscountAmountTypeEnum::PERCENTAGE) {
+            $discountAmount = $amount->multiply(bcsub(1, bcdiv($this->discount_amount_value, 100, 4), 4));
+
+            // 如果设置最大优惠金额
+            if (bccomp($this->max_discount_amount, 0, 2) > 0) {
+                $maxDiscountAmount = Money::parse($this->max_discount_amount, $discountAmount->getCurrency());
+                if ($maxDiscountAmount < $discountAmount) {
+                    $discountAmount = $maxDiscountAmount;
+                }
+            }
+            return $discountAmount;
+        }
+        return Money::parse(0, $amount->getCurrency());
     }
 
     /**
@@ -436,7 +583,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return [
             'status'                 => CouponStatusEnum::class,
             'is_show'                => 'boolean',
-            'discount_level'        => DiscountLevelEnum::class,
+            'discount_level'         => DiscountLevelEnum::class,
             'discount_amount_type'   => DiscountAmountTypeEnum::class,
             'discount_amount_value'  => 'decimal:2',
             'threshold_type'         => ThresholdTypeEnum::class,

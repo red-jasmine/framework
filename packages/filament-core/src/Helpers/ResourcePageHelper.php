@@ -136,7 +136,6 @@ trait ResourcePageHelper
                         ->send();
             throw $exception;
         } catch (AbstractException $abstractException) {
-            dd($abstractException);
             Notification::make()
                         ->title($abstractException->getMessage())
                         ->danger()

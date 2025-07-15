@@ -26,9 +26,8 @@ return new class extends Migration {
             $table->string('description')->nullable()->comment('描述');
             $table->string('image')->nullable()->comment('优惠券图片');
             $table->boolean('is_show')->default(true)->comment('是否显示');
-            $table->enum('status', CouponStatusEnum::values())
-                  ->default(CouponStatusEnum::DRAFT)
-                  ->comment(CouponStatusEnum::comments('状态'));
+            $table->enum('status',
+                CouponStatusEnum::values())->default(CouponStatusEnum::DRAFT)->comment(CouponStatusEnum::comments('状态'));
 
 
             $table->enum('discount_level', DiscountLevelEnum::values())->comment(DiscountLevelEnum::comments('优惠目标类型'));

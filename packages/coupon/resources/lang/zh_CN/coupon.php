@@ -147,6 +147,16 @@ return [
             'used'      => '已使用',
             'expired'   => '已过期',
         ],
+        'rule_type'            => [
+            'exclude' => '排除',
+            'include' => '包含',
+        ],
+        'rule_object_type'     => [
+            'product'    => '商品',
+            'brand'      => '品牌',
+            'category'   => '类目',
+            'user_group' => '用户分组',
+        ],
     ],
 
     'messages' => [
