@@ -3,7 +3,9 @@
 namespace RedJasmine\Shopping\Domain\Data;
 
 use Cknow\Money\Money;
+use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
 class OrdersData extends Data
@@ -16,10 +18,26 @@ class OrdersData extends Data
     public Money $total;
 
     public int $count;
+
+
+    public UserInterface $buyer;
     /**
      * @var OrderData[]
      */
     public array $orders = [];
+
+
+    /**
+     * 使用的优惠券
+     * @var CouponInfoData[]
+     */
+    public array $coupons = [];
+
+    /**
+     * 可用的优惠券
+     * @var CouponInfoData[]
+     */
+    public array $availableCoupons = [];
 
 
     public function __construct()

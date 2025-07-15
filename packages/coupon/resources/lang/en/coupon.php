@@ -38,7 +38,7 @@ return [
             'amount' => 'Amount',
             'quantity' => 'Quantity',
         ],
-        'discount_target'     => [
+        'discount_level'     => [
             'order_amount'       => 'Order Amount',
             'product_amount'     => 'Product Amount',
             'shipping_amount'    => 'Shipping Amount',

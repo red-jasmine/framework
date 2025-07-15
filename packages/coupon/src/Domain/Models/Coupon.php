@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Exceptions\CouponException;
@@ -45,7 +45,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         'image',
         'is_show',
         'status',
-        'discount_target',
+        'discount_level',
         'discount_amount_type',
         'discount_amount_value',
         'threshold_type',
@@ -437,7 +437,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return [
             'status'                 => CouponStatusEnum::class,
             'is_show'                => 'boolean',
-            'discount_target'        => DiscountTargetEnum::class,
+            'discount_level'        => DiscountLevelEnum::class,
             'discount_amount_type'   => DiscountAmountTypeEnum::class,
             'discount_amount_value'  => 'decimal:2',
             'threshold_type'         => ThresholdTypeEnum::class,

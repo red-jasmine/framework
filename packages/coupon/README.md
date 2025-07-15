@@ -93,7 +93,7 @@ Red Jasmine Coupon Package 是一个基于 Laravel 的优惠券管理包，提�
 - `FIXED_AMOUNT` - 固定金额
 - `PERCENTAGE` - 百分比
 
-#### DiscountTargetEnum（优惠目标类型）
+#### discountLevelEnum（优惠目标类型）
 - `ORDER_AMOUNT` - 订单金额
 - `PRODUCT_AMOUNT` - 商品金额
 - `SHIPPING_AMOUNT` - 运费金额
@@ -145,7 +145,7 @@ use RedJasmine\Coupon\Domain\Models\Coupon;
 
 $couponData = new CouponData([
     'name' => '满100减10',
-    'discountTarget' => DiscountTargetEnum::ORDER_AMOUNT,
+    'discountLevel' => discountLevelEnum::ORDER_AMOUNT,
     'discountAmountType' => DiscountAmountTypeEnum::FIXED_AMOUNT,
     'discountAmountValue' => 10,
     'thresholdType' => ThresholdTypeEnum::AMOUNT,

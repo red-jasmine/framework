@@ -22,7 +22,7 @@ class CouponResource extends JsonResource
             'image'                 => $this->image,
             'is_show'               => $this->is_show,
             'status'                => $this->status,
-            'discount_target'       => $this->discount_target,
+            'discount_level'       => $this->discount_level,
             'threshold_type'        => $this->threshold_type,
             'threshold_value'       => $this->threshold_value,
             'discount_amount_type'  => $this->discount_amount_type,

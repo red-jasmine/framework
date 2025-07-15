@@ -55,7 +55,7 @@ class UserCouponResource extends JsonResource
                     'name' => $this->coupon->name,
                     'description' => $this->coupon->description,
                     'image' => $this->coupon->image,
-                    'discount_target' => $this->coupon->discount_target,
+                    'discount_level' => $this->coupon->discount_level,
                     'discount_amount_type' => $this->coupon->discount_amount_type,
                     'discount_amount_value' => $this->coupon->discount_amount_value,
                     'threshold_type' => $this->coupon->threshold_type,

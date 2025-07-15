@@ -12,9 +12,11 @@ use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderProductAmountHook;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderSplitProductHook;
 use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Helpers\Money\MoneyDivided;
 
 /**
  * 金额计算服务
@@ -135,6 +137,49 @@ class AmountCalculationService extends Service
     }
 
 
+    protected function handleCheckoutCoupons(OrdersData $ordersData) : void
+    {
+        // 获取订单级可用优惠券
+        $ordersData->availableCoupons = $this->couponService->getUserCheckoutCoupons($ordersData);
+
+        // 对优惠券进行排序
+        $availableProductCoupons = $ordersData->availableCoupons;
+
+        $availableProductCoupons = collect($availableProductCoupons)->sort(function ($a, $b) {
+            return $b->discountAmount->getAmount() <=> $a->discountAmount->getAmount();
+        });
+
+        //选中优惠券
+        if (count($availableProductCoupons) > 0) {
+            $ordersData->coupons[] = $availableProductCoupons[0];
+
+        }
+        // 分摊到 订单中进行优惠券
+        foreach ($ordersData->coupons as $coupon) {
+
+            $discountAmounts = MoneyDivided::divided($coupon->discountAmount, $coupon->proportions);
+
+            // 分摊到订单
+            foreach ($ordersData->orders as $orderData) {
+                // 计算当前订单 分摊后的优惠券
+                $discountAmount = $discountAmounts[$orderData->getSerialNumber()] ?? null;
+                if ($discountAmount) {
+                    $orderData->getOrderAmountInfo()->discountAmount =
+                        $orderData->getOrderAmountInfo()->discountAmount->add($discountAmount);
+                    $orderCoupon                                     = clone $coupon;
+                    $orderCoupon->discountAmount                     = $discountAmount;
+                    $orderData->getOrderAmountInfo()->coupons[]      = $orderCoupon;
+                    // 追加优惠券信息
+
+                    $orderData->getOrderAmountInfo()->calculate();
+                }
+            }
+
+        }
+
+
+    }
+
     protected function handleProductCoupons(OrderData $orderData) : void
     {
         // 匹配优惠券
@@ -195,7 +240,7 @@ class AmountCalculationService extends Service
         }
     }
 
-    // 匹配 最薄
+    // 匹配 订单级优惠券 最优选择
     protected function matchBestProductCoupons(array &$productPurchaseFactors) : array
     {
         // 最优优惠券

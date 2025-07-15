@@ -29,7 +29,7 @@ class CouponTransformer implements TransformerInterface
         $model->is_show                = $data->isShow;
         $model->status                 = $data->status;
         $model->owner                  = $data->owner;
-        $model->discount_target        = $data->discountTarget;
+        $model->discount_level        = $data->discountLevel;
         $model->discount_amount_type   = $data->discountAmountType;
         $model->discount_amount_value  = $data->discountAmountValue;
         $model->threshold_type         = $data->thresholdType;

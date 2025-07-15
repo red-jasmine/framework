@@ -6,6 +6,7 @@ use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponUsageData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Shopping\Domain\Data\OrdersData;
 
 interface CouponServiceInterface
 {
@@ -28,6 +29,16 @@ interface CouponServiceInterface
      * @return CouponInfoData[]
      */
     public function getUserCouponsByOrder(OrderData $orderData) : array;
+
+
+    /**
+     * 获取用户结账级别优惠券
+     *
+     * @param  OrdersData  $ordersData
+     *
+     * @return CouponInfoData[]
+     */
+    public function getUserCheckoutCoupons(OrdersData $ordersData) : array;
 
     /**
      * @param  string  $couponNo

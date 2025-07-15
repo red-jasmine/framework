@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
@@ -31,7 +31,7 @@ return new class extends Migration {
                   ->comment(CouponStatusEnum::comments('状态'));
 
 
-            $table->enum('discount_target', DiscountTargetEnum::values())->comment(DiscountTargetEnum::comments('优惠目标类型'));
+            $table->enum('discount_level', DiscountLevelEnum::values())->comment(DiscountLevelEnum::comments('优惠目标类型'));
 
             $table->enum('discount_amount_type', DiscountAmountTypeEnum::values())
                   ->comment(DiscountAmountTypeEnum::comments('优惠金额类型'));

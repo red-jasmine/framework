@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Exceptions\CouponException;
@@ -50,8 +50,8 @@ class CouponData extends Data
     /**
      * 优惠目标
      */
-    #[WithCast(EnumCast::class, DiscountTargetEnum::class)]
-    public DiscountTargetEnum $discountTarget = DiscountTargetEnum::ORDER_AMOUNT;
+    #[WithCast(EnumCast::class, DiscountLevelEnum::class)]
+    public DiscountLevelEnum $discountLevel = DiscountLevelEnum::ORDER;
 
     /**
      * 优惠金额类型
@@ -144,7 +144,7 @@ class CouponData extends Data
             'startTime' => ['nullable', 'date'],
             'endTime' => ['nullable', 'date'],
             'status' => ['required'],
-            'discountTarget' => ['required'],
+            'discountLevel' => ['required'],
             'discountAmountType' => ['required'],
             'discountAmountValue' => ['required', 'numeric', 'min:0'],
             'thresholdType' => ['required'],

@@ -31,7 +31,7 @@ return [
         'image'                  => '图片',
         'is_show'                => '是否显示',
         'status'                 => '状态',
-        'discount_target'        => '优惠目标',
+        'discount_level'        => '优惠目标',
         'discount_amount_type'   => '优惠类型',
         'discount_amount_value'  => '优惠值',
         'threshold_type'         => '门槛类型',
@@ -122,11 +122,11 @@ return [
             'amount'   => '金额',
             'quantity' => '数量',
         ],
-        'discount_target'      => [
-            'order_amount'       => '订单金额',
-            'product_amount'     => '商品金额',
-            'shipping_amount'    => '运费金额',
-            'cross_store_amount' => '跨店金额',
+        'discount_level' => [
+            'order'    => '订单',
+            'product'  => '商品',
+            'shipping' => '运费',
+            'checkout' => '结算',
         ],
         'validity_type'        => [
             'absolute' => '绝对时间',

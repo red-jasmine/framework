@@ -15,7 +15,7 @@ use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\FilamentCoupon\Clusters\Coupons;
@@ -121,10 +121,10 @@ class CouponResource extends Resource
                                                                   ->schema([
                                                                       Forms\Components\Section::make()
                                                                                               ->schema([
-                                                                                                  Forms\Components\Select::make('discount_target')
-                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_target'))
-                                                                                                                         ->options(DiscountTargetEnum::options())
-                                                                                                                         ->default(DiscountTargetEnum::ORDER_AMOUNT)
+                                                                                                  Forms\Components\Select::make('discount_level')
+                                                                                                                         ->label(__('red-jasmine-coupon::coupon.fields.discount_level'))
+                                                                                                                         ->options(DiscountLevelEnum::options())
+                                                                                                                         ->default(DiscountLevelEnum::ORDER)
                                                                                                                          ->required(),
 
                                                                                                   Forms\Components\Select::make('discount_amount_type')

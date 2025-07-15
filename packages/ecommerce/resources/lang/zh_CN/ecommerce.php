@@ -59,6 +59,13 @@ return [
             'reshipment'          => '补发',
         ],
 
+        'discount_level' => [
+            'order'    => '订单',
+            'product'  => '商品',
+            'shipping' => '运费',
+            'checkout' => '结算',
+        ],
+
     ],
 
 ];

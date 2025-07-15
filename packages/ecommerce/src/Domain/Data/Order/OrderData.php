@@ -3,6 +3,7 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
+use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
 use RedJasmine\Support\Contracts\UserInterface;
 
@@ -11,6 +12,7 @@ use RedJasmine\Support\Contracts\UserInterface;
  */
 class OrderData extends PurchaseFactor
 {
+    use HasSerialNumber;
 
 
     /**
@@ -84,7 +86,6 @@ class OrderData extends PurchaseFactor
         $this->orderNo = $orderNo;
         return $this;
     }
-
 
 
 }

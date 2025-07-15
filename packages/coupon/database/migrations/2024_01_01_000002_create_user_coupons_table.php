@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountTargetEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 
 return new class extends Migration {
@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('owner_type', 32)->comment('所有者类型');
             $table->string('owner_id', 64)->comment('所有者ID');
             $table->string('coupon_no')->unique()->comment('券码');
-            $table->enum('discount_target', DiscountTargetEnum::values())->comment(DiscountTargetEnum::comments('优惠目标类型'));
+            $table->enum('discount_level', DiscountLevelEnum::values())->comment(DiscountLevelEnum::comments('优惠目标类型'));
 
             $table->userMorphs('user', '用户', false);
             // 所有者信息
