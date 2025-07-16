@@ -22,13 +22,6 @@ class CouponData extends Data
 {
     public UserInterface $owner;
 
-    /**
-     * 优惠类型
-     * @var CouponTypeEnum
-     */
-    #[WithCast(EnumCast::class, CouponTypeEnum::class)]
-    public CouponTypeEnum $couponType = CouponTypeEnum::SYSTEM;
-
     public string $name;
 
     public ?string $description = null;

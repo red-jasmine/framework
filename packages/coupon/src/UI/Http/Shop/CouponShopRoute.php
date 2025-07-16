@@ -27,19 +27,12 @@ class CouponShopRoute
                      Route::get('/', [UserCouponController::class, 'index'])->name('shop.api.user-coupons.index');
                      Route::get('/{id}', [UserCouponController::class, 'show'])->name('shop.api.user-coupons.show');
 
-                     // 统计信息
-                     Route::get('/statistics/overview',
-                         [UserCouponController::class, 'statistics'])->name('shop.api.user-coupons.statistics');
                  });
 
                  // 优惠券使用记录相关路由
-                 Route::prefix('usage-records')->group(function () {
+                 Route::prefix('coupon-usages')->group(function () {
                      Route::get('/', [CouponUsageController::class, 'index'])->name('shop.api.coupon-usage.index');
                      Route::get('/{id}', [CouponUsageController::class, 'show'])->name('shop.api.coupon-usage.show');
-
-                     // 统计信息
-                     Route::get('/statistics/overview',
-                         [CouponUsageController::class, 'statistics'])->name('shop.api.coupon-usage.statistics');
                  });
 
              });

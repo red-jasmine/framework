@@ -7,8 +7,10 @@ use RedJasmine\Support\Contracts\UserInterface;
 class System extends Data implements UserInterface
 {
 
+    const string TYPE = 'system';
+
     public function __construct(
-        public string $id = 'system',
+        public string $id = self::TYPE,
         public string $type = 'system',
         public ?string $nickname = '系统',
         public ?string $avatar = null,
@@ -20,6 +22,11 @@ class System extends Data implements UserInterface
         return new static(...$args);
     }
 
+
+    public static function isSystem(UserInterface $user) : bool
+    {
+        return ($user->getType() === static::TYPE);
+    }
 
     public function getType() : string
     {
