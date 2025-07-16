@@ -78,19 +78,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         'validity_time', 'delayed_effective_time'
     ];
 
-    protected static function boot() : void
-    {
-        parent::boot();
 
-        // 保存时处理关联关系
-        static::saving(function (Coupon $coupon) {
-            // 处理成本承担方关联
-            if ($coupon->relationLoaded('costBearer')) {
-                $coupon->cost_bearer_type = $coupon->costBearer?->getType();
-                $coupon->cost_bearer_id   = $coupon->costBearer?->getID();
-            }
-        });
-    }
 
     public function newInstance($attributes = [], $exists = false) : static
     {
