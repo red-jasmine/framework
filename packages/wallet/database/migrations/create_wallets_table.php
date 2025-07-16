@@ -17,12 +17,8 @@ return new class extends Migration {
             $table->decimal('balance', 12)->default(0)->comment('余额');
             $table->decimal('freeze', 12)->default(0)->comment('冻结');
             $table->string('status', 32)->default(WalletStatusEnum::ENABLE)->comment(WalletStatusEnum::comments('状态'));
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 32)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->timestamps();
+
+            $table->operator();
             $table->unique(['owner_type', 'owner_id', 'type'], 'owner_type_wallet');
             $table->comment('钱包表');
         });
