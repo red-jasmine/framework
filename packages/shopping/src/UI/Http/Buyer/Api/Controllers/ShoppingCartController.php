@@ -13,6 +13,7 @@ use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQ
 use RedJasmine\Shopping\Application\Services\ShoppingCart\ShoppingCartApplicationService;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\AddProductRequest;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Requests\SelectProductsRequest;
+use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\OrderDataResource;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\ShoppingCartProductResource;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\ShoppingCartResource;
 use Throwable;
@@ -57,7 +58,7 @@ class ShoppingCartController extends Controller
 
 
         $cart = $this->service->addProduct($command);
-        return response()->json(new ShoppingCartResource($cart));
+        return static::success();
     }
 
     // 移除商品
@@ -73,40 +74,36 @@ class ShoppingCartController extends Controller
 
 
     // 更新商品数量
-    public function updateQuantity($id, Request $request) : JsonResponse
+    public function updateQuantity($id, Request $request) : OrderDataResource
     {
         $request->offsetSet('buyer', $this->getOwner());
 
         $command = UpdateQuantityCommand::from($request);
         $command->setKey($id);
         $cart = $this->service->updateQuantity($command);
-        return static::success();
-        return response()->json(new ShoppingCartResource($cart));
+
+
+        return $this->calculateAmount($request);
     }
 
     // 选择/取消选择商品
-    public function selected($id, SelectProductsRequest $request) : JsonResponse
+    public function selected($id, SelectProductsRequest $request) : OrderDataResource
     {
         $request->offsetSet('buyer', $this->getOwner());
         $command = SelectProductCommand::from($request);
         $command->setKey($id);
         $this->service->selectProduct($command);
 
-
-        $calculateAmountCommand = CalculateAmountCommand::from($request);
-        $orderAmount            = $this->service->calculateAmount($calculateAmountCommand);
-
-        return static::success($orderAmount);
-
+        return $this->calculateAmount($request);
     }
 
     // 重新计算金额
-    public function calculateAmount(Request $request) : JsonResponse
+    public function calculateAmount(Request $request) : OrderDataResource
     {
         $request->offsetSet('buyer', $this->getOwner());
-        $command     = CalculateAmountCommand::from($request);
-        $orderAmount = $this->service->calculateAmount($command);
+        $command   = CalculateAmountCommand::from($request);
+        $orderData = $this->service->calculateAmount($command);
 
-        return static::success($orderAmount);
+        return new OrderDataResource($orderData);
     }
 } 

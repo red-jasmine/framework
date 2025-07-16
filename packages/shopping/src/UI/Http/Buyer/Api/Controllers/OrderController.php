@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\CheckCommand;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
+use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\OrdersDataResource;
 use RedJasmine\Support\Http\Controllers\Controller;
 
 class OrderController extends Controller
@@ -35,9 +36,9 @@ class OrderController extends Controller
      *
      * @param  Request  $request  请求对象，包含产品计算所需的数据
      *
-     * @return JsonResponse  返回计算后的订单信息
+     * @return OrdersDataResource  返回计算后的订单信息
      */
-    public function check(Request $request) : JsonResponse
+    public function check(Request $request) : OrdersDataResource
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
@@ -47,11 +48,11 @@ class OrderController extends Controller
         $orders = $this->commandService->check($command);
 
         // 返回计算后的订单信息
-        return static::success($orders);
+        return new OrdersDataResource($orders);
     }
 
 
-    public function buy(Request $request) : JsonResponse
+    public function buy(Request $request) : OrdersDataResource
     {
         $request->offsetSet('buyer', $this->getOwner());
         // 从请求数据和当前用户信息中构建产品计算命令
@@ -64,7 +65,7 @@ class OrderController extends Controller
         $command->clientVersion = '1.0.0';
 
         $orders = $this->commandService->buy($command);
-        return static::success($orders);
+        return new OrdersDataResource($orders);
     }
 
     public function show($id)

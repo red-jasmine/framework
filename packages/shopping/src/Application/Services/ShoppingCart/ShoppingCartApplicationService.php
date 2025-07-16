@@ -3,6 +3,7 @@
 namespace RedJasmine\Shopping\Application\Services\ShoppingCart;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommand;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\AddProductCommandHandler;
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Commands\CalculateAmountCommand;
@@ -36,7 +37,7 @@ use RedJasmine\Support\Data\Data;
  * @method bool removeProduct(RemoveProductCommand $command)
  * @method bool selectProduct(SelectProductCommand $command)
  * @method ShoppingCartProduct updateQuantity(UpdateQuantityCommand $command)
- * @method ShoppingCart calculateAmount(CalculateAmountCommand $command)
+ * @method OrderData calculateAmount(CalculateAmountCommand $command)
  */
 class ShoppingCartApplicationService extends ApplicationService
 {

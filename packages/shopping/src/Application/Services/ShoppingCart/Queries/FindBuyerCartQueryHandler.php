@@ -27,7 +27,7 @@ class FindBuyerCartQueryHandler extends QueryHandler
         if ($cart) {
             // 还需要获取商品信息
 
-            $orderData     = $this->shoppingCartDomainService->show($cart, $query);
+            $orderData     = $this->shoppingCartDomainService->calculates($cart, $query, false);
             $orderProducts = collect($orderData->products)->keyBy('shoppingCartId');
 
             foreach ($cart->products as $product) {

@@ -21,6 +21,7 @@ class SelectProductCommandHandler extends CommandHandler
      */
     public function handle(SelectProductCommand $command) : bool
     {
+
         $this->beginDatabaseTransaction();
         try {
             // 查询购物车

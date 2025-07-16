@@ -30,7 +30,7 @@ class UserData extends Data implements UserInterface
             id: $user->getID(),
             nickname: $user->getNickname(),
             avatar: $user->getAvatar()
-        ))->additional(['user' => $user]);
+        ));
     }
 
 

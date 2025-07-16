@@ -3,6 +3,7 @@
 namespace RedJasmine\Coupon\Domain\Services;
 
 use RedJasmine\Coupon\Domain\Models\Coupon;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
@@ -66,11 +67,13 @@ class CouponRuleService extends Service
 
 
         // 如果不是系统券时
-        if (!$coupon->isSystem()) {
+        if ($coupon->coupon_type === CouponTypeEnum::SHOP) {
             $shopRules         = RuleItem::collect($coupon->getSellerUsageRules());
             $factorSellerValue = $productPurchaseFactor->getProductInfo()->product->seller->getType()
                                  .'|'.
                                  $productPurchaseFactor->getProductInfo()->product->seller->getID();
+
+
             if (!$this->meetRules($shopRules, [['objectType' => RuleObjectTypeEnum::SELLER, 'objectValue' => $factorSellerValue,]])) {
                 return false;
             }

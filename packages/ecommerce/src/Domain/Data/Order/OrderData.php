@@ -62,7 +62,7 @@ class OrderData extends PurchaseFactor
     public array $products;
 
     protected OrderAmountInfoData $orderAmountInfo;
-    protected string              $orderNo;
+    protected ?string              $orderNo;
 
 
     public function getOrderAmountInfo() : OrderAmountInfoData
@@ -76,9 +76,9 @@ class OrderData extends PurchaseFactor
         return $this;
     }
 
-    public function getOrderNo() : string
+    public function getOrderNo() : ?string
     {
-        return $this->orderNo;
+        return $this->orderNo ?? null;
     }
 
     public function setOrderNo(string $orderNo) : OrderData

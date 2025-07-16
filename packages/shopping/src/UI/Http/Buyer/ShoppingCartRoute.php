@@ -21,8 +21,6 @@ class ShoppingCartRoute
                  Route::post('/calculate-amount', [ShoppingCartController::class, 'calculateAmount']);
                  // 添加商品到购物车
                  Route::post('/products', [ShoppingCartController::class, 'add']);
-                 // 获取购物车商品列表
-                 Route::get('/products', [ShoppingCartController::class, 'products']);
                  Route::delete('/products/{id}', [ShoppingCartController::class, 'destroy']);
                  Route::put('/products/{id}', [ShoppingCartController::class, 'updateQuantity']);
                  Route::post('/products/{id}/selected', [ShoppingCartController::class, 'selected']);

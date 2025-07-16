@@ -138,9 +138,9 @@ class CouponServiceIntegration implements CouponServiceInterface
                         $quantity      = $quantity + $product->quantity;
                         $money         = $money ? $money->add($productAmount) : $productAmount;
 
-                        $proportions[$orderData->getSerialNumber()] =
+                        $proportions[$product->getSerialNumber()] =
                             bcadd(
-                                $proportions[$orderData->getSerialNumber()],
+                                $proportions[$product->getSerialNumber()],
                                 $productAmount->getAmount(),
                                 2
                             );
@@ -159,7 +159,7 @@ class CouponServiceIntegration implements CouponServiceInterface
                 $money       = null;
                 $quantity    = 0; // 数量
                 $ordersData  = $factor;
-                $proportions = [];
+                $proportions = []; // 分摊比例
                 foreach ($ordersData->orders as $orderData) {
                     $proportions[$orderData->getSerialNumber()] = 0;
                     foreach ($orderData->products as $product) {

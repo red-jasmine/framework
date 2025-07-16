@@ -134,15 +134,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-    /**
-     * 判断是否为系统优惠券
-     * @return bool
-     */
-    public function isSystem() : bool
-    {
-        $system = System::make();
-        return $this->owner_type === $system->getType();
-    }
 
 
     public function getSellerUsageRules() : array
@@ -151,7 +142,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
             [
                 'ruleType'    => RuleTypeEnum::INCLUDE,
                 'objectType'  => RuleObjectTypeEnum::SELLER,
-                'objectValue' => $this->coupon->owner_type.'|'.$this->coupon->owner_id,
+                'objectValue' => $this->owner_type.'|'.$this->owner_id,
             ]
         ];
     }

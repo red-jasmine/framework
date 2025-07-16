@@ -28,11 +28,11 @@ class OrderProductData extends ProductPurchaseFactor
     public ?string $password = null;
 
 
-    protected string $orderProductNo;
+    protected ?string $orderProductNo;
 
-    public function getOrderProductNo() : string
+    public function getOrderProductNo() : ?string
     {
-        return $this->orderProductNo;
+        return $this->orderProductNo ?? null;
     }
 
     public function setOrderProductNo(string $orderProductNo) : OrderProductData

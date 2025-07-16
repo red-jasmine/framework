@@ -53,6 +53,7 @@ class CouponTransformer implements TransformerInterface
     {
         $this->validate($data);
 
+
         $couponType = System::isSystem($data->owner) ? CouponTypeEnum::SYSTEM : CouponTypeEnum::SHOP;
         /**
          * @var Coupon $model
@@ -83,9 +84,9 @@ class CouponTransformer implements TransformerInterface
         $model->sort                   = $data->sort;
         $model->remarks                = $data->remarks;
         $model->total_quantity         = $data->totalQuantity;
-        $model->cost_bearer            = $data->costBearer;
-
-
+        if ($couponType === CouponTypeEnum::SHOP) {
+            $model->cost_bearer = $data->owner;
+        }
         return $model;
     }
 

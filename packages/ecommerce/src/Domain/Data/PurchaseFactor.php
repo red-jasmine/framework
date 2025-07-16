@@ -13,7 +13,7 @@ class PurchaseFactor extends Data
 {
 
     /**
-     * 市场
+     * 市场标识
      * @var string
      */
     public string $market = 'default';

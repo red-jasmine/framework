@@ -2,8 +2,9 @@
 
 namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
  * @mixin ShoppingCartProduct
@@ -13,7 +14,7 @@ class ShoppingCartProductResource extends JsonResource
     public function toArray($request) : array
     {
         return [
-            // 购物车中的商品信息
+            // 保持在购物车中的信息
             'id'              => $this->id,
             'cart_id'         => $this->cart_id,
             'selected'        => $this->selected,
@@ -31,7 +32,9 @@ class ShoppingCartProductResource extends JsonResource
             'image'           => $this->image,
             'price'           => $this->price,
             // 最新的商品信息
-            'product'         => $this->product,
+
+            $this->merge(new ProductInfoResource($this->product))
+
         ];
     }
 } 

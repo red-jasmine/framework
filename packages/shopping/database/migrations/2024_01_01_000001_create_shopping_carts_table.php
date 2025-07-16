@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->enum('status', ['active', 'expired', 'converted', 'cleared'])->default('active')->comment('购物车状态');
             $table->operator();
             $table->comment('购物车');
-            $table->index(['market', 'owner_type', 'owner_id'], 'idx_owner');
+            $table->index(['owner_id', 'owner_type', 'market',], 'idx_owner_market');
 
         });
     }

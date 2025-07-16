@@ -83,12 +83,6 @@ class ShoppingCartDomainService extends AmountCalculationService
         return true;
     }
 
-    public function show(ShoppingCart $cart, PurchaseFactor $factor) : OrderData
-    {
-        $selectProducts = $cart->products->all();
-
-        return $this->getSelectProductsOrderAmount($selectProducts, $factor);
-    }
 
     /**
      * @param  ShoppingCartProduct[]  $selectProducts
@@ -125,10 +119,17 @@ class ShoppingCartDomainService extends AmountCalculationService
         return $this->calculateOrderAmount($orderData);
     }
 
-    public function calculates(ShoppingCart $cart, PurchaseFactor $factor) : OrderData
-    {
+    public function calculates(
+        ShoppingCart $cart,
+        PurchaseFactor $factor,
+        $onlySelected = true
+    ) : OrderData {
 
-        $selectProducts = $cart->products->where('selected', true)->all();
+        if ($onlySelected) {
+            $selectProducts = $cart->products->where('selected', true)->all();
+        } else {
+            $selectProducts = $cart->products->all();
+        }
 
 
         return $this->getSelectProductsOrderAmount($selectProducts, $factor);
