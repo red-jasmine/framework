@@ -15,8 +15,6 @@ use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 {
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserReadRepositoryInterface $userReadRepository;
-
     protected UserReadRepositoryInterface $readRepository;
     protected string                      $guard;
 
@@ -28,6 +26,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 
         return $this;
     }
+
     public function __construct()
     {
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
@@ -47,7 +46,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $phone = $data->data['phone'];
         // TODO 验证手机号 格式
 
-        $user = $this->userReadRepository->findByPhone($phone);
+        $user = $this->readRepository->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
@@ -92,7 +91,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->captchaApplicationService->verify($command);
 
         // 查询用户信息
-        return $this->userReadRepository->findByPhone($phone);
+        return $this->readRepository->findByPhone($phone);
 
     }
 

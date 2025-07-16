@@ -17,6 +17,7 @@ class UserLoginCaptchaCommandHandler extends CommandHandler
             $this->service->readRepository,
             $this->service->getGuard(),
         );
+
     }
 
 

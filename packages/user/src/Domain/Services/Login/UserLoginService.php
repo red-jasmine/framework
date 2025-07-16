@@ -23,7 +23,9 @@ class UserLoginService
 
     public function captcha(Data\UserLoginData $data) : bool
     {
+
         $provider = UserLoginServiceProvider::create($data->provider);
+
         $provider->init($this->readRepository, $this->guard)->captcha($data);
         return true;
     }

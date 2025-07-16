@@ -28,6 +28,7 @@ class CaptchaServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_captchas_table',
             ])
+            ->runsMigrations()
             ;
     }
 
