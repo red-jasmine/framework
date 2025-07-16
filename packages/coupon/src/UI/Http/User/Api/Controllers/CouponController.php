@@ -47,7 +47,7 @@ class CouponController extends Controller
     {
         $request->offsetSet('coupon_id', $id);
 
-        $request->offsetSet('user', $this->getOwner()->getUserData());
+        $request->offsetSet('buyer', $this->getOwner()->getUserData());
 
         $command = UserCouponReceiveCommand::from($request);
         $command->setKey($id);

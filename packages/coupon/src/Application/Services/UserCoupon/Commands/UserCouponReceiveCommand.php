@@ -2,25 +2,10 @@
 
 namespace RedJasmine\Coupon\Application\Services\UserCoupon\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 
-class UserCouponReceiveCommand extends Data
+class UserCouponReceiveCommand extends PurchaseFactor
 {
 
-    /**
-     * 用户信息
-     */
-    public UserInterface $user;
 
-    /**
-     * 领取渠道
-     */
-    public ?string $channel = null;
-
-
-    /**
-     * 扩展参数
-     */
-    public array $extra = [];
 }

@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Coupon\Infrastructure\ReadRepositories\Mysql;
 
-use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Coupon\Domain\Repositories\UserCouponReadRepositoryInterface;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -17,6 +17,24 @@ class UserCouponReadRepository extends QueryBuilderReadRepository implements Use
      * @var $modelClass class-string
      */
     protected static string $modelClass = UserCoupon::class;
+
+    /**
+     * 获取用户优惠券数量
+     *
+     * @param  UserInterface  $user
+     * @param  Coupon  $coupon
+     *
+     * @return int
+     */
+    public function getUserCouponCountByCoupon(UserInterface $user, Coupon $coupon) : int
+    {
+        return $this->query()
+                    ->where([
+                        'user_type' => $user->getType(),
+                        'user_id'   => $user->getKey(),
+                        'coupon_id' => $coupon->id
+                    ])->count();
+    }
 
 
     /**

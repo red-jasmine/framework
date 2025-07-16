@@ -22,7 +22,16 @@ class RuleItem extends RuleValue
      */
     public function matches(RuleObjectTypeEnum $objectType, string $objectValue) : bool
     {
-        return $this->objectType === $objectType && $this->objectValue === $objectValue;
+        if ($objectType !== $this->objectType) {
+            return false;
+        }
+
+        if ($this->objectType === RuleObjectTypeEnum::USER_RECEIVE_LIMIT) {
+            return bccomp($objectValue, $this->objectValue, 0) < 0;
+        }
+
+
+        return $this->objectValue === $objectValue;
     }
 
 

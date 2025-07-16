@@ -15,6 +15,7 @@ use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleValue;
+use RedJasmine\Coupon\Domain\Services\CouponRuleService;
 use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
@@ -77,7 +78,6 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     protected $appends = [
         'validity_time', 'delayed_effective_time'
     ];
-
 
 
     public function newInstance($attributes = [], $exists = false) : static
@@ -145,62 +145,8 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return $this->owner_type === $system->getType();
     }
 
-    /**
-     * 满足规则
-     *
-     * @param  array  $rules
-     * @param  array  $factors
-     *
-     * @return bool
-     */
-    protected function meetRules(array $rules, array $factors) : bool
-    {
-        $ruleItems    = collect(RuleItem::collect($rules));
-        $factors      = collect(RuleValue::collect($factors));
-        $factorGroups = $factors->groupBy('objectType')->all();
 
-
-        // 命中排除规则
-        /**
-         * @var RuleItem $ruleItem
-         */
-
-        if (array_any($ruleItems->where('ruleType', RuleTypeEnum::EXCLUDE)->all(),
-            fn($ruleItem) => array_any($factorGroups[$ruleItem->objectType->value]?->all() ?? [],
-                fn($ruleFactor) => $ruleItem->matches($ruleFactor->objectType, $ruleFactor->objectValue)))) {
-            return false;
-        }
-
-        // 然后对包含规则再次分组
-        $includeRules = $ruleItems->where('ruleType', RuleTypeEnum::INCLUDE)->groupBy('objectType')->all();
-
-        // 同  objectType 下  或的关系、 不同  objectType 下 需 全部满足
-        $isMeet = true;
-
-        foreach ($includeRules as $objectType => $objectTypeRules) {
-            $objectTypeMet = false;
-            foreach ($objectTypeRules as $ruleItem) {
-                foreach ($factorGroups[$objectType] ?? [] as $factor) {
-                    if ($ruleItem->matches($factor->objectType, $factor->objectValue)) {
-                        $objectTypeMet = true;
-                        break; // 找到匹配项后跳出内层循环
-                    }
-                }
-
-                if ($objectTypeMet) {
-                    break; // 找到匹配规则后跳出当前 objectType 的处理
-                }
-            }
-
-            if (!$objectTypeMet) {
-                $isMeet = false;
-                break; // 只要有一个 objectType 不满足条件，整体就不满足
-            }
-        }
-        return $isMeet;
-    }
-
-    protected function getSellerUsageRules() : array
+    public function getSellerUsageRules() : array
     {
         return [
             [
@@ -220,39 +166,9 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
      */
     public function checkUsageRules(ProductPurchaseFactor $productPurchaseFactor) : bool
     {
-        // TODO 对规则进行验证
-        // 获取当前规格
-        $this->usage_rules;
 
+        return app(CouponRuleService::class)->checkUsageRules($this, $productPurchaseFactor);
 
-        // 如果不是系统券时
-        if (!$this->isSystem()) {
-            $shopRules         = RuleItem::collect($this->getSellerUsageRules());
-            $factorSellerValue = $productPurchaseFactor->getProductInfo()->product->seller->getType()
-                                 .'|'.
-                                 $productPurchaseFactor->getProductInfo()->product->seller->getID();
-            if (!$this->meetRules($shopRules, [['objectType' => RuleObjectTypeEnum::SELLER, 'objectValue' => $factorSellerValue,]])) {
-                return false;
-            }
-        }
-
-        $ruleFactors = [];
-
-        $ruleFactors[] = [
-            'objectType'  => RuleObjectTypeEnum::PRODUCT,
-            'objectValue' => $productPurchaseFactor->getProductInfo()->product->id,
-        ];
-        $ruleFactors[] = [
-            'objectType'  => RuleObjectTypeEnum::BRAND,
-            'objectValue' => $productPurchaseFactor->getProductInfo()->brandId,
-        ];
-        $ruleFactors[] = [
-            'objectType'  => RuleObjectTypeEnum::CATEGORY,
-            'objectValue' => $productPurchaseFactor->getProductInfo()->categoryId,
-        ];
-
-
-        return $this->meetRules($this->usage_rules, $ruleFactors);
 
     }
 
@@ -310,13 +226,14 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
      */
     public function canReceive(PurchaseFactor $purchaseFactor) : bool
     {
+
         // 检查是否可以发放
         if (!$this->canIssue()) {
             return false;
         }
 
         // 检查领取规则
-        if ($this->receive_rules && !$this->checkReceiveRules($purchaseFactor)) {
+        if (!$this->checkReceiveRules($purchaseFactor)) {
             return false;
         }
 
@@ -352,16 +269,10 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
      *
      * @return bool
      */
-    protected function checkReceiveRules(PurchaseFactor $purchaseFactor) : bool
+    public function checkReceiveRules(PurchaseFactor $purchaseFactor) : bool
     {
-        // TODO
-        // 领取规则的验证
-        // 每人总数量
-        // 每人当前数量
-        // 必须为  VIP
 
-
-        return true;
+        return app(CouponRuleService::class)->checkReceiveRules($this, $purchaseFactor);
     }
 
 

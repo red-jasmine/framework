@@ -42,7 +42,7 @@ class UserCouponReceiveCommandHandler extends CommandHandler
                 throw new CouponException('优惠券不存在');
             }
 
-            $userCoupon = $this->couponUserService->receive($coupon, $command->user);
+            $userCoupon = $this->couponUserService->receive($coupon, $command);
 
 
             $this->userCouponRepository->store($userCoupon);

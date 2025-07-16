@@ -5,19 +5,52 @@ namespace RedJasmine\Coupon\Domain\Transformers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
+use RedJasmine\Coupon\Domain\Models\Enums\RuleCheckTypeEnum;
+use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class CouponTransformer implements TransformerInterface
 {
+
+    /**
+     * @param  CouponData  $data
+     *
+     * @return void
+     * @throws CouponException
+     */
+    protected function validate(CouponData $data) : void
+    {
+        if ($data->usageRules) {
+            foreach ($data->usageRules as $usageRule) {
+                if (!$usageRule->objectType->isAllowCheckType(RuleCheckTypeEnum::USAGE)) {
+                    throw new CouponException('优惠规则对象类型不允许');
+                }
+            }
+
+        }
+
+        if ($data->receiveRules) {
+            foreach ($data->receiveRules as $usageRule) {
+                if (!$usageRule->objectType->isAllowCheckType(RuleCheckTypeEnum::RECEIVE)) {
+                    throw new CouponException('优惠规则对象类型不允许');
+                }
+            }
+
+        }
+
+    }
+
     /**
      * @param  CouponData  $data
      * @param  Coupon  $model
      *
      * @return Coupon
+     * @throws CouponException
      */
     public function transform($data, $model) : Coupon
     {
-    
+        $this->validate($data);
+
 
         /**
          * @var Coupon $model
@@ -29,7 +62,7 @@ class CouponTransformer implements TransformerInterface
         $model->is_show                = $data->isShow;
         $model->status                 = $data->status;
         $model->owner                  = $data->owner;
-        $model->discount_level        = $data->discountLevel;
+        $model->discount_level         = $data->discountLevel;
         $model->discount_amount_type   = $data->discountAmountType;
         $model->discount_amount_value  = $data->discountAmountValue;
         $model->threshold_type         = $data->thresholdType;
@@ -54,5 +87,4 @@ class CouponTransformer implements TransformerInterface
     }
 
 
-    
 }

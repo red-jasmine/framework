@@ -10,6 +10,7 @@ use RedJasmine\Coupon\Domain\Models\CouponUsage;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Coupon\Exceptions\CouponException;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -20,20 +21,20 @@ class CouponUserService extends Service
      * 领取优惠券
      *
      * @param  Coupon  $coupon
-     * @param  UserInterface  $user
+     * @param  PurchaseFactor  $purchaseFactor
      *
      * @return UserCoupon
      * @throws CouponException
      */
-    public function receive(Coupon $coupon, UserInterface $user) : UserCoupon
+    public function receive(Coupon $coupon, PurchaseFactor $purchaseFactor) : UserCoupon
     {
         // 验证优惠券是否可以发放
         if (!$coupon->canIssue()) {
             throw new CouponException('优惠券不支持发放');
         }
-
-        // TODO 验证领取条件
-
+        if (!$coupon->canReceive($purchaseFactor)) {
+            throw new CouponException('优惠券不支持领取');
+        }
 
         [$validityStartTime, $validityEndTime] = $coupon->buildUserCouponValidityTimes();
 
@@ -46,10 +47,10 @@ class CouponUserService extends Service
          */
         $userCoupon                      = UserCoupon::make([
             'owner' => $coupon->owner,
-            'user'  => $user,
+            'user'  => $purchaseFactor->buyer,
         ]);
         $userCoupon->coupon_id           = $coupon->id;
-        $userCoupon->discount_level     = $coupon->discount_level;
+        $userCoupon->discount_level      = $coupon->discount_level;
         $userCoupon->issue_time          = Carbon::now();
         $userCoupon->validity_start_time = $validityStartTime;
         $userCoupon->validity_end_time   = $validityEndTime;
