@@ -57,6 +57,7 @@ class CouponTransformer implements TransformerInterface
          * @var CouponData $data
          */
         $model->name                   = $data->name;
+        $model->coupon_type            = $data->couponType;
         $model->description            = $data->description;
         $model->image                  = $data->image;
         $model->is_show                = $data->isShow;

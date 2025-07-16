@@ -4,6 +4,7 @@ namespace RedJasmine\Coupon\Domain\Data;
 
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
@@ -20,6 +21,13 @@ use Spatie\LaravelData\Casts\EnumCast;
 class CouponData extends Data
 {
     public UserInterface $owner;
+
+    /**
+     * 优惠类型
+     * @var CouponTypeEnum
+     */
+    #[WithCast(EnumCast::class, CouponTypeEnum::class)]
+    public CouponTypeEnum $couponType = CouponTypeEnum::SYSTEM;
 
     public string $name;
 

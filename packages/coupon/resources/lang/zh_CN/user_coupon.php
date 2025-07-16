@@ -10,6 +10,7 @@ return [
 
     'fields' => [
         'id'                  => 'ID',
+        'coupon_get_type'     => '获得方式',
         'coupon_id'           => '优惠券ID',
         'coupon_name'         => '优惠券名称',
         'coupon_no'           => '优惠券编号',
@@ -34,11 +35,17 @@ return [
     ],
 
     'enums' => [
-        'status' => [
+        'status'          => [
             'available' => '可用',
             'used'      => '已使用',
             'expired'   => '已过期',
         ],
+        'coupon_get_type' => [
+            'receive' => '领取',
+            'issue'   => '发放',
+            'give'    => '赠送',
+        ],
+
     ],
 
     'commands' => [

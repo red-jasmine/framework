@@ -33,15 +33,20 @@ trait RestQueryControllerActions
 
     public function show($id, Request $request) : JsonResource
     {
+        $model = $this->findOne($id, $request);
+        return new (static::$resourceClass)($model);
+    }
+
+    protected function findOne($id, Request $request)
+    {
         $queryClass = static::$findQueryClass ?? FindQuery::class;
         $query      = $queryClass::from($request);
         $query->setKey($id);
-
         $model = $this->service->find($query);
         if (method_exists($this, 'authorize')) {
             $this->authorize('view', $model);
         }
-        return new (static::$resourceClass)($model);
+        return $model;
     }
 
 }

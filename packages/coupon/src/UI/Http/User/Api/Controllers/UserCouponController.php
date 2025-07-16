@@ -7,7 +7,6 @@ namespace RedJasmine\Coupon\UI\Http\User\Api\Controllers;
 use RedJasmine\Coupon\Application\Services\UserCoupon\Queries\UserCouponFindQuery;
 use RedJasmine\Coupon\Application\Services\UserCoupon\Queries\UserCouponPaginateQuery;
 use RedJasmine\Coupon\Application\Services\UserCoupon\UserCouponApplicationService;
-use RedJasmine\Coupon\Domain\Data\UserCouponData as Data;
 use RedJasmine\Coupon\Domain\Models\UserCoupon as Model;
 use RedJasmine\Coupon\UI\Http\User\Api\Resources\UserCouponResource as Resource;
 use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
@@ -22,7 +21,7 @@ class UserCouponController extends Controller
     protected static string $resourceClass = Resource::class;
 
     protected static string $modelClass = Model::class;
-    protected static string $dataClass  = Data::class;
+
 
     protected static string $paginateQueryClass = UserCouponPaginateQuery::class;
     protected static string $findQueryClass     = UserCouponFindQuery::class;

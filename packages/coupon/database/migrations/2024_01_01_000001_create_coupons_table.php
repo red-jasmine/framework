@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
@@ -18,7 +19,7 @@ return new class extends Migration {
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id()->comment('优惠券ID');
-
+            $table->enum('coupon_type', CouponTypeEnum::values())->comment(CouponTypeEnum::comments('类型'));
             // 所有者信息
             $table->string('owner_type', 64)->comment('所有者类型');
             $table->string('owner_id', 32)->comment('所有者ID');
@@ -26,10 +27,8 @@ return new class extends Migration {
             $table->string('description')->nullable()->comment('描述');
             $table->string('image')->nullable()->comment('优惠券图片');
             $table->boolean('is_show')->default(true)->comment('是否显示');
-            $table->enum('status',
-                CouponStatusEnum::values())->default(CouponStatusEnum::DRAFT)->comment(CouponStatusEnum::comments('状态'));
-
-
+            $table->enum('status', CouponStatusEnum::values())->default(CouponStatusEnum::DRAFT)
+                  ->comment(CouponStatusEnum::comments('状态'));
             $table->enum('discount_level', DiscountLevelEnum::values())->comment(DiscountLevelEnum::comments('优惠目标类型'));
 
             $table->enum('discount_amount_type', DiscountAmountTypeEnum::values())
@@ -72,6 +71,9 @@ return new class extends Migration {
             $table->timestamp('start_time')->comment('开始时间');
             $table->timestamp('end_time')->comment('结束时间');
             $table->timestamp('published_time')->nullable()->comment('发布时间');
+
+
+            // 是否支持转增
 
             $table->operator();
 

@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleValue;
 use RedJasmine\Coupon\Domain\Services\CouponRuleService;
 use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
@@ -299,12 +298,25 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
         return [$startTime, $endTime];
     }
 
+
+    public function canPublish() : bool
+    {
+        return $this->isAllowUpdateStatus(CouponStatusEnum::PUBLISHED);
+    }
+
+
     /**
      * 发布优惠券
+     * @return void
+     * @throws CouponException
      */
     public function publish() : void
     {
         $this->updateStatus(CouponStatusEnum::PUBLISHED);
+
+        $this->published_time = \Illuminate\Support\Carbon::now();
+
+        $this->fireModelEvent('publish', false);
     }
 
     /**
@@ -334,18 +346,25 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
 
     /**
      * 暂停优惠券
+     * @return void
+     * @throws CouponException
      */
     public function pause() : void
     {
         $this->updateStatus(CouponStatusEnum::PAUSED);
+        $this->fireModelEvent('pause');
     }
 
     /**
      * 过期优惠券
+     * @return void
+     * @throws CouponException
      */
     public function expire() : void
     {
         $this->updateStatus(CouponStatusEnum::EXPIRED);
+
+        $this->fireModelEvent('pause');
     }
 
     /**
@@ -487,6 +506,7 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     protected function casts() : array
     {
         return [
+            'coupon_type'            => CouponTypeEnum::class,
             'status'                 => CouponStatusEnum::class,
             'is_show'                => 'boolean',
             'discount_level'         => DiscountLevelEnum::class,

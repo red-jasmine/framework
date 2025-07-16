@@ -157,6 +157,11 @@ return [
             'category'   => '类目',
             'user_group' => '用户分组',
         ],
+        'coupon_type'          => [
+            'shop'   => '商家券',
+            'system' => '平台券'
+        ],
+
     ],
 
     'messages' => [

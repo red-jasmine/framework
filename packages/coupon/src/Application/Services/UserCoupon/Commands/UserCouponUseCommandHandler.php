@@ -49,24 +49,5 @@ class UserCouponUseCommandHandler extends CommandHandler
         return true;
     }
 
-    /**
-     * 验证优惠券可用性
-     */
-    private function validateCouponUsability(UserCoupon $userCoupon, UserCouponUseCommand $command) : void
-    {
-        // TODO: 实现优惠券可用性验证逻辑
-        // 1. 检查优惠券状态
-        // 2. 检查使用时间
-        // 3. 检查使用条件
-    }
 
-    /**
-     * 创建使用记录
-     */
-    private function createUsageRecord(UserCoupon $userCoupon, UserCouponUseCommand $command) : void
-    {
-        // TODO: 实现创建使用记录逻辑
-        // 1. 创建 CouponUsage 记录
-        // 2. 记录使用详情
-    }
 }

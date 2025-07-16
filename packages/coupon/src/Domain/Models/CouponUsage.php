@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
@@ -49,6 +50,7 @@ class CouponUsage extends Model implements OperatorInterface, OwnerInterface
     protected function casts() : array
     {
         return [
+            'coupon_type'     => CouponTypeEnum::class,
             'coupon_id'       => 'integer',
             'used_at'         => 'datetime',
             'user'            => UserInterfaceCast::class,

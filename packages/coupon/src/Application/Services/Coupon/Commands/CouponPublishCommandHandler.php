@@ -5,7 +5,7 @@ namespace RedJasmine\Coupon\Application\Services\Coupon\Commands;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Data\Data;
+
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
@@ -18,20 +18,23 @@ class CouponPublishCommandHandler extends CommandHandler
     }
 
     /**
-     * @param Data $command
+     * @param  CouponPublishCommand  $command
+     *
      * @return bool
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(Data $command): bool
+    public function handle(CouponPublishCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
 
         try {
-            $model = $this->service->find(FindQuery::from(['id' => $command->getKey()]));
-            $model->status = CouponStatusEnum::PUBLISHED;
+            $model = $this->service->repository->find($command->getKey());
+
+            $model->publish();
+
             $this->service->repository->update($model);
-            
+
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

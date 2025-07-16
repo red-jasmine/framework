@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponGetTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 
@@ -15,12 +17,15 @@ return new class extends Migration {
         Schema::create('user_coupons', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
+            $table->enum('coupon_type', CouponTypeEnum::values())->comment(CouponTypeEnum::comments('类型'));
             $table->string('owner_type', 32)->comment('所有者类型');
             $table->string('owner_id', 64)->comment('所有者ID');
-            $table->string('coupon_no')->unique()->comment('券码');
             $table->enum('discount_level', DiscountLevelEnum::values())->comment(DiscountLevelEnum::comments('优惠目标类型'));
 
             $table->userMorphs('user', '用户', false);
+            $table->enum('coupon_get_type', CouponGetTypeEnum::values())
+                  ->comment(CouponGetTypeEnum::comments('获得方式'));
+            $table->string('coupon_no')->unique()->comment('券码');
             // 所有者信息
 
             $table->enum('status', UserCouponStatusEnum::values())

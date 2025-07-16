@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponGetTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 
 return new class extends Migration {
     /**
@@ -13,10 +15,11 @@ return new class extends Migration {
         Schema::create('coupon_usages', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
+            $table->enum('coupon_type', CouponTypeEnum::values())->comment(CouponTypeEnum::comments('类型'));
             $table->string('owner_type', 32)->comment('所有者类型');
             $table->string('owner_id', 64)->comment('所有者ID');
-            $table->string('coupon_no')->comment('券码');
             $table->userMorphs('user', '用户', false);
+            $table->string('coupon_no')->comment('券码');
             // 成本承担方信息
             $table->userMorphs('cost_bearer', '成本承担方');
 

@@ -2,6 +2,11 @@
 
 namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponIssueCommand;
+use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponPauseCommand;
+use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponPublishCommand;
 use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Application\Services\Coupon\Queries\CouponPaginateQuery as PaginateQuery;
 use RedJasmine\Coupon\Domain\Data\CouponData as Data;
@@ -26,4 +31,36 @@ class CouponController extends Controller
             $query->onlyOwner($this->getOwner());
         });
     }
+
+
+    public function issue($id, Request $request) : JsonResponse
+    {
+
+        $this->findOne($id, $request);
+
+        $command = CouponIssueCommand::from($request);
+        $command->setKey($id);
+
+        $this->service->issue($command);
+        return static::success();
+    }
+
+    public function publish($id, Request $request) : JsonResponse
+    {
+        $this->findOne($id, $request);
+        $command = CouponPublishCommand::from($request);
+        $command->setKey($id);
+        $this->service->publish($command);
+        return static::success();
+    }
+
+    public function pause($id, Request $request) : JsonResponse
+    {
+        $this->findOne($id, $request);
+        $command = CouponPauseCommand::from($request);
+        $command->setKey($id);
+        $this->service->pause($command);
+        return static::success();
+    }
+
 }

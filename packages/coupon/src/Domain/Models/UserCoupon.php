@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponGetTypeEnum;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
@@ -33,6 +35,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property UserInterface $owner
  * @property string $user_id
  * @property string $coupon_no
+ * @property CouponGetTypeEnum $coupon_get_type
  */
 class UserCoupon extends Model implements OperatorInterface, OwnerInterface
 {
@@ -57,16 +60,23 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
         'user',
     ];
 
-    protected static function boot() : void
+    protected function casts() : array
     {
-        parent::boot();
-
-        static::creating(function (UserCoupon $userCoupon) {
-            $userCoupon->setUniqueIds();
-            $userCoupon->status     = UserCouponStatusEnum::AVAILABLE;
-            $userCoupon->issue_time = Carbon::now();
-        });
+        return [
+            'coupon_type'         => CouponTypeEnum::class,
+            'coupon_get_type'     => CouponGetTypeEnum::class,
+            'status'              => UserCouponStatusEnum::class,
+            'user'                => UserInterfaceCast::class,
+            'discount_level'      => DiscountLevelEnum::class,
+            'issue_time'          => 'datetime',
+            'validity_start_time' => 'datetime',
+            'validity_end_time'   => 'datetime',
+            'used_time'           => 'datetime',
+            'coupon_id'           => 'integer',
+            'order_id'            => 'integer',
+        ];
     }
+
 
     public function scopeOnlyUser(Builder $query, UserInterface $user) : Builder
     {
@@ -256,21 +266,6 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
         return $query->where('owner_type', $ownerType)
                      ->where('owner_id', $ownerId);
-    }
-
-    protected function casts() : array
-    {
-        return [
-            'status'              => UserCouponStatusEnum::class,
-            'user'                => UserInterfaceCast::class,
-            'discount_level'      => DiscountLevelEnum::class,
-            'issue_time'          => 'datetime',
-            'validity_start_time' => 'datetime',
-            'validity_end_time'   => 'datetime',
-            'used_time'           => 'datetime',
-            'coupon_id'           => 'integer',
-            'order_id'            => 'integer',
-        ];
     }
 
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Data\UserCouponUseData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\CouponUsage;
+use RedJasmine\Coupon\Domain\Models\Enums\CouponGetTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Coupon\Exceptions\CouponException;
@@ -16,6 +17,55 @@ use RedJasmine\Support\Foundation\Service\Service;
 
 class CouponUserService extends Service
 {
+    // TODO 赠送
+
+    /**
+     * 发放优惠券
+     *
+     * @param  Coupon  $coupon
+     * @param  UserInterface  $user
+     *
+     * @return UserCoupon
+     * @throws CouponException
+     */
+    public function issue(Coupon $coupon, UserInterface $user) : UserCoupon
+    {
+        if (!$coupon->canIssue()) {
+            throw new CouponException('优惠券不支持发放');
+        }
+
+        return $this->createUserCoupon($coupon, $user, CouponGetTypeEnum::ISSUE);
+    }
+
+
+    protected function createUserCoupon(
+        Coupon $coupon,
+        UserInterface $user,
+        CouponGetTypeEnum $couponGetType = CouponGetTypeEnum::RECEIVE
+    ) : UserCoupon {
+        [$validityStartTime, $validityEndTime] = $coupon->buildUserCouponValidityTimes();
+
+        // 增加一次领域记录
+        $coupon->increment('total_issued');
+        // 构建 用户优惠券
+        /**
+         * @var UserCoupon $userCoupon
+         */
+        $userCoupon                      = UserCoupon::make([
+            'owner' => $coupon->owner,
+            'user'  => $user,
+        ]);
+        $userCoupon->coupon_type         = $coupon->coupon_type;
+        $userCoupon->coupon_get_type     = $couponGetType;
+        $userCoupon->coupon_id           = $coupon->id;
+        $userCoupon->discount_level      = $coupon->discount_level;
+        $userCoupon->issue_time          = Carbon::now();
+        $userCoupon->validity_start_time = $validityStartTime;
+        $userCoupon->validity_end_time   = $validityEndTime;
+        $userCoupon->status              = UserCouponStatusEnum::AVAILABLE;
+
+        return $userCoupon;
+    }
 
     /**
      * 领取优惠券
@@ -35,32 +85,14 @@ class CouponUserService extends Service
         if (!$coupon->canReceive($purchaseFactor)) {
             throw new CouponException('优惠券不支持领取');
         }
+        return $this->createUserCoupon($coupon, $purchaseFactor->buyer);
 
-        [$validityStartTime, $validityEndTime] = $coupon->buildUserCouponValidityTimes();
-
-
-        // 增加一次领域记录
-        $coupon->increment('total_issued');
-        // 构建 用户优惠券
-        /**
-         * @var UserCoupon $userCoupon
-         */
-        $userCoupon                      = UserCoupon::make([
-            'owner' => $coupon->owner,
-            'user'  => $purchaseFactor->buyer,
-        ]);
-        $userCoupon->coupon_id           = $coupon->id;
-        $userCoupon->discount_level      = $coupon->discount_level;
-        $userCoupon->issue_time          = Carbon::now();
-        $userCoupon->validity_start_time = $validityStartTime;
-        $userCoupon->validity_end_time   = $validityEndTime;
-        $userCoupon->status              = UserCouponStatusEnum::AVAILABLE;
-
-        return $userCoupon;
     }
 
 
     /**
+     * 优惠券使用
+     *
      * @param  UserCoupon  $userCoupon
      * @param  array  $usages
      *
@@ -96,6 +128,7 @@ class CouponUserService extends Service
              * @var UserCouponUseData $usage
              */
             $couponUsage                   = CouponUsage::make();
+            $couponUsage->coupon_type      = $userCoupon->coupon_type;
             $couponUsage->coupon_no        = $userCoupon->coupon_no;
             $couponUsage->coupon_id        = $userCoupon->coupon_id;
             $couponUsage->owner            = $userCoupon->owner;

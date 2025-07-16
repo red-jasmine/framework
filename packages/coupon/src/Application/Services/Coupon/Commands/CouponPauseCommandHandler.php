@@ -18,18 +18,18 @@ class CouponPauseCommandHandler extends CommandHandler
     }
 
     /**
-     * @param Data $command
+     * @param CouponPauseCommand $command
      * @return bool
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(Data $command): bool
+    public function handle(CouponPauseCommand $command): bool
     {
         $this->beginDatabaseTransaction();
 
         try {
-            $model = $this->service->find(FindQuery::from(['id' => $command->getKey()]));
-            $model->status = CouponStatusEnum::PAUSED;
+            $model = $this->service->repository->find($command->getKey());
+            $model->pause();
             $this->service->repository->update($model);
             
             $this->commitDatabaseTransaction();
