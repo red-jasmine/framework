@@ -328,9 +328,8 @@ class Coupon extends Model implements OperatorInterface, OwnerInterface
     private function isAllowUpdateStatus(CouponStatusEnum $status) : bool
     {
         return match ($this->status) {
-            CouponStatusEnum::DRAFT => in_array($status, [CouponStatusEnum::PUBLISHED, CouponStatusEnum::EXPIRED]),
+            CouponStatusEnum::DRAFT, CouponStatusEnum::PAUSED => in_array($status, [CouponStatusEnum::PUBLISHED, CouponStatusEnum::EXPIRED]),
             CouponStatusEnum::PUBLISHED => in_array($status, [CouponStatusEnum::PAUSED, CouponStatusEnum::EXPIRED]),
-            CouponStatusEnum::PAUSED => in_array($status, [CouponStatusEnum::PUBLISHED, CouponStatusEnum::EXPIRED]),
             CouponStatusEnum::EXPIRED => false,
         };
     }

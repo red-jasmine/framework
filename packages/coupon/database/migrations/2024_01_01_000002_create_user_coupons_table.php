@@ -14,7 +14,7 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('user_coupons', function (Blueprint $table) {
+        Schema::create('coupon_user_coupons', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('coupon_id')->comment('优惠券ID');
             $table->enum('coupon_type', CouponTypeEnum::values())->comment(CouponTypeEnum::comments('类型'));
@@ -51,6 +51,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('user_coupons');
+        Schema::dropIfExists('coupon_user_coupons');
     }
 }; 

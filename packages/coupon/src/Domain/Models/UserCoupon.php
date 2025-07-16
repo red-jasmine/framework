@@ -3,7 +3,6 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 
-use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,15 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponGetTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\DiscountAmountTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
-use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\Generator\CouponNoGenerator;
-use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Exceptions\CouponException;
-use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
@@ -42,6 +35,8 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     use HasSnowflakeId;
     use HasOwner;
     use HasOperator;
+
+    protected $table = 'coupon_user_coupons';
 
     public    $incrementing = false;
     protected $fillable     = [

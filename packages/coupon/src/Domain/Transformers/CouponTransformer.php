@@ -84,9 +84,7 @@ class CouponTransformer implements TransformerInterface
         $model->sort                   = $data->sort;
         $model->remarks                = $data->remarks;
         $model->total_quantity         = $data->totalQuantity;
-        if ($couponType === CouponTypeEnum::SHOP) {
-            $model->cost_bearer = $data->owner;
-        }
+        $model->cost_bearer            = $data->owner;
         return $model;
     }
 

@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Domain\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\UserData;
 
@@ -21,7 +22,7 @@ class UserInterfaceCast implements CastsAttributes
 
     protected function getKeyName(string $key, string $field) : string
     {
-        return $key.'_'.$field;
+        return Str::snake($key).'_'.$field;
     }
 
     public function get(Model $model, string $key, mixed $value, array $attributes) : ?UserInterface
