@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Data;
 
+use Illuminate\Support\Str;
 use RedJasmine\Support\Contracts\UserInterface;
 use Spatie\LaravelData\DataPipes\DataPipe;
 use Spatie\LaravelData\Support\Creation\CreationContext;
@@ -16,19 +17,19 @@ class UserInterfacePipeline implements DataPipe
 
             if ($property->type->type->acceptsType(UserInterface::class) || $property->type->type->findAcceptedTypeForBaseType(UserInterface::class)) {
 
-                $idKey   = $property->name . '_id';
-                $typeKey = $property->name . '_type';
-
+                $name    = Str::snake($property->name);
+                $idKey   = $name.'_id';
+                $typeKey = $name.'_type';
                 if (isset($payload[$idKey], $payload[$typeKey])
-                    && !isset($payload[$property->name])
+                    && !isset($payload[$name])
 
                     && filled($payload[$idKey]) && filled($payload[$typeKey])
                 ) {
                     $properties[$property->name] = UserData::from([
                         'id'       => $payload[$idKey],
                         'type'     => $payload[$typeKey],
-                        'avatar'   => $payload[$property->name . '_avatar'] ?? null,
-                        'nickname' => $payload[$property->name . '_nickname'] ?? null,
+                        'avatar'   => $payload[$property->name.'_avatar'] ?? null,
+                        'nickname' => $payload[$property->name.'_nickname'] ?? null,
                     ]);
                 }
 
