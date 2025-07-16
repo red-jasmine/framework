@@ -8,7 +8,7 @@ use RedJasmine\Address\Domain\Models\Enums\AddressStatusEnum;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('address', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('owner_type', 64)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
@@ -55,6 +55,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('address');
+        Schema::dropIfExists('addresses');
     }
 };

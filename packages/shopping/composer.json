@@ -5,6 +5,7 @@
     "require": {
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/order": "1.0.x-dev",
+        "red-jasmine/address": "1.0.x-dev",
         "red-jasmine/product": "1.0.x-dev",
         "red-jasmine/shop": "1.0.x-dev",
         "red-jasmine/payment": "1.0.x-dev",

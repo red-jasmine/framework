@@ -18,7 +18,7 @@ class AddressPackageServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
                 ->hasConfigFile()
                 ->hasMigrations([
-                    'create_address_table',
+                    'create_addresses_table',
                 ])
                 ->runsMigrations();
 

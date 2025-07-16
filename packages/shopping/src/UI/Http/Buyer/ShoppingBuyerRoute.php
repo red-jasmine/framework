@@ -3,30 +3,36 @@
 namespace RedJasmine\Shopping\UI\Http\Buyer;
 
 use Illuminate\Support\Facades\Route;
+use RedJasmine\Address\UI\Http\User\AddressUserRoute;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers\OrderController;
 
 class ShoppingBuyerRoute
 {
 
 
-    public static function api()
+    public static function api() : void
     {
+        Route::middleware('auth:user')->group(function () {
 
-        Route::prefix('shopping')
-             ->middleware(['auth:user'])
-             ->group(function () {
+            Route::prefix('shopping')
+                 ->group(function () {
 
-                 Route::prefix('order')->group(function () {
-                     Route::post('check', [OrderController::class, 'check']);
-                     Route::post('buy', [OrderController::class, 'buy']);
+                     Route::prefix('order')->group(function () {
+                         Route::post('check', [OrderController::class, 'check']);
+                         Route::post('buy', [OrderController::class, 'buy']);
+
+
+                     });
 
 
                  });
 
 
-             });
+            ShoppingCartRoute::api();
 
-        ShoppingCartRoute::api();
+            AddressUserRoute::api();
+
+        });
 
 
     }
