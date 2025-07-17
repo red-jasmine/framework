@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
 
 return new class extends Migration {
@@ -17,15 +18,22 @@ return new class extends Migration {
             $table->string('wallet_type')->comment('钱包类型');
             $table->string('currency', 3)->comment('货币');
             $table->decimal('amount', 12)->comment('金额');
-            $table->decimal('fee', 12)->default(0)->comment('费用');
             $table->string('status')->comment(RechargeStatusEnum::comments('状态'));
-            $table->decimal('pay_amount', 12)->default(0)->comment('支付金额');
+            $table->timestamp('recharge_time')->nullable()->comment('充值时间');
+            // 应付金额
+            $table->decimal('exchange_rate', 10, 5)->comment('汇率');
+            $table->string('payment_currency', 3)->comment('支付货币');
+            $table->decimal('payment_amount', 12)->default(0)->comment('应付金额');
+            $table->decimal('payment_fee', 12)->default(0)->comment('支付手续费');
+            $table->decimal('total_payment_amount', 12)->default(0)->comment('总支付金额');
+            $table->string('payment_status')->comment(PaymentStatusEnum::comments('支付状态'));
+            $table->timestamp('payment_time')->nullable()->comment('支付时间');
             // 支付类型
             $table->string('payment_type')->nullable()->comment('支付单类型');
             $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单ID');
             $table->string('payment_channel_trade_no', '64')->nullable()->comment('支付渠道单号');
             $table->string('payment_mode', '32')->nullable()->comment('支付方式');
-            $table->timestamp('payment_time')->nullable()->comment('支付时间');
+
             $table->json('extra')->nullable()->comment('扩展字段');
             $table->operator();
             $table->comment('钱包-充值单');

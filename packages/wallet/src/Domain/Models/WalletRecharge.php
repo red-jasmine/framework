@@ -11,6 +11,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
+use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\Recharges\RechargeStatusEnum;
 
 class WalletRecharge extends Model implements OwnerInterface, OperatorInterface
@@ -25,9 +26,13 @@ class WalletRecharge extends Model implements OwnerInterface, OperatorInterface
     public $incrementing = false;
 
     protected $casts = [
-        'status' => RechargeStatusEnum::class,
-        'extra'  => 'array',
-        'amount' => MoneyCast::class, ':amount_currency,amount_total',
+        'status'               => RechargeStatusEnum::class,
+        'extra'                => 'array',
+        'amount'               => MoneyCast::class, ':currency,total',// 充值金额
+        'payment_status'       => PaymentStatusEnum::class,
+        'payment_amount'       => MoneyCast::class, ':payment_currency,payment_amount',// 支付金额
+        'payment_fee'          => MoneyCast::class, ':payment_currency,payment_fee',// 支付金额
+        'total_payment_amount' => MoneyCast::class, ':payment_currency,total_payment_amount',// 支付总金额
     ];
 
 
