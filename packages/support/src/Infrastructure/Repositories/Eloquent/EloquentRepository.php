@@ -24,6 +24,22 @@ class EloquentRepository implements RepositoryInterface
         return static::$eloquentModelClass::findOrFail($id);
     }
 
+    public function findLock($id)
+    {
+        return static::$eloquentModelClass::findOrFail($id);
+    }
+
+
+    public function findByNo(string $no)
+    {
+        return static::$eloquentModelClass::uniqueNo($no)->firstOrFail();
+    }
+
+    public function findByNoLock(string $no)
+    {
+        return static::$eloquentModelClass::lockForUpdate()->uniqueNo($no)->firstOrFail();
+    }
+
 
     /**
      * @param  Model  $model

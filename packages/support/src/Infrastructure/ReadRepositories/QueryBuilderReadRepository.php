@@ -80,7 +80,8 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function find(FindQuery $query) : ?Model
     {
         return $this->query($query->except($query->getPrimaryKey()))
-                    ->where($query->getPrimaryKey(), $query->getKey())->firstOrFail();
+                    ->where($query->getPrimaryKey(), $query->getKey())
+                    ->firstOrFail();
     }
 
     public function modelQuery(?Query $query = null) : Builder

@@ -27,7 +27,7 @@ trait RestQueryControllerActions
         if (in_array(OwnerInjectionInterface::class, class_implements($queryClass))) {
 
 
-           // $request->offsetSet($queryClass::getOwnerKey(), $this->getOwner());
+            // $request->offsetSet($queryClass::getOwnerKey(), $this->getOwner());
         }
     }
 
@@ -59,6 +59,7 @@ trait RestQueryControllerActions
 
         $query = $queryClass::from($request);
         $query->setKey($id);
+
         $model = $this->service->find($query);
         if (method_exists($this, 'authorize')) {
             $this->authorize('view', $model);
