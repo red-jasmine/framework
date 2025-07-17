@@ -13,5 +13,15 @@ class WalletRechargeRepository extends EloquentRepository implements WalletRecha
 
     protected static string $eloquentModelClass = WalletRecharge::class;
 
+    public function findByNo(string $no)
+    {
+        return static::$eloquentModelClass::uniqueNo($no)->firstOrFail();
+    }
+
+    public function findByNoLock(string $no)
+    {
+        return static::$eloquentModelClass::lockForUpdate()->uniqueNo($no)->firstOrFail();
+    }
+
 
 }

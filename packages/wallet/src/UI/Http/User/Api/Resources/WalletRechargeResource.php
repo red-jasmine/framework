@@ -3,35 +3,37 @@
 namespace RedJasmine\Wallet\UI\Http\User\Api\Resources;
 
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
+use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 
+/**
+ * @mixin WalletRecharge
+ */
 class WalletRechargeResource extends JsonResource
 {
-    public function toArray($request)
+    public function toArray($request) : array
     {
         return [
-            'id' => $this->id,
-            'wallet_id' => $this->wallet_id,
-            'amount' => $this->amount,
-            'payment_method' => $this->payment_method,
-            'remark' => $this->remark,
-            'status' => $this->status,
-            'paid_at' => $this->paid_at,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            
-            // 扩展信息
-            'status_label' => $this->status?->label(),
-            'status_color' => $this->status?->color(),
-            'payment_method_label' => $this->payment_method?->label(),
-            
-            // 关联数据
-            'wallet' => $this->whenLoaded('wallet', function () {
-                return [
-                    'id' => $this->wallet->id,
-                    'type' => $this->wallet->type,
-                    'type_label' => $this->wallet->type?->label(),
-                ];
-            }),
+            'id'                       => $this->id,
+            'wallet_type'              => $this->wallet_type,
+            'recharge_no'              => $this->recharge_no,
+            'wallet_id'                => $this->wallet_id,
+            'owner_type'               => $this->owner_type,
+            'owner_id'                 => $this->owner_id,
+            'amount'                   => $this->amount,
+            'status'                   => $this->status,
+            'recharge_time'            => $this->recharge_time,
+            'exchange_rate'            => $this->exchange_rate,
+            'payment_currency'         => $this->payment_currency,
+            'payment_amount'           => $this->payment_amount,
+            'payment_fee'              => $this->payment_fee,
+            'total_payment_amount'     => $this->total_payment_amount,
+            'payment_status'           => $this->payment_status,
+            'payment_time'             => $this->payment_time,
+            'payment_type'             => $this->payment_type,
+            'payment_id'               => $this->payment_id,
+            'payment_channel_trade_no' => $this->payment_channel_trade_no,
+            'payment_mode'             => $this->payment_mode,
+            'created_at'               => $this->created_at,
         ];
     }
 } 

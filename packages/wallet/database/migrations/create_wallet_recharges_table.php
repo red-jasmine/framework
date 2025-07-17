@@ -29,12 +29,12 @@ return new class extends Migration {
             $table->string('payment_status')->comment(PaymentStatusEnum::comments('支付状态'));
             $table->timestamp('payment_time')->nullable()->comment('支付时间');
             // 支付类型
-            $table->string('payment_type')->nullable()->comment('支付单类型');
-            $table->unsignedBigInteger('payment_id')->nullable()->comment('支付单ID');
+            $table->string('payment_type', 32)->nullable()->comment('支付单类型');
+            $table->string('payment_id', 64)->nullable()->comment('支付单ID');
             $table->string('payment_channel_trade_no', '64')->nullable()->comment('支付渠道单号');
+            $table->decimal('payment_channel_amount', 12)->nullable()->comment('支付渠道金额');
             $table->string('payment_mode', '32')->nullable()->comment('支付方式');
             $table->string('fail_reason')->nullable()->comment('失败原因');
-            $table->string('fail_code', 32)->nullable()->comment('失败代码');
             $table->json('extra')->nullable()->comment('扩展字段');
             $table->operator();
             $table->comment('钱包-充值单');

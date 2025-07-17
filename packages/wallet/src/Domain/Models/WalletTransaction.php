@@ -12,6 +12,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionStatusEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
@@ -23,8 +24,10 @@ use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
  * @property Money $balance_after
  * @property Money $freeze_after
  */
-class WalletTransaction extends Model implements OwnerInterface, OperatorInterface
+class WalletTransaction extends Model implements OwnerInterface, OperatorInterface, UniqueNoInterface
 {
+
+    protected static string $uniqueNoKey = 'transaction_no';
 
     use HasOwner;
 
@@ -53,10 +56,6 @@ class WalletTransaction extends Model implements OwnerInterface, OperatorInterfa
             'extra'            => 'array',
         ];
     }
-
-
-    protected string $uniqueNoKey = 'transaction_no';
-
 
 
 

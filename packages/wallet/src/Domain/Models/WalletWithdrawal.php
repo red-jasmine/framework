@@ -14,6 +14,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 use RedJasmine\Wallet\Domain\Data\WalletWithdrawalPaymentData;
 use RedJasmine\Wallet\Domain\Events\WalletWithdrawal\WalletWithdrawalCreatedEvent;
 use RedJasmine\Wallet\Domain\Events\WalletWithdrawal\WalletWithdrawalFailEvent;
@@ -24,7 +25,7 @@ use RedJasmine\Wallet\Domain\Models\Enums\Withdrawals\WithdrawalStatusEnum;
 use RedJasmine\Wallet\Exceptions\WalletWithdrawalException;
 
 
-class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterface
+class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterface, UniqueNoInterface
 {
 
     use HasOwner;
@@ -35,7 +36,7 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
     use HasDateTimeFormatter;
 
 
-    public $uniqueNoKey = 'withdrawal_no';
+    protected static string $uniqueNoKey = 'withdrawal_no';
 
     use HasUniqueNo;
 
@@ -68,7 +69,6 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
         'payee_cert_no'    => 'encrypted',
         'extra'            => 'array',
     ];
-
 
 
     public function wallet() : BelongsTo

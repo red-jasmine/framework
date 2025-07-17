@@ -3,11 +3,16 @@
 namespace RedJasmine\Wallet\Application\Services\Recharge;
 
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Wallet\Application\Services\Recharge\Commands\CompletePaymentCommand;
 use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletRechargeService;
 
+/**
+ * @see Commands\CompletePaymentCommandHandler::handle()
+ * @method completePayment(CompletePaymentCommand $command)
+ */
 class WalletRechargeApplicationService extends ApplicationService
 {
 
@@ -27,6 +32,7 @@ class WalletRechargeApplicationService extends ApplicationService
         'initiatePayment' => Commands\InitiatePaymentCommandHandler::class,
         'completePayment' => Commands\CompletePaymentCommandHandler::class,
         'failPayment'     => Commands\FailPaymentCommandHandler::class,
+
     ];
 
 
