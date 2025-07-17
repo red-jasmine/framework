@@ -3,15 +3,24 @@
 namespace RedJasmine\Support\Domain\Models\Traits;
 
 
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
 /**
- * @property string $uniqueNoKey
+ *
+ * @property  string $uniqueNoKey
  * @method string[] buildUniqueNoFactors()
  */
 trait HasUniqueNo
 {
+
+
+    public static function getUniqueNoKey() : string
+    {
+        return static::$uniqueNoKey;
+    }
 
     public static function bootHasUniqueNo() : void
     {
@@ -21,6 +30,30 @@ trait HasUniqueNo
              */
             $model->setUniqueNo();
         });
+    }
+
+    /**
+     * @param  string  $no
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public static function checkUniqueNo(string $no) : bool
+    {
+        return NoCheckNumber::chack($no) ? true : throw new Exception('Invalid unique no');
+    }
+
+    /**
+     * @param  Builder  $query
+     * @param  string  $no
+     *
+     * @return Builder
+     * @throws Exception
+     */
+    public function scopeUniqueNo(Builder $query, string $no) : Builder
+    {
+        static::checkUniqueNo($no);
+        return $query->where($this->uniqueNoKey, $no);
     }
 
     protected function factorRemainder(int|string $number) : string
