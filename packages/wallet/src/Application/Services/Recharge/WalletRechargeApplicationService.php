@@ -6,6 +6,7 @@ use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeRepositoryInterface;
+use RedJasmine\Wallet\Domain\Services\WalletRechargeService;
 
 class WalletRechargeApplicationService extends ApplicationService
 {
@@ -15,15 +16,17 @@ class WalletRechargeApplicationService extends ApplicationService
     public function __construct(
         public WalletRechargeRepositoryInterface $repository,
         public WalletRechargeReadRepositoryInterface $readRepository,
+        public WalletRechargeService $rechargeService,
     ) {
 
     }
 
 
     protected static $macros = [
-        'create' => null,
-        'update' => null,
-        'delete' => null,
+        'create'          => Commands\CreateRechargeCommandHandler::class,
+        'initiatePayment' => Commands\InitiatePaymentCommandHandler::class,
+        'completePayment' => Commands\CompletePaymentCommandHandler::class,
+        'failPayment'     => Commands\FailPaymentCommandHandler::class,
     ];
 
 

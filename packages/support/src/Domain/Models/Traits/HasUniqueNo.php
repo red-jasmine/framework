@@ -4,9 +4,11 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 
 
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
+use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
 /**
  * @property string $uniqueNoKey
+ * @method string[] buildUniqueNoFactors()
  */
 trait HasUniqueNo
 {
@@ -14,13 +16,11 @@ trait HasUniqueNo
     public static function bootHasUniqueNo() : void
     {
         static::creating(function ($model) {
+            /**
+             * @var HasUniqueNo $model
+             */
             $model->setUniqueNo();
         });
-    }
-
-    protected function generateDatetimeId() : string
-    {
-        return DatetimeIdGenerator::buildId();
     }
 
     protected function factorRemainder(int|string $number) : string
@@ -29,6 +29,7 @@ trait HasUniqueNo
             $number = crc32($number);
         }
         return sprintf("%02d", ($number % 64));
+
     }
 
     public function setUniqueNo() : void
@@ -40,7 +41,22 @@ trait HasUniqueNo
 
     public function newUniqueNo() : string
     {
-        return $this->generateDatetimeId();
+        $factors = [];
+        if (method_exists($this, 'buildUniqueNoFactors')) {
+            foreach ($this->buildUniqueNoFactors() as $factor) {
+                $factors[] = $this->factorRemainder($factor);
+            }
+        } else {
+            $factors[] = rand(10, 99);
+            $factors[] = rand(10, 99);
+            $factors[] = rand(10, 99);
+            $factors[] = rand(10, 99);
+            $factors[] = rand(10, 99);
+        }
+        return NoCheckNumber::generator(implode('', [
+            DatetimeIdGenerator::buildId(),
+            ...$factors
+        ]));
     }
 
 

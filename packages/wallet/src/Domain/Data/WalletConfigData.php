@@ -4,6 +4,8 @@ namespace RedJasmine\Wallet\Domain\Data;
 
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Wallet\Domain\Data\Config\ExchangeCurrencyConfigData;
+use RedJasmine\Wallet\Domain\Data\Config\WalletExchangeConfigData;
 
 class WalletConfigData extends Data
 {
@@ -20,8 +22,14 @@ class WalletConfigData extends Data
      */
     public string $currency;
 
-    // 是否支持充值
-    public bool $recharge = false;
+
+    /**
+     * 充值配置
+     * @var WalletExchangeConfigData|null
+     */
+    public ?WalletExchangeConfigData $recharge = null;
+
+
     // 提现
     public bool $withdrawal = false;
 

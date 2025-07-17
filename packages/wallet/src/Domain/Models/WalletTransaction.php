@@ -58,16 +58,7 @@ class WalletTransaction extends Model implements OwnerInterface, OperatorInterfa
     protected string $uniqueNoKey = 'transaction_no';
 
 
-    public function newUniqueNo() : string
-    {
-        return implode('', [
-            $this->generateDatetimeId(),
-            '01',
-            $this->factorRemainder($this->direction->value),
-            $this->factorRemainder($this->app_id),
-            $this->factorRemainder($this->wallet_id),
-        ]);
-    }
+
 
 
 }

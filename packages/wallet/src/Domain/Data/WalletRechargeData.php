@@ -11,6 +11,7 @@ use RedJasmine\Support\Data\Data;
 class WalletRechargeData extends Data
 {
 
+
     /**
      * 充值的钱包金额
      * @var Money
@@ -21,6 +22,6 @@ class WalletRechargeData extends Data
      * 支付货币
      * @var string
      */
-    public string $currency;
+    public string $paymentCurrency = 'CNY';
 
 }

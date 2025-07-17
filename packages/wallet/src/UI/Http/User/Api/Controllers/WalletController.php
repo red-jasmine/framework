@@ -2,14 +2,10 @@
 
 namespace RedJasmine\Wallet\UI\Http\User\Api\Controllers;
 
-use Cknow\Money\Money;
 use Illuminate\Http\Request;
 use RedJasmine\Support\Http\Controllers\UserOwnerTools;
-use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
-use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
-use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\UI\Http\User\Api\Resources\WalletResource;
 

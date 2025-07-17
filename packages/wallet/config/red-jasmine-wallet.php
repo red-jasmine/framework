@@ -51,6 +51,18 @@ return [
                     'user'
                 ],
 
+                // 钱包充值配置
+                'recharge'            => [
+                    'state'      => true,
+                    'currencies' => [
+                        [
+                            'currency'      => 'CNY',
+                            'exchange_rate' => 0.1,
+                            'fee_rate'      => 0
+                        ]
+                    ]
+                ]
+
             ],
 
     ]

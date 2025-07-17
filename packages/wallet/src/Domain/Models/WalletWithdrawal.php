@@ -70,16 +70,6 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
     ];
 
 
-    public function newUniqueNo() : string
-    {
-        return implode('', [
-            $this->generateDatetimeId(),
-            $this->factorRemainder($this->owner_type),
-            $this->factorRemainder($this->owner_id),
-            $this->factorRemainder($this->wallet_id),
-        ]);
-    }
-
 
     public function wallet() : BelongsTo
     {
