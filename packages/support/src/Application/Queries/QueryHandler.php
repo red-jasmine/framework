@@ -2,10 +2,9 @@
 
 namespace RedJasmine\Support\Application\Queries;
 
-use RedJasmine\Support\Foundation\Hook\HasHooks;
+use RedJasmine\Support\Application\Handler;
 
-abstract class QueryHandler
+abstract class QueryHandler extends Handler
 {
 
-    use HasHooks;
 }

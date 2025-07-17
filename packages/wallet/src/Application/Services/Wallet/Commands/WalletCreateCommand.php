@@ -8,4 +8,6 @@ class WalletCreateCommand extends WalletData
 {
 
 
+
+
 }

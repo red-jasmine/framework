@@ -14,6 +14,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 
 
 /**
+ * @deprecated
  * @method Model create(Data $command)
  * @method void  update(Data $command)
  * @method void  delete(Data $command)

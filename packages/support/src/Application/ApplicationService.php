@@ -3,11 +3,9 @@
 namespace RedJasmine\Support\Application;
 
 
-use BadMethodCallException;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Traits\Macroable;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
 use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
 use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
@@ -19,9 +17,7 @@ use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
-use RedJasmine\Support\Foundation\Hook\HasHooks;
 use RedJasmine\Support\Foundation\Service\Service;
-use ReflectionClass;
 
 /**
  * @method Model create(Data $command)

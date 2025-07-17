@@ -12,11 +12,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('recharge_no', 64)->unique()->comment('充值单号');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
-            $table->string('wallet_type')->comment('钱包类型');
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
-            $table->string('amount_currency', 3)->comment('货币');
-            $table->decimal('amount_total', 12)->comment('金额');
+            $table->string('wallet_type')->comment('钱包类型');
+            $table->string('currency', 3)->comment('货币');
+            $table->decimal('amount', 12)->comment('金额');
             $table->decimal('fee', 12)->default(0)->comment('费用');
             $table->string('status')->comment(RechargeStatusEnum::comments('状态'));
             $table->decimal('pay_amount', 12)->default(0)->comment('支付金额');

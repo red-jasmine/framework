@@ -10,7 +10,9 @@ use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use Throwable;
-
+/**
+ * @deprecated
+ */
 class CreateCommandHandler extends CommandHandler
 {
 

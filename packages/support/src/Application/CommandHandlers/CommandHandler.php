@@ -3,18 +3,18 @@
 namespace RedJasmine\Support\Application\CommandHandlers;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Application\Handler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Foundation\Hook\HasHooks;
 use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
-
-abstract class CommandHandler
+/**
+ * @deprecated
+ */
+abstract class CommandHandler extends Handler
 {
 
-    use HasHooks;
 
-
-    use CanUseDatabaseTransactions;
 
 
     protected Model|null $model = null;

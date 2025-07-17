@@ -8,7 +8,9 @@ use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 use RedJasmine\Support\Facades\ServiceContext;
-
+/**
+ * @deprecated
+ */
 class UpdateCommandHandler extends CommandHandler
 {
 

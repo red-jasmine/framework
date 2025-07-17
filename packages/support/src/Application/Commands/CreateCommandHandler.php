@@ -14,9 +14,9 @@ class CreateCommandHandler extends RestCommandHandler
 
     protected string $name = 'create';
 
-    public function __construct(
-        protected $service
-    ) {
+    public function __construct($service)
+    {
+        $this->service = $service;
         $this->initHandleContext();
     }
 
@@ -24,8 +24,8 @@ class CreateCommandHandler extends RestCommandHandler
     protected function validate(HandleContext $context) : void
     {
         // 业务逻辑验证
-        if(method_exists($context->getCommand(), 'validateBusinessRules')){
-           
+        if (method_exists($context->getCommand(), 'validateBusinessRules')) {
+
             $context->getCommand()->validateBusinessRules();
         }
     }

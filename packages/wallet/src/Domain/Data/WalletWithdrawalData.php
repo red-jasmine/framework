@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Wallet\Domain\Data;
 
+use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 
 class WalletWithdrawalData extends Data
 {
     /**
-     * @var Amount
+     * @var Money
      */
-    public Amount $amount;
+    public Money $amount;
 
     /**
      * 收款人

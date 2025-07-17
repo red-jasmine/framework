@@ -3,8 +3,8 @@
 namespace RedJasmine\Wallet\Domain\Data;
 
 
+use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
 use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -25,9 +25,9 @@ class WalletTransactionData extends Data
     public TransactionTypeEnum $transactionType;
 
     /**
-     * @var Amount
+     * @var Money
      */
-    public Amount $amount;
+    public Money $amount;
 
 
     public ?string $title = null;

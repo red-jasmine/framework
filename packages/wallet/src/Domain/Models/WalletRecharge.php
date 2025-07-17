@@ -4,6 +4,7 @@ namespace RedJasmine\Wallet\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -25,7 +26,8 @@ class WalletRecharge extends Model implements OwnerInterface, OperatorInterface
 
     protected $casts = [
         'status' => RechargeStatusEnum::class,
-        'extra' => 'array',
+        'extra'  => 'array',
+        'amount' => MoneyCast::class, ':amount_currency,amount_total',
     ];
 
 

@@ -5,7 +5,7 @@ namespace RedJasmine\Wallet\Domain\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use RedJasmine\Support\Domain\Casts\AmountCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -62,11 +62,11 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
         'status'           => WithdrawalStatusEnum::class,
         'approval_status'  => ApprovalStatusEnum::class,
         'payment_status'   => WithdrawalPaymentStatusEnum::class,
-        'amount'           => AmountCast::class,
+        'amount'           => MoneyCast::class, ':amount_currency,amount_total',
         'payee_name'       => 'encrypted',
         'payee_account_no' => 'encrypted',
         'payee_cert_no'    => 'encrypted',
-        'extra'           => 'array',
+        'extra'            => 'array',
     ];
 
 

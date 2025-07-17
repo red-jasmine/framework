@@ -12,12 +12,12 @@ class WalletReadRepository extends QueryBuilderReadRepository implements WalletR
 
     public static string $modelClass = Wallet::class;
 
-    public function findByOwnerType(UserInterface $owner, string $type) : ?Wallet
+    public function findByOwnerType(UserInterface $owner, string $type) : Wallet
     {
         return $this->query()
                     ->onlyOwner($owner)
                     ->where('type', $type)
-                    ->first();
+                    ->firstOrFail();
     }
 
 

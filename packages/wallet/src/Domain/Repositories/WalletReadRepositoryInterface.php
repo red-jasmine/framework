@@ -9,6 +9,6 @@ use RedJasmine\Wallet\Domain\Models\Wallet;
 interface WalletReadRepositoryInterface extends ReadRepositoryInterface
 {
 
-    public function findByOwnerType(UserInterface $owner, string $type) : ?Wallet;
+    public function findByOwnerType(UserInterface $owner, string $type) : Wallet;
 
 }

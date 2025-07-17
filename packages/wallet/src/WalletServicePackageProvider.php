@@ -32,4 +32,15 @@ class WalletServicePackageProvider extends PackageServiceProvider
 
     }
 
+    public function packageRegistered() : void
+    {
+        // 对 配置进行
+
+        foreach ($this->app->config->get('red-jasmine-wallet.wallets', []) as $type => $walletConfig) {
+            $this->app->config->set('money.currencies.custom.'.$walletConfig['currency'], $walletConfig);
+        }
+
+
+    }
+
 }

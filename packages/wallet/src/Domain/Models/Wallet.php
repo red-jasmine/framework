@@ -2,9 +2,11 @@
 
 namespace RedJasmine\Wallet\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -14,6 +16,9 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Wallet\Domain\Models\Enums\WalletStatusEnum;
 
 
+/**
+ * @property Money $balance
+ */
 class Wallet extends Model implements OperatorInterface, OwnerInterface
 {
 
@@ -38,7 +43,9 @@ class Wallet extends Model implements OperatorInterface, OwnerInterface
         'currency',
     ];
     protected $casts    = [
-        'status' => WalletStatusEnum::class
+        'status'  => WalletStatusEnum::class,
+        'balance' => MoneyCast::class.':currency,balance',
+        'freeze'  => MoneyCast::class.':currency,freeze',
     ];
 
     public function transactions() : HasMany
