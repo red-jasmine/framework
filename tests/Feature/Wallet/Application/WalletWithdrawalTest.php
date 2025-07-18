@@ -1,7 +1,7 @@
 <?php
 
+use Cknow\Money\Money;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
@@ -24,8 +24,8 @@ beforeEach(function () {
     $this->WalletRepository               = app(WalletRepositoryInterface::class);
     $this->WalletWithdrawalCommandService = app(WalletWithdrawalApplicationService::class);
     $this->WalletWithdrawalRepository     = app(WalletWithdrawalRepositoryInterface::class);
-    $this->type                           = 'point';
-    $this->currency                       = 'CNY';
+    $this->type                           = 'integral';
+    $this->currency                       = 'ZJF';
 });
 test('can create a wallet', function () {
 
@@ -53,15 +53,15 @@ test('can create a wallet', function () {
 
 test('cna wallet add income', function (Wallet $wallet) {
     // 加宽
-    $command                  = new WalletTransactionCommand();
-    $command->id              = $wallet->id;
-    $command->amount          = new Amount(fake()->numberBetween(10000, 20000), $this->currency);
+    $command = new WalletTransactionCommand();
+    $command->setKey($wallet->id);
+    $command->amount          = Money::parse(fake()->numberBetween(10000, 20000), $this->currency);
     $command->direction       = AmountDirectionEnum::INCOME;
     $command->transactionType = TransactionTypeEnum::RECHARGE;
     $result                   = $this->WalletCommandService->transaction($command);
 
 
-    $this->assertEquals($command->amount->total(), $result->amount->total(), 0);
+    $this->assertEquals($command->amount->getAmount(), $result->amount->getAmount(), 0);
 
 
     return $this->WalletRepository->findByOwnerType(\Illuminate\Support\Facades\Auth::user(), $this->type);
@@ -81,7 +81,7 @@ test('can create withdrawal', function (Wallet $wallet) {
 
     $command         = new WalletWithdrawalCreateCommand();
     $command->id     = $wallet->id;
-    $command->amount = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
+    $command->amount = Money::parse(fake()->numberBetween(1000, 2000), $this->currency);
 
     $command->payee = $payee;
     $withdrawal     = $this->WalletWithdrawalCommandService->create($command);
@@ -89,7 +89,7 @@ test('can create withdrawal', function (Wallet $wallet) {
     $this->assertEquals($wallet->id, $withdrawal->wallet_id);
     $this->assertEquals($wallet->owner_type, $withdrawal->owner_type);
     $this->assertEquals($wallet->owner_id, $withdrawal->owner_id);
-    $this->assertEquals($command->amount->total(), $withdrawal->amount->total());
+    $this->assertEquals($command->amount->getAmount(), $withdrawal->amount->getAmount());
 
 
     return $withdrawal;
@@ -152,7 +152,7 @@ test('can create withdrawal2', function (Wallet $wallet) {
 
     $command         = new WalletWithdrawalCreateCommand();
     $command->id     = $wallet->id;
-    $command->amount = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
+    $command->amount = Money::parse(fake()->numberBetween(1000, 2000), $this->currency);
 
     $command->payee = $payee;
     $withdrawal     = $this->WalletWithdrawalCommandService->create($command);
@@ -160,7 +160,7 @@ test('can create withdrawal2', function (Wallet $wallet) {
     $this->assertEquals($wallet->id, $withdrawal->wallet_id);
     $this->assertEquals($wallet->owner_type, $withdrawal->owner_type);
     $this->assertEquals($wallet->owner_id, $withdrawal->owner_id);
-    $this->assertEquals($command->amount->total(), $withdrawal->amount->total());
+    $this->assertEquals($command->amount->getAmount(), $withdrawal->amount->getAmount());
 
 
     return $withdrawal;
@@ -197,7 +197,7 @@ test('can create withdrawal3', function (Wallet $wallet) {
 
     $command         = new WalletWithdrawalCreateCommand();
     $command->id     = $wallet->id;
-    $command->amount = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
+    $command->amount = Money::parse(fake()->numberBetween(1000, 2000), $this->currency);
 
     $command->payee = $payee;
     $withdrawal     = $this->WalletWithdrawalCommandService->create($command);
@@ -205,7 +205,7 @@ test('can create withdrawal3', function (Wallet $wallet) {
     $this->assertEquals($wallet->id, $withdrawal->wallet_id);
     $this->assertEquals($wallet->owner_type, $withdrawal->owner_type);
     $this->assertEquals($wallet->owner_id, $withdrawal->owner_id);
-    $this->assertEquals($command->amount->total(), $withdrawal->amount->total());
+    $this->assertEquals($command->amount->getAmount(), $withdrawal->amount->getAmount());
 
 
     return $withdrawal;

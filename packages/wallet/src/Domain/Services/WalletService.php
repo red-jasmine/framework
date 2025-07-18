@@ -102,13 +102,13 @@ class WalletService extends Service
                     throw new WalletException('余额不足');
                 }
                 $wallet->balance     = $wallet->balance->subtract($data->amount);
-                $wallet->freeze      = $wallet->balance->add($data->amount);
+                $wallet->freeze      = $wallet->freeze->add($data->amount);
                 $transaction->amount = $data->amount->negative(); // 负数
                 break;
             case AmountDirectionEnum::UNFROZEN: // 解冻
 
                 $wallet->balance     = $wallet->balance->add($data->amount);
-                $wallet->freeze      = $wallet->balance->subtract($data->amount);
+                $wallet->freeze      = $wallet->freeze->subtract($data->amount);
                 $transaction->amount = $data->amount; // 负数
                 break;
             default:

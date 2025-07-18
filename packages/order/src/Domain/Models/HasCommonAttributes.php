@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Domain\Models;
 
 use Cknow\Money\Money;
-use RedJasmine\Order\Domain\Models\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\CurrencyCast;

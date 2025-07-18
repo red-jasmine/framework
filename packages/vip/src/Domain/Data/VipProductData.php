@@ -2,9 +2,10 @@
 
 namespace RedJasmine\Vip\Domain\Data;
 
+use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+
 use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

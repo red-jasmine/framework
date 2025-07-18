@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b31a37950fb2c958ba5c627fe8688881",
+    "content-hash": "d0ddf7272d8563c314be9763a02be954",
     "packages": [
         {
             "name": "amphp/amp",
@@ -7746,7 +7746,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/admin",
-                "reference": "008929cedaf245446cea276b0fe18fdeb0a4f88c"
+                "reference": "39eeda885dad23c2a83925d672f0dd9379634afc"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev",
@@ -7826,7 +7826,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/captcha",
-                "reference": "c8c1321e66cb27f20aab659b1a1905ef2ece83b4"
+                "reference": "2a99440526cabd8f57e3d628fff2b44f412ea018"
             },
             "require": {
                 "overtrue/laravel-easy-sms": "^2.1",
@@ -8023,7 +8023,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/filament-admin",
-                "reference": "faf2d792e45604798d2498eda5ad0e33643751c2"
+                "reference": "8de271ad6b169c0fa15ec1e79db9c5faee2d12d2"
             },
             "require": {
                 "bezhansalleh/filament-shield": "^3.3",
@@ -8629,6 +8629,66 @@
                 "laravel",
                 "red-jasmine",
                 "user"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "red-jasmine/wallet",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./packages/wallet",
+                "reference": "d2874caf7b3880154c5e7d8f9cb82653a07bd54e"
+            },
+            "require": {
+                "red-jasmine/support": "1.0.x-dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\Wallet\\WalletServicePackageProvider",
+                        "RedJasmine\\Wallet\\Application\\WalletApplicationServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Wallet\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\Wallet\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "homepage": "https://github.com/liushoukun"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/red-jasmine/wallet",
+            "keywords": [
+                "Laravel",
+                "Wallet"
             ],
             "transport-options": {
                 "symlink": true,
@@ -15633,7 +15693,8 @@
         "red-jasmine/order": 20,
         "red-jasmine/payment": 20,
         "red-jasmine/support": 20,
-        "red-jasmine/user": 20
+        "red-jasmine/user": 20,
+        "red-jasmine/wallet": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

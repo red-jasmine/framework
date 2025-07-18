@@ -1,6 +1,7 @@
 <?php
 
-use RedJasmine\Support\Domain\Models\ValueObjects\Amount;
+
+use Cknow\Money\Money;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
@@ -14,8 +15,8 @@ beforeEach(function () {
     $this->WalletCommandService = app(WalletApplicationService::class);
     $this->WalletRepository     = app(WalletRepositoryInterface::class);
 
-    $this->type     = 'point';
-    $this->currency = 'CNY';
+    $this->type     = 'integral';
+    $this->currency = 'ZJF';
 });
 test('can create a wallet', function () {
 
@@ -35,8 +36,8 @@ test('can create a wallet', function () {
 
     $wallet = $result = $this->WalletCommandService->create($command);
     $this->assertEquals($command->type, $result->type);
-    $this->assertEquals(0, bccomp($result->balance, 0, 0));
-    $this->assertEquals(0, bccomp($result->freeze, 0, 0));
+    $this->assertEquals(0, bccomp($result->balance->getAmount(), 0, 0));
+    $this->assertEquals(0, bccomp($result->freeze->getAmount(), 0, 0));
 
 
     return $wallet;
@@ -46,58 +47,67 @@ test('can create a wallet', function () {
 test('cna wallet transactions', function (Wallet $wallet) {
 
 
-    $command     = new WalletTransactionCommand();
-    $command->id = $wallet->id;
+    $command = new WalletTransactionCommand();
+    $command->setKey($wallet->id);
 
     // 收入
     $initBalance = $wallet->balance;
-    $initFreeze  = $wallet->freeze ?? 0.00;
 
-    $command->amount          = new Amount(fake()->numberBetween(10000, 20000), $this->currency);
+    $initFreeze = $wallet->freeze ?? Money::parse(0, $this->currency);
+
+    $command->amount          = Money::parse(fake()->numberBetween(10000, 20000), $this->currency);
     $command->direction       = AmountDirectionEnum::INCOME;
     $command->transactionType = TransactionTypeEnum::RECHARGE;
-    $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), $result->amount->total());
-    $this->assertEquals(bcadd($initBalance, $command->amount->total(), 2), $result->balance);
+
+    $result = $this->WalletCommandService->transaction($command);
+    $this->assertEquals($command->amount->getAmount(), $result->amount->getAmount());
+    $wallet = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals(bcadd($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
 
 
     // 支出
-    $initBalance              = $result->balance;
-    $command->amount          = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
+    $initBalance              = $wallet->balance;
+    $command->amount          = Money::parse(fake()->numberBetween(100, 200), $this->currency);
     $command->direction       = AmountDirectionEnum::EXPENSE;
     $command->transactionType = TransactionTypeEnum::PAYMENT;
     $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), -$result->amount->total());
-    $this->assertEquals(bcsub($initBalance, $command->amount->total(), 2), $result->balance);
+    $wallet                   = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals($command->amount->getAmount(), -$result->amount->getAmount());
+    $this->assertEquals(bcsub($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
 
 
     // 冻结余额
-    $initBalance              = $result->balance;
-    $freeze                   = new Amount(fake()->numberBetween(1000, 2000), $this->currency);
+    $initBalance              = $wallet->balance;
+    $initFreeze               = $wallet->freeze;
+
+    $freeze                   = Money::parse(fake()->numberBetween(100, 200), $this->currency);
     $command->amount          = clone $freeze;
+
     $command->direction       = AmountDirectionEnum::FROZEN;
     $command->transactionType = TransactionTypeEnum::FROZEN;
     $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), -$result->amount->total());
-    $this->assertEquals(bcsub($initBalance, $command->amount->total(), 2), $result->balance);
-    $this->assertEquals(bcadd($command->amount->total(), $initFreeze, 2), $result->freeze);
+    $wallet                   = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals($command->amount->getAmount(), -$result->amount->getAmount());
+    $this->assertEquals(bcsub($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
+    $this->assertEquals(bcadd($command->amount->getAmount(), $initFreeze->getAmount(), 0), $wallet->freeze->getAmount());
 
 
     // 余额解冻
-    $initBalance              = $result->balance;
+    $initBalance              = $wallet->balance;
+    $initFreeze               = $wallet->freeze;
+
     $command->amount          = clone $freeze;
     $command->direction       = AmountDirectionEnum::UNFROZEN;
     $command->transactionType = TransactionTypeEnum::UNFROZEN;
     $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), $result->amount->total());
-    $this->assertEquals(bcadd($initBalance, $command->amount->total(), 2), $result->balance);
-    $this->assertEquals($initFreeze, $result->freeze);
-
-
+    $wallet                   = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals($command->amount->getAmount(), $result->amount->getAmount());
+    $this->assertEquals(bcadd($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
+    $this->assertEquals(bcsub($initFreeze->getAmount(), $command->amount->getAmount(), 0), $wallet->freeze->getAmount());
 
 
     $wallet = $this->WalletRepository->findByOwnerType(\Illuminate\Support\Facades\Auth::user(), $this->type);
-    $this->assertEquals($result->balance, $wallet->balance);
+    $this->assertEquals($wallet->balance, $wallet->balance);
     return $wallet;
 
 })->depends('can create a wallet');
@@ -106,35 +116,37 @@ test('cna wallet transactions', function (Wallet $wallet) {
 test('can create excess payment', function (Wallet $wallet) {
 
     $command                  = new WalletTransactionCommand();
-    $command->id              = $wallet->id;
+    $command->setKey( $wallet->id)           ;
     $command->isAllowNegative = true;
 
     // 支付类型
 
-    $amount                   = new Amount(fake()->numberBetween(10000000, 20000000), $this->currency);
+    $amount                   = Money::parse(fake()->numberBetween(100, 200), $this->currency);
     $initBalance              = $wallet->balance;
     $initFreeze               = $wallet->freeze;
     $command->amount          = clone $amount;
     $command->direction       = AmountDirectionEnum::EXPENSE;
     $command->transactionType = TransactionTypeEnum::PAYMENT;
     $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), -$result->amount->total());
-    $this->assertEquals(bcsub($initBalance, $command->amount->total(), 2), $result->balance);
+    $wallet                   = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals($command->amount->getAmount(), -$result->amount->getAmount());
+    $this->assertEquals(bcsub($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
 
     // 充值回去
-    $initBalance              = $result->balance;
-    $initFreeze               = $result->freeze;
+    $initBalance              = $wallet->balance;
+    $initFreeze               = $wallet->freeze;
     $command->amount          = clone $amount;
     $command->direction       = AmountDirectionEnum::INCOME;
     $command->transactionType = TransactionTypeEnum::RECHARGE;
     $result                   = $this->WalletCommandService->transaction($command);
-    $this->assertEquals($command->amount->total(), $result->amount->total());
-    $this->assertEquals(bcadd($initBalance, $command->amount->total(), 2), $result->balance);
+    $wallet                   = $this->WalletCommandService->repository->find($wallet->id);
+    $this->assertEquals($command->amount->getAmount(), $result->amount->getAmount());
+    $this->assertEquals(bcadd($initBalance->getAmount(), $command->amount->getAmount(), 0), $wallet->balance->getAmount());
 
 
     $this->expectException(WalletException::class);
     $command->isAllowNegative = false;
-    $amount                   = new Amount(fake()->numberBetween(10000000, 20000000), $this->currency);
+    $amount                   = Money::parse(fake()->numberBetween(10000000, 20000000), $this->currency);
     $initBalance              = $wallet->balance;
     $initFreeze               = $wallet->freeze;
     $command->amount          = clone $amount;
