@@ -5,21 +5,34 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
 /**
  *
- * @property  string $uniqueNoKey
+ * @property string $uniqueNoKey
+ * @property ?string $uniqueNoPrefix
  * @method string[] buildUniqueNoFactors()
  */
 trait HasUniqueNo
 {
 
+    /**
+     * @return string|null
+     */
+    public static function getUniqueNoPrefix() : ?string
+    {
+        if (isset(static::$uniqueNoPrefix)) {
+            return static::$uniqueNoPrefix;
+        }
+        return null;
+    }
+
 
     public static function getUniqueNoKey() : string
     {
-        return static::$uniqueNoKey;
+        return static::$uniqueNoKey ?? 'no';
     }
 
     public static function bootHasUniqueNo() : void
@@ -40,7 +53,12 @@ trait HasUniqueNo
      */
     public static function checkUniqueNo(string $no) : bool
     {
-        return NoCheckNumber::chack($no) ? true : throw new Exception('Invalid unique no');
+        if ($prefix = static::getUniqueNoPrefix()) {
+            if (!Str::start($no, $prefix)) {
+                return false;
+            }
+        }
+        return NoCheckNumber::chack($no);
     }
 
     /**
@@ -52,8 +70,10 @@ trait HasUniqueNo
      */
     public function scopeUniqueNo(Builder $query, string $no) : Builder
     {
-        static::checkUniqueNo($no);
-        return $query->where($this->uniqueNoKey, $no);
+        if (static::checkUniqueNo($no)) {
+            throw new Exception('Invalid unique no');
+        }
+        return $query->where(static::getUniqueNoKey(), $no);
     }
 
     protected function factorRemainder(int|string $number) : string
@@ -67,14 +87,19 @@ trait HasUniqueNo
 
     public function setUniqueNo() : void
     {
-        if (!isset($this->{$this->uniqueNoKey})) {
-            $this->{$this->uniqueNoKey} = $this->newUniqueNo();
+        if (!isset($this->{static::getUniqueNoKey()})) {
+            $this->{static::getUniqueNoKey()} = $this->newUniqueNo();
         }
     }
 
     public function newUniqueNo() : string
     {
         $factors = [];
+        if ($prefix = static::getUniqueNoPrefix()) {
+            $factors[] = $prefix;
+        }
+        $factors[] = DatetimeIdGenerator::buildId();
+
         if (method_exists($this, 'buildUniqueNoFactors')) {
             foreach ($this->buildUniqueNoFactors() as $factor) {
                 $factors[] = $this->factorRemainder($factor);
@@ -86,10 +111,7 @@ trait HasUniqueNo
             $factors[] = rand(10, 99);
             $factors[] = rand(10, 99);
         }
-        return NoCheckNumber::generator(implode('', [
-            DatetimeIdGenerator::buildId(),
-            ...$factors
-        ]));
+        return NoCheckNumber::generator(implode('', $factors));
     }
 
 

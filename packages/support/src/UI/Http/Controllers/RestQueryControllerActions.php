@@ -10,7 +10,6 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\OwnerInjectionInterface;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
-use RedJasmine\User\Domain\Data\UserData;
 
 /**
  * @property ApplicationService $service
