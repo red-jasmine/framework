@@ -23,12 +23,10 @@ return new class extends Migration {
                 $table->string('total_amount_currency')->default(0)->comment('金额货币');
                 $table->unsignedBigInteger('total_amount_value')->default(0)->comment('总金额');
                 $table->unsignedBigInteger('total_count')->default(0)->comment('总笔数');
-                $table->timestamp('create_time')->comment('创建时间');
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
+
+                $table->comment('转账批次表');
+
             });
     }
 

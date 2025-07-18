@@ -36,9 +36,10 @@ class CompletePaymentCommandHandler extends CommandHandler
             /**
              * @var WalletRecharge $recharge
              */
-            $recharge = $this->service->repository->findByNo($command->getKey());
+            $recharge = $this->service->repository->findByNoLock($command->getKey());
 
             $recharge->paid($command);
+
             // 保存充值单
             $walletTransactionCommand = new WalletTransactionCommand();
             $walletTransactionCommand->setKey($recharge->wallet_id);

@@ -27,7 +27,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * @property $status
- * @property \RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld $refundAmount
+ * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $refundAmount
  */
 class Refund extends Model
 {

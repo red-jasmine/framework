@@ -24,7 +24,7 @@ use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 

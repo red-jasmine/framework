@@ -32,12 +32,8 @@ class TradeReadyCommandHandler extends AbstractTradeCommandHandler
             // 根据 支付环境 获取 支付方式
             $methods = $this->service->tradeRoutingService->getMethods($trade, $command);
 
-            $paymentTradeResult              = new PaymentTradeResult();
-            $paymentTradeResult->amount      = $trade->amount;
-            $paymentTradeResult->subject     = $trade->subject;
-            $paymentTradeResult->description = $trade->description;
-            $paymentTradeResult->tradeNo     = $trade->trade_no;
-            $paymentTradeResult->methods     = PaymentMethod::collect($methods->toArray());
+            $paymentTradeResult          = $this->service->getSdkResult($trade);
+            $paymentTradeResult->methods = PaymentMethod::collect($methods->toArray());
 
             // 返回支付场景等信息
             $this->commitDatabaseTransaction();

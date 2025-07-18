@@ -2,6 +2,8 @@
 
 namespace RedJasmine\Wallet;
 
+use RedJasmine\Wallet\Domain\Contracts\PaymentServiceInterface;
+use RedJasmine\Wallet\Infrastructure\Services\PaymentServiceIntegration;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -39,6 +41,9 @@ class WalletServicePackageProvider extends PackageServiceProvider
         foreach ($this->app->config->get('red-jasmine-wallet.wallets', []) as $type => $walletConfig) {
             $this->app->config->set('money.currencies.custom.'.$walletConfig['currency'], $walletConfig);
         }
+
+
+        $this->app->bind(PaymentServiceInterface::class, PaymentServiceIntegration::class);
 
 
     }

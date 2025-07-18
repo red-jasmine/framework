@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Vip\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 
 /**
@@ -20,7 +20,7 @@ use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
  * @property string $name
  * @property VipProductStatusEnum $status
  * @property int $stock
- * @property MoneyOld $price
+ * @property Money $price
  * @property TimeUnitEnum $time_unit
  * @property int $time_value
  */
@@ -36,7 +36,7 @@ class VipProduct extends Model implements OwnerInterface, OperatorInterface
     {
         return [
             'status'    => VipProductStatusEnum::class,
-            'price'     => MoneyOldCast::class,
+            'price'     => MoneyCast::class,
             'time_unit' => TimeUnitEnum::class,
         ];
     }

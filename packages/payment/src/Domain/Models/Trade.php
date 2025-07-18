@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,25 +15,31 @@ use RedJasmine\Payment\Domain\Data\NotifyData;
 use RedJasmine\Payment\Domain\Events\Trades\TradePaidEvent;
 use RedJasmine\Payment\Domain\Events\Trades\TradePayingEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Generator\TradeNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
+
 
 /**
- * @property MoneyOld $amount
- * @property MoneyOld $paymentAmount
- * @property MoneyOld $refundAmount
+ * @property Money $amount
+ * @property Money $paymentAmount
+ * @property Money $refundAmount
  */
-class Trade extends Model implements AsyncNotifyInterface
+class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
 {
+
+
+    public static $uniqueNoKey = 'trade_no';
+    use HasUniqueNo;
+
     public $incrementing = false;
 
     use HasSnowflakeId;
@@ -43,7 +50,6 @@ class Trade extends Model implements AsyncNotifyInterface
     {
         parent::boot();
         static::creating(function (Trade $trade) {
-            $trade->generateNo();
             if ($trade->relationLoaded('extension')) {
                 $trade->extension->trade_id = $trade->id;
             }
@@ -61,14 +67,12 @@ class Trade extends Model implements AsyncNotifyInterface
     }
 
 
-    protected function generateNo() : void
+    protected function buildUniqueNoFactors() : array
     {
-        $this->trade_no = app(TradeNumberGeneratorInterface::class)->generator(
-            [
-                'merchant_app_id' => $this->merchant_app_id,
-                'merchant_id'     => $this->merchant_id
-            ]
-        );
+        return [
+            'merchant_app_id' => $this->merchant_app_id,
+            'merchant_id'     => $this->merchant_id
+        ];
     }
 
 
@@ -82,9 +86,9 @@ class Trade extends Model implements AsyncNotifyInterface
             'notify_time'   => 'datetime',
             'refund_time'   => 'datetime',
             'settle_time'   => 'datetime',
-            'amount'        => MoneyOldCast::class,
-            'paymentAmount' => MoneyOldCast::class,
-            'refundAmount'  => MoneyOldCast::class,
+            'amount'        => MoneyCast::class,
+            'paymentAmount' => MoneyCast::class,
+            'refundAmount'  => MoneyCast::class,
 
         ];
     }
@@ -160,8 +164,9 @@ class Trade extends Model implements AsyncNotifyInterface
     public function preCreate() : void
     {
         $this->status       = TradeStatusEnum::PRE;
-        $this->refundAmount = new MoneyOld(0, $this->amount->currency);
+        $this->refundAmount = new Money(0, $this->amount->getCurrency());
         $this->create_time  = now();
+
     }
 
 
@@ -193,18 +198,18 @@ class Trade extends Model implements AsyncNotifyInterface
         if (!$this->isAllowPaying()) {
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
-        $this->status                 = TradeStatusEnum::PAYING;
+        $this->status                = TradeStatusEnum::PAYING;
         $this->system_channel_app_id = $channelApp->id;
-        $this->channel_code           = $channelTrade->channelCode;
-        $this->channel_app_id         = $channelTrade->channelAppId;
-        $this->channel_merchant_id    = $channelTrade->channelMerchantId;
-        $this->channel_product_code   = $channelTrade->channelProductCode;
-        $this->scene_code             = $channelTrade->sceneCode;
-        $this->method_code            = $channelTrade->methodCode;
-        $this->channel_trade_no       = $channelTrade->channelTradeNo;
-        $this->paying_time            = now();
-        $this->extension->device      = $environment->device?->toArray();
-        $this->extension->client      = $environment->client?->toArray();
+        $this->channel_code          = $channelTrade->channelCode;
+        $this->channel_app_id        = $channelTrade->channelAppId;
+        $this->channel_merchant_id   = $channelTrade->channelMerchantId;
+        $this->channel_product_code  = $channelTrade->channelProductCode;
+        $this->scene_code            = $channelTrade->sceneCode;
+        $this->method_code           = $channelTrade->methodCode;
+        $this->channel_trade_no      = $channelTrade->channelTradeNo;
+        $this->paying_time           = now();
+        $this->extension->device     = $environment->device?->toArray();
+        $this->extension->client     = $environment->client?->toArray();
         $this->fireModelEvent('paying', false);
     }
 
@@ -276,11 +281,11 @@ class Trade extends Model implements AsyncNotifyInterface
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
         // 验证 退款金额 和 不能超过订单金额
-        if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new MoneyOld())) < 0) {
+        if ($this->amount->compare($refund->refundAmount->add($this->refundAmount ?? new Money())) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
 
-        if ($this->amount->compare($refund->refundAmount->add(new MoneyOld($this->refunding_amount_value,
+        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value,
                 $this->amount->currency))) < 0) {
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
@@ -301,7 +306,7 @@ class Trade extends Model implements AsyncNotifyInterface
         $refund->channel_trade_no        = $this->channel_trade_no;
         $refund->channel_app_id          = $this->channel_app_id;
         $refund->channel_merchant_id     = $this->channel_merchant_id;
-        $refund->system_channel_app_id  = $this->system_channel_app_id;
+        $refund->system_channel_app_id   = $this->system_channel_app_id;
         $refund->refund_status           = RefundStatusEnum::PRE;
 
 

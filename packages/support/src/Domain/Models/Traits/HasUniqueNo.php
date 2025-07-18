@@ -54,7 +54,8 @@ trait HasUniqueNo
     public static function checkUniqueNo(string $no) : bool
     {
         if ($prefix = static::getUniqueNoPrefix()) {
-            if (!Str::start($no, $prefix)) {
+
+            if (!Str::startsWith($no, $prefix)) {
                 return false;
             }
         }
@@ -70,7 +71,7 @@ trait HasUniqueNo
      */
     public function scopeUniqueNo(Builder $query, string $no) : Builder
     {
-        if (static::checkUniqueNo($no)) {
+        if (static::checkUniqueNo($no) === false) {
             throw new Exception('Invalid unique no');
         }
         return $query->where(static::getUniqueNoKey(), $no);

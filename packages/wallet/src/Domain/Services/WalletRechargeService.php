@@ -6,7 +6,10 @@ use Cknow\Money\Money;
 use Exception;
 use Money\Currency;
 use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Wallet\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\Wallet\Domain\Data\Config\ExchangeCurrencyConfigData;
+use RedJasmine\Wallet\Domain\Data\Payment\PaymentTradeData;
+use RedJasmine\Wallet\Domain\Data\Payment\WalletPaymentData;
 use RedJasmine\Wallet\Domain\Data\Recharge\RechargePaymentData;
 use RedJasmine\Wallet\Domain\Data\WalletRechargeData;
 use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
@@ -20,6 +23,7 @@ class WalletRechargeService extends Service
 {
     public function __construct(
         protected WalletService $walletService,
+        protected PaymentServiceInterface $paymentService,
     ) {
     }
 
@@ -77,6 +81,29 @@ class WalletRechargeService extends Service
         return $walletRecharge;
     }
 
+
+    /**
+     * @param  WalletRecharge  $walletRecharge
+     *
+     * @return PaymentTradeData
+     */
+    public function createPayment(WalletRecharge $walletRecharge) : PaymentTradeData
+    {
+
+        $walletPayment = new WalletPaymentData();
+
+        $walletPayment->businessNo = $walletRecharge->no;
+        $walletPayment->amount     = $walletRecharge->total_payment_amount;
+
+        $paymentTradeData = $this->paymentService->createTrade($walletPayment);
+        // 创建收款单
+        $walletRecharge->payment_type   = $paymentTradeData->paymentType;
+        $walletRecharge->payment_id     = $paymentTradeData->paymentId;
+        $walletRecharge->payment_status = PaymentStatusEnum::PAYING;
+
+        return $paymentTradeData;
+
+    }
 
 
 }

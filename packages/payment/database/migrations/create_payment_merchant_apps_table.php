@@ -22,11 +22,7 @@ return new class extends Migration {
                 $table->text('app_public_key')->nullable()->comment('应用公钥');
                 $table->text('app_private_key')->nullable()->comment('应用私钥');
 
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
                 $table->softDeletes();
                 $table->comment('支付应用表');
             });

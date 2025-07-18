@@ -8,7 +8,7 @@ use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
@@ -21,12 +21,12 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
     BaseDataFixtures::init($this);
-    $this->tradeCommandService  = app(TradeCommandService::class);
+    $this->tradeCommandService  = app(TradeApplicationService::class);
     $this->tradeRepository      = app(TradeRepositoryInterface::class);
     $this->refundCommandService = app(RefundCommandService::class);
     $this->refundRepository     = app(RefundRepositoryInterface::class);
@@ -40,7 +40,7 @@ test('pre create a payment trade', function () {
 
     $command->merchantAppId = $this->merchantApp->id;
 
-    $command->amount               = MoneyOld::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount               = Money::from(['value' => 1, 'currency' => 'CNY']);
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';

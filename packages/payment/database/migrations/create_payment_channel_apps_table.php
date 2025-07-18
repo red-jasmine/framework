@@ -35,11 +35,7 @@ return new class extends Migration {
                 $table->string('status')->default(ChannelAppStatusEnum::ENABLE->value)->comment(ChannelAppStatusEnum::comments('状态'));
                 $table->string('remarks')->nullable()->comment('备注');
                 $table->json('extra')->nullable()->comment('扩展');
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
                 $table->softDeletes();
                 $table->index([ 'channel_code', 'channel_app_id' ], 'idx_channel_app');
                 $table->comment('支付渠道应用');

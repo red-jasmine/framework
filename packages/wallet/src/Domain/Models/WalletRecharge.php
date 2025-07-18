@@ -24,6 +24,7 @@ class WalletRecharge extends Model implements OwnerInterface, OperatorInterface,
 
 
     protected static string $uniqueNoPrefix = 'WR';
+
     use HasUniqueNo;
 
     public function buildUniqueNoFactors() : array

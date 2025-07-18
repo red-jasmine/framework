@@ -35,11 +35,8 @@ return new class extends Migration {
                 $table->timestamp('create_time')->nullable()->comment('创建时间');
                 $table->timestamp('refund_time')->nullable()->comment('退款时间');
                 $table->timestamp('finish_time')->nullable()->comment('结束时间');
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+
+                $table->operator();
                 // 一个交易下  商户退款单号是唯一的
                 $table->unique([ 'trade_no', 'merchant_refund_no' ], 'uk_trade_merchant_refund_no');
                 $table->comment('支付-退款单');

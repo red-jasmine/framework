@@ -36,7 +36,7 @@ class WalletTransactionCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $model = $this->service->repository->findLock($command->id);
+            $model = $this->service->repository->findLock($command->getKey());
 
 
             $wallet = $this->walletService->transaction($model, $command);

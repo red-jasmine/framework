@@ -32,6 +32,7 @@ class TradeTransformer implements TransformerInterface
         $model->extension->pass_back_params = $data->passBackParams;
         $model->setGoodsDetails($data->goodDetails);
 
+
         return $model;
     }
 }

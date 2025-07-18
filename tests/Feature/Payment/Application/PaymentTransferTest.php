@@ -1,7 +1,7 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateCommand;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferExecutingCommand;
 use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferFailCommand;
@@ -13,14 +13,14 @@ use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
     // 数据准备
 
     BaseDataFixtures::init($this);
-    $this->tradeCommandService    = app(TradeCommandService::class);
+    $this->tradeCommandService    = app(TradeApplicationService::class);
     $this->tradeRepository        = app(TradeRepositoryInterface::class);
     $this->transferCommandService = app(TransferCommandService::class);
     $this->transferRepository     = app(TransferRepositoryInterface::class);
@@ -44,7 +44,7 @@ test('create a transfer', function () {
     $command->merchantAppId      = $this->merchantApp->id;
     $command->sceneCode          = TransferSceneEnum::OTHER;
     $command->subject            = '测试转账';
-    $command->amount             = MoneyOld::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount             = Money::from(['value' => 1, 'currency' => 'CNY']);
     $command->merchantTransferNo = fake()->numerify('transfer-no-##########');
     $command->methodCode         = 'alipay';
     $command->channelAppId       = $channelApp->channel_app_id;  // 指定渠道应用

@@ -36,11 +36,7 @@ return new class extends Migration {
                 $table->timestamp('settle_time')->nullable()->comment('结算时间');
 
 
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
                 $table->comment('支付-结算单');
 
 

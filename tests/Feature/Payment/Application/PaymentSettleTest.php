@@ -7,7 +7,7 @@ use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Payment\Domain\Data\SettleReceiverData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
@@ -23,7 +23,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
@@ -32,7 +32,7 @@ beforeEach(function () {
 
     BaseDataFixtures::init($this);
 
-    $this->tradeCommandService = app(TradeCommandService::class);
+    $this->tradeCommandService = app(TradeApplicationService::class);
     $this->tradeRepository     = app(TradeRepositoryInterface::class);
 
 
@@ -92,7 +92,7 @@ test('pre create a payment trade', function () {
     $command->isSettleSharing = true;
     $command->merchantAppId   = $this->merchantApp->id;
 
-    $command->amount               = MoneyOld::from(['value' => fake()->numberBetween(1000, 5000), 'currency' => 'CNY' ]);
+    $command->amount               = Money::from(['value' => fake()->numberBetween(1000, 5000), 'currency' => 'CNY' ]);
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';

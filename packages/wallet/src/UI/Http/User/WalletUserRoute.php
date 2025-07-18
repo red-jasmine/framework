@@ -26,7 +26,6 @@ class WalletUserRoute
             Route::get('recharges', [WalletRechargeController::class, 'index']);
             Route::get('recharges/{id}', [WalletRechargeController::class, 'show']);
             Route::post('recharges', [WalletRechargeController::class, 'store']);
-            Route::post('recharges/{id}/payment', [WalletRechargeController::class, 'payment']);
         });
     }
 

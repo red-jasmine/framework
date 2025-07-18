@@ -15,11 +15,7 @@ return new class extends Migration {
             $table->string('icon')->nullable()->comment('图标');
             $table->string('status')->default(MethodStatusEnum::ENABLE->value)->comment(MethodStatusEnum::comments('状态'));
             $table->string('remarks')->nullable()->comment('备注');
-            $table->string('creator_type', 32)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->timestamps();
+            $table->operator();
             $table->unique('code', 'uk_method');
             $table->comment('支付方式');
         });

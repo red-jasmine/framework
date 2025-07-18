@@ -8,7 +8,7 @@ use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
-use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
 
@@ -18,7 +18,7 @@ class PayCommandHandler extends CommandHandler
         public OrderRepositoryInterface $orderRepository,
         public OrderApplicationService $orderCommandService,
 
-        public TradeCommandService $tradeCommandService,
+        public TradeApplicationService $tradeCommandService,
 
     ) {
     }

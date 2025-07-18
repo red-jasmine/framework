@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
+use Cknow\Money\Money;
 use DateTime;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
 
 class TradeData extends Data
 {
@@ -16,14 +16,14 @@ class TradeData extends Data
 
     public ?string $merchantTradeOrderNo;
 
-    public MoneyOld $amount;
+    public Money $amount;
 
     public string $subject;
     /**
      * 是否需要结算分账
      * @var bool
      */
-    public bool   $isSettleSharing = false;
+    public bool $isSettleSharing = false;
 
     public ?string $description = null;
 

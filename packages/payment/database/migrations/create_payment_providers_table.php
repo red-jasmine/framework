@@ -12,11 +12,7 @@ return new class extends Migration {
             $table->string('name')->comment('名称');
             $table->string('status')->comment('状态');
             $table->string('remarks')->nullable()->comment('备注');
-            $table->string('creator_type', 32)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('updater_type', 32)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->timestamps();
+            $table->operator();
             $table->softDeletes();
             $table->comment('服务商');
         });

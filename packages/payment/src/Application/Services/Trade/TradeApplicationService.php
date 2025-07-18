@@ -15,7 +15,7 @@ use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
 use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see  TradeCreateCommandHandler::handle
@@ -27,7 +27,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see  TradePaidCommandHandler::handle()
  * @method bool paid(Commands\TradePaidCommand $command)
  */
-class TradeCommandService extends ApplicationCommandService
+class TradeApplicationService extends ApplicationService
 {
 
     public function __construct(

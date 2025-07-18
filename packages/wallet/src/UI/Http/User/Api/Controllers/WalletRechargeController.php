@@ -2,9 +2,11 @@
 
 namespace RedJasmine\Wallet\UI\Http\User\Api\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RedJasmine\Support\Http\Controllers\UserOwnerTools;
 use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 use RedJasmine\Wallet\Application\Queries\Recharge\WalletRechargeDetailQuery;
 use RedJasmine\Wallet\Application\Queries\Recharge\WalletRechargeListQuery;
 use RedJasmine\Wallet\Application\Services\Recharge\Commands\CompletePaymentCommand;
@@ -36,13 +38,12 @@ class WalletRechargeController extends Controller
         });
     }
 
-
     /**
      * @param  CreateRechargeRequest  $request
      *
-     * @return WalletRechargeResource
+     * @return JsonResponse
      */
-    public function store(CreateRechargeRequest $request) : WalletRechargeResource
+    public function store(CreateRechargeRequest $request) : JsonResponse
     {
         $query        = new FindByOwnerTypeQuery();
         $query->owner = $this->getOwner();
@@ -50,17 +51,9 @@ class WalletRechargeController extends Controller
         $wallet       = $this->walletApplicationService->findByOwnerType($query);
         $command      = CreateRechargeCommand::from($request);
         $command->setKey($wallet->id);
-        $recharge = $this->service->create($command);
+        $paymentTradeData = $this->service->create($command);
 
-        return new WalletRechargeResource($recharge);
-    }
-
-
-    public function payment($id, Request $request)
-    {
-        // 发起支付
-
-
+        return static::success($paymentTradeData);
     }
 
 

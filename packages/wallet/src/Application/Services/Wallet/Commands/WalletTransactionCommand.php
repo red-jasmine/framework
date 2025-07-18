@@ -8,6 +8,4 @@ use RedJasmine\Wallet\Domain\Data\WalletTransactionData;
 class WalletTransactionCommand extends WalletTransactionData
 {
 
-    public int $id;
-
 }

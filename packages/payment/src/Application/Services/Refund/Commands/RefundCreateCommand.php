@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\MoneyOld;
+use RedJasmine\Support\Domain\Models\ValueObjects\Money;
 
 class RefundCreateCommand extends Data
 {
@@ -15,7 +15,7 @@ class RefundCreateCommand extends Data
      */
     public string $merchantRefundNo;
 
-    public MoneyOld $refundAmount;
+    public Money $refundAmount;
 
     public ?string $refundReason = null;
 

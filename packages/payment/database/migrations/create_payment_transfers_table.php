@@ -44,11 +44,7 @@ return new class extends Migration {
                 $table->timestamp('processing_time')->nullable()->comment('处理时间');
                 $table->timestamp('transfer_time')->nullable()->comment('转账时间');
                 $table->timestamp('finish_time')->nullable()->comment('结束时间');
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
                 $table->comment('支付-转账');
             });
     }

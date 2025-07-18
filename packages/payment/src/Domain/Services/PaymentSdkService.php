@@ -22,9 +22,11 @@ class PaymentSdkService
 
         $paymentSdkTradeResult = new  PaymentTradeResult;
 
-        $paymentSdkTradeResult->merchantAppId = (string)$trade->merchant_app_id;
-
+        $paymentSdkTradeResult->merchantAppId = (string) $trade->merchant_app_id;
+        $paymentSdkTradeResult->subject       = $trade->subject;
+        $paymentSdkTradeResult->description   = $trade->description;
         $paymentSdkTradeResult->tradeNo       = $trade->trade_no;
+        $paymentSdkTradeResult->amount        = $trade->amount;
         // 支付网关
         // 订单号
         // 调用字符串

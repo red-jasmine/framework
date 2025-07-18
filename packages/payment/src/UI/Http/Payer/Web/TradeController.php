@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\UI\Http\Payer\Web;
 use Illuminate\Http\Request;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
-use RedJasmine\Payment\Application\Services\Trade\TradeCommandService;
+use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Facades\PaymentUrl;
 use RedJasmine\Payment\Domain\Models\Enums\PaymentTriggerTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
@@ -15,7 +15,7 @@ class TradeController extends Controller
 {
 
     public function __construct(
-        public TradeCommandService $tradeCommandService
+        public TradeApplicationService $tradeCommandService
 
     ) {
     }

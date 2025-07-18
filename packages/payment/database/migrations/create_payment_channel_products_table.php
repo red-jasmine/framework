@@ -20,11 +20,7 @@ return new class extends Migration {
                 $table->string('remarks')->nullable()->comment('备注');
                 $table->string('gateway')->nullable()->comment('支付网关名称');
                 $table->json('extra')->nullable()->comment('扩展');
-                $table->string('creator_type', 32)->nullable();
-                $table->string('creator_id', 64)->nullable();
-                $table->string('updater_type', 32)->nullable();
-                $table->string('updater_id', 64)->nullable();
-                $table->timestamps();
+                $table->operator();
                 $table->softDeletes();
                 $table->unique(['channel_code', 'code'], 'uk_channel_code');
                 $table->comment('支付渠道支付产品');
