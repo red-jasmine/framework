@@ -6,11 +6,23 @@ namespace Workbench\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 //use Laravel\Sanctum\HasApiTokens;
 use RedJasmine\Support\Contracts\UserInterface;
 
 class User extends Authenticatable implements UserInterface
 {
+    public function getUserData() : array
+    {
+        return [
+            'id'       => $this->getID(),
+            'nickname' => $this->getNickname(),
+            'avatar'   => $this->getAvatar(),
+            'type'     => $this->getType(),
+        ];
+    }
+
+
     use HasFactory, Notifiable;
 
     /**
