@@ -1,6 +1,7 @@
 <?php
 
 
+use Cknow\Money\Money;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
@@ -17,7 +18,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
@@ -37,9 +38,8 @@ test('pre create a payment trade', function () {
 
     $command = new  TradeCreateCommand();
 
-    $command->merchantAppId = $this->merchantApp->id;
-
-    $command->amount               = Money::from(['value' => fake()->randomNumber(1, 5000), 'currency' => 'CNY']);
+    $command->merchantAppId        = $this->merchantApp->id;
+    $command->amount               = Money::parse(fake()->randomNumber(1, 5000), 'CNY');
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';
@@ -49,7 +49,7 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'   => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -59,7 +59,7 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'    => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -72,8 +72,8 @@ test('pre create a payment trade', function () {
 
 
     $this->assertEquals($trade->merchant_app_id, $command->merchantAppId, '商户应用id不一致');
-    $this->assertEquals($trade->amount_currency, $command->amount->currency, '货币不一致');
-    $this->assertEquals($trade->amount_value, $command->amount->value, '金额不一致');
+    $this->assertEquals($trade->amount_currency, $command->amount->getCurrency(), '货币不一致');
+    $this->assertEquals($trade->amount_amount, $command->amount->formatByDecimal(), '金额不一致');
     $this->assertEquals($trade->merchant_trade_no, $command->merchantTradeNo, '商户单号不一致');
     $this->assertEquals($trade->merchant_trade_order_no, $command->merchantTradeOrderNo, '商户原始订单号不一致');
     $this->assertEquals($trade->subject, $command->subject, '订单主题不一致');
@@ -155,7 +155,6 @@ test('can paying a trade', function (Trade $trade, $methods) {
 
 
     $channelTrade = $this->tradeCommandService->paying($command);
-
 
 
     $this->assertEquals($command->scene->value, $channelTrade->sceneCode, '支付场景不一致');

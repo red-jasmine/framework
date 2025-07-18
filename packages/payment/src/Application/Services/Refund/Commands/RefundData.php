@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use Cknow\Money\Money;
 
 class RefundData extends Data
 {

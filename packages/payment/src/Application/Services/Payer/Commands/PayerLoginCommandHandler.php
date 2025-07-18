@@ -6,7 +6,7 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\PayerService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class PayerLoginCommandHandler extends CommandHandler

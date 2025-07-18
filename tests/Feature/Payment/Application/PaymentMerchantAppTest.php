@@ -4,7 +4,7 @@ use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
 use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppCreateCommand;
 use RedJasmine\Payment\Application\Services\MerchantApp\Commands\MerchantAppUpdateCommand;
-use RedJasmine\Payment\Application\Services\MerchantApp\MerchantAppCommandService;
+use RedJasmine\Payment\Application\Services\MerchantApp\MerchantAppApplicationService;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantAppStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\PermissionStatusEnum;
@@ -20,7 +20,7 @@ beforeEach(function () {
     $this->paymentMerchantCommandService = app(MerchantCommandService::class);
 
     $this->paymentMerchantAppRepository     = app(MerchantAppRepositoryInterface::class);
-    $this->paymentMerchantAppCommandService = app(MerchantAppCommandService::class);
+    $this->paymentMerchantAppCommandService = app(MerchantAppApplicationService::class);
     //
 });
 
@@ -86,7 +86,7 @@ test('can update a merchant app', function (MerchantApp $merchantApp) {
 
 
     $command             = new MerchantAppUpdateCommand();
-    $command->id         = $merchantApp->id;
+    $command->setKey($merchantApp->id)     ;
     $command->name       = fake()->company;
     $command->merchantId = $merchantApp->merchant_id;
     $command->status     = MerchantAppStatusEnum::DISABLE;

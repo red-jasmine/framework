@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\AsyncNotify\Commands;
 use Exception;
 use RedJasmine\Payment\Application\Services\AsyncNotify\AsyncNotifyCommandService;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyStatusEnum;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 
 class NotifySendCommandHandler extends CommandHandler
 {

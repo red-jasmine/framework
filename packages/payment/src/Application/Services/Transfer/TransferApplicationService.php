@@ -20,7 +20,7 @@ use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 
 /**
@@ -37,7 +37,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see TransferCloseCommandHandler::handle()
  * * @method bool close(TransferCloseCommand $command)
  */
-class TransferCommandService extends ApplicationCommandService
+class TransferApplicationService extends ApplicationService
 {
     public function __construct(
         public TransferRepositoryInterface $repository,
@@ -55,6 +55,9 @@ class TransferCommandService extends ApplicationCommandService
     public static string $hookNamePrefix = 'payment.application.transfer.command';
 
     protected static string $modelClass = Transfer::class;
+
+
+    protected static array $handlers = [];
 
     protected static $macros = [
         'create'    => TransferCreateCommandHandler::class,

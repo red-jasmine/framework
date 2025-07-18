@@ -21,7 +21,7 @@ return new class extends Migration {
                 $table->string('subject', 64)->nullable()->comment('交易标题');
                 $table->string('description', 64)->nullable()->comment('说明');
                 $table->string('amount_currency', 3)->comment('货币');
-                $table->decimal('amount_value')->default(0)->comment('金额');
+                $table->decimal('amount_amount')->default(0)->comment('金额');
 
                 $table->unsignedBigInteger('system_channel_app_id')->nullable()->comment('系统内渠道应用ID');
                 $table->string('channel_code', 64)->nullable()->comment('支付渠道');

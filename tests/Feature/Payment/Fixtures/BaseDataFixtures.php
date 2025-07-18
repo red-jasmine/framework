@@ -86,7 +86,7 @@ class BaseDataFixtures
                 'channel_code' => 'alipay',
                 'code'         => 'FACE_TO_FACE_PAYMENT',
                 'name'         => '当面付',
-                'gateway'      => 'Alipay_AopF2F',
+                'gateway'      => 'Alipay_F2F',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::FACE,
@@ -102,7 +102,7 @@ class BaseDataFixtures
                 'channel_code' => 'alipay',
                 'code'         => 'JSAPI',
                 'name'         => '小程序支付',
-                'gateway'      => 'Alipay_AopJs',
+                'gateway'      => 'Alipay_Js',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::JSAPI,
@@ -114,7 +114,7 @@ class BaseDataFixtures
                 'channel_code' => 'alipay',
                 'code'         => 'QUICK_MSECURITY_PAY',
                 'name'         => 'APP支付',
-                'gateway'      => 'Alipay_AopApp',
+                'gateway'      => 'Alipay_App',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::APP,
@@ -126,7 +126,7 @@ class BaseDataFixtures
                 'channel_code' => 'alipay',
                 'code'         => 'QUICK_WAP_WAY',
                 'name'         => '手机网站支付',
-                'gateway'      => 'Alipay_AopWap',
+                'gateway'      => 'Alipay_Wap',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::WAP,
@@ -139,7 +139,7 @@ class BaseDataFixtures
                 'channel_code' => 'alipay',
                 'code'         => 'FAST_INSTANT_TRADE_PAY',
                 'name'         => '电脑网站支付',
-                'gateway'      => 'Alipay_AopPage',
+                'gateway'      => 'Alipay_Native',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::WEB,
@@ -152,7 +152,7 @@ class BaseDataFixtures
                 'type'         => 'transfer',
                 'code'         => 'TRANS_ACCOUNT_NO_PWD',
                 'name'         => '单笔无密转账',
-                'gateway'      => 'Alipay_AopPage',
+                'gateway'      => 'Alipay_Native',
                 'modes'        => [
                     [
                         'scene_code'  => SceneEnum::API,

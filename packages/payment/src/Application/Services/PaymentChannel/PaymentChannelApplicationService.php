@@ -15,7 +15,7 @@ use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
-use RedJasmine\Support\Foundation\Service\Service;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see ChannelTradeNotifyCommandHandler::handle()
@@ -25,7 +25,7 @@ use RedJasmine\Support\Foundation\Service\Service;
  * @method transfer(ChannelTransferCreateCommand $command)
  * @method transferQuery(ChannelTransferQueryCommand $command)
  */
-class PaymentChannelHandlerService extends Service
+class PaymentChannelApplicationService extends ApplicationService
 {
     public function __construct(
         public TradeRepositoryInterface $tradeRepository,
@@ -39,8 +39,8 @@ class PaymentChannelHandlerService extends Service
     ) {
     }
 
-
-    protected static $macros = [
+    protected static array $handlers = [];
+    protected static       $macros   = [
         'refund'        => Commands\ChannelRefundCreateCommandHandler::class, // 异步发起退款
         'refundQuery'   => Commands\ChannelRefundQueryCommandHandler::class, // 发起退款查询
         'tradeNotify'   => Commands\ChannelTradeNotifyCommandHandler::class, // 接受交易通知

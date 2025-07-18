@@ -19,7 +19,7 @@ return new class extends Migration {
                 $table->string('subject')->comment('标题');
                 $table->string('description')->nullable()->comment('说明');
                 $table->string('amount_currency',3)->comment('金额货币');
-                $table->decimal('amount_value')->default(0)->comment('金额值');
+                $table->decimal('amount_amount')->default(0)->comment('金额值');
                 $table->string('transfer_status')->comment('转账状态');
                 // 渠道信息
                 $table->string('method_code')->comment('支付方式');

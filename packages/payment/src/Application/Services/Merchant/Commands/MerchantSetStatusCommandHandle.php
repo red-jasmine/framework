@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Merchant\Commands;
 
 use RedJasmine\Payment\Application\Services\CommandHandlers\AbstractException;
 use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
 class MerchantSetStatusCommandHandle extends CommandHandler

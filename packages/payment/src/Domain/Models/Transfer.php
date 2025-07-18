@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelTransferData;
@@ -12,18 +13,28 @@ use RedJasmine\Payment\Domain\Events\Transfers\TransferExecutingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Transfers\TransferSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Generator\TransferNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\CertTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\IdentityTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TransferStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\TransferExtension;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
-class Transfer extends Model
+/**
+ * @property Money $amount
+ */
+class Transfer extends Model implements UniqueNoInterface
 {
+
+
+    public static $uniqueNoKey = 'transfer_no';
+
+    use HasUniqueNo;
+
     public $incrementing = false;
 
     use HasSnowflakeId;
@@ -34,7 +45,7 @@ class Transfer extends Model
     {
         parent::boot();
         static::creating(static function (Transfer $transfer) {
-            $transfer->generateNo();
+
             if ($transfer->relationLoaded('extension')) {
                 $transfer->extension->transfer_id = $transfer->id;
             }
@@ -51,7 +62,7 @@ class Transfer extends Model
         return [
             'transfer_status'     => TransferStatusEnum::class,
             'scene_code'          => TransferSceneEnum::class,
-            'amount'              => MoneyOldCast::class,
+            'amount'              => MoneyCast::class,
             'payee_identity_type' => IdentityTypeEnum::class,
             'payee_cert_type'     => CertTypeEnum::class,
             'transfer_time'       => 'datetime',
@@ -75,14 +86,12 @@ class Transfer extends Model
         'abnormal',
     ];
 
-    protected function generateNo() : void
+    protected function buildUniqueNoFactors() : array
     {
-        $this->transfer_no = app(TransferNumberGeneratorInterface::class)->generator(
-            [
-                'merchant_app_id' => $this->merchant_app_id,
-                'merchant_id'     => $this->merchant_id
-            ]
-        );
+        return [
+            'merchant_app_id' => $this->merchant_app_id,
+            'merchant_id'     => $this->merchant_id
+        ];
     }
 
 
@@ -112,12 +121,12 @@ class Transfer extends Model
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
                 return TransferPayee::from([
-                                               'identityType' => $attributes['payee_identity_type'],
-                                               'identityId'   => $attributes['payee_identity_id'],
-                                               'name'         => $attributes['payee_name'],
-                                               'certType'     => $attributes['payee_cert_type'],
-                                               'certNo'       => $attributes['payee_cert_no'],
-                                           ]);
+                    'identityType' => $attributes['payee_identity_type'],
+                    'identityId'   => $attributes['payee_identity_id'],
+                    'name'         => $attributes['payee_name'],
+                    'certType'     => $attributes['payee_cert_type'],
+                    'certNo'       => $attributes['payee_cert_no'],
+                ]);
             },
             set: static function (TransferPayee $payee) {
                 $attributes                        = [];
@@ -137,13 +146,12 @@ class Transfer extends Model
     {
 
         $this->system_channel_app_id = $channelApp->id;
-        $this->channel_code           = $channelApp->channel_code;
-        $this->channel_merchant_id    = $channelApp->channel_merchant_id;
-        $this->channel_app_id         = $channelApp->channel_app_id;
-        $this->channel_product_code   = $channelProduct->code;
+        $this->channel_code          = $channelApp->channel_code;
+        $this->channel_merchant_id   = $channelApp->channel_merchant_id;
+        $this->channel_app_id        = $channelApp->channel_app_id;
+        $this->channel_product_code  = $channelProduct->code;
 
     }
-
 
 
     public function isAllowExecuting() : bool
@@ -200,8 +208,6 @@ class Transfer extends Model
     }
 
 
-
-
     public function isAllowSuccess() : bool
     {
         if (!in_array($this->transfer_status,
@@ -216,13 +222,14 @@ class Transfer extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
      *
      * @return void
      * @throws PaymentException
      */
     public function success(ChannelTransferData $data) : void
     {
+
         if (!$this->isAllowSuccess()) {
             throw new PaymentException('状态不一致');
         }
@@ -249,7 +256,7 @@ class Transfer extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
      *
      * @return void
      * @throws PaymentException
@@ -305,7 +312,9 @@ class Transfer extends Model
 
     /**
      * 处理中
-     * @param ChannelTransferData $data
+     *
+     * @param  ChannelTransferData  $data
+     *
      * @return void
      * @throws PaymentException
      */
@@ -333,7 +342,8 @@ class Transfer extends Model
     }
 
     /**
-     * @param string|null $message
+     * @param  string|null  $message
+     *
      * @return void
      * @throws PaymentException
      */
@@ -366,7 +376,8 @@ class Transfer extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
+     *
      * @return void
      * @throws PaymentException
      */

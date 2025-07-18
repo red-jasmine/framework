@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelTransferQueryCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
 
 class ChannelTransferQueryJob implements ShouldQueue
 {
@@ -27,7 +27,7 @@ class ChannelTransferQueryJob implements ShouldQueue
         // 执行失败需要再次执行 TODO
         try {
             $command = ChannelTransferQueryCommand::from([ 'transferNo' => $this->transferNo ]);
-            app(PaymentChannelHandlerService::class)->transferQuery($command);
+            app(PaymentChannelApplicationService::class)->transferQuery($command);
         } catch (Throwable $throwable) {
             throw $throwable;
         }

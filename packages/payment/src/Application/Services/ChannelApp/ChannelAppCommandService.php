@@ -8,27 +8,28 @@ use RedJasmine\Payment\Application\Services\ChannelApp\Commands\MerchantChannelA
 use RedJasmine\Payment\Domain\Data\ChannelAppData;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
+use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\ChannelAppTransformer;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @method ChannelApp create(ChannelAppData $command)
  * @method void authorize(MerchantChannelAppPermissionData $command)
  */
-class ChannelAppCommandService extends ApplicationCommandService
+class ChannelAppCommandService extends ApplicationService
 {
     public function __construct(
-        public ChannelAppRepositoryInterface                   $repository,
-        public ChannelAppTransformer                           $transformer,
-        public MerchantRepositoryInterface                     $merchantRepository,
-        public MerchantAppRepositoryInterface                  $merchantAppRepository,
+        public ChannelAppRepositoryInterface $repository,
+        public ChannelAppReadRepositoryInterface $readRepository,
+        public ChannelAppTransformer $transformer,
+        public MerchantRepositoryInterface $merchantRepository,
+        public MerchantAppRepositoryInterface $merchantAppRepository,
         public MerchantChannelAppPermissionRepositoryInterface $permissionRepository
-    )
-    {
+    ) {
     }
 
     protected static string $modelClass = ChannelApp::class;

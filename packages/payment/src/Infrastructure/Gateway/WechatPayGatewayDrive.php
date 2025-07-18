@@ -35,7 +35,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use Cknow\Money\Money;
 use Throwable;
 
 class WechatPayGatewayDrive implements GatewayDriveInterface

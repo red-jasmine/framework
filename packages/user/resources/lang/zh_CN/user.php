@@ -39,20 +39,20 @@ return [
     ],
 
     'enums' => [
-        'status' => [
+        'status'       => [
             'unactivated' => '未激活',
             'activated'   => '正常',
             'suspended'   => '停用',
             'disabled'    => '禁用',
             'canceled'    => '已注销',
         ],
-        'type'   => [
+        'account_type' => [
             'personal'     => '个人',
             'company'      => '公司',
             'organization' => '机构',
 
         ],
-        'gender' => [
+        'gender'       => [
             'male'    => '男',
             'female'  => '女',
             'secrecy' => '保密',

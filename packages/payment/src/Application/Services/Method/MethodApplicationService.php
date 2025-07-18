@@ -5,12 +5,12 @@ namespace RedJasmine\Payment\Application\Services\Method;
 use RedJasmine\Payment\Domain\Data\MethodData;
 use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @method Method create(MethodData $command)
  */
-class MethodCommandService extends ApplicationCommandService
+class MethodApplicationService extends ApplicationService
 {
 
 

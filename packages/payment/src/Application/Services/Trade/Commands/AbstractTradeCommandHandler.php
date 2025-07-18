@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
 use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 
 /**
  * @property TradeApplicationService $service

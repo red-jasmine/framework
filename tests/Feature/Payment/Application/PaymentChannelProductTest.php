@@ -2,8 +2,8 @@
 
 
 use RedJasmine\Payment\Application\Services\Channel\ChannelCommandService;
-use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
+use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductApplicationService;
+use RedJasmine\Payment\Application\Services\Method\MethodApplicationService;
 use RedJasmine\Payment\Domain\Data\ChannelData;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Data\ChannelProductModeData;
@@ -23,12 +23,12 @@ beforeEach(function () {
     $this->repository     = app(ChannelRepositoryInterface::class);
     //
 
-    $this->productCommandService = app(ChannelProductCommandService::class);
+    $this->productCommandService = app(ChannelProductApplicationService::class);
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
 
     $this->methodRepository     = app(MethodRepositoryInterface::class);
-    $this->methodCommandService = app(MethodCommandService::class);
+    $this->methodCommandService = app(MethodApplicationService::class);
 
 
 });
@@ -95,8 +95,8 @@ test('can create channel product', function (Channel $channel) {
     $command->name        = fake()->word();
 
     $command->modes = [
-        ChannelProductModeData::from([ 'sceneCode' => SceneEnum::WEB->value, 'methodCode' => 'alipay' ]),
-        ChannelProductModeData::from([ 'sceneCode' => SceneEnum::JSAPI->value, 'methodCode' => 'wechat' ]),
+        ChannelProductModeData::from(['sceneCode' => SceneEnum::WEB->value, 'methodCode' => 'alipay']),
+        ChannelProductModeData::from(['sceneCode' => SceneEnum::JSAPI->value, 'methodCode' => 'wechat']),
     ];
 
 
@@ -126,25 +126,25 @@ test('can update a channel product', function (Channel $channel, ChannelProduct 
 
     $command->modes = [
         ChannelProductModeData::from([
-                                         'sceneCode'  => SceneEnum::WEB->value,
-                                         'methodCode' => 'alipay'
-                                     ]),
+            'sceneCode'  => SceneEnum::WEB->value,
+            'methodCode' => 'alipay'
+        ]),
         ChannelProductModeData::from([
-                                         'sceneCode'  => SceneEnum::JSAPI->value,
-                                         'methodCode' => 'wechat',
-                                         'status'     => ModeStatusEnum::DISABLE
-                                     ]),
+            'sceneCode'  => SceneEnum::JSAPI->value,
+            'methodCode' => 'wechat',
+            'status'     => ModeStatusEnum::DISABLE
+        ]),
         ChannelProductModeData::from([
-                                         'sceneCode'  => SceneEnum::WEB->value,
-                                         'methodCode' => 'wechat'
-                                     ]),
+            'sceneCode'  => SceneEnum::WEB->value,
+            'methodCode' => 'wechat'
+        ]),
     ];
 
-    $command->id = $channelProduct->id;
+    $command->setKey($channelProduct->id);
 
     $this->productCommandService->update($command);
 
-    $model = $this->productRepository->find($command->id);
+    $model = $this->productRepository->find($command->getKey());
     $this->assertEquals($command->name, $model->name);
     $this->assertEquals($command->code, $model->code);
     $this->assertEquals($command->channelCode, $model->channel_code);

@@ -21,9 +21,10 @@ enum AccountTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::COMPANY->value      => __('red-jasmine-user::user.enums.type.company'),
-            self::ORGANIZATION->value => __('red-jasmine-user::user.enums.type.organization'),
-            self::PERSONAL->value     => __('red-jasmine-user::user.enums.type.personal'),
+            self::PERSONAL->value     => __('red-jasmine-user::user.enums.account_type.personal'),
+            self::COMPANY->value      => __('red-jasmine-user::user.enums.account_type.company'),
+            self::ORGANIZATION->value => __('red-jasmine-user::user.enums.account_type.organization'),
+
         ];
 
     }

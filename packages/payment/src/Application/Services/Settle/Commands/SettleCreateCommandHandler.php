@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Payment\Application\Services\Settle\Commands;
 
-use RedJasmine\Payment\Application\Services\Settle\SettleCommandService;
+use RedJasmine\Payment\Application\Services\Settle\SettleApplicationService;
 use RedJasmine\Payment\Domain\Data\SettleData;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Services\SettleService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -14,7 +14,7 @@ class SettleCreateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected SettleCommandService $service,
+        protected SettleApplicationService $service,
         public SettleService           $settleService,
     )
     {
@@ -22,6 +22,7 @@ class SettleCreateCommandHandler extends CommandHandler
 
     public function handle(SettleCreateCommand $command) : Settle
     {
+
         $this->beginDatabaseTransaction();
 
         try {

@@ -3,6 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -17,27 +18,31 @@ use RedJasmine\Payment\Domain\Events\Refunds\RefundFailEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundProcessingEvent;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundSuccessEvent;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Payment\Domain\Generator\RefundNumberGeneratorInterface;
 use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
-use RedJasmine\Support\Domain\Casts\MoneyOldCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
+
 
 /**
  * @property $status
- * @property \RedJasmine\Support\Domain\Models\ValueObjects\Money $refundAmount
+ * @property Money $refundAmount
  */
-class Refund extends Model
+class Refund extends Model implements UniqueNoInterface
 {
+    use HasUniqueNo;
+
+    public static $uniqueNoKey = 'refund_no';
 
     public static function boot() : void
     {
         parent::boot();
 
         static::creating(static function (Refund $refund) {
-            $refund->generateNo();
             if ($refund->relationLoaded('extension')) {
                 $refund->extension->refund_id = $refund->id;
             }
@@ -57,7 +62,7 @@ class Refund extends Model
             'refund_status' => RefundStatusEnum::class,
             'create_time'   => 'datetime',
             'refund_time'   => 'datetime',
-            'refundAmount'  => MoneyOldCast::class,
+            'refundAmount'  => MoneyCast::class,
         ];
     }
 
@@ -84,15 +89,14 @@ class Refund extends Model
         'success',
     ];
 
-    protected function generateNo() : void
+    protected function buildUniqueNoFactors() : array
     {
-        $this->refund_no = app(RefundNumberGeneratorInterface::class)->generator(
-            [
-                'merchant_app_id' => $this->merchant_app_id,
-                'merchant_id'     => $this->merchant_id
-            ]
-        );
+        return [
+            'merchant_app_id' => $this->merchant_app_id,
+            'merchant_id'     => $this->merchant_id
+        ];
     }
+
 
     public function newInstance($attributes = [], $exists = false) : static
     {
@@ -330,9 +334,6 @@ class Refund extends Model
     }
 
 
-
-
-
     public function getNotifyUlr() : ?string
     {
         return $this->extension->notify_url;
@@ -359,8 +360,8 @@ class Refund extends Model
             'create_time'            => $this->create_time?->format('Y-m-d H:i:s'),
             'paid_time'              => $this->refund_time?->format('Y-m-d H:i:s'),
             'subject'                => $this->subject,
-            'refund_amount_currency' => $this->refundAmount->currency,
-            'refund_amount_value'    => $this->refundAmount->value,
+            'refund_amount_currency' => $this->refundAmount->getCurrency(),
+            'refund_amount_amount'   => $this->refundAmount->getAmount(),
             'pass_back_params'       => $this->extension->pass_back_params,
         ];
         return $command;

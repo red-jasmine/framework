@@ -2,12 +2,12 @@
 
 use RedJasmine\Payment\Application\Services\Channel\ChannelCommandService;
 use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
-use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
+use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductApplicationService;
 use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantCreateCommand;
 use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantSetStatusCommand;
 use RedJasmine\Payment\Application\Services\Merchant\Commands\MerchantUpdateCommand;
 use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
-use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
+use RedJasmine\Payment\Application\Services\Method\MethodApplicationService;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
@@ -37,10 +37,10 @@ beforeEach(function () {
 
 
     $this->methodRepository     = app(MethodRepositoryInterface::class);
-    $this->methodCommandService = app(MethodCommandService::class);
+    $this->methodCommandService = app(MethodApplicationService::class);
 
 
-    $this->productCommandService = app(ChannelProductCommandService::class);
+    $this->productCommandService = app(ChannelProductApplicationService::class);
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
 
@@ -78,7 +78,7 @@ test('can set status', function (Merchant $merchant) {
 test('can update merchant', function (Merchant $merchant) {
 
     $command     = new MerchantUpdateCommand();
-    $command->id = $merchant->id;
+    $command->setKey($merchant->id);
 
     $command->owner = \Illuminate\Support\Facades\Auth::user();
 

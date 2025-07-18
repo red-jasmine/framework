@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\ChannelApp\Commands;
 use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 

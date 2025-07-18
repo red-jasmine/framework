@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 
-use RedJasmine\Payment\Application\Services\Refund\RefundCommandService;
+use RedJasmine\Payment\Application\Services\Refund\RefundApplicationService;
 use RedJasmine\Payment\Domain\Models\Refund;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 class RefundCreateCommandHandler extends CommandHandler
 {
-    public function __construct(protected RefundCommandService $service)
+    public function __construct(protected RefundApplicationService $service)
     {
     }
 

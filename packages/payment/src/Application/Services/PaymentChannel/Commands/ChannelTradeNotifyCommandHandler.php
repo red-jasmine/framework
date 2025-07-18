@@ -5,10 +5,10 @@ namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Application\Services\AsyncNotify\Commands\ChannelNotifyTradeCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -16,7 +16,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
 {
 
 
-    public function __construct(protected PaymentChannelHandlerService $service)
+    public function __construct(protected PaymentChannelApplicationService $service)
     {
 
     }

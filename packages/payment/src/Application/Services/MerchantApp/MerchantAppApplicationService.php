@@ -4,15 +4,17 @@ namespace RedJasmine\Payment\Application\Services\MerchantApp;
 
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 
-class MerchantAppCommandService extends ApplicationCommandService
+class MerchantAppApplicationService extends ApplicationService
 {
     public function __construct(
         public MerchantAppRepositoryInterface $repository,
+        public MerchantAppReadRepositoryInterface $readRepository,
         public MerchantRepositoryInterface $merchantRepository,
         public ChannelAppRepositoryInterface $channelAppRepository,
 

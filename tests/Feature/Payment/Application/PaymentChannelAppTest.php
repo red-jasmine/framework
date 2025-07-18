@@ -5,8 +5,8 @@ use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Application\Services\ChannelApp\Commands\ChannelAppCreateCommand;
 use RedJasmine\Payment\Application\Services\ChannelApp\Commands\ChannelAppUpdateCommand;
 use RedJasmine\Payment\Application\Services\ChannelMerchant\ChannelMerchantCommandService;
-use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductCommandService;
-use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
+use RedJasmine\Payment\Application\Services\ChannelProduct\ChannelProductApplicationService;
+use RedJasmine\Payment\Application\Services\Method\MethodApplicationService;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
@@ -29,10 +29,10 @@ beforeEach(function () {
 
 
     $this->methodRepository     = app(MethodRepositoryInterface::class);
-    $this->methodCommandService = app(MethodCommandService::class);
+    $this->methodCommandService = app(MethodApplicationService::class);
 
 
-    $this->productCommandService = app(ChannelProductCommandService::class);
+    $this->productCommandService = app(ChannelProductApplicationService::class);
     $this->productRepository     = app(ChannelProductRepositoryInterface::class);
 
 
@@ -59,6 +59,7 @@ test('create payment channel apps', function () {
         $command->channelAppPublicKey  = fake()->text(3000);//
         $command->channelPublicKey     = fake()->text(3000);//
         $command->channelAppPrivateKey = fake()->text(3000);//
+        $command->channelAppSecret     = fake()->text(3000);//
         $command->appName              = fake()->word();//
         $command->merchantName         = fake()->word();//
 

@@ -11,7 +11,8 @@ return new class extends Migration {
     {
         Schema::create( 'payment_merchants', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('商户ID');
-            $table->morphs('owner');
+            $table->string('owner_type',32)->comment('所有者');
+            $table->string('owner_id',64)->comment('所有者');
             $table->string('name')->comment('名称');
             $table->string('short_name')->comment('短名称');
             $table->string('type')->comment(MerchantTypeEnum::comments('类型'));

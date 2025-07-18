@@ -17,7 +17,7 @@ abstract class Migration extends \Illuminate\Database\Migrations\Migration
 
     public function up() : void
     {
-
+        Schema::dropIfExists(Str::plural($this->name));
         Schema::create(Str::plural($this->name), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('account_type', 64)->nullable()->comment(AccountTypeEnum::comments('账号类型'));

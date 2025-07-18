@@ -6,18 +6,17 @@ use RedJasmine\Payment\Application\Services\Settle\Commands\SettleCreateCommand;
 use RedJasmine\Payment\Application\Services\Settle\Commands\SettleCreateCommandHandler;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see SettleCreateCommandHandler::handle()
  * @method Settle create(SettleCreateCommand $command)
  */
-class SettleCommandService extends ApplicationCommandService
+class SettleApplicationService extends ApplicationService
 {
     public function __construct(
         public SettleRepositoryInterface $repository,
-    )
-    {
+    ) {
     }
 
     /**

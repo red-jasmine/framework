@@ -19,7 +19,7 @@ return new class extends Migration {
                 $table->string('receiver_id', 64)->comment('接收方用户ID');
                 $table->string('settle_receiver_id')->comment('结算接收方ID');
                 $table->string('amount_currency')->comment('货币');
-                $table->bigInteger('amount_value')->default(0)->comment('金额');
+                $table->bigInteger('amount_amount')->default(0)->comment('金额');
                 $table->string('settle_status')->comment(SettleStatusEnum::comments('结算状态'));
                 $table->text('name')->comment('名称');
                 $table->string('account_type')->comment(AccountTypeEnum::comments('账户类型'));

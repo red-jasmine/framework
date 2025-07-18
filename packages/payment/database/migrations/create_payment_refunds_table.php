@@ -28,7 +28,7 @@ return new class extends Migration {
                 $table->string('channel_merchant_id')->nullable()->comment('渠道商户号');
                 $table->string('channel_refund_no')->nullable()->comment('渠道退款单号');
                 $table->string('refund_amount_currency')->comment('货币');
-                $table->unsignedBigInteger('refund_amount_value')->default(0)->comment('金额');
+                $table->unsignedBigInteger('refund_amount_amount')->default(0)->comment('金额');
                 $table->string('refund_reason')->comment('商户原始退款单号');
                 $table->string('refund_status')->comment(RefundStatusEnum::comments('退款状态'));
                 $table->string('notify_status')->nullable()->comment(NotifyStatusEnum::comments('异步通知状态'));

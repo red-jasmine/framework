@@ -10,7 +10,7 @@ use RedJasmine\Payment\Application\Services\Refund\Commands\RefundExecutingComma
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * @see  RefundCreateCommandHandler::handle()
@@ -20,7 +20,7 @@ use RedJasmine\Support\Application\ApplicationCommandService;
  * @see  RefundCancelCommandHandler::handle()
  * * @method bool cancel(RefundExecutingCommand $command)
  */
-class RefundCommandService extends ApplicationCommandService
+class RefundApplicationService extends ApplicationService
 {
 
     public function __construct(

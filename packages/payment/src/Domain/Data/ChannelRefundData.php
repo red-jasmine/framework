@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Domain\Data;
 use Illuminate\Support\Carbon;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+use Cknow\Money\Money;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 

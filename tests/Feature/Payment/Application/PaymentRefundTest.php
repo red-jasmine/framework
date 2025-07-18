@@ -1,15 +1,17 @@
 <?php
 
 
+use Cknow\Money\Money;
 use Illuminate\Support\Collection;
 use RedJasmine\Payment\Application\Services\Refund\Commands\RefundCreateCommand;
-use RedJasmine\Payment\Application\Services\Refund\RefundCommandService;
+use RedJasmine\Payment\Application\Services\Refund\RefundApplicationService;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeReadyCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult;
 use RedJasmine\Payment\Domain\Models\Enums\ClientTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
@@ -21,14 +23,14 @@ use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Domain\Models\ValueObjects\Money;
+
 use RedJasmine\Tests\Feature\Payment\Fixtures\BaseDataFixtures;
 
 beforeEach(function () {
     BaseDataFixtures::init($this);
     $this->tradeCommandService  = app(TradeApplicationService::class);
     $this->tradeRepository      = app(TradeRepositoryInterface::class);
-    $this->refundCommandService = app(RefundCommandService::class);
+    $this->refundCommandService = app(RefundApplicationService::class);
     $this->refundRepository     = app(RefundRepositoryInterface::class);
 
 });
@@ -40,7 +42,7 @@ test('pre create a payment trade', function () {
 
     $command->merchantAppId = $this->merchantApp->id;
 
-    $command->amount               = Money::from(['value' => 1, 'currency' => 'CNY']);
+    $command->amount               = Money::parse(100, 'CNY');
     $command->merchantTradeNo      = fake()->numerify('trade-no-##########');
     $command->merchantTradeOrderNo = fake()->numerify('order-no-##########');
     $command->subject              = '测试支付';
@@ -50,7 +52,7 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'   => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -60,7 +62,7 @@ test('pre create a payment trade', function () {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'   => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -73,8 +75,8 @@ test('pre create a payment trade', function () {
 
 
     $this->assertEquals($trade->merchant_app_id, $command->merchantAppId, '商户应用id不一致');
-    $this->assertEquals($trade->amount_currency, $command->amount->currency, '货币不一致');
-    $this->assertEquals($trade->amount_value, $command->amount->value, '金额不一致');
+    $this->assertEquals($trade->amount_currency, $command->amount->getCurrency(), '货币不一致');
+    $this->assertEquals($trade->amount_amount, $command->amount->formatByDecimal(), '金额不一致');
     $this->assertEquals($trade->merchant_trade_no, $command->merchantTradeNo, '商户单号不一致');
     $this->assertEquals($trade->merchant_trade_order_no, $command->merchantTradeOrderNo, '商户原始订单号不一致');
     $this->assertEquals($trade->subject, $command->subject, '订单主题不一致');
@@ -122,7 +124,7 @@ test('can get trade pay methods', function (Trade $trade) {
 
     $methods = $this->tradeCommandService->ready($command);
 
-    $this->assertEquals($methods instanceof \RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult, true,
+    $this->assertEquals($methods instanceof PaymentTradeResult, true,
         '返回值类型错误');
 
     return $methods->methods;
@@ -225,7 +227,7 @@ test('can create a refund', function (Trade $trade) {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'   => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -235,7 +237,7 @@ test('can create a refund', function (Trade $trade) {
             'goods_name' => fake()->word(),
             'price'      => [
                 'currency' => 'CNY',
-                'value'    => fake()->randomNumber(2, 90),
+                'amount'   => fake()->randomNumber(2, 90),
             ],
             'quantity'   => fake()->randomNumber(1, 10),
             'goods_id'   => fake()->numerify('goods-id-########'),
@@ -261,7 +263,7 @@ test('can create a refund', function (Trade $trade) {
     $this->assertEquals($trade->channel_app_id, $refund->channel_app_id);
 
     $this->assertEquals($command->merchantRefundNo, $refund->merchant_refund_no, '商户退款单号不一致');
-    $this->assertEquals($command->refundAmount->value, $refund->refundAmount->value, '退款金额不一致');
+    $this->assertEquals($command->refundAmount->getAmount(), $refund->refundAmount->getAmount(), '退款金额不一致');
     $this->assertEquals($command->refundReason, $refund->refund_reason, ' 退款原因不一致');
     $this->assertEquals($command->notifyUrl, $refund->extension->notify_url, ' 回调地址不一致');
     $this->assertEquals($command->passBackParams, $refund->extension->pass_back_params, '回调参数不一致');

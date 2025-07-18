@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
-use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
+use RedJasmine\Payment\Application\Services\Transfer\TransferApplicationService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Factories\TransferFactory;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\Routing\TransferRoutingService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
@@ -16,7 +16,7 @@ class TransferCreateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected TransferCommandService $service,
+        protected TransferApplicationService $service,
         protected ChannelAppPermissionService $channelAppPermissionService,
         protected TransferRoutingService $transferRoutingService,
     ) {

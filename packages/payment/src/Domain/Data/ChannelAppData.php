@@ -18,11 +18,11 @@ class ChannelAppData extends Data
 
     public ChannelAppStatusEnum $status = ChannelAppStatusEnum::ENABLE;
 
-    public string  $signType = 'RSA2';
-    public ?string $channelAppSecret;
-    public ?string $channelPublicKey;
-    public ?string $channelAppPublicKey;
-    public ?string $channelAppPrivateKey;
+    public string  $signType             = 'RSA2';
+    public ?string $channelAppSecret     = null;
+    public ?string $channelPublicKey     = null;
+    public ?string $channelAppPublicKey  = null;
+    public ?string $channelAppPrivateKey = null;
     /**
      * 是否沙箱
      * @var bool

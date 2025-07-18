@@ -1,14 +1,14 @@
 <?php
 
 
-use RedJasmine\Payment\Application\Services\Method\MethodCommandService;
+use RedJasmine\Payment\Application\Services\Method\MethodApplicationService;
 use RedJasmine\Payment\Domain\Data\MethodData;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
 
 beforeEach(function () {
 
     $this->repository     = app(MethodRepositoryInterface::class);
-    $this->commandService = app(MethodCommandService::class);
+    $this->commandService = app(MethodApplicationService::class);
 
 
     //

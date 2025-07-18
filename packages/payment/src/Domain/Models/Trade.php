@@ -32,6 +32,7 @@ use RedJasmine\Support\Domain\Models\UniqueNoInterface;
  * @property Money $amount
  * @property Money $paymentAmount
  * @property Money $refundAmount
+ * @property Money $refundingAmount
  */
 class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
 {
@@ -79,16 +80,17 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
     protected function casts() : array
     {
         return [
-            'status'        => TradeStatusEnum::class,
-            'create_time'   => 'datetime',
-            'pay_time'      => 'datetime',
-            'paid_time'     => 'datetime',
-            'notify_time'   => 'datetime',
-            'refund_time'   => 'datetime',
-            'settle_time'   => 'datetime',
-            'amount'        => MoneyCast::class,
-            'paymentAmount' => MoneyCast::class,
-            'refundAmount'  => MoneyCast::class,
+            'status'          => TradeStatusEnum::class,
+            'create_time'     => 'datetime',
+            'pay_time'        => 'datetime',
+            'paid_time'       => 'datetime',
+            'notify_time'     => 'datetime',
+            'refund_time'     => 'datetime',
+            'settle_time'     => 'datetime',
+            'amount'          => MoneyCast::class,
+            'paymentAmount'   => MoneyCast::class,
+            'refundAmount'    => MoneyCast::class,
+            'refundingAmount' => MoneyCast::class.':refund_amount_currency',
 
         ];
     }
@@ -247,7 +249,8 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
         if (!$this->isAllowPaid()) {
             throw new PaymentException('支付状态错误', PaymentException::TRADE_STATUS_ERROR);
         }
-        if (!$this->amount->equal($channelTrade->paymentAmount)) {
+
+        if (!$this->amount->equals($channelTrade->paymentAmount)) {
             throw new PaymentException('支付金额不一致', PaymentException::TRADE_AMOUNT_ERROR);
         }
 
@@ -285,9 +288,8 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
             throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
 
-        if ($this->amount->compare($refund->refundAmount->add(new Money($this->refunding_amount_value,
-                $this->amount->currency))) < 0) {
-            throw new PaymentException('退款金额不能超过订单金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
+        if ($this->amount->compare($this->refundingAmount->add($refund->refundAmount)) < 0) {
+            throw new PaymentException('退款金额不能超过付款金额', PaymentException::TRADE_REFUND_AMOUNT_ERROR);
         }
         // 退款 时间不能超过支付时间一年
         if ($this->paid_time->diffInYears(now()) > 1) {
@@ -310,7 +312,7 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
         $refund->refund_status           = RefundStatusEnum::PRE;
 
 
-        $this->refunding_amount_value = (int) ($this->refunding_amount_value + $refund->refundAmount->value);
+        $this->refundingAmount = $this->refundingAmount->add($refund->refundAmount);
 
         if (!$this->relationLoaded('refunds')) {
             $this->setRelation('refunds', Collection::make([]));
@@ -322,12 +324,12 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
 
     public function refundSuccess(Refund $refund) : void
     {
-        $this->refunding_amount_value -= $refund->refundAmount->value;
-        $this->refund_amount_value    += $refund->refundAmount->value;
+        $this->refundingAmount = $this->refundingAmount->subtract($refund->refundAmount);
+        $this->refundAmount    = $this->refundAmount->add($refund->refundAmount);
 
         $this->refund_time = $this->refund_time ?? $refund->refund_time;
         // 如果退款金额 等于 支付金额 那么支付状态为完成
-        if ($this->refund_amount_value >= $this->amount_value) {
+        if ($this->refundAmount->compare($this->amount) > 0) {
             $this->status = TradeStatusEnum::REFUND;
         }
     }
@@ -362,8 +364,8 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
             'create_time'             => $this->create_time?->format('Y-m-d H:i:s'),
             'paid_time'               => $this->paid_time?->format('Y-m-d H:i:s'),
             'subject'                 => $this->subject,
-            'amount_currency'         => $this->amount->currency,
-            'amount_value'            => $this->amount->value,
+            'amount_currency'         => $this->amount->getCurrency(),
+            'amount_amount'           => $this->amount->getAmount(),
             'pass_back_params'        => $this->extension->pass_back_params,
         ];
         return $command;

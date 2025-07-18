@@ -3,13 +3,13 @@
 namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 
 use RedJasmine\Payment\Application\Services\CommandHandlers\PaymentChannel\Throwable;
-use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 class ChannelRefundQueryCommandHandler extends CommandHandler
 {
-    public function __construct(protected PaymentChannelHandlerService $service)
+    public function __construct(protected PaymentChannelApplicationService $service)
     {
 
     }

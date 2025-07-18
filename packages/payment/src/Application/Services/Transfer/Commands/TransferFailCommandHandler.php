@@ -3,16 +3,16 @@
 namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
 use Illuminate\Support\Facades\Log;
-use RedJasmine\Payment\Application\Services\Transfer\TransferCommandService;
+use RedJasmine\Payment\Application\Services\Transfer\TransferApplicationService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 class TransferFailCommandHandler extends CommandHandler
 {
     public function __construct(
-        protected TransferCommandService $service
+        protected TransferApplicationService $service
     )
     {
     }

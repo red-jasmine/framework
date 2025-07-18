@@ -13,15 +13,15 @@ class ChannelProductTransformer implements TransformerInterface
 {
     /**
      * @param  ChannelProductData  $data
-     * @param  ChannelProduct|Model|null  $channelProduct
+     * @param  ChannelProduct $model
      *
      * @return ChannelProduct
      */
     public function transform(
-        ChannelProductData $data,
-        ChannelProduct|Model|null $channelProduct = null
+        $data,
+        $model
     ) : ChannelProduct {
-        $channelProduct               = $channelProduct ?? ChannelProduct::make();
+        $channelProduct               =$model;
         $channelProduct->type         = $data->type;
         $channelProduct->channel_code = $data->channelCode;
         $channelProduct->code         = $data->code;

@@ -3,18 +3,20 @@
 namespace RedJasmine\Payment\Application\Services\ChannelProduct;
 
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
+use RedJasmine\Payment\Domain\Repositories\ChannelProductReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\ChannelProductTransformer;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Data\Data;
 
 /**
  * @method ChannelProduct create(Data $command)
  */
-class ChannelProductCommandService extends ApplicationCommandService
+class ChannelProductApplicationService extends ApplicationService
 {
     public function __construct(
         public ChannelProductRepositoryInterface $repository,
+        public ChannelProductReadRepositoryInterface $readRepository,
         public ChannelProductTransformer $transformer,
 
     ) {

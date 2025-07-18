@@ -12,8 +12,8 @@ return new class extends Migration {
         Schema::create( 'payment_channel_apps',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary()->comment('ID');
-                $table->string('owner_type', 32);
-                $table->string('owner_id', 64);
+                $table->string('owner_type',32)->comment('所有者');
+                $table->string('owner_id',64)->comment('所有者');
                 $table->string('channel_code')->comment('渠道编码');
                 $table->string('channel_app_id')->comment('渠道应用ID');
                 $table->string('app_name')->nullable()->comment('应用名称');

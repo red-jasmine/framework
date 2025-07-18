@@ -21,7 +21,7 @@ return new class extends Migration {
                 $table->string('status')->comment('状态');
                 $table->string('title')->comment('标题');
                 $table->string('total_amount_currency')->default(0)->comment('金额货币');
-                $table->unsignedBigInteger('total_amount_value')->default(0)->comment('总金额');
+                $table->unsignedBigInteger('total_amount_amount')->default(0)->comment('总金额');
                 $table->unsignedBigInteger('total_count')->default(0)->comment('总笔数');
                 $table->operator();
 

@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelRefundCreateCommand;
 use RedJasmine\Payment\Application\Services\PaymentChannel\Commands\ChannelTransferCreateCommand;
-use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelHandlerService;
+use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
 
 class ChannelTransferCreateJob implements ShouldQueue
 {
@@ -25,7 +25,7 @@ class ChannelTransferCreateJob implements ShouldQueue
         // TODO 执行失败无需重试，如果执行失败了
         try {
             $command = ChannelTransferCreateCommand::from([ 'transferNo' => $this->transferNo ]);
-            app(PaymentChannelHandlerService::class)->transfer($command);
+            app(PaymentChannelApplicationService::class)->transfer($command);
         } catch (Throwable $throwable) {
             throw $throwable;
         }

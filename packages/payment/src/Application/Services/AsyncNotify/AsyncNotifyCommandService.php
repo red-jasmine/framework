@@ -8,23 +8,24 @@ use RedJasmine\Payment\Application\Services\AsyncNotify\Commands\NotifySendComma
 use RedJasmine\Payment\Domain\Models\Notify;
 use RedJasmine\Payment\Domain\Repositories\NotifyRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\AsyncNotifyService;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 
 
 /**
  * @see NotifySendCommandHandler::handle()
  * @method void send(NotifySendCommand $command)
  */
-class AsyncNotifyCommandService extends ApplicationCommandService
+class AsyncNotifyCommandService extends ApplicationService
 {
 
     public function __construct(
         public NotifyRepositoryInterface $repository,
-        public AsyncNotifyService        $asyncNotifyService,
-    )
-    {
+        public AsyncNotifyService $asyncNotifyService,
+    ) {
     }
 
+
+    protected static array $handlers = [];
     /**
      * 钩子前缀
      * @var string
