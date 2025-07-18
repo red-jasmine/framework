@@ -35,10 +35,9 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
 
     use HasDateTimeFormatter;
 
-
-    protected static string $uniqueNoKey = 'withdrawal_no';
-
     use HasUniqueNo;
+
+    protected static string $uniqueNoPrefix = 'WW';
 
     public $incrementing = false;
 

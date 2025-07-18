@@ -27,7 +27,8 @@ use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 class WalletTransaction extends Model implements OwnerInterface, OperatorInterface, UniqueNoInterface
 {
 
-    protected static string $uniqueNoKey = 'transaction_no';
+
+    protected static string $uniqueNoPrefix = 'WT';
 
     use HasOwner;
 
@@ -56,8 +57,6 @@ class WalletTransaction extends Model implements OwnerInterface, OperatorInterfa
             'extra'            => 'array',
         ];
     }
-
-
 
 
 }

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('wallet_transactions', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('transaction_no', 64)->unique()->comment('交易号');
+            $table->string('no', 64)->unique()->comment('交易号');
             $table->unsignedBigInteger('wallet_id')->comment('钱包ID');
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');

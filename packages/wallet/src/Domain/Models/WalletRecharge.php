@@ -22,8 +22,10 @@ use RedJasmine\Wallet\Exceptions\WalletRechargeException;
 class WalletRecharge extends Model implements OwnerInterface, OperatorInterface, UniqueNoInterface
 {
 
-    protected static string $uniqueNoKey = 'recharge_no';
+
+    protected static string $uniqueNoPrefix = 'WR';
     use HasUniqueNo;
+
     public function buildUniqueNoFactors() : array
     {
         return [

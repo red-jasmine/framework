@@ -47,7 +47,7 @@ class CompletePaymentCommandHandler extends CommandHandler
             $walletTransactionCommand->title           = '充值';
             $walletTransactionCommand->description     = '充值';
             $walletTransactionCommand->transactionType = TransactionTypeEnum::RECHARGE;
-            $walletTransactionCommand->outTradeNo      = $recharge->recharge_no;
+            $walletTransactionCommand->outTradeNo      = $recharge->no;
 
             $this->walletApplicationService->transaction($walletTransactionCommand);
 

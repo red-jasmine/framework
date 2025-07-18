@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Wallet\Domain\Services;
 
-use Exception;
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Wallet\Domain\Data\WalletTransactionData;
@@ -58,7 +57,7 @@ class WalletWithdrawalService
         // 钱包扣款
         $transactionData                  = new WalletTransactionData();
         $transactionData->appId           = WalletSystemAppEnum::WITHDRAWAL->value;
-        $transactionData->outTradeNo      = $withdrawal->withdrawal_no;
+        $transactionData->outTradeNo      = $withdrawal->no;
         $transactionData->direction       = AmountDirectionEnum::EXPENSE;
         $transactionData->amount          = $data->amount;
         $transactionData->transactionType = TransactionTypeEnum::WITHDRAWAL;
@@ -106,7 +105,7 @@ class WalletWithdrawalService
         // 钱包扣款
         $transactionData                  = new WalletTransactionData();
         $transactionData->appId           = WalletSystemAppEnum::WITHDRAWAL->value;
-        $transactionData->outTradeNo      = $withdrawal->withdrawal_no;
+        $transactionData->outTradeNo      = $withdrawal->no;
         $transactionData->direction       = AmountDirectionEnum::INCOME;
         $transactionData->amount          = $withdrawal->amount;
         $transactionData->transactionType = TransactionTypeEnum::REFUND;

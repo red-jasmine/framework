@@ -14,6 +14,6 @@ class UserWalletTransactionFindQuery extends FindQuery
 {
 
 
-    protected string $primaryKey = 'transaction_no';
+    protected string $primaryKey = 'no';
 
 }
