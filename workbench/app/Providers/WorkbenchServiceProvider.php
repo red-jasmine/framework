@@ -2,16 +2,14 @@
 
 namespace Workbench\App\Providers;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
-use Workbench\App\Models\User;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
-    public function register() : void
+    public function register(): void
     {
         //
     }
@@ -19,8 +17,8 @@ class WorkbenchServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot() : void
+    public function boot(): void
     {
-        Relation::enforceMorphMap([ 'user' => User::class ]);
+        //
     }
 }

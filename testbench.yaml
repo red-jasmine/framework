@@ -15,9 +15,10 @@ workbench:
   health: false
   discovers:
     web: true
-    api: false
-    commands: false
+    api: true
+    commands: true
     components: false
+    factories: true
     views: false
   build:
     - asset-publish
@@ -26,4 +27,7 @@ workbench:
     - migrate-fresh
   assets:
     - laravel-assets
-  sync: []
+  sync:
+    - from: storage
+      to: workbench/storage
+      reverse: true
