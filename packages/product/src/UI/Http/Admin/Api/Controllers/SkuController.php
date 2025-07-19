@@ -10,27 +10,25 @@ use RedJasmine\Product\Application\Stock\Services\Queries\ProductStockLogPaginat
 use RedJasmine\Product\Application\Stock\Services\Queries\ProductStockPaginateQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockLogQueryService;
-use RedJasmine\Product\Application\Stock\Services\StockQueryService;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockLogResource;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\StockSkuResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use Throwable;
 
 class SkuController extends Controller
 {
     public function __construct(
-        protected StockApplicationService  $commandService,
-        protected StockQueryService    $queryService,
+        protected StockApplicationService $service,
         protected StockLogQueryService $logQueryService,
-    )
-    {
+    ) {
     }
 
 
     public function index(Request $request) : AnonymousResourceCollection
     {
 
-        $result = $this->queryService->paginate(ProductStockPaginateQuery::from($request->all()));
+        $result = $this->service->paginate(ProductStockPaginateQuery::from($request->all()));
 
 
         return StockSkuResource::collection($result->appends($request->all()));
@@ -41,24 +39,23 @@ class SkuController extends Controller
     public function show($id, Request $request) : StockSkuResource
     {
 
-        $result = $this->queryService->find(FindQuery::make($id,$request));;
+        $result = $this->service->find(FindQuery::make($id, $request));
 
         return StockSkuResource::make($result);
     }
 
     /**
      * @param         $id
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
-     * @throws StockException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function action($id, Request $request) : JsonResponse
     {
         $type = $request->input('action_type', 'add');
 
-        $sku = $this->queryService->find(FindQuery::make($id));
+        $sku = $this->service->find(FindQuery::make($id));
 
         $request->offsetSet('sku_id', $sku->id);
         $request->offsetSet('product_id', $sku->product_id);
@@ -66,13 +63,13 @@ class SkuController extends Controller
 
         switch ($type) {
             case 'add':
-                $this->commandService->add($command);
+                $this->service->add($command);
                 break;
             case 'sub':
-                $this->commandService->sub($command);
+                $this->service->sub($command);
                 break;
             case 'reset':
-                $this->commandService->reset($command);
+                $this->service->reset($command);
                 break;
             default:
                 abort(405);

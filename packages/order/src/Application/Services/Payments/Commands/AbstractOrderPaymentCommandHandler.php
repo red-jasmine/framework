@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Payments\Commands;
 
 use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 
 abstract class AbstractOrderPaymentCommandHandler extends CommandHandler
 {

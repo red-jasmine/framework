@@ -10,7 +10,6 @@ use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCo
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommandHandler;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderPaymentReadRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**

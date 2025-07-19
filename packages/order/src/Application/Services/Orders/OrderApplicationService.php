@@ -44,7 +44,6 @@ use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
 use RedJasmine\Order\Domain\Transformers\OrderTransformer;
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
 
 

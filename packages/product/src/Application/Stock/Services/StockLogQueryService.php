@@ -3,24 +3,29 @@
 namespace RedJasmine\Product\Application\Stock\Services;
 
 use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogReadRepositoryInterface;
-use RedJasmine\Support\Application\ApplicationQueryService;
+use RedJasmine\Support\Application\ApplicationService;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class StockLogQueryService extends ApplicationQueryService
+class StockLogQueryService extends ApplicationService
 {
 
     /**
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix  = 'product.application.stock-log.query';
+    public static string $hookNamePrefix = 'product.application.stock-log.query';
 
     public function __construct(
         protected ProductStockLogReadRepositoryInterface $repository
-    )
-    {
+    ) {
 
     }
+
+    protected static $macros = [
+        'create' => null,
+        'update' => null,
+        'delete' => null
+    ];
 
 
     public function allowedIncludes() : array

@@ -6,10 +6,10 @@ use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\PayCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
-use RedJasmine\Support\Application\ApplicationCommandService;
+use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Vip\Application\Services\Commands\UserPurchaseVipCommand;
 
-class VipPurchaseCommandService extends ApplicationCommandService
+class VipPurchaseCommandService extends ApplicationService
 {
 
     public function __construct(

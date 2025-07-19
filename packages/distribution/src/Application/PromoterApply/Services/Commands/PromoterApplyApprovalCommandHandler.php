@@ -5,7 +5,7 @@ namespace RedJasmine\Distribution\Application\PromoterApply\Services\Commands;
 use RedJasmine\Distribution\Application\PromoterApply\Services\PromoterApplyApplicationService;
 use RedJasmine\Distribution\Domain\Models\PromoterApply;
 use RedJasmine\Distribution\Domain\Services\PromoterService;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\ApprovalData;
 use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;

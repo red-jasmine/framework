@@ -2,9 +2,7 @@
 
 namespace RedJasmine\Vip\Application\Services;
 
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Vip\Application\Services\Commands\UserVipOpenCommand;
 use RedJasmine\Vip\Application\Services\Commands\UserVipOpenCommandHandler;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQuery;

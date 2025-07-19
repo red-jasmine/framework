@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Card\Application\Services;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Card\Application\Services\CommandHandlers\CardGroupBindProduct\CardGroupBindProductBindCommandHandler;
 use RedJasmine\Card\Application\Services\Pipelines\CardGroupPipeline;
@@ -11,7 +12,6 @@ use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductReadRepositoryInterface;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
 use RedJasmine\Card\Exceptions\CardException;
-use RedJasmine\Support\Application\ApplicationCommandService;
 use RedJasmine\Support\Application\ApplicationService;
 
 
@@ -29,7 +29,7 @@ class CardGroupBindProductApplicationService extends ApplicationService
         public CardGroupBindProductRepositoryInterface $repository,
         public CardGroupBindProductReadRepositoryInterface $readRepository,
     ) {
-        
+
     }
 
 
@@ -41,7 +41,7 @@ class CardGroupBindProductApplicationService extends ApplicationService
      * @param  CardGroupBindProductCreateCommand  $command
      *
      * @return Model
-     * @throws \Exception
+     * @throws Exception
      */
     public function newModel($command = null) : Model
     {
@@ -53,7 +53,7 @@ class CardGroupBindProductApplicationService extends ApplicationService
         }
 
 
-        return parent::newModel($command); 
+        return parent::newModel($command);
     }
 
 

@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 
 
 abstract class AbstractRefundCommandHandler extends CommandHandler

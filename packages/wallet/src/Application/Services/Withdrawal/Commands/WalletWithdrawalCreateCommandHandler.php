@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Application\Services\Withdrawal\Commands;
 
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicationService;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
