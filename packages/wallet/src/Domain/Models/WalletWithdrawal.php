@@ -38,6 +38,7 @@ class WalletWithdrawal extends Model implements OwnerInterface, OperatorInterfac
     use HasUniqueNo;
 
     protected static string $uniqueNoPrefix = 'WW';
+    protected static string $uniqueNoKey = 'withdrawal_no';
 
     public $incrementing = false;
 

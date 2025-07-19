@@ -29,7 +29,7 @@ class WalletTransaction extends Model implements OwnerInterface, OperatorInterfa
 
 
     protected static string $uniqueNoPrefix = 'WT';
-
+    protected static string $uniqueNoKey = 'transaction_no';
     use HasOwner;
 
     use HasOperator;
