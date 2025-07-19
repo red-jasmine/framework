@@ -6,6 +6,7 @@ namespace RedJasmine\Support\Domain\Models\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use RedJasmine\Support\Helpers\ID\DatetimeIdGenerator;
 use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
@@ -17,6 +18,15 @@ use RedJasmine\Support\Helpers\ID\NoCheckNumber;
  */
 trait HasUniqueNo
 {
+
+
+    /**
+     * @return string
+     */
+    public function getUniqueNo() : string
+    {
+        return $this->{static::getUniqueNoKey()};
+    }
 
     /**
      * @return string|null
@@ -97,8 +107,10 @@ trait HasUniqueNo
     {
         $factors = [];
         if ($prefix = static::getUniqueNoPrefix()) {
-            $factors[] = $prefix;
+            $factors[] = $prefix; // 2位
         }
+
+        // 24 位
         $factors[] = DatetimeIdGenerator::buildId();
 
         if (method_exists($this, 'buildUniqueNoFactors')) {
@@ -108,9 +120,13 @@ trait HasUniqueNo
         } else {
             $factors[] = rand(10, 99);
             $factors[] = rand(10, 99);
-            $factors[] = rand(10, 99);
-            $factors[] = rand(10, 99);
-            $factors[] = rand(10, 99);
+            $factors[] = rand(0, 9);
+
+        }
+        // 保证最长位 31位
+        $no = implode('', $factors);
+        if (strlen($no) > 31) {
+            throw new InvalidArgumentException("unique no is too long");
         }
         return NoCheckNumber::generator(implode('', $factors));
     }

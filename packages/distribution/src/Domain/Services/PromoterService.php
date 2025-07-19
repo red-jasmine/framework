@@ -146,7 +146,7 @@ class PromoterService extends Service
         if ($apply->approval_method === PromoterApprovalMethodEnum::AUTO) {
             $ApprovalData = ApprovalData::from([
                 'approver'       => System::make(),
-                'approvalStatus' => ApprovalStatusEnum::PASS,
+                'status' => ApprovalStatusEnum::PASS,
             ]);
             $apply->handleApproval($ApprovalData);
         }
