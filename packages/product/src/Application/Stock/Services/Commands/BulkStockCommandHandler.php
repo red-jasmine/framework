@@ -18,7 +18,7 @@ class BulkStockCommandHandler extends StockCommandHandler
     public function handle(BulkStockCommand $command) : void
     {
 
-        $this->setCommand($command);
+        $this->context->setCommand($command);
 
 
         $this->beginDatabaseTransaction();

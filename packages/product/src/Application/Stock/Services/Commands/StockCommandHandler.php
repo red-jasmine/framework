@@ -10,6 +10,7 @@ use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Facades\ServiceContext;
 
 abstract class StockCommandHandler extends CommandHandler
@@ -19,7 +20,7 @@ abstract class StockCommandHandler extends CommandHandler
         protected ProductSkuRepositoryInterface $repository,
         protected StockDomainService $domainService
     ) {
-
+        $this->context = new HandleContext();
     }
 
 

@@ -30,12 +30,13 @@ class Data extends \Spatie\LaravelData\Data
 
     public function getKey()
     {
-        return $this->_primaryKeyValue;
+        return $this->{$this->primaryKey} ?? $this->_primaryKeyValue;
     }
 
     public function setKey($key) : void
     {
-        $this->_primaryKeyValue = $key;
+        $this->{$this->primaryKey} = $key;
+        $this->_primaryKeyValue    = $key;
 
     }
 

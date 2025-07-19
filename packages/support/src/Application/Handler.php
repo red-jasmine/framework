@@ -13,6 +13,11 @@ abstract class Handler
     use CanUseDatabaseTransactions;
 
 
-    protected HandleContext $context;
+    protected HandleContext $context {
+        get {
+            return $this->context ?? new HandleContext();
+
+        }
+    }
 
 }

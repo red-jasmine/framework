@@ -17,7 +17,7 @@ class StockSubCommandHandler extends StockCommandHandler
     {
 
         $command->actionType = ProductStockActionTypeEnum::SUB;
-        $this->setCommand($command);
+        $this->context->setCommand($command);
         $this->validate($command);
 
         $this->beginDatabaseTransaction();
