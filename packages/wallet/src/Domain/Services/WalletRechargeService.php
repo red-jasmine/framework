@@ -9,7 +9,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Wallet\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\Wallet\Domain\Data\Config\ExchangeCurrencyConfigData;
 use RedJasmine\Wallet\Domain\Data\Payment\PaymentTradeData;
-use RedJasmine\Wallet\Domain\Data\Payment\WalletPaymentData;
+use RedJasmine\Wallet\Domain\Data\Payment\WalletTradeData;
 use RedJasmine\Wallet\Domain\Data\Recharge\RechargePaymentData;
 use RedJasmine\Wallet\Domain\Data\WalletRechargeData;
 use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
@@ -76,7 +76,7 @@ class WalletRechargeService extends Service
         $walletRecharge->total_payment_amount = $totalPaymentAmount;
         $walletRecharge->exchange_rate        = $currencyConfig->exchangeRate;
         $walletRecharge->status               = RechargeStatusEnum::CREATED;
-        $walletRecharge->payment_status       = PaymentStatusEnum::PRE;
+        $walletRecharge->payment_status       = PaymentStatusEnum::PREPARE;
 
         return $walletRecharge;
     }
@@ -90,7 +90,7 @@ class WalletRechargeService extends Service
     public function createPayment(WalletRecharge $walletRecharge) : PaymentTradeData
     {
 
-        $walletPayment = new WalletPaymentData();
+        $walletPayment = new WalletTradeData();
 
         $walletPayment->businessNo = $walletRecharge->no;
         $walletPayment->amount     = $walletRecharge->total_payment_amount;

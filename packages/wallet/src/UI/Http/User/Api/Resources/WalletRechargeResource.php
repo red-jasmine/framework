@@ -15,7 +15,7 @@ class WalletRechargeResource extends JsonResource
         return [
             'id'                       => $this->id,
             'wallet_type'              => $this->wallet_type,
-            'no'              => $this->no,
+            'recharge_no'              => $this->recharge_no,
             'wallet_id'                => $this->wallet_id,
             'owner_type'               => $this->owner_type,
             'owner_id'                 => $this->owner_id,

@@ -1,17 +1,17 @@
 <?php
 
-namespace RedJasmine\Wallet\Domain\Data;
+namespace RedJasmine\Wallet\Domain\Data\Payment;
 
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Wallet\Domain\Models\Enums\Withdrawals\WithdrawalPaymentStatusEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
-class WalletWithdrawalPaymentData extends Data
+class PaymentTransferData extends Data
 {
 
-    public WithdrawalPaymentStatusEnum $paymentStatus;
+    public PaymentStatusEnum $paymentStatus;
 
     public ?string $paymentType = null;
 
@@ -23,4 +23,8 @@ class WalletWithdrawalPaymentData extends Data
     #[WithCast(DateTimeInterfaceCast::class)]
     public ?Carbon $paymentTime = null;
 
+    /**
+     * @var array
+     */
+    public array $context = [];
 }

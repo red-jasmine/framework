@@ -8,7 +8,7 @@ enum PaymentStatusEnum: string
 {
     use EnumsHelper;
 
-    case  PRE = 'pre'; // 预创建
+    case  PREPARE = 'prepare'; // 预创建
     case  PAYING = 'paying'; // 支付中
     case  PROCESSING = 'processing'; // // 处理中
     case  SUCCESS = 'success'; // 支持成功
@@ -22,7 +22,7 @@ enum PaymentStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::PRE->value        => '等待',
+            self::PREPARE->value    => '等待',
             self::PROCESSING->value => '处理中',
             self::SUCCESS->value    => '成功',
             self::CLOSED->value     => '已关闭',

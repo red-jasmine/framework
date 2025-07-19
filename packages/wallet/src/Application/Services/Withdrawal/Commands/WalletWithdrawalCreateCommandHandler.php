@@ -8,6 +8,7 @@ use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicatio
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletWithdrawalService;
+use RedJasmine\Wallet\Exceptions\WalletException;
 use Throwable;
 
 /**
@@ -24,13 +25,21 @@ class WalletWithdrawalCreateCommandHandler extends CommandHandler
     ) {
     }
 
+    /**
+     * @param  WalletWithdrawalCreateCommand  $command
+     *
+     * @return WalletWithdrawal
+     * @throws AbstractException
+     * @throws Throwable
+     * @throws WalletException
+     */
     public function handle(WalletWithdrawalCreateCommand $command) : WalletWithdrawal
     {
 
         $this->beginDatabaseTransaction();
 
         try {
-            $wallet = $this->walletRepository->findLock($command->id);
+            $wallet = $this->walletRepository->findLock($command->getKey());
 
             $withdrawal = $this->walletWithdrawalService->withdrawal($wallet, $command);
 

@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Wallet\Application;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Wallet\Application\Listeners\WalletWithdrawalApprovalListener;
+use RedJasmine\Wallet\Application\Listeners\WalletWithdrawalTransferListener;
+use RedJasmine\Wallet\Domain\Events\WalletWithdrawal\WalletWithdrawalTransferPrepareEvent;
 use RedJasmine\Wallet\Domain\Repositories\WalletReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeRepositoryInterface;
@@ -42,6 +45,10 @@ class WalletApplicationServiceProvider extends ServiceProvider
 
     public function boot() : void
     {
-
+        Event::listen([
+            WalletWithdrawalTransferPrepareEvent::class,
+        ],
+            WalletWithdrawalTransferListener::class
+        );
     }
 }

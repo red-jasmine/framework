@@ -10,4 +10,6 @@ interface WalletWithdrawalRepositoryInterface extends RepositoryInterface
 
     public function findByNo(string $no) : WalletWithdrawal;
 
+    public function findByNoLock(string $no) : WalletWithdrawal;
+
 }

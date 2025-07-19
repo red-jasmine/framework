@@ -30,8 +30,11 @@ class WalletConfigData extends Data
     public ?WalletExchangeConfigData $recharge = null;
 
 
-    // 提现
-    public bool $withdrawal = false;
+    /**
+     * 充值配置
+     * @var WalletExchangeConfigData|null
+     */
+    public ?WalletExchangeConfigData $withdrawal = null;
 
 
     /**

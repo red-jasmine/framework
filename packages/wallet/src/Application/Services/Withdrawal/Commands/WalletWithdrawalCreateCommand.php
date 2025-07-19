@@ -6,5 +6,5 @@ use RedJasmine\Wallet\Domain\Data\WalletWithdrawalData;
 
 class WalletWithdrawalCreateCommand extends WalletWithdrawalData
 {
-    public int $id;
+
 }

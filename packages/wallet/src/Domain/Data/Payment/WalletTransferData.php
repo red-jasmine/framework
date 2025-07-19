@@ -1,13 +1,19 @@
 <?php
 
-namespace RedJasmine\Wallet\Domain\Data;
+namespace RedJasmine\Wallet\Domain\Data\Payment;
 
 use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Wallet\Domain\Models\ValueObjects\Payee;
 
-class WalletWithdrawalData extends Data
+class WalletTransferData extends Data
 {
+    /**
+     * 业务单号
+     * @var string
+     */
+    public string $businessNo;
+
     /**
      * @var Money
      */
@@ -18,13 +24,5 @@ class WalletWithdrawalData extends Data
      * @var Payee
      */
     public Payee $payee;
-
-
-    /**
-     * 需要转换的货币
-     * @var string
-     */
-    public string $currency;
-
 
 }

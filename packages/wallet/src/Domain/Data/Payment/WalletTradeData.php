@@ -5,7 +5,7 @@ namespace RedJasmine\Wallet\Domain\Data\Payment;
 use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
 
-class WalletPaymentData extends Data
+class WalletTradeData extends Data
 {
 
 

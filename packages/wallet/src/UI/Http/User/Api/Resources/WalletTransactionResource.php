@@ -13,8 +13,8 @@ class WalletTransactionResource extends JsonResource
     public function toArray($request) : array
     {
         return [
-            //'id'               => $this->id,
-            'no'   => $this->no,
+            'id'               => $this->id,
+            'transaction_no'   => $this->transaction_no,
             'wallet_id'        => (string) $this->wallet_id,
             'type'             => $this->direction,
             'currency'         => $this->currency,

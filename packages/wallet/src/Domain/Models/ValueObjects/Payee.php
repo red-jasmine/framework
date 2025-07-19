@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Wallet\Domain\Data;
+namespace RedJasmine\Wallet\Domain\Models\ValueObjects;
 
 use RedJasmine\Support\Data\Data;
 

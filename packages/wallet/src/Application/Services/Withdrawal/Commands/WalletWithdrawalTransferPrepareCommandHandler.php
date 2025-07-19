@@ -2,18 +2,15 @@
 
 namespace RedJasmine\Wallet\Application\Services\Withdrawal\Commands;
 
-use RedJasmine\Support\Application\CommandHandlers\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicationService;
 use RedJasmine\Wallet\Domain\Services\WalletWithdrawalService;
-use RedJasmine\Wallet\Exceptions\WalletException;
 use RedJasmine\Wallet\Exceptions\WalletWithdrawalException;
 use Throwable;
 
-/**
- * @method WalletWithdrawalApplicationService getService()
- */
-class WalletWithdrawalPaymentCommandHandler extends CommandHandler
+
+class WalletWithdrawalTransferPrepareCommandHandler extends CommandHandler
 {
 
     public function __construct(
@@ -23,26 +20,25 @@ class WalletWithdrawalPaymentCommandHandler extends CommandHandler
     }
 
     /**
-     * 审批处理
      *
-     * @param  WalletWithdrawalApprovalCommand  $command
+     *
+     * @param  WalletWithdrawalTransferPrepareCommand  $command
      *
      * @return bool
      * @throws AbstractException
      * @throws Throwable
-     * @throws WalletException
      * @throws WalletWithdrawalException
      */
-    public function handle(WalletWithdrawalPaymentCommand $command) : bool
+    public function handle(WalletWithdrawalTransferPrepareCommand $command) : bool
     {
 
         $this->beginDatabaseTransaction();
 
         try {
 
-            $withdrawal = $this->service->repository->findByNo($command->withdrawalNo);
+            $withdrawal = $this->service->repository->findByNoLock($command->getKey());
 
-            $this->walletWithdrawalService->payment($withdrawal, $command);
+            $this->walletWithdrawalService->createTransfer($withdrawal);
 
             $this->service->repository->update($withdrawal);
 
