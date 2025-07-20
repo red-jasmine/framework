@@ -13,6 +13,7 @@ class SubmitApprovalCommandHandler extends CommandHandler
     public function __construct(
         protected ApplicationService $service
     ) {
+        $this->initHandleContext();
     }
 
     /**

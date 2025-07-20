@@ -14,13 +14,7 @@ abstract class RestCommandHandler extends CommandHandler
         get;
     }
 
-    protected function initHandleContext() : void
-    {
-        if (!isset($this->context)) {
-            $this->context = new HandleContext();
-        }
 
-    }
 
     protected function callHook(string $hook, mixed $passable, Closure $destination)
     {
@@ -38,9 +32,9 @@ abstract class RestCommandHandler extends CommandHandler
      */
     public function handle(Data $command) : ?Model
     {
-        $this->initHandleContext();
 
         $this->context->setCommand($command);
+
         // 开始数据库事务
         $this->beginDatabaseTransaction();
         try {

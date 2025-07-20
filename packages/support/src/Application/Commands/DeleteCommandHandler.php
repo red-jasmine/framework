@@ -20,7 +20,7 @@ class DeleteCommandHandler extends RestCommandHandler
     public function __construct(
         protected $service
     ) {
-        $this->initHandleContext();
+        $this->getContext();
     }
 
     protected function getModel(Data $command) : Model
