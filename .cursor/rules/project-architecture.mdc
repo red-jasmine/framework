@@ -52,6 +52,7 @@ packages/{domain}/
 │   │   ├── Models/             # 领域模型
 │   │   │   ├── Enums/          # 枚举定义
 │   │   │   └── ValueObjects/   # 值对象
+│   │   ├── Contracts/          # 外部服务接口定义
 │   │   ├── Repositories/       # 仓库接口
 │   │   ├── Data/               # 基础DTO
 │   │   ├── Transformers/       # 转换器
