@@ -26,7 +26,43 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        
+        // 注册仓库绑定
+        $this->app->bind(
+            \RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface::class,
+            \RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent\PointsProductRepository::class
+        );
+
+        $this->app->bind(
+            \RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface::class,
+            \RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql\PointsProductReadRepository::class
+        );
+
+        $this->app->bind(
+            \RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface::class,
+            \RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent\PointsExchangeOrderRepository::class
+        );
+
+        $this->app->bind(
+            \RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderReadRepositoryInterface::class,
+            \RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql\PointsExchangeOrderReadRepository::class
+        );
+
+        // 注册外部服务集成
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Infrastructure\Services\ProductServiceIntegration::class
+        );
+
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Infrastructure\Services\WalletServiceIntegration::class
+        );
+
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Infrastructure\Services\OrderServiceIntegration::class
+        );
+
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Infrastructure\Services\PaymentServiceIntegration::class
+        );
     }
 
     public function packageBooted(): void
