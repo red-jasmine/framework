@@ -42,17 +42,16 @@ class 积分商品 {
   +title: string
   +description: string
   +image: string
-  +points_price: int
-  +money_price: Money
+  +point: decimal
+  +price: Money
   +payment_mode: PointsProductPaymentModeEnum
-  +original_price: Money
   +stock_quantity: int
   +exchange_limit: int
   +status: PointsProductStatusEnum
   +sort: int
   +category_id: int
   +product_type: string
-  +shipping_type: string
+  +product_id: string
   --
   +getActualMoneyPrice(): Money
   +getTotalValue(): Money
@@ -69,8 +68,8 @@ class 积分商品 {
 ```plantuml
 class 积分兑换订单 {
   +id: string
+  +point_order_no: string
   +order_no: string
-  +order_id: string
   +product_id: string
   +product_title: string
   +points_price: int
@@ -714,10 +713,10 @@ CREATE TABLE `points_products` (
   `title` varchar(255) NOT NULL COMMENT '商品标题',
   `description` text COMMENT '商品描述',
   `image` varchar(500) DEFAULT NULL COMMENT '商品图片',
-  `points_price` int NOT NULL DEFAULT '0' COMMENT '积分价格',
-  `money_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '现金价格',
+  `point` int NOT NULL DEFAULT '0' COMMENT '积分价格',
+  `price_currency` varchar(3) NOT NULL  COMMENT '价格货币',
+  `price_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格金额',
   `payment_mode` varchar(32) NOT NULL DEFAULT 'points_only' COMMENT '支付模式',
-  `original_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '原价',
   `stock_quantity` int NOT NULL DEFAULT '0' COMMENT '库存数量',
   `exchange_limit` int NOT NULL DEFAULT '0' COMMENT '兑换限制',
   `status` varchar(32) NOT NULL DEFAULT 'on_sale' COMMENT '状态',

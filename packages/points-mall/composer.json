@@ -1,0 +1,40 @@
+{
+    "name": "red-jasmine/points-mall",
+    "description": "积分商城模块",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/points-mall",
+    "keywords": ["Laravel", "PointsMall", "积分商城"],
+    "require": {
+        "red-jasmine/support": "^1.0.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\PointsMall\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\PointsMall\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\PointsMall\\PointsMallPackageServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+} 
