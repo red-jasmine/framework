@@ -1,4 +1,3 @@
-
 ---
 globs: ["*.php"]
 description: "PHP文件编码规范，仅适用于PHP文件"
