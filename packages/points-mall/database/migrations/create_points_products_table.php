@@ -18,10 +18,9 @@ return new class extends Migration {
             $table->string('image')->nullable()->comment('商品图片');
             $table->integer('point')->default(0)->comment('积分价格');
             $table->string('price_currency', 3)->default('CNY')->comment('价格货币');
-            $table->decimal('price_amount', 10, 2)->default(0.00)->comment('价格金额');
+            $table->decimal('price_amount', 10)->default(0.00)->comment('价格金额');
             $table->string('payment_mode')->default(PointsProductPaymentModeEnum::POINTS_ONLY->value)->comment('支付模式');
             $table->bigInteger('stock')->default(0)->comment('库存');
-            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             $table->integer('exchange_limit')->default(0)->comment('兑换限制');

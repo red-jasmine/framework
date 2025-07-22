@@ -11,12 +11,14 @@ return new class extends Migration {
     {
         Schema::create('points_exchange_orders', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-             
+
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
             $table->string('order_no', 64)->unique()->comment('兑换订单号');
-            $table->string('outer_order_no')->comment('关联订单ID');
+            $table->string('outer_order_no')->comment('关联订单号');
             $table->unsignedBigInteger('point_product_id')->comment('积分商品ID');
+            $table->string('product_type')->comment('商品源类型');
+            $table->string('product_id')->comment('商品源ID');
             $table->string('product_title')->comment('商品标题');
             $table->integer('point')->default(0)->comment('积分');
             $table->string('price_currency', 3)->default('CNY')->comment('价格货币');
@@ -26,10 +28,7 @@ return new class extends Migration {
             $table->string('payment_status')->comment('支付状态');
             $table->string('status')->default(PointsExchangeOrderStatusEnum::EXCHANGED->value)->comment('状态');
             $table->timestamp('exchange_time')->comment('兑换时间');
-            $table->json('shipping_info')->nullable()->comment('物流信息');
-            $table->json('address_info')->nullable()->comment('地址信息');
-            $table->json('payment_info')->nullable()->comment('支付信息');
-           
+
             
             $table->operator();
             $table->softDeletes();
