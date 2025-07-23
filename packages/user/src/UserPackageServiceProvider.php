@@ -2,9 +2,10 @@
 
 namespace RedJasmine\User;
 
+use RedJasmine\User\Commands\UserCommand;
+use RedJasmine\User\Domain\Models\User;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use RedJasmine\User\Commands\UserCommand;
 
 class UserPackageServiceProvider extends PackageServiceProvider
 {
@@ -28,7 +29,21 @@ class UserPackageServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_user_table',
             ])
-            ->runsMigrations()
-            ;
+            ->runsMigrations();
+    }
+
+    public function packageRegistered():void
+    {
+
+        $this->app->config->set('auth.providers.users', [
+            'driver' => 'eloquent',
+            'model'  => User::class,
+        ]);
+
+        $this->app->config->set('auth.guards.user', [
+            'driver'   => 'jwt',
+            'provider' => 'users',
+        ]);
+
     }
 }

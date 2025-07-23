@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Admin;
 
+use RedJasmine\Admin\Domain\Models\Admin;
 use RedJasmine\Admin\Domain\Models\Permission;
 use RedJasmine\Admin\Domain\Models\Role;
 use Spatie\LaravelPackageTools\Package;
@@ -36,5 +37,24 @@ class AdminPackageServiceProvider extends PackageServiceProvider
                 'create_admin_table', 'create_permission_tables'
             ])
             ->runsMigrations();
+    }
+
+
+    public function packageRegistered() : void
+    {
+
+        // 添加  user 配置
+
+        $this->app->config->set('auth.providers.admins', [
+            'driver' => 'eloquent',
+            'model'  => Admin::class,
+        ]);
+
+        $this->app->config->set('auth.guards.admin', [
+            'driver'   => 'jwt',
+            'provider' => 'admins',
+        ]);
+
+
     }
 }

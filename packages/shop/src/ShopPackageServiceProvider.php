@@ -2,12 +2,13 @@
 
 namespace RedJasmine\Shop;
 
+use RedJasmine\Shop\Domain\Models\Shop;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class ShopPackageServiceProvider extends PackageServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function configurePackage(Package $package) : void
     {
         /*
          * This class is a Package Service Provider
@@ -26,9 +27,21 @@ class ShopPackageServiceProvider extends PackageServiceProvider
             ->runsMigrations();
     }
 
+
     public function packageRegistered() : void
     {
-        // 注册应用服务提供者
         $this->app->register(Application\ShopApplicationServiceProvider::class);
+
+
+        $this->app->config->set('auth.providers.users', [
+            'driver' => 'eloquent',
+            'model'  => Shop::class,
+        ]);
+
+        $this->app->config->set('auth.guards.user', [
+            'driver'   => 'jwt',
+            'provider' => 'users',
+        ]);
+
     }
 } 
