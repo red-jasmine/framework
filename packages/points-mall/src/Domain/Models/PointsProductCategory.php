@@ -13,7 +13,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
-class PointProductCategory extends BaseCategoryModel implements OwnerInterface
+class PointsProductCategory extends BaseCategoryModel implements OwnerInterface
 {
 
     use HasOwner;

@@ -3,7 +3,7 @@
 namespace RedJasmine\PointsMall\Domain\Transformers;
 
 use RedJasmine\PointsMall\Domain\Data\PointProductCategoryData;
-use RedJasmine\PointsMall\Domain\Models\PointProductCategory;
+use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class PointProductCategoryTransformer implements TransformerInterface
@@ -11,10 +11,10 @@ class PointProductCategoryTransformer implements TransformerInterface
     /**
      * 将DTO数据映射到积分商品分类模型
      */
-    public function transform($data, $model): PointProductCategory
+    public function transform($data, $model): PointsProductCategory
     {
-        if (!$model instanceof PointProductCategory) {
-            $model = new PointProductCategory();
+        if (!$model instanceof PointsProductCategory) {
+            $model = new PointsProductCategory();
         }
 
         if ($data instanceof PointProductCategoryData) {

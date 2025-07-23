@@ -16,6 +16,7 @@ interface ProductServiceInterface
 {
     /**
      * 获取积分商品信息
+     * - 主要包括 商品基本信息、商品规格信息、商品描述信息、原有的商品状态信息
      *
      * @param ProductPurchaseFactor $productPurchaseFactor
      * @return ProductInfo

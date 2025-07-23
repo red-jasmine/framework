@@ -15,7 +15,7 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigrations([
                 'create_points_products_table',
-                'create_point_product_categories_table',
+                'create_points_product_categories_table',
                 'create_points_exchange_orders_table',
             ])
             ->hasRoutes([

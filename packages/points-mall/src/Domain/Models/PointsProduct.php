@@ -329,7 +329,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
      */
     public function category()
     {
-        return $this->belongsTo(PointProductCategory::class, 'category_id');
+        return $this->belongsTo(PointsProductCategory::class, 'category_id');
     }
 
     /**

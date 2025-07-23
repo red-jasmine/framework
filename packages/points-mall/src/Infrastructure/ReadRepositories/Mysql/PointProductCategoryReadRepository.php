@@ -2,7 +2,7 @@
 
 namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
 
-use RedJasmine\PointsMall\Domain\Models\PointProductCategory;
+use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
 use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -12,7 +12,7 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository
 {
     use HasTree;
 
-    public static $modelClass = PointProductCategory::class;
+    public static $modelClass = PointsProductCategory::class;
 
     /**
      * 允许的过滤器配置

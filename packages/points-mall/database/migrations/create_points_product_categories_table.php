@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('point_product_categories', function (Blueprint $table) {
+        Schema::create('points_product_categories', function (Blueprint $table) {
 
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
@@ -20,6 +20,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('point_product_categories');
+        Schema::dropIfExists('points_product_categories');
     }
 };
