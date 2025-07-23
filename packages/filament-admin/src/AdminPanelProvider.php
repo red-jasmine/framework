@@ -54,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarWidth('10rem')
-            ->authGuard('admin')
+            ->authGuard('admin-panel')
             ->passwordReset()
             ->emailVerification()
             ->profile()

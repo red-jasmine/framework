@@ -53,6 +53,11 @@ class FilamentAdminServiceProvider extends PackageServiceProvider
 
     public function packageRegistered() : void
     {
+
+        $this->app->config->set('auth.guards.admin-panel', [
+            'driver'   => 'session',
+            'provider' => 'admins',
+        ]);
     }
 
     public function packageBooted() : void
