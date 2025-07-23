@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('owner_type', 32)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
             $table->userMorphs('user', '用户', false);
-            $table->string('order_no', 64)->unique()->comment('兑换订单号');
+            $table->string('points_order_no', 64)->unique()->comment('积分订单号');
             $table->string('outer_order_no')->comment('关联订单号');
             $table->unsignedBigInteger('point_product_id')->comment('积分商品ID');
             $table->string('product_type')->comment('商品源类型');
@@ -36,11 +36,11 @@ return new class extends Migration {
             $table->comment('积分兑换订单表');
 
             // 索引
-            $table->index('order_id', 'idx_order_id');
+            $table->index('points_order_no', 'idx_points_order_no');
             $table->index('product_id', 'idx_product_id');
             $table->index('status', 'idx_status');
             $table->index(['owner_id', 'owner_type'], 'idx_owner');
-            $table->index(['user_id', 'user_id'], 'idx_user');
+            $table->index(['user_id', 'user_type'], 'idx_user');
         });
     }
 

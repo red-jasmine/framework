@@ -4,6 +4,7 @@ namespace RedJasmine\PointsMall\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use phpDocumentor\Reflection\Types\Static_;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
@@ -11,9 +12,17 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
-class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToOwnerInterface
+class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToOwnerInterface, UniqueNoInterface
 {
+
+    protected static string $uniqueNoKey = 'points_order_no';
+
+    protected static string $uniqueNoPrefix = 'PO';
+
+    use HasUniqueNo;
     use HasSnowflakeId;
     use HasOwner;
     use HasOperator;
@@ -40,16 +49,21 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
         'exchange_time',
     ];
 
-    protected $casts = [
-        'point' => 'integer',
-        'price_amount' => 'decimal:2',
-        'quantity' => 'integer',
-        'payment_mode' => PointsProductPaymentModeEnum::class,
-        'status' => PointsExchangeOrderStatusEnum::class,
-        'exchange_time' => 'datetime',
-    ];
 
-    protected static function boot(): void
+    protected function casts() : array
+    {
+        return [
+            'point'         => 'integer',
+            'price_amount'  => 'decimal:2',
+            'quantity'      => 'integer',
+            'payment_mode'  => PointsProductPaymentModeEnum::class,
+            'status'        => PointsExchangeOrderStatusEnum::class,
+            'exchange_time' => 'datetime',
+        ];
+    }
+
+
+    protected static function boot() : void
     {
         parent::boot();
 
@@ -73,7 +87,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 获取总价值（积分转换为现金）
      */
-    public function getTotalValue(float $pointsRate = 0.01): float
+    public function getTotalValue(float $pointsRate = 0.01) : float
     {
         $pointsMoney = $this->point * $pointsRate;
         return $pointsMoney + $this->price_amount;
@@ -82,7 +96,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为混合支付
      */
-    public function isMixedPayment(): bool
+    public function isMixedPayment() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::MIXED;
     }
@@ -90,7 +104,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为纯积分支付
      */
-    public function isPointsOnlyPayment(): bool
+    public function isPointsOnlyPayment() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::POINTS_ONLY;
     }
@@ -98,7 +112,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为纯现金支付
      */
-    public function isMoneyOnlyPayment(): bool
+    public function isMoneyOnlyPayment() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::MONEY_ONLY;
     }
@@ -106,7 +120,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 更新订单状态
      */
-    public function updateStatus(PointsExchangeOrderStatusEnum $status): void
+    public function updateStatus(PointsExchangeOrderStatusEnum $status) : void
     {
         $this->status = $status;
     }
@@ -114,7 +128,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为已兑换状态
      */
-    public function isExchanged(): bool
+    public function isExchanged() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::EXCHANGED;
     }
@@ -122,7 +136,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已创建状态
      */
-    public function isOrderCreated(): bool
+    public function isOrderCreated() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_CREATED;
     }
@@ -130,7 +144,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已支付状态
      */
-    public function isOrderPaid(): bool
+    public function isOrderPaid() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_PAID;
     }
@@ -138,7 +152,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已接单状态
      */
-    public function isOrderAccepted(): bool
+    public function isOrderAccepted() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_ACCEPTED;
     }
@@ -146,7 +160,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已发货状态
      */
-    public function isOrderShipped(): bool
+    public function isOrderShipped() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_SHIPPED;
     }
@@ -154,7 +168,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已完成状态
      */
-    public function isOrderFinished(): bool
+    public function isOrderFinished() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_FINISHED;
     }
@@ -162,7 +176,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否为订单已取消状态
      */
-    public function isOrderCanceled(): bool
+    public function isOrderCanceled() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_CANCELED;
     }
@@ -170,7 +184,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否可以取消订单
      */
-    public function canCancel(): bool
+    public function canCancel() : bool
     {
         return in_array($this->status, [
             PointsExchangeOrderStatusEnum::EXCHANGED,
@@ -181,7 +195,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否可以支付
      */
-    public function canPay(): bool
+    public function canPay() : bool
     {
         return in_array($this->status, [
             PointsExchangeOrderStatusEnum::EXCHANGED,
@@ -192,7 +206,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否可以发货
      */
-    public function canShip(): bool
+    public function canShip() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_ACCEPTED;
     }
@@ -200,7 +214,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否可以完成订单
      */
-    public function canFinish(): bool
+    public function canFinish() : bool
     {
         return $this->status === PointsExchangeOrderStatusEnum::ORDER_SHIPPED;
     }
@@ -208,7 +222,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 设置支付状态
      */
-    public function setPaymentStatus(string $paymentStatus): void
+    public function setPaymentStatus(string $paymentStatus) : void
     {
         $this->payment_status = $paymentStatus;
     }
@@ -216,7 +230,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否已支付
      */
-    public function isPaid(): bool
+    public function isPaid() : bool
     {
         return $this->payment_status === 'paid';
     }
@@ -224,7 +238,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否支付失败
      */
-    public function isPaymentFailed(): bool
+    public function isPaymentFailed() : bool
     {
         return $this->payment_status === 'failed';
     }
@@ -232,7 +246,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 检查是否待支付
      */
-    public function isPaymentPending(): bool
+    public function isPaymentPending() : bool
     {
         return $this->payment_status === 'pending';
     }
@@ -240,7 +254,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 获取状态标签
      */
-    public function getStatusLabel(): string
+    public function getStatusLabel() : string
     {
         return $this->status->label();
     }
@@ -248,7 +262,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 获取状态颜色
      */
-    public function getStatusColor(): string
+    public function getStatusColor() : string
     {
         return $this->status->color();
     }
@@ -256,7 +270,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 获取支付模式标签
      */
-    public function getPaymentModeLabel(): string
+    public function getPaymentModeLabel() : string
     {
         return $this->payment_mode->label();
     }
@@ -264,7 +278,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     /**
      * 获取支付模式颜色
      */
-    public function getPaymentModeColor(): string
+    public function getPaymentModeColor() : string
     {
         return $this->payment_mode->color();
     }

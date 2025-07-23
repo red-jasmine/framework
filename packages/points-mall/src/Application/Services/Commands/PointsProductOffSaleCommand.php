@@ -3,12 +3,11 @@
 namespace RedJasmine\PointsMall\Application\Services\Commands;
 
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Data\Data;
 
-class PointsProductOffSaleCommand
+class PointsProductOffSaleCommand extends Data
 {
-    public function __construct(
-        public int $id,
-        public UserInterface $operator
-    ) {
-    }
+
+
+
 } 

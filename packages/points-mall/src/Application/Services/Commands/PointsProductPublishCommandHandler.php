@@ -13,12 +13,12 @@ class PointsProductPublishCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(\RedJasmine\PointsMall\Application\Services\Commands\PointsProductPublishCommand $command): PointsProduct
+    public function handle(PointsProductPublishCommand $command): PointsProduct
     {
         $this->beginDatabaseTransaction();
         
         try {
-            $model = $this->service->repository->find($command->id);
+            $model = $this->service->repository->find($command->getKey());
             if (!$model) {
                 throw new \Exception('积分商品不存在');
             }

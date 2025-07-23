@@ -14,6 +14,7 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerInterface
 {
@@ -45,20 +46,25 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
         'product_id',
     ];
 
-    protected $casts = [
-        'point' => 'integer',
-        'price_amount' => 'decimal:2',
-        'stock' => 'integer',
-        'lock_stock' => 'integer',
-        'safety_stock' => 'integer',
-        'exchange_limit' => 'integer',
-        'sort' => 'integer',
-        'category_id' => 'integer',
-        'payment_mode' => PointsProductPaymentModeEnum::class,
-        'status' => PointsProductStatusEnum::class,
-    ];
 
-    protected static function boot(): void
+    protected function casts() : array
+    {
+        return [
+            'point'          => 'integer',
+            'price_amount'   => 'decimal:2',
+            'stock'          => 'integer',
+            'lock_stock'     => 'integer',
+            'safety_stock'   => 'integer',
+            'exchange_limit' => 'integer',
+            'sort'           => 'integer',
+            'category_id'    => 'integer',
+            'payment_mode'   => PointsProductPaymentModeEnum::class,
+            'status'         => PointsProductStatusEnum::class,
+        ];
+    }
+
+
+    protected static function boot() : void
     {
         parent::boot();
 
@@ -80,7 +86,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 获取库存信息值对象
      */
-    public function getStockInfo(): StockInfo
+    public function getStockInfo() : StockInfo
     {
         return new StockInfo(
             $this->stock,
@@ -92,17 +98,17 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 设置库存信息
      */
-    public function setStockInfo(StockInfo $stockInfo): void
+    public function setStockInfo(StockInfo $stockInfo) : void
     {
-        $this->stock = $stockInfo->totalStock;
-        $this->lock_stock = $stockInfo->lockStock;
+        $this->stock        = $stockInfo->totalStock;
+        $this->lock_stock   = $stockInfo->lockStock;
         $this->safety_stock = $stockInfo->safetyStock;
     }
 
     /**
      * 获取支付信息值对象
      */
-    public function getPaymentInfo(): PaymentInfo
+    public function getPaymentInfo() : PaymentInfo
     {
         return new PaymentInfo(
             $this->payment_mode,
@@ -114,17 +120,17 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 设置支付信息
      */
-    public function setPaymentInfo(PaymentInfo $paymentInfo): void
+    public function setPaymentInfo(PaymentInfo $paymentInfo) : void
     {
         $this->payment_mode = $paymentInfo->paymentMode;
-        $this->point = $paymentInfo->pointAmount;
+        $this->point        = $paymentInfo->pointAmount;
         $this->price_amount = $paymentInfo->moneyAmount;
     }
 
     /**
      * 获取兑换限制值对象
      */
-    public function getExchangeLimit(): ExchangeLimit
+    public function getExchangeLimit() : ExchangeLimit
     {
         return new ExchangeLimit($this->exchange_limit);
     }
@@ -132,7 +138,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 设置兑换限制
      */
-    public function setExchangeLimit(ExchangeLimit $exchangeLimit): void
+    public function setExchangeLimit(ExchangeLimit $exchangeLimit) : void
     {
         $this->exchange_limit = $exchangeLimit->maxPerUser;
     }
@@ -140,7 +146,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 获取可用库存
      */
-    public function getAvailableStock(): int
+    public function getAvailableStock() : int
     {
         return $this->getStockInfo()->getAvailableStock();
     }
@@ -148,7 +154,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 获取实际现金价格
      */
-    public function getActualMoneyPrice(): float
+    public function getActualMoneyPrice() : float
     {
         return $this->price_amount;
     }
@@ -156,7 +162,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 获取总价值（积分转换为现金）
      */
-    public function getTotalValue(float $pointsRate = 0.01): float
+    public function getTotalValue(float $pointsRate = 0.01) : float
     {
         $pointsMoney = $this->point * $pointsRate;
         return $pointsMoney + $this->price_amount;
@@ -165,7 +171,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否为混合支付模式
      */
-    public function isMixedPaymentMode(): bool
+    public function isMixedPaymentMode() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::MIXED;
     }
@@ -173,7 +179,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否为纯积分支付模式
      */
-    public function isPointsOnlyPaymentMode(): bool
+    public function isPointsOnlyPaymentMode() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::POINTS_ONLY;
     }
@@ -181,7 +187,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否为纯现金支付模式
      */
-    public function isMoneyOnlyPaymentMode(): bool
+    public function isMoneyOnlyPaymentMode() : bool
     {
         return $this->payment_mode === PointsProductPaymentModeEnum::MONEY_ONLY;
     }
@@ -189,7 +195,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否可以兑换指定数量
      */
-    public function canExchange(int $quantity): bool
+    public function canExchange(int $quantity) : bool
     {
         // 检查商品状态
         if ($this->status !== PointsProductStatusEnum::ON_SALE) {
@@ -213,27 +219,27 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 减少库存
      */
-    public function decreaseStock(int $quantity): bool
+    public function decreaseStock(int $quantity) : bool
     {
         $stockInfo = $this->getStockInfo();
-        
+
         if (!$stockInfo->decreaseStock($quantity)) {
             return false;
         }
 
         $this->setStockInfo($stockInfo);
         $this->updateStockStatus();
-        
+
         return true;
     }
 
     /**
      * 锁定库存
      */
-    public function lockStock(int $quantity): bool
+    public function lockStock(int $quantity) : bool
     {
         $stockInfo = $this->getStockInfo();
-        
+
         if (!$stockInfo->lockStock($quantity)) {
             return false;
         }
@@ -245,10 +251,10 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 解锁库存
      */
-    public function unlockStock(int $quantity): bool
+    public function unlockStock(int $quantity) : bool
     {
         $stockInfo = $this->getStockInfo();
-        
+
         if (!$stockInfo->unlockStock($quantity)) {
             return false;
         }
@@ -260,7 +266,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 增加库存
      */
-    public function increaseStock(int $quantity): void
+    public function increaseStock(int $quantity) : void
     {
         $stockInfo = $this->getStockInfo();
         $stockInfo->increaseStock($quantity);
@@ -271,10 +277,10 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 更新库存状态
      */
-    public function updateStockStatus(): void
+    public function updateStockStatus() : void
     {
         $stockInfo = $this->getStockInfo();
-        
+
         if ($stockInfo->isSoldOut()) {
             $this->status = PointsProductStatusEnum::SOLD_OUT;
         } elseif ($this->status === PointsProductStatusEnum::SOLD_OUT && $stockInfo->getAvailableStock() > 0) {
@@ -285,7 +291,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 上架商品
      */
-    public function putOnSale(): void
+    public function putOnSale() : void
     {
         if ($this->getAvailableStock() > 0) {
             $this->status = PointsProductStatusEnum::ON_SALE;
@@ -295,7 +301,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 下架商品
      */
-    public function putOffSale(): void
+    public function putOffSale() : void
     {
         $this->status = PointsProductStatusEnum::OFF_SALE;
     }
@@ -303,7 +309,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否上架
      */
-    public function isOnSale(): bool
+    public function isOnSale() : bool
     {
         return $this->status === PointsProductStatusEnum::ON_SALE;
     }
@@ -311,7 +317,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否售罄
      */
-    public function isSoldOut(): bool
+    public function isSoldOut() : bool
     {
         return $this->status === PointsProductStatusEnum::SOLD_OUT;
     }
@@ -319,7 +325,7 @@ class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerIn
     /**
      * 检查是否下架
      */
-    public function isOffSale(): bool
+    public function isOffSale() : bool
     {
         return $this->status === PointsProductStatusEnum::OFF_SALE;
     }
