@@ -9,7 +9,7 @@ class PointsMallAdminRoute
 {
     public static function api(): void
     {
-        Route::group(['prefix' => 'admin/points-mall'], function () {
+        Route::group(['prefix' => 'points-mall'], function () {
             // 积分商品管理
             Route::group(['prefix' => 'products'], function () {
                 Route::apiResource('products', PointsProductController::class);
@@ -30,12 +30,6 @@ class PointsMallAdminRoute
 
     public static function web(): void
     {
-        Route::group(['prefix' => 'admin/points-mall'], function () {
-            // 积分商品管理
-            Route::group(['prefix' => 'products'], function () {
-                Route::get('products', [PointsProductController::class, 'index']);
-                Route::get('products/{id}', [PointsProductController::class, 'show']);
-            });
-        });
+
     }
 } 

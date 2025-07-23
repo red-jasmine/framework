@@ -2,10 +2,12 @@
 
 namespace RedJasmine\Support\Data;
 
+use Illuminate\Contracts\Support\Arrayable;
 use RedJasmine\Support\Contracts\UserInterface;
 
-class System extends Data implements UserInterface
+class System extends Data implements UserInterface,Arrayable
 {
+
 
     const string TYPE = 'system';
 

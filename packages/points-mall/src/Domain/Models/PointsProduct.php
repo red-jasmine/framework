@@ -16,7 +16,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
-class PointsProduct extends Model implements OperatorInterface, BelongsToOwnerInterface
+class PointsProduct extends Model implements OperatorInterface
 {
     use HasSnowflakeId;
     use HasOwner;

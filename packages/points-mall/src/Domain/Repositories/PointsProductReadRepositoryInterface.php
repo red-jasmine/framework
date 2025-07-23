@@ -7,7 +7,7 @@ use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 
 interface PointsProductReadRepositoryInterface extends ReadRepositoryInterface
 {
-    public function find($id): ?PointsProduct;
+
     
     /**
      * 查找上架商品

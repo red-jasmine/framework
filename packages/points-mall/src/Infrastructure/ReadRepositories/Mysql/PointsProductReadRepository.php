@@ -31,6 +31,7 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
             AllowedFilter::scope('max_price'),
             AllowedFilter::exact('product_type'),
             AllowedFilter::exact('product_id'),
+            AllowedFilter::exact('search'),
         ];
     }
 

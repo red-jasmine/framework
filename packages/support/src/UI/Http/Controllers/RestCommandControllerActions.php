@@ -36,12 +36,10 @@ trait RestCommandControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('create', static::$modelClass);
         }
-
-        $request->offsetSet($this->getOwnerKey(), $this->getOwner()->getUserData());
-
-        $dataClass = static::$createCommandClass ?? static::$dataClass;
-
-        $command = $dataClass::from($request);
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner()?->toArray());
+        $dataClass                       = static::$createCommandClass ?? static::$dataClass;
+        $command                         = $dataClass::from($request);
+        $command->{$this->getOwnerKey()} = $this->getOwner();
 
 
         $result = $this->service->create($command);
@@ -60,10 +58,12 @@ trait RestCommandControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('update', $model);
         }
-        $request->offsetSet($this->getOwnerKey(), $this->getOwner()->getUserData());
-        $dataClass = static::$updateCommandClass ?? static::$dataClass;
-        $command   = $dataClass::from($request);
+        $request->offsetSet($this->getOwnerKey(), $this->getOwner()?->toArray());
+        $dataClass                       = static::$updateCommandClass ?? static::$dataClass;
+        $command                         = $dataClass::from($request);
+        $command->{$this->getOwnerKey()} = $this->getOwner();
         $command->setKey($id);
+
         $result = $this->service->update($command);
         return new (static::$resourceClass)($result);
 
