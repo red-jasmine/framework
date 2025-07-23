@@ -1,0 +1,29 @@
+<?php
+
+namespace RedJasmine\PointsMall\Application\Services;
+
+use RedJasmine\PointsMall\Application\Services\Commands\PointsProductOffSaleCommandHandler;
+use RedJasmine\PointsMall\Application\Services\Commands\PointsProductPublishCommandHandler;
+use RedJasmine\PointsMall\Domain\Models\PointsProduct;
+use RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface;
+use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
+use RedJasmine\PointsMall\Domain\Transformers\PointsProductTransformer;
+use RedJasmine\Support\Application\ApplicationService;
+
+class PointsProductApplicationService extends ApplicationService
+{
+    public static string $hookNamePrefix = 'points-mall.product.application';
+    protected static string $modelClass = PointsProduct::class;
+    
+    public function __construct(
+        public PointsProductRepositoryInterface $repository,
+        public PointsProductReadRepositoryInterface $readRepository,
+        public PointsProductTransformer $transformer
+    ) {
+    }
+    
+    protected static $macros = [
+        'publish' => PointsProductPublishCommandHandler::class,
+        'offSale' => PointsProductOffSaleCommandHandler::class,
+    ];
+} 

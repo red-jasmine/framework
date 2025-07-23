@@ -2,6 +2,8 @@
 
 namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
@@ -23,8 +25,10 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
             AllowedFilter::exact('category_id'),
             AllowedFilter::exact('status'),
             AllowedFilter::exact('payment_mode'),
-            AllowedFilter::exact('owner_type'),
-            AllowedFilter::exact('owner_id'),
+            AllowedFilter::scope('min_point'),
+            AllowedFilter::scope('max_point'),
+            AllowedFilter::scope('min_price'),
+            AllowedFilter::scope('max_price'),
             AllowedFilter::exact('product_type'),
             AllowedFilter::exact('product_id'),
         ];
@@ -38,11 +42,12 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
         return [
             AllowedSort::field('id'),
             AllowedSort::field('title'),
-            AllowedSort::field('created_at'),
-            AllowedSort::field('updated_at'),
-            AllowedSort::field('sort'),
             AllowedSort::field('point'),
             AllowedSort::field('price_amount'),
+            AllowedSort::field('stock'),
+            AllowedSort::field('sort'),
+            AllowedSort::field('created_at'),
+            AllowedSort::field('updated_at'),
         ];
     }
 
@@ -53,14 +58,14 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
     {
         return [
             'category',
-            'productSource',
+            'exchangeOrders',
         ];
     }
 
     /**
      * 查找上架商品
      */
-    public function findOnSale(): \Illuminate\Database\Eloquent\Collection
+    public function findOnSale(): Collection
     {
         return $this->query()
             ->where('status', 'on_sale')
@@ -73,7 +78,7 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
     /**
      * 根据分类查找商品
      */
-    public function findByCategory(int $categoryId): \Illuminate\Database\Eloquent\Collection
+    public function findByCategory(int $categoryId): Collection
     {
         return $this->query()
             ->where('category_id', $categoryId)
@@ -92,43 +97,5 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
             ->where('product_type', $productType)
             ->where('product_id', $productId)
             ->first();
-    }
-
-    /**
-     * 查找用户的商品
-     */
-    public function findByOwner(string $ownerType, string $ownerId): \Illuminate\Database\Eloquent\Collection
-    {
-        return $this->query()
-            ->where('owner_type', $ownerType)
-            ->where('owner_id', $ownerId)
-            ->orderBy('sort', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
-    /**
-     * 查找商品及其分类
-     */
-    public function findWithCategory(string $productId): ?PointsProduct
-    {
-        return $this->query()
-            ->with('category')
-            ->where('id', $productId)
-            ->first();
-    }
-
-    /**
-     * 按分类查找上架商品
-     */
-    public function findOnSaleByCategory(int $categoryId): \Illuminate\Database\Eloquent\Collection
-    {
-        return $this->query()
-            ->where('category_id', $categoryId)
-            ->where('status', 'on_sale')
-            ->where('stock', '>', 0)
-            ->orderBy('sort', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
     }
 } 

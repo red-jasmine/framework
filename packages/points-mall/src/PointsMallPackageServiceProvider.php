@@ -47,6 +47,16 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
             \RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql\PointsExchangeOrderReadRepository::class
         );
 
+        // 注册应用服务
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Application\Services\PointsProductApplicationService::class
+        );
+
+        // 注册转换器
+        $this->app->singleton(
+            \RedJasmine\PointsMall\Domain\Transformers\PointsProductTransformer::class
+        );
+
         // 注册外部服务集成
         $this->app->singleton(
             \RedJasmine\PointsMall\Infrastructure\Services\ProductServiceIntegration::class
@@ -67,6 +77,14 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        // 包启动时的逻辑
+        // 注册路由
+        $this->registerRoutes();
+    }
+
+    protected function registerRoutes(): void
+    {
+        // 注册Admin路由
+        \RedJasmine\PointsMall\UI\Http\Admin\PointsMallAdminRoute::api();
+        \RedJasmine\PointsMall\UI\Http\Admin\PointsMallAdminRoute::web();
     }
 } 
