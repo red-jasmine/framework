@@ -12,6 +12,8 @@ alwaysApply: true
 - **宏扩展**: 使用 `$macros` 数组扩展自定义方法
 - **Hook机制**: 使用 hook 方法实现扩展点管理
 
+### 原则
+- 如果实体的应用服务只有简单的 CURD 那么直接继承基类完善配置即可
 ### 代码示例
 ```php
 class ArticleApplicationService extends ApplicationService

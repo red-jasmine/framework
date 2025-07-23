@@ -62,8 +62,8 @@ packages/{domain}/
 │   │   └── Facades/            # 门面类
 │   ├── Application/            # 应用层
 │   │   └── Services/           # 应用服务
-│   │       ├── Commands/       # 命令定义和 命令处理器
-│   │       └── Queries/        # 查询定义和 查询处理器
+│   │       ├────── Commands/       # 命令定义和 命令处理器
+│   │       └────── Queries/        # 查询定义和 查询处理器
 │   ├── Infrastructure/         # 基础设施层
 │   │   ├── Repositories/       # 仓库实现
 │   │   │   └── Eloquent/       # Eloquent实现
