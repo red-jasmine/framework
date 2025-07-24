@@ -1,9 +1,9 @@
 <?php
 
-namespace RedJasmine\PointsMall\Application\Services;
+namespace RedJasmine\PointsMall\Application\Services\PointsProduct;
 
-use RedJasmine\PointsMall\Application\Services\Commands\PointsProductCreateCommandHandler;
-use RedJasmine\PointsMall\Application\Services\Commands\PointsProductUpdateCommandHandler;
+use RedJasmine\PointsMall\Application\Services\PointsProduct\Commands\PointsProductCreateCommandHandler;
+use RedJasmine\PointsMall\Application\Services\PointsProduct\Commands\PointsProductUpdateCommandHandler;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;

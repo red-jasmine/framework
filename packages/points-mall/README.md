@@ -37,8 +37,7 @@ php artisan migrate
 ### 积分兑换
 
 ```php
-use RedJasmine\PointsMall\Application\Services\PointsMallApplicationService;
-use RedJasmine\PointsMall\Application\Commands\PointsExchangeCommand;
+use RedJasmine\PointsMall\Application\Commands\PointsExchangeCommand;use RedJasmine\PointsMall\Application\Services\PointsProduct\PointsMallApplicationService;
 
 $service = app(PointsMallApplicationService::class);
 

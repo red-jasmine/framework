@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\PointsMall\Application\Services\Queries;
+namespace RedJasmine\PointsMall\Application\Services\PointsProduct\Queries;
 
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductStatusEnum;

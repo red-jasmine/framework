@@ -2,7 +2,7 @@
 
 namespace RedJasmine\PointsMall\UI\Http\Admin\Api\Controllers;
 
-use RedJasmine\PointsMall\Application\Services\PointProductCategory\PointProductCategoryApplicationService as Service;
+use RedJasmine\PointsMall\Application\Services\PointsProduct\PointsProductCategory\PointsProductCategoryApplicationService as Service;
 use RedJasmine\PointsMall\Domain\Data\PointProductCategoryData as Data;
 use RedJasmine\PointsMall\Domain\Models\PointsProductCategory as Model;
 use RedJasmine\PointsMall\UI\Http\Admin\Api\Resources\PointProductCategoryResource as Resource;

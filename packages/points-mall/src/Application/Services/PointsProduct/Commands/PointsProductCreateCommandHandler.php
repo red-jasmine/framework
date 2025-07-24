@@ -1,8 +1,8 @@
 <?php
 
-namespace RedJasmine\PointsMall\Application\Services\Commands;
+namespace RedJasmine\PointsMall\Application\Services\PointsProduct\Commands;
 
-use RedJasmine\PointsMall\Application\Services\PointsProductApplicationService;
+use RedJasmine\PointsMall\Application\Services\PointsProduct\PointsProductApplicationService;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
 use RedJasmine\Support\Application\HandleContext;
 
