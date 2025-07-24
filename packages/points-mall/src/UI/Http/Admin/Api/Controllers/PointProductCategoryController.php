@@ -21,14 +21,15 @@ class PointProductCategoryController extends Controller
         protected Service $service,
     ) {
         $this->service->readRepository->withQuery(function ($query) {
-            $query->show();
+            $query->onlyOwner($this->getOwner());
         });
     }
 
-    public function authorize($ability, $arguments = []): bool
+    public function authorize($ability, $arguments = [])
     {
         return true;
     }
+
 
     use HasTreeAction;
 } 
