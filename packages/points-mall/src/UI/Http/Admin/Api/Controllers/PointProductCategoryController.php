@@ -1,0 +1,34 @@
+<?php
+
+namespace RedJasmine\PointsMall\UI\Http\Admin\Api\Controllers;
+
+use RedJasmine\PointsMall\Application\Services\PointProductCategory\PointProductCategoryApplicationService as Service;
+use RedJasmine\PointsMall\Domain\Data\PointProductCategoryData as Data;
+use RedJasmine\PointsMall\Domain\Models\PointsProductCategory as Model;
+use RedJasmine\PointsMall\UI\Http\Admin\Api\Resources\PointProductCategoryResource as Resource;
+use RedJasmine\Support\UI\Http\Controllers\HasTreeAction;
+use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
+
+class PointProductCategoryController extends Controller
+{
+    protected static string $resourceClass      = Resource::class;
+    protected static string $modelClass         = Model::class;
+    protected static string $dataClass          = Data::class;
+
+    use RestControllerActions;
+
+    public function __construct(
+        protected Service $service,
+    ) {
+        $this->service->readRepository->withQuery(function ($query) {
+            $query->show();
+        });
+    }
+
+    public function authorize($ability, $arguments = []): bool
+    {
+        return true;
+    }
+
+    use HasTreeAction;
+} 
