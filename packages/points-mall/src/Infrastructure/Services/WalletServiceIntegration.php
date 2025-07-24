@@ -2,8 +2,10 @@
 
 namespace RedJasmine\PointsMall\Infrastructure\Services;
 
-use RedJasmine\Wallet\Application\Services\WalletApplicationService;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
+use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
 
 /**
  * 积分商城钱包服务集成
@@ -11,111 +13,55 @@ use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
  */
 class WalletServiceIntegration implements WalletServiceInterface
 {
+    public const string WALLET_TYPE = 'points';
+
     public function __construct(
         protected WalletApplicationService $walletApplicationService,
     ) {
     }
 
     /**
-     * 获取积分余额
+     * 验证用户积分钱包是否存在且有效
      *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @return int
+     * @param  UserInterface  $user
+     *
+     * @return bool 钱包是否有效
      */
-    public function getPointsBalance(string $ownerType, string $ownerId): int
+    public function validateUserWallet(UserInterface $user) : bool
     {
-        try {
-            return $this->walletApplicationService->getPointsBalance($ownerType, $ownerId);
-        } catch (\Throwable $throwable) {
-            return 0;
-        }
+
+        $query        = new FindByOwnerTypeQuery();
+        $query->owner = $user;
+        $query->type  = static::WALLET_TYPE;
+
+        $wallet = $this->walletApplicationService->findByOwnerType($query);
     }
 
     /**
-     * 扣除积分
+     * 获取用户积分余额
      *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @param int $points
-     * @param array $metadata
-     * @return bool
+     * @param  UserInterface  $user
+     *
+     * @return int 用户积分余额
      */
-    public function deductPoints(string $ownerType, string $ownerId, int $points, array $metadata = []): bool
+    public function getPointsBalance(UserInterface $user) : int
     {
-        try {
-            return $this->walletApplicationService->deductPoints($ownerType, $ownerId, $points, $metadata);
-        } catch (\Throwable $throwable) {
-            return false;
-        }
+        // TODO: Implement getPointsBalance() method.
     }
 
     /**
-     * 验证积分余额
+     * 扣减用户积分
      *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @param int $requiredPoints
-     * @return bool
+     * @param  UserInterface  $user
+     * @param  int  $points  扣减的积分数量
+     * @param  array  $metadata  元数据
+     *
+     * @return bool 是否扣减成功
      */
-    public function validatePointsBalance(string $ownerType, string $ownerId, int $requiredPoints): bool
+    public function deductPoints(UserInterface $user, int $points, array $metadata = []) : bool
     {
-        try {
-            return $this->walletApplicationService->validatePointsBalance($ownerType, $ownerId, $requiredPoints);
-        } catch (\Throwable $throwable) {
-            return false;
-        }
+        // TODO: Implement deductPoints() method.
     }
 
-    /**
-     * 创建积分交易记录
-     *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @param int $points
-     * @param string $type
-     * @param array $metadata
-     * @return string|null
-     */
-    public function createPointsTransaction(string $ownerType, string $ownerId, int $points, string $type, array $metadata = []): ?string
-    {
-        try {
-            return $this->walletApplicationService->createPointsTransaction($ownerType, $ownerId, $points, $type, $metadata);
-        } catch (\Throwable $throwable) {
-            return null;
-        }
-    }
 
-    /**
-     * 获取积分交易记录
-     *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @param int $limit
-     * @return array
-     */
-    public function getPointsTransactions(string $ownerType, string $ownerId, int $limit = 20): array
-    {
-        try {
-            return $this->walletApplicationService->getPointsTransactions($ownerType, $ownerId, $limit);
-        } catch (\Throwable $throwable) {
-            return [];
-        }
-    }
-
-    /**
-     * 验证钱包状态
-     *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @return bool
-     */
-    public function validateWalletStatus(string $ownerType, string $ownerId): bool
-    {
-        try {
-            return $this->walletApplicationService->validateWalletStatus($ownerType, $ownerId);
-        } catch (\Throwable $throwable) {
-            return false;
-        }
-    }
 } 

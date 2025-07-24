@@ -18,7 +18,7 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
                 'create_points_product_categories_table',
                 'create_points_exchange_orders_table',
             ])
-            ->hasRoutes(['admin'])
+            ->hasRoutes(['api'])
             ->runsMigrations();
 
         $this->app->register(PointsMallApplicationServiceProvider::class);

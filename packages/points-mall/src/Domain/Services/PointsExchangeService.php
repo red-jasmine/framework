@@ -4,6 +4,7 @@ namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
+use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
@@ -11,12 +12,14 @@ use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInter
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
 use RedJasmine\PointsMall\Exceptions\PointsProductException;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Service\Service;
 
-class PointsExchangeService
+class PointsExchangeService extends Service
 {
     public function __construct(
         protected PointsProductRepositoryInterface $productRepository,
-        protected PointsExchangeOrderRepositoryInterface $orderRepository
+        protected PointsExchangeOrderRepositoryInterface $orderRepository,
+        protected WalletServiceInterface $walletService,
     ) {
     }
 
