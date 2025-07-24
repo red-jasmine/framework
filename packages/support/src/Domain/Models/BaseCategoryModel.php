@@ -15,12 +15,18 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 /**
  * @property int $id
+ * @property int $parent_id
  * @property string $name
- * @property string $cluster
- * @property string $image
+ * @property ?string $cluster
+ * @property ?string $image
+ * @property ?string $slug
+ * @property ?string $description
+ * @property ?string $icon
+ * @property ?string $color
  * @property int $sort
  * @property bool $is_leaf
  * @property bool $is_show
+ * @property ?array $extra
  * @property UniversalStatusEnum $status
  *
  */
