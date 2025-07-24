@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\PointsMall\Application\Services\PointsProduct\PointsProductCategory;
+namespace RedJasmine\PointsMall\Application\Services\PointsProductCategory;
 
 use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
 use RedJasmine\PointsMall\Domain\Repositories\PointProductCategoryReadRepositoryInterface;
