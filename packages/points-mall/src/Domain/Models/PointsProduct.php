@@ -2,6 +2,7 @@
 
 namespace RedJasmine\PointsMall\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
@@ -9,14 +10,18 @@ use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\ValueObjects\ExchangeLimit;
 use RedJasmine\PointsMall\Domain\Models\ValueObjects\PaymentInfo;
 use RedJasmine\PointsMall\Domain\Models\ValueObjects\StockInfo;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
-class PointsProduct extends Model implements OperatorInterface
+/**
+ * @property Money $price
+ * @property PointsProductPaymentModeEnum $payment_mode
+ */
+class PointsProduct extends Model implements OperatorInterface, OwnerInterface
 {
     use HasSnowflakeId;
     use HasOwner;
@@ -51,7 +56,7 @@ class PointsProduct extends Model implements OperatorInterface
     {
         return [
             'point'          => 'integer',
-            'price_amount'   => 'decimal:2',
+            'price'          => MoneyCast::class,
             'stock'          => 'integer',
             'lock_stock'     => 'integer',
             'safety_stock'   => 'integer',
@@ -90,7 +95,7 @@ class PointsProduct extends Model implements OperatorInterface
     {
         return new StockInfo(
             $this->stock,
-            $this->lock_stock,
+            $this->lock_stock ?? 0,
             $this->safety_stock
         );
     }
@@ -181,16 +186,9 @@ class PointsProduct extends Model implements OperatorInterface
      */
     public function isPointsOnlyPaymentMode() : bool
     {
-        return $this->payment_mode === PointsProductPaymentModeEnum::POINTS_ONLY;
+        return $this->payment_mode === PointsProductPaymentModeEnum::POINTS;
     }
 
-    /**
-     * 检查是否为纯现金支付模式
-     */
-    public function isMoneyOnlyPaymentMode() : bool
-    {
-        return $this->payment_mode === PointsProductPaymentModeEnum::MONEY_ONLY;
-    }
 
     /**
      * 检查是否可以兑换指定数量

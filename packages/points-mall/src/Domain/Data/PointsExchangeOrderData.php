@@ -24,7 +24,7 @@ class PointsExchangeOrderData extends Data
     public int $quantity = 1;
     
     #[WithCast(EnumCast::class, PointsProductPaymentModeEnum::class)]
-    public PointsProductPaymentModeEnum $paymentMode = PointsProductPaymentModeEnum::POINTS_ONLY;
+    public PointsProductPaymentModeEnum $paymentMode = PointsProductPaymentModeEnum::POINTS;
     
     public string $paymentStatus = 'pending';
     

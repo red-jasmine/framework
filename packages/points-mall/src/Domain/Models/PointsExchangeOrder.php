@@ -106,16 +106,9 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
      */
     public function isPointsOnlyPayment() : bool
     {
-        return $this->payment_mode === PointsProductPaymentModeEnum::POINTS_ONLY;
+        return $this->payment_mode === PointsProductPaymentModeEnum::POINTS;
     }
 
-    /**
-     * 检查是否为纯现金支付
-     */
-    public function isMoneyOnlyPayment() : bool
-    {
-        return $this->payment_mode === PointsProductPaymentModeEnum::MONEY_ONLY;
-    }
 
     /**
      * 更新订单状态

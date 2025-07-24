@@ -10,13 +10,9 @@ use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 class PointsProductPaginationQuery extends PaginateQuery
 {
     public ?string                       $title        = null;
-    public ?int                          $category_id  = null;
+    public ?int                          $categoryId   = null;
     public ?PointsProductStatusEnum      $status       = null;
     public ?PointsProductPaymentModeEnum $payment_mode = null;
-    public ?int                          $min_point    = null;
-    public ?int                          $max_point    = null;
-    public ?float                        $min_price    = null;
-    public ?float                        $max_price    = null;
-    public ?string                       $product_type = null;
-    public ?int                          $product_id   = null;
+    public ?string                       $productType  = null;
+    public ?int                          $productId    = null;
 } 

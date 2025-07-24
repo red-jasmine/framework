@@ -87,10 +87,7 @@ class PointsExchangeService
             $this->validatePointsBalance($buyer, $product->point * $quantity);
         }
 
-        // 检查现金金额
-        if ($product->isMoneyOnlyPaymentMode() || $product->isMixedPaymentMode()) {
-            $this->validateCashAmount($product, $cashAmount, $quantity);
-        }
+
     }
 
     /**

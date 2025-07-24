@@ -32,23 +32,16 @@ class PaymentInfo extends ValueObject
     /**
      * 检查是否为纯积分支付
      */
-    public function isPointsOnly(): bool
+    public function isPointsOnly() : bool
     {
-        return $this->paymentMode === PointsProductPaymentModeEnum::POINTS_ONLY;
+        return $this->paymentMode === PointsProductPaymentModeEnum::POINTS;
     }
 
-    /**
-     * 检查是否为纯现金支付
-     */
-    public function isMoneyOnly(): bool
-    {
-        return $this->paymentMode === PointsProductPaymentModeEnum::MONEY_ONLY;
-    }
 
     /**
      * 检查是否为混合支付
      */
-    public function isMixed(): bool
+    public function isMixed() : bool
     {
         return $this->paymentMode === PointsProductPaymentModeEnum::MIXED;
     }
@@ -56,7 +49,7 @@ class PaymentInfo extends ValueObject
     /**
      * 获取总支付金额（积分转换为现金）
      */
-    public function getTotalMoneyAmount(float $pointsRate = 0.01): float
+    public function getTotalMoneyAmount(float $pointsRate = 0.01) : float
     {
         $pointsMoney = $this->pointAmount * $pointsRate;
         return $pointsMoney + $this->moneyAmount;
@@ -65,7 +58,7 @@ class PaymentInfo extends ValueObject
     /**
      * 设置支付状态
      */
-    public function setPaymentStatus(string $status): void
+    public function setPaymentStatus(string $status) : void
     {
         $this->paymentStatus = $status;
     }
@@ -73,7 +66,7 @@ class PaymentInfo extends ValueObject
     /**
      * 设置交易号
      */
-    public function setTradeNo(string $tradeNo): void
+    public function setTradeNo(string $tradeNo) : void
     {
         $this->tradeNo = $tradeNo;
     }
@@ -81,7 +74,7 @@ class PaymentInfo extends ValueObject
     /**
      * 检查是否已支付
      */
-    public function isPaid(): bool
+    public function isPaid() : bool
     {
         return $this->paymentStatus === 'paid';
     }
@@ -89,7 +82,7 @@ class PaymentInfo extends ValueObject
     /**
      * 检查是否支付失败
      */
-    public function isFailed(): bool
+    public function isFailed() : bool
     {
         return $this->paymentStatus === 'failed';
     }
@@ -97,7 +90,7 @@ class PaymentInfo extends ValueObject
     /**
      * 检查是否待支付
      */
-    public function isPending(): bool
+    public function isPending() : bool
     {
         return $this->paymentStatus === 'pending';
     }
@@ -105,7 +98,7 @@ class PaymentInfo extends ValueObject
     /**
      * 获取支付模式标签
      */
-    public function getPaymentModeLabel(): string
+    public function getPaymentModeLabel() : string
     {
         return $this->paymentMode->label();
     }
@@ -113,7 +106,7 @@ class PaymentInfo extends ValueObject
     /**
      * 获取支付模式颜色
      */
-    public function getPaymentModeColor(): string
+    public function getPaymentModeColor() : string
     {
         return $this->paymentMode->color();
     }

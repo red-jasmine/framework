@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82cf4850c252f8205615fc0de7edfabc",
+    "content-hash": "06201228e10201a767486cdf1467be92",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3588,12 +3588,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5d777bd4e11e80a71bced6b034f918f086f18527"
+                "reference": "382af9552ae7c2a6dc12b6cab5856d90238e8f22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5d777bd4e11e80a71bced6b034f918f086f18527",
-                "reference": "5d777bd4e11e80a71bced6b034f918f086f18527",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/382af9552ae7c2a6dc12b6cab5856d90238e8f22",
+                "reference": "382af9552ae7c2a6dc12b6cab5856d90238e8f22",
                 "shasum": ""
             },
             "require": {
@@ -3796,7 +3796,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-07-22T19:28:28+00:00"
+            "time": "2025-07-23T22:36:29+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -8295,6 +8295,67 @@
             "time": "2025-05-22T10:00:18+00:00"
         },
         {
+            "name": "red-jasmine/logistics",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./packages/logistics",
+                "reference": "21b7f5f5cdf25fff0bcb44aebcc692b78c99f419"
+            },
+            "require": {
+                "red-jasmine/region": "1.0.x-dev",
+                "red-jasmine/support": "1.0.x-dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\Logistics\\LogisticsPackageServiceProvider",
+                        "RedJasmine\\Logistics\\Application\\LogisticsApplicationServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Logistics\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\Logistics\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "homepage": "https://github.com/liushoukun"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/red-jasmine/logistics",
+            "keywords": [
+                "Laravel",
+                "Logistics"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "red-jasmine/order",
             "version": "dev-master",
             "dist": {
@@ -8464,6 +8525,127 @@
                 "Laravel",
                 "PointsMall",
                 "积分商城"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "red-jasmine/product",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./packages/product",
+                "reference": "a6336cd0b387426eb94a87d1d71d1946796d8a89"
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "red-jasmine/ecommerce": "1.0.x-dev",
+                "red-jasmine/logistics": "1.0.x-dev",
+                "red-jasmine/support": "1.0.x-dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "\\RedJasmine\\Product\\Application\\ProductApplicationServiceProvider",
+                        "\\RedJasmine\\Product\\ProductPackageServiceProvider"
+                    ],
+                    "aliases": []
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev",
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Product\\": "src/",
+                    "RedJasmine\\Product\\Database\\Seeders\\": "./database/seeders/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\Product\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "homepage": "https://github.com/liushoukun"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/red-jasmine/product",
+            "keywords": [
+                "Laravel",
+                "Product"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "red-jasmine/region",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./packages/region",
+                "reference": "3ed9c6f220cb4cb467cb3c0632dbfed2ae2eccf6"
+            },
+            "require": {
+                "red-jasmine/support": "1.0.x-dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\Region\\RegionPackageServiceProvider",
+                        "RedJasmine\\Region\\Application\\RegionApplicationServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Region\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\Region\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "homepage": "https://github.com/liushoukun66"
+                }
+            ],
+            "description": "region",
+            "homepage": "https://github.com/red-jasmine/region",
+            "keywords": [
+                "Laravel",
+                "Region"
             ],
             "transport-options": {
                 "symlink": true,
@@ -9169,12 +9351,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "a1851df15da5f9bcb7b47691ba03cd8f320fc4a0"
+                "reference": "a028147780a2832aa7b3a6d6b522a61c87ea51fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/a1851df15da5f9bcb7b47691ba03cd8f320fc4a0",
-                "reference": "a1851df15da5f9bcb7b47691ba03cd8f320fc4a0",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/a028147780a2832aa7b3a6d6b522a61c87ea51fd",
+                "reference": "a028147780a2832aa7b3a6d6b522a61c87ea51fd",
                 "shasum": ""
             },
             "require": {
@@ -9245,7 +9427,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-16T21:31:49+00:00"
+            "time": "2025-07-23T16:13:20+00:00"
         },
         {
             "name": "spatie/laravel-query-builder",
@@ -15746,10 +15928,12 @@
         "orchestra/testbench": 20,
         "pestphp/pest": 20,
         "red-jasmine/distribution": 20,
+        "red-jasmine/ecommerce": 20,
         "red-jasmine/filament-admin": 20,
         "red-jasmine/order": 20,
         "red-jasmine/payment": 20,
         "red-jasmine/points-mall": 20,
+        "red-jasmine/product": 20,
         "red-jasmine/support": 20,
         "red-jasmine/user": 20,
         "red-jasmine/wallet": 20
