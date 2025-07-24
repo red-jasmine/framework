@@ -3,11 +3,13 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
+use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
+use RedJasmine\PointsMall\Exceptions\PointsProductException;
 use RedJasmine\Support\Contracts\UserInterface;
 
 class PointsExchangeService
@@ -21,14 +23,11 @@ class PointsExchangeService
     /**
      * 处理积分兑换
      */
-    public function processExchange(
-        PointsProduct $product,
-        UserInterface $buyer,
-        int $quantity,
-        float $cashAmount = 0.0
-    ) : PointsExchangeOrder {
+    public function processExchange(PointsProduct $product, PurchaseFactor $purchaseFactor, int $quantity) : PointsExchangeOrder
+    {
+        $buyer = $purchaseFactor->buyer;
         // 验证兑换资格
-        $this->validateExchange($product, $buyer, $quantity, $cashAmount);
+        $this->validateExchange($product, $purchaseFactor->buyer, $quantity);
 
         // 锁定库存
         if (!$product->lockStock($quantity)) {
@@ -62,21 +61,21 @@ class PointsExchangeService
 
     /**
      * 验证兑换资格
+     * @throws PointsProductException
      */
     public function validateExchange(
         PointsProduct $product,
         UserInterface $buyer,
-        int $quantity,
-        float $cashAmount = 0.0
+        int $quantity
     ) : void {
         // 检查商品状态
         if (!$product->isOnSale()) {
-            throw new Exception('商品未上架，无法兑换');
+            throw new PointsProductException('商品未上架，无法兑换');
         }
 
         // 检查库存
         if (!$product->canExchange($quantity)) {
-            throw new Exception('库存不足，无法兑换');
+            throw new PointsProductException('库存不足，无法兑换');
         }
 
         // 检查兑换限制
@@ -105,12 +104,12 @@ class PointsExchangeService
         );
 
         if (!$exchangeLimit->checkUserLimit($userExchangeCount)) {
-            throw new Exception('已达到用户兑换限制');
+            throw new PointsProductException('已达到用户兑换限制');
         }
 
         // 检查订单数量限制
         if (!$exchangeLimit->checkOrderLimit($quantity)) {
-            throw new Exception('订单数量超过限制');
+            throw new PointsProductException('订单数量超过限制');
         }
     }
 
@@ -124,7 +123,7 @@ class PointsExchangeService
         $userPoints = $this->getUserPoints($buyer);
 
         if ($userPoints < $requiredPoints) {
-            throw new Exception('积分余额不足');
+            throw new PointsProductException('积分余额不足');
         }
     }
 
@@ -136,7 +135,7 @@ class PointsExchangeService
         $requiredAmount = $product->getActualMoneyPrice() * $quantity;
 
         if ($cashAmount < $requiredAmount) {
-            throw new Exception('现金金额不足');
+            throw new PointsProductException('现金金额不足');
         }
     }
 

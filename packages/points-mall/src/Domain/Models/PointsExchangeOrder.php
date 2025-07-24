@@ -9,13 +9,14 @@ use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
 use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
-class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToOwnerInterface, UniqueNoInterface
+class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInterface, UniqueNoInterface
 {
 
     protected static string $uniqueNoKey = 'points_order_no';
@@ -31,8 +32,6 @@ class PointsExchangeOrder extends Model implements OperatorInterface, BelongsToO
     public $incrementing = false;
 
     protected $fillable = [
-        'owner_type',
-        'owner_id',
         'order_no',
         'outer_order_no',
         'point_product_id',

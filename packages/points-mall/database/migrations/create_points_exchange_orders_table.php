@@ -20,7 +20,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('point_product_id')->comment('积分商品ID');
             $table->string('product_type')->comment('商品源类型');
             $table->string('product_id')->comment('商品源ID');
-            $table->string('product_title')->comment('商品标题');
+            $table->string('sku_id')->comment('商品源规格ID');
+            $table->string('title')->comment('商品标题');
             $table->integer('point')->default(0)->comment('积分');
             $table->string('price_currency', 3)->default('CNY')->comment('价格货币');
             $table->decimal('price_amount', 10, 2)->default(0.00)->comment('价格金额');
