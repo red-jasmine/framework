@@ -18,6 +18,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
+ * @property float|int $point
  * @property Money $price
  * @property PointsProductPaymentModeEnum $payment_mode
  */

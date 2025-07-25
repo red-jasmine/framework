@@ -3,10 +3,13 @@
 namespace RedJasmine\PointsMall\Infrastructure\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Infrastructure\Services\Transformers\PointsExchangeOrderCreateCommandTransformer;
+use Throwable;
 
 /**
  * 积分商城订单服务集成
@@ -22,10 +25,11 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 获取订单商品拆分键
      *
-     * @param ProductPurchaseFactor $orderProductData
+     * @param  ProductPurchaseFactor  $orderProductData
+     *
      * @return string
      */
-    public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData): string
+    public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData) : string
     {
         if (!isset($orderProductData->product->seller)) {
             return '-';
@@ -36,49 +40,27 @@ class OrderServiceIntegration implements OrderServiceInterface
         ]));
     }
 
-    /**
-     * 创建积分兑换订单
-     *
-     * @param OrderData $orderData
-     * @return OrderData
-     */
-    public function create(OrderData $orderData): OrderData
+    public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo)
     {
-        // 转换 DTO
-        $command = (new PointsExchangeOrderCreateCommandTransformer())->transform($orderData);
-        
-        // 创建订单
-        $order = $this->orderApplicationService->create($command);
-
-        // 设置订单号
-        $orderData->setOrderNo($order->order_no);
-        
-        // 关联订单商品
-        foreach ($order->products as $product) {
-            $product->getSerialNumber();
-            foreach ($orderData->products as $productData) {
-                if ($productData->getSerialNumber() == $product->getSerialNumber()) {
-                    $productData->setOrderProductNo($product->order_product_no);
-                }
-            }
-        }
-
-        return $orderData;
+        // TODO 构建 订单领域 创建DTO
+        // TODO 调用 订单领域 创建命令
     }
+
 
     /**
      * 更新订单状态
      *
-     * @param string $orderNo
-     * @param string $status
-     * @param array $metadata
+     * @param  string  $orderNo
+     * @param  string  $status
+     * @param  array  $metadata
+     *
      * @return bool
      */
-    public function updateOrderStatus(string $orderNo, string $status, array $metadata = []): bool
+    public function updateOrderStatus(string $orderNo, string $status, array $metadata = []) : bool
     {
         try {
             return $this->orderApplicationService->updateStatus($orderNo, $status, $metadata);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return false;
         }
     }
@@ -86,15 +68,16 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 获取订单信息
      *
-     * @param string $orderNo
+     * @param  string  $orderNo
+     *
      * @return array|null
      */
-    public function getOrderInfo(string $orderNo): ?array
+    public function getOrderInfo(string $orderNo) : ?array
     {
         try {
             $order = $this->orderApplicationService->find($orderNo);
             return $order ? $order->toArray() : null;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return null;
         }
     }
@@ -102,16 +85,17 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 验证订单状态
      *
-     * @param string $orderNo
-     * @param string $expectedStatus
+     * @param  string  $orderNo
+     * @param  string  $expectedStatus
+     *
      * @return bool
      */
-    public function validateOrderStatus(string $orderNo, string $expectedStatus): bool
+    public function validateOrderStatus(string $orderNo, string $expectedStatus) : bool
     {
         try {
             $order = $this->orderApplicationService->find($orderNo);
             return $order && $order->status === $expectedStatus;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return false;
         }
     }
@@ -119,32 +103,33 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 创建积分兑换订单数据
      *
-     * @param array $exchangeData
+     * @param  array  $exchangeData
+     *
      * @return array
      */
-    public function createPointsExchangeOrderData(array $exchangeData): array
+    public function createPointsExchangeOrderData(array $exchangeData) : array
     {
         return [
             'order_no' => $exchangeData['outer_order_no'],
-            'buyer' => $exchangeData['buyer'],
-            'seller' => $exchangeData['seller'],
+            'buyer'    => $exchangeData['buyer'],
+            'seller'   => $exchangeData['seller'],
             'products' => [
                 [
                     'product_id' => $exchangeData['point_product_id'],
-                    'quantity' => $exchangeData['quantity'],
-                    'price' => $exchangeData['price_amount'],
-                    'currency' => $exchangeData['price_currency'],
-                    'metadata' => [
+                    'quantity'   => $exchangeData['quantity'],
+                    'price'      => $exchangeData['price_amount'],
+                    'currency'   => $exchangeData['price_currency'],
+                    'metadata'   => [
                         'points_exchange_order_id' => $exchangeData['id'],
-                        'points' => $exchangeData['point'],
-                        'payment_mode' => $exchangeData['payment_mode'],
+                        'points'                   => $exchangeData['point'],
+                        'payment_mode'             => $exchangeData['payment_mode'],
                     ]
                 ]
             ],
             'metadata' => [
                 'points_exchange_order_id' => $exchangeData['id'],
-                'payment_mode' => $exchangeData['payment_mode'],
-                'point_amount' => $exchangeData['point'],
+                'payment_mode'             => $exchangeData['payment_mode'],
+                'point_amount'             => $exchangeData['point'],
             ]
         ];
     }
@@ -152,15 +137,16 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 取消订单
      *
-     * @param string $orderNo
-     * @param string $reason
+     * @param  string  $orderNo
+     * @param  string  $reason
+     *
      * @return bool
      */
-    public function cancelOrder(string $orderNo, string $reason = ''): bool
+    public function cancelOrder(string $orderNo, string $reason = '') : bool
     {
         try {
             return $this->orderApplicationService->cancel($orderNo, $reason);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return false;
         }
     }
@@ -168,17 +154,18 @@ class OrderServiceIntegration implements OrderServiceInterface
     /**
      * 获取用户订单列表
      *
-     * @param string $ownerType
-     * @param string $ownerId
-     * @param int $limit
+     * @param  string  $ownerType
+     * @param  string  $ownerId
+     * @param  int  $limit
+     *
      * @return array
      */
-    public function getUserOrders(string $ownerType, string $ownerId, int $limit = 20): array
+    public function getUserOrders(string $ownerType, string $ownerId, int $limit = 20) : array
     {
         try {
             $orders = $this->orderApplicationService->getUserOrders($ownerType, $ownerId, $limit);
             return is_array($orders) ? $orders : ($orders ? $orders->toArray() : []);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return [];
         }
     }

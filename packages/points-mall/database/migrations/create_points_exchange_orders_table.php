@@ -21,12 +21,20 @@ return new class extends Migration {
             $table->string('product_type')->comment('商品源类型');
             $table->string('product_id')->comment('商品源ID');
             $table->string('sku_id')->comment('商品源规格ID');
-            $table->string('title')->comment('商品标题');
-            $table->integer('point')->default(0)->comment('积分');
+            $table->bigInteger('point')->default(0)->comment('积分');
             $table->string('price_currency', 3)->default('CNY')->comment('价格货币');
-            $table->decimal('price_amount', 10, 2)->default(0.00)->comment('价格金额');
+            $table->decimal('price_amount', 10)->default(0.00)->comment('价格金额');
             $table->integer('quantity')->default(1)->comment('数量');
-            $table->string('payment_mode')->comment('支付模式');
+
+            $table->string('title')->nullable()->comment('标题');
+            $table->string('image')->nullable()->comment('图片');
+
+            $table->bigInteger('total_point')->default(0)->comment('积分');
+            $table->string('total_amount_currency', 3)->default('CNY')->comment('价格货币');
+            $table->decimal('total_amount_amount', 10)->default(0.00)->comment('价格金额');
+
+            // 订单状态
+
             $table->string('payment_status')->comment('支付状态');
             $table->string('status')->default(PointsExchangeOrderStatusEnum::EXCHANGED->value)->comment('状态');
             $table->timestamp('exchange_time')->comment('兑换时间');

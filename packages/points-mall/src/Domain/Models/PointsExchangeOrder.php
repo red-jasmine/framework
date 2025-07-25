@@ -2,12 +2,16 @@
 
 namespace RedJasmine\PointsMall\Domain\Models;
 
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use phpDocumentor\Reflection\Types\Static_;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -16,6 +20,11 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
 use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
+/**
+ * @property UserInterface $user
+ * @property Money $price
+ * @property Money $total_amount
+ */
 class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInterface, UniqueNoInterface
 {
 
@@ -53,11 +62,14 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
     {
         return [
             'point'         => 'integer',
-            'price_amount'  => 'decimal:2',
+            'total_point'   => 'integer',
             'quantity'      => 'integer',
             'payment_mode'  => PointsProductPaymentModeEnum::class,
             'status'        => PointsExchangeOrderStatusEnum::class,
             'exchange_time' => 'datetime',
+            'user'          => UserInterfaceCast::class,
+            'price'         => MoneyCast::class,
+            'total_amount'  => MoneyCast::class,
         ];
     }
 

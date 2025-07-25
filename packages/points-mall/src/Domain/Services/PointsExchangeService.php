@@ -3,11 +3,16 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
-use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
+use phpDocumentor\Reflection\Types\Object_;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
+use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
+use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\PointsMall\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
+use RedJasmine\PointsMall\Domain\Data\PointsExchangeOrderData;
+use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
-use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
 use RedJasmine\PointsMall\Exceptions\PointsProductException;
@@ -20,17 +25,24 @@ class PointsExchangeService extends Service
         protected PointsProductRepositoryInterface $productRepository,
         protected PointsExchangeOrderRepositoryInterface $orderRepository,
         protected WalletServiceInterface $walletService,
+        protected ProductServiceInterface $productService,
+        protected OrderServiceInterface $orderService,
     ) {
     }
 
     /**
      * 处理积分兑换
+     * @throws PointsProductException
+     * @throws Exception
      */
-    public function processExchange(PointsProduct $product, PurchaseFactor $purchaseFactor, int $quantity) : PointsExchangeOrder
+    public function exchange(PointsExchangeOrderData $exchangeOrderData) : PointsExchangeOrder
     {
-        $buyer = $purchaseFactor->buyer;
+        $purchaseFactor = $exchangeOrderData;
+        $product        = $purchaseFactor->pointProduct;
+        $quantity       = $purchaseFactor->quantity;
+        $buyer          = $purchaseFactor->buyer;
         // 验证兑换资格
-        $this->validateExchange($product, $purchaseFactor->buyer, $quantity);
+        $this->validateExchange($exchangeOrderData);
 
         // 锁定库存
         if (!$product->lockStock($quantity)) {
@@ -38,18 +50,23 @@ class PointsExchangeService extends Service
         }
 
         try {
+
+            // 创建兑换订单
+            $order = $this->createExchangeOrder($exchangeOrderData);
+
+
             // 扣除积分
             if ($product->isPointsOnlyPaymentMode() || $product->isMixedPaymentMode()) {
                 $this->deductPoints($buyer, $product->point * $quantity);
             }
-
-            // 创建兑换订单
-            $order = $this->createExchangeOrder($product, $buyer, $quantity, $cashAmount);
-
             // 减少库存
             if (!$product->decreaseStock($quantity)) {
                 throw new Exception('库存扣减失败');
             }
+
+            // 调用订单领域服务、创建 订单
+
+            $this->createOrder();
 
             // 保存商品
             $this->productRepository->update($product);
@@ -66,31 +83,42 @@ class PointsExchangeService extends Service
      * 验证兑换资格
      * @throws PointsProductException
      */
-    public function validateExchange(
-        PointsProduct $product,
-        UserInterface $buyer,
-        int $quantity
-    ) : void {
+    public function validateExchange(PointsExchangeOrderData $exchangeOrderData) : void
+    {
+
+        $this->validatePointsProduct($exchangeOrderData);
+
+        // 检查兑换限制
+
+
+        // 检查积分余额
+
+        $this->validatePointsWallet($exchangeOrderData);
+
+    }
+
+
+    /**
+     * @param  PointsExchangeOrderData  $exchangeOrderData
+     *
+     * @return void
+     * @throws PointsProductException
+     */
+    public function validatePointsProduct(PointsExchangeOrderData $exchangeOrderData) : void
+    {
+        $pointProduct = $exchangeOrderData->pointProduct;
+        $quantity     = $exchangeOrderData->quantity;
         // 检查商品状态
-        if (!$product->isOnSale()) {
+        if (!$pointProduct->isOnSale()) {
             throw new PointsProductException('商品未上架，无法兑换');
         }
 
         // 检查库存
-        if (!$product->canExchange($quantity)) {
+        if (!$pointProduct->canExchange($quantity)) {
             throw new PointsProductException('库存不足，无法兑换');
         }
-
-        // 检查兑换限制
-        $this->validateExchangeLimit($product, $buyer, $quantity);
-
-        // 检查积分余额
-        if ($product->isPointsOnlyPaymentMode() || $product->isMixedPaymentMode()) {
-            $this->validatePointsBalance($buyer, $product->point * $quantity);
-        }
-
-
     }
+
 
     /**
      * 验证兑换限制
@@ -118,12 +146,17 @@ class PointsExchangeService extends Service
 
     /**
      * 验证积分余额
+     * @throws PointsProductException
      */
-    private function validatePointsBalance(UserInterface $buyer, int $requiredPoints) : void
+    private function validatePointsWallet(PointsExchangeOrderData $exchangeOrderData) : void
     {
         // 这里需要调用钱包服务验证积分余额
         // 暂时使用模拟验证
-        $userPoints = $this->getUserPoints($buyer);
+
+        $buyer          = $exchangeOrderData->buyer;
+        $requiredPoints = $exchangeOrderData->pointProduct->point * $exchangeOrderData->quantity;
+
+        $userPoints = $this->walletService->getPointsBalance($buyer);
 
         if ($userPoints < $requiredPoints) {
             throw new PointsProductException('积分余额不足');
@@ -155,33 +188,44 @@ class PointsExchangeService extends Service
     /**
      * 创建兑换订单
      */
-    private function createExchangeOrder(
-        PointsProduct $product,
-        UserInterface $buyer,
-        int $quantity,
-        float $cashAmount
-    ) : PointsExchangeOrder {
-        $order                   = new PointsExchangeOrder();
-        $order->owner_type       = $buyer->getOwnerType();
-        $order->owner_id         = $buyer->getOwnerId();
-        $order->order_no         = $this->generateOrderNo();
-        $order->outer_order_no   = $this->generateOuterOrderNo();
-        $order->point_product_id = $product->id;
-        $order->product_type     = $product->product_type;
-        $order->product_id       = $product->product_id;
-        $order->product_title    = $product->title;
-        $order->point            = $product->point * $quantity;
-        $order->price_currency   = $product->price_currency;
-        $order->price_amount     = $cashAmount;
-        $order->quantity         = $quantity;
-        $order->payment_mode     = $product->payment_mode;
-        $order->payment_status   = 'pending';
-        $order->status           = PointsExchangeOrderStatusEnum::EXCHANGED;
-        $order->exchange_time    = now();
+    private function createExchangeOrder(PointsExchangeOrderData $exchangeOrderData) : PointsExchangeOrder
+    {
+        $quantity = $exchangeOrderData->quantity;
+        // 获取商品信息
+        $productIdentity         = new ProductIdentity();
+        $productIdentity->seller = $exchangeOrderData->pointProduct->owner;
+        $productIdentity->type   = $exchangeOrderData->pointProduct->product_type;
+        $productIdentity->id     = $exchangeOrderData->pointProduct->product_id;
+        $productIdentity->skuId  = $exchangeOrderData->skuId;
+        $productInfo             = $this->productService->getProductInfo($productIdentity);
 
-        $this->orderRepository->store($order);
+        $exchangeOrder                   = new PointsExchangeOrder();
+        $exchangeOrder->user             = $exchangeOrderData->buyer;
+        $exchangeOrder->owner            = $exchangeOrderData->pointProduct->owner;
+        $exchangeOrder->point_product_id = $exchangeOrderData->pointProduct->id;
+        $exchangeOrder->product_type     = $exchangeOrderData->pointProduct->product_type;
+        $exchangeOrder->product_id       = $exchangeOrderData->pointProduct->product_id;
+        $exchangeOrder->sku_id           = $exchangeOrderData->skuId;
+        $exchangeOrder->point            = $exchangeOrderData->pointProduct->point;
+        $exchangeOrder->price            = $exchangeOrderData->pointProduct->price;
+        $exchangeOrder->quantity         = $quantity;
+        $exchangeOrder->total_point      = $exchangeOrderData->pointProduct->point * $quantity;
+        $exchangeOrder->total_amount     = $exchangeOrderData->pointProduct->price->multiply($quantity);
+        $exchangeOrder->title            = $productInfo->title;
+        $exchangeOrder->image            = $productInfo->image;
 
-        return $order;
+
+        $this->orderRepository->store($exchangeOrder);
+
+        $this->createOrder($exchangeOrder, $productInfo);
+
+        return $exchangeOrder;
+    }
+
+    public function createOrder(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo)
+    {
+
+        $this->orderService->create($exchangeOrder, $productInfo);
     }
 
     /**
@@ -200,14 +244,6 @@ class PointsExchangeService extends Service
         return 'OUTER'.date('YmdHis').mt_rand(1000, 9999);
     }
 
-    /**
-     * 获取用户积分余额（模拟）
-     */
-    private function getUserPoints(UserInterface $buyer) : int
-    {
-        // 这里应该调用钱包服务获取用户积分余额
-        return 10000; // 模拟返回10000积分
-    }
 
     /**
      * 扣除用户积分（模拟）
