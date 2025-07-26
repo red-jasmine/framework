@@ -56,9 +56,10 @@ class PointsExchangeService extends Service
 
 
             // 扣除积分
-            if ($product->isPointsOnlyPaymentMode() || $product->isMixedPaymentMode()) {
-                $this->deductPoints($buyer, $product->point * $quantity);
+            if ($order->total_point > 0) {
+                $this->deductPoints($buyer, $order->total_point);
             }
+
             // 减少库存
             if (!$product->decreaseStock($quantity)) {
                 throw new Exception('库存扣减失败');
