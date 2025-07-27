@@ -5,6 +5,7 @@ namespace RedJasmine\PointsMall\Infrastructure\Services;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
@@ -44,6 +45,10 @@ class OrderServiceIntegration implements OrderServiceInterface
     {
         // TODO 构建 订单领域 创建DTO
         // TODO 调用 订单领域 创建命令
+
+        $command =  new OrderCreateCommand();
+
+        $this->orderApplicationService->create($command);
     }
 
 
