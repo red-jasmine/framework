@@ -37,7 +37,7 @@ class PointsExchangeService extends Service
     public function exchange(PointsExchangeOrderData $exchangeOrderData) : PointsExchangeOrder
     {
         $purchaseFactor = $exchangeOrderData;
-        $product        = $purchaseFactor->pointProduct;
+        $product        = $purchaseFactor->pointsProduct;
         $quantity       = $purchaseFactor->quantity;
         $buyer          = $purchaseFactor->buyer;
         // 验证兑换资格
@@ -85,10 +85,11 @@ class PointsExchangeService extends Service
      */
     public function validateExchange(PointsExchangeOrderData $exchangeOrderData) : void
     {
+        // 验证积分商品
 
         $this->validatePointsProduct($exchangeOrderData);
 
-        // 检查兑换限制
+        // 检查兑换限制 TODO
 
 
         // 检查积分余额
@@ -106,7 +107,7 @@ class PointsExchangeService extends Service
      */
     public function validatePointsProduct(PointsExchangeOrderData $exchangeOrderData) : void
     {
-        $pointProduct = $exchangeOrderData->pointProduct;
+        $pointProduct = $exchangeOrderData->pointsProduct;
         $quantity     = $exchangeOrderData->quantity;
         // 检查商品状态
         if (!$pointProduct->isOnSale()) {
@@ -154,7 +155,7 @@ class PointsExchangeService extends Service
         // 暂时使用模拟验证
 
         $buyer          = $exchangeOrderData->buyer;
-        $requiredPoints = $exchangeOrderData->pointProduct->point * $exchangeOrderData->quantity;
+        $requiredPoints = $exchangeOrderData->pointsProduct->point * $exchangeOrderData->quantity;
 
         $userPoints = $this->walletService->getPointsBalance($buyer);
 
@@ -182,7 +183,7 @@ class PointsExchangeService extends Service
     {
         // 这里需要调用钱包服务扣除积分
         // 暂时使用模拟扣除
-        $this->deductUserPoints($buyer, $points);
+
     }
 
     /**
@@ -193,24 +194,27 @@ class PointsExchangeService extends Service
         $quantity = $exchangeOrderData->quantity;
         // 获取商品信息
         $productIdentity         = new ProductIdentity();
-        $productIdentity->seller = $exchangeOrderData->pointProduct->owner;
-        $productIdentity->type   = $exchangeOrderData->pointProduct->product_type;
-        $productIdentity->id     = $exchangeOrderData->pointProduct->product_id;
-        $productIdentity->skuId  = $exchangeOrderData->skuId;
+        $productIdentity->seller = $exchangeOrderData->pointsProduct->owner;
+        $productIdentity->type   = $exchangeOrderData->pointsProduct->product_type;
+        $productIdentity->id     = $exchangeOrderData->pointsProduct->product_id;
+        $productIdentity->skuId  = $exchangeOrderData->skuId ?? $exchangeOrderData->pointsProduct->product_id;
         $productInfo             = $this->productService->getProductInfo($productIdentity);
+
+        // TODO 验证是否需要 地址信息
+
 
         $exchangeOrder                   = new PointsExchangeOrder();
         $exchangeOrder->user             = $exchangeOrderData->buyer;
-        $exchangeOrder->owner            = $exchangeOrderData->pointProduct->owner;
-        $exchangeOrder->point_product_id = $exchangeOrderData->pointProduct->id;
-        $exchangeOrder->product_type     = $exchangeOrderData->pointProduct->product_type;
-        $exchangeOrder->product_id       = $exchangeOrderData->pointProduct->product_id;
+        $exchangeOrder->owner            = $exchangeOrderData->pointsProduct->owner;
+        $exchangeOrder->point_product_id = $exchangeOrderData->pointsProduct->id;
+        $exchangeOrder->product_type     = $exchangeOrderData->pointsProduct->product_type;
+        $exchangeOrder->product_id       = $exchangeOrderData->pointsProduct->product_id;
         $exchangeOrder->sku_id           = $exchangeOrderData->skuId;
-        $exchangeOrder->point            = $exchangeOrderData->pointProduct->point;
-        $exchangeOrder->price            = $exchangeOrderData->pointProduct->price;
+        $exchangeOrder->point            = $exchangeOrderData->pointsProduct->point;
+        $exchangeOrder->price            = $exchangeOrderData->pointsProduct->price;
         $exchangeOrder->quantity         = $quantity;
-        $exchangeOrder->total_point      = $exchangeOrderData->pointProduct->point * $quantity;
-        $exchangeOrder->total_amount     = $exchangeOrderData->pointProduct->price->multiply($quantity);
+        $exchangeOrder->total_point      = $exchangeOrderData->pointsProduct->point * $quantity;
+        $exchangeOrder->total_amount     = $exchangeOrderData->pointsProduct->price->multiply($quantity);
         $exchangeOrder->title            = $productInfo->title;
         $exchangeOrder->image            = $productInfo->image;
 
@@ -228,29 +232,5 @@ class PointsExchangeService extends Service
         $this->orderService->create($exchangeOrder, $productInfo);
     }
 
-    /**
-     * 生成订单号
-     */
-    private function generateOrderNo() : string
-    {
-        return 'PO'.date('YmdHis').mt_rand(1000, 9999);
-    }
 
-    /**
-     * 生成关联订单号
-     */
-    private function generateOuterOrderNo() : string
-    {
-        return 'OUTER'.date('YmdHis').mt_rand(1000, 9999);
-    }
-
-
-    /**
-     * 扣除用户积分（模拟）
-     */
-    private function deductUserPoints(UserInterface $buyer, int $points) : void
-    {
-        // 这里应该调用钱包服务扣除用户积分
-        // 暂时只是模拟扣除
-    }
-} 
+}

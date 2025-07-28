@@ -6,6 +6,7 @@ use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
+use RedJasmine\Wallet\Domain\Models\Wallet;
 
 /**
  * 积分商城钱包服务集成
@@ -37,6 +38,15 @@ class WalletServiceIntegration implements WalletServiceInterface
         $wallet = $this->walletApplicationService->findByOwnerType($query);
     }
 
+    private function getWallet(UserInterface $user) : Wallet
+    {
+        $query        = new FindByOwnerTypeQuery();
+        $query->owner = $user;
+        $query->type  = static::WALLET_TYPE;
+
+        return $this->walletApplicationService->findByOwnerType($query);
+    }
+
     /**
      * 获取用户积分余额
      *
@@ -46,7 +56,10 @@ class WalletServiceIntegration implements WalletServiceInterface
      */
     public function getPointsBalance(UserInterface $user) : int
     {
-        // TODO: Implement getPointsBalance() method.
+
+        $wallet = $this->getWallet($user);
+        return (int) $wallet->balance->formatByDecimal();
+
     }
 
     /**

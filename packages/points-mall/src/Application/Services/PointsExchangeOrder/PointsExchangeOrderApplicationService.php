@@ -2,6 +2,7 @@
 
 namespace RedJasmine\PointsMall\Application\Services\PointsExchangeOrder;
 
+use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderCreateCommand;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderCreateCommandHandler;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderReadRepositoryInterface;
@@ -11,6 +12,10 @@ use RedJasmine\PointsMall\Domain\Services\PointsExchangeService;
 use RedJasmine\PointsMall\Domain\Transformers\PointsExchangeOrderTransformer;
 use RedJasmine\Support\Application\ApplicationService;
 
+/**
+ * @see PointsExchangeOrderCreateCommandHandler::handle()
+ * @method PointsExchangeOrder create(PointsExchangeOrderCreateCommand $command)
+ */
 class PointsExchangeOrderApplicationService extends ApplicationService
 {
     public static string    $hookNamePrefix = 'points-mall.product.application';

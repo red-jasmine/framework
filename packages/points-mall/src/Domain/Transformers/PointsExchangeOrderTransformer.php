@@ -18,13 +18,13 @@ class PointsExchangeOrderTransformer implements TransformerInterface
         }
 
         if ($data instanceof PointsExchangeOrderData) {
-            $model->owner            = $data->pointProduct->owner;
-            $model->point_product_id = $data->pointProduct->id;
-            $model->product_type     = $data->pointProduct->product_type;
-            $model->product_id       = $data->pointProduct->product_id;
-            $model->sku_id           = $data->pointProduct->product_id;
-            $model->point            = $data->pointProduct->point;
-            $model->price            = $data->pointProduct->price;
+            $model->owner            = $data->pointsProduct->owner;
+            $model->point_product_id = $data->pointsProduct->id;
+            $model->product_type     = $data->pointsProduct->product_type;
+            $model->product_id       = $data->pointsProduct->product_id;
+            $model->sku_id           = $data->pointsProduct->product_id;
+            $model->point            = $data->pointsProduct->point;
+            $model->price            = $data->pointsProduct->price;
             $model->quantity         = $data->quantity;
         }
 

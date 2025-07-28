@@ -32,13 +32,13 @@ class PointsExchangeOrderCreateCommandHandler extends CreateCommandHandler
         // 转换 命令对象
         // 积分商品、积分钱包、用户地址、积分商品对用的产品
 
-        $pointProduct = $this->service->pointsProductRepository->find($command->pointProductId);
+        $pointsProduct = $this->service->pointsProductRepository->find($command->pointsProductId);
 
         $newCommand               = new PointsExchangeOrderData;
         $newCommand->buyer        = $command->user;
         $newCommand->quantity     = $command->quantity;
         $newCommand->skuId        = $command->productSkuId;
-        $newCommand->pointProduct = $pointProduct;
+        $newCommand->pointsProduct = $pointsProduct;
 
 
 

@@ -10,8 +10,6 @@ use RedJasmine\Support\Data\Data;
  */
 class PointsExchangeOrderCreateCommand extends Data
 {
-
-
     public UserInterface $user;
 
     /**
@@ -20,7 +18,7 @@ class PointsExchangeOrderCreateCommand extends Data
      */
     public ?int $addressId = null;
 
-    public int $pointProductId;
+    public int $pointsProductId;
 
     public ?string $productSkuId = null;
     /**

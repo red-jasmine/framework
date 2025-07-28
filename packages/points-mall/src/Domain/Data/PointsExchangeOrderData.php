@@ -9,7 +9,7 @@ use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 class PointsExchangeOrderData extends PurchaseFactor
 {
 
-    public PointsProduct $pointProduct;
+    public PointsProduct $pointsProduct;
     public ?string       $skuId    = null;
     public int           $quantity = 1;
     public ?AddressData  $address;

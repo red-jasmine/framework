@@ -2,18 +2,16 @@
 
 namespace RedJasmine\PointsMall\UI\Http\User\Api\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use RedJasmine\PointsMall\Application\Services\PointsProduct\PointsProductApplicationService;
 use RedJasmine\PointsMall\Application\Services\PointsProduct\Queries\PointsProductFindQuery;
 use RedJasmine\PointsMall\Application\Services\PointsProduct\Queries\PointsProductPaginationQuery;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\UI\Http\User\Api\Resources\PointsProductResource;
-use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
+use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
 class PointsProductController extends Controller
 {
-    use RestControllerActions;
+    use RestQueryControllerActions;
 
     protected static string $resourceClass      = PointsProductResource::class;
     protected static string $paginateQueryClass = PointsProductPaginationQuery::class;
@@ -34,4 +32,8 @@ class PointsProductController extends Controller
         // 用户端权限验证逻辑
         return true;
     }
+
+
+
+
 }

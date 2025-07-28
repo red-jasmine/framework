@@ -6,11 +6,11 @@ use RedJasmine\PointsMall\Application\Services\PointsProductCategory\PointsProdu
 use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
 use RedJasmine\PointsMall\UI\Http\User\Api\Resources\PointProductCategoryResource;
 use RedJasmine\Support\UI\Http\Controllers\HasTreeAction;
-use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
+use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
 class PointProductCategoryController extends Controller
 {
-    use RestControllerActions, HasTreeAction;
+    use RestQueryControllerActions, HasTreeAction;
 
     protected static string $resourceClass = PointProductCategoryResource::class;
     protected static string $modelClass    = PointsProductCategory::class;

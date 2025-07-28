@@ -93,7 +93,7 @@ return [
                 ],
             ],
         // 积分钱包
-        'integral'   =>
+        'points'   =>
             [
                 // 货币配置
                 'currency'            => 'ZJF',
@@ -106,7 +106,7 @@ return [
                 'decimal_mark'        => '.',
                 'thousands_separator' => ',',
                 // 钱包配置
-                'type'                => 'integral',
+                'type'                => 'points',
                 'description'         => '用户积分钱包',
                 'user_types'          => [
                     'user'
