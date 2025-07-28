@@ -3,7 +3,6 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
-use phpDocumentor\Reflection\Types\Object_;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;

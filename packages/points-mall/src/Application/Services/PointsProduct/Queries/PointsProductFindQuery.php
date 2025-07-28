@@ -6,5 +6,5 @@ use RedJasmine\Support\Application\Queries\FindQuery;
 
 class PointsProductFindQuery extends FindQuery
 {
-    public int $id;
+
 } 
