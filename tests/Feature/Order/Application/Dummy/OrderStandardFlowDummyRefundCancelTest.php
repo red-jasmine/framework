@@ -168,7 +168,7 @@ test('can cancel refund a order', function (Order $order, $refunds = []) {
     $order = $this->orderRepository->find($order->id);
 
 
-    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_SEND_GOODS, $order->order_status, '订单状态不正确');
+    $this->assertEquals(OrderStatusEnum::SHIPPING, $order->order_status, '订单状态不正确');
 
 
     foreach ($refunds as $refundNo) {

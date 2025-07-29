@@ -203,7 +203,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
      */
     $order = $this->orderRepository->findByNo($order->order_no);
 
-    $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
+    $this->assertEquals($order->order_status, OrderStatusEnum::CONFIRMING, '订单状态');
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
 

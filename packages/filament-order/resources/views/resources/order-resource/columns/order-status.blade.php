@@ -5,16 +5,15 @@
         {{$getState()?->getLabel()}}
     </x-filament::badge>
 
-    @if($getState() === OrderStatusEnum::WAIT_SELLER_ACCEPT && $getRecord()->accept_status === \RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum::REJECTED)
+    @if($getState() === OrderStatusEnum::ACCEPTING && $getRecord()->accept_status === \RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum::REJECTED)
 
         <x-filament::badge color="{{$getRecord()->accept_status?->getColor()}}"
                            icon="{{$getRecord()->accept_status?->getIcon()}}">
             {{$getRecord()->accept_status?->getLabel()}}
         </x-filament::badge>
 
-
     @endif
-    @if($getState() === OrderStatusEnum::WAIT_SELLER_SEND_GOODS)
+    @if($getState() === OrderStatusEnum::SHIPPING)
         @if($getRecord()->shipping_status === \RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum::PART_SHIPPED)
             <x-filament::badge color="{{$getRecord()->shipping_status?->getColor()}}"
                                icon="{{$getRecord()->shipping_status?->getIcon()}}">

@@ -213,10 +213,10 @@ class OrderStandardType implements OrderTypeInterface
     public function creating(Order $order) : void
     {
         // 初始化
-        $order->order_status   = OrderStatusEnum::WAIT_BUYER_PAY;
+        $order->order_status   = OrderStatusEnum::PAYING;
         $order->payment_status = PaymentStatusEnum::WAIT_PAY;
         $order->products->each(function (OrderProduct $product) {
-            $product->order_status   = OrderStatusEnum::WAIT_BUYER_PAY;
+            $product->order_status   = OrderStatusEnum::PAYING;
             $product->payment_status = PaymentStatusEnum::WAIT_PAY;
         });
 
@@ -237,10 +237,10 @@ class OrderStandardType implements OrderTypeInterface
         }
 
         // 设置订单为 等待卖家确认中
-        $order->order_status  = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+        $order->order_status  = OrderStatusEnum::ACCEPTING;
         $order->accept_status = AcceptStatusEnum::WAIT_ACCEPT;
         $order->products->each(function (OrderProduct $product) {
-            $product->order_status = OrderStatusEnum::WAIT_SELLER_ACCEPT;
+            $product->order_status = OrderStatusEnum::ACCEPTING;
         });
 
         // 为自定接受
@@ -262,10 +262,10 @@ class OrderStandardType implements OrderTypeInterface
      */
     public function accept(Order $order) : void
     {
-        $order->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
+        $order->order_status    = OrderStatusEnum::SHIPPING;
         $order->shipping_status = ShippingStatusEnum::WAIT_SEND;
         $order->products->each(function (OrderProduct $product) {
-            $product->order_status    = OrderStatusEnum::WAIT_SELLER_SEND_GOODS;
+            $product->order_status    = OrderStatusEnum::SHIPPING;
             $product->shipping_status = ShippingStatusEnum::WAIT_SEND;
         });
     }
@@ -280,7 +280,7 @@ class OrderStandardType implements OrderTypeInterface
     {
         $order->products->each(function (OrderProduct $product) {
             if ($product->shipping_status === ShippingStatusEnum::SHIPPED && $product->isEffective()) {
-                $product->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
+                $product->order_status = OrderStatusEnum::CONFIRMING;
             }
         });
 
@@ -291,11 +291,11 @@ class OrderStandardType implements OrderTypeInterface
 
         $order->products->each(function (OrderProduct $product) {
             if ($product->shipping_status === ShippingStatusEnum::SHIPPED && $product->isEffective()) {
-                $product->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
+                $product->order_status = OrderStatusEnum::CONFIRMING;
             }
         });
         if ($order->shipping_status === ShippingStatusEnum::SHIPPED) {
-            $order->order_status = OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS;
+            $order->order_status = OrderStatusEnum::CONFIRMING;
 
 
             // 设置最大确认时间 TODO

@@ -95,7 +95,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $this->assertTrue($result);
 
     $order = $this->orderRepository->findByNo($order->order_no);
-    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_ACCEPT->value, $order->order_status->value);
+    $this->assertEquals(OrderStatusEnum::ACCEPTING->value, $order->order_status->value);
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
     $this->assertEquals($order->payable_amount->getAmount(), $order->payment_amount->getAmount());
     return $result;
@@ -116,7 +116,7 @@ test('can reject a order', function (Order $order, OrderPayment $orderPayment) {
 
     $order = $this->orderRepository->findByNo($order->order_no);
 
-    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_ACCEPT->value, $order->order_status->value);
+    $this->assertEquals(OrderStatusEnum::ACCEPTING->value, $order->order_status->value);
     $this->assertEquals(AcceptStatusEnum::REJECTED->value, $order->accept_status->value);
 
     return $result;

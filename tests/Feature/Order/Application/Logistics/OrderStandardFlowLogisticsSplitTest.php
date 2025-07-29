@@ -134,11 +134,11 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
         if ($i === $num) {
 
-            $this->assertEquals($product1->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
+            $this->assertEquals($product1->order_status, OrderStatusEnum::CONFIRMING, '订单状态');
             $this->assertEquals($product1->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
         } else {
-            $this->assertEquals($product1->order_status, OrderStatusEnum::WAIT_SELLER_SEND_GOODS, '订单状态');
+            $this->assertEquals($product1->order_status, OrderStatusEnum::SHIPPING, '订单状态');
             $this->assertEquals($product1->shipping_status, ShippingStatusEnum::PART_SHIPPED, '发货状态');
 
         }
@@ -147,7 +147,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
      * @var $order Order
      */
     $order = $this->orderRepository->find($order->id);
-    $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_SELLER_SEND_GOODS, '订单状态');
+    $this->assertEquals($order->order_status, OrderStatusEnum::SHIPPING, '订单状态');
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::PART_SHIPPED, '发货状态');
 
 
@@ -169,7 +169,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
      * @var $order Order
      */
     $order = $this->orderRepository->find($order->id);
-    $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
+    $this->assertEquals($order->order_status, OrderStatusEnum::CONFIRMING, '订单状态');
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
 

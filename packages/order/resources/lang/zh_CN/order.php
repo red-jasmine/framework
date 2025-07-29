@@ -140,13 +140,13 @@ return [
             'group_purchase' => '团购',
         ],
         'order_status'        => [
-            'wait_buyer_pay'           => '待付款',
-            'wait_seller_accept'       => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
-            'wait_seller_send_goods'   => '待发货',
-            'wait_buyer_confirm_goods' => '待收货',
-            'finished'                 => '已完成',
-            'cancel'                   => '已取消',
-            'closed'                   => '已关闭',
+            'paying'     => '待付款',
+            'accepting'  => '待接单', // 商家接受订单 (住宿类 等确认、团购类待成团、等等付款有一个中间态)
+            'shipping'   => '待发货',
+            'confirming' => '待收货',
+            'finished'   => '已完成',
+            'cancel'     => '已取消',
+            'closed'     => '已关闭',
         ],
         'order_refund_status' => [
             'full_refund'    => '全款退款',

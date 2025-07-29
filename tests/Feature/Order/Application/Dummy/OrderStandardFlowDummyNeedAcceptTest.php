@@ -96,7 +96,7 @@ test('can paid a order', function (Order $order, OrderPayment $orderPayment) {
     $this->assertTrue($result);
 
     $order = $this->orderRepository->find($order->id);
-    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_ACCEPT->value, $order->order_status->value);
+    $this->assertEquals(OrderStatusEnum::ACCEPTING->value, $order->order_status->value);
     $this->assertEquals(PaymentStatusEnum::PAID->value, $order->payment_status->value);
     $this->assertEquals($order->payable_amount->getAmount(), $order->payment_amount->getAmount());
     return $result;
@@ -117,7 +117,7 @@ test('can accept a order', function (Order $order, OrderPayment $orderPayment) {
 
     $order = $this->orderRepository->findByNo($order->order_no);
 
-    $this->assertEquals(OrderStatusEnum::WAIT_SELLER_SEND_GOODS->value, $order->order_status->value);
+    $this->assertEquals(OrderStatusEnum::SHIPPING->value, $order->order_status->value);
 
     return $result;
 
@@ -218,7 +218,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
      */
     $order = $this->orderRepository->find($order->id);
 
-    $this->assertEquals($order->order_status, OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS, '订单状态');
+    $this->assertEquals($order->order_status, OrderStatusEnum::CONFIRMING, '订单状态');
     $this->assertEquals($order->shipping_status, ShippingStatusEnum::SHIPPED, '发货状态');
 
 

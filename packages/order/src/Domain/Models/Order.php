@@ -363,7 +363,7 @@ class Order extends Model implements OperatorInterface
     {
         // 什么情况下可以接受
 
-        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+        if ($this->order_status !== OrderStatusEnum::ACCEPTING) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
         $this->accept_status = AcceptStatusEnum::ACCEPTED;
@@ -380,7 +380,7 @@ class Order extends Model implements OperatorInterface
      */
     public function reject(?string $reason = null) : void
     {
-        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+        if ($this->order_status !== OrderStatusEnum::ACCEPTING) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
         if ($this->accept_status !== AcceptStatusEnum::WAIT_ACCEPT) {
@@ -637,7 +637,7 @@ class Order extends Model implements OperatorInterface
 
     public function isAllowShipping() : bool
     {
-        if ($this->order_status === OrderStatusEnum::WAIT_SELLER_SEND_GOODS) {
+        if ($this->order_status === OrderStatusEnum::SHIPPING) {
             return true;
         }
 
@@ -646,7 +646,7 @@ class Order extends Model implements OperatorInterface
 
     public function isAccepting() : bool
     {
-        if ($this->order_status !== OrderStatusEnum::WAIT_SELLER_ACCEPT) {
+        if ($this->order_status !== OrderStatusEnum::ACCEPTING) {
             return false;
         }
 
@@ -789,23 +789,23 @@ class Order extends Model implements OperatorInterface
 
     public function scopeOnWaitBuyerPay(Builder $builder) : Builder
     {
-        return $builder->where('order_status', OrderStatusEnum::WAIT_BUYER_PAY);
+        return $builder->where('order_status', OrderStatusEnum::PAYING);
     }
 
     public function scopeOnWaitSellerAccept(Builder $builder) : Builder
     {
-        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_ACCEPT)
+        return $builder->where('order_status', OrderStatusEnum::ACCEPTING)
                        ->where('accept_status', AcceptStatusEnum::WAIT_ACCEPT);
     }
 
     public function scopeOnWaitSellerSendGoods(Builder $builder) : Builder
     {
-        return $builder->where('order_status', OrderStatusEnum::WAIT_SELLER_SEND_GOODS);
+        return $builder->where('order_status', OrderStatusEnum::SHIPPING);
     }
 
     public function scopeOnWaitBuyerConfirmGoods(Builder $builder) : Builder
     {
-        return $builder->where('order_status', OrderStatusEnum::WAIT_BUYER_CONFIRM_GOODS);
+        return $builder->where('order_status', OrderStatusEnum::CONFIRMING);
     }
 
     public function scopeOnFinished(Builder $builder) : Builder
