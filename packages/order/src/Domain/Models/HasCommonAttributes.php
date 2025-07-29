@@ -32,21 +32,22 @@ trait HasCommonAttributes
             'channel'                 => UserInterfaceCast::class.':1',
             'source'                  => UserInterfaceCast::class,
             'currency'                => CurrencyCast::class,
-            'price'                   => MoneyCast::class,
-            'total_price'             => MoneyCast::class,
-            'discount_amount'         => MoneyCast::class,
-            'product_amount'          => MoneyCast::class,
-            'tax_amount'              => MoneyCast::class,
-            'service_amount'          => MoneyCast::class,
-            'freight_amount'          => MoneyCast::class,
-            'divided_discount_amount' => MoneyCast::class,
-            'payable_amount'          => MoneyCast::class,
-            'payment_amount'          => MoneyCast::class,
-            'refund_amount'           => MoneyCast::class,
-            'cost_price'              => MoneyCast::class,
-            'total_cost_price'        => MoneyCast::class,
+            'price'                   => MoneyCast::class.':currency,price,1',
+            'total_price'             => MoneyCast::class.':currency,total_price,1',
+            'discount_amount'         => MoneyCast::class.':currency,discount_amount,1',
+            'product_amount'          => MoneyCast::class.':currency,product_amount,1',
+            'tax_amount'              => MoneyCast::class.':currency,tax_amount,1',
+            'service_amount'          => MoneyCast::class.':currency,service_amount,1',
+            'freight_amount'          => MoneyCast::class.':currency,freight_amount,1',
+            'divided_discount_amount' => MoneyCast::class.':currency,divided_discount_amount,1',
+            'payable_amount'          => MoneyCast::class.':currency,payable_amount,1',
+            'payment_amount'          => MoneyCast::class.':currency,payment_amount,1',
+            'refund_amount'           => MoneyCast::class.':currency,refund_amount,1',
 
 
+            'cost_price'       => MoneyCast::class.':currency,cost_price,1',
+            'total_cost_price' => MoneyCast::class.':currency,total_cost_price,1',
+            
         ];
     }
 }

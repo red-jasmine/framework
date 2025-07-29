@@ -114,9 +114,9 @@ class Refund extends Model implements OperatorInterface
             'phase'                 => RefundPhaseEnum::class,
             'has_good_return'       => 'boolean',
             'end_time'              => 'datetime',
-            'refund_product_amount' => MoneyCast::class,
-            'refund_freight_amount' => MoneyCast::class,
-            'total_refund_amount'   => MoneyCast::class,
+            'refund_product_amount' => MoneyCast::class.':currency,refund_product_amount,1',
+            'refund_freight_amount' => MoneyCast::class.':currency,refund_freight_amount,1',
+            'total_refund_amount'   => MoneyCast::class.':currency,total_refund_amount,1',
         ], $this->getCommonAttributesCast());
     }
 

@@ -186,12 +186,12 @@ class Order extends Model implements OperatorInterface
             'is_buyer_delete'  => 'boolean',
 
 
-            'commission_amount'        => MoneyCast::class,
-            'seller_discount_amount'   => MoneyCast::class,
-            'platform_discount_amount' => MoneyCast::class,
-            'platform_service_amount'  => MoneyCast::class,
-            'receivable_amount'        => MoneyCast::class,
-            'received_amount'          => MoneyCast::class,
+            'commission_amount'        => MoneyCast::class.':currency,commission_amount,1',
+            'seller_discount_amount'   => MoneyCast::class.':currency,seller_discount_amount,1',
+            'platform_discount_amount' => MoneyCast::class.':currency,platform_discount_amount,1',
+            'platform_service_amount'  => MoneyCast::class.':currency,platform_service_amount,1',
+            'receivable_amount'        => MoneyCast::class.':currency,receivable_amount,1',
+            'received_amount'          => MoneyCast::class.':currency,received_amount,1',
 
 
         ], $this->getCommonAttributesCast());

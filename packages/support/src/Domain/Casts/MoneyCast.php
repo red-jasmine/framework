@@ -42,7 +42,7 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
     public function __construct(
         $currencyKey = null,
         $valueKey = null,
-        string $isShareCurrencyField = null,
+        ?string $isShareCurrencyField = null,
         string $valueType = self::AMOUNT_TYPE_DECIMAL
     ) {
 
