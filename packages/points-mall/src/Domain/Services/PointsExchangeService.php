@@ -67,7 +67,11 @@ class PointsExchangeService extends Service
             // 保存商品
             $this->productRepository->update($product);
 
+            if ($exchangeOrder->total_amount->getAmount() <= 0) {
+                $exchangeOrder->paid();
+            }
             return $exchangeOrder;
+
         } catch (Exception $e) {
             // 回滚库存锁定
             $product->unlockStock($quantity);
