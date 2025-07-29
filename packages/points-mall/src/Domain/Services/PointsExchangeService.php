@@ -53,11 +53,9 @@ class PointsExchangeService extends Service
             // 创建兑换订单
             $exchangeOrder = $this->createExchangeOrder($exchangeOrderData);
 
-            // TODO 兑换单的支付状态
-            $exchangeOrder->payment_status = 'init';
             // 扣除积分
             if ($exchangeOrder->total_point > 0) {
-                $this->deductPoints($buyer, $exchangeOrder->total_point);
+                $this->walletService->deductPoints($exchangeOrder);
             }
 
             // 减少库存
@@ -174,16 +172,6 @@ class PointsExchangeService extends Service
         }
     }
 
-    /**
-     * 扣除积分
-     */
-    private function deductPoints(UserInterface $buyer, int $points) : void
-    {
-        // TODO
-        // 这里需要调用钱包服务扣除积分
-        // 暂时使用模拟扣除
-
-    }
 
     /**
      * 创建兑换订单
@@ -209,6 +197,9 @@ class PointsExchangeService extends Service
         } else {
             $exchangeOrderData->address = null;
         }
+        /**
+         * @var PointsExchangeOrder $exchangeOrder
+         */
         $exchangeOrder = PointsExchangeOrder::make([
             'owner' => $exchangeOrderData->pointsProduct->owner,
             'user'  => $exchangeOrderData->buyer,

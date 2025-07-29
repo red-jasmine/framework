@@ -8,50 +8,65 @@ enum PointsExchangeOrderStatusEnum: string
 {
     use EnumsHelper;
 
-    case EXCHANGED = 'exchanged';
-    case ORDER_CREATED = 'order_created';
-    case ORDER_PAID = 'order_paid';
-    case ORDER_ACCEPTED = 'order_accepted';
-    case ORDER_SHIPPED = 'order_shipped';
-    case ORDER_FINISHED = 'order_finished';
-    case ORDER_CANCELED = 'order_canceled';
+    // 待付款状态（适用于混合支付模式）
+    case PAYING = 'paying';
 
-    public static function labels(): array
+    // 待接单状态
+    case ACCEPTING = 'accepting';
+
+    // 待发货状态 发货中
+    case SHIPPING = 'shipping';
+
+    // 待收货状态
+    case CONFIRMING = 'confirming';
+
+    // 已完成状态
+    case FINISHED = 'finished';
+
+    // 已取消状态（未支付取消）
+    case CANCEL = 'cancel';
+
+    // 已关闭状态（已支付后退款关闭）
+    case CLOSED = 'closed';
+
+    public static function labels() : array
     {
         return [
-            self::EXCHANGED->value => '已兑换',
-            self::ORDER_CREATED->value => '订单已创建',
-            self::ORDER_PAID->value => '订单已支付',
-            self::ORDER_ACCEPTED->value => '订单已接单',
-            self::ORDER_SHIPPED->value => '订单已发货',
-            self::ORDER_FINISHED->value => '订单已完成',
-            self::ORDER_CANCELED->value => '订单已取消',
+            self::PAYING->value     => '待支付',
+            self::ACCEPTING->value  => '待接单',
+            self::SHIPPING->value   => '待发货',
+            self::CONFIRMING->value => '待收货',
+            self::FINISHED->value   => '已完成',
+            self::CANCEL->value     => '已取消',
+            self::CLOSED->value     => '已关闭',
         ];
     }
 
-    public static function colors(): array
+    public static function colors() : array
     {
         return [
-            self::EXCHANGED->value => 'blue',
-            self::ORDER_CREATED->value => 'yellow',
-            self::ORDER_PAID->value => 'green',
-            self::ORDER_ACCEPTED->value => 'purple',
-            self::ORDER_SHIPPED->value => 'indigo',
-            self::ORDER_FINISHED->value => 'green',
-            self::ORDER_CANCELED->value => 'red',
+            self::PAYING->value     => 'warning',
+            self::ACCEPTING->value  => 'info',
+            self::SHIPPING->value   => 'primary',
+            self::CONFIRMING->value => 'success',
+            self::FINISHED->value   => 'success',
+            self::CANCEL->value     => 'danger',
+            self::CLOSED->value     => 'secondary',
         ];
     }
 
-    public static function icons(): array
+    public static function icons() : array
     {
         return [
-            self::EXCHANGED->value => 'heroicon-o-star',
-            self::ORDER_CREATED->value => 'heroicon-o-document-text',
-            self::ORDER_PAID->value => 'heroicon-o-credit-card',
-            self::ORDER_ACCEPTED->value => 'heroicon-o-check-circle',
-            self::ORDER_SHIPPED->value => 'heroicon-o-truck',
-            self::ORDER_FINISHED->value => 'heroicon-o-check-circle',
-            self::ORDER_CANCELED->value => 'heroicon-o-x-circle',
+            self::PAYING->value     => 'heroicon-o-credit-card',
+            self::ACCEPTING->value  => 'heroicon-o-bell-alert',
+            self::SHIPPING->value   => 'heroicon-o-arrow-up-on-square-stack',
+            self::CONFIRMING->value => 'heroicon-o-truck',
+            self::FINISHED->value   => 'heroicon-o-check-badge',
+            self::CANCEL->value     => 'heroicon-o-x-circle',
+            self::CLOSED->value     => 'heroicon-o-archive-box-x-mark',
         ];
     }
-} 
+
+
+}

@@ -2,10 +2,15 @@
 
 namespace RedJasmine\PointsMall\Infrastructure\Services;
 
+use Cknow\Money\Money;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
+use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
+use RedJasmine\Wallet\Domain\Models\Enums\AmountDirectionEnum;
+use RedJasmine\Wallet\Domain\Models\Enums\TransactionTypeEnum;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 
 /**
@@ -36,6 +41,8 @@ class WalletServiceIntegration implements WalletServiceInterface
         $query->type  = static::WALLET_TYPE;
 
         $wallet = $this->walletApplicationService->findByOwnerType($query);
+
+        return $wallet->isAvailable();
     }
 
     private function getWallet(UserInterface $user) : Wallet
@@ -65,15 +72,26 @@ class WalletServiceIntegration implements WalletServiceInterface
     /**
      * 扣减用户积分
      *
-     * @param  UserInterface  $user
-     * @param  int  $points  扣减的积分数量
-     * @param  array  $metadata  元数据
+     * @param  PointsExchangeOrder  $exchangeOrder
      *
-     * @return bool 是否扣减成功
+     * @return bool
      */
-    public function deductPoints(UserInterface $user, int $points, array $metadata = []) : bool
+    public function deductPoints(PointsExchangeOrder $exchangeOrder) : bool
     {
-        // TODO: Implement deductPoints() method.
+        $point = $exchangeOrder->point;
+
+        $wallet = $this->getWallet($exchangeOrder->user);
+
+        $command = new WalletTransactionCommand();
+        $command->setKey($wallet->id);
+        $command->direction       = AmountDirectionEnum::EXPENSE;
+        $command->transactionType = TransactionTypeEnum::PAYMENT;
+        $command->outTradeNo      = $exchangeOrder->getUniqueNo();
+
+        $command->amount = Money::parse($point, $wallet->balance->getCurrency());
+
+        $this->walletApplicationService->transaction($command);
+        return true;
     }
 
 

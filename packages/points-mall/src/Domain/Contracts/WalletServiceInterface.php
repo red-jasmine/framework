@@ -2,6 +2,7 @@
 
 namespace RedJasmine\PointsMall\Domain\Contracts;
 
+use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\Support\Contracts\UserInterface;
 
 interface WalletServiceInterface
@@ -25,16 +26,14 @@ interface WalletServiceInterface
      */
     public function getPointsBalance(UserInterface $user) : int;
 
+
     /**
      * 扣减用户积分
+     * @param  PointsExchangeOrder  $exchangeOrder
      *
-     * @param  UserInterface  $user
-     * @param  int  $points  扣减的积分数量
-     * @param  array  $metadata  元数据
-     *
-     * @return bool 是否扣减成功
+     * @return bool
      */
-    public function deductPoints(UserInterface $user, int $points, array $metadata = []) : bool;
+    public function deductPoints(PointsExchangeOrder $exchangeOrder) : bool;
 
 
 } 

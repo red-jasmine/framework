@@ -25,7 +25,6 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
             AllowedFilter::exact('product_id'),
             AllowedFilter::exact('status'),
             AllowedFilter::exact('payment_mode'),
-            AllowedFilter::exact('payment_status'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
         ];

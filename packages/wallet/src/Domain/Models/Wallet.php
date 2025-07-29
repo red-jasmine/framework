@@ -48,6 +48,14 @@ class Wallet extends Model implements OperatorInterface, OwnerInterface
         'freeze'  => MoneyCast::class.':currency,freeze',
     ];
 
+
+    public function isAvailable() : bool
+    {
+
+        return ($this->status === WalletStatusEnum::ENABLE);
+
+    }
+
     public function transactions() : HasMany
     {
         return $this->hasMany(WalletTransaction::class, 'wallet_id', 'id');
