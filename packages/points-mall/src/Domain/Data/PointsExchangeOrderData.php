@@ -12,6 +12,6 @@ class PointsExchangeOrderData extends PurchaseFactor
     public PointsProduct $pointsProduct;
     public ?string       $skuId    = null;
     public int           $quantity = 1;
-    public ?AddressData  $address;
+    public ?AddressData  $address = null;
 
 }

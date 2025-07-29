@@ -22,22 +22,31 @@ enum ProductTypeEnum: string
     case SERVICE = 'service'; // 服务
 
 
-    public function getAllowShippingType() : array
+    public function getAllowShippingType(): array
     {
         return ProductTypeEnum::shippingTypes()[$this->value];
+    }
+
+    /**
+     * 是否需要收货地址
+     * @return bool
+     */
+    public function isNeedDeliveryAddress(): bool
+    {
+        return ($this->value === self::GOODS->value);
     }
 
     /**
      * 是否允许选择配送方式
      * @return bool
      */
-    public function isAllowDeliveryMethods() : bool
+    public function isAllowDeliveryMethods(): bool
     {
         return ($this->value === self::GOODS->value);
     }
 
 
-    public static function shippingTypes() : array
+    public static function shippingTypes(): array
     {
         return [
 
@@ -52,7 +61,7 @@ enum ProductTypeEnum: string
                 //ShippingTypeEnum::CARD_KEY->value,
             ],
 
-            self::VIRTUAL->value  => [
+            self::VIRTUAL->value => [
                 //ShippingTypeEnum::LOGISTICS->value,
                 //ShippingTypeEnum::DELIVERY->value,
                 //ShippingTypeEnum::NONE->value,
@@ -90,30 +99,30 @@ enum ProductTypeEnum: string
 
     // 服务
 
-    public static function labels() : array
+    public static function labels(): array
     {
         return [
-            self::GOODS->value    => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
-            self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::GOODS->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
+            self::VIRTUAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
             self::CARD_KEY->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.cardKey'),
-            self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
-            self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
+            self::COUPONS->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
+            self::SERVICE->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
         ];
     }
 
-    public static function icons() : array
+    public static function icons(): array
     {
         return [
-            self::GOODS->value    => 'heroicon-o-shopping-bag',
-            self::VIRTUAL->value  => 'heroicon-o-cloud',
-            self::COUPONS->value  => 'heroicon-o-ticket',
+            self::GOODS->value => 'heroicon-o-shopping-bag',
+            self::VIRTUAL->value => 'heroicon-o-cloud',
+            self::COUPONS->value => 'heroicon-o-ticket',
             self::CARD_KEY->value => 'heroicon-o-key',
-            self::SERVICE->value  => 'heroicon-o-shield-check',
+            self::SERVICE->value => 'heroicon-o-shield-check',
 
         ];
     }
 
-    public static function tips() : array
+    public static function tips(): array
     {
         return [];
     }

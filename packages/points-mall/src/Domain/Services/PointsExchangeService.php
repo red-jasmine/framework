@@ -51,12 +51,13 @@ class PointsExchangeService extends Service
         try {
 
             // 创建兑换订单
-            $order = $this->createExchangeOrder($exchangeOrderData);
+            $exchangeOrder = $this->createExchangeOrder($exchangeOrderData);
 
-
+            // TODO 兑换单的支付状态
+            $exchangeOrder->payment_status = 'init';
             // 扣除积分
-            if ($order->total_point > 0) {
-                $this->deductPoints($buyer, $order->total_point);
+            if ($exchangeOrder->total_point > 0) {
+                $this->deductPoints($buyer, $exchangeOrder->total_point);
             }
 
             // 减少库存
@@ -64,14 +65,11 @@ class PointsExchangeService extends Service
                 throw new Exception('库存扣减失败');
             }
 
-            // 调用订单领域服务、创建 订单
-
-            $this->createOrder();
 
             // 保存商品
             $this->productRepository->update($product);
 
-            return $order;
+            return $exchangeOrder;
         } catch (Exception $e) {
             // 回滚库存锁定
             $product->unlockStock($quantity);
@@ -181,6 +179,7 @@ class PointsExchangeService extends Service
      */
     private function deductPoints(UserInterface $buyer, int $points) : void
     {
+        // TODO
         // 这里需要调用钱包服务扣除积分
         // 暂时使用模拟扣除
 
@@ -188,6 +187,7 @@ class PointsExchangeService extends Service
 
     /**
      * 创建兑换订单
+     * @throws PointsProductException
      */
     private function createExchangeOrder(PointsExchangeOrderData $exchangeOrderData) : PointsExchangeOrder
     {
@@ -200,36 +200,40 @@ class PointsExchangeService extends Service
         $productIdentity->skuId  = $exchangeOrderData->skuId ?? $exchangeOrderData->pointsProduct->product_id;
         $productInfo             = $this->productService->getProductInfo($productIdentity);
 
-        // TODO 验证是否需要 地址信息
+        // 验证是否需要 地址信息
+        if ($productInfo->productType->isNeedDeliveryAddress()) {
+            // 如果地址那么就需要
+            if ($exchangeOrderData->address === null) {
+                throw new PointsProductException('请提供收货地址');
+            }
+        } else {
+            $exchangeOrderData->address = null;
+        }
+        $exchangeOrder = PointsExchangeOrder::make([
+            'owner' => $exchangeOrderData->pointsProduct->owner,
+            'user'  => $exchangeOrderData->buyer,
+        ]);
 
-
-        $exchangeOrder                   = new PointsExchangeOrder();
-        $exchangeOrder->user             = $exchangeOrderData->buyer;
-        $exchangeOrder->owner            = $exchangeOrderData->pointsProduct->owner;
         $exchangeOrder->point_product_id = $exchangeOrderData->pointsProduct->id;
         $exchangeOrder->product_type     = $exchangeOrderData->pointsProduct->product_type;
         $exchangeOrder->product_id       = $exchangeOrderData->pointsProduct->product_id;
-        $exchangeOrder->sku_id           = $exchangeOrderData->skuId;
-        $exchangeOrder->point            = $exchangeOrderData->pointsProduct->point;
-        $exchangeOrder->price            = $exchangeOrderData->pointsProduct->price;
-        $exchangeOrder->quantity         = $quantity;
-        $exchangeOrder->total_point      = $exchangeOrderData->pointsProduct->point * $quantity;
-        $exchangeOrder->total_amount     = $exchangeOrderData->pointsProduct->price->multiply($quantity);
-        $exchangeOrder->title            = $productInfo->title;
-        $exchangeOrder->image            = $productInfo->image;
+
+        $exchangeOrder->point        = $exchangeOrderData->pointsProduct->point;
+        $exchangeOrder->price        = $exchangeOrderData->pointsProduct->price;
+        $exchangeOrder->quantity     = $quantity;
+        $exchangeOrder->total_point  = $exchangeOrderData->pointsProduct->point * $quantity;
+        $exchangeOrder->total_amount = $exchangeOrderData->pointsProduct->price->multiply($quantity);
+        $exchangeOrder->title        = $productInfo->title;
+        $exchangeOrder->image        = $productInfo->image;
 
 
-        $this->orderRepository->store($exchangeOrder);
+        $orderNo = $this->orderService->create($exchangeOrder, $productInfo);
 
-        $this->createOrder($exchangeOrder, $productInfo);
+        $exchangeOrder->sku_id         = $exchangeOrderData->skuId ?? $exchangeOrderData->pointsProduct->product_id;
+        $exchangeOrder->outer_order_no = $orderNo;
+
 
         return $exchangeOrder;
-    }
-
-    public function createOrder(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo)
-    {
-
-        $this->orderService->create($exchangeOrder, $productInfo);
     }
 
 

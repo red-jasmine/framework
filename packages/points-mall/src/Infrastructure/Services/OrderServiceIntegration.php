@@ -41,14 +41,15 @@ class OrderServiceIntegration implements OrderServiceInterface
         ]));
     }
 
-    public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo)
+    public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo) : string
     {
-        // TODO 构建 订单领域 创建DTO
-        // TODO 调用 订单领域 创建命令
 
-        $command =  new OrderCreateCommand();
+        $command = new PointsExchangeOrderCreateCommandTransformer()->transform($exchangeOrder,$productInfo);
 
-        $this->orderApplicationService->create($command);
+
+        $order = $this->orderApplicationService->create($command);
+
+        return $order->order_no;
     }
 
 
@@ -176,4 +177,4 @@ class OrderServiceIntegration implements OrderServiceInterface
     }
 
 
-} 
+}

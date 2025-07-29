@@ -23,9 +23,9 @@ class PointsExchangeOrderController extends Controller
         $command = PointsExchangeOrderCreateCommand::from($request);
 
 
-        $this->service->create($command);
+        $order =  $this->service->create($command);
 
-        dd($command);
+
 
     }
 }
