@@ -14,17 +14,18 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
-use RedJasmine\Order\Domain\Generator\OrderProductNoGenerator;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Extensions\OrderProductExtension;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 use Spatie\LaravelData\WithData;
 
 /**
@@ -37,8 +38,12 @@ use Spatie\LaravelData\WithData;
  * @property Money $refund_amount
  * @property Money $payable_amount
  */
-class OrderProduct extends Model
+class OrderProduct extends Model implements UniqueNoInterface
 {
+    public static string $uniqueNoPrefix = 'DP';
+    public static string $uniqueNoKey    = 'order_product_no';
+    use HasUniqueNo;
+
     use HasSerialNumber;
 
     use HasSnowflakeId;
@@ -119,18 +124,20 @@ class OrderProduct extends Model
 
         }
         if (!$instance->exists && !empty($attributes)) {
-            $instance->generateNo();
+            $instance->setUniqueNo();
         }
         return $instance;
     }
 
-    protected function generateNo() : void
-    {
-        if (!$this->order_product_no) {
-            $this->order_product_no = app(OrderProductNoGenerator::class)->generator($this);
-        }
-    }
 
+    public function buildUniqueNoFactors() : array
+    {
+        return [
+            $this->app_id,
+            $this->seller_id,
+            $this->buyer_id
+        ];
+    }
 
     public function order() : BelongsTo
     {

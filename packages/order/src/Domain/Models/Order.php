@@ -29,7 +29,6 @@ use RedJasmine\Order\Domain\Events\OrderUrgeEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
 use RedJasmine\Order\Domain\Facades\OrderType;
-use RedJasmine\Order\Domain\Generator\OrderNoGenerator;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
@@ -46,6 +45,8 @@ use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 
 /**
@@ -57,8 +58,12 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property ShippingStatusEnum $shipping_status
  * @property AcceptStatusEnum $accept_status
  */
-class Order extends Model implements OperatorInterface
+class Order extends Model implements OperatorInterface, UniqueNoInterface
 {
+    public static string $uniqueNoPrefix = 'DD';
+    public static string $uniqueNoKey    = 'order_no';
+    use HasUniqueNo;
+
     use HasSnowflakeId;
 
     use HasDateTimeFormatter;
@@ -150,16 +155,19 @@ class Order extends Model implements OperatorInterface
         }
 
         if (!$instance->exists && !empty($attributes)) {
-            $instance->generateNo();
+            $instance->setUniqueNo();
         }
         return $instance;
     }
 
-    protected function generateNo() : void
+
+    public function buildUniqueNoFactors() : array
     {
-        if (!$this->order_no) {
-            $this->order_no = app(OrderNoGenerator::class)->generator($this);
-        }
+        return [
+            $this->app_id,
+            $this->seller_id,
+            $this->buyer_id
+        ];
     }
 
     public function casts() : array

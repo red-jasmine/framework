@@ -125,7 +125,8 @@ trait HasUniqueNo
         }
         // 保证最长位 31位
         $no = implode('', $factors);
-        if (strlen($no) > 31) {
+        if (strlen($no) > 64) {
+            // TODO
             throw new InvalidArgumentException("unique no is too long");
         }
         return NoCheckNumber::generator(implode('', $factors));

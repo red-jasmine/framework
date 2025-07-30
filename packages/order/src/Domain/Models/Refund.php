@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
@@ -22,8 +21,6 @@ use RedJasmine\Order\Domain\Events\RefundRejectedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReshippedGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundReturnedGoodsEvent;
 use RedJasmine\Order\Domain\Exceptions\RefundException;
-use RedJasmine\Order\Domain\Generator\RefundNoGeneratorInterface;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Order\Domain\Models\Enums\EntityTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\Payments\AmountTypeEnum;
@@ -35,10 +32,13 @@ use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
 use RedJasmine\Order\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
+use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 
 /**
@@ -48,8 +48,11 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property Money $refund_freight_amount
  * @property Money $refund_product_amount
  */
-class Refund extends Model implements OperatorInterface
+class Refund extends Model implements OperatorInterface, UniqueNoInterface
 {
+    public static string $uniqueNoPrefix = 'DR';
+    public static string $uniqueNoKey    = 'refund_no';
+    use HasUniqueNo;
     use HasSnowflakeId;
 
     use HasDateTimeFormatter;
@@ -82,20 +85,21 @@ class Refund extends Model implements OperatorInterface
             $instance->setRelation('extension', $instance->extension()->newModelInstance(['id' => $instance->getKey()]));
         }
         if (!$instance->exists && !empty($attributes)) {
-            $instance->generateNo();
+            $instance->setUniqueNo();
         }
 
         return $instance;
     }
 
-    protected function generateNo() : void
+    public function buildUniqueNoFactors() : array
     {
-        if (!$this->refund_no) {
-
-            $this->refund_no = app(RefundNoGeneratorInterface::class)->generator($this);
-        }
-
+        return [
+            $this->app_id,
+            $this->seller_id,
+            $this->buyer_id
+        ];
     }
+
 
     public function extension() : HasOne
     {
