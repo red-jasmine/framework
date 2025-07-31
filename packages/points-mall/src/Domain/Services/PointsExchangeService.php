@@ -79,6 +79,10 @@ class PointsExchangeService extends Service
         }
     }
 
+    public function pay(PointsExchangeOrder $exchangeOrder)
+    {
+
+    }
     /**
      * 验证兑换资格
      * @throws PointsProductException
