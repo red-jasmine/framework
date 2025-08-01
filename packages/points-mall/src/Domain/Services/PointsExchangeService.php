@@ -4,12 +4,11 @@ namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
-use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\PointsMall\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
 use RedJasmine\PointsMall\Domain\Data\PointsExchangeOrderData;
-use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
@@ -26,6 +25,7 @@ class PointsExchangeService extends Service
         protected WalletServiceInterface $walletService,
         protected ProductServiceInterface $productService,
         protected OrderServiceInterface $orderService,
+        protected PaymentServiceInterface $paymentService,
     ) {
     }
 
@@ -82,7 +82,10 @@ class PointsExchangeService extends Service
     public function pay(PointsExchangeOrder $exchangeOrder)
     {
 
+        $this->paymentService->createPayment();
+
     }
+
     /**
      * 验证兑换资格
      * @throws PointsProductException
