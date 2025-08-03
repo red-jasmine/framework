@@ -64,5 +64,10 @@ class OrderServiceIntegration implements OrderServiceInterface
         return $orderData;
     }
 
+    public function find(string $orderNo)
+    {
+        return $this->orderApplicationService->findByNo($orderNo);
+    }
+
 
 }

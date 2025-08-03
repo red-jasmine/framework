@@ -24,4 +24,7 @@ interface OrderServiceInterface
      *
      */
     public function create(OrderData $orderData) : OrderData;
+
+
+    public function find(string $orderNo);
 }
