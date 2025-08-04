@@ -1,0 +1,19 @@
+<?php
+
+namespace RedJasmine\Shopping\Domain\Data;
+
+use Cknow\Money\Money;
+use RedJasmine\Support\Data\Data;
+
+class GoodDetailData extends Data
+{
+    public string $goodsName;
+
+    public int $quantity = 1;
+
+    public Money $price;
+
+    public ?string $goodsId;
+
+    public ?string $category;
+}

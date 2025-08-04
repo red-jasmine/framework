@@ -7,6 +7,7 @@ use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
+use RedJasmine\Shopping\Domain\Data\PaymentTradeResult;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderCreateHook;
 
 /**
@@ -167,4 +168,18 @@ class OrderDomainService extends AmountCalculationService
     }
 
 
+    /**
+     * 订单支付
+     *
+     * @param  string  $orderNo
+     *
+     * @return PaymentTradeResult
+     */
+    public function pay(string $orderNo) : PaymentTradeResult
+    {
+        $orderPaymentData = $this->orderService->createOrderPayment($orderNo);
+
+        return $this->paymentService->create($orderPaymentData);
+
+    }
 }

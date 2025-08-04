@@ -5,8 +5,10 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\CheckCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\PayCommand;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\OrdersDataResource;
 use RedJasmine\Support\Http\Controllers\Controller;
@@ -16,7 +18,7 @@ class OrderController extends Controller
 
     public function __construct(
 
-        protected ShoppingOrderCommandService $commandService,
+        protected ShoppingOrderCommandService $service,
 
 
     ) {
@@ -45,7 +47,7 @@ class OrderController extends Controller
         $command = CheckCommand::from($request);
 
         // 调用命令服务进行产品订单的计算
-        $orders = $this->commandService->check($command);
+        $orders = $this->service->check($command);
 
         // 返回计算后的订单信息
         return new OrdersDataResource($orders);
@@ -64,12 +66,22 @@ class OrderController extends Controller
         $command->clientType    = 'test';
         $command->clientVersion = '1.0.0';
 
-        $orders = $this->commandService->buy($command);
+        $orders = $this->service->buy($command);
         return new OrdersDataResource($orders);
     }
 
+
     public function show($id)
     {
+    }
+
+    public function pay($id) : JsonResponse
+    {
+        $command = PayCommand::from();
+        $command->setKey($id);
+        $result = $this->service->pay($command);
+
+        return static::success($result);
     }
 
     public function update(Request $request, $id)

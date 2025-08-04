@@ -2,6 +2,10 @@
 
 namespace RedJasmine\Shopping\Domain\Contracts;
 
+
+use RedJasmine\Shopping\Domain\Data\OrderPaymentData;
+use RedJasmine\Shopping\Domain\Data\PaymentTradeResult;
+
 /**
  * 支付服务
  * - 发起支付
@@ -18,8 +22,6 @@ interface PaymentServiceInterface
      * 创建支付单
      * @return mixed
      */
-    public function create();
+    public function create(OrderPaymentData $orderPayment) : PaymentTradeResult;
 
-
-    public function paying();
 }

@@ -415,7 +415,8 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public function paying(OrderPayment $orderPayment) : void
     {
         if (!in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, null], true)) {
-            throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
+           // todo 临时
+            // throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
         $orderPayment->app_id      = $this->app_id;

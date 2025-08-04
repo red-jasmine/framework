@@ -21,6 +21,7 @@ class ShoppingBuyerRoute
                      Route::prefix('order')->group(function () {
                          Route::post('check', [OrderController::class, 'check']);
                          Route::post('buy', [OrderController::class, 'buy']);
+                         Route::post('pay/{id}', [OrderController::class, 'pay']);
 
 
                      });

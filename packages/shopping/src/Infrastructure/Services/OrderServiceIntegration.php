@@ -4,8 +4,13 @@ namespace RedJasmine\Shopping\Infrastructure\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
+use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\Shopping\Domain\Data\GoodDetailData;
+use RedJasmine\Shopping\Domain\Data\OrderPaymentData;
 use RedJasmine\Shopping\Infrastructure\Services\Transformers\OrderCreateCommandTransformer;
 
 /**
@@ -64,10 +69,45 @@ class OrderServiceIntegration implements OrderServiceInterface
         return $orderData;
     }
 
-    public function find(string $orderNo)
+    public function find(string $orderNo) : Order
     {
         return $this->orderApplicationService->findByNo($orderNo);
     }
 
+    public function createOrderPayment(string $orderNo) : OrderPaymentData
+    {
+        $order = $this->orderApplicationService->findByNo($orderNo);
 
+
+        $orderPayingCommand = new  OrderPayingCommand;
+        $orderPayingCommand->setKey($orderNo);
+
+        // 订单发起支付
+        $orderPayment = $this->orderApplicationService->paying($orderPayingCommand);
+
+        $orderPaymentData = OrderPaymentData::from($orderPayment);
+
+        // 产品信息
+        $goodDetails                   = GoodDetailData::collect(
+            $order->products->map(
+                fn($orderProduct) => $this->orderProductToGoodDetailData($orderProduct)
+            )->toArray());
+        $orderPaymentData->goodDetails = $goodDetails;
+
+        return $orderPaymentData;
+
+    }
+
+    protected function orderProductToGoodDetailData(OrderProduct $orderProduct) : GoodDetailData
+    {
+        $goodDetailData = new GoodDetailData;
+
+        $goodDetailData->goodsId   = $orderProduct->product_id;
+        $goodDetailData->goodsName = $orderProduct->title;
+        $goodDetailData->price     = $orderProduct->price;
+        $goodDetailData->quantity  = $orderProduct->quantity;
+
+
+        return $goodDetailData;
+    }
 }

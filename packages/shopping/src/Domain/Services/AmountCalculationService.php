@@ -10,6 +10,7 @@ use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\Shopping\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\PromotionServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
@@ -31,6 +32,7 @@ class AmountCalculationService extends Service
         protected PromotionServiceInterface $promotionService,
         protected OrderServiceInterface $orderService,
         protected CouponServiceInterface $couponService,
+        protected PaymentServiceInterface $paymentService,
     ) {
 
     }
