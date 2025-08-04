@@ -27,16 +27,16 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
         $order = $this->service->repository->findByNo($no);
 
 
-        $this->setModel($order);
+        $this->context->setModel($order);
         return $order;
     }
 
 
-    protected function find(int $id) : Order
-    {
-        $order = $this->service->repository->find($id);
-        $this->setModel($order);
-        return $order;
-
-    }
+    // protected function find(int $id) : Order
+    // {
+    //     $order = $this->service->repository->find($id);
+    //     $this->context->setModel($order);
+    //     return $order;
+    //
+    // }
 }

@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Data;
 
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Str;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\DataPipeline;
@@ -19,25 +20,23 @@ class Data extends \Spatie\LaravelData\Data
 
     public function getPrimaryKey() : string
     {
-        return $this->primaryKey;
+        return Str::camel($this->primaryKey);
     }
 
     public function setPrimaryKey(string $primaryKey) : void
     {
-        $this->primaryKey = $primaryKey;
+        $this->primaryKey = Str::camel($primaryKey);
     }
 
 
     public function getKey()
     {
-        return $this->{$this->primaryKey} ?? $this->_primaryKeyValue;
+        return $this->{$this->getPrimaryKey()} ?? null;
     }
 
     public function setKey($key) : void
     {
-        $this->{$this->primaryKey} = $key;
-        $this->_primaryKeyValue    = $key;
-
+        $this->{$this->getPrimaryKey()} = $key;
     }
 
 
