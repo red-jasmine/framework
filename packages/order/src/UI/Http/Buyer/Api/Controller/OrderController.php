@@ -5,7 +5,6 @@ namespace RedJasmine\Order\UI\Http\Buyer\Api\Controller;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCancelCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderConfirmCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
@@ -13,9 +12,9 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderHiddenCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
+use RedJasmine\Order\Application\Services\Orders\Queries\FindQuery;
 use RedJasmine\Order\UI\Http\Buyer\Api\Resources\OrderResource;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
+use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
 class OrderController extends Controller
 {
@@ -29,20 +28,26 @@ class OrderController extends Controller
         });
     }
 
+    use RestQueryControllerActions;
 
-    public function index(Request $request) : AnonymousResourceCollection
+    /**
+     * Authorize a given action for the current user.
+     *
+     * @param  mixed  $ability
+     * @param  mixed|array  $arguments
+     *
+     * @return \Illuminate\Auth\Access\Response
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function authorize($ability, $arguments = [])
     {
-        $result = $this->service->paginate(PaginateQuery::from($request->query()));
-
-        return OrderResource::collection($result->appends($request->query()));
+        return  true;
     }
 
-    public function show(Request $request, int $id) : OrderResource
-    {
-        $result = $this->service->find(FindQuery::make($id, $request));
 
-        return OrderResource::make($result);
-    }
+    public static string $findQueryClass = FindQuery::class;
+    public static string $resourceClass  = OrderResource::class;
 
 
     public function store(Request $request) : OrderResource

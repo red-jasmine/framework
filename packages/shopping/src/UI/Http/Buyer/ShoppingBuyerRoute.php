@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\UI\Http\Buyer;
 
 use Illuminate\Support\Facades\Route;
 use RedJasmine\Address\UI\Http\User\AddressUserRoute;
+use RedJasmine\Order\UI\Http\Buyer\Api\OrderBuyerApiRoute;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers\OrderController;
 use RedJasmine\Wallet\UI\Http\User\WalletUserRoute;
 
@@ -30,6 +31,7 @@ class ShoppingBuyerRoute
                  });
 
 
+            OrderBuyerApiRoute::api();
             ShoppingCartRoute::api();
 
             AddressUserRoute::api();

@@ -4,10 +4,11 @@ namespace RedJasmine\Order\UI\Http\Buyer\Api\Resources;
 
 use Illuminate\Http\Request;
 
+use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \RedJasmine\Order\Domain\Models\Order
+ * @mixin Order
  */
 class OrderResource extends JsonResource
 {
@@ -16,6 +17,7 @@ class OrderResource extends JsonResource
     {
         return [
             'id'              => $this->id,
+            'order_no'        => $this->order_no,
             'seller_type'     => $this->seller_type,
             'seller_id'       => $this->seller_id,
             'seller_nickname' => $this->seller_nickname,
@@ -58,7 +60,7 @@ class OrderResource extends JsonResource
             'creator_id'           => $this->creator_id,
             'updater_type'         => $this->updater_type,
             'updater_id'           => $this->updater_id,
-            'extension'                 => new OrderExtensionResource($this->whenLoaded('extension')),
+            'extension'            => new OrderExtensionResource($this->whenLoaded('extension')),
             'address'              => new OrderAddressResource($this->whenLoaded('address')),
             'products'             => OrderProductResource::collection($this->whenLoaded('products')),
             'payments'             => OrderPaymentResource::collection($this->whenLoaded('payments')),
