@@ -5,6 +5,7 @@ namespace RedJasmine\Shopping\Infrastructure\Services;
 use Illuminate\Support\Facades\Config;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
+use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Shopping\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\Shopping\Domain\Data\OrderPaymentData;
 use RedJasmine\Shopping\Domain\Data\PaymentTradeResult;
@@ -30,20 +31,19 @@ class PaymentServiceIntegration implements PaymentServiceInterface
      */
     public function create(OrderPaymentData $orderPayment) : PaymentTradeResult
     {
-        $title                                    = ''; // TODO
-        $goodDetails                              = []; // TODO
+
         $tradeCreateCommand                       = new TradeCreateCommand;
         $tradeCreateCommand->amount               = $orderPayment->paymentAmount;
-        $tradeCreateCommand->subject              = filled($title) ? $title : '支付订单：'.$orderPayment->orderNo;
-        $tradeCreateCommand->goodDetails          = [];
+        $tradeCreateCommand->subject              = '支付订单：'.$orderPayment->orderNo;
         $tradeCreateCommand->merchantTradeNo      = $orderPayment->id;
         $tradeCreateCommand->merchantTradeOrderNo = $orderPayment->orderNo;
         $tradeCreateCommand->description          = '';
-        $tradeCreateCommand->goodDetails          = $goodDetails;
+        $tradeCreateCommand->goodDetails          = GoodDetailData::collect($orderPayment->goodDetails);
         // 配置的商户应用ID
         $tradeCreateCommand->merchantAppId  = $this->getMerchantAppId();
         $tradeCreateCommand->notifyUrl      = '';
         $tradeCreateCommand->passBackParams = null;
+
 
         $paymentTrade = $this->tradeCommandService->create($tradeCreateCommand);
 

@@ -3,6 +3,8 @@
 namespace RedJasmine\Order\UI\Http\Buyer\Api\Controller;
 
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCancelCommand;
@@ -13,6 +15,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Orders\Queries\FindQuery;
+use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\UI\Http\Buyer\Api\Resources\OrderResource;
 use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
@@ -36,16 +39,17 @@ class OrderController extends Controller
      * @param  mixed  $ability
      * @param  mixed|array  $arguments
      *
-     * @return \Illuminate\Auth\Access\Response
+     * @return Response
      *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function authorize($ability, $arguments = [])
     {
-        return  true;
+        return true;
     }
 
 
+    public static string $modelClass     = Order::class;
     public static string $findQueryClass = FindQuery::class;
     public static string $resourceClass  = OrderResource::class;
 
