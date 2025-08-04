@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Data\Queries\Query;
@@ -79,7 +80,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function find(FindQuery $query) : ?Model
     {
         return $this->query($query->except($query->getPrimaryKey()))
-                    ->where($query->getPrimaryKey(), $query->getKey())
+                    ->where(Str::snake($query->getPrimaryKey()), $query->getKey())
                     ->firstOrFail();
     }
 
