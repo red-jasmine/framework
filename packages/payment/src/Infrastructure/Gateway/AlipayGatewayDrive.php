@@ -155,7 +155,7 @@ class AlipayGatewayDrive implements GatewayDriveInterface
         $bizContent = [
 
             'out_trade_no'      => $trade->trade_no,
-            'total_amount'      => $trade->amount->format(),
+            'total_amount'      => $trade->amount->formatByDecimal(),
             'subject'           => $trade->subject,
             'product_code'      => $this->channelProduct->code,
             'merchant_order_no' => $trade->merchant_order_no,

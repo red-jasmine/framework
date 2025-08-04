@@ -153,7 +153,7 @@ class WechatPayGatewayDrive implements GatewayDriveInterface
             'out_trade_no' => $trade->trade_no,
             'time_expire'  => $trade->expired_time?->toIso8601String(),
             'attach'       => '', // 商户数据包
-            'amount'       => bcmul($trade->amount->value, 100, 0),
+            'amount'       => (int)$trade->amount->getAmount(),
             'currency'     => $trade->amount->currency,
             'payer'        => [
                 'openid' => $environment->payer?->openId,
