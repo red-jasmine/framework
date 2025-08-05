@@ -48,8 +48,8 @@ class OrderServiceIntegration implements OrderServiceInterface
     public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo) : string
     {
 
-        $command = new PointsExchangeOrderCreateCommandTransformer()->transform($exchangeOrder,$productInfo);
-
+        $command        = new PointsExchangeOrderCreateCommandTransformer()->transform($exchangeOrder, $productInfo);
+        $command->appId = 'points';
 
         $order = $this->orderApplicationService->create($command);
 
@@ -59,7 +59,7 @@ class OrderServiceIntegration implements OrderServiceInterface
     public function createPayment(PointsExchangeOrder $exchangeOrder) : PaymentTradeData
     {
         $orderNo = $exchangeOrder->outer_order_no;
-        $order = $this->orderApplicationService->findByNo($orderNo);
+        $order   = $this->orderApplicationService->findByNo($orderNo);
 
         $orderPayingCommand = new  OrderPayingCommand;
         $orderPayingCommand->setKey($orderNo);
@@ -98,6 +98,7 @@ class OrderServiceIntegration implements OrderServiceInterface
 
         return $goodDetailData;
     }
+
     /**
      * 更新订单状态
      *

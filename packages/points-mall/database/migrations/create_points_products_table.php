@@ -19,12 +19,14 @@ return new class extends Migration {
             $table->integer('point')->default(0)->comment('积分价格');
             $table->string('price_currency', 3)->default('CNY')->comment('价格货币');
             $table->decimal('price_amount', 10)->default(0.00)->comment('价格金额');
-            $table->string('payment_mode')->default(PointsProductPaymentModeEnum::POINTS->value)->comment('支付模式');
+            $table->enum('payment_mode', PointsProductPaymentModeEnum::values())->default(PointsProductPaymentModeEnum::POINTS)
+                  ->comment(PointsProductPaymentModeEnum::comments('支付模式'));
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             $table->integer('exchange_limit')->default(0)->comment('兑换限制');
-            $table->string('status')->default(PointsProductStatusEnum::ON_SALE->value)->comment('状态');
+            $table->enum('status', PointsProductStatusEnum::values())
+                  ->default(PointsProductStatusEnum::ON_SALE)->comment(PointsProductStatusEnum::comments('状态'));
             $table->integer('sort')->default(0)->comment('排序');
             $table->unsignedBigInteger('category_id')->nullable()->comment('分类ID');
             $table->string('product_type')->comment('商品源类型');
@@ -47,4 +49,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('points_products');
     }
-}; 
+};

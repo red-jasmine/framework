@@ -3,7 +3,6 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
-use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
@@ -15,6 +14,7 @@ use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
+use RedJasmine\PointsMall\Exceptions\PointsExchangeOrderException;
 use RedJasmine\PointsMall\Exceptions\PointsProductException;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -41,7 +41,7 @@ class PointsExchangeService extends Service
         $purchaseFactor = $exchangeOrderData;
         $product        = $purchaseFactor->pointsProduct;
         $quantity       = $purchaseFactor->quantity;
-        $buyer          = $purchaseFactor->buyer;
+
         // 验证兑换资格
         $this->validateExchange($exchangeOrderData);
 
@@ -85,10 +85,20 @@ class PointsExchangeService extends Service
      * @param  PointsExchangeOrder  $exchangeOrder
      *
      * @return PaymentTradeResult
+     * @throws PointsExchangeOrderException
      */
     public function pay(PointsExchangeOrder $exchangeOrder) : PaymentTradeResult
     {
         // 创建订单领域的支付信息
+
+        if (!$exchangeOrder->canPaymentMoney()) {
+            throw new PointsExchangeOrderException('无需支付');
+        }
+
+        if (!$exchangeOrder->isPaying()) {
+            throw new PointsExchangeOrderException('未在支付中');
+        }
+
 
         $paymentTradeData = $this->orderService->createPayment($exchangeOrder);
 

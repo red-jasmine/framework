@@ -132,4 +132,18 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
     {
         return $this->belongsTo(PointsProduct::class, 'point_product_id');
     }
+
+    public function isPaying() : bool
+    {
+        return $this->status = PointsExchangeOrderStatusEnum::PAYING;
+    }
+
+    /**
+     * 是否需要支付
+     * @return bool
+     */
+    public function canPaymentMoney() : bool
+    {
+        return bccomp($this->total_amount_amount, 0, 2) > 0;
+    }
 } 
