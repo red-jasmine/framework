@@ -7,8 +7,9 @@ use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
-use RedJasmine\Shopping\Domain\Data\PaymentTradeResult;
 use RedJasmine\Shopping\Domain\Hooks\ShoppingOrderCreateHook;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 
 /**
  * 订单结算服务

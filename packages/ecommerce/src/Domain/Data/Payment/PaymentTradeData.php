@@ -1,16 +1,17 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Payment;
 
 use Cknow\Money\Money;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 
-class OrderPaymentData extends Data
-{
-    public int $id;
 
-    public string $orderNo;
+class PaymentTradeData extends Data
+{
+
+    public string $merchantTradeNo;
+    public string $merchantTradeOrderNo;
 
     public Money $paymentAmount;
 

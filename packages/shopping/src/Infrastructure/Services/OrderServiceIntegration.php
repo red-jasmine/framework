@@ -3,14 +3,14 @@
 namespace RedJasmine\Shopping\Infrastructure\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\GoodDetailData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\Shopping\Domain\Contracts\OrderServiceInterface;
-use RedJasmine\Shopping\Domain\Data\GoodDetailData;
-use RedJasmine\Shopping\Domain\Data\OrderPaymentData;
 use RedJasmine\Shopping\Infrastructure\Services\Transformers\OrderCreateCommandTransformer;
 
 /**
@@ -74,7 +74,7 @@ class OrderServiceIntegration implements OrderServiceInterface
         return $this->orderApplicationService->findByNo($orderNo);
     }
 
-    public function createOrderPayment(string $orderNo) : OrderPaymentData
+    public function createOrderPayment(string $orderNo) : PaymentTradeData
     {
         $order = $this->orderApplicationService->findByNo($orderNo);
 
@@ -85,7 +85,13 @@ class OrderServiceIntegration implements OrderServiceInterface
         // 订单发起支付
         $orderPayment = $this->orderApplicationService->paying($orderPayingCommand);
 
-        $orderPaymentData = OrderPaymentData::from($orderPayment);
+        $orderPaymentData = new PaymentTradeData; //::from($orderPayment);
+
+        $orderPaymentData->merchantTradeNo      = $orderPayment->id;
+        $orderPaymentData->merchantTradeOrderNo = $orderPayment->order_no;
+        $orderPaymentData->paymentAmount        = $orderPayment->payment_amount;
+        $orderPaymentData->buyer                = $orderPayment->buyer;
+        $orderPaymentData->seller               = $orderPayment->seller;
 
         // 产品信息
         $goodDetails                   = GoodDetailData::collect(

@@ -1,9 +1,10 @@
 <?php
 
-namespace RedJasmine\Shopping\Domain\Data;
+namespace RedJasmine\Ecommerce\Domain\Data\Payment;
 
 use Cknow\Money\Money;
 use RedJasmine\Support\Data\Data;
+
 
 class PaymentTradeResult extends Data
 {

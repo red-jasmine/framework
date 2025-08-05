@@ -7,8 +7,9 @@ use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\TradeApplicationService;
 use RedJasmine\Payment\Domain\Data\GoodDetailData;
 use RedJasmine\Shopping\Domain\Contracts\PaymentServiceInterface;
-use RedJasmine\Shopping\Domain\Data\OrderPaymentData;
-use RedJasmine\Shopping\Domain\Data\PaymentTradeResult;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
+
 
 class PaymentServiceIntegration implements PaymentServiceInterface
 {
@@ -29,14 +30,14 @@ class PaymentServiceIntegration implements PaymentServiceInterface
      * 创建支付单
      * @return mixed
      */
-    public function create(OrderPaymentData $orderPayment) : PaymentTradeResult
+    public function create(PaymentTradeData $orderPayment) : PaymentTradeResult
     {
 
         $tradeCreateCommand                       = new TradeCreateCommand;
         $tradeCreateCommand->amount               = $orderPayment->paymentAmount;
-        $tradeCreateCommand->subject              = '支付订单：'.$orderPayment->orderNo;
-        $tradeCreateCommand->merchantTradeNo      = $orderPayment->id;
-        $tradeCreateCommand->merchantTradeOrderNo = $orderPayment->orderNo;
+        $tradeCreateCommand->subject              = '支付订单：'.$orderPayment->merchantTradeOrderNo;
+        $tradeCreateCommand->merchantTradeNo      = $orderPayment->merchantTradeNo;
+        $tradeCreateCommand->merchantTradeOrderNo = $orderPayment->merchantTradeOrderNo;
         $tradeCreateCommand->description          = '';
         $tradeCreateCommand->goodDetails          = GoodDetailData::collect($orderPayment->goodDetails);
         // 配置的商户应用ID
