@@ -19,18 +19,18 @@ class ListOrders extends ListRecords
     {
         return [
             'all'                      => Tab::make()->label(__('red-jasmine-order::order.scopes.all')),
-            'wait_buyer_pay'           => Tab::make()->label(__('red-jasmine-order::order.scopes.wait_buyer_pay'))
-                                             ->badge(static::getResource()::getEloquentQuery()->onWaitBuyerPay()->count())
-                                             ->modifyQueryUsing(fn(Builder $query) => $query->onWaitBuyerPay()),
-            'wait_seller_accept'       => Tab::make()->label(__('red-jasmine-order::order.scopes.wait_seller_accept'))
-                                             ->badge(static::getResource()::getEloquentQuery()->onWaitSellerAccept()->count())
-                                             ->modifyQueryUsing(fn(Builder $query) => $query->onWaitSellerAccept()),
-            'wait_seller_send_goods'   => Tab::make()->label(__('red-jasmine-order::order.scopes.wait_seller_send_goods'))
-                                             ->badge(static::getResource()::getEloquentQuery()->onWaitSellerSendGoods()->count())
-                                             ->modifyQueryUsing(fn(Builder $query) => $query->onWaitSellerSendGoods()),
-            'wait_buyer_confirm_goods' => Tab::make()->label(__('red-jasmine-order::order.scopes.wait_buyer_confirm_goods'))
-                                             ->badge(static::getResource()::getEloquentQuery()->onWaitBuyerConfirmGoods()->count())
-                                             ->modifyQueryUsing(fn(Builder $query) => $query->onWaitBuyerConfirmGoods()),
+            'paying'           => Tab::make()->label(__('red-jasmine-order::order.scopes.paying'))
+                                             ->badge(static::getResource()::getEloquentQuery()->onPaying()->count())
+                                             ->modifyQueryUsing(fn(Builder $query) => $query->onPaying()),
+            'accepting'       => Tab::make()->label(__('red-jasmine-order::order.scopes.accepting'))
+                                             ->badge(static::getResource()::getEloquentQuery()->onAccepting()->count())
+                                             ->modifyQueryUsing(fn(Builder $query) => $query->onAccepting()),
+            'shipping'   => Tab::make()->label(__('red-jasmine-order::order.scopes.shipping'))
+                                             ->badge(static::getResource()::getEloquentQuery()->onShipping()->count())
+                                             ->modifyQueryUsing(fn(Builder $query) => $query->onShipping()),
+            'confirming' => Tab::make()->label(__('red-jasmine-order::order.scopes.confirming'))
+                                             ->badge(static::getResource()::getEloquentQuery()->onConfirming()->count())
+                                             ->modifyQueryUsing(fn(Builder $query) => $query->onConfirming()),
             'finished'                 => Tab::make()->label(__('red-jasmine-order::order.scopes.finished'))
                                              ->modifyQueryUsing(fn(Builder $query) => $query->onFinished()),
             'cancel-closed'            => Tab::make()->label(__('red-jasmine-order::order.scopes.cancel-closed'))

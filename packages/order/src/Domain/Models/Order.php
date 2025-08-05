@@ -796,23 +796,23 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     // |---------------scope----------------------------
 
-    public function scopeOnWaitBuyerPay(Builder $builder) : Builder
+    public function scopeOnPaying(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::PAYING);
     }
 
-    public function scopeOnWaitSellerAccept(Builder $builder) : Builder
+    public function  scopeOnAccepting(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::ACCEPTING)
                        ->where('accept_status', AcceptStatusEnum::WAIT_ACCEPT);
     }
 
-    public function scopeOnWaitSellerSendGoods(Builder $builder) : Builder
+    public function scopeOnShipping(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::SHIPPING);
     }
 
-    public function scopeOnWaitBuyerConfirmGoods(Builder $builder) : Builder
+    public function scopeOnConfirming(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::CONFIRMING);
     }
