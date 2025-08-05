@@ -4,6 +4,7 @@ namespace RedJasmine\PointsMall\Application;
 
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
+use RedJasmine\PointsMall\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\ProductServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointProductCategoryReadRepositoryInterface;
@@ -19,6 +20,7 @@ use RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent\PointProductCateg
 use RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent\PointsExchangeOrderRepository;
 use RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent\PointsProductRepository;
 use RedJasmine\PointsMall\Infrastructure\Services\OrderServiceIntegration;
+use RedJasmine\PointsMall\Infrastructure\Services\PaymentServiceIntegration;
 use RedJasmine\PointsMall\Infrastructure\Services\ProductServiceIntegration;
 use RedJasmine\PointsMall\Infrastructure\Services\WalletServiceIntegration;
 
@@ -54,6 +56,7 @@ class PointsMallApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductServiceInterface::class, ProductServiceIntegration::class);
         $this->app->bind(WalletServiceInterface::class, WalletServiceIntegration::class);
         $this->app->bind(OrderServiceInterface::class, OrderServiceIntegration::class);
+        $this->app->bind(PaymentServiceInterface::class, PaymentServiceIntegration::class);
     }
 
     public function boot() : void

@@ -11,7 +11,7 @@ interface PointsExchangeOrderRepositoryInterface extends RepositoryInterface
     /**
      * 根据订单号查找订单
      */
-    public function findByOrderNo(string $orderNo): ?PointsExchangeOrder;
+    public function findByNo(string $no);
 
     /**
      * 根据关联订单号查找订单

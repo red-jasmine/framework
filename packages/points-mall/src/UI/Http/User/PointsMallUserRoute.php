@@ -22,6 +22,7 @@ class PointsMallUserRoute
             Route::apiResource('products', PointsProductController::class)->only(['index', 'show']);
 
             Route::post('orders/exchange', [PointsExchangeOrderController::class, 'exchange']);
+            Route::post('orders/{id}/pay', [PointsExchangeOrderController::class, 'pay']);
             Route::apiResource('orders', PointsExchangeOrderController::class)->only(['index', 'show']);
         });
     }

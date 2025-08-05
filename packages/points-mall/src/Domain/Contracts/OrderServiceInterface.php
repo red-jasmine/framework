@@ -3,6 +3,7 @@
 namespace RedJasmine\PointsMall\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
@@ -25,7 +26,10 @@ interface OrderServiceInterface
     public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData) : string;
 
 
-    public function create(PointsExchangeOrder $exchangeOrder,ProductInfo $productInfo);
+    public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo);
+
+
+    public function createPayment(PointsExchangeOrder $exchangeOrder) : PaymentTradeData;
 
     /**
      * 更新订单状态

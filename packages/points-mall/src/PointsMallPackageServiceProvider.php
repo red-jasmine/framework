@@ -11,7 +11,7 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package) : void
     {
         $package
-            ->name('points-mall')
+            ->name('red-jasmine-points-mall')
             ->hasConfigFile()
             ->hasMigrations([
                 'create_points_products_table',

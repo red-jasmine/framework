@@ -62,7 +62,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
     public function newInstance($attributes = [], $exists = false) : PointsExchangeOrder
     {
         $instance = parent::newInstance($attributes, $exists);
-        if (!$instance->exists) {
+        if (!$instance->exists && !empty($attributes)) {
             $instance->setUniqueNo();
         }
 
@@ -97,13 +97,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
             }
         });
 
-        static::saving(function ($model) {
-            // 保存时的业务逻辑
-        });
 
-        static::deleting(function ($model) {
-            // 删除时的业务逻辑
-        });
     }
 
 

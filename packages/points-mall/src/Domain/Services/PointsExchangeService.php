@@ -3,6 +3,8 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\PointsMall\Domain\Contracts\PaymentServiceInterface;
@@ -79,10 +81,19 @@ class PointsExchangeService extends Service
         }
     }
 
-    public function pay(PointsExchangeOrder $exchangeOrder)
+    /**
+     * @param  PointsExchangeOrder  $exchangeOrder
+     *
+     * @return PaymentTradeResult
+     */
+    public function pay(PointsExchangeOrder $exchangeOrder) : PaymentTradeResult
     {
+        // 创建订单领域的支付信息
 
-        $this->paymentService->createPayment();
+        $paymentTradeData = $this->orderService->createPayment($exchangeOrder);
+
+
+        return $this->paymentService->create($paymentTradeData);
 
     }
 

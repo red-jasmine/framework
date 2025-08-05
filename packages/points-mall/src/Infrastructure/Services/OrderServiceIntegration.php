@@ -3,10 +3,14 @@
 namespace RedJasmine\PointsMall\Infrastructure\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\GoodDetailData;
+use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
+use RedJasmine\Order\Domain\Models\OrderProduct;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 use RedJasmine\PointsMall\Infrastructure\Services\Transformers\PointsExchangeOrderCreateCommandTransformer;
@@ -52,7 +56,48 @@ class OrderServiceIntegration implements OrderServiceInterface
         return $order->order_no;
     }
 
+    public function createPayment(PointsExchangeOrder $exchangeOrder) : PaymentTradeData
+    {
+        $orderNo = $exchangeOrder->outer_order_no;
+        $order = $this->orderApplicationService->findByNo($orderNo);
 
+        $orderPayingCommand = new  OrderPayingCommand;
+        $orderPayingCommand->setKey($orderNo);
+
+        // 订单发起支付
+        $orderPayment = $this->orderApplicationService->paying($orderPayingCommand);
+
+        $orderPaymentData = new PaymentTradeData; //::from($orderPayment);
+
+        $orderPaymentData->merchantTradeNo      = $orderPayment->id;
+        $orderPaymentData->merchantTradeOrderNo = $orderPayment->order_no;
+        $orderPaymentData->paymentAmount        = $orderPayment->payment_amount;
+        $orderPaymentData->buyer                = $orderPayment->buyer;
+        $orderPaymentData->seller               = $orderPayment->seller;
+
+        // 产品信息
+        $goodDetails                   = GoodDetailData::collect(
+            $order->products->map(
+                fn($orderProduct) => $this->orderProductToGoodDetailData($orderProduct)
+            )->toArray());
+        $orderPaymentData->goodDetails = $goodDetails;
+
+        return $orderPaymentData;
+
+    }
+
+    protected function orderProductToGoodDetailData(OrderProduct $orderProduct) : GoodDetailData
+    {
+        $goodDetailData = new GoodDetailData;
+
+        $goodDetailData->goodsId   = $orderProduct->product_id;
+        $goodDetailData->goodsName = $orderProduct->title;
+        $goodDetailData->price     = $orderProduct->price;
+        $goodDetailData->quantity  = $orderProduct->quantity;
+
+
+        return $goodDetailData;
+    }
     /**
      * 更新订单状态
      *
