@@ -135,7 +135,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
 
     public function isPaying() : bool
     {
-        return $this->status = PointsExchangeOrderStatusEnum::PAYING;
+        return $this->status == PointsExchangeOrderStatusEnum::PAYING;
     }
 
     /**
