@@ -15,7 +15,7 @@ class UserVipResource extends JsonResource
             'id'         => $this->id,
             'owner_type' => $this->owner_type,
             'owner_id'   => $this->owner_id,
-            'app_id'     => $this->app_id,
+            'biz'     => $this->biz,
             'type'       => $this->type,
             'level'      => $this->level,
             'start_time' => $this->start_time?->format('Y-m-d'),

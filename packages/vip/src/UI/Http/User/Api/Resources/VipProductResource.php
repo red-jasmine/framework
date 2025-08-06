@@ -13,7 +13,7 @@ class VipProductResource extends JsonResource
     {
         return [
             'id'              => (string)$this->id,
-            'app_id'          => $this->app_id,
+            'biz'          => $this->biz,
             'type'            => $this->type,
             'name'            => $this->name,
             'price'           => $this->price,

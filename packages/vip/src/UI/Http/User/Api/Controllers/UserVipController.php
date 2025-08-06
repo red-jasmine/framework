@@ -31,10 +31,10 @@ class UserVipController extends Controller
         return UserVipResource::collection($result);
     }
 
-    public function vip(string $appId, string $type) : UserVipResource
+    public function vip(string $biz, string $type) : UserVipResource
     {
         $query = FindUserVipQuery::from([
-            'appId' => $appId,
+            'biz' => $biz,
             'type'  => $type,
             'owner' => $this->getOwner(),
         ]);

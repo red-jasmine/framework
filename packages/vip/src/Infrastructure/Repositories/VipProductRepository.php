@@ -49,10 +49,10 @@ class VipProductRepository implements VipProductRepositoryInterface
             'unit'          => $model->time_unit->value,
             'unitQuantity'  => $model->time_value,
             'stock'         => $model->stock,
-            'appId'         => $model->app_id,
+            'biz'         => $model->biz,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
             'extra'         => [
-                'app_id' => $model->app_id,
+                'biz' => $model->biz,
                 'type'   => $model->type,
             ],
         ]);
@@ -79,10 +79,10 @@ class VipProductRepository implements VipProductRepositoryInterface
             'unit'          => $model->time_unit->value,
             'unitQuantity'  => $model->time_value,
             'stock'         => $model->stock,
-            'appId'         => $model->app_id,
+            'biz'         => $model->biz,
             'product_model' => $model->type, // 产品型号 对应的是 VIP 类型
             'extra'         => [
-                'app_id' => $model->app_id,
+                'biz' => $model->biz,
                 'type'   => $model->type,
             ],
         ]);

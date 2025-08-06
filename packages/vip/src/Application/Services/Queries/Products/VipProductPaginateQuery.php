@@ -8,7 +8,7 @@ class VipProductPaginateQuery extends \RedJasmine\Support\Domain\Data\Queries\Pa
     public ?string $status;
 
 
-    public string $appId;
+    public string $biz;
 
     public string $type;
 

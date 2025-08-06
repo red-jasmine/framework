@@ -26,7 +26,7 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
     ) {
 
         // $this->queryService->getRepository()->withQuery(function ($query) {
-        //     return $query->where('app_id', 'vip');
+        //     return $query->where('biz', 'vip');
         // });
     }
 

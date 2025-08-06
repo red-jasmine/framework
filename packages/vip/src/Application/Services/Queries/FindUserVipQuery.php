@@ -10,7 +10,7 @@ class FindUserVipQuery extends Query
 
     public UserInterface $owner;
 
-    public string $appId;
+    public string $biz;
 
     public string $type;
 

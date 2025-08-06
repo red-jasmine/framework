@@ -14,7 +14,7 @@ class OpenUserVipData extends Data
 {
 
     public UserInterface $owner;
-    public string        $appId;
+    public string        $biz;
     public string        $type;
     #[WithCast(EnumCast::class, TimeUnitEnum::class)]
     public TimeUnitEnum  $timeUnit  = TimeUnitEnum::MONTH; // 时间单位

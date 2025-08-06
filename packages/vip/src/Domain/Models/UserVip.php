@@ -21,7 +21,7 @@ class UserVip extends Model implements OwnerInterface, OperatorInterface
 
 
     protected $fillable = [
-        'app_id',
+        'biz',
         'type',
         'level',
         'is_forever',

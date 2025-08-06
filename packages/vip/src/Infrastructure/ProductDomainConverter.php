@@ -33,7 +33,7 @@ class ProductDomainConverter
         $model->name       = $product->title;
         $model->time_value = $product->unit_quantity;
         $model->stock      = $product->stock;
-        $model->app_id     = $product->app_id;
+        $model->biz     = $product->biz;
         $model->type       = $product->product_model;
         $model->time_unit  = TimeUnitEnum::from($product->unit);
         return $model;

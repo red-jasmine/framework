@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
             $table->unsignedBigInteger('vip_id')->comment('VIP id');
-            $table->string('app_id', 32)->comment('应用ID');
+            $table->string('biz', 64)->comment('业务');
             $table->string('type', 32)->comment('类型');
             $table->tinyInteger('level')->default(1)->comment('等级');
             $table->dateTime('start_time')->comment('生效时间');
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
-            $table->unique(['owner_type', 'owner_id', 'app_id', 'type'], 'owner_app_vip');
+            $table->unique(['owner_type', 'owner_id', 'biz', 'type'], 'owner_app_vip');
             $table->comment('用户 VIP表');
         });
     }

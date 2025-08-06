@@ -9,6 +9,6 @@ use RedJasmine\Vip\Domain\Models\UserVip;
 interface UserVipReadRepositoryInterface extends ReadRepositoryInterface
 {
 
-    public function findVipByOwner(UserInterface $owner, string $appID, string $type) : ?UserVip;
+    public function findVipByOwner(UserInterface $owner, string $biz, string $type) : ?UserVip;
 
 }

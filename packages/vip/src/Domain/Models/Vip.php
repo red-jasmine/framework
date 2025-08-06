@@ -28,7 +28,7 @@ class Vip extends Model implements OwnerInterface, OperatorInterface
     }
 
     protected $fillable = [
-        'app_id',
+        'biz',
         'type',
         'level',
         'name',

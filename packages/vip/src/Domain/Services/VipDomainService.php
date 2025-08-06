@@ -16,16 +16,16 @@ class VipDomainService
 
 
     /**
-     * @param  string  $appId
+     * @param  string  $biz
      * @param  string  $type
      *
      * @return Vip
      * @throws VipException
      */
-    public function validate(string $appId, string $type) : Vip
+    public function validate(string $biz, string $type) : Vip
     {
 
-        $vip = $this->vipReadRepository->findVipType($appId, $type);
+        $vip = $this->vipReadRepository->findVipType($biz, $type);
 
         if (!$vip) {
             throw new VipException('vip not found');

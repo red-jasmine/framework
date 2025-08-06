@@ -22,10 +22,10 @@ class VipController extends Controller
         return VipResource::collection($result);
     }
 
-    public function show(string $appId, string $type)
+    public function show(string $biz, string $type)
     {
         $result = $this->service->findVipType(
-            $appId,
+            $biz,
             $type,
         );
 

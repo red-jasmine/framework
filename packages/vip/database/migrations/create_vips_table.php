@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('vips', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->string('app_id', 32)->comment('应用ID');
+            $table->string('biz', 64)->comment('业务');
             $table->string('type', 32)->comment('类型');
             $table->tinyInteger('level')->default(1)->comment('等级');
             $table->string('name', 32)->comment('名称');
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('updater_type', 32)->nullable();
             $table->string('updater_id', 64)->nullable();
             $table->timestamps();
-            $table->unique(['app_id', 'type'], 'uk_vip_type');
+            $table->unique(['biz', 'type'], 'uk_vip_type');
             $table->comment('vip 表');
         });
     }

@@ -16,12 +16,12 @@ class UserVipReadRepository extends QueryBuilderReadRepository implements UserVi
      */
     protected static string $modelClass = UserVip::class;
 
-    public function findVipByOwner(UserInterface $owner, string $appID, string $type) : ?UserVip
+    public function findVipByOwner(UserInterface $owner, string $biz, string $type) : ?UserVip
     {
         return $this->query()
                     ->where('owner_type', $owner->getType())
                     ->where('owner_id', $owner->getID())
-                    ->where('app_id', $appID)
+                    ->where('biz', $biz)
                     ->where('type', $type)
                     ->first();
     }

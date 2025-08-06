@@ -33,7 +33,7 @@ class UserVipDomainService
     public function open(OpenUserVipData $data) : UserVip
     {
         // 验证VIP 是否有效
-        $vip = $this->vipDomainService->validate($data->appId, $data->type);
+        $vip = $this->vipDomainService->validate($data->biz, $data->type);
 
         $userVip         = $this->findUserVip($data);
         $userVip->vip_id = $vip->id;
@@ -50,10 +50,10 @@ class UserVipDomainService
     protected function findUserVip(OpenUserVipData $data) : UserVip
     {
         // 查询用户VIP
-        $userVip             = $this->readRepository->findVipByOwner($data->owner, $data->appId, $data->type);
+        $userVip             = $this->readRepository->findVipByOwner($data->owner, $data->biz, $data->type);
         $userVip             = $userVip ?? UserVip::make();
         $userVip->owner      = $data->owner;
-        $userVip->app_id     = $data->appId;
+        $userVip->biz     = $data->biz;
         $userVip->type       = $data->type;
         $userVip->level      = $userVip->level ?? $userVip->defaultLevel();
         $userVip->start_time = $userVip->start_time ?? now();
@@ -82,7 +82,7 @@ class UserVipDomainService
         $userVipOrder->end_time     = $userVip->getCurrentEndTime();
         $userVipOrder->order_time   = Carbon::now();
         $userVipOrder->owner        = $data->owner;
-        $userVipOrder->app_id       = $data->appId;
+        $userVipOrder->biz       = $data->biz;
         $userVipOrder->payment_type = $data->paymentType;
         $userVipOrder->payment_id   = $data->paymentId;
         $userVipOrder->type         = $data->type;

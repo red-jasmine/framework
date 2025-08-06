@@ -13,7 +13,7 @@ class VipResource extends JsonResource
     {
         return [
             'id'          => $this->id,
-            'app_id'      => $this->app_id,
+            'biz'      => $this->biz,
             'type'        => $this->type,
             'level'       => $this->level,
             'name'        => $this->name,

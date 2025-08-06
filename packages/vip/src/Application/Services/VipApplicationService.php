@@ -20,8 +20,8 @@ class VipApplicationService extends ApplicationService
 
     public static string $hookNamePrefix = 'vip.application.vip';
 
-    public function findVipType(string $appId, string $type) : ?Vip
+    public function findVipType(string $biz, string $type) : ?Vip
     {
-        return $this->readRepository->findVipType($appId, $type);
+        return $this->readRepository->findVipType($biz, $type);
     }
 }

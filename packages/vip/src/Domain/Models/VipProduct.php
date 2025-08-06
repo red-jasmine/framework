@@ -15,7 +15,7 @@ use RedJasmine\Vip\Domain\Models\Enums\VipProductStatusEnum;
 
 /**
  * @property int $id;
- * @property string $app_id;
+ * @property string $biz;
  * @property string $type;
  * @property string $name
  * @property VipProductStatusEnum $status
@@ -42,7 +42,7 @@ class VipProduct extends Model implements OwnerInterface, OperatorInterface
     }
 
     protected $fillable = [
-        'app_id',
+        'biz',
         'type',
         'name',
         'description',

@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary();
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
-            $table->string('app_id', 32)->comment('应用ID');
+            $table->string('biz', 64)->comment('业务');
             $table->string('type', 32)->comment('类型');
             $table->dateTime('start_time')->comment('开始时间');
             $table->dateTime('end_time')->comment('过期时间');
