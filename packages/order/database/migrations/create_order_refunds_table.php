@@ -21,7 +21,7 @@ return new class extends Migration {
                 $table->string('refund_no', 64)->unique()->comment('售后单号');
                 // 订单数据
                 $table->string('order_no', 64)->comment('订单号');
-                $table->string('app_id', 64)->comment('应用ID');
+                $table->string('biz', 64)->comment('业务线');
                 $table->string('seller_type', 32)->comment('卖家类型');
                 $table->string('seller_id', 64)->comment('卖家ID');
                 $table->string('seller_nickname')->nullable()->comment('卖家昵称');

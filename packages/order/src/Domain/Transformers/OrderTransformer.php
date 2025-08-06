@@ -22,8 +22,8 @@ class OrderTransformer implements TransformerInterface
     public function transform($data, $order) : Order
     {
 
-        $order->app_id                    = $data->appId;
-        $order->seller                    = $data->seller;
+        $order->biz    = $data->biz;
+        $order->seller = $data->seller;
         $order->buyer                     = $data->buyer;
         $order->guide                     = $data->guide;
         $order->channel                   = $data->channel;

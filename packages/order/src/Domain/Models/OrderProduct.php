@@ -106,7 +106,7 @@ class OrderProduct extends Model implements UniqueNoInterface
         'price',
         'buyer',
         'seller',
-        'app_id',
+        'biz',
         'currency',
     ];
 
@@ -133,7 +133,7 @@ class OrderProduct extends Model implements UniqueNoInterface
     public function buildUniqueNoFactors() : array
     {
         return [
-            $this->app_id,
+            $this->biz,
             $this->seller_id,
             $this->buyer_id
         ];
@@ -167,7 +167,7 @@ class OrderProduct extends Model implements UniqueNoInterface
         $cardKey->seller      = $this->seller;
         $cardKey->buyer       = $this->buyer;
         $cardKey->order_no    = $this->order_no;
-        $cardKey->app_id      = $this->app_id;
+        $cardKey->biz      = $this->biz;
         $cardKey->entity_id   = $this->order_product_no;
         $cardKey->entity_type = EntityTypeEnum::ORDER_PRODUCT;
 

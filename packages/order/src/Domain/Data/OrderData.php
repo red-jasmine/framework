@@ -13,7 +13,11 @@ use Spatie\LaravelData\Casts\EnumCast;
 class OrderData extends Data
 {
 
-    public string $appId = 'system';
+    /**
+     * 业务线
+     * @var string
+     */
+    public string $biz = 'system';
     // 订单类型
     public string $orderType;
     /**

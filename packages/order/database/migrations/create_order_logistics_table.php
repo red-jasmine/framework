@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create( 'order_logistics', function (Blueprint $table) {
             $table->id();
-            $table->string('app_id', 64)->comment('应用ID');
+            $table->string('biz', 64)->comment('业务线');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->string('seller_id',64)->comment('卖家ID');
             $table->string('buyer_type', 32)->comment('买家类型');

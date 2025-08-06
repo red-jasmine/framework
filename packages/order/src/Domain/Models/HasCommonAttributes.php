@@ -11,7 +11,7 @@ use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 
 /**
  * @property OrderTypeEnum $order_type
- * @property string $app_id
+ * @property string $biz
  * @property UserInterface $buyer
  * @property UserInterface $seller
  * @property UserInterface $store

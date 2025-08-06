@@ -85,7 +85,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public $incrementing = false;
 
     protected $fillable = [
-        'app_id',
+        'biz',
         'buyer_id',
         'seller_id',
         'seller',
@@ -132,7 +132,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     {
 
         return OrderProduct::make([
-            'app_id'   => $this->app_id,
+            'biz'   => $this->biz,
             'seller'   => $this->seller,
             'buyer'    => $this->buyer,
             'currency' => $this->currency,
@@ -164,7 +164,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public function buildUniqueNoFactors() : array
     {
         return [
-            $this->app_id,
+            $this->biz,
             $this->seller_id,
             $this->buyer_id
         ];
@@ -235,8 +235,8 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
-        $orderProduct->app_id         = $this->app_id;
-        $orderProduct->order_no       = $this->order_no;
+        $orderProduct->biz      = $this->biz;
+        $orderProduct->order_no = $this->order_no;
         $orderProduct->order_type     = $this->order_type;
         $orderProduct->buyer          = $this->buyer;
         $orderProduct->seller         = $this->seller;
@@ -262,7 +262,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     public function addLogistics(OrderLogistics $logistics) : void
     {
-        $logistics->app_id      = $this->app_id;
+        $logistics->biz      = $this->biz;
         $logistics->entity_type = EntityTypeEnum::ORDER;
         $logistics->entity_id   = $this->order_no;
         $logistics->order_no    = $this->order_no;
@@ -419,7 +419,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
             // throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
-        $orderPayment->app_id      = $this->app_id;
+        $orderPayment->biz      = $this->biz;
         $orderPayment->order_no    = $this->order_no;
         $orderPayment->buyer       = $this->buyer;
         $orderPayment->seller      = $this->seller;
@@ -588,7 +588,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     {
 
         $refund = Refund::make([
-            'app_id'   => $this->app_id,
+            'biz'   => $this->biz,
             'seller'   => $this->seller,
             'buyer'    => $this->buyer,
             'currency' => $this->currency,

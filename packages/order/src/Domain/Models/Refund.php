@@ -94,7 +94,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
     public function buildUniqueNoFactors() : array
     {
         return [
-            $this->app_id,
+            $this->biz,
             $this->seller_id,
             $this->buyer_id
         ];
@@ -148,7 +148,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
     ];
 
     protected $fillable = [
-        'app_id',
+        'biz',
         'seller_id',
         'seller',
         'buyer_id',
@@ -160,9 +160,9 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
     public function setOrder(Order $order) : void
     {
         $this->setRelation('order', $order);
-        $this->order_no   = $order->order_no;
-        $this->app_id     = $order->app_id;
-        $this->seller     = $order->seller;
+        $this->order_no = $order->order_no;
+        $this->biz      = $order->biz;
+        $this->seller   = $order->seller;
         $this->buyer      = $order->buyer;
         $this->source     = $order->source;
         $this->store      = $order->store;
@@ -379,7 +379,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         // 创建支付单
         $payment                 = OrderPayment::make();
         $payment->order_no       = $this->order_no;
-        $payment->app_id         = $this->app_id;
+        $payment->biz         = $this->biz;
         $payment->seller         = $this->seller;
         $payment->buyer          = $this->buyer;
         $payment->entity_type    = EntityTypeEnum::REFUND;
@@ -520,7 +520,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         $orderLogistics->buyer_type  = $this->buyer_type;
         $orderLogistics->buyer_id    = $this->buyer_id;
         $orderLogistics->order_no    = $this->order_no;
-        $orderLogistics->app_id      = $this->app_id;
+        $orderLogistics->biz      = $this->biz;
 
 
         $this->logistics->add($orderLogistics);
@@ -587,7 +587,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         $cardKey->seller           = $this->seller;
         $cardKey->buyer            = $this->buyer;
         $cardKey->order_no         = $this->order_no;
-        $cardKey->app_id           = $this->app_id;
+        $cardKey->biz           = $this->biz;
         $cardKey->entity_id        = $this->refund_no;
         $cardKey->order_product_no = $this->order_product_no;
         $cardKey->entity_type      = EntityTypeEnum::REFUND;

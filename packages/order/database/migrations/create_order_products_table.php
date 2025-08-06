@@ -20,7 +20,7 @@ return new class extends Migration {
         Schema::create('order_products', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('order_product_no', 64)->unique()->comment('商品单号');
-            $table->string('app_id', 64)->comment('应用ID');
+            $table->string('biz', 64)->comment('业务线');
             $table->string('order_no', 64)->comment('订单号');
             $table->string('seller_type', 32)->comment('卖家类型');
             $table->string('seller_id', 64)->comment('卖家ID');
