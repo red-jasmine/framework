@@ -298,6 +298,7 @@ class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
 
 
         //
+        $refund->biz                     = $this->biz;
         $refund->merchant_id             = $this->merchant_id;
         $refund->trade_id                = $this->id;
         $refund->trade_no                = $this->trade_no;

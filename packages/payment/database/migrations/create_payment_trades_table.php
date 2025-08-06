@@ -14,6 +14,7 @@ return new class extends Migration {
                 $table->unsignedBigInteger('id')->primary();
                 $table->string('trade_no')->unique()->comment('交易号');
                 // 服务商信息 TODO
+                $table->string('biz')->comment('业务标识');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
                 $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
                 $table->string('merchant_trade_no')->comment('商户单号');

@@ -12,6 +12,7 @@ return new class extends Migration {
         Schema::create( 'payment_refunds',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
+                $table->string('biz')->comment('业务标识');
                 $table->string('refund_no')->unique()->comment('退款单号');
                 $table->unsignedBigInteger('trade_id')->comment('交易ID');
                 $table->string('trade_no')->comment('交易号');

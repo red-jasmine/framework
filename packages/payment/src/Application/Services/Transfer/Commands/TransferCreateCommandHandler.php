@@ -39,6 +39,7 @@ class TransferCreateCommandHandler extends CommandHandler
 
             $transfer = app(TransferFactory::class)->create($command);
             // 绑定商户应用
+            $transfer->biz             = $command->biz;
             $transfer->merchant_id     = $merchantApp->merchant_id;
             $transfer->merchant_app_id = $merchantApp->id;
             // 设置渠道应用

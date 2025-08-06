@@ -11,6 +11,8 @@ use Spatie\LaravelData\Casts\EnumCast;
 class TransferCreateData extends Data
 {
 
+    public string $biz = 'default';
+
     public int $merchantAppId;
 
     public string $subject;

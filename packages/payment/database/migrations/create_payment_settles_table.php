@@ -11,6 +11,7 @@ return new class extends Migration {
         Schema::create('payment_settles',
             function (Blueprint $table) {
                 $table->unsignedBigInteger('id')->primary();
+                $table->string('biz')->comment('业务标识');
                 $table->string('settle_no', 64)->unique()->comment('结算号');
                 $table->string('trade_no', 64)->comment('交易号');
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');

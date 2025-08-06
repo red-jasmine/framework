@@ -93,6 +93,7 @@ class Settle extends Model
 
     public function setTrade(Trade $trade) : void
     {
+        $this->biz                   = $trade->biz;
         $this->trade_no              = $trade->trade_no;
         $this->merchant_id           = $trade->merchant_id;
         $this->merchant_app_id       = $trade->merchant_app_id;
@@ -143,7 +144,7 @@ class Settle extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
      *
      * @return void
      * @throws SettleException
@@ -175,7 +176,7 @@ class Settle extends Model
     }
 
     /**
-     * @param ChannelTransferData $data
+     * @param  ChannelTransferData  $data
      *
      * @return void
      * @throws SettleException
@@ -231,7 +232,9 @@ class Settle extends Model
 
     /**
      * 处理中
-     * @param ChannelSettleResult $data
+     *
+     * @param  ChannelSettleResult  $data
+     *
      * @return void
      * @throws SettleException
      */
@@ -259,7 +262,8 @@ class Settle extends Model
     }
 
     /**
-     * @param string|null $message
+     * @param  string|null  $message
+     *
      * @return void
      * @throws SettleException
      */

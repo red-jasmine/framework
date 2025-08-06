@@ -16,6 +16,7 @@ return new class extends Migration {
                 $table->unsignedBigInteger('merchant_id')->comment('商户ID');
                 $table->unsignedBigInteger('merchant_app_id')->comment('应用ID');
 
+                $table->string('biz')->comment('业务标识');
                 $table->string('subject')->comment('标题');
                 $table->string('description')->nullable()->comment('说明');
                 $table->string('amount_currency',3)->comment('金额货币');

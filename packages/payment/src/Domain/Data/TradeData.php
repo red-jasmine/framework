@@ -10,7 +10,9 @@ use RedJasmine\Support\Data\Data;
 class TradeData extends Data
 {
 
-    public int $merchantAppId;
+    public string $biz = 'default';
+
+    public int    $merchantAppId;
 
     public string $merchantTradeNo;
 
