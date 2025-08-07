@@ -14,7 +14,7 @@ trait RefundReject
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::refund.actions.reject'));
+        $this->label(label: __('red-jasmine-order::refund.commands.reject'));
 
         $this->icon('heroicon-o-minus-circle');
         $this->color('danger');

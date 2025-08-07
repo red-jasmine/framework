@@ -9,14 +9,7 @@ class OrderShippingTableAction extends Action
 {
 
     use Shipping;
-//    protected function setUp() : void
-//    {
-//        parent::setUp();
-//
-//        $this->label(__('red-jasmine-order::order.actions.shipping'));
-//
-//        $this->visible(fn($record) => $record->isAllowShipping());
-//    }
+
 
 
 }

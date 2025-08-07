@@ -322,13 +322,15 @@ class Signer
             'digest_alg'       => 'sha256',
             "private_key_bits" => $bits, // 密钥长度
             "private_key_type" => $type,
+            "config"=>'C:\Users\liushoukun_110187947\.config\herd\bin\php84\extras\ssl\openssl.cnf',
         );
 
-        // 创建密钥对
+            // 创建密钥对
         $res = openssl_pkey_new($config);
 
+
         // 提取私钥
-        openssl_pkey_export($res, $privateKey);
+        openssl_pkey_export($res, $privateKey,null,$config);
 
         // 提取公钥
         $publicKeyDetails = openssl_pkey_get_details($res);

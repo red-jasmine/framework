@@ -19,7 +19,7 @@ trait RefundReshipment
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::refund.actions.reshipment'));
+        $this->label(label: __('red-jasmine-order::refund.commands.reshipment'));
 
         $this->visible(fn(Refund $record) => $record->isAllowReshipment());
 

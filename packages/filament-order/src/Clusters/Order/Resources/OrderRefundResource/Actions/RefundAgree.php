@@ -16,7 +16,7 @@ trait RefundAgree
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::refund.actions.agree'));
+        $this->label(label: __('red-jasmine-order::refund.commands.agree'));
 
         $this->icon('heroicon-o-check-circle');
         $this->color('success');

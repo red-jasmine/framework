@@ -13,7 +13,7 @@ trait RefundAgreeReshipment
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::refund.actions.agree-reshipment'));
+        $this->label(label: __('red-jasmine-order::refund.commands.agree-reshipment'));
 
         $this->color('success');
         $this->icon('heroicon-o-check-badge');

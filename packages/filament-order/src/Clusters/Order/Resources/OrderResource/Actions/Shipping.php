@@ -18,7 +18,7 @@ trait Shipping
     {
         parent::setUp();
 
-        $this->label(label: __('red-jasmine-order::order.actions.shipping'));
+        $this->label(label: __('red-jasmine-order::order.commands.shipping'));
 
 
         $this->visible(fn($record) => $record->isAllowShipping());

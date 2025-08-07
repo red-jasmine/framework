@@ -247,7 +247,7 @@ class CouponUsageResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\Action::make('export')
-                        ->label(__('red-jasmine-coupon::coupon_usage.actions.export'))
+                        ->label(__('red-jasmine-coupon::coupon_usage.commands.export'))
                         ->icon('heroicon-o-document-arrow-down')
                         ->action(function ($records) {
                             // 导出逻辑

@@ -116,7 +116,7 @@ return [
         'alias'  => '别名',
     ],
 
-    'actions' => [
+    'commands' => [
         'listing' => '上架',
         'removal' => '下架'
     ],

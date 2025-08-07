@@ -1165,17 +1165,17 @@ class ProductResource extends Resource
                                              ->label(function (Model $record) {
                                                  return $record->status !== ProductStatusEnum::ON_SALE ?
 
-                                                     __('red-jasmine-product::product.actions.listing')
+                                                     __('red-jasmine-product::product.commands.listing')
                                                      :
-                                                     __('red-jasmine-product::product.actions.removal');
+                                                     __('red-jasmine-product::product.commands.removal');
                                              })
                                              ->successNotificationTitle('ok')
                                              ->icon(function (Model $record) {
                                                  return $record->status !== ProductStatusEnum::ON_SALE ?
 
-                                                     FilamentIcon::resolve('product.actions.listing') ?? 'heroicon-o-arrow-up-circle'
+                                                     FilamentIcon::resolve('product.commands.listing') ?? 'heroicon-o-arrow-up-circle'
                                                      :
-                                                     FilamentIcon::resolve('product.actions.removal') ?? 'heroicon-o-arrow-down-circle';
+                                                     FilamentIcon::resolve('product.commands.removal') ?? 'heroicon-o-arrow-down-circle';
 
                                              })
                                              ->action(function (Model $record, Tables\Actions\Action $action) {

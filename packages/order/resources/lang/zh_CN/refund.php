@@ -125,7 +125,7 @@ return [
         ],
 
     ],
-    'actions' => [
+    'commands' => [
         'agree'            => '同意退款',
         'reject'           => '拒绝',
         'agree-reshipment' => '同意补发',

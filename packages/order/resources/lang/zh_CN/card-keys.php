@@ -55,7 +55,7 @@ return [
     'scopes'  => [
 
     ],
-    'actions' => [
+    'commands' => [
 
     ],
 ];

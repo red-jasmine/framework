@@ -59,7 +59,7 @@ return [
     'scopes'  => [
 
     ],
-    'actions' => [
+    'commands' => [
 
     ],
 ];
