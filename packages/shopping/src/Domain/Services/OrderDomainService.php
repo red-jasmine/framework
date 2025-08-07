@@ -185,8 +185,8 @@ class OrderDomainService extends AmountCalculationService
 
     }
 
-    public function paid(string $orderNo, int $orderPaymentId, OrderPaymentData $orderPaymentData) : bool
+    public function paid(string $orderNo, OrderPaymentData $orderPaymentData) : bool
     {
-        return $this->orderService->paidOrderPayment($orderNo, $orderPaymentId, $orderPaymentData);
+        return $this->orderService->paidOrderPayment($orderNo, $orderPaymentData);
     }
 }

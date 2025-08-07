@@ -7,6 +7,12 @@ use RedJasmine\Support\Data\Data;
 
 class OrderPaymentData extends Data
 {
+
+    /**
+     * 支付单 DI
+     * @var string|null
+     */
+    public ?string $orderPaymentId = null;
     public Money   $amount;
     public string  $paymentType;
     public string  $paymentId;

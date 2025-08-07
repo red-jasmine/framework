@@ -24,9 +24,9 @@ class PointsExchangeOrderRepository extends EloquentRepository implements Points
     /**
      * 根据关联订单号查找订单
      */
-    public function findByOuterOrderNo(string $outerOrderNo): ?PointsExchangeOrder
+    public function findByOuterOrderNo(string $outerOrderNo): PointsExchangeOrder
     {
-        return static::$eloquentModelClass::where('outer_order_no', $outerOrderNo)->first();
+        return static::$eloquentModelClass::where('outer_order_no', $outerOrderNo)->firstOrFail();
     }
 
     /**

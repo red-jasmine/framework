@@ -5,6 +5,8 @@ namespace RedJasmine\PointsMall\Application\Services\PointsExchangeOrder;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderCreateCommand;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderCreateCommandHandler;
+use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPaidCommand;
+use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPaidCommandHandler;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPayCommand;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPayCommandHandler;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
@@ -20,6 +22,8 @@ use RedJasmine\Support\Application\ApplicationService;
  * @method PointsExchangeOrder create(PointsExchangeOrderCreateCommand $command)
  * @see PointsExchangeOrderPayCommandHandler::handle()
  * @method PaymentTradeResult pay(PointsExchangeOrderPayCommand $command)
+ * @see PointsExchangeOrderPaidCommandHandler::handle()
+ * @method bool paid(PointsExchangeOrderPaidCommand $command)
  */
 class PointsExchangeOrderApplicationService extends ApplicationService
 {
@@ -40,5 +44,6 @@ class PointsExchangeOrderApplicationService extends ApplicationService
     protected static $macros = [
         'create' => PointsExchangeOrderCreateCommandHandler::class,
         'pay'    => PointsExchangeOrderPayCommandHandler::class,
+        'paid'   => PointsExchangeOrderPaidCommandHandler::class
     ];
 }

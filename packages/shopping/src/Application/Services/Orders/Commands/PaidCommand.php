@@ -10,6 +10,5 @@ use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 class PaidCommand extends OrderPaymentData
 {
     public string $orderNo;
-    public string $orderPaymentId;
 
 }

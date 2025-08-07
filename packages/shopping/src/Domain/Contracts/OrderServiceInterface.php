@@ -42,12 +42,11 @@ interface OrderServiceInterface
      * 支付完成支付单
      *
      * @param  string  $orderNo
-     * @param  int  $orderPaymentId
      * @param  OrderPaymentData  $orderPaymentData
      *
      * @return bool
      */
-    public function paidOrderPayment(string $orderNo, int $orderPaymentId, OrderPaymentData $orderPaymentData) : bool;
+    public function paidOrderPayment(string $orderNo, OrderPaymentData $orderPaymentData) : bool;
 
 
 }

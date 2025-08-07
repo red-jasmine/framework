@@ -3,6 +3,7 @@
 namespace RedJasmine\PointsMall;
 
 use RedJasmine\PointsMall\Application\PointsMallApplicationServiceProvider;
+use RedJasmine\PointsMall\Infrastructure\PointsMallInfrastructureServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -22,6 +23,7 @@ class PointsMallPackageServiceProvider extends PackageServiceProvider
             ->runsMigrations();
 
         $this->app->register(PointsMallApplicationServiceProvider::class);
+        $this->app->register(PointsMallInfrastructureServiceProvider::class);
     }
 
 

@@ -121,7 +121,7 @@ class PointsExchangeOrder extends Model implements OperatorInterface, OwnerInter
 
     public function paid() : void
     {
-        $this->status = PointsExchangeOrderStatusEnum::SHIPPING;
+        $this->status = PointsExchangeOrderStatusEnum::PAID;
 
     }
 

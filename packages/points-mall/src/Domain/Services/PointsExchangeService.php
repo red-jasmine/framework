@@ -3,6 +3,7 @@
 namespace RedJasmine\PointsMall\Domain\Services;
 
 use Exception;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\PointsMall\Domain\Contracts\OrderServiceInterface;
@@ -260,4 +261,13 @@ class PointsExchangeService extends Service
     }
 
 
+    public function paid(PointsExchangeOrder $exchangeOrder, OrderPaymentData $orderPaymentData) : bool
+    {
+        $this->orderService->paidOrderPayment($exchangeOrder, $orderPaymentData);
+
+
+        $exchangeOrder->paid();
+
+        return true;
+    }
 }

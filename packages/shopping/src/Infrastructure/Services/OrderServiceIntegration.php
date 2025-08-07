@@ -123,18 +123,17 @@ class OrderServiceIntegration implements OrderServiceInterface
      * 支付完成支付单
      *
      * @param  string  $orderNo
-     * @param  int  $orderPaymentId
      * @param  OrderPaymentData  $orderPaymentData
      *
      * @return bool
      */
-    public function paidOrderPayment(string $orderNo, int $orderPaymentId, OrderPaymentData $orderPaymentData) : bool
+    public function paidOrderPayment(string $orderNo, OrderPaymentData $orderPaymentData) : bool
     {
         $command = new OrderPaidCommand();
 
 
         $command->orderNo        = $orderNo;
-        $command->orderPaymentId = $orderPaymentId;
+        $command->orderPaymentId = (int) $orderPaymentData->orderPaymentId;
         $command->amount         = $orderPaymentData->amount;
 
         $command->paymentType = $orderPaymentData->paymentType;

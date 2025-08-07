@@ -12,7 +12,7 @@ use Throwable;
 /**
  * @property PointsExchangeOrderApplicationService $service
  */
-class PointsExchangeOrderPayCommandHandler extends CommandHandler
+class PointsExchangeOrderPaidCommandHandler extends CommandHandler
 {
 
     public function __construct(
@@ -25,22 +25,22 @@ class PointsExchangeOrderPayCommandHandler extends CommandHandler
     /**
      * 发起支付
      *
-     * @param  PointsExchangeOrderPayCommand  $command
+     * @param  PointsExchangeOrderPaidCommand  $command
      *
-     * @return PaymentTradeResult
+     * @return bool
      * @throws Throwable
      */
-    public function handle(PointsExchangeOrderPayCommand $command) : PaymentTradeResult
+    public function handle(PointsExchangeOrderPaidCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
 
         try {
 
+            $pointsExchangeOrder = $this->service->repository->findByOuterOrderNo($command->orderNo);
 
-            $pointsExchangeOrder = $this->service->repository->findByOuterOrderNo($command->getKey());
+            $result = $this->service->pointsExchangeService->paid($pointsExchangeOrder, $command);
 
-            $result = $this->service->pointsExchangeService->pay($pointsExchangeOrder);
-
+            $this->service->repository->update($pointsExchangeOrder);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

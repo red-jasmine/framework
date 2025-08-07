@@ -3,7 +3,6 @@
 namespace RedJasmine\Shopping\Application\Services\Orders\Commands;
 
 
-use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Domain\Services\OrderDomainService;
@@ -43,7 +42,7 @@ class PaidCommandHandler extends CommandHandler
 
             $this->orderDomainService->paid(
                 $command->orderNo,
-                $command->orderPaymentId,
+
                 $command,
             );
 

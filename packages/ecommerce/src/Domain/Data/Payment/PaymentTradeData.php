@@ -10,14 +10,22 @@ use RedJasmine\Support\Data\Data;
 class PaymentTradeData extends Data
 {
 
+    /**
+     * 支付订单号
+     * @var string
+     */
     public string $merchantTradeNo;
+    /**
+     * 原始订单号
+     * @var string
+     */
     public string $merchantTradeOrderNo;
 
     public Money $paymentAmount;
 
-    public UserInterface $buyer;
+    public ?UserInterface $buyer = null;
 
-    public UserInterface $seller;
+    public ?UserInterface $seller = null;
 
     /**
      * @var GoodDetailData[]

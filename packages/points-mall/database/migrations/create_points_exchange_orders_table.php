@@ -33,7 +33,8 @@ return new class extends Migration {
             // 订单状态
 
 
-            $table->enum('status', PointsExchangeOrderStatusEnum::values())->default(PointsExchangeOrderStatusEnum::PAYING)
+            $table->enum('status', PointsExchangeOrderStatusEnum::values())
+                  ->default(PointsExchangeOrderStatusEnum::PAYING)
                   ->comment(PointsExchangeOrderStatusEnum::comments('状态'));
             $table->timestamp('exchange_time')->comment('兑换时间');
 

@@ -3,6 +3,7 @@
 namespace RedJasmine\PointsMall\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
@@ -28,8 +29,25 @@ interface OrderServiceInterface
 
     public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo);
 
-
+    /**
+     * 创建订单支付单
+     *
+     * @param  PointsExchangeOrder  $exchangeOrder
+     *
+     * @return PaymentTradeData
+     */
     public function createPayment(PointsExchangeOrder $exchangeOrder) : PaymentTradeData;
+
+    /**
+     * 支付完成支付单
+     *
+     * @param  PointsExchangeOrder  $exchangeOrder
+     * @param  OrderPaymentData  $orderPaymentData
+     *
+     * @return bool
+     */
+    public function paidOrderPayment(PointsExchangeOrder $exchangeOrder, OrderPaymentData $orderPaymentData) : bool;
+
 
     /**
      * 更新订单状态

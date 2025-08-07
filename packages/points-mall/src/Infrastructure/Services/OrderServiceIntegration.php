@@ -3,11 +3,13 @@
 namespace RedJasmine\PointsMall\Infrastructure\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\GoodDetailData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;
+use RedJasmine\Order\Application\Services\Orders\Commands\OrderPaidCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\OrderProduct;
@@ -86,6 +88,7 @@ class OrderServiceIntegration implements OrderServiceInterface
 
     }
 
+
     protected function orderProductToGoodDetailData(OrderProduct $orderProduct) : GoodDetailData
     {
         $goodDetailData = new GoodDetailData;
@@ -98,6 +101,35 @@ class OrderServiceIntegration implements OrderServiceInterface
 
         return $goodDetailData;
     }
+
+    /**
+     * 支付完成支付单
+     *
+     * @param  PointsExchangeOrder  $exchangeOrder
+     * @param  OrderPaymentData  $orderPaymentData
+     *
+     * @return bool
+     */
+    public function paidOrderPayment(PointsExchangeOrder $exchangeOrder, OrderPaymentData $orderPaymentData) : bool
+    {
+        $command = new OrderPaidCommand();
+
+        $command->orderNo        = $exchangeOrder->outer_order_no;
+        $command->orderPaymentId = (int) $orderPaymentData->orderPaymentId;
+        $command->amount         = $orderPaymentData->amount;
+
+        $command->paymentType = $orderPaymentData->paymentType;
+        $command->paymentId   = $orderPaymentData->paymentId;
+
+        $command->paymentChannel   = $orderPaymentData->paymentChannel;
+        $command->paymentChannelNo = $orderPaymentData->paymentChannelNo;
+        $command->paymentMethod    = $orderPaymentData->paymentMethod;
+        $command->paymentTime      = $orderPaymentData->paymentTime;
+
+        return $this->orderApplicationService->paid($command);
+
+    }
+
 
     /**
      * 更新订单状态
