@@ -58,7 +58,7 @@ class PaymentServiceIntegration implements PaymentServiceInterface
     }
 
 
-    public function paidEventHandle($event)
+    public function listenTradePaidEvent($event) : void
     {
         if ($event instanceof TradePaidEvent) {
             if ($event->trade && $event->trade->biz === PaymentServiceInterface::BIZ) {

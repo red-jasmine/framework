@@ -17,7 +17,7 @@ class ShoppingInfrastructureServiceProvider extends ServiceProvider
     public function boot() : void
     {
         Event::listen(TradePaidEvent::class, [
-            PaymentServiceIntegration::class, 'paidEventHandle'
+            PaymentServiceIntegration::class, 'listenTradePaidEvent'
         ]);
     }
 }
