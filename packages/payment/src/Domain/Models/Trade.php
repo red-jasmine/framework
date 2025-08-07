@@ -33,6 +33,7 @@ use RedJasmine\Support\Domain\Models\UniqueNoInterface;
  * @property Money $paymentAmount
  * @property Money $refundAmount
  * @property Money $refundingAmount
+ * @property string $biz
  */
 class Trade extends Model implements AsyncNotifyInterface, UniqueNoInterface
 {

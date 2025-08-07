@@ -18,8 +18,7 @@ class TradeTransformer implements TransformerInterface
      */
     public function transform($data, $model) : Trade
     {
-
-
+        $model->biz           = $data->biz;
         $model->merchant_trade_no           = $data->merchantTradeNo;
         $model->merchant_trade_order_no     = $data->merchantTradeOrderNo;
         $model->subject                     = $data->subject;

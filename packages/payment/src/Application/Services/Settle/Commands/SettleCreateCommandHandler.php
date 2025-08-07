@@ -20,6 +20,13 @@ class SettleCreateCommandHandler extends CommandHandler
     {
     }
 
+    /**
+     * @param  SettleCreateCommand  $command
+     *
+     * @return Settle
+     * @throws AbstractException
+     * @throws Throwable
+     */
     public function handle(SettleCreateCommand $command) : Settle
     {
 
