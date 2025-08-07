@@ -18,6 +18,10 @@ interface PaymentServiceInterface
 {
     // 创建支付单
     // 发起支付
+    /**
+     * 业务标识
+     */
+    public const string BIZ = 'points-mall';
 
     /**
      * 创建支付单

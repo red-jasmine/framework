@@ -15,6 +15,11 @@ use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 interface PaymentServiceInterface
 {
 
+
+    /**
+     * 业务标识
+     */
+    public const string BIZ = 'shopping';
     // 创建支付单
     // 发起支付
 

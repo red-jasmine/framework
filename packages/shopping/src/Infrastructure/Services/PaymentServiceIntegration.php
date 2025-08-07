@@ -34,6 +34,7 @@ class PaymentServiceIntegration implements PaymentServiceInterface
     {
 
         $tradeCreateCommand                       = new TradeCreateCommand;
+        $tradeCreateCommand->biz                  = static::BIZ;
         $tradeCreateCommand->amount               = $orderPayment->paymentAmount;
         $tradeCreateCommand->subject              = '支付订单：'.$orderPayment->merchantTradeOrderNo;
         $tradeCreateCommand->merchantTradeNo      = $orderPayment->merchantTradeNo;
