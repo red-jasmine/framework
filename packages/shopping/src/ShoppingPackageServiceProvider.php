@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping;
 
 
 use RedJasmine\Shopping\Application\ShoppingCartApplicationServiceProvider;
+use RedJasmine\Shopping\Infrastructure\ShoppingInfrastructureServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -30,5 +31,6 @@ class ShoppingPackageServiceProvider extends PackageServiceProvider
     public function packageRegistered() : void
     {
         $this->app->register(ShoppingCartApplicationServiceProvider::class);
+        $this->app->register(ShoppingInfrastructureServiceProvider::class);
     }
 }

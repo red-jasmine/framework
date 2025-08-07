@@ -4,6 +4,8 @@ namespace RedJasmine\Shopping\Application\Services\Orders;
 
 use Illuminate\Support\Collection;
 use RedJasmine\Order\Domain\Models\Order;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\PaidCommand;
+use RedJasmine\Shopping\Application\Services\Orders\Commands\PaidCommandHandler;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\PayCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\PayCommandHandler;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
@@ -19,6 +21,8 @@ use RedJasmine\Support\Application\ApplicationService;
  * @method pay(PayCommand $command)
  * @see CheckCommandHandler::handle()
  * @method check(CheckCommand $command)
+ * @see PaidCommandHandler::handle()
+ * @method paid(PaidCommand $command)
  */
 class ShoppingOrderCommandService extends ApplicationService
 {
@@ -27,6 +31,7 @@ class ShoppingOrderCommandService extends ApplicationService
         'check' => CheckCommandHandler::class,
         'buy'   => BuyCommandHandler::class,
         'pay'   => PayCommandHandler::class,
+        'paid'  => PaidCommandHandler::class,
     ];
 
 }

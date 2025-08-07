@@ -132,7 +132,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     {
 
         return OrderProduct::make([
-            'biz'   => $this->biz,
+            'biz'      => $this->biz,
             'seller'   => $this->seller,
             'buyer'    => $this->buyer,
             'currency' => $this->currency,
@@ -235,8 +235,8 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     public function addProduct(OrderProduct $orderProduct) : static
     {
-        $orderProduct->biz      = $this->biz;
-        $orderProduct->order_no = $this->order_no;
+        $orderProduct->biz            = $this->biz;
+        $orderProduct->order_no       = $this->order_no;
         $orderProduct->order_type     = $this->order_type;
         $orderProduct->buyer          = $this->buyer;
         $orderProduct->seller         = $this->seller;
@@ -262,7 +262,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     public function addLogistics(OrderLogistics $logistics) : void
     {
-        $logistics->biz      = $this->biz;
+        $logistics->biz         = $this->biz;
         $logistics->entity_type = EntityTypeEnum::ORDER;
         $logistics->entity_id   = $this->order_no;
         $logistics->order_no    = $this->order_no;
@@ -415,11 +415,10 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public function paying(OrderPayment $orderPayment) : void
     {
         if (!in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, null], true)) {
-           // todo 临时
-            // throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
+            throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
-        $orderPayment->biz      = $this->biz;
+        $orderPayment->biz         = $this->biz;
         $orderPayment->order_no    = $this->order_no;
         $orderPayment->buyer       = $this->buyer;
         $orderPayment->seller      = $this->seller;
@@ -588,7 +587,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     {
 
         $refund = Refund::make([
-            'biz'   => $this->biz,
+            'biz'      => $this->biz,
             'seller'   => $this->seller,
             'buyer'    => $this->buyer,
             'currency' => $this->currency,
@@ -801,7 +800,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         return $builder->where('order_status', OrderStatusEnum::PAYING);
     }
 
-    public function  scopeOnAccepting(Builder $builder) : Builder
+    public function scopeOnAccepting(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::ACCEPTING)
                        ->where('accept_status', AcceptStatusEnum::WAIT_ACCEPT);

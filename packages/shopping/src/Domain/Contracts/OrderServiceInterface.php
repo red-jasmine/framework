@@ -3,6 +3,7 @@
 namespace RedJasmine\Shopping\Domain\Contracts;
 
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 
@@ -27,6 +28,26 @@ interface OrderServiceInterface
     public function create(OrderData $orderData) : OrderData;
 
 
+    /**
+     * 创建支付订单
+     *
+     * @param  string  $orderNo
+     *
+     * @return PaymentTradeData
+     */
     public function createOrderPayment(string $orderNo) : PaymentTradeData;
+
+
+    /**
+     * 支付完成支付单
+     *
+     * @param  string  $orderNo
+     * @param  int  $orderPaymentId
+     * @param  OrderPaymentData  $orderPaymentData
+     *
+     * @return bool
+     */
+    public function paidOrderPayment(string $orderNo, int $orderPaymentId, OrderPaymentData $orderPaymentData) : bool;
+
 
 }

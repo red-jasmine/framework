@@ -4,6 +4,7 @@ namespace RedJasmine\Shopping\Domain\Services;
 
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponUsageData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
+use RedJasmine\Ecommerce\Domain\Data\Order\OrderPaymentData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderProductData;
 use RedJasmine\Ecommerce\Domain\Data\OrdersData;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
@@ -182,5 +183,10 @@ class OrderDomainService extends AmountCalculationService
 
         return $this->paymentService->create($orderPaymentData);
 
+    }
+
+    public function paid(string $orderNo, int $orderPaymentId, OrderPaymentData $orderPaymentData) : bool
+    {
+        return $this->orderService->paidOrderPayment($orderNo, $orderPaymentId, $orderPaymentData);
     }
 }
