@@ -14,7 +14,7 @@
 
     @endif
     @if($getState() === OrderStatusEnum::SHIPPING)
-        @if($getRecord()->shipping_status === \RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum::PART_SHIPPED)
+        @if($getRecord()->shipping_status === \RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum::PARTIAL)
             <x-filament::badge color="{{$getRecord()->shipping_status?->getColor()}}"
                                icon="{{$getRecord()->shipping_status?->getIcon()}}">
                 {{$getRecord()->shipping_status?->getLabel()}}

@@ -312,15 +312,15 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
                 in_array($orderProduct->shipping_status,
                     [
                         null,
-                        ShippingStatusEnum::WAIT_SEND,
-                        ShippingStatusEnum::PART_SHIPPED
+                        ShippingStatusEnum::WAITING,
+                        ShippingStatusEnum::PARTIAL
                     ], true)) {
                 $effectiveAndNotShippingCount++;
             }
         });
 
         // 如果还有未完成发货的订单商品 那么订单只能是部分发货
-        $this->shipping_status = $effectiveAndNotShippingCount > 0 ? ShippingStatusEnum::PART_SHIPPED : ShippingStatusEnum::SHIPPED;
+        $this->shipping_status = $effectiveAndNotShippingCount > 0 ? ShippingStatusEnum::PARTIAL : ShippingStatusEnum::SHIPPED;
         $this->shipping_time   = $this->shipping_time ?? now();
 
         $event = $this->shipping_status === ShippingStatusEnum::SHIPPED ? 'shipped' : 'shipping';
@@ -348,7 +348,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         }
         // 未发货、未支付、情况下可以取消
         if (in_array($this->payment_status,
-            [PaymentStatusEnum::PAID, PaymentStatusEnum::PART_PAY, PaymentStatusEnum::NO_PAYMENT,], true)) {
+            [PaymentStatusEnum::PAID, PaymentStatusEnum::PARTIAL, PaymentStatusEnum::EXEMPT,], true)) {
             throw OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         $this->order_status  = OrderStatusEnum::CANCEL;
@@ -391,7 +391,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         if ($this->order_status !== OrderStatusEnum::ACCEPTING) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
-        if ($this->accept_status !== AcceptStatusEnum::WAIT_ACCEPT) {
+        if ($this->accept_status !== AcceptStatusEnum::ACCEPTING) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
         $this->accept_status = AcceptStatusEnum::REJECTED;
@@ -414,7 +414,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
      */
     public function paying(OrderPayment $orderPayment) : void
     {
-        if (!in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, null], true)) {
+        if (!in_array($this->payment_status, [PaymentStatusEnum::WAITING, null], true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
         // 添加支付单
@@ -427,7 +427,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         $orderPayment->entity_id   = $this->id;
         $this->addPayment($orderPayment);
         // 设置为支付中
-        if (in_array($this->payment_status, [PaymentStatusEnum::WAIT_PAY, null], true)) {
+        if (in_array($this->payment_status, [PaymentStatusEnum::WAITING, null], true)) {
             $this->payment_status = PaymentStatusEnum::PAYING;
         }
         $this->products->each(function (OrderProduct $orderProduct) {
@@ -452,7 +452,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public function paid(OrderPayment $orderPayment) : void
     {
         if (!in_array($this->payment_status, [
-            null, PaymentStatusEnum::WAIT_PAY, PaymentStatusEnum::PAYING, PaymentStatusEnum::PART_PAY
+            null, PaymentStatusEnum::WAITING, PaymentStatusEnum::PAYING, PaymentStatusEnum::PARTIAL
         ], true)) {
             throw  OrderException::newFromCodes(OrderException::PAYMENT_STATUS_NOT_ALLOW);
         }
@@ -460,7 +460,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         $orderPayment->status = PaymentStatusEnum::PAID;
 
         $this->payment_amount = $this->payment_amount->add($orderPayment->payment_amount);
-        $this->payment_status = PaymentStatusEnum::PART_PAY;
+        $this->payment_status = PaymentStatusEnum::PARTIAL;
         $this->payment_time   = $this->payment_time ?? now();
 
         if ($this->payment_amount->compare($this->payable_amount) >= 0) {
@@ -503,7 +503,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         if (filled($orderProductId)) {
             // 子单 分开确认
             // 如果是部分发货  子单号必须填写
-            if ($this->shipping_status === ShippingStatusEnum::PART_SHIPPED) {
+            if ($this->shipping_status === ShippingStatusEnum::PARTIAL) {
                 throw new OrderException('发货状态不一致');
             }
 
@@ -659,7 +659,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         }
 
         if (in_array($this->accept_status, [
-            AcceptStatusEnum::WAIT_ACCEPT,
+            AcceptStatusEnum::ACCEPTING,
             AcceptStatusEnum::REJECTED,
         ], true)) {
             return true;
@@ -803,7 +803,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
     public function scopeOnAccepting(Builder $builder) : Builder
     {
         return $builder->where('order_status', OrderStatusEnum::ACCEPTING)
-                       ->where('accept_status', AcceptStatusEnum::WAIT_ACCEPT);
+                       ->where('accept_status', AcceptStatusEnum::ACCEPTING);
     }
 
     public function scopeOnShipping(Builder $builder) : Builder

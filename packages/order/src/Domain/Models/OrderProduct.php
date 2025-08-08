@@ -217,24 +217,24 @@ class OrderProduct extends Model implements UniqueNoInterface
         // 退款
         if ($this->isAllowAfterSaleService(RefundTypeEnum::REFUND)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::REFUND;
-            if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED],
+            if (in_array($this->shipping_status, [ShippingStatusEnum::PARTIAL, ShippingStatusEnum::SHIPPED],
                 true)) {
                 $allowApplyRefundTypes[] = RefundTypeEnum::RETURN_GOODS_REFUND;
             }
         }
         // 换货 只有物流发货才支持换货 TODO
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PARTIAL, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowAfterSaleService(RefundTypeEnum::EXCHANGE)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::EXCHANGE;
         }
         // 保修
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PARTIAL, ShippingStatusEnum::SHIPPED], true)
             && $this->isAllowAfterSaleService(RefundTypeEnum::WARRANTY)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::WARRANTY;
         }
 
         // TODO 最长时间
-        if (in_array($this->shipping_status, [ShippingStatusEnum::PART_SHIPPED, ShippingStatusEnum::SHIPPED], true)) {
+        if (in_array($this->shipping_status, [ShippingStatusEnum::PARTIAL, ShippingStatusEnum::SHIPPED], true)) {
             $allowApplyRefundTypes[] = RefundTypeEnum::RESHIPMENT;
         }
 

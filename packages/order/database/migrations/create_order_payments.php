@@ -23,10 +23,10 @@ return new class extends Migration {
                 $table->string('entity_type')->comment(EntityTypeEnum::comments('对象类型'));
                 $table->string('entity_id')->comment('对象单号');
 
-                $table->string('amount_type', 32)->comment(AmountTypeEnum::comments('金额类型'));
-                $table->string('currency', 10)->default('CNY')->comment('货币');
+                $table->enum('amount_type', AmountTypeEnum::values())->comment(AmountTypeEnum::comments('金额类型'));
+                $table->string('currency', 3)->default('CNY')->comment('货币');
                 $table->decimal('payment_amount', 12)->comment('支付金额');
-                $table->string('status', 32)->comment(PaymentStatusEnum::comments('支付状态'));
+                $table->enum('status', PaymentStatusEnum::values())->comment(PaymentStatusEnum::comments('支付状态'));
                 $table->timestamp('payment_time')->nullable()->comment('支付时间');
 
                 // 管理第三方支付单 类型 如 对接 支付宝、微信、支付中心

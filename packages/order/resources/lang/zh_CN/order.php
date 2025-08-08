@@ -149,14 +149,14 @@ return [
             'closed'     => '已关闭',
         ],
         'order_refund_status' => [
-            'full_refund'    => '全款退款',
-            'partial_refund' => '全款退款',
+            'full'    => '全款退款',
+            'partial' => '全款退款',
         ],
 
         'accept_status' => [
-            'wait_accept' => '待接单',
-            'accepted'    => '已接单',
-            'rejected'    => '已拒单',
+            'accepting' => '待接单',
+            'accepted'  => '已接单',
+            'rejected'  => '已拒单',
         ],
 
         'invoice_status' => [

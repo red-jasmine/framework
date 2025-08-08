@@ -50,8 +50,8 @@ return new class extends Migration {
                 $table->string('order_product_no', 64)->comment('商品单号');
 
                 // 商品基本信息
-                $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('订单商品类型'));
-                $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+                $table->enum('order_product_type', ProductTypeEnum::values())->comment(ProductTypeEnum::comments('订单商品类型'));
+                $table->enum('shipping_type', ShippingTypeEnum::values())->comment(ShippingTypeEnum::comments('发货类型'));
                 $table->string('product_type', 32)->comment('商品源类型');
                 $table->unsignedBigInteger('product_id')->comment('商品源ID');
                 $table->unsignedBigInteger('sku_id')->default(0)->comment('规格ID');
@@ -90,11 +90,11 @@ return new class extends Migration {
                 $table->decimal('total_cost_price', 12)->default(0)->comment('成本总价');
 
                 // 退款售后
-                $table->string('refund_status', 32)->comment(RefundStatusEnum::comments('退款状态'));
-                $table->string('phase', 32)->comment(RefundPhaseEnum::comments('阶段'));
-                $table->string('refund_type', 32)->comment(RefundTypeEnum::comments('售后类型'));
+                $table->enum('refund_status', RefundStatusEnum::values())->comment(RefundStatusEnum::comments('退款状态'));
+                $table->enum('phase', RefundPhaseEnum::values())->comment(RefundPhaseEnum::comments('阶段'));
+                $table->enum('refund_type', RefundTypeEnum::values())->comment(RefundTypeEnum::comments('售后类型'));
                 $table->boolean('has_good_return')->default(false)->comment('是否需要退货');
-                $table->string('good_status', 32)->nullable()->comment(RefundGoodsStatusEnum::comments('货物状态'));
+                $table->enum('good_status', RefundGoodsStatusEnum::values())->nullable()->comment(RefundGoodsStatusEnum::comments('货物状态'));
                 $table->string('reason')->nullable()->comment('原因');
                 $table->decimal('refund_freight_amount', 12)->default(0)->comment('退运费');
                 $table->decimal('refund_product_amount', 12)->default(0)->comment('退商品金额');

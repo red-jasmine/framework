@@ -3,15 +3,19 @@
 namespace RedJasmine\Order\UI\Http\Buyer\Api\Resources;
 
 use Illuminate\Http\Request;
+use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Order\Domain\Models\Refund */
+/** @mixin Refund */
 class OrderRefundResource extends JsonResource
 {
     public function toArray(Request $request) : array
     {
         return [
             'id'                     => $this->id,
+            'refund_no'              => $this->refund_no,
+            'order_no'               => $this->order_no,
+            'biz'                    => $this->biz,
             'seller_type'            => $this->seller_type,
             'seller_id'              => $this->seller_id,
             'buyer_type'             => $this->buyer_type,
@@ -25,11 +29,11 @@ class OrderRefundResource extends JsonResource
             'product_id'             => $this->product_id,
             'sku_id'                 => $this->sku_id,
             'category_id'            => $this->category_id,
-            'product_group_id'     => $this->product_group_id,
-            'outer_product_id'               => $this->outer_product_id,
+            'product_group_id'       => $this->product_group_id,
+            'outer_product_id'       => $this->outer_product_id,
             'outer_sku_id'           => $this->outer_sku_id,
             'barcode'                => $this->barcode,
-            'quantity'                    => $this->quantity,
+            'quantity'               => $this->quantity,
             'price'                  => $this->price,
             // 'cost_price'             => $this->cost_price,
             'product_amount'         => $this->product_amount,
@@ -63,13 +67,13 @@ class OrderRefundResource extends JsonResource
             'updater_type'           => $this->updater_type,
             'created_at'             => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at'             => $this->updated_at?->format('Y-m-d H:i:s'),
-            'order_id'         => $this->order_id,
-            'order_product_id' => $this->order_product_id,
+            'order_id'               => $this->order_id,
+            'order_product_id'       => $this->order_product_id,
 
-            'logistics'    => OrderLogisticsResource::collection($this->whenLoaded('logistics')),
-            'order'        => new OrderResource($this->whenLoaded('order')),
-            'product' => new OrderProductResource($this->whenLoaded('product')),
-            'payments'     => OrderPaymentResource::collection($this->whenLoaded('payments')),
+            'logistics' => OrderLogisticsResource::collection($this->whenLoaded('logistics')),
+            'order'     => new OrderResource($this->whenLoaded('order')),
+            'product'   => new OrderProductResource($this->whenLoaded('product')),
+            'payments'  => OrderPaymentResource::collection($this->whenLoaded('payments')),
         ];
     }
 }

@@ -270,16 +270,15 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         }
 
         $this->extension->reject_reason = $reason;
-        $this->refund_status            = RefundStatusEnum::SELLER_REJECT_BUYER;
+        $this->refund_status            = RefundStatusEnum::REJECTED;
         $this->fireModelEvent('rejected', false);
     }
 
     public function isAllowReject() : bool
     {
         if (!in_array($this->refund_status, [
-            RefundStatusEnum::WAIT_SELLER_AGREE,
-            RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
-            RefundStatusEnum::WAIT_SELLER_CONFIRM,
+            RefundStatusEnum::PENDING,
+            RefundStatusEnum::CHECKING,
         ], true)) {
             return false;
         }
@@ -311,9 +310,8 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
     {
         if (!in_array($this->refund_status,
             [
-                RefundStatusEnum::SELLER_REJECT_BUYER,
-                RefundStatusEnum::WAIT_SELLER_AGREE,
-                RefundStatusEnum::WAIT_SELLER_AGREE_RETURN
+                RefundStatusEnum::REJECTED,
+                RefundStatusEnum::PENDING,
             ], true)) {
             return false;
 
@@ -386,7 +384,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         $payment->entity_id      = $this->refund_no;
         $payment->amount_type    = AmountTypeEnum::REFUND;
         $payment->payment_amount = $this->total_refund_amount;
-        $payment->status         = PaymentStatusEnum::WAIT_PAY;
+        $payment->status         = PaymentStatusEnum::WAITING;
         $this->payments->add($payment);
 
 
@@ -406,7 +404,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
             return false;
         }
         if (!in_array($this->refund_status,
-            [RefundStatusEnum::WAIT_SELLER_AGREE, RefundStatusEnum::WAIT_SELLER_CONFIRM,], true)) {
+            [RefundStatusEnum::PENDING, RefundStatusEnum::CHECKING,], true)) {
             return false;
         }
         return true;
@@ -426,10 +424,10 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
-        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE_RETURN) {
+        if ($this->refund_status !== RefundStatusEnum::PENDING) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status = RefundStatusEnum::WAIT_BUYER_RETURN_GOODS;
+        $this->refund_status = RefundStatusEnum::RETURNING;
 
         $this->fireModelEvent('agreedReturnGoods');
 
@@ -448,7 +446,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
+        $this->refund_status = RefundStatusEnum::SHIPPING;
 
         $this->fireModelEvent('agreedReshipment', false);
     }
@@ -463,7 +461,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         }
 
 
-        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_AGREE) {
+        if ($this->refund_status !== RefundStatusEnum::PENDING) {
             return false;
         }
         return true;
@@ -483,10 +481,10 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         ], true)) {
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
-        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_CONFIRM) {
+        if ($this->refund_status !== RefundStatusEnum::CHECKING) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_RESHIPMENT;
+        $this->refund_status = RefundStatusEnum::SHIPPING;
 
         $this->fireModelEvent('confirmed');
 
@@ -506,11 +504,11 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
             throw  RefundException::newFromCodes(RefundException::REFUND_TYPE_NOT_ALLOW);
         }
 
-        if ($this->refund_status !== RefundStatusEnum::WAIT_BUYER_RETURN_GOODS) {
+        if ($this->refund_status !== RefundStatusEnum::RETURNING) {
             throw  RefundException::newFromCodes(RefundException::REFUND_STATUS_NOT_ALLOW);
         }
 
-        $this->refund_status = RefundStatusEnum::WAIT_SELLER_CONFIRM;
+        $this->refund_status = RefundStatusEnum::CHECKING;
 
 
         $orderLogistics->entity_type = EntityTypeEnum::REFUND;
@@ -598,7 +596,7 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
 
     public function isAllowReshipment() : bool
     {
-        if ($this->refund_status !== RefundStatusEnum::WAIT_SELLER_RESHIPMENT) {
+        if ($this->refund_status !== RefundStatusEnum::SHIPPING) {
             return false;
         }
         return true;
@@ -628,24 +626,23 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
     public function scopeWaitSellerHandle(Builder $builder) : Builder
     {
         $builder->whereIn('refund_status', [
-            RefundStatusEnum::WAIT_SELLER_AGREE,
-            RefundStatusEnum::WAIT_SELLER_AGREE_RETURN,
-            RefundStatusEnum::WAIT_SELLER_RESHIPMENT,
+            RefundStatusEnum::PENDING,
+            RefundStatusEnum::SHIPPING,
         ]);
         return $builder;
     }
 
     public function scopeWaitSellerConfirm(Builder $builder) : Builder
     {
-        $builder->where('refund_status', RefundStatusEnum::WAIT_SELLER_CONFIRM);
+        $builder->where('refund_status', RefundStatusEnum::CHECKING);
         return $builder;
     }
 
     public function scopeWaitBuyerHandle(Builder $builder) : Builder
     {
         $builder->whereIn('refund_status', [
-            RefundStatusEnum::WAIT_BUYER_RETURN_GOODS,
-            RefundStatusEnum::SELLER_REJECT_BUYER,
+            RefundStatusEnum::RETURNING,
+            RefundStatusEnum::REJECTED,
         ]);
         return $builder;
     }

@@ -32,12 +32,12 @@ return [
             'refund' => '售后',
         ],
         'payment_status' => [
-            'wait_pay'   => '等待支付',
-            'paying'     => '支付中',
-            'part_pay'   => '部分支付',
-            'paid'       => '支付成功',
-            'no_payment' => '无需支付',
-            'fail'       => '支付失败',
+            'waiting' => '等待支付',
+            'paying'  => '支付中',
+            'partial' => '部分支付',
+            'paid'    => '支付成功',
+            'exempt'  => '无需支付',
+            'fail'    => '支付失败',
         ],
     ],
 

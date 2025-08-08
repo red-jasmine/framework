@@ -32,8 +32,8 @@ class OrderRefundService
         // 如果订单 已经发货了  ,那么就不需要退邮费
         if (!in_array($product->shipping_status, [
             null,
-            ShippingStatusEnum::WAIT_SEND,
-            ShippingStatusEnum::READY_SEND,
+            ShippingStatusEnum::WAITING,
+            ShippingStatusEnum::PENDING,
         ], true)) {
             return false;
         }
@@ -108,13 +108,13 @@ class OrderRefundService
             case RefundTypeEnum::RESHIPMENT:
             case RefundTypeEnum::REFUND:
                 $orderRefund->has_good_return = false;
-                $orderRefund->refund_status   = RefundStatusEnum::WAIT_SELLER_AGREE;
+                $orderRefund->refund_status   = RefundStatusEnum::PENDING;
                 break;
             case RefundTypeEnum::EXCHANGE:
             case RefundTypeEnum::WARRANTY:
             case RefundTypeEnum::RETURN_GOODS_REFUND:
                 $orderRefund->has_good_return = true;
-                $orderRefund->refund_status   = RefundStatusEnum::WAIT_SELLER_AGREE_RETURN;
+                $orderRefund->refund_status   = RefundStatusEnum::PENDING;
                 break;
 
         }

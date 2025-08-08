@@ -11,15 +11,16 @@ enum OrderRefundStatusEnum: string
 {
     use EnumsHelper;
 
-    case  FULL_REFUND = 'full_refund';
+    case  PARTIAL = 'partial'; // 部分退款
 
-    case  PARTIAL_REFUND = 'partial_refund';
+    case  FULL = 'full'; // 全部退款
 
-    public static function labels():array
+
+    public static function labels() : array
     {
-        return  [
-            self::FULL_REFUND->value => __('red-jasmine-order::order.enums.order_refund_status.full_refund'),
-            self::PARTIAL_REFUND->value => __('red-jasmine-order::order.enums.order_refund_status.partial_refund'),
+        return [
+            self::FULL->value    => __('red-jasmine-order::order.enums.order_refund_status.full'),
+            self::PARTIAL->value => __('red-jasmine-order::order.enums.order_refund_status.partial'),
         ];
     }
 }

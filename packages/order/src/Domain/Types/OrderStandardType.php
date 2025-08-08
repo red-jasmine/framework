@@ -214,10 +214,10 @@ class OrderStandardType implements OrderTypeInterface
     {
         // 初始化
         $order->order_status   = OrderStatusEnum::PAYING;
-        $order->payment_status = PaymentStatusEnum::WAIT_PAY;
+        $order->payment_status = PaymentStatusEnum::WAITING;
         $order->products->each(function (OrderProduct $product) {
             $product->order_status   = OrderStatusEnum::PAYING;
-            $product->payment_status = PaymentStatusEnum::WAIT_PAY;
+            $product->payment_status = PaymentStatusEnum::WAITING;
         });
 
         // 设置 支付超时时间
@@ -238,7 +238,7 @@ class OrderStandardType implements OrderTypeInterface
 
         // 设置订单为 等待卖家确认中
         $order->order_status  = OrderStatusEnum::ACCEPTING;
-        $order->accept_status = AcceptStatusEnum::WAIT_ACCEPT;
+        $order->accept_status = AcceptStatusEnum::ACCEPTING;
         $order->products->each(function (OrderProduct $product) {
             $product->order_status = OrderStatusEnum::ACCEPTING;
         });
@@ -263,10 +263,10 @@ class OrderStandardType implements OrderTypeInterface
     public function accept(Order $order) : void
     {
         $order->order_status    = OrderStatusEnum::SHIPPING;
-        $order->shipping_status = ShippingStatusEnum::WAIT_SEND;
+        $order->shipping_status = ShippingStatusEnum::WAITING;
         $order->products->each(function (OrderProduct $product) {
             $product->order_status    = OrderStatusEnum::SHIPPING;
-            $product->shipping_status = ShippingStatusEnum::WAIT_SEND;
+            $product->shipping_status = ShippingStatusEnum::WAITING;
         });
     }
 
@@ -320,13 +320,13 @@ class OrderStandardType implements OrderTypeInterface
         }
         if ($isAllConfirmed) {
             $order->order_status      = OrderStatusEnum::FINISHED;
-            $order->rate_status       = RateStatusEnum::WAIT_RATE;
-            $order->settlement_status = SettlementStatusEnum::WAIT_SETTLEMENT;
+            $order->rate_status       = RateStatusEnum::PENDING;
+            $order->settlement_status = SettlementStatusEnum::PENDING;
             $order->products->each(function (OrderProduct $product) {
                 if ($product->isEffective()) {
                     $product->order_status      = OrderStatusEnum::FINISHED;
-                    $product->rate_status       = RateStatusEnum::WAIT_RATE;
-                    $product->settlement_status = SettlementStatusEnum::WAIT_SETTLEMENT;
+                    $product->rate_status       = RateStatusEnum::PENDING;
+                    $product->settlement_status = SettlementStatusEnum::PENDING;
                 }
             });
         }

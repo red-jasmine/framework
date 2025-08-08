@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
+use RedJasmine\Order\Domain\Models\Enums\InvoiceStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderRefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\OrderStatusEnum;
-use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RateStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\SettlementStatusEnum;
@@ -47,8 +47,8 @@ return new class extends Migration {
 
 
             // 商品基本信息
-            $table->string('order_product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
-            $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
+            $table->enum('order_product_type', ProductTypeEnum::values())->comment(ProductTypeEnum::comments('商品类型'));
+            $table->enum('shipping_type', ShippingTypeEnum::values())->comment(ShippingTypeEnum::comments('发货类型'));
 
             // 商品身份信息
             $table->string('product_type', 32)->comment('商品源类型');
@@ -101,14 +101,16 @@ return new class extends Migration {
             // 订单类型 决定流程
             $table->string('order_type', 32)->comment('订单类型');
             // 状态
-            $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
-            $table->string('order_refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
-            $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
-            $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
-            $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
-            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
-            $table->string('invoice_status', 32)->nullable()->comment('发票状态');
+            $table->enum('order_status', OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
+            $table->enum('order_refund_status',
+                OrderRefundStatusEnum::values())->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
+            $table->enum('payment_status', PaymentStatusEnum::values())->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
+            $table->enum('accept_status', AcceptStatusEnum::values())->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
+            $table->enum('shipping_status', ShippingStatusEnum::values())->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
+            $table->enum('settlement_status',
+                SettlementStatusEnum::values())->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->enum('rate_status', RateStatusEnum::values())->nullable()->comment(RateStatusEnum::comments('评价状态'));
+            $table->enum('invoice_status', InvoiceStatusEnum::values())->nullable()->comment(InvoiceStatusEnum::comments('发票状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             // 时间
             $table->timestamp('created_time')->nullable()->comment('创建时间');

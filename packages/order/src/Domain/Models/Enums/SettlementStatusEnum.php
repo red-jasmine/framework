@@ -8,21 +8,21 @@ enum SettlementStatusEnum: string
 {
     use EnumsHelper;
 
-    case NIL = 'nil';
-    case WAIT_SETTLEMENT = 'wait_settlement';
-    case IN_SETTLEMENT = 'in_settlement';
-    case PART_SETTLEMENT = 'part_settlement';
-    case COMPLETE_SETTLEMENT = 'complete_settlement';
+    case NONE = 'none';
+    case PENDING = 'pending';
+    case PROCESSING = 'processing';
+    case PARTIAL = 'partial';
+    case COMPLETED = 'completed';
 
 
     public static function labels() : array
     {
         return [
-            self::NIL->value         => '',
-            self::WAIT_SETTLEMENT->value     => '等待结算',
-            self::IN_SETTLEMENT->value       => '结算中',
-            self::PART_SETTLEMENT->value     => '部分结算',
-            self::COMPLETE_SETTLEMENT->value => '完成结算',
+            self::NONE->value       => '无结算',
+            self::PENDING->value    => '等结算',
+            self::PROCESSING->value => '结算中',
+            self::PARTIAL->value    => '部分结算',
+            self::COMPLETED->value  => '已结算',
         ];
     }
 

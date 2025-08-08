@@ -13,12 +13,11 @@ enum RefundStatusEnum: string
     use EnumsHelper;
 
 
-    case  WAIT_SELLER_AGREE = 'wait_seller_agree';
-    case  WAIT_SELLER_AGREE_RETURN = 'wait_seller_agree_return';
-    case  WAIT_BUYER_RETURN_GOODS = 'wait_buyer_return_goods';
-    case  WAIT_SELLER_RESHIPMENT = 'wait_seller_reshipment';
-    case  WAIT_SELLER_CONFIRM = 'wait_seller_confirm';
-    case  SELLER_REJECT_BUYER = 'seller_reject_buyer';
+    case  PENDING = 'pending'; // 待处理
+    case  RETURNING = 'returning';
+    case  SHIPPING = 'shipping';
+    case  CHECKING = 'checking';
+    case  REJECTED = 'rejected';
     case  FINISHED = 'finished';
     case  CANCEL = 'cancel';
     case  CLOSED = 'closed';
@@ -27,15 +26,14 @@ enum RefundStatusEnum: string
     {
         return [
 
-            self::WAIT_SELLER_AGREE->value        => __('red-jasmine-order::refund.enums.refund_status.wait_seller_agree'),
-            self::WAIT_SELLER_AGREE_RETURN->value => __('red-jasmine-order::refund.enums.refund_status.wait_seller_agree_return'),
-            self::WAIT_BUYER_RETURN_GOODS->value  => __('red-jasmine-order::refund.enums.refund_status.wait_buyer_return_goods'),
-            self::WAIT_SELLER_CONFIRM->value      => __('red-jasmine-order::refund.enums.refund_status.wait_seller_confirm'),
-            self::WAIT_SELLER_RESHIPMENT->value   => __('red-jasmine-order::refund.enums.refund_status.wait_seller_reshipment'),
-            self::SELLER_REJECT_BUYER->value      => __('red-jasmine-order::refund.enums.refund_status.seller_reject_buyer'),
-            self::FINISHED->value                 => __('red-jasmine-order::refund.enums.refund_status.finished'),
-            self::CANCEL->value                   => __('red-jasmine-order::refund.enums.refund_status.cancel'),
-            self::CLOSED->value                   => __('red-jasmine-order::refund.enums.refund_status.closed'),
+            self::PENDING->value   => __('red-jasmine-order::refund.enums.refund_status.pending'),
+            self::RETURNING->value => __('red-jasmine-order::refund.enums.refund_status.returning'),
+            self::CHECKING->value  => __('red-jasmine-order::refund.enums.refund_status.checking'),
+            self::SHIPPING->value  => __('red-jasmine-order::refund.enums.refund_status.shipping'),
+            self::REJECTED->value  => __('red-jasmine-order::refund.enums.refund_status.rejected'),
+            self::FINISHED->value  => __('red-jasmine-order::refund.enums.refund_status.finished'),
+            self::CANCEL->value    => __('red-jasmine-order::refund.enums.refund_status.cancel'),
+            self::CLOSED->value    => __('red-jasmine-order::refund.enums.refund_status.closed'),
         ];
     }
 }

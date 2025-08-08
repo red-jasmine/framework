@@ -2,13 +2,13 @@
 
 
 return [
-    'label'   => '售后',
-    'labels'  => [
+    'label'    => '售后',
+    'labels'   => [
         'refund' => '售后',
         'status' => '状态',
         'amount' => '金额',
     ],
-    'fields'  => [
+    'fields'   => [
         'id' => '售后编号',
 
         'order_product_type'   => '商品类型',
@@ -61,12 +61,12 @@ return [
         'progress_total'         => '进度总数',
 
 
-        'seller_remarks' => '卖家备注',
-        'buyer_remarks'  => '买家备注',
-        'description'    => '描述',
-        'images'         => '图片',
-        'reject_reason'  => '拒绝理由',
-        'extra'        => '扩展',
+        'seller_remarks'   => '卖家备注',
+        'buyer_remarks'    => '买家备注',
+        'description'      => '描述',
+        'images'           => '图片',
+        'reject_reason'    => '拒绝理由',
+        'extra'            => '扩展',
 
         // |--------------公共部分-------------------
         'order_id'         => '订单编号',
@@ -93,7 +93,7 @@ return [
 
 
     ],
-    'enums'   => [
+    'enums'    => [
 
         'order_type'     => [
             'standard'       => '标准',
@@ -101,15 +101,14 @@ return [
             'group_purchase' => '团购',
         ],
         'refund_status'  => [
-            'wait_seller_agree'        => '待卖家同意',
-            'wait_seller_agree_return' => '待卖家同意退货',
-            'wait_buyer_return_goods'  => '待买家退货',
-            'wait_seller_reshipment'   => '待卖家发补',
-            'wait_seller_confirm'      => '待卖家确认',
-            'seller_reject_buyer'      => '卖家拒绝',
-            'finished'                 => '已完成',
-            'cancel'                   => '已取消',
-            'closed'                   => '已关闭',
+            'pending'   => '处理中',
+            'returning' => '退货中',
+            'shipping'  => '发货中',
+            'checking'  => '确认中',
+            'rejected'  => '已拒绝',
+            'finished'  => '已完成',
+            'cancel'    => '已取消',
+            'closed'    => '已关闭',
         ],
         'payment_status' => [
             'wait_pay'   => '待支付',

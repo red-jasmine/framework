@@ -13,26 +13,26 @@ enum PaymentStatusEnum: string
     use EnumsHelper;
 
 
-    case WAIT_PAY = 'wait_pay';
+    case WAITING = 'waiting';
     // 支付中
     case PAYING = 'paying';
-    // 部分支付
-    case PART_PAY = 'part_pay';
+    // 首付款
+    case PARTIAL = 'partial';
     // 支付成功
     case PAID = 'paid';
     // 无需支付
-    case NO_PAYMENT = 'no_payment';
+    case EXEMPT = 'exempt';
 
     case FAIL = 'fail';
 
     public static function labels() : array
     {
         return [
-            self::WAIT_PAY->value   => __('red-jasmine-order::common.enums.payment_status.wait_pay'),
-            self::PAYING->value     => __('red-jasmine-order::common.enums.payment_status.paying'),
-            self::PART_PAY->value   => __('red-jasmine-order::common.enums.payment_status.part_pay'),
-            self::PAID->value       => __('red-jasmine-order::common.enums.payment_status.paid'),
-            self::NO_PAYMENT->value => __('red-jasmine-order::common.enums.payment_status.no_payment'),
+            self::WAITING->value => __('red-jasmine-order::common.enums.payment_status.waiting'),
+            self::PAYING->value  => __('red-jasmine-order::common.enums.payment_status.paying'),
+            self::PARTIAL->value => __('red-jasmine-order::common.enums.payment_status.partial'),
+            self::PAID->value    => __('red-jasmine-order::common.enums.payment_status.paid'),
+            self::EXEMPT->value  => __('red-jasmine-order::common.enums.payment_status.exempt'),
         ];
 
     }
@@ -41,11 +41,11 @@ enum PaymentStatusEnum: string
     {
         return [
 
-            self::WAIT_PAY->value   => 'warning',
-            self::PAYING->value     => 'warning',
-            self::PART_PAY->value   => 'primary',
-            self::PAID->value       => 'success',
-            self::NO_PAYMENT->value => 'info',
+            self::WAITING->value => 'warning',
+            self::PAYING->value  => 'warning',
+            self::PARTIAL->value => 'primary',
+            self::PAID->value    => 'success',
+            self::EXEMPT->value  => 'info',
 
         ];
     }

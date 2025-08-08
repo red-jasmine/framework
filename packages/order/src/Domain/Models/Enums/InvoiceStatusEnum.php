@@ -9,16 +9,16 @@ enum InvoiceStatusEnum: string
 
     use EnumsHelper;
 
-    case Invoicing = 'invoicing';
+    case INVOICING = 'invoicing';
 
-    case Invoiced = 'Invoiced';
+    case INVOICED = 'invoiced';
 
 
     public static function labels():array
     {
         return  [
-            self::Invoiced->value => __('red-jasmine-order::order.enums.invoice_status.invoicing'),
-            self::Invoiced->value => __('red-jasmine-order::order.enums.invoice_status.invoiced'),
+            self::INVOICED->value => __('red-jasmine-order::order.enums.invoice_status.invoicing'),
+            self::INVOICED->value => __('red-jasmine-order::order.enums.invoice_status.invoiced'),
         ];
 
    }

@@ -24,11 +24,12 @@ return new class extends Migration {
 
             $table->string('order_product_no')->comment('订单商品项单号');
             $table->unsignedBigInteger('quantity')->default(1)->comment('数量');
-            $table->string('content_type')->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
+            $table->enum('content_type',OrderCardKeyContentTypeEnum::values())
+                  ->default(OrderCardKeyContentTypeEnum::TEXT)->comment(OrderCardKeyContentTypeEnum::comments('状态'));
             $table->text('content')->nullable()->comment('内容');
             $table->string('source_type')->nullable()->comment('来源类型');
             $table->string('source_id')->nullable()->comment('来源类型');
-            $table->string('status')->nullable()->comment(OrderCardKeyStatusEnum::comments('状态'));
+            $table->enum('status',OrderCardKeyStatusEnum::values())->nullable()->comment(OrderCardKeyStatusEnum::comments('状态'));
             $table->operator();
             $table->softDeletes();
             $table->comment('订单-卡密表');

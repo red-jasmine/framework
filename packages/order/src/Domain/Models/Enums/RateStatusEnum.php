@@ -9,15 +9,15 @@ enum RateStatusEnum: string
     use EnumsHelper;
 
 
-    case WAIT_RATE = 'wait_rate';
+    case PENDING = 'pending';
     case RATED = 'rated';
 
     public static function labels() : array
     {
         return [
 
-            self::WAIT_RATE->value => '待评价',
-            self::RATED->value     => '已评价'
+            self::PENDING->value => '待评价',
+            self::RATED->value   => '已评价'
 
         ];
     }

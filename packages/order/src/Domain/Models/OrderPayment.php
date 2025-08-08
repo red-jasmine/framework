@@ -63,7 +63,7 @@ class OrderPayment extends Model
 
     public function isAllowPaying() : bool
     {
-        if ($this->status !== PaymentStatusEnum::WAIT_PAY) {
+        if ($this->status !== PaymentStatusEnum::WAITING) {
             return true;
         }
         return false;
@@ -85,7 +85,7 @@ class OrderPayment extends Model
 
     public function isAllowFail() : bool
     {
-        if (in_array($this->status, [PaymentStatusEnum::PAYING, PaymentStatusEnum::WAIT_PAY], true)) {
+        if (in_array($this->status, [PaymentStatusEnum::PAYING, PaymentStatusEnum::WAITING], true)) {
             return true;
         }
         return false;

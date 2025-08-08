@@ -50,15 +50,15 @@ return new class extends Migration {
             $table->string('shipping_type', 32)->comment(ShippingTypeEnum::comments('发货类型'));
             // 状态
             // 总流程状态
-            $table->string('order_status', 32)->comment(OrderStatusEnum::comments('订单状态'));
-            $table->string('order_refund_status', 32)->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
+            $table->enum('order_status',OrderStatusEnum::values())->comment(OrderStatusEnum::comments('订单状态'));
+            $table->enum('order_refund_status',OrderRefundStatusEnum::values())->nullable()->comment(OrderRefundStatusEnum::comments('订单退款状态'));
             // 步骤状态
-            $table->string('payment_status', 32)->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
-            $table->string('accept_status', 32)->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
-            $table->string('shipping_status', 32)->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
-            $table->string('settlement_status', 32)->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
-            $table->string('invoice_status', 32)->nullable()->comment(InvoiceStatusEnum::comments('发票状态'));
-            $table->string('rate_status', 32)->nullable()->comment(RateStatusEnum::comments('评价状态'));
+            $table->enum('payment_status',PaymentStatusEnum::values())->nullable()->comment(PaymentStatusEnum::comments('付款状态'));
+            $table->enum('accept_status', AcceptStatusEnum::values())->nullable()->comment(AcceptStatusEnum::comments('接单状态'));
+            $table->enum('shipping_status',ShippingStatusEnum::values())->nullable()->comment(ShippingStatusEnum::comments('发货状态'));
+            $table->enum('settlement_status', SettlementStatusEnum::values())->nullable()->comment(SettlementStatusEnum::comments('结算状态'));
+            $table->enum('invoice_status', InvoiceStatusEnum::values())->nullable()->comment(InvoiceStatusEnum::comments('发票状态'));
+            $table->enum('rate_status', RateStatusEnum::values())->nullable()->comment(RateStatusEnum::comments('评价状态'));
             $table->string('seller_custom_status', 32)->nullable()->comment('卖家自定义状态');
             // 时间
             $table->timestamp('created_time')->nullable()->comment('创建时间');

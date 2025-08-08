@@ -20,10 +20,10 @@ class RefundHandleListener
         $order = $event->order;
         foreach ($order->products as $product) {
             // 如果是刚发货
-            if (($product->getOriginal('shipping_status') === ShippingStatusEnum::WAIT_SEND) && $product->last_refund_no) {
+            if (($product->getOriginal('shipping_status') === ShippingStatusEnum::WAITING) && $product->last_refund_no) {
                 $refund = $this->refundCommandService->repository->findByNo($product->last_refund_no);
 
-                if ($refund->refund_status === RefundStatusEnum::WAIT_SELLER_AGREE) {
+                if ($refund->refund_status === RefundStatusEnum::PENDING) {
 
                     $command = RefundRejectCommand::from([
                         'refundNo' => $product->last_refund_no,

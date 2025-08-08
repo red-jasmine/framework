@@ -65,7 +65,7 @@ class OrderShippingService
                 }
                 if (($isSplit === false) || ($isSplit === true && in_array($orderProduct->order_product_no,
                             $logistics->order_product_no ?? [], false))) {
-                    $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
+                    $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PARTIAL;
                     $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
                     $isEffectiveShipping           = true;
                 }
@@ -110,7 +110,7 @@ class OrderShippingService
         $orderProduct->addCardKey($orderProductCardKey);
 
         $orderProduct->progress        += $orderProductCardKey->quantity;
-        $orderProduct->shipping_status = ShippingStatusEnum::PART_SHIPPED;
+        $orderProduct->shipping_status = ShippingStatusEnum::PARTIAL;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
 
         if ($orderProduct->progress >= $orderProduct->quantity) {
@@ -145,7 +145,7 @@ class OrderShippingService
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {
             throw OrderException::newFromCodes(OrderException::ORDER_STATUS_NOT_ALLOW);
         }
-        $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PART_SHIPPED;
+        $orderProduct->shipping_status = $isFinished ? ShippingStatusEnum::SHIPPED : ShippingStatusEnum::PARTIAL;
         $orderProduct->shipping_time   = $orderProduct->shipping_time ?? now();
 
         if ($orderProduct->shipping_status === ShippingStatusEnum::SHIPPED) {

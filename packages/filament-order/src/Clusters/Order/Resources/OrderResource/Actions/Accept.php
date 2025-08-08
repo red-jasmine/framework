@@ -26,7 +26,7 @@ trait Accept
             $this->color('danger');
             $this->icon('heroicon-o-x-circle');
 
-            $this->visible(fn($record) => $record->isAccepting() && $record->accept_status === AcceptStatusEnum::WAIT_ACCEPT);
+            $this->visible(fn($record) => $record->isAccepting() && $record->accept_status === AcceptStatusEnum::ACCEPTING);
         }
         $this->requiresConfirmation();
 

@@ -8,18 +8,18 @@ enum RefundGoodsStatusEnum: string
 {
     use EnumsHelper;
 
-    case  BUYER_NOT_RECEIVED = 'buyer_not_received';
-    case  BUYER_RECEIVED = 'buyer_received';
-    case  BUYER_RETURNED_GOODS = 'buyer_returned_goods ';
+    case  NOT_RECEIVED = 'not_received';
+    case  RECEIVED = 'received';
+    case  RETURNED = 'returned ';
 
 
     public static function labels() : array
     {
         return [
 
-            self::BUYER_NOT_RECEIVED->value   => '未收到货',
-            self::BUYER_RECEIVED->value       => '已收到货',
-            self::BUYER_RETURNED_GOODS->value => '已退货',
+            self::NOT_RECEIVED->value => '未收到货',
+            self::RECEIVED->value     => '已收到货',
+            self::RETURNED->value     => '已退货',
         ];
     }
 

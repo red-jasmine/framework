@@ -23,8 +23,8 @@ return new class extends Migration {
             $table->string('entity_id',64)->comment('对象单号');
 
             $table->string('order_product_no')->nullable()->comment('订单商品项单号');
-            $table->string('shipper', 32)->comment(LogisticsShipperEnum::comments('发货方'));
-            $table->string('status', 32)->comment(LogisticsStatusEnum::comments('状态'));
+            $table->enum('shipper', LogisticsShipperEnum::values())->comment(LogisticsShipperEnum::comments('发货方'));
+            $table->enum('status', LogisticsStatusEnum::values())->comment(LogisticsStatusEnum::comments('状态'));
             $table->string('logistics_company_code')->comment('快递公司代码');
             $table->string('logistics_no')->comment('快递单号');
             $table->timestamp('shipping_time')->nullable()->comment('发货时间');

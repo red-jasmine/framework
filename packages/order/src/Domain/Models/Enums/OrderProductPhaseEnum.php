@@ -11,21 +11,21 @@ enum OrderProductPhaseEnum: string
 {
     use EnumsHelper;
 
-    case PAYMENT = 'payment'; // 定金支付、尾款支付
+    case PAID = 'paid'; // 定金支付、尾款支付
 
-    case SHIPPING = 'shipping';
+    case SHIPPING = 'shipping'; // 发货中
 
-    case SHIPPED = 'shipped';
+    case SHIPPED = 'shipped'; // 发货后
 
-    case  SIGNED = 'signed';
+    case  SIGNED = 'signed'; // 签收后
 
-    case CONFIRMED = 'confirmed';
+    case CONFIRMED = 'confirmed'; // 确认收货后
 
 
     public static function lables() : array
     {
         return [
-            self::PAYMENT->value   => '支付后',
+            self::PAID->value      => '支付后',
             self::SHIPPING->value  => '部分发货后',
             self::SHIPPED->value   => '已发货后',
             self::SIGNED->value    => '已签收后',

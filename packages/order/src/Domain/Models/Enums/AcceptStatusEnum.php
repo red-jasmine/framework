@@ -11,7 +11,7 @@ enum AcceptStatusEnum: string
 {
     use EnumsHelper;
 
-    case WAIT_ACCEPT = 'wait_accept';
+    case ACCEPTING = 'accepting';
 
     case ACCEPTED = 'accepted';
 
@@ -21,9 +21,9 @@ enum AcceptStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::WAIT_ACCEPT->value => __('red-jasmine-order::order.enums.accept_status.wait_accept'),
-            self::ACCEPTED->value    => __('red-jasmine-order::order.enums.accept_status.accepted'),
-            self::REJECTED->value    => __('red-jasmine-order::order.enums.accept_status.rejected'),
+            self::ACCEPTING->value => __('red-jasmine-order::order.enums.accept_status.accepting'),
+            self::ACCEPTED->value  => __('red-jasmine-order::order.enums.accept_status.accepted'),
+            self::REJECTED->value  => __('red-jasmine-order::order.enums.accept_status.rejected'),
         ];
 
     }
@@ -32,9 +32,9 @@ enum AcceptStatusEnum: string
     public static function icons() : array
     {
         return [
-            self::WAIT_ACCEPT->value => 'heroicon-o-clock',
-            self::ACCEPTED->value    => 'heroicon-o-check-badge',
-            self::REJECTED->value    => 'heroicon-o-no-symbol',
+            self::ACCEPTING->value => 'heroicon-o-clock',
+            self::ACCEPTED->value  => 'heroicon-o-check-badge',
+            self::REJECTED->value  => 'heroicon-o-no-symbol',
 
 
         ];
@@ -44,9 +44,9 @@ enum AcceptStatusEnum: string
     {
         return [
 
-            self::REJECTED->value    => 'danger',
-            self::WAIT_ACCEPT->value => 'primary',
-            self::ACCEPTED->value    => 'success',
+            self::REJECTED->value  => 'danger',
+            self::ACCEPTING->value => 'primary',
+            self::ACCEPTED->value  => 'success',
 
 
         ];
