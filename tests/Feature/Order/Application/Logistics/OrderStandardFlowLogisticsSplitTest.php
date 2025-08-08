@@ -139,7 +139,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
         } else {
             $this->assertEquals($product1->order_status, OrderStatusEnum::SHIPPING, '订单状态');
-            $this->assertEquals($product1->shipping_status, ShippingStatusEnum::PART_SHIPPED, '发货状态');
+            $this->assertEquals($product1->shipping_status, ShippingStatusEnum::PARTIAL, '发货状态');
 
         }
     }
@@ -148,7 +148,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
      */
     $order = $this->orderRepository->find($order->id);
     $this->assertEquals($order->order_status, OrderStatusEnum::SHIPPING, '订单状态');
-    $this->assertEquals($order->shipping_status, ShippingStatusEnum::PART_SHIPPED, '发货状态');
+    $this->assertEquals($order->shipping_status, ShippingStatusEnum::PARTIAL, '发货状态');
 
 
     foreach ($order->products as $index => $product) {

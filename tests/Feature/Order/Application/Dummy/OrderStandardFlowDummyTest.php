@@ -191,7 +191,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
 
 
     $command = $this->orderFake->shippingDummy([
-        'order_no'        => $order->order_no,
+        'order_no'       => $order->order_no,
         'order_products' => $order->products->pluck('order_product_no')->toArray()
     ]);
 
@@ -237,8 +237,9 @@ test('can custom status a order', function (Order $order) {
 
     foreach ($order->products as $product) {
         $commands[] = OrderSellerCustomStatusCommand::from([
-            'orderNo'            => $order->order_no, 'id' => $order->id,
-            'orderProductId'     => $product->id,
+            'orderNo'            => $order->order_no,
+            'id'                 => $order->id,
+            'orderProductNo'     => $product->order_product_no,
             'sellerCustomStatus' => $sellerCustomStatus
 
         ]);
@@ -308,7 +309,7 @@ test('can remarks a order', function (Order $order) {
     foreach ($order->products as $product) {
         $commands[] = OrderRemarksCommand::from([
             'orderNo'        => $order->order_no,
-            'orderProductId' => $product->id,
+            'orderProductNo' => $product->order_product_no,
             'remarks'        => $remarks,
         ]);
     }
@@ -359,7 +360,7 @@ test('can message a order', function (Order $order) {
     foreach ($order->products as $product) {
         $commands[] = OrderMessageCommand::from([
             'orderNo'        => $order->order_no,
-            'orderProductId' => $product->id,
+            'orderProductNo' => $product->order_product_no,
             'message'        => $message
         ]);
     }

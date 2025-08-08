@@ -142,7 +142,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
 
         $refund = $this->refundRepository->findByNo($refundNo);
 
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::PENDING->value, $refund->refund_status->value, '退款状态不正确');
     }
 
     return $refunds;

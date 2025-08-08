@@ -194,7 +194,7 @@ test('can refund a order', function (Order $order) {
         $refund = $this->refundRepository->findByNo($refundNo);
 
 
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value,
+        $this->assertEquals(RefundStatusEnum::PENDING->value, $refund->refund_status->value,
             '退款状态不正确');
     }
 
@@ -215,7 +215,7 @@ test('can agree refund reshipment', function ($refunds) {
         $command->refundNo = $refundNo;
         $this->refundCommandService->agreeReshipment($command);
         $refund = $this->refundRepository->findByNo($command->refundNo);
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_RESHIPMENT, $refund->refund_status, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::SHIPPING, $refund->refund_status, '退款状态不正确');
     }
 
 

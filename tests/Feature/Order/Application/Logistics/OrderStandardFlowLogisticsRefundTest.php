@@ -144,7 +144,7 @@ test('can apply refund a order', function (Order $order, OrderPayment $orderPaym
     foreach ($refunds as $refundNo) {
         $refund = $this->refundRepository->findByNo($refundNo);
         $refundModels->add($refund);
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::PENDING->value, $refund->refund_status->value, '退款状态不正确');
     }
     $sumRefundAmount = Money::sum(...$refundModels->pluck('total_refund_amount'));
     $this->assertTrue($order->payable_amount->equals($sumRefundAmount));
@@ -179,7 +179,7 @@ test('can shipped a order', function (Order $order, OrderPayment $orderPayment, 
         $refund = $this->refundRepository->findByNo($refundNo);
 
         $this->assertEquals($refund->refund_status->value,
-            RefundStatusEnum::SELLER_REJECT_BUYER->value, '退款状态');
+            RefundStatusEnum::REJECTED->value, '退款状态');
     }
 
 
@@ -218,7 +218,7 @@ test('can apply return goods refund', function (Order $order, OrderPayment $orde
     foreach ($refunds as $refundNo) {
         $refund = $this->refundRepository->findByNo($refundNo);
         $refundModels->add($refund);
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE_RETURN->value, $refund->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::PENDING->value, $refund->refund_status->value, '退款状态不正确');
     }
 
 
@@ -237,7 +237,7 @@ test('can seller agree return goods refund', function (Order $order, $refunds) {
     }
     foreach ($refunds as $refundNo) {
         $refund = $this->refundRepository->findByNo($refundNo);
-        $this->assertEquals($refund->refund_status, RefundStatusEnum::WAIT_BUYER_RETURN_GOODS, ' 退款状态不正确');
+        $this->assertEquals($refund->refund_status, RefundStatusEnum::RETURNING, ' 退款状态不正确');
     }
     return $refunds;
 })->depends('can create a new order', 'can apply return goods refund');
@@ -257,7 +257,7 @@ test('can buyer return goods', function (Order $order, $refunds) {
 
     foreach ($refunds as $refundNo) {
         $refund = $this->refundRepository->findByNo($refundNo);
-        $this->assertEquals($refund->refund_status, RefundStatusEnum::WAIT_SELLER_CONFIRM, ' 退款状态不正确');
+        $this->assertEquals($refund->refund_status, RefundStatusEnum::CHECKING, ' 退款状态不正确');
     }
     return $refunds;
 

@@ -173,7 +173,7 @@ test('can refund a order', function (Order $order, OrderPayment $orderPayment) {
     foreach ($refunds as $refundNo) {
         $refund = $this->refundRepository->findByNo($refundNo);
         $refundModels->add($refund);
-        $this->assertEquals(RefundStatusEnum::WAIT_SELLER_AGREE->value, $refund->refund_status->value, '退款状态不正确');
+        $this->assertEquals(RefundStatusEnum::PENDING->value, $refund->refund_status->value, '退款状态不正确');
     }
     $sumRefundAmount = Money::sum(...$refundModels->pluck('total_refund_amount'));
     $this->assertTrue($order->payable_amount->equals($sumRefundAmount));
