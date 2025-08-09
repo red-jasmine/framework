@@ -1,0 +1,158 @@
+@startuml 公告领域模型图
+
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+}
+
+' 公告聚合
+package "公告聚合" {
+    class Announcement <<Aggregate Root>> {
+        +ID: string
+        +Biz: string
+        +Owner: Owner
+        +CategoryID: string
+        +Title: Title
+        +Cover: Cover
+        +Content: Content
+        +Scopes: Scope[]
+        +Channels: Channel[]
+        +PublishTime: PublishTime
+        +Status: Status
+        +Attachments: Attachment[]
+        +ApprovalStatus: ApprovalStatus
+        +IsForceRead: bool
+        +Version: int
+        +CreatedAt: datetime
+        +UpdatedAt: datetime
+        
+        +Publish()
+        +Revoke()
+        +SubmitForApproval()
+        +Approve()
+        +Reject()
+        +UpdateContent()
+    }
+    
+    class Content <<Entity>> {
+        +ID: string
+        +Type: string
+        +Data: json
+    }
+    
+    class Scope <<Entity>> {
+        +ID: string
+        +Name: string
+        +Description: string
+        +Rules: json
+    }
+    
+    class Channel <<Entity>> {
+        +ID: string
+        +Name: string
+        +Type: string
+        +Config: json
+    }
+    
+    class Attachment <<Entity>> {
+        +ID: string
+        +Name: string
+        +Path: string
+        +Size: int
+        +Type: string
+    }
+    
+    class Title <<Value Object>> {
+        +Value: string
+        
+        +Validate()
+        +ToString()
+    }
+    
+    class Cover <<Value Object>> {
+        +Url: string
+    }
+    
+    class PublishTime <<Value Object>> {
+        +ScheduledTime: datetime
+        +ActualTime: datetime
+    }
+}
+
+' 分类聚合
+package "分类聚合" {
+    class Category <<Aggregate Root>> {
+        +ID: string
+        +Biz: string
+        +Owner: Owner
+        +ParentID: string
+        +Name: Name
+        +Description: Description
+        +Sort: Sort
+        +IsShow: bool
+        +Version: int
+        +CreatedAt: datetime
+        +UpdatedAt: datetime
+        
+        +Show()
+        +Hide()
+        +Move()
+        +AddChild()
+    }
+    
+    class Name <<Value Object>> {
+        +Value: string
+        
+        +Validate()
+        +ToString()
+    }
+    
+    class Description <<Value Object>> {
+        +Value: string
+    }
+    
+    class Sort <<Value Object>> {
+        +Value: int
+    }
+}
+
+' 枚举定义
+enum Status {
+    DRAFT: 草稿
+    PUBLISHED: 已发布
+    REVOKED: 已撤销
+}
+
+enum ApprovalStatus {
+    PENDING: 待审批
+    APPROVED: 已通过
+    REJECTED: 已拒绝
+}
+
+' 关系定义
+Announcement ||--|| Title : 包含
+Announcement ||--|| Cover : 包含
+Announcement ||--|| Content : 包含
+Announcement ||--o{ Scope : 包含
+Announcement ||--o{ Channel : 包含
+Announcement ||--o{ Attachment : 包含
+Announcement ||--|| PublishTime : 包含
+
+Category ||--|| Name : 包含
+Category ||--|| Description : 包含
+Category ||--|| Sort : 包含
+
+' 领域事件
+note right of Announcement : 发布AnnouncementPublished事件
+note right of Announcement : 发布AnnouncementRevoked事件
+note right of Announcement : 发布AnnouncementSubmittedForApproval事件
+note right of Announcement : 发布AnnouncementApproved事件
+note right of Announcement : 发布AnnouncementRejected事件
+
+note right of Category : 发布CategoryCreated事件
+note right of Category : 发布CategoryUpdated事件
+note right of Category : 发布CategoryDeleted事件
+
+@enduml

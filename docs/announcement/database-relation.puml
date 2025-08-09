@@ -1,0 +1,46 @@
+@startuml 公告领域数据库关系图
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+entity "公告表" as announcements {
+    * id : bigint
+    --
+    * biz : varchar(32)
+    * owner_type : varchar(32)
+    * owner_id : varchar(32)
+    category_id : bigint
+    * title : varchar(255)
+    cover : varchar(255)
+    * content : json
+    * scopes : json
+    * channels : json
+    publish_time : timestamp
+    * status : enum
+    * attachments : json
+    * approval_status : enum
+    * is_force_read : tinyint(1)
+    * version : bigint
+    * created_at : timestamp
+    * updated_at : timestamp
+}
+
+entity "公告分类表" as categories {
+    * id : bigint
+    --
+    * biz : varchar(32)
+    * owner_type : varchar(32)
+    * owner_id : varchar(32)
+    parent_id : bigint
+    * name : varchar(100)
+    description : varchar(255)
+    * sort : int
+    * is_show : tinyint(1)
+    * version : bigint
+    * created_at : timestamp
+    * updated_at : timestamp
+}
+
+announcements ||--o{ categories : "category_id关联"
+
+@enduml
