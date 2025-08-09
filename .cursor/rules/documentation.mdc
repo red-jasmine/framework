@@ -2,9 +2,11 @@
 description: "文档规范和UML图标准，用于编写项目文档时手动应用"
 alwaysApply: false
 ---
+
 # 文档规范和UML图标准
 
 ## 目录结构规范
+
 ```
 docs/
 ├── {domain}/                    # 领域文档目录
@@ -25,6 +27,7 @@ docs/
 ## 领域设计方案结构规范
 
 ### 1. 引言部分
+
 - **背景介绍**: 描述该领域在业务中的背景和重要性
 - **问题域**: 列出领域要解决的核心问题（4个问题）
 - **业务价值**: 说明领域为业务带来的价值（4个价值）
@@ -32,6 +35,7 @@ docs/
 - **适用范围**: 明确文档的适用范围
 
 ### 2. 领域建模部分
+
 - **领域分析**: 描述核心业务流程
 - **核心能力**: 按功能分类描述（3个分类，每类3个能力）
 - **领域参与角色**: 区分内部角色（4-6个）和外部角色（3-5个）
@@ -40,11 +44,13 @@ docs/
 - **领域事件**: 描述核心事件和事件处理
 
 ### 3. 战略设计部分
+
 - **子域划分**: 核心子域、支撑子域、通用子域
 - **限界上下文**: 明确上下文边界和职责
 - **上下文映射**: 描述上下文间的映射关系
 
 ### 4. 战术设计部分
+
 - **聚合设计**: 详细描述每个聚合的边界、包含内容、一致性规则
 - **实体设计**: 聚合根和实体的功能描述
 - **值对象设计**: 值对象的功能描述
@@ -55,6 +61,7 @@ docs/
 - **业务异常分类**: 验证、业务、系统、外部异常
 
 ### 5. 应用层设计部分
+
 - **应用服务**: 功能描述和核心方法
 - **命令设计**: 基础命令和业务命令
 - **查询设计**: 基础查询和业务查询
@@ -63,31 +70,37 @@ docs/
 - **转换器**: 数据映射职责
 
 ### 6. 基础设施层设计部分
+
 - **仓库实现**: 写操作仓库和只读仓库
 - **过滤器配置**: 允许的过滤器、排序、关联
 
 ### 7. 用户接口层设计部分
+
 - **控制器**: 功能描述和核心接口
 - **API资源**: 功能描述和核心字段
 - **请求验证**: 验证规则和功能描述
 - **路由定义**: API路由配置
 
 ### 8. 数据模型设计部分
+
 - **核心数据表**: 表说明、核心字段、索引设计
 - **数据关系图**: 使用PlantUML绘制ER图
 - **数据迁移策略**: 版本管理、向后兼容、数据备份、回滚策略
 
 ### 9. 核心用例部分
+
 - **用例格式**: 参与者、前置条件、主流程、后置条件
 - **用例编号**: UC001、UC002、UC003格式
 - **用例数量**: 控制在3-5个核心用例
 
 ### 10. 统一语言表部分
+
 - **表格结构**: 英文名称、中文名称、说明、示例四列
 - **术语数量**: 控制在30个以内核心术语
 - **命名规范**: 英文名称使用PascalCase
 
 ### 11. 附录部分
+
 - **术语表**: 术语、定义、说明
 - **参考资料**: 相关书籍和文档
 - **变更记录**: 版本、日期、变更内容、变更人
@@ -95,30 +108,35 @@ docs/
 ## 领域文档内容规范
 
 ### 概述部分规则
+
 - **概述内容**: 必须包含领域的基本情况、主要职责、业务价值
 - **问题域**: 列出领域要解决的核心问题
 - **业务价值**: 说明领域为业务带来的价值
 - **语言要求**: 使用清晰、准确的中文描述
 
 ### 核心能力描述规则
+
 - **分类要求**: 按功能模块分类描述核心能力
 - **描述格式**: 每个能力包含功能名称和具体说明
 - **数量要求**: 核心能力数量控制在3-6个
 - **重点突出**: 突出领域最核心、最重要的功能
 
 ### 领域参与角色规则
+
 - **分类要求**: 必须区分内部角色和外部角色
 - **角色描述**: 每个角色必须说明职责和权限
 - **角色数量**: 内部角色控制在4-6个，外部角色控制在3-5个
 - **命名规范**: 角色名称使用中文，职责描述清晰明确
 
 ### 连接领域规则
+
 - **分类要求**: 必须区分上游领域和下游领域
 - **依赖说明**: 说明与每个连接领域的依赖关系
 - **接口描述**: 简要说明与连接领域的接口
 - **数量控制**: 上下游领域各控制在3-5个
 
 ### 聚合设计规则
+
 - **聚合根**: 明确指定聚合根实体
 - **包含实体**: 列出聚合内包含的所有实体
 - **包含值对象**: 列出聚合内包含的所有值对象
@@ -126,11 +144,13 @@ docs/
 - **业务规则**: 列出聚合内的核心业务规则
 
 ### 业务规则设计规则
+
 - **核心业务规则**: 描述规则和实现方式
 - **验证规则**: 输入验证和业务验证规则
 - **业务约束**: 业务逻辑约束和限制条件
 
 ### 应用层设计规则
+
 - **应用服务**: 功能描述和核心方法列表
 - **命令设计**: 基础CRUD命令和业务命令
 - **查询设计**: 基础查询和业务查询
@@ -138,12 +158,14 @@ docs/
 - **转换器**: 数据映射和转换职责
 
 ### 核心用例规则
+
 - **用例格式**: 使用标准用例格式，包含参与者、前置条件、主流程、后置条件
 - **用例编号**: 使用UC001、UC002等格式编号
 - **用例数量**: 核心用例控制在3-5个
 - **流程描述**: 主流程使用步骤列表，步骤清晰明确
 
 ### 统一语言表规则
+
 - **表格结构**: 必须包含英文名称、中文名称、说明、示例四列
 - **术语数量**: 控制在30个以内核心术语
 - **命名规范**: 英文名称使用PascalCase，中文名称简洁明了
@@ -152,11 +174,13 @@ docs/
 ## UML图规范
 
 ### 命名规范
+
 - **类名**: 必须使用中文，如 `分销员`、`佣金`、`推广订单`
 - **属性名**: 必须使用中文和英文描述，如 `佣金金额-CommissionAmount`
 - **枚举值**: 必须使用中文和英文描述，如 `启用-ENABLE`
 
 ### 领域模型图规范
+
 ```puml
 @startuml {领域名称}-domain-model
 
@@ -246,6 +270,7 @@ note right of {核心实体2} : 发布{事件2}
 ```
 
 ### 时序图规范
+
 ```puml
 @startuml {领域名称}-sequence
 
@@ -276,30 +301,115 @@ C -> U: 返回成功响应
 ## 数据库设计文档
 
 ### 表结构文档
-```markdown
+
 ## {实体名称}表 ({table_name})
 
-### 表说明
+### 建表语句
+
 {该表的主要用途}
+示例: 订单表
 
-### 字段说明
-| 字段名 | 类型 | 长度 | 允许空 | 默认值 | 说明 |
-|--------|------|------|--------|--------|------|
-| id | bigint | 20 | NO | NULL | 主键，雪花ID |
-| {字段1} | varchar | 255 | NO | NULL | {字段描述} |
-| {字段2} | text | - | YES | NULL | {字段描述} |
-| status | varchar | 50 | NO | {默认状态} | 状态字段 |
-| created_at | timestamp | - | NO | CURRENT_TIMESTAMP | 创建时间 |
-| updated_at | timestamp | - | NO | CURRENT_TIMESTAMP | 更新时间 |
-
-### 索引说明
-- PRIMARY KEY: id
-- INDEX idx_{字段1}: {字段1}
-- INDEX idx_status: status
-- INDEX idx_created_at: created_at
+```sql
+CREATE TABLE `orders`
+(
+    `id`                       bigint unsigned NOT NULL,
+    `order_no`                 varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单号',
+    `biz`                      varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '业务线',
+    `seller_type`              varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '卖家类型',
+    `seller_id`                varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '卖家ID',
+    `seller_nickname`          varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '卖家昵称',
+    `buyer_type`               varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '买家类型',
+    `buyer_id`                 varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '买家类型',
+    `buyer_nickname`           varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '买家昵称',
+    `source_type`              varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '订单来源',
+    `source_id`                varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '来源ID',
+    `store_type`               varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '门店类型',
+    `store_id`                 bigint unsigned DEFAULT NULL COMMENT '门店ID',
+    `store_nickname`           varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '门店名称',
+    `channel_type`             varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '渠道类型',
+    `channel_id`               bigint unsigned DEFAULT NULL COMMENT '渠道ID',
+    `channel_nickname`         varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '渠道名称',
+    `guide_type`               varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '导购类型',
+    `guide_id`                 bigint unsigned DEFAULT NULL COMMENT '导购ID',
+    `guide_nickname`           varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '导购名称',
+    `client_type`              varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '客户端类型',
+    `client_version`           varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '客户端版本',
+    `client_ip`                varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT 'IP',
+    `order_type`               varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单类型',
+    `shipping_type`            varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发货类型: logistics(快递),cardKey(卡密),dummy(虚拟),delivery(配送),coupons(卡券),selfPickup(自提),none(免发)',
+    `order_status`             enum('paying','accepting','shipping','confirming','finished','cancel','closed') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单状态: paying(待付款),accepting(待接单),shipping(待发货),confirming(待收货),finished(已完成),cancel(已取消),closed(已关闭)',
+    `order_refund_status`      enum('partial','full') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '订单退款状态: full(全款退款),partial(全款退款)',
+    `payment_status`           enum('waiting','paying','partial','paid','exempt','fail') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '付款状态: waiting(等待支付),paying(支付中),partial(部分支付),paid(支付成功),exempt(无需支付)',
+    `accept_status`            enum('accepting','accepted','rejected') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '接单状态: accepting(待接单),accepted(已接单),rejected(已拒单)',
+    `shipping_status`          enum('pending','waiting','partial','shipped') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发货状态: pending(待处理),waiting(待发货),partial(部分发货),shipped(已发货)',
+    `settlement_status`        enum('none','pending','processing','partial','completed') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '结算状态: none(无结算),pending(等结算),processing(结算中),partial(部分结算),completed(已结算)',
+    `invoice_status`           enum('invoicing','invoiced') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发票状态: invoiced(已开票)',
+    `rate_status`              enum('pending','rated') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '评价状态: pending(待评价),rated(已评价)',
+    `seller_custom_status`     varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '卖家自定义状态',
+    `created_time`             timestamp NULL DEFAULT NULL COMMENT '创建时间',
+    `payment_time`             timestamp NULL DEFAULT NULL COMMENT '付款时间',
+    `accept_time`              timestamp NULL DEFAULT NULL COMMENT '接单时间',
+    `shipping_time`            timestamp NULL DEFAULT NULL COMMENT '发货时间',
+    `signed_time`              timestamp NULL DEFAULT NULL COMMENT '签收时间',
+    `confirm_time`             timestamp NULL DEFAULT NULL COMMENT '确认时间',
+    `close_time`               timestamp NULL DEFAULT NULL COMMENT '关闭时间',
+    `refund_time`              timestamp NULL DEFAULT NULL COMMENT '退款时间',
+    `rate_time`                timestamp NULL DEFAULT NULL COMMENT '评价时间',
+    `settlement_time`          timestamp NULL DEFAULT NULL COMMENT '结算时间',
+    `collect_time`             timestamp NULL DEFAULT NULL COMMENT '揽收时间',
+    `dispatch_time`            timestamp NULL DEFAULT NULL COMMENT '派送时间',
+    `quantity`                 bigint unsigned NOT NULL DEFAULT '0' COMMENT '数量',
+    `currency`                 varchar(3) COLLATE utf8mb4_unicode_ci  NOT NULL DEFAULT 'CNY' COMMENT '货币',
+    `price`                    decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '销售单价',
+    `total_price`              decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '总销售总价',
+    `product_amount`           decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '总商品金额',
+    `service_amount`           decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '总服务费金额',
+    `tax_amount`               decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '总税费金额',
+    `discount_amount`          decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '订单优惠金额',
+    `freight_amount`           decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '订单运费金额',
+    `divided_discount_amount`  decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '分摊优惠金额',
+    `payable_amount`           decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '买家应付金额',
+    `payment_amount`           decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '买家实付金额',
+    `refund_amount`            decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '买家退款金额',
+    `commission_amount`        decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '佣金',
+    `seller_discount_amount`   decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '卖家优惠金额',
+    `platform_discount_amount` decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '平台优惠金额',
+    `platform_service_amount`  decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '平台服务费',
+    `receivable_amount`        decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '卖家应收金额',
+    `received_amount`          decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '卖家实收金额',
+    `cost_price`               decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '成本单价',
+    `total_cost_price`         decimal(12, 2)                         NOT NULL DEFAULT '0.00' COMMENT '成本总价',
+    `payment_timeout`          bigint                                 NOT NULL DEFAULT '0' COMMENT '支付超时',
+    `accept_timeout`           bigint                                 NOT NULL DEFAULT '0' COMMENT '接单超时',
+    `confirm_timeout`          bigint                                 NOT NULL DEFAULT '0' COMMENT '确认超时',
+    `rate_timeout`             bigint                                 NOT NULL DEFAULT '0' COMMENT '评价超时',
+    `title`                    varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '标题',
+    `outer_order_id`           varchar(64) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '外部订单号',
+    `star`                     tinyint unsigned DEFAULT NULL COMMENT '加星',
+    `urge`                     tinyint unsigned DEFAULT NULL COMMENT '催单',
+    `urge_time`                timestamp NULL DEFAULT NULL COMMENT '催单时间',
+    `is_seller_delete`         tinyint(1) NOT NULL DEFAULT '0' COMMENT '卖家删除',
+    `is_buyer_delete`          tinyint(1) NOT NULL DEFAULT '0' COMMENT '买家删除',
+    `cancel_reason`            varchar(255) COLLATE utf8mb4_unicode_ci         DEFAULT NULL COMMENT '取消原因',
+    `version`                  bigint unsigned NOT NULL DEFAULT '0' COMMENT '版本',
+    `creator_type`             varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '创建者类型',
+    `creator_id`               varchar(64) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '创建者ID',
+    `creator_nickname`         varchar(64) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '创建者昵称',
+    `updater_type`             varchar(32) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '更新者类型',
+    `updater_id`               varchar(64) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '更新者ID',
+    `updater_nickname`         varchar(64) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '更新者昵称',
+    `created_at`               timestamp NULL DEFAULT NULL,
+    `updated_at`               timestamp NULL DEFAULT NULL,
+    `deleted_at`               timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `orders_order_no_unique` (`order_no`),
+    KEY                        `idx_buyer` (`buyer_type`,`buyer_id`,`order_status`),
+    KEY                        `idx_seller` (`seller_type`,`seller_id`,`order_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='订单表';
 ```
 
 ### 数据关系图规范
+
 ```puml
 @startuml {领域名称}-database-relation
 
@@ -340,33 +450,41 @@ entity {扩展表} {
 ## 文档引用规范
 
 ### PlantUML图引用
+
 ```markdown
 ### 领域模型
+
 <!--@include: ./model.puml-->
 
 ### 核心流程
+
 <!--@include: ./sequence.puml-->
 ```
 
 ### 配置文件引用
+
 ```markdown
 ### 配置示例
+
 <!--@include: ../config/{domain}.php-->
 ```
 
 ## 文档维护规范
 
 ### 更新频率
+
 - 重要功能变更: 立即更新
 - 小功能调整: 每周更新
 - 文档优化: 每月检查
 
 ### 版本控制
+
 - 文档版本与代码版本同步
 - 重大变更需要版本说明
 - 保留历史版本文档
 
 ### 质量检查
+
 - 定期检查文档完整性
 - 确保UML图与代码一致
 - 验证DDD设计原则的遵循
@@ -376,12 +494,14 @@ entity {扩展表} {
 ## DDD设计原则检查清单
 
 ### 战略设计检查
+
 - [ ] 子域划分是否合理
 - [ ] 限界上下文边界是否清晰
 - [ ] 上下文映射关系是否正确
 - [ ] 聚合边界是否明确
 
 ### 战术设计检查
+
 - [ ] 聚合根选择是否合适
 - [ ] 实体和值对象区分是否正确
 - [ ] 业务规则是否完整
@@ -389,12 +509,14 @@ entity {扩展表} {
 - [ ] 仓库接口是否合理
 
 ### 应用层设计检查
+
 - [ ] 应用服务职责是否单一
 - [ ] 命令和查询是否分离
 - [ ] 处理器是否职责明确
 - [ ] 转换器是否功能完整
 
 ### 基础设施层检查
+
 - [ ] 仓库实现是否正确
 - [ ] 过滤器配置是否合理
 - [ ] 数据模型设计是否规范
