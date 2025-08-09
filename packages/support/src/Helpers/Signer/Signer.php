@@ -322,7 +322,6 @@ class Signer
             'digest_alg'       => 'sha256',
             "private_key_bits" => $bits, // 密钥长度
             "private_key_type" => $type,
-            "config"=>'C:\Users\liushoukun_110187947\.config\herd\bin\php84\extras\ssl\openssl.cnf',
         );
 
             // 创建密钥对
