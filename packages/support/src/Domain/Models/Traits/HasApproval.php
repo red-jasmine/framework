@@ -19,7 +19,20 @@ use RedJasmine\Support\Exceptions\ApprovalException;
 trait HasApproval
 {
 
-    public function isAllowApproval() : bool
+
+    /**
+     * Initialize the trait.
+     *
+     * @return void
+     */
+    public function initializeHasApproval() : void
+    {
+        // TODO 动态添加转换器
+
+
+    }
+
+    public function canApproval() : bool
     {
         if ($this->approval_status !== ApprovalStatusEnum::PENDING) {
             return false;
@@ -27,7 +40,10 @@ trait HasApproval
         return true;
     }
 
-
+    /**
+     * 是否提交审批
+     * @return bool
+     */
     public function canSubmitApproval() : bool
     {
         if ($this->approval_status === ApprovalStatusEnum::PENDING) {
@@ -52,6 +68,8 @@ trait HasApproval
     }
 
     /**
+     * 处理审批
+     *
      * @param  ApprovalData  $data
      *
      * @return void
@@ -59,7 +77,7 @@ trait HasApproval
      */
     public function handleApproval(ApprovalData $data) : void
     {
-        if (!$this->isAllowApproval()) {
+        if (!$this->canApproval()) {
             throw new ApprovalException();
         }
 

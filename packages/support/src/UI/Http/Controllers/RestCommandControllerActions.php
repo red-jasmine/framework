@@ -21,11 +21,7 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
  */
 trait RestCommandControllerActions
 {
-
-    protected function getOwnerKey() : string
-    {
-        return property_exists($this, 'ownerKey') ? $this->ownerKey : 'owner';
-    }
+    use HasInjectionOwner;
 
 
     public function store(Request $request) : JsonResource
@@ -36,7 +32,8 @@ trait RestCommandControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('create', static::$modelClass);
         }
-        $request->offsetSet($this->getOwnerKey(), $this->getOwner()?->toArray());
+        $this->injectionOwnerRequest();
+        // $request->offsetSet($this->getOwnerKey(), $this->getOwner()?->toArray());
         $dataClass                       = static::$createCommandClass ?? static::$dataClass;
         $command                         = $dataClass::from($request);
         $command->{$this->getOwnerKey()} = $this->getOwner();
@@ -58,7 +55,8 @@ trait RestCommandControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('update', $model);
         }
-        $request->offsetSet($this->getOwnerKey(), $this->getOwner()?->toArray());
+        $this->injectionOwnerRequest();
+
         $dataClass                       = static::$updateCommandClass ?? static::$dataClass;
         $command                         = $dataClass::from($request);
         $command->{$this->getOwnerKey()} = $this->getOwner();

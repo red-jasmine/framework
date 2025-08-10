@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Data\Queries\OwnerInjectionInterface;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
@@ -21,14 +20,10 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 trait RestQueryControllerActions
 {
 
-    protected function requestInjectionOwner(Request $request, string $queryClass)
-    {
-        if (in_array(OwnerInjectionInterface::class, class_implements($queryClass))) {
+    use HasInjectionOwner;
 
+    // 判断什么情况下需要注入
 
-            // $request->offsetSet($queryClass::getOwnerKey(), $this->getOwner());
-        }
-    }
 
     public function index(Request $request) : AnonymousResourceCollection
     {
@@ -36,8 +31,9 @@ trait RestQueryControllerActions
         if (method_exists($this, 'authorize')) {
             $this->authorize('viewAny', static::$modelClass);
         }
+
         $queryClass = static::$paginateQueryClass ?? PaginateQuery::class;
-        $this->requestInjectionOwner($request, $queryClass);
+        $this->injectionOwnerRequest();
 
         $result = $this->service->paginate($queryClass::from($request));
         return static::$resourceClass::collection($result->appends($request->query()));
@@ -54,7 +50,7 @@ trait RestQueryControllerActions
     {
         $queryClass = static::$findQueryClass ?? FindQuery::class;
 
-        $this->requestInjectionOwner($request, $queryClass);
+        $this->injectionOwnerRequest($request);
 
         $query = $queryClass::from($request);
         $query->setKey($id);

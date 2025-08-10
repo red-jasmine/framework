@@ -11,8 +11,13 @@ use RedJasmine\Support\Domain\Data\Queries\Query;
 trait HasTreeAction
 {
 
+    use HasInjectionOwner;
+
     public function tree(Request $request)
     {
+
+        $this->injectionOwnerRequest();
+
         $query = isset(static::$treeQueryClass) ? (static::$treeQueryClass::from($request)) : Query::from($request);
 
         $tree = $this->service->tree($query);

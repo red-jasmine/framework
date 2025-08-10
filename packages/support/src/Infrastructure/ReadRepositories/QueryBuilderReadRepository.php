@@ -30,29 +30,29 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     protected array $queryCallbacks = [];
     protected mixed $defaultSort    = '-id';
 
-    public function setAllowedFilters(?array $allowedFilters) : static
-    {
-        $this->allowedFilters = $allowedFilters;
-        return $this;
-    }
-
-    public function setAllowedIncludes(?array $allowedIncludes) : static
-    {
-        $this->allowedIncludes = $allowedIncludes;
-        return $this;
-    }
-
-    public function setAllowedFields(?array $allowedFields) : static
-    {
-        $this->allowedFields = $allowedFields;
-        return $this;
-    }
-
-    public function setAllowedSorts(?array $allowedSorts) : static
-    {
-        $this->allowedSorts = $allowedSorts;
-        return $this;
-    }
+    // public function setAllowedFilters(?array $allowedFilters) : static
+    // {
+    //     $this->allowedFilters = $allowedFilters;
+    //     return $this;
+    // }
+    //
+    // public function setAllowedIncludes(?array $allowedIncludes) : static
+    // {
+    //     $this->allowedIncludes = $allowedIncludes;
+    //     return $this;
+    // }
+    //
+    // public function setAllowedFields(?array $allowedFields) : static
+    // {
+    //     $this->allowedFields = $allowedFields;
+    //     return $this;
+    // }
+    //
+    // public function setAllowedSorts(?array $allowedSorts) : static
+    // {
+    //     $this->allowedSorts = $allowedSorts;
+    //     return $this;
+    // }
 
     public function setQueryCallbacks(array $queryCallbacks) : static
     {
@@ -156,6 +156,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
             $fieldsParameterName,
             $sortParameterName,
             'page', 'perPage');
+
 
         // 如果过滤参数名称已配置，处理查询参数以生成过滤条件
         if (filled($filterParameterName)) {

@@ -4,15 +4,21 @@ namespace RedJasmine\Support\Data;
 
 use Illuminate\Contracts\Support\Arrayable;
 use RedJasmine\Support\Contracts\UserInterface;
+use Stringable;
 
-class System extends Data implements UserInterface,Arrayable
+class System extends UserData implements UserInterface, Arrayable, Stringable
 {
+
+    public function __toString() : string
+    {
+        return $this->toJson();
+    }
 
 
     const string TYPE = 'system';
 
     public function __construct(
-        public string $id = self::TYPE,
+        public string|int $id = self::TYPE,
         public string $type = 'system',
         public ?string $nickname = '系统',
         public ?string $avatar = null,

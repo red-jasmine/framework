@@ -3,6 +3,7 @@
 namespace RedJasmine\Support\Services;
 
 use Illuminate\Database\Schema\Blueprint;
+use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
 class MigrationService
@@ -60,6 +61,14 @@ class MigrationService
             if ($comment) {
                 $this->comment($comment);
             }
+        });
+
+
+        Blueprint::macro('approval', function () {
+            $this->enum('approval_status', ApprovalStatusEnum::values())
+                 ->nullable()->comment(ApprovalStatusEnum::comments('审批状态'));
+            $this->timestamp('approval_time')->nullable()->comment('审批时间');
+            $this->string('approval_message')->nullable()->comment('信息');
         });
     }
 }

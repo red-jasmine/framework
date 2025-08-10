@@ -2,12 +2,18 @@
 
 namespace RedJasmine\Support\Data;
 
+use Illuminate\Contracts\Support\Arrayable;
 use RedJasmine\Support\Contracts\UserInterface;
+use Stringable;
 
 
-class UserData extends Data implements UserInterface
+class UserData extends Data implements UserInterface, Arrayable, Stringable
 {
 
+    public function __toString() : string
+    {
+        return $this->toJson();
+    }
 
     /**
      * @param  string  $type
