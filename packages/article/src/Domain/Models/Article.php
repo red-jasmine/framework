@@ -101,7 +101,7 @@ class Article extends Model implements OwnerInterface, OperatorInterface
     }
 
 
-    public function isAllowPublish() : bool
+    public function canPublish() : bool
     {
         if ($this->approval_status !== ApprovalStatusEnum::PASS) {
             return false;
@@ -115,9 +115,13 @@ class Article extends Model implements OwnerInterface, OperatorInterface
 
     }
 
+    /**
+     * @return void
+     * @throws ArticleException
+     */
     public function publish() : void
     {
-        if (!$this->isAllowPublish()) {
+        if (!$this->canPublish()) {
             throw new ArticleException();
         }
         $this->status       = ArticleStatusEnum::PUBLISHED;
