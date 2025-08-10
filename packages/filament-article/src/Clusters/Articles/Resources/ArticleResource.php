@@ -260,7 +260,7 @@ class ArticleResource extends Resource
                                          $command->setKey($record->getKey());
                                          app(static::$service)->publish($command);
 
-                                     })->visible(fn($record) => $record->isAllowPublish()),
+                                     })->visible(fn($record) => $record->canPublish()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
