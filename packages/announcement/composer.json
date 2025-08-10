@@ -1,0 +1,46 @@
+{
+    "name": "red-jasmine/announcement",
+    "description": "公告领域包 - Red Jasmine Framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Red Jasmine Team",
+            "email": "team@red-jasmine.com"
+        }
+    ],
+    "require": {
+        "red-jasmine/support": "^1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Announcement\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Announcement\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Announcement\\AnnouncementServiceProvider",
+                "RedJasmine\\Announcement\\Application\\AnnouncementApplicationServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
