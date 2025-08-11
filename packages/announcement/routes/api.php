@@ -6,7 +6,7 @@ use RedJasmine\Announcement\UI\Http\User\AnnouncementUserRoute;
 
 // User API Routes
 Route::prefix('api/user')
-     ->middleware(['api', 'auth:user'])
+     ->middleware(['api'])
      ->group(function () {
 
          AnnouncementUserRoute::api();
