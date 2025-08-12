@@ -1,0 +1,261 @@
+@startuml message-domain-model
+
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+}
+
+' 消息聚合
+package "消息聚合" {
+    class 消息 << Aggregate Root >> {
+        +ID: string
+        +应用ID: string
+        +业务线: 业务线枚举
+        +分类ID: string
+        +接收人ID: string
+        +发送人ID: string
+        +模板ID: string
+        +标题: string
+        +内容: string
+        +消息数据: array
+        +消息来源: 来源枚举
+        +消息类型: 类型枚举
+        +优先级: 优先级枚举
+        +状态: 消息状态枚举
+        +阅读时间: datetime
+        +推送渠道: array
+        +推送状态: 推送状态枚举
+        +强提醒: boolean
+        +阅后即焚: boolean
+        +过期时间: datetime
+        +创建时间: datetime
+        +更新时间: datetime
+        
+        +创建消息()
+        +更新状态()
+        +标记已读()
+        +归档消息()
+        +验证权限()
+        +检查过期()
+    }
+    
+    class 消息内容 << Value Object >> {
+        +标题: string
+        +正文内容: string
+        +内容类型: string
+        +附件信息: array
+        +验证内容()
+        +获取摘要()
+    }
+    
+    class 推送配置 << Value Object >> {
+        +推送渠道列表: array
+        +优先级设置: int
+        +推送参数: array
+        +重试配置: array
+        +验证配置()
+        +获取渠道()
+    }
+    
+    class 消息数据 << Value Object >> {
+        +业务数据字典: array
+        +模板变量映射: array
+        +扩展属性: array
+        +验证数据()
+        +获取变量值()
+    }
+}
+
+' 消息应用聚合
+package "消息应用聚合" {
+    class 消息应用 << Aggregate Root >> {
+        +ID: string
+        +名称: string
+        +描述: string
+        +图标: string
+        +所属者ID: string
+        +状态: 状态枚举
+        +配置信息: array
+        +创建时间: datetime
+        +更新时间: datetime
+        
+        +创建应用()
+        +更新配置()
+        +启用应用()
+        +禁用应用()
+        +验证权限()
+        +添加分类()
+    }
+    
+    class 消息分类 {
+        +ID: string
+        +应用ID: string
+        +业务线: 业务线枚举
+        +分类名称: string
+        +分类描述: string
+        +图标: string
+        +颜色: string
+        +排序: int
+        +状态: 状态枚举
+        +创建时间: datetime
+        +更新时间: datetime
+        
+        +创建分类()
+        +更新信息()
+        +调整排序()
+        +启用分类()
+        +禁用分类()
+    }
+    
+    class 应用配置 << Value Object >> {
+        +推送渠道配置: array
+        +频率限制设置: array
+        +权限配置: array
+        +扩展配置: array
+        +验证配置()
+        +获取渠道配置()
+    }
+}
+
+' 消息模板聚合
+package "消息模板聚合" {
+    class 消息模板 << Aggregate Root >> {
+        +ID: string
+        +模板名称: string
+        +标题模板: string
+        +内容模板: string
+        +模板变量: array
+        +状态: 状态枚举
+        +创建时间: datetime
+        +更新时间: datetime
+        
+        +创建模板()
+        +更新模板()
+        +渲染内容()
+        +验证变量()
+        +启用模板()
+        +禁用模板()
+    }
+    
+    class 模板变量 << Value Object >> {
+        +变量名称: string
+        +变量类型: string
+        +默认值: string
+        +验证规则: array
+        +描述信息: string
+        +验证变量()
+        +获取默认值()
+    }
+}
+
+' 推送日志聚合
+package "推送日志聚合" {
+    class 推送日志 << Aggregate Root >> {
+        +ID: string
+        +消息ID: string
+        +推送渠道: 渠道枚举
+        +推送状态: 推送状态枚举
+        +推送时间: datetime
+        +错误信息: string
+        +重试次数: int
+        +创建时间: datetime
+        
+        +记录推送()
+        +更新状态()
+        +记录错误()
+        +增加重试()
+        +获取统计()
+    }
+    
+    class 推送结果 << Value Object >> {
+        +推送状态: string
+        +响应时间: int
+        +响应数据: array
+        +成功标识: boolean
+        +获取结果()
+        +是否成功()
+    }
+    
+    class 错误信息 << Value Object >> {
+        +错误码: string
+        +错误描述: string
+        +错误详情: array
+        +错误时间: datetime
+        +获取错误信息()
+        +格式化错误()
+    }
+}
+
+' 枚举定义
+enum 业务线枚举 {
+    用户端-USER
+    商家端-MERCHANT
+    管理端-ADMIN
+    系统端-SYSTEM
+}
+
+enum 消息状态枚举 {
+    未读-UNREAD
+    已读-READ
+    已归档-ARCHIVED
+}
+
+enum 类型枚举 {
+    通知-NOTIFICATION
+    警告-ALERT
+    提醒-REMINDER
+}
+
+enum 优先级枚举 {
+    低-LOW
+    普通-NORMAL
+    高-HIGH
+    紧急-URGENT
+}
+
+enum 渠道枚举 {
+    APP内消息-IN_APP
+    推送通知-PUSH
+    邮件-EMAIL
+    短信-SMS
+}
+
+enum 推送状态枚举 {
+    等待中-PENDING
+    已发送-SENT
+    发送失败-FAILED
+}
+
+enum 状态枚举 {
+    启用-ENABLE
+    禁用-DISABLE
+}
+
+enum 来源枚举 {
+    系统-SYSTEM
+    用户-USER
+    API-API
+}
+
+' 关系定义
+消息 ||--|| 消息内容 : 包含
+消息 ||--|| 推送配置 : 包含
+消息 ||--|| 消息数据 : 包含
+消息应用 ||--o{ 消息分类 : 包含
+消息应用 ||--|| 应用配置 : 包含
+消息模板 ||--o{ 模板变量 : 包含
+推送日志 ||--|| 推送结果 : 包含
+推送日志 ||--|| 错误信息 : 包含
+
+消息 }o--|| 消息应用 : 属于
+消息 }o--|| 消息分类 : 属于
+消息 }o--|| 消息模板 : 使用
+消息 ||--o{ 推送日志 : 产生
+
+' 领域事件
+note right of 消息 : 发布消息创建事件\n发布消息发送事件\n发布消息阅读事件\n发布消息归档事件
+note right of 推送日志 : 发布消息推送事件
+
+@enduml
