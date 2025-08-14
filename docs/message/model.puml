@@ -11,7 +11,6 @@ skinparam class {
 package "消息聚合" {
     class 消息 << Aggregate Root >> {
         +ID: string
-        +应用ID: string
         +业务线: 业务线枚举
         +分类ID: string
         +接收人ID: string
@@ -30,6 +29,7 @@ package "消息聚合" {
         +强提醒: boolean
         +阅后即焚: boolean
         +过期时间: datetime
+        +所属者ID: string
         +创建时间: datetime
         +更新时间: datetime
         
@@ -68,30 +68,10 @@ package "消息聚合" {
     }
 }
 
-' 消息应用聚合
-package "消息应用聚合" {
-    class 消息应用 << Aggregate Root >> {
+' 消息分类聚合
+package "消息分类聚合" {
+    class 消息分类 << Aggregate Root >> {
         +ID: string
-        +名称: string
-        +描述: string
-        +图标: string
-        +所属者ID: string
-        +状态: 状态枚举
-        +配置信息: array
-        +创建时间: datetime
-        +更新时间: datetime
-        
-        +创建应用()
-        +更新配置()
-        +启用应用()
-        +禁用应用()
-        +验证权限()
-        +添加分类()
-    }
-    
-    class 消息分类 {
-        +ID: string
-        +应用ID: string
         +业务线: 业务线枚举
         +分类名称: string
         +分类描述: string
@@ -99,6 +79,7 @@ package "消息应用聚合" {
         +颜色: string
         +排序: int
         +状态: 状态枚举
+        +所属者ID: string
         +创建时间: datetime
         +更新时间: datetime
         
@@ -107,15 +88,7 @@ package "消息应用聚合" {
         +调整排序()
         +启用分类()
         +禁用分类()
-    }
-    
-    class 应用配置 << Value Object >> {
-        +推送渠道配置: array
-        +频率限制设置: array
-        +权限配置: array
-        +扩展配置: array
-        +验证配置()
-        +获取渠道配置()
+        +验证权限()
     }
 }
 
@@ -243,13 +216,10 @@ enum 来源枚举 {
 消息 ||--|| 消息内容 : 包含
 消息 ||--|| 推送配置 : 包含
 消息 ||--|| 消息数据 : 包含
-消息应用 ||--o{ 消息分类 : 包含
-消息应用 ||--|| 应用配置 : 包含
 消息模板 ||--o{ 模板变量 : 包含
 推送日志 ||--|| 推送结果 : 包含
 推送日志 ||--|| 错误信息 : 包含
 
-消息 }o--|| 消息应用 : 属于
 消息 }o--|| 消息分类 : 属于
 消息 }o--|| 消息模板 : 使用
 消息 ||--o{ 推送日志 : 产生
