@@ -300,7 +300,7 @@ C -> U: 返回成功响应
 
 ## 数据库设计文档
 
-### 表结构文档
+### 存储层数据表结构文档 storage.md
 
 ## {实体名称}表 ({table_name})
 
@@ -408,44 +408,7 @@ CREATE TABLE `orders`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='订单表';
 ```
 
-### 数据关系图规范
 
-```puml
-@startuml {领域名称}-database-relation
-
-!theme plain
-entity {实体名称} {
-    * id : bigint
-    --
-    * {字段1} : varchar(255)
-    {字段2} : text
-    * status : varchar(50)
-    * created_at : timestamp
-    * updated_at : timestamp
-}
-
-entity {关联实体} {
-    * id : bigint
-    --
-    * {实体名称}_id : bigint
-    * {字段1} : varchar(100)
-    {字段2} : decimal(10,2)
-}
-
-entity {扩展表} {
-    * id : bigint
-    --
-    * {实体名称}_id : bigint
-    * {字段1} : varchar(100)
-    {字段2} : text
-    * created_at : timestamp
-}
-
-{实体名称} ||--o{ {关联实体} : 关联关系
-{实体名称} ||--o{ {扩展表} : 扩展关系
-
-@enduml
-```
 
 ## 文档引用规范
 
