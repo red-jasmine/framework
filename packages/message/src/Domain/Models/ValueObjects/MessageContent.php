@@ -4,7 +4,11 @@ declare(strict_types = 1);
 
 namespace RedJasmine\Message\Domain\Models\ValueObjects;
 
+use Illuminate\Mail\Attachment;
+use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
 use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 /**
  * 消息内容值对象
@@ -24,11 +28,16 @@ class MessageContent extends ValueObject
     /**
      * 内容类型 (text, html, markdown)
      */
-    public string $contentType;
+    /**
+     * @var ContentTypeEnum
+     */
+    #[WithCast(EnumCast::class, ContentTypeEnum::class)]
+    public ContentTypeEnum $contentType = ContentTypeEnum::TEXT;
 
     /**
      * 附件信息
      */
+
     public array $attachments = [];
 
     /**

@@ -10,6 +10,7 @@ use RedJasmine\Message\Domain\Models\Enums\MessageSourceEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageTypeEnum;
 use RedJasmine\Message\Domain\Models\Enums\PushChannelEnum;
+use RedJasmine\Message\Domain\Models\ValueObjects\MessageContent;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -30,9 +31,9 @@ class MessageData extends Data
 
         public ?int $categoryId = null,
         public ?int $templateId = null,
-        public ?string $title = null,
-        public ?string $content = null,
-        public ?array $data = null,
+
+        public MessageContent $content,
+
 
 
         #[WithCast(EnumCast::class, MessageTypeEnum::class)]
