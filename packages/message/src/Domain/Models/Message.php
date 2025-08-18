@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InvalidArgumentException;
 use RedJasmine\Message\Domain\Models\Enums\BizEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessagePriorityEnum;
-use RedJasmine\Message\Domain\Models\Enums\MessageSourceEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageTypeEnum;
 use RedJasmine\Message\Domain\Models\Enums\PushStatusEnum;
@@ -64,6 +63,7 @@ class Message extends Model
         'status'             => MessageStatusEnum::class,
         'push_status'        => PushStatusEnum::class,
         'data'               => 'array',
+        'attachments'        => 'array',
         'channels'           => 'array',
         'is_urgent'          => 'boolean',
         'is_burn_after_read' => 'boolean',
@@ -123,12 +123,19 @@ class Message extends Model
      */
     public function getMessageContent() : MessageContent
     {
-        return new MessageContent(
-            title: $this->title,
-            content: $this->content,
-            contentType: 'text', // 可以从扩展数据中获取
-            attachments: $this->getMessageData()->getExtension('attachments', [])
-        );
+        return MessageContent::from($this);
+    }
+
+
+    public function setMesageContent(MessageContent $messageContent)
+    {
+        $this->title        = $messageContent->title;
+        $this->content_type = $messageContent->contentType;
+        $this->content      = $messageContent->content;
+        $this->data         = $messageContent->data;
+        $this->attachments  = $messageContent->attachments;
+
+
     }
 
     /**
@@ -145,19 +152,6 @@ class Message extends Model
         );
     }
 
-    /**
-     * 获取消息数据值对象
-     */
-    public function getMessageData() : MessageData
-    {
-        $data = $this->data ?? [];
-
-        return new MessageData(
-            businessData: $data['business_data'] ?? [],
-            templateVariables: $data['template_variables'] ?? [],
-            extensions: $data['extensions'] ?? []
-        );
-    }
 
     /**
      * 标记消息为已读

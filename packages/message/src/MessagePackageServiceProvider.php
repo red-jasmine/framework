@@ -22,7 +22,6 @@ class MessagePackageServiceProvider extends PackageServiceProvider
                 'create_messages_table',
                 'create_message_categories_table',
                 'create_message_templates_table',
-                'create_message_push_logs_table',
             ])
             ->hasRoutes(['message'])
             ->runsMigrations();

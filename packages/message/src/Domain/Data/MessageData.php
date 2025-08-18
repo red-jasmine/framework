@@ -6,7 +6,6 @@ namespace RedJasmine\Message\Domain\Data;
 
 use DateTimeInterface;
 use RedJasmine\Message\Domain\Models\Enums\MessagePriorityEnum;
-use RedJasmine\Message\Domain\Models\Enums\MessageSourceEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageTypeEnum;
 use RedJasmine\Message\Domain\Models\Enums\PushChannelEnum;
@@ -33,7 +32,6 @@ class MessageData extends Data
         public ?int $templateId = null,
 
         public MessageContent $content,
-
 
 
         #[WithCast(EnumCast::class, MessageTypeEnum::class)]

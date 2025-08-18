@@ -4,24 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up() : void
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->string('biz', 64)->comment('业务线');
             $table->unsignedBigInteger('category_id')->nullable()->comment('消息分类ID');
-            $table->userMorphs('owner','接收人',false,false);
-            $table->userMorphs('sender','接收人',true,false);
+            $table->userMorphs('owner', '接收者', false, false);
+            $table->userMorphs('sender', '发送者', true, false);
             $table->unsignedBigInteger('template_id')->nullable()->comment('消息模板ID');
             $table->string('title')->comment('消息标题');
             $table->text('content')->comment('消息内容');
             $table->json('data')->nullable()->comment('消息数据');
-            $table->userMorphs('source','来源',true,false);
+            $table->json('attachments')->nullable()->comment('附件');
+            $table->userMorphs('source', '来源', true, false);
             $table->enum('type', ['notification', 'alert', 'reminder'])->default('notification')->comment('消息类型');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('normal')->comment('优先级');
             $table->enum('status', ['unread', 'read', 'archived'])->default('unread')->comment('消息状态');
@@ -48,7 +48,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down() : void
     {
         Schema::dropIfExists('messages');
     }
