@@ -22,6 +22,7 @@
         "red-jasmine/shopping": "1.0.x-dev",
         "red-jasmine/wallet": "1.0.x-dev",
         "red-jasmine/points-mall": "1.0.x-dev",
+        "red-jasmine/message": "1.0.x-dev",
         "red-jasmine/distribution": "1.0.x-dev"
     },
     "require-dev": {
