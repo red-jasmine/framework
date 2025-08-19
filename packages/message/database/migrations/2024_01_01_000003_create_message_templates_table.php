@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->userMorphs('owner','所属者',true,false);
             $table->string('name', 100)->comment('模板名称');
-            $table->text('title_template')->comment('标题模板');
+            $table->string('title')->comment('标题模板');
             $table->text('content_template')->comment('内容模板');
             $table->json('variables')->nullable()->comment('模板变量定义');
             $table->enum('status', ['enable', 'disable'])->default('enable')->comment('状态');

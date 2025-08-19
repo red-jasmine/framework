@@ -31,17 +31,12 @@ return new class extends Migration {
             $table->boolean('is_urgent')->default(false)->comment('是否强提醒');
             $table->boolean('is_burn_after_read')->default(false)->comment('是否阅后即焚');
             $table->timestamp('expires_at')->nullable()->comment('过期时间');
-            $table->string('owner_id', 64)->comment('所属者ID');
-            $table->string('operator_id', 64)->nullable()->comment('操作者ID');
-            $table->timestamps();
+            $table->operator();
             $table->softDeletes();
 
             // 索引
-            $table->index(['receiver_id', 'status', 'created_at'], 'idx_receiver_status');
-            $table->index(['owner_id', 'biz', 'created_at'], 'idx_owner_biz');
-            $table->index(['push_status', 'created_at'], 'idx_push_status');
-            $table->index('category_id', 'idx_category');
-            $table->index('template_id', 'idx_template');
+
+
         });
     }
 

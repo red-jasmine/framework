@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace RedJasmine\Message\UI\Http\User\Api\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use RedJasmine\Message\Application\Services\Category\MessageCategoryApplicationService;
 use RedJasmine\Message\Application\Services\Commands\MessageCategoryCreateCommand;
 use RedJasmine\Message\Application\Services\Commands\MessageCategoryUpdateCommand;
-use RedJasmine\Message\Application\Services\MessageCategoryApplicationService;
 use RedJasmine\Message\Application\Services\Queries\MessageCategoryListQuery;
+use RedJasmine\Message\Application\Services\Category\Queries\MessageCategoryTreeQuery;
 use RedJasmine\Message\Domain\Models\MessageCategory;
-use RedJasmine\Message\UI\Http\User\Api\Requests\MessageCategoryCreateRequest;
 use RedJasmine\Message\UI\Http\User\Api\Requests\MessageCategoryListRequest;
 use RedJasmine\Message\UI\Http\User\Api\Requests\MessageCategoryUpdateRequest;
 use RedJasmine\Message\UI\Http\User\Api\Resources\MessageCategoryResource;
@@ -29,6 +28,7 @@ class MessageCategoryController extends Controller
 
     protected static string $resourceClass = MessageCategoryResource::class;
     protected static string $paginateQueryClass = MessageCategoryListQuery::class;
+    protected static string $treeQueryClass = MessageCategoryTreeQuery::class;
     protected static string $modelClass = MessageCategory::class;
 
 

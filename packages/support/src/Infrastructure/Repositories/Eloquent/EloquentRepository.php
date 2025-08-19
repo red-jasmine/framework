@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Infrastructure\Repositories\Eloquent;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Throwable;
@@ -69,5 +70,10 @@ class EloquentRepository implements RepositoryInterface
         $model->delete();
     }
 
+
+    public function query() : Builder
+    {
+        return static::$eloquentModelClass::query();
+    }
 
 }

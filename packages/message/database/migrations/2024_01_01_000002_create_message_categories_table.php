@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('message_categories', function (Blueprint $table) {
 
-            $table->comment('消息-分类');
+            $table->category('消息-分类');
             $table->string('biz', 32)->comment('业务线');
 
         });

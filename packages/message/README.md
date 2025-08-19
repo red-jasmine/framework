@@ -110,8 +110,9 @@ php artisan vendor:publish --tag=message-lang
 ## 使用示例
 
 ### 发送消息
+
 ```php
-use RedJasmine\Message\Application\Services\MessageApplicationService;
+use RedJasmine\Message\Application\Services\Message\MessageApplicationService;
 
 $messageService = app(MessageApplicationService::class);
 

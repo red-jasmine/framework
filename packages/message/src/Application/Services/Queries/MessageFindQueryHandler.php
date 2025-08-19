@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace RedJasmine\Message\Application\Services\Queries;
 
-use RedJasmine\Message\Application\Services\MessageApplicationService;
+use RedJasmine\Message\Application\Services\Message\MessageApplicationService;
+use RedJasmine\Message\Application\Services\Message\Queries\MessageFindQuery;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 

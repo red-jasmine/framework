@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace RedJasmine\Message\Application\Services;
+namespace RedJasmine\Message\Application\Services\Category;
 
 use RedJasmine\Message\Domain\Models\MessageCategory;
 use RedJasmine\Message\Domain\Repositories\MessageCategoryReadRepositoryInterface;

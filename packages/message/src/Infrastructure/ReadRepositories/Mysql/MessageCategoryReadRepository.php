@@ -7,6 +7,8 @@ namespace RedJasmine\Message\Infrastructure\ReadRepositories\Mysql;
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Message\Domain\Models\MessageCategory;
 use RedJasmine\Message\Domain\Repositories\MessageCategoryReadRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
+use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
@@ -102,127 +104,8 @@ class MessageCategoryReadRepository extends QueryBuilderReadRepository implement
         ];
     }
 
-    /**
-     * 自定义查询方法：获取分类树
-     */
-    public function getTree(?int $parentId = null): Collection
-    {
-        return $this->query()
-            ->where('parent_id', $parentId)
-            ->where('status', 'enable')
-            ->with(['children' => function ($query) {
-                $query->where('status', 'enable')->orderBy('sort');
-            }])
-            ->orderBy('sort')
-            ->get();
-    }
+    use HasTree;
 
-    /**
-     * 自定义查询方法：获取启用的分类列表
-     */
-    public function getEnabledList(): Collection
-    {
-        return $this->query()
-            ->where('status', 'enable')
-            ->orderBy('sort')
-            ->orderBy('name')
-            ->get();
-    }
-
-    /**
-     * 自定义查询方法：根据业务线获取分类
-     */
-    public function getByBiz(string $biz): Collection
-    {
-        return $this->query()
-            ->where('biz', $biz)
-            ->where('status', 'enable')
-            ->orderBy('sort')
-            ->get();
-    }
-
-    /**
-     * 自定义查询方法：获取顶级分类
-     */
-    public function getRootCategories(): Collection
-    {
-        return $this->query()
-            ->whereNull('parent_id')
-            ->where('status', 'enable')
-            ->orderBy('sort')
-            ->get();
-    }
-
-    /**
-     * 自定义查询方法：获取子分类
-     */
-    public function getChildren(int $parentId): Collection
-    {
-        return $this->query()
-            ->where('parent_id', $parentId)
-            ->where('status', 'enable')
-            ->orderBy('sort')
-            ->get();
-    }
-
-    /**
-     * 自定义查询方法：获取分类路径
-     */
-    public function getCategoryPath(int $categoryId): array
-    {
-        $path = [];
-        $category = $this->query()->find($categoryId);
-        
-        while ($category) {
-            array_unshift($path, [
-                'id' => $category->id,
-                'name' => $category->name,
-            ]);
-            
-            $category = $category->parent_id ? 
-                $this->query()->find($category->parent_id) : null;
-        }
-        
-        return $path;
-    }
-
-    /**
-     * 自定义查询方法：搜索分类
-     */
-    public function search(string $keyword): Collection
-    {
-        return $this->query()
-            ->where(function ($query) use ($keyword) {
-                $query->where('name', 'like', "%{$keyword}%")
-                      ->orWhere('description', 'like', "%{$keyword}%");
-            })
-            ->where('status', 'enable')
-            ->orderBy('sort')
-            ->get();
-    }
-
-    /**
-     * 自定义查询方法：获取使用统计
-     */
-    public function getUsageStatistics(): Collection
-    {
-        return $this->query()
-            ->withCount('messages')
-            ->orderBy('messages_count', 'desc')
-            ->get();
-    }
-
-    // 缺失的接口方法简化实现
-    public function findList(array $ids): Collection { return collect(); }
-    public function getStatistics(): array { return []; }
-    public function searchCategories(string $keyword): Collection { return collect(); }
-    public function getCategoryRanking(): array { return []; }
-    public function getMessageCountStats(): array { return []; }
-    public function getActivityStats(): array { return []; }
-    public function getGroupedByBiz(): array { return []; }
-    public function getRecentlyUsed(int $limit = 10): Collection { return collect(); }
-    public function getPopularCategories(int $limit = 10): Collection { return collect(); }
-    public function getCategoryDetailStats(int $categoryId): array { return []; }
 
     /**
      * 设置默认排序

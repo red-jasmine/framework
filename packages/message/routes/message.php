@@ -14,7 +14,7 @@ use RedJasmine\Message\UI\Http\User\MessageUserRoute;
 */
 
 // 用户端路由
-Route::group(['prefix' => 'api/user', 'middleware' => ['api']], function () {
+Route::group(['prefix' => 'api/user', 'middleware' => ['api','auth:user']], function () {
     MessageUserRoute::api();
 });
 
