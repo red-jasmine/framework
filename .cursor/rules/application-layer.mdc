@@ -57,13 +57,13 @@ class ArticleCreateCommand extends ArticleData
 
 ### 规范
 - **基类继承**: 继承 `RedJasmine\Support\Application\Queries\Query`
-- **分页查询**: 继承 `RedJasmine\Support\Application\Queries\PaginationQuery`
+- **分页查询**: 继承 `RedJasmine\Support\Application\Queries\PaginateQuery`
 - **单个查询**: 继承 `RedJasmine\Support\Application\Queries\FindQuery`
 - **命名规范**: 查询名格式为 `{Action}Query`
 
 ### 代码示例
 ```php
-class ArticleListQuery extends PaginationQuery
+class ArticleListQuery extends PaginateQuery
 {
     public ?string $title = null;
     public ?int $categoryId = null;
