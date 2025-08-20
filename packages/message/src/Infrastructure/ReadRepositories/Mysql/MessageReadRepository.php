@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace RedJasmine\Message\Infrastructure\ReadRepositories\Mysql;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageReadRepositoryInterface;
@@ -155,17 +155,6 @@ class MessageReadRepository extends QueryBuilderReadRepository implements Messag
         ];
     }
 
-    /**
-     * 自定义查询方法：根据接收人查找消息列表
-     */
-    public function findByReceiver(string $receiverId, int $limit = 20) : Collection
-    {
-        return $this->query()
-                    ->where('receiver_id', $receiverId)
-                    ->orderBy('created_at', 'desc')
-                    ->limit($limit)
-                    ->get();
-    }
 
     /**
      * 获取未读消息数量
@@ -175,184 +164,29 @@ class MessageReadRepository extends QueryBuilderReadRepository implements Messag
         $query = $this->query()
                       ->where('biz', $biz)
                       ->where('status', MessageStatusEnum::UNREAD)
-                      ->onlyOwner($owner);
+                      ->where('owner_type', $owner->getType())
+                      ->where('owner_id', $owner->getId());
 
         return $query->count();
     }
 
-    // 简化的接口方法实现
-    public function findList(array $ids) : Collection
-    {
-        return $this->query()->whereIn('id', $ids)->get();
-    }
-
-    public function getUnreadCountByBiz(string $receiverId) : array
-    {
-        return $this->query()
-                    ->where('receiver_id', $receiverId)
-                    ->where('status', 'unread')
-                    ->selectRaw('biz, COUNT(*) as count')
-                    ->groupBy('biz')
-                    ->get()
-                    ->pluck('count', 'biz')
-                    ->toArray();
-    }
-
-    public function getUnreadCountByCategory(string $receiverId) : array
-    {
-        return $this->query()
-                    ->where('receiver_id', $receiverId)
-                    ->where('status', 'unread')
-                    ->selectRaw('category_id, COUNT(*) as count')
-                    ->groupBy('category_id')
-                    ->get()
-                    ->pluck('count', 'category_id')
-                    ->toArray();
-    }
-
     /**
-     * 自定义查询方法：获取高优先级未读消息
+     * @param  UserInterface  $owner
+     * @param  string  $biz
+     *
+     * @return array
      */
-    public function getHighPriorityUnread(string $receiverId, int $limit = 10) : Collection
+    public function getUnreadStatistics(UserInterface $owner, string $biz) : array
     {
-        return $this->query()
-                    ->where('receiver_id', $receiverId)
-                    ->where('status', 'unread')
-                    ->whereIn('priority', ['high', 'urgent'])
-                    ->orderByRaw("
-                CASE priority 
-                    WHEN 'urgent' THEN 4
-                    WHEN 'high' THEN 3
-                    ELSE 0
-                END DESC
-            ")
-                    ->orderBy('created_at', 'desc')
-                    ->limit($limit)
-                    ->get();
+        $query = $this->query()
+                      ->select(['category_id', DB::raw('count(*) as total')])
+                      ->where('owner_type', $owner->getType())
+                      ->where('owner_id', $owner->getId())
+                      ->where('biz', $biz)
+                      ->where('status', MessageStatusEnum::UNREAD)
+                      ->groupBy('category_id');
+
+        return $query->get()->pluck('total', 'category_id')->toArray();
     }
 
-    /**
-     * 自定义查询方法：获取即将过期的消息
-     */
-    public function getExpiringMessages(int $hours = 24) : Collection
-    {
-        return $this->query()
-                    ->whereNotNull('expires_at')
-                    ->where('expires_at', '>', now())
-                    ->where('expires_at', '<=', now()->addHours($hours))
-                    ->where('status', 'unread')
-                    ->orderBy('expires_at')
-                    ->get();
-    }
-
-    /**
-     * 自定义查询方法：统计消息数据
-     */
-    public function getStatistics(string $receiverId) : array
-    {
-        $query = $this->query()->where('receiver_id', $receiverId);
-
-        return [
-            'total'    => $query->count(),
-            'unread'   => $query->where('status', 'unread')->count(),
-            'read'     => $query->where('status', 'read')->count(),
-            'archived' => $query->where('status', 'archived')->count(),
-            'urgent'   => $query->where('is_urgent', true)->count(),
-            'expired'  => $query->whereNotNull('expires_at')
-                                ->where('expires_at', '<', now())
-                                ->count(),
-        ];
-    }
-
-    /**
-     * 自定义查询方法：按业务线分组统计
-     */
-    public function getStatisticsByBiz() : array
-    {
-        return $this->query()
-                    ->selectRaw('biz, COUNT(*) as total, 
-                        SUM(CASE WHEN status = "unread" THEN 1 ELSE 0 END) as unread,
-                        SUM(CASE WHEN status = "read" THEN 1 ELSE 0 END) as read,
-                        SUM(CASE WHEN is_urgent = 1 THEN 1 ELSE 0 END) as urgent')
-                    ->groupBy('biz')
-                    ->get()
-                    ->keyBy('biz')
-                    ->toArray();
-    }
-
-    // 其他缺失的接口方法简化实现
-    public function getPushStatistics() : array
-    {
-        return [];
-    }
-
-    public function searchMessages(string $keyword) : Collection
-    {
-        return collect();
-    }
-
-    public function getRecentMessages(int $limit = 10) : Collection
-    {
-        return collect();
-    }
-
-    public function getPopularMessages() : Collection
-    {
-        return collect();
-    }
-
-    public function getTrendData() : array
-    {
-        return [];
-    }
-
-    public function getUserBehaviorStats() : array
-    {
-        return [];
-    }
-
-    public function getCategoryStats() : array
-    {
-        return [];
-    }
-
-    public function getTemplateUsageStats() : array
-    {
-        return [];
-    }
-
-    public function getChannelEffectivenessStats() : array
-    {
-        return [];
-    }
-
-    public function getSendVolumeStats() : array
-    {
-        return [];
-    }
-
-    public function getReadRateStats() : array
-    {
-        return [];
-    }
-
-    public function findSimilarMessages(int $messageId) : Collection
-    {
-        return collect();
-    }
-
-    public function getExpiredMessages() : Collection
-    {
-        return collect();
-    }
-
-    public function getLongUnreadMessages(int $days = 30) : Collection
-    {
-        return collect();
-    }
-
-    /**
-     * 设置默认排序
-     */
-    protected mixed $defaultSort = '-created_at';
 }

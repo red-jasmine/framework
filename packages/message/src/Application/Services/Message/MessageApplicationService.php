@@ -9,6 +9,8 @@ use RedJasmine\Message\Application\Services\Commands\MessageCreateCommandHandler
 use RedJasmine\Message\Application\Services\Message\Commands\MessageAllMarkAsReadCommandHandler;
 use RedJasmine\Message\Application\Services\Message\Commands\MessageMarkAsReadCommand;
 use RedJasmine\Message\Application\Services\Message\Commands\MessageMarkAsReadCommandHandler;
+use RedJasmine\Message\Application\Services\Message\Queries\MessageStatisticsQuery;
+use RedJasmine\Message\Application\Services\Message\Queries\MessageStatisticsQueryHandler;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageReadRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
@@ -20,6 +22,7 @@ use RedJasmine\Support\Contracts\UserInterface;
  * 消息应用服务
  * @method markAsRead(MessageMarkAsReadCommand $command)
  * @method allMarkAsRead(MessageMarkAsReadCommand $command)
+ * @method statistics(MessageStatisticsQuery $query)
  */
 class MessageApplicationService extends ApplicationService
 {
@@ -37,6 +40,7 @@ class MessageApplicationService extends ApplicationService
         'create'        => MessageCreateCommandHandler::class,
         'markAsRead'    => MessageMarkAsReadCommandHandler::class,
         'allMarkAsRead' => MessageAllMarkAsReadCommandHandler::class,
+        'statistics'    => MessageStatisticsQueryHandler::class,
 
     ];
 
@@ -48,52 +52,7 @@ class MessageApplicationService extends ApplicationService
         return $this->readRepository->getUnreadCount($owner, $biz);
     }
 
-    /**
-     * 获取用户消息统计
-     */
-    public function getUserStatistics(string $receiverId) : array
-    {
-        return $this->readRepository->getStatistics($receiverId);
-    }
 
-    /**
-     * 获取高优先级未读消息
-     */
-    public function getHighPriorityUnread(string $receiverId, int $limit = 10) : array
-    {
-        return $this->readRepository->getHighPriorityUnread($receiverId, $limit)->toArray();
-    }
 
-    /**
-     * 获取即将过期的消息
-     */
-    public function getExpiringMessages(int $hours = 24) : array
-    {
-        return $this->readRepository->getExpiringMessages($hours)->toArray();
-    }
 
-    /**
-     * 清理过期消息
-     */
-    public function cleanExpiredMessages() : int
-    {
-        $expiredBefore = now()->subHours(24);
-        return $this->repository->deleteExpiredMessages($expiredBefore);
-    }
-
-    /**
-     * 批量标记为已读
-     */
-    public function batchMarkAsRead(array $messageIds, string $readerId) : int
-    {
-        return $this->repository->markAsRead($messageIds, $readerId);
-    }
-
-    /**
-     * 批量归档消息
-     */
-    public function batchArchive(array $messageIds) : int
-    {
-        return $this->repository->archiveMessages($messageIds);
-    }
 }

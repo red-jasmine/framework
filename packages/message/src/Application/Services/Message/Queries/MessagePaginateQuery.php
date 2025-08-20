@@ -14,7 +14,7 @@ use Spatie\LaravelData\Casts\EnumCast;
 /**
  * 消息列表查询
  */
-class MessageListQuery extends PaginateQuery
+class MessagePaginateQuery extends PaginateQuery
 {
 
     public string $biz        = 'default';

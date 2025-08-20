@@ -30,6 +30,8 @@ class MessageCategoryResource extends JsonResource
             'children'    => static::collection(collect($this->children)),
             'parent'      => new static($this->whenLoaded('parent')),
 
+            'count' => $this->count ?? 0,
+
 
         ];
     }

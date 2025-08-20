@@ -15,10 +15,19 @@ interface MessageReadRepositoryInterface extends ReadRepositoryInterface
 
     /**
      * 获取未读消息数量
+     *
      * @param  UserInterface  $owner
      * @param  string  $biz
      *
      * @return int
      */
     public function getUnreadCount(UserInterface $owner, string $biz) : int;
+
+    /**
+     * @param  UserInterface  $owner
+     * @param  string  $biz
+     *
+     * @return array<int,int>
+     */
+    public function getUnreadStatistics(UserInterface $owner, string $biz) : array;
 }

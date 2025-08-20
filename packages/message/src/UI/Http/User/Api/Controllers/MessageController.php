@@ -10,8 +10,8 @@ use RedJasmine\Message\Application\Services\Message\Commands\MessageCreateComman
 use RedJasmine\Message\Application\Services\Message\Commands\MessageMarkAsReadCommand;
 use RedJasmine\Message\Application\Services\Message\MessageApplicationService;
 use RedJasmine\Message\Application\Services\Message\Queries\MessageFindQuery;
-use RedJasmine\Message\Application\Services\Message\Queries\MessageListQuery;
-use RedJasmine\Message\Application\Services\Queries\MessageStatisticsQuery;
+use RedJasmine\Message\Application\Services\Message\Queries\MessagePaginateQuery;
+use RedJasmine\Message\Application\Services\Message\Queries\MessageStatisticsQuery;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\UI\Http\User\Api\Requests\MessageMarkAsReadRequest;
 use RedJasmine\Message\UI\Http\User\Api\Resources\MessageResource;
@@ -26,7 +26,7 @@ class MessageController extends Controller
 
 
     protected static string $resourceClass      = MessageResource::class;
-    protected static string $paginateQueryClass = MessageListQuery::class;
+    protected static string $paginateQueryClass = MessagePaginateQuery::class;
     protected static string $findQueryClass     = MessageFindQuery::class;
     protected static string $modelClass         = Message::class;
     protected static string $dataClass          = MessageCreateCommand::class;
@@ -93,16 +93,17 @@ class MessageController extends Controller
     /**
      * 获取消息统计
      */
-    public function statistics() : JsonResponse
+    public function statistics(Request $request) : JsonResponse
     {
-        $query = new MessageStatisticsQuery(
-            owner: $this->getOwner(),
-            receiverId: (string) $this->getOwner()->getKey(),
-        );
 
-        $statistics = $this->service->statistics($query);
+        $this->injectionOwnerRequest();
+        $query = MessageStatisticsQuery::from($request);
 
-        return $this->jsonSuccess($statistics);
+
+        $result = $this->service->statistics($query);
+
+        return static::success($result);
+
     }
 
 
