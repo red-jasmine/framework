@@ -3,7 +3,7 @@
 namespace RedJasmine\Promotion\Domain\Data;
 
 use RedJasmine\Promotion\Domain\Models\Enums\PriceSettingModeEnum;
-use RedJasmine\Promotion\Domain\Models\Enums\ProductStatusEnum;
+use RedJasmine\Promotion\Domain\Models\Enums\ActivityProductStatusEnum;
 use RedJasmine\Promotion\Domain\Models\Enums\SkuParticipationModeEnum;
 use RedJasmine\Promotion\Domain\Models\Enums\StockManagementModeEnum;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -42,8 +42,8 @@ class ActivityProductData extends Data
     public ?\DateTime $startTime = null;
     public ?\DateTime $endTime = null;
     
-    #[WithCast(EnumCast::class, ProductStatusEnum::class)]
-    public ProductStatusEnum $status = ProductStatusEnum::PENDING;
+    #[WithCast(EnumCast::class, ActivityProductStatusEnum::class)]
+    public ActivityProductStatusEnum $status = ActivityProductStatusEnum::PENDING;
     
     public bool $isShow = true;
 }

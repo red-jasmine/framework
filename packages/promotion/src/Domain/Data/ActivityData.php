@@ -22,9 +22,7 @@ class ActivityData extends Data
     #[WithCast(EnumCast::class, ActivityTypeEnum::class)]
     public ActivityTypeEnum $type;
     
-    public ?string $clientType = null;
-    public ?string $clientId = null;
-    
+
     public ?\DateTime $signUpStartTime = null;
     public ?\DateTime $signUpEndTime = null;
     public \DateTime $startTime;

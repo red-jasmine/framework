@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Promotion\Domain\Models\Enums\PriceSettingModeEnum;
-use RedJasmine\Promotion\Domain\Models\Enums\ProductStatusEnum;
+use RedJasmine\Promotion\Domain\Models\Enums\ActivityProductStatusEnum;
 use RedJasmine\Promotion\Domain\Models\Enums\SkuParticipationModeEnum;
 use RedJasmine\Promotion\Domain\Models\Enums\StockManagementModeEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
@@ -71,7 +71,7 @@ class ActivityProduct extends Model implements  OwnerInterface, OperatorInterfac
             'stock_management_mode' => StockManagementModeEnum::class,
             'start_time' => 'datetime',
             'end_time' => 'datetime',
-            'status' => ProductStatusEnum::class,
+            'status' => ActivityProductStatusEnum::class,
             'is_show' => 'boolean',
             'activity_sales_volume' => 'integer',
             'activity_sales_amount' => 'decimal:2',
@@ -99,7 +99,7 @@ class ActivityProduct extends Model implements  OwnerInterface, OperatorInterfac
      */
     public function canParticipate(): bool
     {
-        return $this->status === ProductStatusEnum::ACTIVE 
+        return $this->status === ActivityProductStatusEnum::ACTIVE
             && $this->is_show 
             && ($this->start_time === null || $this->start_time <= now())
             && ($this->end_time === null || $this->end_time >= now());
