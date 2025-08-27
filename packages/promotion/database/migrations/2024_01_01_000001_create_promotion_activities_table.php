@@ -45,9 +45,13 @@ return new class extends Migration {
 
             // 数据统计
             $table->unsignedBigInteger('total_products')->default(0)->comment('参与商品总数');
-            $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
-            $table->decimal('total_sales', 12)->default(0.00)->comment('总销售额');
             $table->unsignedBigInteger('total_participants')->default(0)->comment('总参与人数');
+
+            $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+            $table->unsignedBigInteger('sales')->default(0)->comment('销售数量');
+
+            $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
+            $table->decimal('total_amount', 12, 2)->default(0)->comment('销售金额');
 
             // 操作信息
             $table->operator();

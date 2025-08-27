@@ -25,17 +25,18 @@ return new class extends Migration {
             $table->decimal('original_price', 10, 2)->comment('原价');
 
 
-            // 活动设置 (统一设置模式)
+            // 价格
             $table->decimal('activity_price', 10, 2)->nullable()->comment('统一活动价');
+
+            //
             $table->decimal('discount_rate', 5, 2)->nullable()->comment('统一折扣率');
+            $table->boolean('is_unified_stock')->default(false)->comment('是否统一库存');
             $table->integer('activity_stock')->nullable()->comment('统一活动库存');
             $table->integer('locked_stock')->default(0)->comment('已锁定库存');
+
+            // 参与限制
             $table->integer('user_purchase_limit')->nullable()->comment('单用户限购数量');
 
-            // 参与模式
-            $table->string('sku_participation_mode', 32)->default('all_skus')->comment('SKU参与模式 (all_skus, specific_skus)');
-            $table->string('price_setting_mode', 32)->default('unified')->comment('价格设置模式 (unified, individual)');
-            $table->string('stock_management_mode', 32)->default('unified')->comment('库存管理模式 (unified, individual)');
 
             // 时间设置
             $table->datetime('start_time')->nullable()->comment('商品参与开始时间');
@@ -47,9 +48,11 @@ return new class extends Migration {
             $table->boolean('is_show')->default(true)->comment('是否展示');
 
             // 数据统计
-            $table->unsignedBigInteger('sales')->default(0)->comment('商品销量');
-            $table->integer('activity_sales_volume')->default(0)->comment('活动销量');
-            $table->decimal('activity_sales_amount', 12, 2)->default(0.00)->comment('活动销售金额');
+
+
+            $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+            $table->unsignedBigInteger('sales')->default(0)->comment('销售数量');
+            $table->decimal('total_amount', 12, 2)->default(0)->comment('销售金额');
 
             // 操作信息
             $table->operator();
