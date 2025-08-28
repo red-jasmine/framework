@@ -26,8 +26,10 @@ return new class extends Migration {
             // 活动设置 (独立设置模式)
             $table->decimal('activity_price', 10, 2)->nullable()->comment('活动价');
             $table->decimal('discount_rate', 5, 2)->nullable()->comment('折扣率');
-            $table->integer('activity_stock')->nullable()->comment('活动库存');
-            $table->integer('locked_stock')->default(0)->comment('已锁定库存');
+            $table->bigInteger('activity_stock')->default(0)->comment('活动库存');
+            $table->bigInteger('stock')->default(0)->comment('可用库存');
+            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
+
             $table->integer('user_purchase_limit')->nullable()->comment('单用户限购数量');
 
             // 状态

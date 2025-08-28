@@ -21,7 +21,7 @@ return new class extends Migration {
 
             // 商品信息
             $table->string('title')->comment('商品标题');
-            $table->string('image', 500)->nullable()->comment('商品主图');
+            $table->string('image')->nullable()->comment('商品主图');
             $table->decimal('original_price', 10, 2)->comment('原价');
 
 
@@ -31,8 +31,10 @@ return new class extends Migration {
             //
             $table->decimal('discount_rate', 5, 2)->nullable()->comment('统一折扣率');
             $table->boolean('is_unified_stock')->default(false)->comment('是否统一库存');
-            $table->integer('activity_stock')->nullable()->comment('统一活动库存');
-            $table->integer('locked_stock')->default(0)->comment('已锁定库存');
+
+            $table->bigInteger('activity_stock')->default(0)->comment('活动库存');
+            $table->bigInteger('stock')->default(0)->comment('可用库存');
+            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
 
             // 参与限制
             $table->integer('user_purchase_limit')->nullable()->comment('单用户限购数量');
