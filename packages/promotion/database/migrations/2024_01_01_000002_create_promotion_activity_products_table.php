@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('title')->comment('商品标题');
             $table->string('image')->nullable()->comment('商品主图');
             $table->decimal('original_price', 10, 2)->comment('原价');
-
+            $table->bigInteger('sort')->default(0)->comment('排序');
 
             // 价格
             $table->decimal('activity_price', 10, 2)->nullable()->comment('统一活动价');

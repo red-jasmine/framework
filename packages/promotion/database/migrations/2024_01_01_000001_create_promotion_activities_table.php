@@ -30,17 +30,16 @@ return new class extends Migration {
             $table->datetime('end_time')->comment('活动结束时间');
 
             // 活动要求
-            $table->json('product_requirements')->nullable()->comment('商品报名要求');
+            $table->json('product_requirements')->nullable()->comment('商品报名 要求');
             $table->json('shop_requirements')->nullable()->comment('店铺报名要求');
             $table->json('user_requirements')->nullable()->comment('用户参与要求');
 
             // 活动规则
             $table->json('rules')->nullable()->comment('活动规则');
-            $table->json('overlay_rules')->nullable()->comment('优惠叠加规则');
+
 
             // 状态管理
-            $table->string('status', ActivityStatusEnum::values())
-                  ->default(ActivityStatusEnum::DRAFT)->comment(ActivityStatusEnum::comments('状态'));
+            $table->string('status', ActivityStatusEnum::values())->default(ActivityStatusEnum::DRAFT)->comment(ActivityStatusEnum::comments('状态'));
             $table->boolean('is_show')->default(true)->comment('是否展示');
 
             // 数据统计
