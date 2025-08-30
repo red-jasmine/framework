@@ -22,14 +22,13 @@ return new class extends Migration {
             // 商品信息
             $table->string('title')->comment('商品标题');
             $table->string('image')->nullable()->comment('商品主图');
-            $table->decimal('original_price', 10, 2)->comment('原价');
             $table->bigInteger('sort')->default(0)->comment('排序');
 
-            // 价格
-            $table->decimal('activity_price', 10, 2)->nullable()->comment('统一活动价');
-
-            //
-            $table->decimal('discount_rate', 5, 2)->nullable()->comment('统一折扣率');
+            // 价格信息
+            $table->string('original_price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('original_price_amount', 12)->comment('原价');
+            $table->string('activity_price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('activity_price_amount', 12)->default(0)->comment('销售价');
 
             // 活动库存设置
             $table->boolean('is_unified_stock')->default(false)->comment('是否统一库存');
@@ -52,12 +51,12 @@ return new class extends Migration {
 
             // 数据统计
 
-           
+
             $table->unsignedBigInteger('total_users')->default(0)->comment('总参与用户数');
             $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
             $table->unsignedBigInteger('total_sales')->default(0)->comment('总销量');
             $table->decimal('total_amount', 12, 2)->default(0)->comment('总销售金额');
-            
+
 
             // 操作信息
             $table->operator();

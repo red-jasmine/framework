@@ -23,11 +23,15 @@ return new class extends Migration {
             // SKU信息
             $table->string('properties_name', 255)->nullable()->comment('规格名称');
             $table->string('image', 500)->nullable()->comment('SKU主图');
-            $table->decimal('original_price', 10, 2)->comment('原价');
 
+            // 活动价格
+            $table->string('original_price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('original_price_amount', 12)->comment('原价');
+            $table->string('activity_price_currency', 3)->default('CNY')->comment('货币');
+            $table->decimal('activity_price_amount', 12)->default(0)->comment('销售价');
             // 活动设置 (独立设置模式)
-            $table->decimal('activity_price', 10, 2)->nullable()->comment('活动价');
-            $table->decimal('discount_rate', 5, 2)->nullable()->comment('折扣率');
+
+
             $table->bigInteger('activity_stock')->default(0)->comment('活动库存');
             $table->bigInteger('stock')->default(0)->comment('可用库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
