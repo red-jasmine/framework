@@ -13,21 +13,37 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class ActivityProductData extends Data
 {
-    public UserInterface $owner;
+
     public int $activityId;
+    public UserInterface $seller;
+    public string $productType;
     public int $productId;
-    
-    public string $sellerType;
-    public string $sellerId;
+ 
     
     public string $title;
     public ?string $image = null;
     public float $originalPrice;
-    public int $sales = 0;
+  
     
+
     public ?float $activityPrice = null;
     public ?float $discountRate = null;
+    
+    
+    // 活动库存设置
+    /**
+     * 是否统一库存
+     *
+     * @var boolean
+     */
+    public bool $isUnifiedStock = false;
+    
+    // 活动总库存
     public ?int $activityStock = null;
+    // 可用库存
+    public ?int $stock = null;
+   
+    // 单用户限购数量
     public ?int $userPurchaseLimit = null;
     
     #[WithCast(EnumCast::class, SkuParticipationModeEnum::class)]

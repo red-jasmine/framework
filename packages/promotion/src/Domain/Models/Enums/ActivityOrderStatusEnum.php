@@ -4,7 +4,7 @@ namespace RedJasmine\Promotion\Domain\Models\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
-enum ParticipationStatusEnum: string
+enum ActivityOrderStatusEnum: string
 {
     use EnumsHelper;
     

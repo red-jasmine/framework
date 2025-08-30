@@ -14,8 +14,8 @@ return new class extends Migration {
         Schema::create('promotion_activity_products', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('activity_id')->comment('活动ID');
-            $table->string('seller_type', 64)->comment('卖家类型');
-            $table->string('seller_id', 64)->comment('卖家ID');
+            $table->userMorphs('seller', '卖家', false);
+            $table->string('product_type')->comment('商品源类型');
             $table->unsignedBigInteger('product_id')->comment('商品ID');
 
 
@@ -30,8 +30,9 @@ return new class extends Migration {
 
             //
             $table->decimal('discount_rate', 5, 2)->nullable()->comment('统一折扣率');
-            $table->boolean('is_unified_stock')->default(false)->comment('是否统一库存');
 
+            // 活动库存设置
+            $table->boolean('is_unified_stock')->default(false)->comment('是否统一库存');
             $table->bigInteger('activity_stock')->default(0)->comment('活动库存');
             $table->bigInteger('stock')->default(0)->comment('可用库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
@@ -51,10 +52,12 @@ return new class extends Migration {
 
             // 数据统计
 
-
-            $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
-            $table->unsignedBigInteger('sales')->default(0)->comment('销售数量');
-            $table->decimal('total_amount', 12, 2)->default(0)->comment('销售金额');
+           
+            $table->unsignedBigInteger('total_users')->default(0)->comment('总参与用户数');
+            $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
+            $table->unsignedBigInteger('total_sales')->default(0)->comment('总销量');
+            $table->decimal('total_amount', 12, 2)->default(0)->comment('总销售金额');
+            
 
             // 操作信息
             $table->operator();

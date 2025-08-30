@@ -118,7 +118,7 @@ class Activity extends Model implements  OwnerInterface, OperatorInterface
      */
     public function participations(): HasMany
     {
-        return $this->hasMany(ActivityParticipation::class);
+        return $this->hasMany(ActivityOrder::class);
     }
 
     /**
