@@ -20,12 +20,12 @@ return new class extends Migration {
             $table->text('description')->nullable()->comment('活动描述');
 
             $table->userMorphs('owner', '所属者', false, false);
-
+            $table->datetime('start_time')->comment('活动开始时间');
+            $table->datetime('end_time')->comment('活动结束时间');
             // 活动时间
             $table->datetime('sign_up_start_time')->nullable()->comment('报名开始时间');
             $table->datetime('sign_up_end_time')->nullable()->comment('报名结束时间');
-            $table->datetime('start_time')->comment('活动开始时间');
-            $table->datetime('end_time')->comment('活动结束时间');
+
 
             // 活动要求
             $table->json('activity_rules')->nullable()->comment('活动规则');
@@ -43,10 +43,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
             $table->unsignedBigInteger('total_sales')->default(0)->comment('总销量');
             $table->decimal('total_amount', 12, 2)->default(0)->comment('总销售金额');
-
-
-            $table->decimal('total_amount', 12, 2)->default(0)->comment('销售金额');
-
             // 操作信息
             $table->operator();
             $table->softDeletes();
