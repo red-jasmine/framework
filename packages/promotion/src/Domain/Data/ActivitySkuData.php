@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Promotion\Domain\Data;
 
+use Cknow\Money\Money;
 use RedJasmine\Promotion\Domain\Models\Enums\SkuStatusEnum;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
@@ -10,23 +11,17 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class ActivitySkuData extends Data
 {
-    public UserInterface $owner;
-    public int $activityId;
-    public int $productId;
-    public int $skuId;
-    public int $activityProductId;
-    
-    public ?string $propertiesName = null;
+
+    public int     $skuId;
+    public ?string $title = null;
     public ?string $image = null;
-    public float $originalPrice;
-    
-    public ?float $activityPrice = null;
-    public ?float $discountRate = null;
-    public ?int $activityStock = null;
-    public ?int $userPurchaseLimit = null;
-    
+    public Money   $originalPrice;
+    public Money   $activityPrice;
+
+    public int $activityStock;
+
     #[WithCast(EnumCast::class, SkuStatusEnum::class)]
     public SkuStatusEnum $status = SkuStatusEnum::ACTIVE;
-    
+
     public bool $isShow = true;
 }

@@ -21,8 +21,8 @@ return new class extends Migration {
 
 
             // SKU信息
-            $table->string('properties_name', 255)->nullable()->comment('规格名称');
-            $table->string('image', 500)->nullable()->comment('SKU主图');
+            $table->string('title', 255)->nullable()->comment('规格名称');
+            $table->string('image', 500)->nullable()->comment('主图');
 
             // 活动价格
             $table->string('original_price_currency', 3)->default('CNY')->comment('货币');

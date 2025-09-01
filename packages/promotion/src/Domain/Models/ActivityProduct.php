@@ -6,10 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Promotion\Domain\Models\Enums\PriceSettingModeEnum;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityProductStatusEnum;
-use RedJasmine\Promotion\Domain\Models\Enums\SkuParticipationModeEnum;
-use RedJasmine\Promotion\Domain\Models\Enums\StockManagementModeEnum;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -134,13 +131,13 @@ class ActivityProduct extends Model implements OwnerInterface, OperatorInterface
     {
         return [
 
-            'original_price'      => MoneyCast::class,
-            'activity_price'      => MoneyCast::class,
+            'original_price' => MoneyCast::class,
+            'activity_price' => MoneyCast::class,
 
-            'start_time'          => 'datetime',
-            'end_time'            => 'datetime',
-            'status'              => ActivityProductStatusEnum::class,
-            'is_show'             => 'boolean',
+            'start_time' => 'datetime',
+            'end_time'   => 'datetime',
+            'status'     => ActivityProductStatusEnum::class,
+            'is_show'    => 'boolean',
         ];
     }
 }
