@@ -132,4 +132,56 @@ return [
         'cache_ttl' => 3600, // 统计数据缓存时间（秒）
         'batch_size' => 1000, // 批量处理大小
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | 活动类型处理器配置
+    |--------------------------------------------------------------------------
+    |
+    | 活动类型处理器的具体配置，每个处理器可以有独立的配置参数
+    |
+    */
+
+    'activity_handlers' => [
+        'flash_sale' => [
+            'max_duration' => 24 * 60, // 最大活动时长（分钟）
+            'min_stock' => 1,          // 最小库存要求
+            'enable_queue' => true,    // 是否启用队列处理
+        ],
+        'group_buying' => [
+            'max_group_size' => 50,    // 最大成团人数
+            'default_timeout' => 24,   // 默认成团超时时间（小时）
+            'enable_auto_refund' => true, // 启用自动退款
+        ],
+        'discount' => [
+            'max_discount_rate' => 90, // 最大折扣率（%）
+            'enable_stacking' => false, // 启用优惠叠加
+        ],
+        'full_reduction' => [
+            'max_reduction_rate' => 50, // 最大减免比例（%）
+            'enable_ladder' => true,     // 启用阶梯满减
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | 自定义活动类型处理器
+    |--------------------------------------------------------------------------
+    |
+    | 注册自定义的活动类型处理器
+    |
+    */
+
+    'custom_activity_handlers' => [
+        // 示例：抽奖活动
+        // 'lottery' => \App\Promotion\Handlers\LotteryActivityHandler::class,
+        
+        // 示例：积分兑换活动
+        // 'points_exchange' => \App\Promotion\Handlers\PointsExchangeActivityHandler::class,
+        
+        // 示例：使用闭包定义处理器
+        // 'custom_type' => function ($config) {
+        //     return new \App\Promotion\Handlers\CustomActivityHandler($config);
+        // },
+    ],
 ];
