@@ -17,6 +17,12 @@ class ActivityUpdateCommandHandler extends CommandHandler
     ) {
     }
 
+    /**
+     * @param  ActivityUpdateCommand  $command
+     *
+     * @return Activity
+     * @throws Throwable
+     */
     public function handle(ActivityUpdateCommand $command): Activity
     {
         $this->beginDatabaseTransaction();
