@@ -2,11 +2,13 @@
 
 namespace RedJasmine\Promotion\Application\Services;
 
+use Exception;
 use RedJasmine\Promotion\Application\Services\Commands\ActivityCreateCommandHandler;
 use RedJasmine\Promotion\Application\Services\Commands\ActivityParticipateCommandHandler;
 use RedJasmine\Promotion\Application\Services\Commands\ActivityUpdateCommandHandler;
 use RedJasmine\Promotion\Application\Services\Queries\ActivityFindQueryHandler;
 use RedJasmine\Promotion\Application\Services\Queries\ActivityPaginateQueryHandler;
+use RedJasmine\Promotion\Domain\Data\ActivityData;
 use RedJasmine\Promotion\Domain\Models\Activity;
 use RedJasmine\Promotion\Domain\Repositories\ActivityReadRepositoryInterface;
 use RedJasmine\Promotion\Domain\Repositories\ActivityRepositoryInterface;
@@ -29,7 +31,7 @@ class ActivityApplicationService extends ApplicationService
     ) {
     }
     
-    protected static array $macros = [
+    protected static $macros = [
         'create' => ActivityCreateCommandHandler::class,
         'update' => ActivityUpdateCommandHandler::class,
         'find' => ActivityFindQueryHandler::class,
@@ -48,12 +50,14 @@ class ActivityApplicationService extends ApplicationService
         $type = $activityOrType instanceof Activity ? $activityOrType->type->value : $activityOrType;
         return ActivityTypeHandlerFactory::make($type);
     }
-    
+
     /**
      * 验证活动数据
-     * 
-     * @param \RedJasmine\Promotion\Domain\Data\ActivityData $data
+     *
+     * @param  ActivityData  $data
+     *
      * @return void
+     * @throws Exception
      */
     public function validateActivityData($data): void
     {
@@ -180,7 +184,7 @@ class ActivityApplicationService extends ApplicationService
             $handler = $this->getTypeHandler($activity);
             $handler->validateParticipation($activity, $user, $participationData);
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -199,7 +203,7 @@ class ActivityApplicationService extends ApplicationService
             $handler = $this->getTypeHandler($activity);
             $handler->validateParticipation($activity, $user, $participationData);
             return null;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }

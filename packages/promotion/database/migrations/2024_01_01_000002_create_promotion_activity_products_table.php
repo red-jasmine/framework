@@ -45,7 +45,7 @@ return new class extends Migration {
             $table->datetime('end_time')->nullable()->comment('商品参与结束时间');
 
             // 状态
-            $table->string('status', ActivityProductStatusEnum::values())
+            $table->enum('status', ActivityProductStatusEnum::values())
                   ->default(ActivityProductStatusEnum::PENDING)->comment(ActivityProductStatusEnum::comments('商品状态'));
             $table->boolean('is_show')->default(true)->comment('是否展示');
 
@@ -63,14 +63,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             // 索引
-            $table->unique(['activity_id', 'product_id'], 'uk_activity_product');
-            $table->index(['activity_id'], 'idx_activity');
-            $table->index(['product_id'], 'idx_product');
-            $table->index(['owner_type', 'owner_id'], 'idx_owner');
-            $table->index(['seller_type', 'seller_id'], 'idx_seller');
-            $table->index(['creator_type', 'creator_id'], 'idx_creator');
-            $table->index(['status'], 'idx_status');
-            $table->index(['activity_id', 'status'], 'idx_products_activity_status');
+
             $table->comment('促销活动商品表');
         });
     }

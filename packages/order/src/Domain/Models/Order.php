@@ -688,7 +688,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
      */
     public function remarks(
         TradePartyEnums $tradeParty,
-        string $remarks = null,
+        ?string $remarks = null,
         ?string $orderProductNo = null,
         bool $isAppend = false
     ) : void {
@@ -718,7 +718,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
 
     public function message(
         TradePartyEnums $tradeParty,
-        string $message = null,
+        ?string $message = null,
         ?string $orderProductNo = null,
         bool $isAppend = false
     ) : void {

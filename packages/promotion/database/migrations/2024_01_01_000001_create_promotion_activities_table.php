@@ -34,7 +34,7 @@ return new class extends Migration {
             $table->json('user_rules')->nullable()->comment('用户规则');
 
             // 状态管理
-            $table->string('status', ActivityStatusEnum::values())->default(ActivityStatusEnum::DRAFT)->comment(ActivityStatusEnum::comments('状态'));
+            $table->enum('status', ActivityStatusEnum::values())->default(ActivityStatusEnum::DRAFT)->comment(ActivityStatusEnum::comments('状态'));
             $table->boolean('is_show')->default(true)->comment('是否展示');
 
             // 数据统计
@@ -42,18 +42,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('total_users')->default(0)->comment('总参与用户数');
             $table->unsignedBigInteger('total_orders')->default(0)->comment('总订单数');
             $table->unsignedBigInteger('total_sales')->default(0)->comment('总销量');
-            $table->decimal('total_amount', 12, 2)->default(0)->comment('总销售金额');
+            $table->decimal('total_amount', 12)->default(0)->comment('总销售金额');
             // 操作信息
             $table->operator();
             $table->softDeletes();
 
             // 索引
-            $table->index(['owner_type', 'owner_id'], 'idx_owner');
-            $table->index(['creator_type', 'creator_id'], 'idx_creator');
-            $table->index(['start_time', 'end_time'], 'idx_time');
-            $table->index(['status'], 'idx_status');
-            $table->index(['type'], 'idx_type');
-            $table->index(['status', 'start_time', 'end_time'], 'idx_activities_status_time');
+
             $table->comment('促销活动表');
         });
     }

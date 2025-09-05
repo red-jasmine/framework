@@ -52,13 +52,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             // 索引
-            $table->unique(['activity_id', 'sku_id'], 'uk_activity_sku');
-            $table->index(['activity_id'], 'idx_activity');
-            $table->index(['product_id'], 'idx_product');
-            $table->index(['sku_id'], 'idx_sku');
-            $table->index(['activity_product_id'], 'idx_activity_product');
-            $table->index(['creator_type', 'creator_id'], 'idx_creator');
-            $table->index(['activity_id', 'product_id'], 'idx_skus_activity_product');
+
             $table->comment('促销活动SKU表');
         });
     }

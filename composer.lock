@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22a4cb8064f1e23115fc60e5dd35fc75",
+    "content-hash": "706a5e89a86a5c486295409abe0fb64a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -8754,6 +8754,93 @@
             }
         },
         {
+            "name": "red-jasmine/promotion",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./packages/promotion",
+                "reference": "8f061e86543bdc2dc95a0339bb88baa999d4ae66"
+            },
+            "require": {
+                "red-jasmine/support": "^1.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "phpstan/phpstan": "^1.10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\Promotion\\PromotionPackageServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Promotion\\": "src/",
+                    "RedJasmine\\Promotion\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\Promotion\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@composer run prepare"
+                ],
+                "prepare": [
+                    "@php vendor/bin/testbench package:discover --ansi"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Red Jasmine Promotion Package - 促销活动管理包",
+            "homepage": "https://github.com/red-jasmine/promotion",
+            "keywords": [
+                "activity",
+                "discount",
+                "flash-sale",
+                "group-buying",
+                "laravel",
+                "promotion",
+                "red-jasmine"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "red-jasmine/region",
             "version": "dev-master",
             "dist": {
@@ -16387,6 +16474,7 @@
         "red-jasmine/payment": 20,
         "red-jasmine/points-mall": 20,
         "red-jasmine/product": 20,
+        "red-jasmine/promotion": 20,
         "red-jasmine/shopping": 20,
         "red-jasmine/support": 20,
         "red-jasmine/user": 20,

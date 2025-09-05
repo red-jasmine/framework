@@ -38,13 +38,6 @@ return new class extends Migration {
             $table->softDeletes();
 
             // 索引
-            $table->index(['activity_id'], 'idx_activity');
-            $table->index(['user_type', 'user_id'], 'idx_user');
-            $table->index(['product_id'], 'idx_product');
-            $table->index(['sku_id'], 'idx_sku');
-            $table->index(['order_no'], 'idx_order');
-            $table->index(['participated_at'], 'idx_participated_at');
-            $table->index(['creator_type', 'creator_id'], 'idx_creator');
 
             $table->comment('活动参与订单表');
         });
