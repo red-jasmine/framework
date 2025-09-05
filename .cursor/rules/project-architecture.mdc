@@ -3,7 +3,7 @@ alwaysApply: true
 description: "Red Jasmine Framework 项目架构规则和DDD设计原则"
 ---
 
-# Red Jasmine Framework 项目架构规则
+# Red Jasmine Framework 项目架构
 
 ## 项目概述
 Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.4+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
@@ -31,11 +31,12 @@ Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.4+ 的现代化电
 ### 整体架构
 ```
 framework/
-├── packages/                   # 领域包目录
+├── packages/                   # 核心包存放目录
 │   ├── support/                # 公共支持包
 │   ├── *                       # 各个业务领域包
-│   ├── admin/                  # 管理后台领域
-│   └── filament-*/             # Filament管理面板相关包
+│   └── admin/                  # 管理后台领域
+├── filament/                   # 基于Filament构建的管理端包目录
+│   └── filament-*/             # 各个Filament管理模块
 ├── docs/                       # 文档目录
 ├── tests/                      # 测试目录
 ├── workbench/                  # 开发工作台
@@ -46,7 +47,7 @@ framework/
 每个领域包都遵循统一的目录结构：
 
 ```
-packages/{domain}/
+{domain}
 ├── src/                        # 源代码
 │   ├── Domain/                 # 领域层
 │   │   ├── Models/             # 领域模型
@@ -91,4 +92,3 @@ packages/{domain}/
 │   └── views/                  # 视图文件
 ├── composer.json               # 包配置
 └── README.md                   # 包说明
-```

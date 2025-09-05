@@ -44,6 +44,13 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "path",
+            "url": "./filament/*",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "scripts": {
