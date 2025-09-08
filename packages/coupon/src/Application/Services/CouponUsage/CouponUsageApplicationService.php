@@ -43,7 +43,7 @@ class CouponUsageApplicationService extends ApplicationService
      */
     public function getUserUsageStatistics(int $userId, string $userType): array
     {
-        $baseQuery = $this->readRepository->modelQuery()
+        $baseQuery = $this->readRepository->query()
                                          ->where('user_id', $userId)
                                          ->where('user_type', $userType);
 
@@ -68,7 +68,7 @@ class CouponUsageApplicationService extends ApplicationService
     public function getUserMonthlyStatistics(int $userId, string $userType, int $months = 12): array
     {
         $statistics = [];
-        $baseQuery = $this->readRepository->modelQuery()
+        $baseQuery = $this->readRepository->query()
                                          ->where('user_id', $userId)
                                          ->where('user_type', $userType);
 
@@ -98,7 +98,7 @@ class CouponUsageApplicationService extends ApplicationService
      */
     public function getCouponUsageStatistics(int $couponId): array
     {
-        $baseQuery = $this->readRepository->modelQuery()
+        $baseQuery = $this->readRepository->query()
                                          ->where('coupon_id', $couponId);
 
         return [
@@ -121,7 +121,7 @@ class CouponUsageApplicationService extends ApplicationService
      */
     public function getUserUsageByDateRange(int $userId, string $userType, $startDate, $endDate): array
     {
-        $baseQuery = $this->readRepository->modelQuery()
+        $baseQuery = $this->readRepository->query()
                                          ->where('user_id', $userId)
                                          ->where('user_type', $userType)
                                          ->whereBetween('used_at', [$startDate, $endDate]);

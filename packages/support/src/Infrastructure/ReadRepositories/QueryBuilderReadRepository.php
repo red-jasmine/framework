@@ -79,12 +79,12 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
 
     public function find(FindQuery $query) : ?Model
     {
-        return $this->query($query->except($query->getPrimaryKey()))
+        return $this->queryBuilder($query->except($query->getPrimaryKey()))
                     ->where(Str::snake($query->getPrimaryKey()), $query->getKey())
                     ->firstOrFail();
     }
 
-    public function modelQuery(?Query $query = null) : Builder
+    public function query(?Query $query = null) : Builder
     {
         return static::$modelClass::query();
     }
@@ -95,10 +95,10 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
      *
      * @return QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
      */
-    public function query(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
+    public function queryBuilder(?Query $query = null) : QueryBuilder|\Illuminate\Database\Eloquent\Builder|Builder
     {
 
-        $queryBuilder = QueryBuilder::for($this->modelQuery($query), $this->buildRequest($query));
+        $queryBuilder = QueryBuilder::for($this->query(), $this->buildRequest($query));
 
         // 根据允许的过滤器、字段、包含关系和排序字段配置QueryBuilder
         // 只有当相应的允许列表不为空时，才应用相应的限制
@@ -189,7 +189,7 @@ abstract class QueryBuilderReadRepository implements ReadRepositoryInterface
     public function paginate(PaginateQuery $query) : LengthAwarePaginator|Paginator
     {
 
-        $queryBuilder = $this->query($query)->defaultSort($this->defaultSort);
+        $queryBuilder = $this->queryBuilder($query)->defaultSort($this->defaultSort);
 
         return $query->isWithCount() ? $queryBuilder->paginate($query->perPage) : $queryBuilder->simplePaginate($query->perPage);
     }

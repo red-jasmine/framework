@@ -21,7 +21,7 @@ class SocialiteUserReadRepository extends QueryBuilderReadRepository implements 
 
     public function findUser(SocialiteUserFindUserQuery $query) : ?SocialiteUser
     {
-        return $this->query(null)->where(
+        return $this->query()->where(
             [
                 'client_id' => $query->clientId,
                 'provider'  => $query->provider,

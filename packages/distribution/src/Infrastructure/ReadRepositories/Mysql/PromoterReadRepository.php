@@ -48,7 +48,7 @@ class PromoterReadRepository extends QueryBuilderReadRepository implements Promo
 
     public function findByOwner(Query $query) : Promoter
     {
-        return $this->query($query)
+        return $this->query()
                     ->onlyOwner($query->owner)
                     ->firstOrFail();
     }

@@ -19,7 +19,7 @@ class CountryReadRepository extends QueryBuilderReadRepository implements Countr
 
     protected mixed $defaultSort = 'code';
 
-    public function findS(FindQuery $query) : ?Model
+    public function find(FindQuery $query) : ?Model
     {
 
         return $this->query($query->except($query->getPrimaryKey()))

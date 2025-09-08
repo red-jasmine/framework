@@ -36,14 +36,14 @@ class VipProductReadRepository implements VipProductReadRepositoryInterface
      */
     protected static string $modelClass = VipProduct::class;
 
-    public function modelQuery(?Query $query = null) : Builder
+    public function query(?Query $query = null) : Builder
     {
-        return $this->productApplicationService->readRepository->modelQuery();
+        return $this->productApplicationService->readRepository->query();
     }
 
-    public function query(?Query $query = null)
+    public function queryBuilder(?Query $query = null)
     {
-        return $this->productApplicationService->readRepository->query($query);
+        return $this->productApplicationService->readRepository->queryBuilder($query);
     }
 
     public function withQuery(Closure $queryCallback) : static

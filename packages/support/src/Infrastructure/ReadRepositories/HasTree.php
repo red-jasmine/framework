@@ -9,7 +9,7 @@ trait HasTree
 
     public function tree(?Query $query = null) : array
     {
-        $nodes = $this->query($query)->get();
+        $nodes = $this->queryBuilder($query)->get();
 
         $model = (new static::$modelClass);
 

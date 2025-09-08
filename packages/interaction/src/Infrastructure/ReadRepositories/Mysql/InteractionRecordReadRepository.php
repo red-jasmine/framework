@@ -18,12 +18,12 @@ class InteractionRecordReadRepository extends QueryBuilderReadRepository
     protected static string $modelClass = InteractionRecord::class;
 
 
-    public function modelQuery(?Query $query = null) : Builder
+    public function query(?Query $query = null) : Builder
     {
-
+        // TODO 需要优化
         $interactionType    = InteractionType::create($query->interactionType);
         static::$modelClass = $interactionType->getModelClass();
-        return parent::modelQuery();
+        return parent::query();
     }
 
     protected function buildRequest(?Query $query = null) : Request

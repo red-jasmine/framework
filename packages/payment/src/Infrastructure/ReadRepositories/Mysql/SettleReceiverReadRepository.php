@@ -26,7 +26,7 @@ class SettleReceiverReadRepository extends QueryBuilderReadRepository implements
         string $channelMerchantId = SettleReceiver::ALL_CHANNEL_MERCHANT,
     ) : ?SettleReceiver {
 
-        return $this->query(null)
+        return $this->query()
                     ->where('system_merchant_app_id', $systemMerchantAppId)
                     ->where('receiver_type', $receiverType)
                     ->where('receiver_id', $receiverId)
@@ -41,7 +41,7 @@ class SettleReceiverReadRepository extends QueryBuilderReadRepository implements
         string $receiverId,
         string $channelCode
     ) : Collection {
-        return $this->query(null)
+        return $this->query()
                     ->where('system_merchant_app_id', $systemMerchantAppId)
                     ->where('receiver_type', $receiverType)
                     ->where('receiver_id', $receiverId)

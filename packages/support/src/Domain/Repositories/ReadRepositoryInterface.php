@@ -28,14 +28,14 @@ interface ReadRepositoryInterface
      *
      * @return Builder
      */
-    public function modelQuery(?Query $query = null) : Builder;
+    public function query(?Query $query = null) : Builder;
 
     /**
      * @param  Query|null  $query
      *
      * @return Builder
      */
-    public function query(?Query $query = null);
+    public function queryBuilder(?Query $query = null);
 
     /**
      * 添加查询回调函数

@@ -24,7 +24,7 @@ class MethodReadRepository extends QueryBuilderReadRepository implements MethodR
     public function findByCode(Query $query) : ?Method
     {
         $code = $query->code;
-        return $this->query($query->except('id'))->where('code', $code)->firstOrFail();
+        return $this->query()->where('code', $code)->firstOrFail();
     }
 
 

@@ -89,17 +89,17 @@ class ProductSeriesResource extends Resource
                                                                         ->searchable()
                                                                         ->inlineLabel()
                                                                         ->options(fn(Forms\Get $get
-                                                                        ) => app(static::$productQueryService)->readRepository->modelQuery()->where('owner_type',
+                                                                        ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
                                                                             $get('../../owner_type'))
-                                                                                                              ->where('owner_id',
+                                                                                                                              ->where('owner_id',
                                                                                                                   (int) $get('../../owner_id'))->select([
                                                                                 'id', 'title'
                                                                             ])->limit(10)->pluck('title', 'id')->toArray())
                                                                         ->getSearchResultsUsing(
                                                                             fn(Forms\Get $get
-                                                                            ) => app(static::$productQueryService)->readRepository->modelQuery()->where('owner_type',
+                                                                            ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
-                                                                                                                  ->where('owner_id',
+                                                                                                                                  ->where('owner_id',
                                                                                                                       (int) $get('../../owner_id'))->select([
                                                                                     'id', 'title'
                                                                                 ])->limit(10)->pluck('title', 'id')->toArray())
@@ -107,11 +107,11 @@ class ProductSeriesResource extends Resource
                                                                             fn(
                                                                                 Forms\Get $get,
                                                                                 $value
-                                                                            ) => app(static::$productQueryService)->readRepository->modelQuery()->where('owner_type',
+                                                                            ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
-                                                                                                                  ->where('owner_id',
+                                                                                                                                  ->where('owner_id',
                                                                                                                       (int) $get('../../owner_id'))
-                                                                                                                  ->where('id',
+                                                                                                                                  ->where('id',
                                                                                                                       $value)->first()?->title
 
                                                                         )
