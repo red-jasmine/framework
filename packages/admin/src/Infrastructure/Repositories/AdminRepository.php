@@ -82,8 +82,12 @@ class AdminRepository extends Repository implements AdminRepositoryInterface
 
     /**
      * 配置允许的排序字段
+     *
+     * @param  Query|null  $query
+     *
+     * @return array
      */
-    protected function allowedSorts($query = null) : array
+    protected function allowedSorts(?Query $query = null) : array
     {
         return [
             AllowedSort::field('id'),

@@ -196,7 +196,7 @@ abstract class Repository implements RepositoryInterface
     /**
      * 配置允许的排序字段
      */
-    protected function allowedSorts($query = null) : array
+    protected function allowedSorts(?Query $query = null) : array
     {
         return [];
     }
