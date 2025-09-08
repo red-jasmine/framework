@@ -9,11 +9,14 @@ use RedJasmine\User\Domain\Repositories\UserTagReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserTagRepositoryInterface;
 use RedJasmine\User\Domain\Transformers\UseTagTransformer;
 
+/**
+ * @property UserTagRepositoryInterface $repository
+ */
 abstract class BaseUserTagApplicationService extends ApplicationService
 {
     public function tree(Query $query) : array
     {
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 
 }

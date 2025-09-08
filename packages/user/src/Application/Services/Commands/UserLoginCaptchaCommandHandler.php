@@ -8,13 +8,15 @@ use RedJasmine\User\Domain\Services\Login\UserLoginService;
 
 class UserLoginCaptchaCommandHandler extends CommandHandler
 {
+    public UserLoginService $loginService;
+    
     public function __construct(
         public BaseUserApplicationService $service,
 
     ) {
 
         $this->loginService = new UserLoginService(
-            $this->service->readRepository,
+            $this->service->repository,
             $this->service->getGuard(),
         );
 

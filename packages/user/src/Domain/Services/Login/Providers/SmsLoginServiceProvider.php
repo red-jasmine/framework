@@ -9,18 +9,19 @@ use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 
 class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 {
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserReadRepositoryInterface $readRepository;
+    protected UserReadRepositoryInterface $repository;
     protected string                      $guard;
 
-    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    public function init(UserRepositoryInterface $repository, string $guard) : static
     {
-        $this->readRepository = $readRepository;
+        $this->repository = $repository;
 
         $this->guard = $guard;
 
@@ -46,7 +47,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $phone = $data->data['phone'];
         // TODO 验证手机号 格式
 
-        $user = $this->readRepository->findByPhone($phone);
+        $user = $this->repository->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }
@@ -91,7 +92,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->captchaApplicationService->verify($command);
 
         // 查询用户信息
-        return $this->readRepository->findByPhone($phone);
+        return $this->repository->findByPhone($phone);
 
     }
 

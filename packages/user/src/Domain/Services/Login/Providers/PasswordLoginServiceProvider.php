@@ -3,10 +3,10 @@
 namespace RedJasmine\User\Domain\Services\Login\Providers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 
@@ -15,12 +15,12 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
     public const string NAME = 'password';
 
 
-    protected UserReadRepositoryInterface $readRepository;
-    protected string                      $guard;
+    protected UserRepositoryInterface $repository;
+    protected string                  $guard;
 
-    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    public function init(UserRepositoryInterface $repository, string $guard) : static
     {
-        $this->readRepository = $readRepository;
+        $this->repository = $repository;
 
         $this->guard = $guard;
 
@@ -42,7 +42,7 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
     public function login(UserLoginData $data) : User
     {
         // 按用户名称查询 用户
-        if ($user = $this->readRepository->findByAccount($data->data['account'])) {
+        if ($user = $this->repository->findByAccount($data->data['account'])) {
 
             // 手动验证密码
             $Credentials = [

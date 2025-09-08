@@ -12,7 +12,6 @@ class UserGroupApplicationService extends BaseUserGroupApplicationService
 
     public function __construct(
         public UserGroupRepositoryInterface $repository,
-        public UserGroupReadRepositoryInterface $readRepository,
         public UserGroupTransformer $transformer
     ) {
     }

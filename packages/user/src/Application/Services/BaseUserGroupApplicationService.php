@@ -9,12 +9,15 @@ use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserGroupRepositoryInterface;
 use RedJasmine\User\Domain\Transformers\UserGroupTransformer;
 
+/**
+ * @property UserGroupRepositoryInterface $repository
+ */
 abstract class BaseUserGroupApplicationService extends ApplicationService
 {
 
 
     public function tree(Query $query) : array
     {
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 }

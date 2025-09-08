@@ -34,7 +34,7 @@ class UserSetGroupCommandHandler extends CommandHandler
 
         try {
             if ($command->groupId) {
-                $this->service->groupReadRepository->find(FindQuery::from(['id' => $command->groupId]));
+                $this->service->groupRepository->find(FindQuery::from(['id' => $command->groupId]));
             }
 
             $user = $this->service->repository->find($command->id);

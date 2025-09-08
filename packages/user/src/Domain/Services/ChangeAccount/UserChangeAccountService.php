@@ -5,7 +5,7 @@ namespace RedJasmine\User\Domain\Services\ChangeAccount;
 use RedJasmine\User\Domain\Data\UserSetAccountData;
 use RedJasmine\User\Domain\Exceptions\UserRegisterException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Contracts\UserChannelAccountServiceProviderInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Data\UserChangeAccountData;
 use RedJasmine\User\Domain\Services\ChangeAccount\Facades\UserChangeAccountServiceProvider;
@@ -13,7 +13,7 @@ use RedJasmine\User\Domain\Services\ChangeAccount\Facades\UserChangeAccountServi
 class UserChangeAccountService implements UserChannelAccountServiceProviderInterface
 {
     public function __construct(
-        protected UserReadRepositoryInterface $userReadRepository
+        protected UserRepositoryInterface $userRepository
     ) {
     }
 
@@ -50,7 +50,7 @@ class UserChangeAccountService implements UserChannelAccountServiceProviderInter
 
         if ($data->phone && $user->phone !== $data->phone) {
             // 查询是否已经存在
-            $hasUser = $this->userReadRepository->findByPhone($data->phone);
+            $hasUser = $this->userRepository->findByPhone($data->phone);
             if ($hasUser && $user->id !== $hasUser->id) {
                 throw  new UserRegisterException('手机号已经存在');
             }
@@ -59,7 +59,7 @@ class UserChangeAccountService implements UserChannelAccountServiceProviderInter
 
         if ($data->email && $user->email !== $data->email) {
             // 查询是否已经存在
-            $hasUser = $this->userReadRepository->findByEmail($data->email);
+            $hasUser = $this->userRepository->findByEmail($data->email);
             if ($hasUser && $user->id !== $hasUser->id) {
                 throw  new UserRegisterException('邮箱已经存在');
             }
@@ -68,7 +68,7 @@ class UserChangeAccountService implements UserChannelAccountServiceProviderInter
 
         if ($data->name && $user->name !== $data->name) {
             // 查询是否已经存在
-            $hasUser = $this->userReadRepository->findByName($data->name);
+            $hasUser = $this->userRepository->findByName($data->name);
             if ($hasUser && $user->id !== $hasUser->id) {
                 throw  new UserRegisterException('邮箱已经存在');
             }

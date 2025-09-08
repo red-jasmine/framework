@@ -33,7 +33,7 @@ class UserSetAccountCommandHandler extends CommandHandler
 
             $user = $this->service->repository->find($command->id);
 
-            $service = new UserChangeAccountService($this->service->readRepository);
+            $service = new UserChangeAccountService($this->service->repository);
 
             $service->setAccount($user, $command);
 

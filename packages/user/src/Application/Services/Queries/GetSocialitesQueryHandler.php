@@ -20,7 +20,7 @@ class GetSocialitesQueryHandler extends QueryHandler
 
     public function handle(GetSocialitesQuery $query)
     {
-        $user = $this->service->readRepository->find(FindQuery::from(['id' => $query->id]));
+        $user = $this->service->repository->find(FindQuery::from(['id' => $query->id]));
 
 
         return $this->userSocialiteService->getBinds($user);

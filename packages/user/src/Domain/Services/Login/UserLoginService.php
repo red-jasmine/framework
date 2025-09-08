@@ -6,7 +6,6 @@ namespace RedJasmine\User\Domain\Services\Login;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\Facades\UserLoginServiceProvider;
@@ -15,7 +14,7 @@ class UserLoginService
 {
 
     public function __construct(
-        protected UserReadRepositoryInterface $readRepository,
+        protected UserRepositoryInterface $repository,
         protected string $guard
     ) {
     }
@@ -26,7 +25,7 @@ class UserLoginService
 
         $provider = UserLoginServiceProvider::create($data->provider);
 
-        $provider->init($this->readRepository, $this->guard)->captcha($data);
+        $provider->init($this->repository, $this->guard)->captcha($data);
         return true;
     }
 
@@ -35,7 +34,7 @@ class UserLoginService
         // 使用服务提供者的登陆方法 进行登陆
         $provider = UserLoginServiceProvider::create($data->provider);
 
-        return $provider->init($this->readRepository, $this->guard)->login($data);
+        return $provider->init($this->repository, $this->guard)->login($data);
 
     }
 

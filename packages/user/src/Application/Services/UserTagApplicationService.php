@@ -11,7 +11,6 @@ class UserTagApplicationService extends BaseUserTagApplicationService
 {
     public function __construct(
         public UserTagRepositoryInterface $repository,
-        public UserTagReadRepositoryInterface $readRepository,
         public UseTagTransformer $transformer
     ) {
     }

@@ -16,12 +16,12 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
 
-    protected UserReadRepositoryInterface $readRepository;
+    protected UserReadRepositoryInterface $repository;
     protected string                      $guard;
 
-    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    public function init(UserRepositoryInterface $repository, string $guard) : static
     {
-        $this->readRepository = $readRepository;
+        $this->repository = $repository;
 
         $this->guard = $guard;
 

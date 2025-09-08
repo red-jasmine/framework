@@ -4,7 +4,7 @@ namespace RedJasmine\User\Domain\Services\Register\Providers;
 
 use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Exceptions\UserRegisterException;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 
@@ -15,12 +15,12 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
     public const string NAME = 'password';
 
 
-    protected UserReadRepositoryInterface $readRepository;
-    protected string                      $guard;
+    protected UserRepositoryInterface $repository;
+    protected string                  $guard;
 
-    public function init(UserReadRepositoryInterface $readRepository, string $guard) : static
+    public function init(UserRepositoryInterface $repository, string $guard) : static
     {
-        $this->readRepository = $readRepository;
+        $this->repository = $repository;
 
         $this->guard = $guard;
 
@@ -61,15 +61,15 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
             throw new UserRegisterException('密码不能为空');
         }
         //严重用户名是否已经注册
-        if (filled($data->data['name'] ?? null) && $this->readRepository->findByName($data->data['name'])) {
+        if (filled($data->data['name'] ?? null) && $this->repository->findByName($data->data['name'])) {
             throw new UserRegisterException('用户名已存在');
         }
 
-        if (filled($data->data['email'] ?? null) && $this->readRepository->findByEmail($data->data['email'])) {
+        if (filled($data->data['email'] ?? null) && $this->repository->findByEmail($data->data['email'])) {
             throw new UserRegisterException('邮箱已存在');
         }
 
-        if (filled($data->data['phone'] ?? null) && $this->readRepository->findByEmail($data->data['phone'])) {
+        if (filled($data->data['phone'] ?? null) && $this->repository->findByPhone($data->data['phone'])) {
             throw new UserRegisterException('邮箱已存在');
         }
 

@@ -18,12 +18,12 @@ class UserRegisterCaptchaCommandHandler extends CommandHandler
         public BaseUserApplicationService $service,
     ) {
         $this->userRegisterService = new UserRegisterService(
-            $this->service->readRepository,
+            $this->service->repository,
             $this->service->getGuard(),
             $this->service->newModel()
         );
         $this->loginService        = new UserLoginService(
-            $this->service->readRepository,
+            $this->service->repository,
             $this->service->getGuard(),
         );
     }
