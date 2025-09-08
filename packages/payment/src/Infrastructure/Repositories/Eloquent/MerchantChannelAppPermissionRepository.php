@@ -9,11 +9,11 @@ use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositor
 class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermissionRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = MerchantChannelAppPermission::class;
+    protected static string $modelClass = MerchantChannelAppPermission::class;
 
     public function find(int $merchantAppId, int $channelAppId) : ?MerchantChannelAppPermission
     {
-        return static::$eloquentModelClass::where('merchant_app_id', $merchantAppId)
+        return static::$modelClass::where('merchant_app_id', $merchantAppId)
                                           ->where('channel_app_id', $channelAppId)
                                           ->first();
     }
@@ -28,7 +28,7 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
 
     public function findMerchantAppAuthorizedChannelApps(int $merchantAppId) : Collection
     {
-        return static::$eloquentModelClass::with(['channelApp'])
+        return static::$modelClass::with(['channelApp'])
                                           ->where('merchant_app_id', $merchantAppId)
                                           ->get();
     }

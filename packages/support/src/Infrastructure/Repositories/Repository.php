@@ -74,7 +74,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return ?Model
      */
-    public function findByNo(string $no) : ?Model
+    public function findByNo(string $no)
     {
         return static::$modelClass::uniqueNo($no)->firstOrFail();
     }
@@ -84,7 +84,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return ?Model
      */
-    public function findByNoLock(string $no) : ?Model
+    public function findByNoLock(string $no)
     {
         return static::$modelClass::lockForUpdate()->uniqueNo($no)->firstOrFail();
     }

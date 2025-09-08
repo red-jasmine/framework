@@ -13,7 +13,7 @@ class RefundRepository extends Repository implements RefundRepositoryInterface
 
     public function findByNo(string $no) : ?Refund
     {
-        return static::$eloquentModelClass::where('refund_no', $no)->first();
+        return static::$modelClass::where('refund_no', $no)->first();
     }
 
 

@@ -14,7 +14,7 @@ class ProductPropertyValueRepository extends Repository implements ProductProper
 
     public function findByNameInProperty(int $pid, string $name) : ?ProductPropertyValue
     {
-        return static::$eloquentModelClass::where('pid', $pid)->where('name', $name)->first();
+        return static::$modelClass::where('pid', $pid)->where('name', $name)->first();
     }
 
 

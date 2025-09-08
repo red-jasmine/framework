@@ -12,7 +12,6 @@ use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalT
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalTransferPrepareCommand;
 use RedJasmine\Wallet\Application\Services\Withdrawal\Commands\WalletWithdrawalTransferPrepareCommandHandler;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
-use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
 
 /**
@@ -27,7 +26,6 @@ class WalletWithdrawalApplicationService extends ApplicationService
 
     public function __construct(
         public WalletWithdrawalRepositoryInterface $repository,
-        public WalletWithdrawalReadRepositoryInterface $readRepository,
 
     ) {
     }

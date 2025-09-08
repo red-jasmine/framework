@@ -13,7 +13,6 @@ use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
 use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQueryHandler;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
-use RedJasmine\Wallet\Domain\Repositories\WalletReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletService;
 
@@ -27,7 +26,6 @@ class WalletApplicationService extends ApplicationService
 
     public function __construct(
         public WalletRepositoryInterface $repository,
-        public WalletReadRepositoryInterface $readRepository,
         public WalletService $walletService
     ) {
     }

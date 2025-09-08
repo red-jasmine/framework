@@ -26,7 +26,7 @@ class WalletTransactionController extends Controller
         protected WalletTransactionApplicationService $service,
     ) {
         // 设置查询作用域
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }
@@ -36,4 +36,4 @@ class WalletTransactionController extends Controller
     {
         return true;
     }
-} 
+}

@@ -32,7 +32,7 @@ class FindByOwnerTypeQueryHandler extends QueryHandler
         }
 
         try {
-            $wallet = $this->service->readRepository->findByOwnerType($query->owner, $query->type);
+            $wallet = $this->service->repository->findByOwnerType($query->owner, $query->type);
         } catch (ModelNotFoundException) {
             $command        = new WalletCreateCommand();
             $command->owner = $query->owner;

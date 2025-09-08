@@ -17,7 +17,7 @@ class AddressRepository extends Repository implements AddressRepositoryInterface
     /**
      * @var string Eloquent模型类
      */
-    protected static string $eloquentModelClass = Address::class;
+    protected static string $modelClass = Address::class;
 
     /**
      * 配置允许的过滤器

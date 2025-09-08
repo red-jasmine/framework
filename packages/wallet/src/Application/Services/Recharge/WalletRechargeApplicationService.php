@@ -5,7 +5,6 @@ namespace RedJasmine\Wallet\Application\Services\Recharge;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Wallet\Application\Services\Recharge\Commands\CompletePaymentCommand;
 use RedJasmine\Wallet\Domain\Models\WalletRecharge;
-use RedJasmine\Wallet\Domain\Repositories\WalletRechargeReadRepositoryInterface;
 use RedJasmine\Wallet\Domain\Repositories\WalletRechargeRepositoryInterface;
 use RedJasmine\Wallet\Domain\Services\WalletRechargeService;
 
@@ -20,7 +19,6 @@ class WalletRechargeApplicationService extends ApplicationService
 
     public function __construct(
         public WalletRechargeRepositoryInterface $repository,
-        public WalletRechargeReadRepositoryInterface $readRepository,
         public WalletRechargeService $rechargeService,
     ) {
 

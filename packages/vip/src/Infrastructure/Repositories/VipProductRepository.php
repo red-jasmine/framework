@@ -21,7 +21,7 @@ class VipProductRepository implements VipProductRepositoryInterface
     ) {
     }
 
-    protected static string $eloquentModelClass = VipProduct::class;
+    protected static string $modelClass = VipProduct::class;
 
 
     public function find($id) : VipProduct

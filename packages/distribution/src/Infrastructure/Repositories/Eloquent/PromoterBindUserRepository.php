@@ -18,7 +18,7 @@ class PromoterBindUserRepository extends Repository implements PromoterBindUserR
     public function findBindRelation(int $promoterId, UserInterface $user) : ?PromoterBindUser
     {
         /** @var PromoterBindUser $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::query()
                           ->where('promoter_id', $promoterId)
                           ->where('user_type', $user->getType())
@@ -29,7 +29,7 @@ class PromoterBindUserRepository extends Repository implements PromoterBindUserR
     public function findUser(UserInterface $user) : ?PromoterBindUser
     {
         /** @var PromoterBindUser $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::query()
                           ->where('user_type', $user->getType())
                           ->where('user_id', $user->getID())
@@ -46,7 +46,7 @@ class PromoterBindUserRepository extends Repository implements PromoterBindUserR
     public function findUserInviting(UserInterface $user) : ?PromoterBindUser
     {
         /** @var PromoterBindUser $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::query()
                           ->where('user_type', $user->getType())
                           ->where('user_id', $user->getID())
@@ -65,7 +65,7 @@ class PromoterBindUserRepository extends Repository implements PromoterBindUserR
     public function findUserBound(UserInterface $user) : ?PromoterBindUser
     {
         /** @var PromoterBindUser $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::query()
                           ->where('user_type', $user->getType())
                           ->where('user_id', $user->getID())

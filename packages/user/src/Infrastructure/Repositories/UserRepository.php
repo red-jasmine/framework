@@ -13,7 +13,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
 
     public function findByName(string $name) : ?User
     {
-        return static::$eloquentModelClass::where('name', $name)->first();
+        return static::$modelClass::where('name', $name)->first();
     }
 
 

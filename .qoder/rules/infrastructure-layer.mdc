@@ -9,7 +9,7 @@ alwaysApply: true
 ### 规范
 - **基类继承**: 继承 `RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository`
 - **接口实现**: 实现对应的领域仓库接口
-- **静态属性**: 定义 `$eloquentModelClass` 指定Eloquent模型
+- **静态属性**: 定义 `$modelClass` 指定Eloquent模型
 - **命名规范**: 实现类名格式为 `{Entity}Repository`
 - **职责专一**: 只负责写操作的具体实现
 
@@ -17,12 +17,12 @@ alwaysApply: true
 ```php
 class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
 {
-    protected static string $eloquentModelClass = Article::class;
+    protected static string $modelClass = Article::class;
     
     // 可以添加特定的方法
     public function findBySlug(string $slug): ?Article
     {
-        return static::$eloquentModelClass::where('slug', $slug)->first();
+        return static::$modelClass::where('slug', $slug)->first();
     }
 }
 ```
@@ -204,7 +204,7 @@ protected mixed $defaultSort = '-created_at';
 ### 规范
 - **基类继承**: 继承 `RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository`
 - **接口实现**: 实现对应的领域仓库接口
-- **静态属性**: 定义 `$eloquentModelClass` 指定Eloquent模型
+- **静态属性**: 定义 `$modelClass` 指定Eloquent模型
 - **命名规范**: 实现类名格式为 `{Entity}Repository`
 - **职责专一**: 只负责写操作的具体实现
 
@@ -212,12 +212,12 @@ protected mixed $defaultSort = '-created_at';
 ```php
 class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
 {
-    protected static string $eloquentModelClass = Article::class;
+    protected static string $modelClass = Article::class;
     
     // 可以添加特定的方法
     public function findBySlug(string $slug): ?Article
     {
-        return static::$eloquentModelClass::where('slug', $slug)->first();
+        return static::$modelClass::where('slug', $slug)->first();
     }
 }
 ```

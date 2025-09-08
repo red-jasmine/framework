@@ -15,14 +15,14 @@ class CardGroupBindProductRepository extends Repository implements CardGroupBind
 {
 
     /**
-     * @var $eloquentModelClass class-string
+     * @var $modelClass class-string
      */
-    protected static string $eloquentModelClass = CardGroupBindProduct::class;
+    protected static string $modelClass = CardGroupBindProduct::class;
 
 
     public function findByProduct(UserInterface $owner, string $productType, int $productId, int $skuId) : ?CardGroupBindProduct
     {
-        return static::$eloquentModelClass::query()->onlyOwner($owner)
+        return static::$modelClass::query()->onlyOwner($owner)
                                           ->where('product_type', $productType)
                                           ->where('product_id', $productId)
                                           ->where('sku_id', $skuId)

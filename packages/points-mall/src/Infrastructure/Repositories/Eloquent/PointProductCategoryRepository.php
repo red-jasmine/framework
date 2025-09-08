@@ -13,7 +13,7 @@ class PointProductCategoryRepository extends Repository implements PointProductC
     public function findByName($name): ?PointsProductCategory
     {
         /** @var class-string<PointsProductCategory> $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::where('name', $name)->first();
     }
 } 

@@ -15,7 +15,7 @@ class OrderRepository extends Repository implements OrderRepositoryInterface
     public function findByNo(string $no) : Order
     {
 
-        return static::$eloquentModelClass::where('order_no', $no)->firstOrFail();
+        return static::$modelClass::where('order_no', $no)->firstOrFail();
 
     }
 

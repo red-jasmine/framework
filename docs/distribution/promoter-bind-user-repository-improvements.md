@@ -47,7 +47,7 @@ interface PromoterBindUserReadRepositoryInterface extends ReadRepositoryInterfac
 public function findBindRelation(int $promoterId, UserInterface $user): ?PromoterBindUser
 {
     /** @var PromoterBindUser $modelClass */
-    $modelClass = static::$eloquentModelClass;
+    $modelClass = static::$modelClass;
     return $modelClass::query()
         ->where('promoter_id', $promoterId)
         ->where('user_type', $user->getType())

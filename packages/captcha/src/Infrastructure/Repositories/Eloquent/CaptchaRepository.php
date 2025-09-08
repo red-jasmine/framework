@@ -15,7 +15,7 @@ class CaptchaRepository extends Repository implements CaptchaRepositoryInterface
 
     public function findLastCodeByNotifiable(CaptchaData $captchaData) : ?Captcha
     {
-        return static::$eloquentModelClass::query()
+        return static::$modelClass::query()
                                           ->where('notifiable_type', $captchaData->notifiableType)
                                           ->where('notifiable_id', AES::encryptString($captchaData->notifiableId))
                                           ->where('type', $captchaData->type)

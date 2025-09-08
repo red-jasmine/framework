@@ -16,7 +16,7 @@ class ShoppingCartRepository extends Repository implements ShoppingCartRepositor
 
     public function findActiveByUser(UserInterface $user, string $market) : ?ShoppingCart
     {
-        return static::$eloquentModelClass::query()
+        return static::$modelClass::query()
                                           ->where('owner_type', $user->getType())
                                           ->where('owner_id', $user->getID())
                                           ->where('status', 'active')
@@ -26,12 +26,12 @@ class ShoppingCartRepository extends Repository implements ShoppingCartRepositor
 
     public function findExpiredCarts() : Collection
     {
-        return static::$eloquentModelClass::query()->where('status', 'expired')->get();
+        return static::$modelClass::query()->where('status', 'expired')->get();
     }
 
     public function clearExpiredCarts() : int
     {
-        return static::$eloquentModelClass::query()->where('status', 'expired')->delete();
+        return static::$modelClass::query()->where('status', 'expired')->delete();
     }
 
     public function deleteProduct(ShoppingCartProduct $product) : bool

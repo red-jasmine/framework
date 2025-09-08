@@ -13,7 +13,7 @@ class PromoterRepository extends Repository implements PromoterRepositoryInterfa
 
     public function findByOwner(UserInterface $owner) : ?Promoter
     {
-        return static::$eloquentModelClass::onlyOwner($owner)->first();
+        return static::$modelClass::onlyOwner($owner)->first();
     }
 
 

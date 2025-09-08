@@ -11,11 +11,11 @@ use RedJasmine\Product\Exceptions\StockException;
 
 class ProductSkuRepository implements ProductSkuRepositoryInterface
 {
-    protected static string $eloquentModelClass = ProductSku::class;
+    protected static string $modelClass = ProductSku::class;
 
     public function find($id) : ProductSku
     {
-        return static::$eloquentModelClass::withTrashed()->findOrFail($id);
+        return static::$modelClass::withTrashed()->findOrFail($id);
     }
 
 

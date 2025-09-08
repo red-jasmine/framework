@@ -13,7 +13,7 @@ class ChannelRepository extends Repository implements ChannelRepositoryInterface
 
     public function findByCode(string $code) : ?Channel
     {
-        return static::$eloquentModelClass::where('code', $code)->firstOrFail();
+        return static::$modelClass::where('code', $code)->firstOrFail();
     }
 
 
