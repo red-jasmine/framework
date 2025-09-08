@@ -14,7 +14,6 @@ use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
@@ -26,7 +25,7 @@ use RedJasmine\Support\Foundation\Service\Service;
  * @method bool delete(Data $command)
  * @method Model find(FindQuery $query)
  * @method LengthAwarePaginator|Paginator  paginate(PaginateQuery $query)
- * @property BaseRepositoryInterface $repository
+ * @property RepositoryInterface $repository
  * @property ReadRepositoryInterface $readRepository
  * @property TransformerInterface $transformer
  */
@@ -75,8 +74,8 @@ class ApplicationService extends Service
 
 
     /**
-     * @deprecated
      * @return string
+     * @deprecated
      */
     public function model() : string
     {

@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Models\UniqueNoInterface;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
-use RedJasmine\Support\Helpers\ID\NoCheckNumber;
 
 /**
  * @property ApplicationService $service
@@ -28,10 +26,6 @@ class FindQueryHandler extends QueryHandler
             }
             $query->setPrimaryKey($this->service->getModelClass()::getUniqueNoKey());
         }
-
-        if ($this->service->repository instanceof BaseRepositoryInterface) {
-            return $this->service->repository->findByQuery($query);
-        }
-        return $this->service->readRepository->find($query);
+        return $this->service->repository->findByQuery($query);
     }
 }
