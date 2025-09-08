@@ -11,7 +11,7 @@ use RedJasmine\Support\Data\Data;
  * 删除命令处理器类
  * 继承自CommandHandler，提供删除数据的处理逻辑
  */
-class DeleteCommandHandler extends RestCommandHandler
+class DeleteCommandHandler extends BaseCommandHandler
 {
 
 

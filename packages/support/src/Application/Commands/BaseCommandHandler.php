@@ -8,15 +8,21 @@ use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Data\Data;
 use Throwable;
 
-abstract class RestCommandHandler extends CommandHandler
+abstract class BaseCommandHandler extends CommandHandler
 {
     abstract protected string $name {
         get;
     }
 
 
-
-    protected function callHook(string $hook, mixed $passable, Closure $destination)
+    /**
+     * @param  string  $hook
+     * @param  mixed  $passable
+     * @param  Closure  $destination
+     *
+     * @return mixed
+     */
+    protected function callHook(string $hook, mixed $passable, Closure $destination) : mixed
     {
         $hook = $this->name.'.'.$hook;
         return $this->service->hook($hook, $passable, $destination);

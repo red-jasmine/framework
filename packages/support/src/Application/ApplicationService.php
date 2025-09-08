@@ -32,6 +32,23 @@ use RedJasmine\Support\Foundation\Service\Service;
 class ApplicationService extends Service
 {
 
+    /**
+     * 模型类
+     * @var string
+     */
+    protected static string $modelClass = Model::class;
+
+    /**
+     * 获取模型类
+     *
+     * @return string
+     */
+    public static function getModelClass() : string
+    {
+        return self::$modelClass;
+    }
+
+
     protected static array $handlers = [
         'create'   => CreateCommandHandler::class,
         'update'   => UpdateCommandHandler::class,
@@ -55,12 +72,11 @@ class ApplicationService extends Service
         return $macro;
     }
 
+
     /**
-     * @var string
+     * @deprecated
+     * @return string
      */
-    protected static string $modelClass = Model::class;
-
-
     public function model() : string
     {
         return static::$modelClass;

@@ -8,7 +8,7 @@ use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
-class UpdateCommandHandler extends RestCommandHandler
+class UpdateCommandHandler extends BaseCommandHandler
 {
 
     public function __construct(protected $service)

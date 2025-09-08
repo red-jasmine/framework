@@ -21,11 +21,11 @@ class FindQueryHandler extends QueryHandler
 
     public function handle(FindQuery $query) : mixed
     {
-        if (in_array(UniqueNoInterface::class, class_implements($this->service->model()))) {
-            if (!$this->service->model()::checkUniqueNo($query->getKey())) {
+        if (in_array(UniqueNoInterface::class, class_implements($this->service->getModelClass()))) {
+            if (!$this->service->getModelClass()::checkUniqueNo($query->getKey())) {
                 throw new ModelNotFoundException('not found!!!');
             }
-            $query->setPrimaryKey($this->service->model()::getUniqueNoKey());
+            $query->setPrimaryKey($this->service->getModelClass()::getUniqueNoKey());
         }
 
         return $this->service->readRepository->find($query);

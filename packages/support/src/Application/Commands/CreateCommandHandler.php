@@ -9,7 +9,7 @@ use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
-class CreateCommandHandler extends RestCommandHandler
+class CreateCommandHandler extends BaseCommandHandler
 {
 
     protected string $name = 'create';
