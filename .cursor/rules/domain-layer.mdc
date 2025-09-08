@@ -128,7 +128,6 @@ class ArticleData extends Data
 
 ### 规范
 - **写操作仓库**: 继承 `RedJasmine\Support\Domain\Repositories\RepositoryInterface`
-- **只读仓库**: 继承 `RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface`
 - **命名规范**: 接口名格式为 `{Entity}RepositoryInterface`
 - **职责分离**: 写操作和读操作分离
 # 领域层(Domain)代码规范
@@ -257,6 +256,5 @@ class ArticleData extends Data
 
 ### 规范
 - **写操作仓库**: 继承 `RedJasmine\Support\Domain\Repositories\RepositoryInterface`
-- **只读仓库**: 继承 `RedJasmine\Support\Domain\Repositories\ReadRepositoryInterface`
 - **命名规范**: 接口名格式为 `{Entity}RepositoryInterface`
 - **职责分离**: 写操作和读操作分离

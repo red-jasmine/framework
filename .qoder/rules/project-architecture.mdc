@@ -66,10 +66,7 @@ framework/
 │   │       ├────── Commands/       # 命令定义和 命令处理器
 │   │       └────── Queries/        # 查询定义和 查询处理器
 │   ├── Infrastructure/         # 基础设施层
-│   │   ├── Repositories/       # 仓库实现
-│   │   │   └── Eloquent/       # Eloquent实现
-│   │   └── ReadRepositories/   # 只读仓库实现
-│   │       └── Mysql/          # MySQL实现
+│   │   └── Repositories/       # 仓库实现
 │   ├── UI/                     # 用户接口层
 │   │   └── Http/               # HTTP接口
 │   │       ├── Admin/          # 管理员接口 （按需）
