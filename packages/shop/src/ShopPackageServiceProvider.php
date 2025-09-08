@@ -33,14 +33,14 @@ class ShopPackageServiceProvider extends PackageServiceProvider
         $this->app->register(Application\ShopApplicationServiceProvider::class);
 
 
-        $this->app->config->set('auth.providers.users', [
+        $this->app->config->set('auth.providers.shops', [
             'driver' => 'eloquent',
             'model'  => Shop::class,
         ]);
 
-        $this->app->config->set('auth.guards.user', [
+        $this->app->config->set('auth.guards.shop', [
             'driver'   => 'jwt',
-            'provider' => 'users',
+            'provider' => 'shops',
         ]);
 
     }

@@ -3,8 +3,6 @@
 namespace RedJasmine\Shop\Application\Services;
 
 use RedJasmine\Shop\Domain\Models\Shop;
-use RedJasmine\Shop\Domain\Repositories\ShopGroupReadRepositoryInterface;
-use RedJasmine\Shop\Domain\Repositories\ShopReadRepositoryInterface;
 use RedJasmine\Shop\Domain\Repositories\ShopRepositoryInterface;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
 use RedJasmine\User\Domain\Transformers\UserTransformer;
@@ -13,8 +11,6 @@ class ShopApplicationService extends BaseUserApplicationService
 {
     public function __construct(
         public ShopRepositoryInterface $repository,
-        public ShopReadRepositoryInterface $readRepository,
-        public ShopGroupReadRepositoryInterface $groupReadRepository,
         public UserTransformer $transformer
     ) {
     }
