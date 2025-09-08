@@ -244,6 +244,7 @@ abstract class Repository implements RepositoryInterface
      */
     protected function buildRequest(?Query $query = null) : Request
     {
+
         $request = new Request();
         $query   = $query ?? Query::from([]);
 
@@ -262,6 +263,7 @@ abstract class Repository implements RepositoryInterface
             'page',
             'perPage'
         );
+
 
         // 处理过滤参数
         if (filled($filterParameterName)) {
