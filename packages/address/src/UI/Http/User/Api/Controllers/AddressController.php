@@ -19,7 +19,7 @@ class AddressController extends Controller
     public static string $dataClass = AddressData::class;
 
     public static string $resourceClass = AddressResource::class;
-    
+
     public static string $paginateQueryClass = AddressPaginateQuery::class;
 
 
@@ -32,7 +32,8 @@ class AddressController extends Controller
     public function __construct(
         public AddressApplicationService $service
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        // 使用统一仓库的查询回调功能
+        $this->service->getRepository()->withQuery(function ($query) {
             return $query->onlyOwner($this->getOwner());
         });
     }

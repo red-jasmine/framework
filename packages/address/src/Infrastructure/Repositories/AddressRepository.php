@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Address\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Address\Infrastructure\Repositories;
 
 use RedJasmine\Address\Domain\Models\Address;
 use RedJasmine\Address\Domain\Repositories\AddressRepositoryInterface;
