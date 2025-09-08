@@ -26,20 +26,13 @@ class AddressApplicationService extends ApplicationService
     /**
      * 获取仓库实例（写操作）
      */
-    public function getRepository(): AddressRepositoryInterface
+    public function getRepository() : AddressRepositoryInterface
     {
         return $this->repository;
     }
 
-    /**
-     * 获取只读仓库实例（读操作）
-     */
-    public function getReadRepository(): AddressRepositoryInterface
-    {
-        return $this->repository;
-    }
 
-    protected function hooks(): array
+    protected function hooks() : array
     {
         return [
             'create.validate' => [
