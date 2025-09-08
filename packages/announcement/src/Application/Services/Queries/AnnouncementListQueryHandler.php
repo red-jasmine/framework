@@ -2,19 +2,19 @@
 
 namespace RedJasmine\Announcement\Application\Services\Queries;
 
-use RedJasmine\Announcement\Domain\Repositories\AnnouncementReadRepositoryInterface;
+use RedJasmine\Announcement\Domain\Repositories\AnnouncementRepositoryInterface;
 use RedJasmine\Support\Application\Queries\QueryHandler;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class AnnouncementListQueryHandler extends QueryHandler
 {
     public function __construct(
-        protected AnnouncementReadRepositoryInterface $readRepository
+        protected AnnouncementRepositoryInterface $repository
     ) {
     }
 
     public function handle(AnnouncementListQuery $query): LengthAwarePaginator
     {
-        return $this->readRepository->paginate($query);
+        return $this->repository->paginate($query);
     }
 }

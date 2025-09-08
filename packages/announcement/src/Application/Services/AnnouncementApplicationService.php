@@ -8,7 +8,6 @@ use RedJasmine\Announcement\Application\Services\Commands\AnnouncementRejectComm
 use RedJasmine\Announcement\Application\Services\Commands\AnnouncementRevokeCommandHandler;
 use RedJasmine\Announcement\Application\Services\Commands\AnnouncementSubmitApprovalCommandHandler;
 use RedJasmine\Announcement\Domain\Models\Announcement;
-use RedJasmine\Announcement\Domain\Repositories\AnnouncementReadRepositoryInterface;
 use RedJasmine\Announcement\Domain\Repositories\AnnouncementRepositoryInterface;
 use RedJasmine\Announcement\Domain\Transformers\AnnouncementTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -20,7 +19,6 @@ class AnnouncementApplicationService extends ApplicationService
 
     public function __construct(
         public AnnouncementRepositoryInterface $repository,
-        public AnnouncementReadRepositoryInterface $readRepository,
         public AnnouncementTransformer $transformer
     ) {
     }

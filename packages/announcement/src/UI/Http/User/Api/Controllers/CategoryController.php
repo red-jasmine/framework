@@ -26,7 +26,7 @@ class CategoryController extends Controller
         protected CategoryApplicationService $service,
     ) {
         // 设置查询作用域 - 用户只能查看显示的分类
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->where('is_show', true);
         });
     }
