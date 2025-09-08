@@ -4,10 +4,10 @@ namespace RedJasmine\Socialite\Infrastructure\Repositories;
 
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class SocialiteUserRepository extends EloquentRepository implements SocialiteUserRepositoryInterface
+class SocialiteUserRepository extends Repository implements SocialiteUserRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = SocialiteUser::class;
+    protected static string $modelClass = SocialiteUser::class;
 }

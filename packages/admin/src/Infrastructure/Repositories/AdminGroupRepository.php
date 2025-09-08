@@ -9,5 +9,5 @@ use RedJasmine\User\Infrastructure\Repositories\UserGroupRepository;
 class AdminGroupRepository extends UserGroupRepository implements AdminGroupRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = AdminTag::class;
+    protected static string $modelClass = AdminTag::class;
 }

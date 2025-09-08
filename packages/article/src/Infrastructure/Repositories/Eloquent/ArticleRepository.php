@@ -5,12 +5,12 @@ namespace RedJasmine\Article\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Article\Domain\Models\Article;
 use RedJasmine\Article\Domain\Repositories\ArticleRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
+class ArticleRepository extends Repository implements ArticleRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Article::class;
+    protected static string $modelClass = Article::class;
 
 
 }

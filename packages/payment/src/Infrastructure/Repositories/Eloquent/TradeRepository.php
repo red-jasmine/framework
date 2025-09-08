@@ -4,16 +4,16 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class TradeRepository extends EloquentRepository implements TradeRepositoryInterface
+class TradeRepository extends Repository implements TradeRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Trade::class;
+    protected static string $modelClass = Trade::class;
 
     public function findByNo(string $no) : ?Trade
     {
-        return static::$eloquentModelClass::where('trade_no', $no)->first();
+        return static::$modelClass::where('trade_no', $no)->first();
     }
 
 

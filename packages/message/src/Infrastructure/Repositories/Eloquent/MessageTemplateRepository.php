@@ -6,14 +6,14 @@ namespace RedJasmine\Message\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Message\Domain\Models\MessageTemplate;
 use RedJasmine\Message\Domain\Repositories\MessageTemplateRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 消息模板仓库实现
  */
-class MessageTemplateRepository extends EloquentRepository implements MessageTemplateRepositoryInterface
+class MessageTemplateRepository extends Repository implements MessageTemplateRepositoryInterface
 {
-    protected static string $eloquentModelClass = MessageTemplate::class;
+    protected static string $modelClass = MessageTemplate::class;
 
     // 基础接口方法实现
     public function findByName(string $name): ?MessageTemplate

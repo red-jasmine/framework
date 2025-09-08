@@ -4,9 +4,9 @@ namespace RedJasmine\Shop\Infrastructure\Repositories;
 
 use RedJasmine\Shop\Domain\Models\ShopGroup;
 use RedJasmine\Shop\Domain\Repositories\ShopGroupRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ShopGroupRepository extends EloquentRepository implements ShopGroupRepositoryInterface
+class ShopGroupRepository extends Repository implements ShopGroupRepositoryInterface
 {
-    protected static string $eloquentModelClass = ShopGroup::class;
+    protected static string $modelClass = ShopGroup::class;
 } 

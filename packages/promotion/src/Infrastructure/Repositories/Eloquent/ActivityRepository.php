@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Promotion\Domain\Models\Activity;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityStatusEnum;
 use RedJasmine\Promotion\Domain\Repositories\ActivityRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 活动仓库实现
  */
-class ActivityRepository extends EloquentRepository implements ActivityRepositoryInterface
+class ActivityRepository extends Repository implements ActivityRepositoryInterface
 {
-    protected static string $eloquentModelClass = Activity::class;
+    protected static string $modelClass = Activity::class;
     
     public function find($id): ?Activity
     {

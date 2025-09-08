@@ -4,16 +4,16 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class SettleRepository extends EloquentRepository implements SettleRepositoryInterface
+class SettleRepository extends Repository implements SettleRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Settle::class;
+    protected static string $modelClass = Settle::class;
 
     public function findByNo(string $no) : ?Settle
     {
-        return static::$eloquentModelClass::where('settle_no', $no)->first();
+        return static::$modelClass::where('settle_no', $no)->first();
     }
 
 

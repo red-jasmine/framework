@@ -4,11 +4,11 @@ namespace RedJasmine\Region\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Region\Domain\Models\Country;
 use RedJasmine\Region\Domain\Repositories\CountryRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class CountryRepository extends EloquentRepository implements CountryRepositoryInterface
+class CountryRepository extends Repository implements CountryRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Country::class;
+    protected static string $modelClass = Country::class;
 
 }

@@ -8,7 +8,7 @@ use RedJasmine\User\Infrastructure\Repositories\UserRepository;
 
 class ShopRepository extends UserRepository implements ShopRepositoryInterface
 {
-    protected static string $eloquentModelClass = Shop::class;
+    protected static string $modelClass = Shop::class;
 
     public function findByName(string $name): ?Shop
     {

@@ -4,12 +4,12 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Payment\Domain\Repositories\RefundRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class RefundRepository extends EloquentRepository implements RefundRepositoryInterface
+class RefundRepository extends Repository implements RefundRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Refund::class;
+    protected static string $modelClass = Refund::class;
 
     public function findByNo(string $no) : ?Refund
     {

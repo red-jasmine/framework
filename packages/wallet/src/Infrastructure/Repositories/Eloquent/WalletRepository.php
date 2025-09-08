@@ -3,28 +3,28 @@
 namespace RedJasmine\Wallet\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;
 
 
-class WalletRepository extends EloquentRepository implements WalletRepositoryInterface
+class WalletRepository extends Repository implements WalletRepositoryInterface
 {
 
 
-    protected static string $eloquentModelClass = Wallet::class;
+    protected static string $modelClass = Wallet::class;
 
     public function findLock($id) : Wallet
     {
-        return static::$eloquentModelClass::query()->lockForUpdate()->findOrFail($id);
+        return static::$modelClass::query()->lockForUpdate()->findOrFail($id);
     }
 
     public function findByOwnerType(UserInterface $owner, string $type) : ?Wallet
     {
-        return static::$eloquentModelClass::query()
-                                          ->onlyOwner($owner)
-                                          ->where('type', $type)
-                                          ->first();
+        return static::$modelClass::query()
+                                  ->onlyOwner($owner)
+                                  ->where('type', $type)
+                                  ->first();
     }
 
 

@@ -4,16 +4,16 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class MethodRepository extends EloquentRepository implements MethodRepositoryInterface
+class MethodRepository extends Repository implements MethodRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Method::class;
+    protected static string $modelClass = Method::class;
 
     public function findByCode(string $code) : ?Method
     {
-        return static::$eloquentModelClass::where('code', $code)->firstOrFail();
+        return static::$modelClass::where('code', $code)->firstOrFail();
     }
 
 

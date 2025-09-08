@@ -5,16 +5,16 @@ namespace RedJasmine\Article\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Article\Domain\Models\ArticleCategory;
 use RedJasmine\Article\Domain\Repositories\ArticleCategoryRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ArticleCategoryRepository extends EloquentRepository implements ArticleCategoryRepositoryInterface
+class ArticleCategoryRepository extends Repository implements ArticleCategoryRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ArticleCategory::class;
+    protected static string $modelClass = ArticleCategory::class;
 
     public function findByName($name) : ?ArticleCategory
     {
-        return static::$eloquentModelClass::where('name', $name)->first();
+        return static::$modelClass::where('name', $name)->first();
     }
 
 

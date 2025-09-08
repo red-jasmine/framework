@@ -9,7 +9,7 @@ use RedJasmine\User\Infrastructure\Repositories\UserRepository;
 class AdminRepository extends UserRepository implements AdminRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Admin::class;
+    protected static string $modelClass = Admin::class;
 
     public function findByName(string $name) : ?Admin
     {

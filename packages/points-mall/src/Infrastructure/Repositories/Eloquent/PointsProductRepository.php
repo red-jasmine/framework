@@ -4,9 +4,9 @@ namespace RedJasmine\PointsMall\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class PointsProductRepository extends EloquentRepository implements PointsProductRepositoryInterface
+class PointsProductRepository extends Repository implements PointsProductRepositoryInterface
 {
-    protected static string $eloquentModelClass = PointsProduct::class;
+    protected static string $modelClass = PointsProduct::class;
 } 

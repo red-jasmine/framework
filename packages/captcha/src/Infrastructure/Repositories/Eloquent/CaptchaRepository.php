@@ -6,12 +6,12 @@ use RedJasmine\Captcha\Domain\Data\CaptchaData;
 use RedJasmine\Captcha\Domain\Models\Captcha;
 use RedJasmine\Captcha\Domain\Repositories\CaptchaRepositoryInterface;
 use RedJasmine\Support\Facades\AES;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class CaptchaRepository extends EloquentRepository implements CaptchaRepositoryInterface
+class CaptchaRepository extends Repository implements CaptchaRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Captcha::class;
+    protected static string $modelClass = Captcha::class;
 
     public function findLastCodeByNotifiable(CaptchaData $captchaData) : ?Captcha
     {

@@ -4,16 +4,16 @@ namespace RedJasmine\Interaction\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Interaction\Domain\Models\InteractionStatistic;
 use RedJasmine\Interaction\Domain\Repositories\InteractionStatisticRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class InteractionStatisticRepository extends EloquentRepository implements InteractionStatisticRepositoryInterface
+class InteractionStatisticRepository extends Repository implements InteractionStatisticRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = InteractionStatistic::class;
+    protected static string $modelClass = InteractionStatistic::class;
 
     public function findByResource(string $resourceType, string $resourceId, string $interactionType) : ?InteractionStatistic
     {
-        return static::$eloquentModelClass::where([
+        return static::$modelClass::where([
             'resource_type'    => $resourceType,
             'resource_id'      => $resourceId,
             'interaction_type' => $interactionType

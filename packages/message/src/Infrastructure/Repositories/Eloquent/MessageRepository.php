@@ -9,14 +9,14 @@ use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 消息仓库实现
  */
-class MessageRepository extends EloquentRepository implements MessageRepositoryInterface
+class MessageRepository extends Repository implements MessageRepositoryInterface
 {
-    protected static string $eloquentModelClass = Message::class;
+    protected static string $modelClass = Message::class;
 
 
     /**
@@ -24,7 +24,7 @@ class MessageRepository extends EloquentRepository implements MessageRepositoryI
      */
     public function markAsRead(array $messageIds, string $bid, UserInterface $owner) : int
     {
-
+        // 这个是一个写操作 TODO
         return $this->query()
                     ->where('biz', $bid)
                     ->where('status', MessageStatusEnum::UNREAD)
@@ -38,6 +38,7 @@ class MessageRepository extends EloquentRepository implements MessageRepositoryI
 
     public function allMarkAsReadAll(string $bid, UserInterface $owner) : int
     {
+        // 这个是一个写操作 TODO
         return $this->query()
                     ->where('biz', $bid)
                     ->where('status', MessageStatusEnum::UNREAD)

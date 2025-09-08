@@ -5,12 +5,12 @@ namespace RedJasmine\Community\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Community\Domain\Models\TopicTag;
 use RedJasmine\Community\Domain\Repositories\TopicTagRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class TopicTagRepository extends EloquentRepository implements TopicTagRepositoryInterface
+class TopicTagRepository extends Repository implements TopicTagRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = TopicTag::class;
+    protected static string $modelClass = TopicTag::class;
 
 
 }

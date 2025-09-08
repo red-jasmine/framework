@@ -5,14 +5,14 @@ namespace RedJasmine\Card\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Card\Domain\Models\Card;
 use RedJasmine\Card\Domain\Repositories\CardRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class CardRepository extends EloquentRepository implements CardRepositoryInterface
+class CardRepository extends Repository implements CardRepositoryInterface
 {
 
     /**
-     * @var $eloquentModelClass class-string
+     * @var $modelClass class-string
      */
-    protected static string $eloquentModelClass = Card::class;
+    protected static string $modelClass = Card::class;
 
 }

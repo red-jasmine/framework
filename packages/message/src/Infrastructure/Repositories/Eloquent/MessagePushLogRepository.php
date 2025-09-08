@@ -6,14 +6,14 @@ namespace RedJasmine\Message\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Message\Domain\Models\MessagePushLog;
 use RedJasmine\Message\Domain\Repositories\MessagePushLogRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 消息推送日志仓库实现
  */
-class MessagePushLogRepository extends EloquentRepository implements MessagePushLogRepositoryInterface
+class MessagePushLogRepository extends Repository implements MessagePushLogRepositoryInterface
 {
-    protected static string $eloquentModelClass = MessagePushLog::class;
+    protected static string $modelClass = MessagePushLog::class;
 
     // 基础接口方法实现
     public function findByMessage(int $messageId): array

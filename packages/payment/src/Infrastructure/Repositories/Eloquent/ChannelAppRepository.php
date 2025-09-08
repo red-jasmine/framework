@@ -4,12 +4,12 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ChannelAppRepository extends EloquentRepository implements ChannelAppRepositoryInterface
+class ChannelAppRepository extends Repository implements ChannelAppRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ChannelApp::class;
+    protected static string $modelClass = ChannelApp::class;
 
 
 }

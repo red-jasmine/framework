@@ -6,14 +6,14 @@ namespace RedJasmine\Message\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Message\Domain\Models\MessageCategory;
 use RedJasmine\Message\Domain\Repositories\MessageCategoryRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 消息分类仓库实现
  */
-class MessageCategoryRepository extends EloquentRepository implements MessageCategoryRepositoryInterface
+class MessageCategoryRepository extends Repository implements MessageCategoryRepositoryInterface
 {
-    protected static string $eloquentModelClass = MessageCategory::class;
+    protected static string $modelClass = MessageCategory::class;
 
 
 }

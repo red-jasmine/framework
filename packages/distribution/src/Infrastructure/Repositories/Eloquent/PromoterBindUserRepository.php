@@ -6,11 +6,11 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class PromoterBindUserRepository extends EloquentRepository implements PromoterBindUserRepositoryInterface
+class PromoterBindUserRepository extends Repository implements PromoterBindUserRepositoryInterface
 {
-    protected static string $eloquentModelClass = PromoterBindUser::class;
+    protected static string $modelClass = PromoterBindUser::class;
 
     /**
      * 查找用户与分销员的绑定关系

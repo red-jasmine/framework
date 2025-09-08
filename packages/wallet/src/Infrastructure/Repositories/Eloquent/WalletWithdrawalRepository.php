@@ -2,20 +2,20 @@
 
 namespace RedJasmine\Wallet\Infrastructure\Repositories\Eloquent;
 
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Wallet\Domain\Models\WalletWithdrawal;
 use RedJasmine\Wallet\Domain\Repositories\WalletWithdrawalRepositoryInterface;
 
 
-class WalletWithdrawalRepository extends EloquentRepository implements WalletWithdrawalRepositoryInterface
+class WalletWithdrawalRepository extends Repository implements WalletWithdrawalRepositoryInterface
 {
 
 
-    protected static string $eloquentModelClass = WalletWithdrawal::class;
+    protected static string $modelClass = WalletWithdrawal::class;
 
     public function findByNo(string $no) : WalletWithdrawal
     {
-        return static::$eloquentModelClass::uniqueNo($no)->firstOrFail();
+        return static::$modelClass::uniqueNo($no)->firstOrFail();
     }
 
     /**

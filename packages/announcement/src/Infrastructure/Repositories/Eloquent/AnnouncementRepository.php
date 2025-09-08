@@ -2,25 +2,25 @@
 
 namespace RedJasmine\Announcement\Infrastructure\Repositories\Eloquent;
 
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
-use RedJasmine\Announcement\Domain\Repositories\AnnouncementRepositoryInterface;
 use RedJasmine\Announcement\Domain\Models\Announcement;
 use RedJasmine\Announcement\Domain\Models\Enums\AnnouncementStatus;
 use RedJasmine\Announcement\Domain\Models\Enums\ApprovalStatus;
+use RedJasmine\Announcement\Domain\Repositories\AnnouncementRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class AnnouncementRepository extends EloquentRepository implements AnnouncementRepositoryInterface
+class AnnouncementRepository extends Repository implements AnnouncementRepositoryInterface
 {
-    protected static string $eloquentModelClass = Announcement::class;
+    protected static string $modelClass = Announcement::class;
 
     /**
      * 根据业务线和所有者查找公告
      */
     public function findByBizAndOwner(string $biz, string $ownerType, string $ownerId): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('biz', $biz)
-            ->where('owner_type', $ownerType)
-            ->where('owner_id', $ownerId)
-            ->get();
+        return static::$modelClass::where('biz', $biz)
+                                  ->where('owner_type', $ownerType)
+                                  ->where('owner_id', $ownerId)
+                                  ->get();
     }
 
     /**
@@ -28,7 +28,7 @@ class AnnouncementRepository extends EloquentRepository implements AnnouncementR
      */
     public function findByCategory(int $categoryId): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('category_id', $categoryId)->get();
+        return static::$modelClass::where('category_id', $categoryId)->get();
     }
 
     /**
@@ -36,7 +36,7 @@ class AnnouncementRepository extends EloquentRepository implements AnnouncementR
      */
     public function findByStatus(string $status): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('status', $status)->get();
+        return static::$modelClass::where('status', $status)->get();
     }
 
     /**
@@ -44,7 +44,7 @@ class AnnouncementRepository extends EloquentRepository implements AnnouncementR
      */
     public function findByApprovalStatus(string $approvalStatus): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('approval_status', $approvalStatus)->get();
+        return static::$modelClass::where('approval_status', $approvalStatus)->get();
     }
 
     /**
@@ -52,7 +52,7 @@ class AnnouncementRepository extends EloquentRepository implements AnnouncementR
      */
     public function findPublished(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('status', AnnouncementStatus::PUBLISHED)->get();
+        return static::$modelClass::where('status', AnnouncementStatus::PUBLISHED)->get();
     }
 
     /**
@@ -60,6 +60,6 @@ class AnnouncementRepository extends EloquentRepository implements AnnouncementR
      */
     public function findPendingApproval(): \Illuminate\Database\Eloquent\Collection
     {
-        return static::$eloquentModelClass::where('approval_status', ApprovalStatus::PENDING)->get();
+        return static::$modelClass::where('approval_status', ApprovalStatus::PENDING)->get();
     }
 }

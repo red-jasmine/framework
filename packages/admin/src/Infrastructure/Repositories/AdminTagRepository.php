@@ -8,5 +8,5 @@ use RedJasmine\User\Infrastructure\Repositories\UserTagRepository;
 
 class AdminTagRepository extends UserTagRepository implements AdminTagRepositoryInterface
 {
-    protected static string $eloquentModelClass = AdminTag::class;
+    protected static string $modelClass = AdminTag::class;
 }

@@ -5,12 +5,12 @@ namespace RedJasmine\Community\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Community\Domain\Models\Topic;
 use RedJasmine\Comnunity\Domain\Repositories\TopicRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class TopicRepository extends EloquentRepository implements TopicRepositoryInterface
+class TopicRepository extends Repository implements TopicRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Topic::class;
+    protected static string $modelClass = Topic::class;
 
 
 }

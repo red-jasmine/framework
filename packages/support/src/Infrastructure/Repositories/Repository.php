@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Support\Infrastructure\Repositories;
 
 use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -12,12 +12,12 @@ use Illuminate\Support\Str;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 use Spatie\QueryBuilder\QueryBuilder;
 use Throwable;
 
 /**
- * BaseRepository 基础仓库实现
+ * Repository 基础仓库实现
  *
  * 实现了BaseRepositoryInterface，合并了读写操作的功能。
  * 继承了EloquentRepository的写操作能力，同时集成了QueryBuilderReadRepository的读操作能力。
@@ -25,13 +25,22 @@ use Throwable;
  *
  * @template TClass of Model
  */
-class BaseRepository implements BaseRepositoryInterface
+abstract class Repository implements RepositoryInterface
 {
     /**
-     * @var $eloquentModelClass class-string<TClass>
+     * @var $modelClass class-string<TClass>
      */
-    protected static string $eloquentModelClass;
+    protected static string $modelClass;
 
+    /**
+     * 获取模型类名
+     *
+     * @return class-string<TClass>
+     */
+    public static function getModelClass() : string
+    {
+        return self::$modelClass;
+    }
 
     // ========================================
     // 写操作实现 (Write Operations)
@@ -43,7 +52,7 @@ class BaseRepository implements BaseRepositoryInterface
     public function find(mixed $id) : ?Model
     {
         /** @var class-string<Model> $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::find($id);
     }
 
@@ -53,9 +62,33 @@ class BaseRepository implements BaseRepositoryInterface
     public function findLock($id) : ?Model
     {
         /** @var class-string<Model> $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::lockForUpdate()->find($id);
     }
+
+
+    /**
+     * 根据唯一编号查找记录
+     *
+     * @param  string  $no
+     *
+     * @return ?Model
+     */
+    public function findByNo(string $no) : ?Model
+    {
+        return static::$modelClass::uniqueNo($no)->firstOrFail();
+    }
+
+    /**
+     * @param  string  $no
+     *
+     * @return ?Model
+     */
+    public function findByNoLock(string $no) : ?Model
+    {
+        return static::$modelClass::lockForUpdate()->uniqueNo($no)->firstOrFail();
+    }
+
 
     /**
      * 存储模型实例到数据库
@@ -108,7 +141,7 @@ class BaseRepository implements BaseRepositoryInterface
     public function query() : Builder
     {
         /** @var class-string<Model> $modelClass */
-        $modelClass = static::$eloquentModelClass;
+        $modelClass = static::$modelClass;
         return $modelClass::query();
     }
 

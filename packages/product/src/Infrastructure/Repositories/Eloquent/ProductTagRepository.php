@@ -4,11 +4,11 @@ namespace RedJasmine\Product\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Domain\Tag\Repositories\ProductTagRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ProductTagRepository extends EloquentRepository implements ProductTagRepositoryInterface
+class ProductTagRepository extends Repository implements ProductTagRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ProductTag::class;
+    protected static string $modelClass = ProductTag::class;
 
 }

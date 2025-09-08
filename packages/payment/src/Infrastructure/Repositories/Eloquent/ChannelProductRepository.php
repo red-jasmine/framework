@@ -4,18 +4,18 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ChannelProductRepository extends EloquentRepository implements ChannelProductRepositoryInterface
+class ChannelProductRepository extends Repository implements ChannelProductRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ChannelProduct::class;
+    protected static string $modelClass = ChannelProduct::class;
 
     public function findByCode(string $channelCode, string $code) : ?ChannelProduct
     {
-        return static::$eloquentModelClass::where('code', $code)
-                                          ->where('channel_code', $channelCode)
-                                          ->firstOrFail();
+        return static::$modelClass::where('code', $code)
+                                  ->where('channel_code', $channelCode)
+                                  ->firstOrFail();
     }
 
 

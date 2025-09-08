@@ -3,16 +3,15 @@
 namespace RedJasmine\Product\Infrastructure\Repositories\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ProductSeriesRepository extends EloquentRepository implements ProductSeriesRepositoryInterface
+class ProductSeriesRepository extends Repository implements ProductSeriesRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ProductSeries::class;
+    protected static string $modelClass = ProductSeries::class;
 
     /**
      * @param  ProductSeries  $model

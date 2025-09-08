@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Vip\Infrastructure\Repositories;
 
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Vip\Domain\Models\UserVip;
 use RedJasmine\Vip\Domain\Repositories\UserVipRepositoryInterface;
 
-class UserVipRepository extends EloquentRepository implements UserVipRepositoryInterface
+class UserVipRepository extends Repository implements UserVipRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = UserVip::class;
+    protected static string $modelClass = UserVip::class;
 
 }

@@ -4,11 +4,11 @@ namespace RedJasmine\Product\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ProductGroupRepository extends EloquentRepository implements ProductGroupRepositoryInterface
+class ProductGroupRepository extends Repository implements ProductGroupRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ProductGroup::class;
+    protected static string $modelClass = ProductGroup::class;
 
 }

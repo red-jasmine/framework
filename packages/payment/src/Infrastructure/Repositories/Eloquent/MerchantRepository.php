@@ -4,12 +4,12 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Merchant;
 use RedJasmine\Payment\Domain\Repositories\MerchantRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class MerchantRepository extends EloquentRepository implements MerchantRepositoryInterface
+class MerchantRepository extends Repository implements MerchantRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Merchant::class;
+    protected static string $modelClass = Merchant::class;
 
 
 }

@@ -2,21 +2,18 @@
 
 namespace RedJasmine\Order\Infrastructure\Repositories\Eloquent;
 
-use DB;
 use RedJasmine\Order\Domain\Models\Refund;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
-use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
-use Throwable;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class RefundRepository extends EloquentRepository implements RefundRepositoryInterface
+class RefundRepository extends Repository implements RefundRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Refund::class;
+    protected static string $modelClass = Refund::class;
 
     public function findByNo(string $no) : Refund
     {
-        return static::$eloquentModelClass::where('refund_no', $no)->firstOrFail();
+        return static::$modelClass::where('refund_no', $no)->firstOrFail();
     }
 
 

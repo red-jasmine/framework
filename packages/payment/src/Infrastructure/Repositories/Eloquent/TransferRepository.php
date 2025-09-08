@@ -4,16 +4,16 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class TransferRepository extends EloquentRepository implements TransferRepositoryInterface
+class TransferRepository extends Repository implements TransferRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = Transfer::class;
+    protected static string $modelClass = Transfer::class;
 
     public function findByNo(string $no) : ?Transfer
     {
-        return static::$eloquentModelClass::where('transfer_no', $no)->first();
+        return static::$modelClass::where('transfer_no', $no)->first();
     }
 
 

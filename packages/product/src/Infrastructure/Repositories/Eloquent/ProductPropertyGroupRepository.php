@@ -5,12 +5,12 @@ namespace RedJasmine\Product\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyGroup;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 
-class ProductPropertyGroupRepository extends EloquentRepository implements ProductPropertyGroupRepositoryInterface
+class ProductPropertyGroupRepository extends Repository implements ProductPropertyGroupRepositoryInterface
 {
-    protected static string $eloquentModelClass = ProductPropertyGroup::class;
+    protected static string $modelClass = ProductPropertyGroup::class;
 
     /**
      * @param string $name
@@ -19,7 +19,7 @@ class ProductPropertyGroupRepository extends EloquentRepository implements Produ
      */
     public function findByName(string $name) : ?ProductPropertyGroup
     {
-        return static::$eloquentModelClass::where('name', $name)->first();
+        return static::$modelClass::where('name', $name)->first();
     }
 
 

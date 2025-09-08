@@ -7,11 +7,11 @@ use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
 use RedJasmine\Shopping\Domain\Repositories\ShoppingCartRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ShoppingCartRepository extends EloquentRepository implements ShoppingCartRepositoryInterface
+class ShoppingCartRepository extends Repository implements ShoppingCartRepositoryInterface
 {
-    protected static string $eloquentModelClass = ShoppingCart::class;
+    protected static string $modelClass = ShoppingCart::class;
 
 
     public function findActiveByUser(UserInterface $user, string $market) : ?ShoppingCart

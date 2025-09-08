@@ -6,12 +6,12 @@ namespace RedJasmine\Card\Infrastructure\Repositories\Eloquent;
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
- * @property CardGroupBindProduct $eloquentModelClass
+ * @property CardGroupBindProduct $modelClass
  */
-class CardGroupBindProductRepository extends EloquentRepository implements CardGroupBindProductRepositoryInterface
+class CardGroupBindProductRepository extends Repository implements CardGroupBindProductRepositoryInterface
 {
 
     /**

@@ -4,9 +4,9 @@ namespace RedJasmine\Coupon\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Repositories\CouponRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class CouponRepository extends EloquentRepository implements CouponRepositoryInterface
+class CouponRepository extends Repository implements CouponRepositoryInterface
 {
-    protected static string $eloquentModelClass = Coupon::class;
+    protected static string $modelClass = Coupon::class;
 } 

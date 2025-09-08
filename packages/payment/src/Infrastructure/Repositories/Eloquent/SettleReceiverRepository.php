@@ -4,12 +4,12 @@ namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class SettleReceiverRepository extends EloquentRepository implements SettleReceiverRepositoryInterface
+class SettleReceiverRepository extends Repository implements SettleReceiverRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = SettleReceiver::class;
+    protected static string $modelClass = SettleReceiver::class;
 
 
 }

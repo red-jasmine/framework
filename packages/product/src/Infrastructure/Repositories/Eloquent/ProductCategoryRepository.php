@@ -4,16 +4,16 @@ namespace RedJasmine\Product\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ProductCategoryRepository extends EloquentRepository implements ProductCategoryRepositoryInterface
+class ProductCategoryRepository extends Repository implements ProductCategoryRepositoryInterface
 {
 
-    protected static string $eloquentModelClass = ProductCategory::class;
+    protected static string $modelClass = ProductCategory::class;
 
     public function findByName($name) : ?ProductCategory
     {
-        return static::$eloquentModelClass::where('name', $name)->first();
+        return static::$modelClass::where('name', $name)->first();
     }
 
 

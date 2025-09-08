@@ -4,14 +4,14 @@ namespace RedJasmine\Invitation\Infrastructure\Repositories\Eloquent;
 
 use RedJasmine\Invitation\Domain\Models\InvitationRecord;
 use RedJasmine\Invitation\Domain\Repositories\InvitationRecordRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**
  * 邀请记录Eloquent仓库实现
  */
-class InvitationRecordRepository extends EloquentRepository implements InvitationRecordRepositoryInterface
+class InvitationRecordRepository extends Repository implements InvitationRecordRepositoryInterface
 {
-    protected static string $eloquentModelClass = InvitationRecord::class;
+    protected static string $modelClass = InvitationRecord::class;
 
     /**
      * 根据邀请码和被邀请人查找记录
