@@ -23,7 +23,7 @@ class FindBuyerCartQueryHandler extends QueryHandler
 
     public function handle(FindBuyerCartQuery $query) : ?ShoppingCart
     {
-        $cart = $this->service->readRepository->findByMarketUser($query->buyer, $query->market);
+        $cart = $this->service->repository->findByMarketUser($query->buyer, $query->market);
         if ($cart) {
             // 还需要获取商品信息
 
@@ -42,4 +42,4 @@ class FindBuyerCartQueryHandler extends QueryHandler
 
         return $cart ?? $this->service->newModel($query);
     }
-} 
+}

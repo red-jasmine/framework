@@ -11,7 +11,6 @@ use RedJasmine\Product\Application\Brand\Services\Handlers\BrandCreateCommandHan
 use RedJasmine\Product\Application\Brand\Services\Handlers\BrandDeleteCommandHandler;
 use RedJasmine\Product\Application\Brand\Services\Handlers\BrandUpdateCommandHandler;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
-use RedJasmine\Product\Domain\Brand\Repositories\BrandReadRepositoryInterface;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -57,7 +56,7 @@ class BrandApplicationService extends ApplicationService
             );
 
         }
-        return parent::newModel($data); 
+        return parent::newModel($data);
     }
 
     public function isAllowUse(int $id) : bool

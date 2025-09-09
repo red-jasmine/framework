@@ -8,7 +8,6 @@ use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupDeleteCom
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCommand;
 use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupTreeQuery;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
-use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
@@ -35,11 +34,8 @@ class ProductGroupApplicationService extends ApplicationService
     protected static string $modelClass = ProductGroup::class;
 
     public function __construct(
-        public ProductGroupRepositoryInterface     $repository,
-        public ProductGroupReadRepositoryInterface $readRepository
-    )
-    {
-
+        public ProductGroupRepositoryInterface $repository
+    ) {
     }
 
     public function newModel($data = null) : Model

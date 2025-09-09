@@ -4,8 +4,8 @@ namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
 
 use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
 use RedJasmine\PointsMall\Domain\Repositories\PointProductCategoryReadRepositoryInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\Support\Infrastructure\Repositories\HasTree;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 

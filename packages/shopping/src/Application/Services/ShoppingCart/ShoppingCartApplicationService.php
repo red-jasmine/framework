@@ -18,7 +18,6 @@ use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQ
 use RedJasmine\Shopping\Application\Services\ShoppingCart\Queries\FindBuyerCartQueryHandler;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;
 use RedJasmine\Shopping\Domain\Models\ShoppingCartProduct;
-use RedJasmine\Shopping\Domain\Repositories\ShoppingCartReadRepositoryInterface;
 use RedJasmine\Shopping\Domain\Repositories\ShoppingCartRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Data\Data;
@@ -51,7 +50,6 @@ class ShoppingCartApplicationService extends ApplicationService
 
     public function __construct(
         public ShoppingCartRepositoryInterface $repository,
-        public ShoppingCartReadRepositoryInterface $readRepository,
     ) {
     }
 

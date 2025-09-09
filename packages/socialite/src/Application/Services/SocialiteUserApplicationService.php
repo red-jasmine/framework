@@ -12,7 +12,6 @@ use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindComman
 use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQuery;
 use RedJasmine\Socialite\Application\Services\Queries\GetUsersByOwnerQueryHandler;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
-use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Queries\FindQueryHandler;
@@ -38,7 +37,6 @@ class SocialiteUserApplicationService extends ApplicationService
 
     public function __construct(
         public SocialiteUserRepositoryInterface $repository,
-        public SocialiteUserReadRepositoryInterface $readRepository
     ) {
     }
 

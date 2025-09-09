@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Region\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Region\Infrastructure\Repositories;
 
 use RedJasmine\Region\Domain\Models\Region;
 use RedJasmine\Region\Domain\Repositories\RegionRepositoryInterface;

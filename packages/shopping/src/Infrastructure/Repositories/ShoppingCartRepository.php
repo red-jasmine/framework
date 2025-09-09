@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Shopping\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Shopping\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Shopping\Domain\Models\ShoppingCart;

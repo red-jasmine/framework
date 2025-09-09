@@ -13,7 +13,6 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateComman
 use RedJasmine\Product\Application\Product\Services\Queries\GetProductPriceQueryHandler;
 use RedJasmine\Product\Application\Product\Services\Queries\GetProductPurchaseQuery;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -42,11 +41,8 @@ class ProductApplicationService extends ApplicationService
 
 
     public function __construct(
-        public ProductRepositoryInterface $repository,
-        public ProductReadRepositoryInterface $readRepository
-
+        public ProductRepositoryInterface $repository
     ) {
-
     }
 
     public function getDefaultModelWithInfo() : array

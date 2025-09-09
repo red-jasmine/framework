@@ -1,32 +1,50 @@
 <?php
 
-namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
+namespace RedJasmine\Product\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
-use RedJasmine\Product\Domain\Group\Repositories\ProductGroupReadRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
-use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\HasTree;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class ProductGroupReadRepository extends QueryBuilderReadRepository implements ProductGroupReadRepositoryInterface
+/**
+ * 商品分组仓库实现
+ *
+ * 基于Repository实现，提供商品分组实体的读写操作能力
+ */
+class ProductGroupRepository extends Repository implements ProductGroupRepositoryInterface
 {
     use HasTree;
 
     /**
-     * @var $modelClass class-string
+     * @var string Eloquent模型类
      */
     protected static string $modelClass = ProductGroup::class;
 
+    /**
+     * 获取树形结构
+     */
+    public function tree(Query $query): array
+    {
+        return $this->getTree($query);
+    }
 
-    public function findByName($name) : ?ProductGroup
+    /**
+     * 根据名称查找分组
+     */
+    public function findByName($name): ?ProductGroup
     {
         return $this->query()->where('name', $name)->first();
     }
 
-
-    public function allowedFields() : array
+    /**
+     * 配置允许的字段
+     */
+    protected function allowedFields($query = null): array
     {
         return [
             'id',
@@ -40,10 +58,12 @@ class ProductGroupReadRepository extends QueryBuilderReadRepository implements P
             'status',
             'extra',
         ];
-
     }
 
-    public function allowedFilters() : array
+    /**
+     * 配置允许的过滤器
+     */
+    protected function allowedFilters($query = null): array
     {
         return [
             AllowedFilter::exact('name'),
@@ -59,6 +79,4 @@ class ProductGroupReadRepository extends QueryBuilderReadRepository implements P
             )),
         ];
     }
-
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Region\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Region\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Region\Domain\Models\Country;

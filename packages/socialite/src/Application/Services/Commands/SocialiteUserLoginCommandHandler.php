@@ -50,7 +50,7 @@ class SocialiteUserLoginCommandHandler extends CommandHandler
                 'app_id'    => $command->appId,
 
             ]);
-            $socialiteUser = $this->service->readRepository->findUser($query);
+            $socialiteUser = $this->service->repository->findUser($query);
 
             if (!$socialiteUser) {
                 $socialiteUser = SocialiteUser::make([

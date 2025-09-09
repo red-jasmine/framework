@@ -40,7 +40,7 @@ class SocialiteUserUnbindCommandHandler extends CommandHandler
                 'app_id'    => $command->appId,
             ]);
 
-            $socialiteUser = $this->service->readRepository->findUser($query);
+            $socialiteUser = $this->service->repository->findUser($query);
 
             $socialiteUser->unbind();
 

@@ -40,7 +40,7 @@ class SocialiteUserBindCommandHandler extends CommandHandler
                 'app_id'    => $command->appId,
             ]);
 
-            $socialiteUser = $this->service->readRepository->findUser($query) ?? SocialiteUser::make(
+            $socialiteUser = $this->service->repository->findUser($query) ?? SocialiteUser::make(
                 [
                     'provider'  => $command->provider,
                     'client_id' => $command->clientId,

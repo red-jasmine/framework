@@ -5,8 +5,8 @@ namespace RedJasmine\Product\Infrastructure\ReadRepositories\Mysql;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\Support\Infrastructure\Repositories\HasTree;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class ProductCategoryReadRepository extends QueryBuilderReadRepository implements ProductCategoryReadRepositoryInterface

@@ -7,7 +7,6 @@ use RedJasmine\Region\Application\Services\Region\Queries\RegionChildrenQueryHan
 use RedJasmine\Region\Application\Services\Region\Queries\RegionTreeQuery;
 use RedJasmine\Region\Application\Services\Region\Queries\RegionTreeQueryHandler;
 use RedJasmine\Region\Domain\Models\Region;
-use RedJasmine\Region\Domain\Repositories\RegionReadRepositoryInterface;
 use RedJasmine\Region\Domain\Repositories\RegionRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -17,13 +16,10 @@ use RedJasmine\Support\Application\ApplicationService;
  */
 class RegionApplicationService extends ApplicationService
 {
-
-
     protected static string $modelClass = Region::class;
 
     public function __construct(
         public RegionRepositoryInterface $repository,
-        public RegionReadRepositoryInterface $readRepository,
     ) {
     }
 

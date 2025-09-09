@@ -8,7 +8,6 @@ use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryDel
 use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryUpdateCommand;
 use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
-use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryReadRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;

@@ -16,7 +16,7 @@ class RegionTreeQueryHandler extends QueryHandler
 
     public function handle(RegionTreeQuery $query) : array
     {
-        return $this->service->readRepository->tree($query);
+        return $this->service->repository->tree($query);
     }
 
 }

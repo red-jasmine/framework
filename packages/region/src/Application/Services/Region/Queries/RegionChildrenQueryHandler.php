@@ -17,7 +17,7 @@ class RegionChildrenQueryHandler extends QueryHandler
     public function handle(RegionChildrenQuery $query) : array
     {
         $query->setIsWithCount(false);
-        return $this->service->readRepository->children($query);
+        return $this->service->repository->children($query);
     }
 
 }

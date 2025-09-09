@@ -33,7 +33,7 @@ class SocialiteUserClearCommandHandler extends CommandHandler
 
         try {
             $socialiteUsers = $this->service
-                ->readRepository
+                ->repository
                 ->getUsersByOwner($command->owner, $command->appId, $command->provider);
 
             foreach ($socialiteUsers as $socialiteUser) {

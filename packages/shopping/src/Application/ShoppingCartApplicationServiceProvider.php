@@ -3,19 +3,19 @@
 namespace RedJasmine\Shopping\Application;
 
 use Illuminate\Support\ServiceProvider;
-use RedJasmine\Shopping\Domain\Repositories\ShoppingCartReadRepositoryInterface;
 use RedJasmine\Shopping\Domain\Repositories\ShoppingCartRepositoryInterface;
-use RedJasmine\Shopping\Infrastructure\ReadRepositories\Mysql\ShoppingCartReadRepository;
-use RedJasmine\Shopping\Infrastructure\Repositories\Eloquent\ShoppingCartRepository;
+use RedJasmine\Shopping\Infrastructure\Repositories\ShoppingCartRepository;
 
+/**
+ * 购物车应用服务提供者
+ *
+ * 使用统一的仓库接口，简化服务绑定
+ */
 class ShoppingCartApplicationServiceProvider extends ServiceProvider
 {
-    public function register() : void
+    public function register(): void
     {
-        // 仓库绑定
+        // 统一仓库接口绑定，支持读写操作
         $this->app->bind(ShoppingCartRepositoryInterface::class, ShoppingCartRepository::class);
-        $this->app->bind(ShoppingCartReadRepositoryInterface::class, ShoppingCartReadRepository::class);
-
-
     }
-} 
+}
