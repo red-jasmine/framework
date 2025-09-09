@@ -10,8 +10,8 @@ use RedJasmine\Support\Data\UserData;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\Support\Infrastructure\ReadRepositories\HasTree;
 use RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository;
+use RedJasmine\Support\Infrastructure\Repositories\HasTree;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 

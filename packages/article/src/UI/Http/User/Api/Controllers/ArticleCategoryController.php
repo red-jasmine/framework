@@ -24,10 +24,10 @@ class ArticleCategoryController extends Controller
     public function __construct(
         protected Service $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        // 使用统一的仓库接口，支持读写操作
+        $this->service->repository->withQuery(function ($query) {
             $query->show();
         });
-
     }
 
     public function authorize($ability, $arguments = []) : bool

@@ -24,10 +24,10 @@ class ArticleController extends Controller
     public function __construct(
         protected ArticleApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        // 使用统一的仓库接口，支持读写操作
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
-
     }
 
     public function authorize($ability, $arguments = []) : bool

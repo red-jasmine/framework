@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Infrastructure\ReadRepositories;
+namespace RedJasmine\Support\Infrastructure\Repositories;
 
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
