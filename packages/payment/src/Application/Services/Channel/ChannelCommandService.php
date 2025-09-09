@@ -3,7 +3,6 @@
 namespace RedJasmine\Payment\Application\Services\Channel;
 
 use RedJasmine\Payment\Domain\Models\Channel;
-use RedJasmine\Payment\Domain\Repositories\ChannelReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Data\Data;
@@ -13,10 +12,7 @@ use RedJasmine\Support\Data\Data;
  */
 class ChannelCommandService extends ApplicationService
 {
-    public function __construct(
-        public ChannelRepositoryInterface $repository,
-        public ChannelReadRepositoryInterface $readRepository,
-    ) {
+        ) {
     }
 
     /**
@@ -27,3 +23,4 @@ class ChannelCommandService extends ApplicationService
 
     protected static string $modelClass = Channel::class;
 }
+

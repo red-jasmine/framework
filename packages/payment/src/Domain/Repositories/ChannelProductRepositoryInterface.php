@@ -16,3 +16,4 @@ interface ChannelProductRepositoryInterface extends RepositoryInterface
     public function findByCode(string $channelCode, string $code) : ?ChannelProduct;
 
 }
+

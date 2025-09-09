@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\Notify;
 use RedJasmine\Payment\Domain\Repositories\NotifyRepositoryInterface;
@@ -18,3 +18,4 @@ class NotifyRepository extends Repository implements NotifyRepositoryInterface
 
 
 }
+

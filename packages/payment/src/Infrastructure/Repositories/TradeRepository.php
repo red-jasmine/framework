@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
@@ -18,3 +18,4 @@ class TradeRepository extends Repository implements TradeRepositoryInterface
 
 
 }
+

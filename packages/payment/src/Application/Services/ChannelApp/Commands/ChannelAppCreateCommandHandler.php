@@ -12,8 +12,7 @@ class ChannelAppCreateCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected ChannelAppCommandService $service,
-    ) {
+        protected ChannelAppCommandService $service) {
     }
 
     public function handle(ChannelAppCreateCommand $command) : ChannelApp
@@ -41,3 +40,4 @@ class ChannelAppCreateCommandHandler extends CommandHandler
     }
 
 }
+

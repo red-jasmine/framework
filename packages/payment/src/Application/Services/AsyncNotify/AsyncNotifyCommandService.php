@@ -20,8 +20,7 @@ class AsyncNotifyCommandService extends ApplicationService
 
     public function __construct(
         public NotifyRepositoryInterface $repository,
-        public AsyncNotifyService $asyncNotifyService,
-    ) {
+        public AsyncNotifyService $asyncNotifyService) {
     }
 
 
@@ -43,3 +42,4 @@ class AsyncNotifyCommandService extends ApplicationService
     ];
 
 }
+

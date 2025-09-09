@@ -1,12 +1,13 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermissionRepositoryInterface
+class MerchantChannelAppPermissionRepository extends Repository implements MerchantChannelAppPermissionRepositoryInterface
 {
 
     protected static string $modelClass = MerchantChannelAppPermission::class;
@@ -19,12 +20,6 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
     }
 
 
-    public function store(MerchantChannelAppPermission $model) : MerchantChannelAppPermission
-    {
-        $model->push();
-
-        return $model;
-    }
 
     public function findMerchantAppAuthorizedChannelApps(int $merchantAppId) : Collection
     {
@@ -35,3 +30,4 @@ class MerchantChannelAppPermissionRepository implements MerchantChannelAppPermis
 
 
 }
+

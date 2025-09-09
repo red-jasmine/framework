@@ -25,9 +25,7 @@ class RefundApplicationService extends ApplicationService
 
     public function __construct(
         public TradeRepositoryInterface $tradeRepository,
-        public RefundRepositoryInterface $refundRepository,
-
-    ) {
+        public RefundRepositoryInterface $refundRepository) {
     }
 
     /**
@@ -44,3 +42,4 @@ class RefundApplicationService extends ApplicationService
         'cancel'    => RefundCancelCommandHandler::class,
     ];
 }
+

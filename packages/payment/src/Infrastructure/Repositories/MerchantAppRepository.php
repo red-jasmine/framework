@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\MerchantApp;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
@@ -13,3 +13,4 @@ class MerchantAppRepository extends Repository implements MerchantAppRepositoryI
 
 
 }
+

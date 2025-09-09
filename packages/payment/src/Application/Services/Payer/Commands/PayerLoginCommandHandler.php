@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Application\Services\Payer\Commands;
 
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Payment\Domain\Repositories\MerchantAppReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\PayerService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
@@ -13,11 +13,9 @@ class PayerLoginCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected MerchantAppReadRepositoryInterface $merchantAppReadRepository,
+        protected MerchantAppRepositoryInterface $merchantAppRepository,
         protected ChannelAppPermissionService $channelAppPermissionService,
-        protected PayerService $payerService,
-
-    ) {
+        protected PayerService $payerService) {
     }
 
 
@@ -25,7 +23,7 @@ class PayerLoginCommandHandler extends CommandHandler
     {
 
         // 查询应用
-        $merchantApp = $this->merchantAppReadRepository->find(FindQuery::from(['id' => $command->merchantAppId]));
+        $merchantApp = $this->merchantAppRepository->find($command->merchantAppId);
 
         // 根据应用查询授权
         $availableChannelApps = $this->channelAppPermissionService->getAvailableChannelAppsByMerchantApp($merchantApp->id);

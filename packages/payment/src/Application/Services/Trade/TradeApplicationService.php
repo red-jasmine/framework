@@ -34,8 +34,7 @@ class TradeApplicationService extends ApplicationService
         public TradeRepositoryInterface $repository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
         public TradeRoutingService $tradeRoutingService,
-        public PaymentChannelService $paymentChannelService,
-    ) {
+        public PaymentChannelService $paymentChannelService) {
     }
 
     /**
@@ -60,3 +59,4 @@ class TradeApplicationService extends ApplicationService
         return PaymentSDK::init($trade);
     }
 }
+

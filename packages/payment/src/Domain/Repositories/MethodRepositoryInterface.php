@@ -15,3 +15,4 @@ interface MethodRepositoryInterface extends RepositoryInterface
     public function findByCode(string $code) : ?Method;
 
 }
+

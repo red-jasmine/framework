@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\Method;
 use RedJasmine\Payment\Domain\Repositories\MethodRepositoryInterface;
@@ -18,3 +18,4 @@ class MethodRepository extends Repository implements MethodRepositoryInterface
 
 
 }
+

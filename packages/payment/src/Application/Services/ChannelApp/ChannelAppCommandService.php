@@ -8,7 +8,6 @@ use RedJasmine\Payment\Application\Services\ChannelApp\Commands\MerchantChannelA
 use RedJasmine\Payment\Domain\Data\ChannelAppData;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
-use RedJasmine\Payment\Domain\Repositories\ChannelAppReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
@@ -24,7 +23,6 @@ class ChannelAppCommandService extends ApplicationService
 {
     public function __construct(
         public ChannelAppRepositoryInterface $repository,
-        public ChannelAppReadRepositoryInterface $readRepository,
         public ChannelAppTransformer $transformer,
         public MerchantRepositoryInterface $merchantRepository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
@@ -45,3 +43,4 @@ class ChannelAppCommandService extends ApplicationService
         'authorize' => MerchantChannelAppPermissionCommandHandler::class,
     ];
 }
+

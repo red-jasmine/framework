@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Repositories\TransferRepositoryInterface;
@@ -18,3 +18,4 @@ class TransferRepository extends Repository implements TransferRepositoryInterfa
 
 
 }
+

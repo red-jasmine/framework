@@ -3,7 +3,6 @@
 namespace RedJasmine\Payment\Application\Services\SettleReceiver;
 
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
-use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\SettleReceiverTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -14,11 +13,7 @@ use RedJasmine\Support\Data\Data;
  */
 class SettleReceiverCommandService extends ApplicationService
 {
-    public function __construct(
-        public SettleReceiverRepositoryInterface $repository,
-        public SettleReceiverReadRepositoryInterface $readRepository,
-        public SettleReceiverTransformer $transformer,
-    ) {
+            public SettleReceiverTransformer $transformer) {
     }
 
     /**
@@ -29,3 +24,4 @@ class SettleReceiverCommandService extends ApplicationService
 
     protected static string $modelClass = SettleReceiver::class;
 }
+

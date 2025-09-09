@@ -10,5 +10,6 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface SettleReceiverRepositoryInterface extends RepositoryInterface
 {
-
+    public function findByMerchantAppReceivers(int $merchantAppId, string $receiverType, int $receiverId, string $channelCode);
 }
+

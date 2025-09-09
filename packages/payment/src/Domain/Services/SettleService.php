@@ -8,7 +8,7 @@ use RedJasmine\Payment\Domain\Models\Extensions\SettleDetail;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Models\Trade;
-use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
+use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use Cknow\Money\Money;
@@ -22,7 +22,7 @@ class SettleService
     public function __construct(
         protected TradeRepositoryInterface $tradeRepository,
         protected SettleRepositoryInterface $settleRepository,
-        protected SettleReceiverReadRepositoryInterface $settleReceiverReadRepository,
+        protected SettleReceiverRepositoryInterface $settleReceiverRepository,
     ) {
     }
 
@@ -66,7 +66,7 @@ class SettleService
      */
     protected function filterSettleReceiver(Settle $settle, SettleDetail $settleDetail)
     {
-        $receivers = $this->settleReceiverReadRepository->findByMerchantAppReceivers(
+        $receivers = $this->settleReceiverRepository->findByMerchantAppReceivers(
             $settle->merchant_app_id,
             $settleDetail->receiver_type,
             $settleDetail->receiver_id,

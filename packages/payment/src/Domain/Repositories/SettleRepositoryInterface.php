@@ -12,3 +12,4 @@ interface SettleRepositoryInterface extends RepositoryInterface
 {
     public function findByNo(string $no) : ?Settle;
 }
+

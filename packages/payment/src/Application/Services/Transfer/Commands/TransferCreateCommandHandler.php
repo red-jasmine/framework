@@ -18,8 +18,7 @@ class TransferCreateCommandHandler extends CommandHandler
     public function __construct(
         protected TransferApplicationService $service,
         protected ChannelAppPermissionService $channelAppPermissionService,
-        protected TransferRoutingService $transferRoutingService,
-    ) {
+        protected TransferRoutingService $transferRoutingService) {
     }
 
     /**
@@ -71,3 +70,4 @@ class TransferCreateCommandHandler extends CommandHandler
     }
 
 }
+

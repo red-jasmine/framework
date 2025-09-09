@@ -13,3 +13,4 @@ interface MerchantAppRepositoryInterface extends RepositoryInterface
 {
 
 }
+

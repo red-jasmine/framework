@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\ChannelApp;
 use RedJasmine\Payment\Domain\Repositories\ChannelAppRepositoryInterface;
@@ -13,3 +13,4 @@ class ChannelAppRepository extends Repository implements ChannelAppRepositoryInt
 
 
 }
+

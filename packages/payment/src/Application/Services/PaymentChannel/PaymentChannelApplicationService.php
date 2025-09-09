@@ -34,9 +34,7 @@ class PaymentChannelApplicationService extends ApplicationService
         public ChannelAppRepositoryInterface $channelAppRepository,
         public ChannelProductRepositoryInterface $channelProductRepository,
         public MerchantAppRepositoryInterface $merchantAppRepository,
-        public PaymentChannelService $paymentChannelService,
-
-    ) {
+        public PaymentChannelService $paymentChannelService) {
     }
 
     protected static array $handlers = [];
@@ -51,3 +49,4 @@ class PaymentChannelApplicationService extends ApplicationService
 
 
 }
+

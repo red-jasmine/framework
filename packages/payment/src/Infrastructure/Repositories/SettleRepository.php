@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Payment\Infrastructure\Repositories\Eloquent;
+namespace RedJasmine\Payment\Infrastructure\Repositories;
 
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Repositories\SettleRepositoryInterface;
@@ -18,3 +18,4 @@ class SettleRepository extends Repository implements SettleRepositoryInterface
 
 
 }
+

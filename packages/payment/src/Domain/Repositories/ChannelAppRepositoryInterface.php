@@ -12,3 +12,4 @@ interface ChannelAppRepositoryInterface extends RepositoryInterface
 {
 
 }
+

@@ -15,8 +15,7 @@ use RedJasmine\Support\Application\ApplicationService;
 class SettleApplicationService extends ApplicationService
 {
     public function __construct(
-        public SettleRepositoryInterface $repository,
-    ) {
+        public SettleRepositoryInterface $repository) {
     }
 
     /**
@@ -32,3 +31,4 @@ class SettleApplicationService extends ApplicationService
         'create' => SettleCreateCommandHandler::class,
     ];
 }
+
