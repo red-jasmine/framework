@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Support\Data\Data;
 use Throwable;
-
+use RedJasmine\Support\Application\ApplicationService;
+/**
+ * @property ApplicationService $service
+ */
 abstract class BaseCommandHandler extends CommandHandler
 {
     abstract protected string $name {

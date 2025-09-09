@@ -24,9 +24,9 @@ class CreateCommandHandler extends BaseCommandHandler
     protected function validate(HandleContext $context) : void
     {
         // 业务逻辑验证
-        if (method_exists($context->getCommand(), 'validateBusinessRules')) {
-
-            $context->getCommand()->validateBusinessRules();
+        $command = $context->getCommand();
+        if (method_exists($command, 'validateBusinessRules')) {
+            $command->validateBusinessRules();
         }
     }
 

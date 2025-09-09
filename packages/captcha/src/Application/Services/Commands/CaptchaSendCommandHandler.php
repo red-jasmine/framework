@@ -17,7 +17,7 @@ class CaptchaSendCommandHandler extends CommandHandler
         public CaptchaApplicationService $service,
         public CaptchaSenderService $senderService,
     ) {
-        $this->context = new HandleContext();
+        $this->initHandleContext();
     }
 
     /**

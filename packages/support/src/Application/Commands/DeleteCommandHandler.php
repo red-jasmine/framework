@@ -20,7 +20,7 @@ class DeleteCommandHandler extends BaseCommandHandler
     public function __construct(
         protected $service
     ) {
-        $this->getContext();
+        $this->initHandleContext();
     }
 
     protected function getModel(Data $command) : Model
