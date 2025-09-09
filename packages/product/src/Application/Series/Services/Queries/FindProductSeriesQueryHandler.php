@@ -16,9 +16,9 @@ class FindProductSeriesQueryHandler extends QueryHandler
 
     public function handle(FindProductSeriesQuery $query)
     {
-        //$this->service->readRepository
+        //$this->service->repository
 
-        return $this->service->readRepository->findProductSeries($query->getKey());
+        return $this->service->repository->findProductSeries($query->getKey());
     }
 
 }

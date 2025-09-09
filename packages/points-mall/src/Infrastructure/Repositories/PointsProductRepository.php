@@ -1,23 +1,30 @@
 <?php
 
-namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
+namespace RedJasmine\PointsMall\Infrastructure\Repositories;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
-use RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 
-class PointsProductReadRepository extends QueryBuilderReadRepository implements PointsProductReadRepositoryInterface
+/**
+ * 积分商品仓库实现
+ *
+ * 基于Repository实现，提供积分商品实体的读写操作能力
+ */
+class PointsProductRepository extends Repository implements PointsProductRepositoryInterface
 {
-    public static $modelClass = PointsProduct::class;
+    /**
+     * @var string Eloquent模型类
+     */
+    protected static string $modelClass = PointsProduct::class;
 
     /**
-     * 允许的过滤器配置
+     * 配置允许的过滤器
      */
-    public function allowedFilters(): array
+    protected function allowedFilters($query = null): array
     {
         return [
             AllowedFilter::partial('title'),
@@ -36,9 +43,9 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
     }
 
     /**
-     * 允许的排序字段配置
+     * 配置允许的排序字段
      */
-    public function allowedSorts(): array
+    protected function allowedSorts($query = null): array
     {
         return [
             AllowedSort::field('id'),
@@ -53,9 +60,9 @@ class PointsProductReadRepository extends QueryBuilderReadRepository implements 
     }
 
     /**
-     * 允许包含的关联配置
+     * 配置允许包含的关联
      */
-    public function allowedIncludes(): array
+    protected function allowedIncludes($query = null): array
     {
         return [
             'category',

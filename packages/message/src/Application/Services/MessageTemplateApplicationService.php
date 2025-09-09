@@ -23,7 +23,7 @@ class MessageTemplateApplicationService extends ApplicationService
     ) {
     }
 
-    protected static array $macros = [
+    protected static $macros = [
         'create' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateCreateCommandHandler::class,
         'update' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateUpdateCommandHandler::class,
         'delete' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateDeleteCommandHandler::class,
@@ -42,7 +42,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function findByCode(string $code): ?MessageTemplate
     {
-        return $this->readRepository->findByCode($code);
+        return $this->repository->findByCode($code);
     }
 
     /**
@@ -50,7 +50,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getEnabledList(): array
     {
-        return $this->readRepository->getEnabledList()->toArray();
+        return $this->repository->getEnabledList()->toArray();
     }
 
     /**
@@ -58,7 +58,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getByBiz(string $biz): array
     {
-        return $this->readRepository->getByBiz($biz)->toArray();
+        return $this->repository->getByBiz($biz)->toArray();
     }
 
     /**
@@ -66,7 +66,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getByCategory(int $categoryId): array
     {
-        return $this->readRepository->getByCategory($categoryId)->toArray();
+        return $this->repository->getByCategory($categoryId)->toArray();
     }
 
     /**
@@ -74,7 +74,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getByType(string $type): array
     {
-        return $this->readRepository->getByType($type)->toArray();
+        return $this->repository->getByType($type)->toArray();
     }
 
     /**
@@ -82,7 +82,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getPopular(int $limit = 10): array
     {
-        return $this->readRepository->getPopular($limit)->toArray();
+        return $this->repository->getPopular($limit)->toArray();
     }
 
     /**
@@ -90,7 +90,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function searchTemplates(string $keyword): array
     {
-        return $this->readRepository->search($keyword)->toArray();
+        return $this->repository->search($keyword)->toArray();
     }
 
     /**
@@ -98,7 +98,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getUsageStatistics(): array
     {
-        return $this->readRepository->getUsageStatistics()->toArray();
+        return $this->repository->getUsageStatistics()->toArray();
     }
 
     /**
@@ -106,7 +106,7 @@ class MessageTemplateApplicationService extends ApplicationService
      */
     public function getVariableStatistics(): array
     {
-        return $this->readRepository->getVariableStatistics();
+        return $this->repository->getVariableStatistics();
     }
 
     /**

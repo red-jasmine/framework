@@ -22,7 +22,7 @@ class SeriesController extends Controller
 
     ) {
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
 

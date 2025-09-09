@@ -35,7 +35,6 @@ class ProductCategoryApplicationService extends ApplicationService
 
     public function __construct(
         public ProductCategoryRepositoryInterface $repository,
-        public ProductCategoryReadRepositoryInterface $readRepository,
     ) {
 
     }
@@ -52,12 +51,12 @@ class ProductCategoryApplicationService extends ApplicationService
     public function tree(ProductCategoryTreeQuery $query) : array
     {
 
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->readRepository->find(FindQuery::make($id))?->isAllowUse());
+        return (bool)($this->repository->find(FindQuery::make($id))?->isAllowUse());
     }
 
 

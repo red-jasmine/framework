@@ -10,7 +10,6 @@ use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\Poin
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPayCommand;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Commands\PointsExchangeOrderPayCommandHandler;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
-use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderReadRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Services\PointsExchangeService;
@@ -33,11 +32,9 @@ class PointsExchangeOrderApplicationService extends ApplicationService
 
     public function __construct(
         public PointsExchangeOrderRepositoryInterface $repository,
-        public PointsExchangeOrderReadRepositoryInterface $readRepository,
         public PointsExchangeService $pointsExchangeService,
         public PointsProductRepositoryInterface $pointsProductRepository,
         public PointsExchangeOrderTransformer $transformer,
-
     ) {
     }
 

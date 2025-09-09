@@ -18,7 +18,7 @@ class ActivityFindQueryHandler extends QueryHandler
 
     public function handle(ActivityFindQuery $query): ?Activity
     {
-        $repository = $this->service->readRepository;
+        $repository = $this->service->repository;
         
         // 设置包含关联
         $includes = [];

@@ -9,7 +9,6 @@ use RedJasmine\Vip\Application\Services\Queries\FindUserVipQuery;
 use RedJasmine\Vip\Application\Services\Queries\FindUserVipQueryHandle;
 use RedJasmine\Vip\Domain\Models\UserVip;
 use RedJasmine\Vip\Domain\Repositories\UserVipOrderRepositoryInterface;
-use RedJasmine\Vip\Domain\Repositories\UserVipReadRepositoryInterface;
 use RedJasmine\Vip\Domain\Repositories\UserVipRepositoryInterface;
 use RedJasmine\Vip\Domain\Services\UserVipDomainService;
 
@@ -23,7 +22,6 @@ class UserVipApplicationService extends ApplicationService
 
     public function __construct(
         public UserVipRepositoryInterface $repository,
-        public UserVipReadRepositoryInterface $readRepository,
         public UserVipDomainService $domainService,
         public UserVipOrderRepositoryInterface $userVipOrderRepository,
     ) {

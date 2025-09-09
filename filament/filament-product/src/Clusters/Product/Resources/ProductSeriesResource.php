@@ -89,7 +89,7 @@ class ProductSeriesResource extends Resource
                                                                         ->searchable()
                                                                         ->inlineLabel()
                                                                         ->options(fn(Forms\Get $get
-                                                                        ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
+                                                                        ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                             $get('../../owner_type'))
                                                                                                                               ->where('owner_id',
                                                                                                                   (int) $get('../../owner_id'))->select([
@@ -97,7 +97,7 @@ class ProductSeriesResource extends Resource
                                                                             ])->limit(10)->pluck('title', 'id')->toArray())
                                                                         ->getSearchResultsUsing(
                                                                             fn(Forms\Get $get
-                                                                            ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
+                                                                            ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
                                                                                                                                   ->where('owner_id',
                                                                                                                       (int) $get('../../owner_id'))->select([
@@ -107,7 +107,7 @@ class ProductSeriesResource extends Resource
                                                                             fn(
                                                                                 Forms\Get $get,
                                                                                 $value
-                                                                            ) => app(static::$productQueryService)->readRepository->query()->where('owner_type',
+                                                                            ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
                                                                                                                                   ->where('owner_id',
                                                                                                                       (int) $get('../../owner_id'))

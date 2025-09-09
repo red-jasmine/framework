@@ -148,3 +148,4 @@ class ActivityCreateRequest extends FormRequest
         }
     }
 }
+

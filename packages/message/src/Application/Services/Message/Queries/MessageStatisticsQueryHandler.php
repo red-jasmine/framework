@@ -37,7 +37,7 @@ class MessageStatisticsQueryHandler extends QueryHandler
         $tree = $this->messageCategoryService->tree($treeQuery);
 
 
-        $counts = $this->service->readRepository->getUnreadStatistics($query->owner, $query->biz);
+        $counts = $this->service->repository->getUnreadStatistics($query->owner, $query->biz);
         // 累加 所有  $counts 值
         $total = array_sum($counts);
         $this->setCategoryTreeUnreadCount($tree, $counts);

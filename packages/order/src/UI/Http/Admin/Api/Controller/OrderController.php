@@ -144,7 +144,7 @@ class OrderController extends Controller
         $this->service->find(FindQuery::make($command->id));
 
 
-        $this->commandService->sellerRemarks($command);
+        $this->service->sellerRemarks($command);
         return static::success();
     }
 

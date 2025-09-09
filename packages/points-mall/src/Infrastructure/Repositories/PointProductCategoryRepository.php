@@ -1,24 +1,34 @@
 <?php
 
-namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
+namespace RedJasmine\PointsMall\Infrastructure\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\PointsMall\Domain\Models\PointsProductCategory;
-use RedJasmine\PointsMall\Domain\Repositories\PointProductCategoryReadRepositoryInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\PointsMall\Domain\Repositories\PointProductCategoryRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\HasTree;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 
-class PointProductCategoryReadRepository extends QueryBuilderReadRepository implements PointProductCategoryReadRepositoryInterface
+/**
+ * 积分商品分类仓库实现
+ *
+ * 基于Repository实现，提供积分商品分类实体的读写操作能力
+ */
+class PointProductCategoryRepository extends Repository implements PointProductCategoryRepositoryInterface
 {
     use HasTree;
 
-    public static $modelClass = PointsProductCategory::class;
+    /**
+     * @var string Eloquent模型类
+     */
+    protected static string $modelClass = PointsProductCategory::class;
 
     /**
-     * 允许的过滤器配置
+     * 配置允许的过滤器
      */
-    public function allowedFilters(): array
+    protected function allowedFilters($query = null): array
     {
         return [
             AllowedFilter::partial('name'),
@@ -33,9 +43,9 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     }
 
     /**
-     * 允许的排序字段配置
+     * 配置允许的排序字段
      */
-    public function allowedSorts(): array
+    protected function allowedSorts($query = null): array
     {
         return [
             AllowedSort::field('id'),
@@ -47,9 +57,9 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     }
 
     /**
-     * 允许包含的关联配置
+     * 配置允许包含的关联
      */
-    public function allowedIncludes(): array
+    protected function allowedIncludes($query = null): array
     {
         return [
             'parent',
@@ -59,9 +69,27 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     }
 
     /**
+     * 根据名称查找分类
+     */
+    public function findByName($name): ?PointsProductCategory
+    {
+        return $this->query()
+            ->where('name', $name)
+            ->first();
+    }
+
+    /**
+     * 获取树形结构分类
+     */
+    public function tree(Query $query): array
+    {
+        return $this->buildTree($query);
+    }
+
+    /**
      * 查找用户的分类
      */
-    public function findByOwner(string $ownerType, string $ownerId): \Illuminate\Database\Eloquent\Collection
+    public function findByOwner(string $ownerType, string $ownerId): Collection
     {
         return $this->query()
             ->where('owner_type', $ownerType)
@@ -74,7 +102,7 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     /**
      * 查找启用的分类
      */
-    public function findEnabled(): \Illuminate\Database\Eloquent\Collection
+    public function findEnabled(): Collection
     {
         return $this->query()
             ->enable()
@@ -86,7 +114,7 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     /**
      * 查找显示的分类
      */
-    public function findShow(): \Illuminate\Database\Eloquent\Collection
+    public function findShow(): Collection
     {
         return $this->query()
             ->show()
@@ -98,7 +126,7 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
     /**
      * 查找叶子分类
      */
-    public function findLeaf(): \Illuminate\Database\Eloquent\Collection
+    public function findLeaf(): Collection
     {
         return $this->query()
             ->leaf()
@@ -106,4 +134,4 @@ class PointProductCategoryReadRepository extends QueryBuilderReadRepository impl
             ->orderBy('created_at', 'desc')
             ->get();
     }
-} 
+}

@@ -4,16 +4,15 @@ namespace RedJasmine\ResourceUsage\Domain\Services;
 
 use RedJasmine\ResourceUsage\Domain\Data\UseResourceData;
 use RedJasmine\ResourceUsage\Domain\Models\Enums\ResourceUsageModeEnum;
-use RedJasmine\ResourceUsage\Domain\Repositories\ResourceUsageReadRepositoryInterface;
+use RedJasmine\ResourceUsage\Domain\Repositories\ResourceUsageRepositoryInterface;
 
 class ResourceUsageDomainService
 {
 
 
     public function __construct(
-        protected ResourceUsageReadRepositoryInterface $readRepository
-    )
-    {
+        protected ResourceUsageRepositoryInterface $repository
+    ) {
     }
 
     public function allowUse()
@@ -43,12 +42,6 @@ class ResourceUsageDomainService
 
     }
 
-
-    protected function checkAvailableResources()
-    {
-
-    }
-
     protected function consume(UseResourceData $data)
     {
         // 查询可用资源
@@ -59,6 +52,11 @@ class ResourceUsageDomainService
     }
 
     protected function settle(UseResourceData $data)
+    {
+
+    }
+
+    protected function checkAvailableResources()
     {
 
     }

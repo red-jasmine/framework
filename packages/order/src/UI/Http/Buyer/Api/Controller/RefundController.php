@@ -22,7 +22,7 @@ class RefundController extends Controller
     ) {
 
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyBuyer($this->getOwner());
         });
 

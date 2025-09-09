@@ -482,7 +482,7 @@ protected static bool $onlyOwner = true;
 // 在查询中应用权限
 public static function getEloquentQuery(): Builder
 {
-    $query = app(static::$service)->readRepository->modelQuery();
+    $query = app(static::$service)->re->modelQuery();
     
     if (static::onlyOwner()) {
         $user = auth()->user();

@@ -39,11 +39,9 @@ class BrandApplicationService extends ApplicationService
      * 仓库
      *
      * @param  BrandRepositoryInterface  $repository
-     * @param  BrandReadRepositoryInterface  $readRepository
      */
     public function __construct(
         public BrandRepositoryInterface $repository,
-        public BrandReadRepositoryInterface $readRepository,
     ) {
     }
 
@@ -61,7 +59,7 @@ class BrandApplicationService extends ApplicationService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool) ($this->readRepository->find(FindQuery::make($id))?->isAllowUse());
+        return (bool) ($this->repository->find(FindQuery::make($id))?->isAllowUse());
     }
 
 

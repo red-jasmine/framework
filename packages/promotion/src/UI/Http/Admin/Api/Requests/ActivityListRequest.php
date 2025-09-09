@@ -137,3 +137,4 @@ class ActivityListRequest extends FormRequest
         });
     }
 }
+

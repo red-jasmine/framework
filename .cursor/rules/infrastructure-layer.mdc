@@ -189,7 +189,7 @@ public function allowedIncludes(): array
 ### 代码示例
 ```php
 // 在ApplicationService中使用查询作用域
-$this->service->readRepository->withQuery(function ($query) {
+$this->service->repository->withQuery(function ($query) {
     $query->onlyOwner($this->getOwner());
     $query->where('status', 'published');
 });
@@ -384,7 +384,7 @@ public function allowedIncludes(): array
 ### 代码示例
 ```php
 // 在ApplicationService中使用查询作用域
-$this->service->readRepository->withQuery(function ($query) {
+$this->service->repository->withQuery(function ($query) {
     $query->onlyOwner($this->getOwner());
     $query->where('status', 'published');
 });

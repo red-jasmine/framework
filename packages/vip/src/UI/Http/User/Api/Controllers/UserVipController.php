@@ -15,7 +15,7 @@ class UserVipController extends Controller
         protected UserVipApplicationService $service,
     ) {
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }

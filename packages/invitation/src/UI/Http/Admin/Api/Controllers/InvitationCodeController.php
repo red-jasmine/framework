@@ -24,7 +24,7 @@ class InvitationCodeController extends Controller
     public function __construct(
         protected InvitationCodeApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             // 管理员可以查看所有邀请码
             // $query->onlyOwner($this->getOwner());
         });

@@ -22,7 +22,7 @@ class PointsProductController extends Controller
         protected PointsProductApplicationService $service,
     ) {
         // 设置查询作用域，只显示上架的商品
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             //$query->where('status', 'on_sale');
         });
     }

@@ -1,21 +1,30 @@
 <?php
 
-namespace RedJasmine\PointsMall\Infrastructure\ReadRepositories\Mysql;
+namespace RedJasmine\PointsMall\Infrastructure\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
-use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderReadRepositoryInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 
-class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository implements PointsExchangeOrderReadRepositoryInterface
+/**
+ * 积分兑换订单仓库实现
+ *
+ * 基于Repository实现，提供积分兑换订单实体的读写操作能力
+ */
+class PointsExchangeOrderRepository extends Repository implements PointsExchangeOrderRepositoryInterface
 {
-    public static $modelClass = PointsExchangeOrder::class;
+    /**
+     * @var string Eloquent模型类
+     */
+    protected static string $modelClass = PointsExchangeOrder::class;
 
     /**
-     * 允许的过滤器配置
+     * 配置允许的过滤器
      */
-    public function allowedFilters(): array
+    protected function allowedFilters($query = null): array
     {
         return [
             AllowedFilter::exact('order_no'),
@@ -31,9 +40,9 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
     }
 
     /**
-     * 允许的排序字段配置
+     * 配置允许的排序字段
      */
-    public function allowedSorts(): array
+    protected function allowedSorts($query = null): array
     {
         return [
             AllowedSort::field('id'),
@@ -47,9 +56,9 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
     }
 
     /**
-     * 允许包含的关联配置
+     * 配置允许包含的关联
      */
-    public function allowedIncludes(): array
+    protected function allowedIncludes($query = null): array
     {
         return [
             'pointProduct',
@@ -60,11 +69,19 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
     /**
      * 根据订单号查找订单
      */
-    public function findByOrderNo(string $orderNo): ?PointsExchangeOrder
+    public function findByNo(string $no): ?PointsExchangeOrder
     {
         return $this->query()
-            ->where('order_no', $orderNo)
+            ->where('order_no', $no)
             ->first();
+    }
+
+    /**
+     * 根据订单号查找订单（别名方法）
+     */
+    public function findByOrderNo(string $orderNo): ?PointsExchangeOrder
+    {
+        return $this->findByNo($orderNo);
     }
 
     /**
@@ -80,7 +97,7 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
     /**
      * 查找用户的订单
      */
-    public function findByBuyer(string $ownerType, string $ownerId): \Illuminate\Database\Eloquent\Collection
+    public function findByBuyer(string $ownerType, string $ownerId): Collection
     {
         return $this->query()
             ->where('owner_type', $ownerType)
@@ -115,7 +132,7 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
     /**
      * 查找用户的订单列表
      */
-    public function findUserOrders(string $ownerType, string $ownerId, int $limit = 20): \Illuminate\Database\Eloquent\Collection
+    public function findUserOrders(string $ownerType, string $ownerId, int $limit = 20): Collection
     {
         return $this->query()
             ->where('owner_type', $ownerType)
@@ -124,4 +141,4 @@ class PointsExchangeOrderReadRepository extends QueryBuilderReadRepository imple
             ->limit($limit)
             ->get();
     }
-} 
+}

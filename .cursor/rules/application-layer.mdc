@@ -23,7 +23,6 @@ class ArticleApplicationService extends ApplicationService
     
     public function __construct(
         public ArticleRepositoryInterface $repository,
-        public ArticleReadRepositoryInterface $readRepository,
         public ArticleTransformer $transformer
     ) {
     }
@@ -121,13 +120,13 @@ class ArticleCreateCommandHandler extends CommandHandler
 class ArticleListQueryHandler extends QueryHandler
 {
     public function __construct(
-        protected ArticleReadRepositoryInterface $readRepository
+        protected ArticleRepositoryInterface $repository
     ) {
     }
 
     public function handle(ArticleListQuery $query): LengthAwarePaginator
     {
-        return $this->readRepository->paginate($query);
+        return $this->repository->paginate($query);
     }
 }
 ```
@@ -186,7 +185,6 @@ class ArticleApplicationService extends ApplicationService
     
     public function __construct(
         public ArticleRepositoryInterface $repository,
-        public ArticleReadRepositoryInterface $readRepository,
         public ArticleTransformer $transformer
     ) {
     }
@@ -284,13 +282,13 @@ class ArticleCreateCommandHandler extends CommandHandler
 class ArticleListQueryHandler extends QueryHandler
 {
     public function __construct(
-        protected ArticleReadRepositoryInterface $readRepository
+        protected ArticleRepositoryInterface $repository
     ) {
     }
 
     public function handle(ArticleListQuery $query): LengthAwarePaginator
     {
-        return $this->readRepository->paginate($query);
+        return $this->repository->paginate($query);
     }
 }
 ```

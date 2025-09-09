@@ -27,7 +27,7 @@ trait ResourcePageHelper
     {
 
 
-        $query = app(static::$service)->readRepository->modelQuery();
+        $query = app(static::$service)->repository->modelQuery();
 
 
         if (static::onlyOwner()) {
@@ -168,7 +168,7 @@ trait ResourcePageHelper
             $owner = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
             if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
             } else {
-                $queryService->readRepository->withQuery(fn($query) => $query->onlyOwner($owner));
+                $queryService->repository->withQuery(fn($query) => $query->onlyOwner($owner));
             }
         }
         $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));

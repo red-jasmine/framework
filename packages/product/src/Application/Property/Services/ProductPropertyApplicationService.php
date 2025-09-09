@@ -8,7 +8,6 @@ use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyUpd
 use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyGroupRulePipeline;
 use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyPipeline;
 use RedJasmine\Product\Domain\Property\Models\ProductProperty;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyReadRepositoryInterface;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationService;
@@ -30,7 +29,6 @@ class ProductPropertyApplicationService extends ApplicationService
 
     public function __construct(
         public ProductPropertyRepositoryInterface $repository,
-        public ProductPropertyReadRepositoryInterface $readRepository,
     ) {
 
     }

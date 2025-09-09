@@ -195,3 +195,4 @@ class ActivityUpdateRequest extends FormRequest
         });
     }
 }
+

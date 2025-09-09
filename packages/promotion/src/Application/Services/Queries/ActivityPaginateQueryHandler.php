@@ -18,7 +18,7 @@ class ActivityPaginateQueryHandler extends QueryHandler
 
     public function handle(ActivityListQuery $query): LengthAwarePaginator
     {
-        $repository = $this->service->readRepository;
+        $repository = $this->service->repository;
         
         // 应用查询条件
         if ($query->type) {

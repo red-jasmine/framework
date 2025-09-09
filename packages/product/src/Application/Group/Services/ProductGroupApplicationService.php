@@ -41,7 +41,7 @@ class ProductGroupApplicationService extends ApplicationService
     public function newModel($data = null) : Model
     {
 
-        if ($model = $this->readRepository
+        if ($model = $this->repository
             ->withQuery(fn($query) => $query->onlyOwner($data->owner)->where('parent_id',$data->parentId))
             ->findByName($data->name)) {
             throw new CategoryException('名称存在重复');
@@ -63,10 +63,10 @@ class ProductGroupApplicationService extends ApplicationService
 
         // $owner = $query->owner;
         // unset($query->owner);
-        // $this->readRepository->withQuery(function ($builder)use($owner){
+        // $this->repository->withQuery(function ($builder)use($owner){
         //     return $builder->onlyOwner($owner);
         // });
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 
 

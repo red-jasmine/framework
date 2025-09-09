@@ -28,7 +28,7 @@ class MessageCategoryApplicationService extends ApplicationService
     public function tree(Query $query) : array
     {
 
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 
 }

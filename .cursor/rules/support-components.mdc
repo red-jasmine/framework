@@ -328,7 +328,6 @@ class ArticleApplicationService extends ApplicationService
     
     public function __construct(
         public ArticleRepositoryInterface $repository,
-        public ArticleReadRepositoryInterface $readRepository,
         public ArticleTransformer $transformer
     ) {
     }

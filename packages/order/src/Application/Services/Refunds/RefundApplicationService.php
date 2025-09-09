@@ -30,7 +30,6 @@ use RedJasmine\Order\Application\Services\Refunds\Commands\RefundStarCommandHand
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundUrgeCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundUrgeCommandHandler;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
-use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -56,7 +55,6 @@ class RefundApplicationService extends ApplicationService
 
     public function __construct(
         public RefundRepositoryInterface $repository,
-        public RefundReadRepositoryInterface $readRepository,
         public OrderRepositoryInterface $orderRepository,
     ) {
     }

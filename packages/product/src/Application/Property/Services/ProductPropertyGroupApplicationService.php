@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyGroupCreateCommand;
 use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyGroupUpdateCommand;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyGroup;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupReadRepositoryInterface;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationService;
@@ -29,7 +28,6 @@ class ProductPropertyGroupApplicationService extends ApplicationService
 
     public function __construct(
         public ProductPropertyGroupRepositoryInterface $repository,
-        public ProductPropertyGroupReadRepositoryInterface $readRepository,
 
     ) {
 

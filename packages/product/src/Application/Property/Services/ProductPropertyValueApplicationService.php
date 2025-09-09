@@ -9,7 +9,6 @@ use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyGr
 use RedJasmine\Product\Application\Property\Services\Pipelines\ProductPropertyRulePipeline;
 use RedJasmine\Product\Application\Property\Services\Pipelines\PropertyValueUpdatePipeline;
 use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueReadRepositoryInterface;
 use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Application\ApplicationService;
@@ -33,7 +32,6 @@ class ProductPropertyValueApplicationService extends ApplicationService
 
     public function __construct(
         public ProductPropertyValueRepositoryInterface $repository,
-        public ProductPropertyValueReadRepositoryInterface $readRepository,
     ) {
 
     }

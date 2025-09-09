@@ -80,3 +80,4 @@ class ActivityProductResource extends JsonResource
         ];
     }
 }
+

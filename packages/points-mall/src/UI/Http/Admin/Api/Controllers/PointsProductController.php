@@ -31,7 +31,7 @@ class PointsProductController extends Controller
         protected PointsProductApplicationService $service,
     ) {
         // 设置查询作用域
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }
@@ -164,7 +164,7 @@ class PointsProductController extends Controller
     public function statistics(Request $request) : JsonResponse
     {
         $query       = new PointsProductPaginationQuery();
-        $allProducts = $this->service->readRepository->paginate($query);
+        $allProducts = $this->service->repository->paginate($query);
 
         $statistics = [
             'total'    => $allProducts->total(),

@@ -7,10 +7,12 @@ use Illuminate\Support\ServiceProvider;
 use RedJasmine\Order\Application\Listeners\RefundHandleListener;
 use RedJasmine\Order\Domain\Events\OrderShippedEvent;
 use RedJasmine\Order\Domain\Events\OrderShippingEvent;
+use RedJasmine\Order\Domain\Repositories\OrderCardKeyRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderLogisticsRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
+use RedJasmine\Order\Infrastructure\Repositories\OrderCardKeyRepository;
 use RedJasmine\Order\Infrastructure\Repositories\OrderLogisticsRepository;
 use RedJasmine\Order\Infrastructure\Repositories\OrderPaymentRepository;
 use RedJasmine\Order\Infrastructure\Repositories\OrderRepository;
@@ -30,6 +32,7 @@ class OrderApplicationServiceProvider extends ServiceProvider
         $this->app->bind(RefundRepositoryInterface::class, RefundRepository::class);
         $this->app->bind(OrderPaymentRepositoryInterface::class, OrderPaymentRepository::class);
         $this->app->bind(OrderLogisticsRepositoryInterface::class, OrderLogisticsRepository::class);
+        $this->app->bind(OrderCardKeyRepositoryInterface::class, OrderCardKeyRepository::class);
     }
 
     public function boot() : void

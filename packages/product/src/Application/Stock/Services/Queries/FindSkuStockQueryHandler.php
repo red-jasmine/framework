@@ -15,7 +15,7 @@ class FindSkuStockQueryHandler extends QueryHandler
 
     public function handle(FindSkuStockQuery $query)
     {
-        return $this->service->readRepository->find($query);
+        return $this->service->repository->find($query);
     }
 
 }

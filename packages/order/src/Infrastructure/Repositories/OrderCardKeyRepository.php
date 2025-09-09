@@ -2,28 +2,20 @@
 
 namespace RedJasmine\Order\Infrastructure\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
-use RedJasmine\Order\Domain\Models\OrderLogistics;
-use RedJasmine\Order\Domain\Repositories\OrderLogisticsRepositoryInterface;
+use RedJasmine\Order\Domain\Models\OrderCardKey;
+use RedJasmine\Order\Domain\Repositories\OrderCardKeyRepositoryInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 
 /**
- * 订单物流仓库实现
+ * 订单卡密仓库实现
  *
- * 基于Repository实现，提供订单物流实体的读写操作能力
+ * 基于Repository实现，提供订单卡密实体的读写操作能力
  */
-class OrderLogisticsRepository extends Repository implements OrderLogisticsRepositoryInterface
+class OrderCardKeyRepository extends Repository implements OrderCardKeyRepositoryInterface
 {
-    protected static string $modelClass = OrderLogistics::class;
-
-    public function getByLogisticsNo(string $logisticsCompanyCode, string $logisticsNo): Collection
-    {
-        return OrderLogistics::where('logistics_company_code', $logisticsCompanyCode)
-            ->where('logistics_no', $logisticsNo)
-            ->get();
-    }
+    protected static string $modelClass = OrderCardKey::class;
 
     /**
      * 配置允许的过滤器
@@ -33,8 +25,9 @@ class OrderLogisticsRepository extends Repository implements OrderLogisticsRepos
         return [
             AllowedFilter::exact('id'),
             AllowedFilter::exact('order_id'),
-            AllowedFilter::exact('logistics_company_id'),
+            AllowedFilter::exact('order_product_id'),
             AllowedFilter::exact('status'),
+            AllowedFilter::exact('content_type'),
         ];
     }
 
@@ -57,7 +50,7 @@ class OrderLogisticsRepository extends Repository implements OrderLogisticsRepos
     {
         return [
             'order',
-            'company',
+            'orderProduct',
         ];
     }
 }

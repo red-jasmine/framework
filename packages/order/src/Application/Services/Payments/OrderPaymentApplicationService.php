@@ -9,7 +9,7 @@ use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPaidComm
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommand;
 use RedJasmine\Order\Application\Services\Payments\Commands\OrderPaymentPayingCommandHandler;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use RedJasmine\Order\Domain\Repositories\OrderPaymentReadRepositoryInterface;
+use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -24,7 +24,7 @@ class OrderPaymentApplicationService extends ApplicationService
 {
 
     public function __construct(
-        public OrderPaymentReadRepositoryInterface $readRepository
+        public OrderPaymentRepositoryInterface $repository
     ) {
     }
 

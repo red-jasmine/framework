@@ -23,7 +23,7 @@ class MessagePushLogApplicationService extends ApplicationService
     ) {
     }
 
-    protected static array $macros = [
+    protected static $macros = [
         'create' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogCreateCommandHandler::class,
         'update' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogUpdateCommandHandler::class,
         'delete' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogDeleteCommandHandler::class,
@@ -42,7 +42,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getByMessageId(int $messageId): array
     {
-        return $this->readRepository->getByMessageId($messageId)->toArray();
+        return $this->repository->getByMessageId($messageId)->toArray();
     }
 
     /**
@@ -50,7 +50,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getByChannel(string $channel, int $limit = 100): array
     {
-        return $this->readRepository->getByChannel($channel, $limit)->toArray();
+        return $this->repository->getByChannel($channel, $limit)->toArray();
     }
 
     /**
@@ -58,7 +58,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getFailedLogs(int $limit = 100): array
     {
-        return $this->readRepository->getFailedLogs($limit)->toArray();
+        return $this->repository->getFailedLogs($limit)->toArray();
     }
 
     /**
@@ -66,7 +66,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getStatistics(?\DateTimeInterface $startDate = null, ?\DateTimeInterface $endDate = null): array
     {
-        return $this->readRepository->getStatistics($startDate, $endDate);
+        return $this->repository->getStatistics($startDate, $endDate);
     }
 
     /**
@@ -74,7 +74,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getPerformanceReport(string $channel, int $days = 7): array
     {
-        return $this->readRepository->getPerformanceReport($channel, $days);
+        return $this->repository->getPerformanceReport($channel, $days);
     }
 
     /**
@@ -82,7 +82,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getErrorStatistics(int $days = 7): array
     {
-        return $this->readRepository->getErrorStatistics($days);
+        return $this->repository->getErrorStatistics($days);
     }
 
     /**
@@ -90,7 +90,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getRetryStatistics(): array
     {
-        return $this->readRepository->getRetryStatistics();
+        return $this->repository->getRetryStatistics();
     }
 
     /**
@@ -98,7 +98,7 @@ class MessagePushLogApplicationService extends ApplicationService
      */
     public function getResponseTimeDistribution(string $channel): array
     {
-        return $this->readRepository->getResponseTimeDistribution($channel);
+        return $this->repository->getResponseTimeDistribution($channel);
     }
 
     /**

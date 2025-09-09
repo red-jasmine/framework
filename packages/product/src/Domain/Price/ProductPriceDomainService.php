@@ -6,7 +6,6 @@ use Cknow\Money\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
-use RedJasmine\Product\Domain\Product\Repositories\ProductReadRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -14,7 +13,6 @@ class ProductPriceDomainService extends Service
 {
     public function __construct(
         protected ProductRepositoryInterface $repository,
-        protected ProductReadRepositoryInterface $readRepository,
 
     ) {
     }

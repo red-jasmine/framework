@@ -26,7 +26,7 @@ class GroupController extends Controller
     public function __construct(
         protected Service $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->show();
         });
 

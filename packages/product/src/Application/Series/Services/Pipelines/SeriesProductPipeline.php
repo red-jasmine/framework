@@ -30,7 +30,7 @@ class SeriesProductPipeline
     {
 
 
-        $this->queryService->readRepository->withQuery(function ($query) use ($command) {
+        $this->queryService->repository->withQuery(function ($query) use ($command) {
             return $query->onlyOwner($command->owner);
         });
 

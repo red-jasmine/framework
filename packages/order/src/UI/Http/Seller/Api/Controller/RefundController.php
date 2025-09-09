@@ -26,7 +26,7 @@ class RefundController extends Controller
         protected RefundApplicationService $service
     ) {
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlySeller($this->getOwner());
         });
 

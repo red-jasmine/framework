@@ -40,7 +40,6 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderUrgeCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderUrgeCommandHandler;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Services\OrderShippingService;
 use RedJasmine\Order\Domain\Transformers\OrderTransformer;
@@ -95,7 +94,6 @@ class OrderApplicationService extends ApplicationService
 
     public function __construct(
         public OrderRepositoryInterface $repository,
-        public OrderReadRepositoryInterface $readRepository,
         public OrderShippingService $orderShippingService,
         public OrderTransformer $transformer,
     ) {

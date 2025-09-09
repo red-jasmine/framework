@@ -4,7 +4,6 @@ namespace RedJasmine\Product\Application\Tag\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
-use RedJasmine\Product\Domain\Tag\Repositories\ProductTagReadRepositoryInterface;
 use RedJasmine\Product\Domain\Tag\Repositories\ProductTagRepositoryInterface;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
@@ -21,14 +20,13 @@ class ProductTagApplicationService extends ApplicationService
 
 
     public function __construct(
-        public ProductTagRepositoryInterface $repository,
-        public ProductTagReadRepositoryInterface $readRepository
+        public ProductTagRepositoryInterface $repository
     ) {
     }
 
     public function newModel($data = null) : Model
     {
-        if ($model = $this->readRepository
+        if ($model = $this->repository
             ->withQuery(fn($query) => $query->onlyOwner($data->owner))
             ->findByName($data->name)) {
             throw new CategoryException('名称存在重复');

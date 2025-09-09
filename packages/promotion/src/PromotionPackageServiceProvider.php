@@ -3,11 +3,9 @@
 namespace RedJasmine\Promotion;
 
 use RedJasmine\Promotion\Application\Services\ActivityApplicationService;
-use RedJasmine\Promotion\Domain\Repositories\ActivityReadRepositoryInterface;
 use RedJasmine\Promotion\Domain\Repositories\ActivityRepositoryInterface;
 use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlerFactory;
-use RedJasmine\Promotion\Infrastructure\ReadRepositories\Mysql\ActivityReadRepository;
-use RedJasmine\Promotion\Infrastructure\Repositories\Eloquent\ActivityRepository;
+use RedJasmine\Promotion\Infrastructure\Repositories\ActivityRepository;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -34,9 +32,8 @@ class PromotionPackageServiceProvider extends PackageServiceProvider
     
     public function packageRegistered(): void
     {
-        // 注册仓库绑定
+        // 统一仓库接口绑定，支持读写操作
         $this->app->bind(ActivityRepositoryInterface::class, ActivityRepository::class);
-        $this->app->bind(ActivityReadRepositoryInterface::class, ActivityReadRepository::class);
         
         // 注册应用服务
         $this->app->singleton(ActivityApplicationService::class);

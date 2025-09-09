@@ -5,7 +5,6 @@ namespace RedJasmine\PointsMall\Application\Services\PointsProduct;
 use RedJasmine\PointsMall\Application\Services\PointsProduct\Commands\PointsProductCreateCommandHandler;
 use RedJasmine\PointsMall\Application\Services\PointsProduct\Commands\PointsProductUpdateCommandHandler;
 use RedJasmine\PointsMall\Domain\Models\PointsProduct;
-use RedJasmine\PointsMall\Domain\Repositories\PointsProductReadRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
 use RedJasmine\PointsMall\Domain\Services\PointsProductService;
 use RedJasmine\PointsMall\Domain\Transformers\PointsProductTransformer;
@@ -18,10 +17,8 @@ class PointsProductApplicationService extends ApplicationService
 
     public function __construct(
         public PointsProductRepositoryInterface $repository,
-        public PointsProductReadRepositoryInterface $readRepository,
         public PointsProductTransformer $transformer,
         public PointsProductService $productService,
-
     ) {
     }
 

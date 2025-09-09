@@ -9,7 +9,6 @@ use RedJasmine\Product\Application\Series\Services\Pipelines\SeriesProductPipeli
 use RedJasmine\Product\Application\Series\Services\Queries\FindProductSeriesQuery;
 use RedJasmine\Product\Application\Series\Services\Queries\FindProductSeriesQueryHandler;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
-use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesReadRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -37,7 +36,6 @@ class ProductSeriesApplicationService extends ApplicationService
 
     public function __construct(
         public ProductSeriesRepositoryInterface $repository,
-        public ProductSeriesReadRepositoryInterface $readRepository,
     ) {
 
     }

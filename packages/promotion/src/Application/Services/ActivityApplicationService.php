@@ -11,7 +11,6 @@ use RedJasmine\Promotion\Application\Services\Queries\ActivityPaginateQueryHandl
 use RedJasmine\Promotion\Domain\Contracts\ActivityTypeHandlerInterface;
 use RedJasmine\Promotion\Domain\Data\ActivityData;
 use RedJasmine\Promotion\Domain\Models\Activity;
-use RedJasmine\Promotion\Domain\Repositories\ActivityReadRepositoryInterface;
 use RedJasmine\Promotion\Domain\Repositories\ActivityRepositoryInterface;
 use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlerFactory;
 use RedJasmine\Promotion\Domain\Transformers\ActivityTransformer;
@@ -34,7 +33,6 @@ class ActivityApplicationService extends ApplicationService
 
     public function __construct(
         public ActivityRepositoryInterface $repository,
-        public ActivityReadRepositoryInterface $readRepository,
         public ActivityTransformer $transformer
     ) {
     }

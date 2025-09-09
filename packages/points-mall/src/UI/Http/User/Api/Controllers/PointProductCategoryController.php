@@ -19,7 +19,7 @@ class PointProductCategoryController extends Controller
         protected Service $service,
     ) {
         // 设置查询作用域，只显示启用的分类
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->where('is_show', true);
         });
     }

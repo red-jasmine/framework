@@ -4,7 +4,6 @@ namespace RedJasmine\Vip\Application\Services;
 
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Vip\Domain\Models\Vip;
-use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
 use RedJasmine\Vip\Domain\Repositories\VipRepositoryInterface;
 
 class VipApplicationService extends ApplicationService
@@ -12,7 +11,6 @@ class VipApplicationService extends ApplicationService
 
     public function __construct(
         public VipRepositoryInterface $repository,
-        public VipReadRepositoryInterface $readRepository,
     ) {
     }
 
@@ -22,6 +20,6 @@ class VipApplicationService extends ApplicationService
 
     public function findVipType(string $biz, string $type) : ?Vip
     {
-        return $this->readRepository->findVipType($biz, $type);
+        return $this->repository->findVipType($biz, $type);
     }
 }

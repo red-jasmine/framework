@@ -82,3 +82,4 @@ class ActivitySkuResource extends JsonResource
         ];
     }
 }
+

@@ -34,7 +34,7 @@ class MessageTemplateController
         protected MessageTemplateApplicationService $service,
     ) {
         // 设置查询作用域 - 可以访问系统模板和自己的模板
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->where(function ($q) {
                 $q->where('owner_id', $this->getOwner()->getKey())
                   ->orWhere('is_system', true);

@@ -30,7 +30,7 @@ class ActivityController extends Controller
         protected ActivityApplicationService $service,
     ) {
         // 设置查询作用域 - 只查询当前管理员有权限的活动
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             // 可以根据需要添加权限过滤逻辑
             // $query->onlyOwner($this->getOwner());
         });

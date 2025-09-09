@@ -26,7 +26,7 @@ class OrderController extends Controller
         protected OrderApplicationService $service,
     ) {
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyBuyer($this->getOwner());
         });
     }

@@ -8,13 +8,13 @@ use RedJasmine\Vip\Domain\Data\OpenUserVipData;
 use RedJasmine\Vip\Domain\Exceptions\VipException;
 use RedJasmine\Vip\Domain\Models\UserVip;
 use RedJasmine\Vip\Domain\Models\UserVipOrder;
-use RedJasmine\Vip\Domain\Repositories\UserVipReadRepositoryInterface;
+use RedJasmine\Vip\Domain\Repositories\UserVipRepositoryInterface;
 
 class UserVipDomainService
 {
 
     public function __construct(
-        protected UserVipReadRepositoryInterface $readRepository,
+        protected UserVipRepositoryInterface $repository,
         protected VipDomainService $vipDomainService,
     ) {
 
@@ -50,7 +50,7 @@ class UserVipDomainService
     protected function findUserVip(OpenUserVipData $data) : UserVip
     {
         // 查询用户VIP
-        $userVip             = $this->readRepository->findVipByOwner($data->owner, $data->biz, $data->type);
+        $userVip             = $this->repository->findVipByOwner($data->owner, $data->biz, $data->type);
         $userVip             = $userVip ?? UserVip::make();
         $userVip->owner      = $data->owner;
         $userVip->biz     = $data->biz;

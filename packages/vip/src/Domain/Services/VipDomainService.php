@@ -5,12 +5,12 @@ namespace RedJasmine\Vip\Domain\Services;
 use Exception;
 use RedJasmine\Vip\Domain\Exceptions\VipException;
 use RedJasmine\Vip\Domain\Models\Vip;
-use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
+use RedJasmine\Vip\Domain\Repositories\VipRepositoryInterface;
 
 class VipDomainService
 {
     public function __construct(
-        protected VipReadRepositoryInterface $vipReadRepository,
+        protected VipRepositoryInterface $vipRepository,
     ) {
     }
 
@@ -25,7 +25,7 @@ class VipDomainService
     public function validate(string $biz, string $type) : Vip
     {
 
-        $vip = $this->vipReadRepository->findVipType($biz, $type);
+        $vip = $this->vipRepository->findVipType($biz, $type);
 
         if (!$vip) {
             throw new VipException('vip not found');

@@ -3,7 +3,6 @@
 namespace RedJasmine\Product\Application\Service\Services;
 
 use RedJasmine\Product\Domain\Service\Models\ProductService;
-use RedJasmine\Product\Domain\Service\Repositories\ProductServiceReadRepositoryInterface;
 use RedJasmine\Product\Domain\Service\Repositories\ProductServiceRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -19,8 +18,7 @@ class ProductServiceApplicationService extends ApplicationService
 
 
     public function __construct(
-        public ProductServiceRepositoryInterface $repository,
-        public ProductServiceReadRepositoryInterface $readRepository
+        public ProductServiceRepositoryInterface $repository
     ) {
     }
 

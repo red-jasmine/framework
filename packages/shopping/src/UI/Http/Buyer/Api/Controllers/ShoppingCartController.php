@@ -40,7 +40,7 @@ class ShoppingCartController extends Controller
     {
         try {
             $query    = ListCartProductsQuery::from(['owner' => $request->user()]);
-            $cart     = $this->service->readRepository->findActiveByUser($query->owner);
+            $cart     = $this->service->repository->findActiveByUser($query->owner);
             $products = $cart ? $cart->products : collect();
             return response()->json(ShoppingCartProductResource::collection($products));
         } catch (Throwable $e) {

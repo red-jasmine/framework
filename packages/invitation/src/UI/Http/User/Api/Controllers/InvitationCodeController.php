@@ -28,7 +28,7 @@ class InvitationCodeController extends Controller
         protected InvitationCodeApplicationService $service,
     )
     {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }

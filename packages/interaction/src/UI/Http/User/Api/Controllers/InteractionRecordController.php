@@ -75,7 +75,7 @@ class InteractionRecordController extends Controller
 
         if (!$command->getKey()) {
             $query           = ResourceUserFindQuery::from($request);
-            $lastInteraction = $this->service->readRepository->findByResourceUserLast($query);
+            $lastInteraction = $this->service->repository->findByResourceUserLast($query);
             $command->setKey($lastInteraction->id);
         }
 

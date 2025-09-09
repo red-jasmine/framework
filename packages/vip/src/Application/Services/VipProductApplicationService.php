@@ -5,7 +5,6 @@ namespace RedJasmine\Vip\Application\Services;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Vip\Domain\Data\VipProductData;
 use RedJasmine\Vip\Domain\Models\VipProduct;
-use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
 use RedJasmine\Vip\Domain\Repositories\VipProductRepositoryInterface;
 
 /**
@@ -17,7 +16,6 @@ class VipProductApplicationService extends ApplicationService
 
     public function __construct(
         public VipProductRepositoryInterface $repository,
-        public VipProductReadRepositoryInterface $readRepository,
     ) {
     }
 

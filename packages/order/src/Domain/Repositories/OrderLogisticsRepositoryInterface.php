@@ -16,6 +16,11 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface OrderLogisticsRepositoryInterface extends RepositoryInterface
 {
+    /**
+     * 根据物流公司代码和物流单号查找物流记录
+     */
+    public function getByLogisticsNo(string $logisticsCompanyCode, string $logisticsNo): Collection;
+    
     // 合并了原OrderLogisticsReadRepositoryInterface的功能
     // 所有读写操作都通过统一接口提供
 }

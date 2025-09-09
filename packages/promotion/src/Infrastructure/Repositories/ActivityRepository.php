@@ -1,30 +1,38 @@
 <?php
 
-namespace RedJasmine\Promotion\Infrastructure\ReadRepositories\Mysql;
+namespace RedJasmine\Promotion\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Promotion\Domain\Models\Activity;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityStatusEnum;
-use RedJasmine\Promotion\Domain\Repositories\ActivityReadRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository;
+use RedJasmine\Promotion\Domain\Repositories\ActivityRepositoryInterface;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\AllowedSort;
 
 /**
- * 活动只读仓库实现
+ * 活动仓库实现
+ *
+ * 基于Repository实现，提供活动实体的读写操作能力
  */
-class ActivityReadRepository extends QueryBuilderReadRepository implements ActivityReadRepositoryInterface
+class ActivityRepository extends Repository implements ActivityRepositoryInterface
 {
-    public static string $modelClass = Activity::class;
-    
-    protected mixed $defaultSort = '-created_at';
-    
     /**
-     * 允许的过滤器配置
+     * @var string Eloquent模型类
      */
-    public function allowedFilters(): array
+    protected static string $modelClass = Activity::class;
+
+    /**
+     * 默认排序
+     */
+    protected mixed $defaultSort = '-created_at';
+
+    /**
+     * 配置允许的过滤器
+     */
+    protected function allowedFilters($query = null): array
     {
         return [
             AllowedFilter::partial('title'),
@@ -53,9 +61,9 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
     }
 
     /**
-     * 允许的排序字段配置
+     * 配置允许的排序字段
      */
-    public function allowedSorts(): array
+    protected function allowedSorts($query = null): array
     {
         return [
             AllowedSort::field('id'),
@@ -72,24 +80,73 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
     }
 
     /**
-     * 允许包含的关联配置
+     * 配置允许包含的关联
      */
-    public function allowedIncludes(): array
+    protected function allowedIncludes($query = null): array
     {
         return [
-            AllowedInclude::relationship('products'),
-            AllowedInclude::relationship('participations'),
-            AllowedInclude::relationship('owner'),
+            'products',
+            'participations',
+            'owner',
         ];
     }
-    
+
+    /**
+     * 根据类型查找活动
+     */
+    public function findByType(string $type): Collection
+    {
+        return $this->query()->where('type', $type)->get();
+    }
+
+    /**
+     * 查找正在进行的活动
+     */
+    public function findRunningActivities(): Collection
+    {
+        return $this->query()
+            ->where('status', ActivityStatusEnum::RUNNING)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>', now())
+            ->get();
+    }
+
+    /**
+     * 查找即将开始的活动
+     */
+    public function findUpcomingActivities(int $minutes = 60): Collection
+    {
+        return $this->query()
+            ->where('status', ActivityStatusEnum::PENDING)
+            ->where('start_time', '>', now())
+            ->where('start_time', '<=', now()->addMinutes($minutes))
+            ->get();
+    }
+
+    /**
+     * 查找已过期但未结束的活动
+     */
+    public function findExpiredActivities(): Collection
+    {
+        return $this->query()
+            ->where('status', ActivityStatusEnum::RUNNING)
+            ->where('end_time', '<', now())
+            ->get();
+    }
+
+    /**
+     * 根据活动类型查询
+     */
     public function byType(string $type): static
     {
         return $this->withQuery(function (Builder $query) use ($type) {
             $query->where('type', $type);
         });
     }
-    
+
+    /**
+     * 查询正在进行的活动
+     */
     public function running(): static
     {
         return $this->withQuery(function (Builder $query) {
@@ -98,7 +155,10 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
                   ->where('end_time', '>', now());
         });
     }
-    
+
+    /**
+     * 查询即将开始的活动
+     */
     public function upcoming(int $minutes = 60): static
     {
         return $this->withQuery(function (Builder $query) use ($minutes) {
@@ -107,7 +167,10 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
                   ->where('start_time', '<=', now()->addMinutes($minutes));
         });
     }
-    
+
+    /**
+     * 查询用户可参与的活动
+     */
     public function availableForUser($user): static
     {
         return $this->withQuery(function (Builder $query) use ($user) {
@@ -122,7 +185,10 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
                   });
         });
     }
-    
+
+    /**
+     * 查询商品相关的活动
+     */
     public function byProduct(int $productId): static
     {
         return $this->withQuery(function (Builder $query) use ($productId) {
@@ -131,7 +197,10 @@ class ActivityReadRepository extends QueryBuilderReadRepository implements Activ
             });
         });
     }
-    
+
+    /**
+     * 查询分类相关的活动
+     */
     public function byCategory(int $categoryId): static
     {
         return $this->withQuery(function (Builder $query) use ($categoryId) {

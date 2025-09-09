@@ -47,7 +47,7 @@ class MessageApplicationService extends ApplicationService
      */
     public function getUnreadCount(UserInterface $owner, ?string $biz = null) : int
     {
-        return $this->readRepository->getUnreadCount($owner, $biz);
+        return $this->repository->getUnreadCount($owner, $biz);
     }
 
 

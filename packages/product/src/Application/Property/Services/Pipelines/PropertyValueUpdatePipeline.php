@@ -27,7 +27,7 @@ class PropertyValueUpdatePipeline
     {
 
         $hasRepeatCount = $this->service
-            ->readRepository->query()
+            ->repository->query()
                             ->where('id', '<>', $command->id)
                             ->where('name', $command->name)
                             ->where('pid', $command->pid)
