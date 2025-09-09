@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace RedJasmine\Message\Application\Services\Category;
 
 use RedJasmine\Message\Domain\Models\MessageCategory;
-use RedJasmine\Message\Domain\Repositories\MessageCategoryReadRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessageCategoryRepositoryInterface;
 use RedJasmine\Message\Domain\Transformers\MessageCategoryTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -22,7 +21,6 @@ class MessageCategoryApplicationService extends ApplicationService
 
     public function __construct(
         public MessageCategoryRepositoryInterface $repository,
-        public MessageCategoryReadRepositoryInterface $readRepository,
         public MessageCategoryTransformer $transformer
     ) {
     }

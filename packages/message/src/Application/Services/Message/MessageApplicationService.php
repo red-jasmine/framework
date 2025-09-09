@@ -12,7 +12,6 @@ use RedJasmine\Message\Application\Services\Message\Commands\MessageMarkAsReadCo
 use RedJasmine\Message\Application\Services\Message\Queries\MessageStatisticsQuery;
 use RedJasmine\Message\Application\Services\Message\Queries\MessageStatisticsQueryHandler;
 use RedJasmine\Message\Domain\Models\Message;
-use RedJasmine\Message\Domain\Repositories\MessageReadRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
 use RedJasmine\Message\Domain\Transformers\MessageTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -31,7 +30,6 @@ class MessageApplicationService extends ApplicationService
 
     public function __construct(
         public MessageRepositoryInterface $repository,
-        public MessageReadRepositoryInterface $readRepository,
         public MessageTransformer $transformer
     ) {
     }

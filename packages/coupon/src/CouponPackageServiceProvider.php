@@ -2,18 +2,12 @@
 
 namespace RedJasmine\Coupon;
 
-use RedJasmine\Coupon\Domain\Repositories\CouponReadRepositoryInterface;
 use RedJasmine\Coupon\Domain\Repositories\CouponRepositoryInterface;
-use RedJasmine\Coupon\Domain\Repositories\CouponUsageReadRepositoryInterface;
 use RedJasmine\Coupon\Domain\Repositories\CouponUsageRepositoryInterface;
-use RedJasmine\Coupon\Domain\Repositories\UserCouponReadRepositoryInterface;
 use RedJasmine\Coupon\Domain\Repositories\UserCouponRepositoryInterface;
-use RedJasmine\Coupon\Infrastructure\ReadRepositories\Mysql\CouponReadRepository;
-use RedJasmine\Coupon\Infrastructure\ReadRepositories\Mysql\CouponUsageReadRepository;
-use RedJasmine\Coupon\Infrastructure\ReadRepositories\Mysql\UserCouponReadRepository;
-use RedJasmine\Coupon\Infrastructure\Repositories\Eloquent\CouponRepository;
-use RedJasmine\Coupon\Infrastructure\Repositories\Eloquent\CouponUsageRepository;
-use RedJasmine\Coupon\Infrastructure\Repositories\Eloquent\UserCouponRepository;
+use RedJasmine\Coupon\Infrastructure\Repositories\CouponRepository;
+use RedJasmine\Coupon\Infrastructure\Repositories\CouponUsageRepository;
+use RedJasmine\Coupon\Infrastructure\Repositories\UserCouponRepository;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -48,15 +42,10 @@ class CouponPackageServiceProvider extends PackageServiceProvider
     public function register()
     {
         parent::register();
-        
+
         // 注册仓库接口绑定
         $this->app->bind(CouponRepositoryInterface::class, CouponRepository::class);
-        $this->app->bind(CouponReadRepositoryInterface::class, CouponReadRepository::class);
-        
         $this->app->bind(UserCouponRepositoryInterface::class, UserCouponRepository::class);
-        $this->app->bind(UserCouponReadRepositoryInterface::class, UserCouponReadRepository::class);
-        
         $this->app->bind(CouponUsageRepositoryInterface::class, CouponUsageRepository::class);
-        $this->app->bind(CouponUsageReadRepositoryInterface::class, CouponUsageReadRepository::class);
     }
 }

@@ -22,7 +22,7 @@ class PromoterApplyController extends Controller
     public function __construct(
         protected PromoterApplyApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->with(['promoter']);
         });
     }
@@ -43,7 +43,7 @@ class PromoterApplyController extends Controller
     public function show(int $id)
     {
         $query = FindQuery::make($id);
-        $apply = $this->service->readRepository->find($query);
+        $apply = $this->service->repository->find($query);
         return new Resource($apply);
     }
 
@@ -57,7 +57,7 @@ class PromoterApplyController extends Controller
             'status' => $request->input('status'),
             'remark' => $request->input('remark', ''),
         ]);
-        
+
         $apply = $this->service->approval($command);
         return new Resource($apply);
     }

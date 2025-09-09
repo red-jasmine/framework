@@ -9,13 +9,14 @@ use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponPublishCommandH
 use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponPauseCommandHandler;
 use RedJasmine\Coupon\Application\Services\Coupon\Commands\CouponIssueCommandHandler;
 use RedJasmine\Coupon\Domain\Models\Coupon;
-use RedJasmine\Coupon\Domain\Repositories\CouponReadRepositoryInterface;
 use RedJasmine\Coupon\Domain\Repositories\CouponRepositoryInterface;
 use RedJasmine\Coupon\Domain\Transformers\CouponTransformer;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * 优惠券应用服务
+ *
+ * 使用统一的仓库接口，支持读写操作
  *
  * @see CouponCreateCommandHandler::handle()
  * @method Coupon create(CouponCreateCommand $command)
@@ -42,7 +43,6 @@ class CouponApplicationService extends ApplicationService
 
     public function __construct(
         public CouponRepositoryInterface $repository,
-        public CouponReadRepositoryInterface $readRepository,
         public CouponTransformer $transformer
     ) {
     }
@@ -60,4 +60,4 @@ class CouponApplicationService extends ApplicationService
         'pause'   => CouponPauseCommandHandler::class,
         'issue'   => CouponIssueCommandHandler::class,
     ];
-} 
+}

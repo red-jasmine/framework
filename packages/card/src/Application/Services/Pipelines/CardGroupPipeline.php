@@ -11,16 +11,12 @@ class CardGroupPipeline
     public function __construct(
         protected CardGroupApplicationService $groupQueryService
     ) {
-
     }
-
 
     public function handle(Data $command, \Closure $next) : mixed
     {
-
         if ($command->groupId) {
-            $this->groupQueryService->readRepository->withQuery(function ($query) use ($command) {
-
+            $this->groupQueryService->repository->withQuery(function ($query) use ($command) {
                 $query->onlyOwner($command->owner);
             });
 

@@ -36,7 +36,7 @@ class UserCouponController extends Controller
         protected UserCouponApplicationService $service,
     ) {
         // 商家端查看用户优惠券，需要限制查看权限
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             // 根据业务需要，可以添加商家相关的查询限制
             // 例如：只查看与当前商家相关的优惠券
             $query->onlyOwner($this->getOwner());

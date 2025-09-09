@@ -23,7 +23,7 @@ class PromoterBindUserController extends Controller
         protected PromoterBindUserApplicationService $service
     ) {
 
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyPromoter($this->getPromoter());
         });
     }

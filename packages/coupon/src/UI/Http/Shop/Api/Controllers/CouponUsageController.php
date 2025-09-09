@@ -6,8 +6,8 @@ namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use RedJasmine\Coupon\Application\Services\CouponUsage\CouponUsageApplicationService;
 use RedJasmine\Coupon\Domain\Models\CouponUsage as Model;
-use RedJasmine\Coupon\Domain\Repositories\CouponUsageReadRepositoryInterface;
 use RedJasmine\Coupon\UI\Http\Shop\Api\Resources\CouponUsageResource as Resource;
 use RedJasmine\Coupon\Application\Services\CouponUsage\Queries\CouponUsagePaginateQuery;
 use RedJasmine\Coupon\Application\Services\CouponUsage\Queries\CouponUsageFindQuery;
@@ -23,10 +23,10 @@ use RedJasmine\Coupon\Application\Services\CouponUsage\Queries\CouponUsageFindQu
 class CouponUsageController extends Controller
 {
     public function __construct(
-        protected CouponUsageReadRepositoryInterface $readRepository,
+        protected CouponUsageApplicationService $service,
     ) {
         // 商家端查看优惠券使用记录，需要限制查看权限
-        $this->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             // 根据业务需要，可以添加商家相关的查询限制
             // 例如：只查看与当前商家相关的使用记录
             $query->onlyOwner($this->getOwner());
@@ -50,7 +50,7 @@ class CouponUsageController extends Controller
     {
         $query = CouponUsagePaginateQuery::from($request->all());
 
-        $result = $this->readRepository->paginate($query);
+        $result = $this->service->repository->paginate($query);
 
         return Resource::collection($result)->response();
     }
@@ -65,7 +65,7 @@ class CouponUsageController extends Controller
     public function show(int $id) : JsonResponse
     {
         $query  = CouponUsageFindQuery::from(['id' => $id]);
-        $result = $this->readRepository->find($query);
+        $result = $this->service->repository->find($query);
 
         if (!$result) {
             return response()->json(['message' => '使用记录不存在'], 404);
@@ -74,4 +74,4 @@ class CouponUsageController extends Controller
         return new Resource($result);
     }
 
-} 
+}

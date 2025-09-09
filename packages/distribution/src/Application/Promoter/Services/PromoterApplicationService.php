@@ -13,8 +13,7 @@ use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQue
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQueryHandler;
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindPromoterByIdQueryHandler;
 use RedJasmine\Distribution\Domain\Models\Promoter;
-use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
-use RedJasmine\Distribution\Domain\Repositories\PromoterReadRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterLevelRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -48,8 +47,7 @@ class PromoterApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterRepositoryInterface $repository,
-        public PromoterReadRepositoryInterface $readRepository,
-        public PromoterLevelReadRepositoryInterface $levelReadRepository,
+        public PromoterLevelRepositoryInterface $levelRepository,
         public PromoterTransformer $transformer,
     ) {
     }

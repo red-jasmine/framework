@@ -25,7 +25,7 @@ class CouponController extends Controller
     public function __construct(
         protected CouponApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }
@@ -44,9 +44,9 @@ class CouponController extends Controller
         $command->setKey($id);
         $command->owner = $this->getOwner();
         $command->operator = $this->getOwner();
-        
+
         $result = $this->service->publish($command);
-        
+
         return static::success($result);
     }
 
@@ -59,9 +59,9 @@ class CouponController extends Controller
         $command->setKey($id);
         $command->owner = $this->getOwner();
         $command->operator = $this->getOwner();
-        
+
         $result = $this->service->pause($command);
-        
+
         return static::success($result);
     }
 
@@ -74,9 +74,9 @@ class CouponController extends Controller
         $command->setKey($id);
         $command->owner = $this->getOwner();
         $command->operator = $this->getOwner();
-        
+
         $result = $this->service->issue($command);
-        
+
         return static::success($result);
     }
 }

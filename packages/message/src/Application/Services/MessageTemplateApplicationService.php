@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RedJasmine\Message\Application\Services;
 
 use RedJasmine\Message\Domain\Models\MessageTemplate;
-use RedJasmine\Message\Domain\Repositories\MessageTemplateReadRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessageTemplateRepositoryInterface;
 use RedJasmine\Message\Domain\Transformers\MessageTemplateTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -20,7 +19,6 @@ class MessageTemplateApplicationService extends ApplicationService
 
     public function __construct(
         public MessageTemplateRepositoryInterface $repository,
-        public MessageTemplateReadRepositoryInterface $readRepository,
         public MessageTemplateTransformer $transformer
     ) {
     }
@@ -32,7 +30,7 @@ class MessageTemplateApplicationService extends ApplicationService
         'batchEnable' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateBatchEnableCommandHandler::class,
         'batchDisable' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateBatchDisableCommandHandler::class,
         'duplicate' => \RedJasmine\Message\Application\Services\Commands\MessageTemplateDuplicateCommandHandler::class,
-        
+
         'find' => \RedJasmine\Message\Application\Services\Queries\MessageTemplateFindQueryHandler::class,
         'paginate' => \RedJasmine\Message\Application\Services\Queries\MessageTemplatePaginateQueryHandler::class,
         'list' => \RedJasmine\Message\Application\Services\Queries\MessageTemplateListQueryHandler::class,

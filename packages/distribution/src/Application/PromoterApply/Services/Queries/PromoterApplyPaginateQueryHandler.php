@@ -25,7 +25,7 @@ class PromoterApplyPaginateQueryHandler extends QueryHandler
     public function handle(PromoterApplyPaginateQuery $query): LengthAwarePaginator
     {
         // 使用标准的分页查询方式
-        return $this->service->readRepository->paginate($query);
+        return $this->service->repository->paginate($query);
     }
 
 }

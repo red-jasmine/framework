@@ -31,7 +31,7 @@ class PromoterApplyController extends Controller
         protected PromoterApplicationService $promoterApplicationService,
         protected PromoterApplyApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->with(['promoterLevel'])->onlyPromoter($this->getPromoter());
         });
     }

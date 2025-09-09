@@ -6,9 +6,7 @@ use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\Promo
 use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterBindUserCommandHandler;
 use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterUnbindUserCommand;
 use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterUnbindUserCommandHandler;
-use RedJasmine\Distribution\Domain\Models\PromoterBindUs\Serviceser;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
-use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterBindUserTransformer;
@@ -37,9 +35,8 @@ class PromoterBindUserApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterBindUserRepositoryInterface $repository,
-        public PromoterBindUserReadRepositoryInterface $readRepository,
         public PromoterRepositoryInterface $promoterRepository,
         public PromoterBindUserTransformer $transformer,
     ) {
     }
-} 
+}

@@ -27,7 +27,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
         $this->beginDatabaseTransaction();
         try {
             // 查找绑定记录
-            $bindUser = $this->service->readRepository->findActiveBind($command->promoterId, $command->user);
+            $bindUser = $this->service->repository->findActiveBind($command->promoterId, $command->user);
 
             if (!$bindUser) {
                 throw new \InvalidArgumentException('未找到绑定记录');
@@ -59,4 +59,4 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
 
         return true;
     }
-} 
+}

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace RedJasmine\Coupon\Application\Services\CouponUsage;
 
 use RedJasmine\Coupon\Domain\Models\CouponUsage;
-use RedJasmine\Coupon\Domain\Repositories\CouponUsageReadRepositoryInterface;
 use RedJasmine\Coupon\Domain\Repositories\CouponUsageRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
  * 优惠券使用记录应用服务
- * 
+ *
+ * 使用统一的仓库接口，支持读写操作
  * 负责处理优惠券使用记录相关的业务逻辑
  */
 class CouponUsageApplicationService extends ApplicationService
@@ -25,8 +25,7 @@ class CouponUsageApplicationService extends ApplicationService
     protected static string $modelClass = CouponUsage::class;
 
     public function __construct(
-        public CouponUsageRepositoryInterface $repository,
-        public CouponUsageReadRepositoryInterface $readRepository
+        public CouponUsageRepositoryInterface $repository
     ) {
     }
 
@@ -36,16 +35,16 @@ class CouponUsageApplicationService extends ApplicationService
 
     /**
      * 获取用户的使用记录统计
-     * 
+     *
      * @param int $userId
      * @param string $userType
      * @return array
      */
     public function getUserUsageStatistics(int $userId, string $userType): array
     {
-        $baseQuery = $this->readRepository->query()
-                                         ->where('user_id', $userId)
-                                         ->where('user_type', $userType);
+        $baseQuery = $this->repository->query()
+                                     ->where('user_id', $userId)
+                                     ->where('user_type', $userType);
 
         return [
             'total_count' => $baseQuery->clone()->count(),
@@ -59,7 +58,7 @@ class CouponUsageApplicationService extends ApplicationService
 
     /**
      * 获取按月统计的使用记录
-     * 
+     *
      * @param int $userId
      * @param string $userType
      * @param int $months
@@ -68,14 +67,14 @@ class CouponUsageApplicationService extends ApplicationService
     public function getUserMonthlyStatistics(int $userId, string $userType, int $months = 12): array
     {
         $statistics = [];
-        $baseQuery = $this->readRepository->query()
-                                         ->where('user_id', $userId)
-                                         ->where('user_type', $userType);
+        $baseQuery = $this->repository->query()
+                                     ->where('user_id', $userId)
+                                     ->where('user_type', $userType);
 
         for ($i = $months - 1; $i >= 0; $i--) {
             $monthStart = now()->subMonths($i)->startOfMonth();
             $monthEnd = now()->subMonths($i)->endOfMonth();
-            
+
             $statistics[] = [
                 'month' => $monthStart->format('Y-m'),
                 'count' => $baseQuery->clone()
@@ -92,14 +91,14 @@ class CouponUsageApplicationService extends ApplicationService
 
     /**
      * 获取某个优惠券的使用统计
-     * 
+     *
      * @param int $couponId
      * @return array
      */
     public function getCouponUsageStatistics(int $couponId): array
     {
-        $baseQuery = $this->readRepository->query()
-                                         ->where('coupon_id', $couponId);
+        $baseQuery = $this->repository->query()
+                                     ->where('coupon_id', $couponId);
 
         return [
             'total_count' => $baseQuery->clone()->count(),
@@ -112,7 +111,7 @@ class CouponUsageApplicationService extends ApplicationService
 
     /**
      * 获取指定时间范围内的使用记录
-     * 
+     *
      * @param int $userId
      * @param string $userType
      * @param \Carbon\Carbon $startDate
@@ -121,10 +120,10 @@ class CouponUsageApplicationService extends ApplicationService
      */
     public function getUserUsageByDateRange(int $userId, string $userType, $startDate, $endDate): array
     {
-        $baseQuery = $this->readRepository->query()
-                                         ->where('user_id', $userId)
-                                         ->where('user_type', $userType)
-                                         ->whereBetween('used_at', [$startDate, $endDate]);
+        $baseQuery = $this->repository->query()
+                                     ->where('user_id', $userId)
+                                     ->where('user_type', $userType)
+                                     ->whereBetween('used_at', [$startDate, $endDate]);
 
         return [
             'count' => $baseQuery->clone()->count(),
@@ -133,4 +132,4 @@ class CouponUsageApplicationService extends ApplicationService
             'end_date' => $endDate->toDateString(),
         ];
     }
-} 
+}

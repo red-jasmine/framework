@@ -13,7 +13,6 @@ use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\PromoterTe
 use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\FindPromoterTeamQuery;
 use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\FindPromoterTeamQueryHandler;
 use RedJasmine\Distribution\Domain\Models\PromoterTeam;
-use RedJasmine\Distribution\Domain\Repositories\PromoterTeamReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterTeamRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterTeamTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -34,7 +33,6 @@ class PromoterTeamApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterTeamRepositoryInterface $repository,
-        public PromoterTeamReadRepositoryInterface $readRepository,
         public PromoterTeamTransformer $transformer,
     ) {
     }

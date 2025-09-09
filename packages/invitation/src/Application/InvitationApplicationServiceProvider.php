@@ -4,17 +4,16 @@ namespace RedJasmine\Invitation\Application;
 
 use Illuminate\Support\ServiceProvider;
 use RedJasmine\Invitation\Application\Pipelines\UserRegister\UserRegisterPipeline;
-use RedJasmine\Invitation\Domain\Repositories\InvitationCodeReadRepositoryInterface;
 use RedJasmine\Invitation\Domain\Repositories\InvitationCodeRepositoryInterface;
 use RedJasmine\Invitation\Domain\Repositories\InvitationRecordRepositoryInterface;
-use RedJasmine\Invitation\Infrastructure\ReadRepositories\Mysql\InvitationCodeReadRepository;
-use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationCodeRepository;
-use RedJasmine\Invitation\Infrastructure\Repositories\Eloquent\InvitationRecordRepository;
+use RedJasmine\Invitation\Infrastructure\Repositories\InvitationCodeRepository;
+use RedJasmine\Invitation\Infrastructure\Repositories\InvitationRecordRepository;
 use RedJasmine\Support\Facades\Hook;
 
-
 /**
- * 邀请应用层服务提供者
+ * 邀请应用服务提供者
+ *
+ * 使用统一的仓库接口，简化服务绑定
  */
 class InvitationApplicationServiceProvider extends ServiceProvider
 {
@@ -23,11 +22,9 @@ class InvitationApplicationServiceProvider extends ServiceProvider
      */
     public function register() : void
     {
+        // 统一仓库接口绑定，支持读写操作
         $this->app->bind(InvitationCodeRepositoryInterface::class, InvitationCodeRepository::class);
-        $this->app->bind(InvitationCodeReadRepositoryInterface::class, InvitationCodeReadRepository::class);
         $this->app->bind(InvitationRecordRepositoryInterface::class, InvitationRecordRepository::class);
-
-
     }
 
     /**
@@ -37,4 +34,4 @@ class InvitationApplicationServiceProvider extends ServiceProvider
     {
         Hook::register('user.register.makeUser',UserRegisterPipeline::class);
     }
-} 
+}

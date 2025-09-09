@@ -4,19 +4,21 @@ namespace RedJasmine\Community\Application\Services\Topic;
 
 use RedJasmine\Article\Application\Services\Article\Commands\TopicPublishCommandHandler;
 use RedJasmine\Community\Domain\Models\Topic;
+use RedJasmine\Community\Domain\Repositories\TopicRepositoryInterface;
 use RedJasmine\Community\Domain\Transformer\TopicTransformer;
-use RedJasmine\Comnunity\Domain\Repositories\TopicReadRepositoryInterface;
-use RedJasmine\Comnunity\Domain\Repositories\TopicRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Commands\ApprovalCommandHandler;
 use RedJasmine\Support\Application\Commands\SubmitApprovalCommandHandler;
 
+/**
+ * 话题应用服务
+ *
+ * 使用统一的仓库接口，支持读写操作
+ */
 class TopicApplicationService extends ApplicationService
 {
-
     public function __construct(
         public TopicRepositoryInterface $repository,
-        public TopicReadRepositoryInterface $readRepository,
         public TopicTransformer $transformer
     ) {
     }
@@ -28,5 +30,4 @@ class TopicApplicationService extends ApplicationService
         'approval'       => ApprovalCommandHandler::class,
         'submitApproval' => SubmitApprovalCommandHandler::class,
     ];
-
 }

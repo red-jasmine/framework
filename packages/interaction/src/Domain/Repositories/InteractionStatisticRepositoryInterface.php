@@ -5,6 +5,11 @@ namespace RedJasmine\Interaction\Domain\Repositories;
 use RedJasmine\Interaction\Domain\Models\InteractionStatistic;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
+/**
+ * 互动统计仓库接口
+ *
+ * 提供互动统计实体的读写操作统一接口
+ */
 interface InteractionStatisticRepositoryInterface extends RepositoryInterface
 {
     public function increment(string $resourceType, string $resourceId, string $interactionType, int $quantity = 1) : int;
@@ -13,4 +18,6 @@ interface InteractionStatisticRepositoryInterface extends RepositoryInterface
 
     public function findByResource(string $resourceType, string $resourceId, string $interactionType) : ?InteractionStatistic;
 
+    // 合并了原InteractionStatisticReadRepositoryInterface的功能
+    // 所有读写操作都通过统一接口提供
 }

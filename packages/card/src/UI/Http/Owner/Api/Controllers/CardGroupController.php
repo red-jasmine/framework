@@ -17,12 +17,10 @@ class CardGroupController extends Controller
     public function __construct(
         protected CardGroupApplicationService $service,
 
-
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
-
     }
 
 

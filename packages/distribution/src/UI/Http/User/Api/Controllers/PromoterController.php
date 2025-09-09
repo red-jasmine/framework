@@ -27,7 +27,7 @@ class PromoterController extends Controller
         protected PromoterApplicationService $service,
         protected PromoterApplyApplicationService $applyApplication,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->with(['parent', 'group', 'team']);
         });
     }
@@ -82,11 +82,11 @@ class PromoterController extends Controller
 
 
 
-    public function test()  
+    public function test()
     {
 
 
-        
+
     }
 
 }

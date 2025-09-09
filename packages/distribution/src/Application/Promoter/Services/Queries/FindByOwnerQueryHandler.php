@@ -15,6 +15,6 @@ class FindByOwnerQueryHandler extends QueryHandler
 
     public function handle(FindByOwnerQuery $query) : Promoter
     {
-        return $this->service->readRepository->findByOwner($query);
+        return $this->service->repository->findByOwner($query);
     }
-} 
+}

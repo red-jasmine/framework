@@ -14,6 +14,6 @@ class FindPromoterByIdQueryHandler extends QueryHandler
 
     public function handle(FindPromoterByIdQuery $query)
     {
-        return $this->service->readRepository->find($query->getKey());
+        return $this->service->repository->find($query->getKey());
     }
-} 
+}

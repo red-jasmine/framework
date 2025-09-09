@@ -13,7 +13,6 @@ use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\PromoterL
 use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\FindPromoterLevelQuery;
 use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\FindPromoterLevelQueryHandler;
 use RedJasmine\Distribution\Domain\Models\PromoterLevel;
-use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterLevelRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterLevelTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -33,7 +32,6 @@ class PromoterLevelApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterLevelRepositoryInterface $repository,
-        public PromoterLevelReadRepositoryInterface $readRepository,
         public PromoterLevelTransformer $transformer,
     ) {
     }

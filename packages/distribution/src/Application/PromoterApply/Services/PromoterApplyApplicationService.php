@@ -6,7 +6,6 @@ use RedJasmine\Distribution\Application\PromoterApply\Services\Commands\Promoter
 use RedJasmine\Distribution\Application\PromoterApply\Services\Commands\PromoterApplyApprovalCommandHandler;
 use RedJasmine\Distribution\Application\PromoterApply\Services\Queries\PromoterApplyPaginateQueryHandler;
 use RedJasmine\Distribution\Domain\Models\PromoterApply;
-use RedJasmine\Distribution\Domain\Repositories\PromoterApplyReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterApplyRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterApplyTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -32,7 +31,6 @@ class PromoterApplyApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterApplyRepositoryInterface $repository,
-        public PromoterApplyReadRepositoryInterface $readRepository,
         public PromoterApplyTransformer $transformer,
     ) {
     }

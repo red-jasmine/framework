@@ -3,9 +3,17 @@
 namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Distribution\Domain\Models\PromoterOrder;
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
 
-interface PromoterOrderRepositoryInterface extends RepositoryInterface
+/**
+ * 推广员订单仓库接口
+ *
+ * 提供推广员订单实体的读写操作统一接口
+ *
+ * @method PromoterOrder find($id)
+ */
+interface PromoterOrderRepositoryInterface extends BaseRepositoryInterface
 {
-
+    // 合并了原PromoterOrderReadRepositoryInterface的功能
+    // 所有读写操作都通过统一接口提供
 }

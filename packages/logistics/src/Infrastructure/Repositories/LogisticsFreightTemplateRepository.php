@@ -2,20 +2,61 @@
 
 namespace RedJasmine\Logistics\Infrastructure\Repositories;
 
-
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
 use RedJasmine\Logistics\Domain\Repositories\LogisticsFreightTemplateRepositoryInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 
 /**
+ * 物流运费模板仓库实现
+ *
+ * 基于Repository实现，提供物流运费模板实体的读写操作能力
+ *
  * @method LogisticsFreightTemplate find($id)
  */
 class LogisticsFreightTemplateRepository extends Repository implements LogisticsFreightTemplateRepositoryInterface
 {
-
     /**
      * @var $modelClass class-string
      */
     protected static string $modelClass = LogisticsFreightTemplate::class;
 
+    /**
+     * 配置允许的过滤器
+     */
+    protected function allowedFilters($query = null): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::exact('owner_type'),
+            AllowedFilter::exact('owner_id'),
+            AllowedFilter::exact('status'),
+        ];
+    }
+
+    /**
+     * 配置允许的排序字段
+     */
+    protected function allowedSorts($query = null): array
+    {
+        return [
+            AllowedSort::field('id'),
+            AllowedSort::field('name'),
+            AllowedSort::field('sort'),
+            AllowedSort::field('created_at'),
+            AllowedSort::field('updated_at'),
+        ];
+    }
+
+    /**
+     * 配置允许包含的关联
+     */
+    protected function allowedIncludes($query = null): array
+    {
+        return [
+            'rules',
+        ];
+    }
 }

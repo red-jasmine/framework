@@ -7,7 +7,7 @@ namespace RedJasmine\Message\Domain\Services;
 use RedJasmine\Message\Domain\Data\MessageData;
 use RedJasmine\Message\Domain\Models\Enums\PushChannelEnum;
 use RedJasmine\Message\Domain\Models\Message;
-use RedJasmine\Message\Domain\Repositories\MessageReadRepositoryInterface;
+use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
 
 /**
  * 消息规则领域服务
@@ -15,7 +15,7 @@ use RedJasmine\Message\Domain\Repositories\MessageReadRepositoryInterface;
 class MessageRuleService
 {
     public function __construct(
-        protected MessageReadRepositoryInterface $messageReadRepository,
+        protected MessageRepositoryInterface $messageRepository,
     ) {
     }
 
@@ -50,7 +50,7 @@ class MessageRuleService
 
         foreach ($limits as $limit) {
             $count = $this->getMessageCount($receiverId, $biz, $limit['period']);
-            
+
             if ($count >= $limit['max_count']) {
                 throw new \InvalidArgumentException(
                     "超过频率限制: {$limit['period']}内最多发送{$limit['max_count']}条消息"
@@ -131,7 +131,7 @@ class MessageRuleService
 
         foreach ($limits as $limit) {
             $count = $this->getMessageCount($receiverId, $biz, $limit['period']);
-            
+
             if ($count >= $limit['max_count']) {
                 throw new \InvalidArgumentException(
                     "超过频率限制: {$limit['period']}内最多发送{$limit['max_count']}条消息"
@@ -155,7 +155,7 @@ class MessageRuleService
 
         // 获取免打扰时间配置
         $quietHours = $this->getQuietHours($messageData->receiverId);
-        
+
         if ($this->isInQuietHours($hour, $quietHours)) {
             throw new \InvalidArgumentException(
                 "当前时间({$hour}:00)在用户免打扰时间内"
@@ -212,7 +212,7 @@ class MessageRuleService
     {
         // 从配置文件获取频率限制
         $config = config("message.frequency_limits.{$biz}", []);
-        
+
         if ($channel) {
             $config = $config[$channel->value] ?? $config;
         }
@@ -229,7 +229,7 @@ class MessageRuleService
     protected function getMessageCount(string $receiverId, string $biz, string $period): int
     {
         $startTime = now()->sub($this->parsePeriod($period));
-        
+
         // 这里应该调用仓库方法获取消息数量
         // 暂时返回0，实际实现时需要查询数据库
         return 0;
@@ -314,10 +314,10 @@ class MessageRuleService
         foreach ($channels as $channel) {
             $stats[$channel->value] = 0.95; // 默认成功率
         }
-        
+
         // 按成功率降序排序
         arsort($stats);
-        
+
         return $stats;
     }
 

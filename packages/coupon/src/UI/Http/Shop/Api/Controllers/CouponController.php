@@ -27,7 +27,7 @@ class CouponController extends Controller
     public function __construct(
         protected CouponApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
     }

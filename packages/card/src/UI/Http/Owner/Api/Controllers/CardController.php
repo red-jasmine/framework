@@ -19,11 +19,9 @@ class CardController extends Controller
         protected CardApplicationService $service,
 
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
-
-
     }
 
 

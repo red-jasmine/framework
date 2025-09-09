@@ -8,7 +8,6 @@ use RedJasmine\Distribution\Application\PromoterGroup\Services\Commands\DeletePr
 use RedJasmine\Distribution\Application\PromoterGroup\Services\Commands\UpdatePromoterGroupCommand;
 use RedJasmine\Distribution\Domain\Data\PromoterGroupData;
 use RedJasmine\Distribution\Domain\Models\PromoterGroup;
-use RedJasmine\Distribution\Domain\Repositories\PromoterGroupReadRepositoryInterface;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterGroupTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -34,22 +33,21 @@ class PromoterGroupApplicationService extends ApplicationService
 
     public function __construct(
         public PromoterGroupRepositoryInterface $repository,
-        public PromoterGroupReadRepositoryInterface $readRepository,
         public PromoterGroupTransformer $transformer,
     ) {
     }
 
-  
+
     public function isAllowUse(int $id, UserInterface $owner): bool
     {
-        return (bool) ($this->readRepository->withQuery(function ($query) use ($owner) {
+        return (bool) ($this->repository->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
         })->find(FindQuery::make($id))?->isAllowUse());
     }
 
     public function tree(Query $query): array
     {
-        return $this->readRepository->tree($query);
+        return $this->repository->tree($query);
     }
 
-} 
+}

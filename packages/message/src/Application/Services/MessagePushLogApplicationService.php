@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RedJasmine\Message\Application\Services;
 
 use RedJasmine\Message\Domain\Models\MessagePushLog;
-use RedJasmine\Message\Domain\Repositories\MessagePushLogReadRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessagePushLogRepositoryInterface;
 use RedJasmine\Message\Domain\Transformers\MessagePushLogTransformer;
 use RedJasmine\Support\Application\ApplicationService;
@@ -20,7 +19,6 @@ class MessagePushLogApplicationService extends ApplicationService
 
     public function __construct(
         public MessagePushLogRepositoryInterface $repository,
-        public MessagePushLogReadRepositoryInterface $readRepository,
         public MessagePushLogTransformer $transformer
     ) {
     }
@@ -32,7 +30,7 @@ class MessagePushLogApplicationService extends ApplicationService
         'updateResult' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogUpdateResultCommandHandler::class,
         'retry' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogRetryCommandHandler::class,
         'clean' => \RedJasmine\Message\Application\Services\Commands\MessagePushLogCleanCommandHandler::class,
-        
+
         'find' => \RedJasmine\Message\Application\Services\Queries\MessagePushLogFindQueryHandler::class,
         'paginate' => \RedJasmine\Message\Application\Services\Queries\MessagePushLogPaginateQueryHandler::class,
         'statistics' => \RedJasmine\Message\Application\Services\Queries\MessagePushLogStatisticsQueryHandler::class,

@@ -8,9 +8,7 @@ use RedJasmine\Interaction\Application\Services\Commands\InteractionRecordCancel
 use RedJasmine\Interaction\Application\Services\Commands\InteractionRecordCreateCommandHandler;
 use RedJasmine\Interaction\Application\Services\Queries\StatisticQuery;
 use RedJasmine\Interaction\Application\Services\Queries\StatisticQueryHandler;
-use RedJasmine\Interaction\Domain\Repositories\InteractionRecordReadRepositoryInterface;
 use RedJasmine\Interaction\Domain\Repositories\InteractionRecordRepositoryInterface;
-use RedJasmine\Interaction\Domain\Repositories\InteractionStatisticReadRepositoryInterface;
 use RedJasmine\Interaction\Domain\Repositories\InteractionStatisticRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -22,9 +20,7 @@ class InteractionRecordApplicationService extends ApplicationService
 {
     public function __construct(
         public InteractionRecordRepositoryInterface $repository,
-        public InteractionRecordReadRepositoryInterface $readRepository,
         public InteractionStatisticRepositoryInterface $statisticRepository,
-        public InteractionStatisticReadRepositoryInterface $statisticReadRepository,
     ) {
     }
 

@@ -24,7 +24,7 @@ class PromoterTeamController extends Controller
     public function __construct(
         protected PromoterTeamApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->with(['promoters']);
         });
     }

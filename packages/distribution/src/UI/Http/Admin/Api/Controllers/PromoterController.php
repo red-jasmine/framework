@@ -23,7 +23,7 @@ class PromoterController extends Controller
     public function __construct(
         protected PromoterApplicationService $service,
     ) {
-        $this->service->readRepository->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             $query->with(['parent', 'group', 'team', 'level']);
         });
     }
@@ -34,7 +34,7 @@ class PromoterController extends Controller
     public function index(Request $request)
     {
         $query = PaginateQuery::from($request);
-        $data = $this->service->readRepository->paginate($query);
+        $data = $this->service->repository->paginate($query);
         return Resource::collection($data);
     }
 
@@ -57,7 +57,7 @@ class PromoterController extends Controller
             'id' => $id,
             'level' => $request->input('level'),
         ]);
-        
+
         $promoter = $this->service->upgrade($command);
         return new Resource($promoter);
     }
@@ -71,7 +71,7 @@ class PromoterController extends Controller
             'id' => $id,
             'level' => $request->input('level'),
         ]);
-        
+
         $promoter = $this->service->downgrade($command);
         return new Resource($promoter);
     }
