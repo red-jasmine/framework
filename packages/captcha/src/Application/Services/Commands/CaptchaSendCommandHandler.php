@@ -7,6 +7,7 @@ use RedJasmine\Captcha\Domain\Services\CaptchaSenderService;
 use RedJasmine\Captcha\Exceptions\CaptchaException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
+use RedJasmine\Support\Exceptions\AbstractException;
 use Throwable;
 
 class CaptchaSendCommandHandler extends CommandHandler
