@@ -21,7 +21,6 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Client;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Device;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Payment\Domain\Repositories\SettleReceiverReadRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use Cknow\Money\Money;
@@ -39,7 +38,6 @@ beforeEach(function () {
 
     $this->settleReceiverCommandService = app(SettleReceiverCommandService::class);
     $this->settleReceiverRepository     = app(SettleReceiverRepositoryInterface::class);
-    $this->settleReceiverReadRepository = app(SettleReceiverReadRepositoryInterface::class);
 
 });
 
@@ -65,7 +63,7 @@ test('create settle accounts', function () {
         $command->certNo            = $account['cert_no'];
 
         // 查询是否存在
-        $result = $this->settleReceiverReadRepository->findByMerchantAppReceiver(
+        $result = $this->settleReceiverRepository->findByMerchantAppReceiver(
             $command->systemMerchantAppId,
             $command->receiverType,
             $command->receiverId,

@@ -16,21 +16,17 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
-use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 // 测试取消退款
 beforeEach(function () {
 
-    $this->orderReadRepository  = app(OrderReadRepositoryInterface::class);
     $this->orderRepository      = app(OrderRepositoryInterface::class);
     $this->orderCommandService  = app(OrderApplicationService::class);
     $this->refundCommandService = app(RefundApplicationService::class);
     $this->refundRepository     = app(RefundRepositoryInterface::class);
-    $this->refundReadRepository = app(RefundReadRepositoryInterface::class);
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;

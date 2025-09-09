@@ -24,9 +24,7 @@ use RedJasmine\Order\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderPaymentRepositoryInterface;
-use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
-use RedJasmine\Order\Domain\Repositories\RefundReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
 use RedJasmine\Order\Domain\Types\OrderStandardType;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
@@ -34,12 +32,10 @@ use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 beforeEach(function () {
 
-    $this->orderReadRepository        = app(OrderReadRepositoryInterface::class);
     $this->orderRepository            = app(OrderRepositoryInterface::class);
     $this->orderCommandService        = app(OrderApplicationService::class);
     $this->refundCommandService       = app(RefundApplicationService::class);
     $this->refundRepository           = app(RefundRepositoryInterface::class);
-    $this->refundReadRepository       = app(RefundReadRepositoryInterface::class);
     $this->orderPaymentRepository     = app(OrderPaymentRepositoryInterface::class);
     $this->orderPaymentCommandService = app(OrderPaymentApplicationService::class);
 

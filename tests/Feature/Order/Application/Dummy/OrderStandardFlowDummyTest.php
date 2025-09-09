@@ -20,14 +20,12 @@ use RedJasmine\Order\Domain\Models\Enums\PaymentStatusEnum;
 use RedJasmine\Order\Domain\Models\Enums\ShippingStatusEnum;
 use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
-use RedJasmine\Order\Domain\Repositories\OrderReadRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 
 beforeEach(function () {
 
-    $this->orderReadRepository = app(OrderReadRepositoryInterface::class);
     $this->orderRepository     = app(OrderRepositoryInterface::class);
     $this->orderCommandService = app(OrderApplicationService::class);
 

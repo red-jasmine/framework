@@ -6,7 +6,6 @@ use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserUnbindComman
 use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
-use RedJasmine\Socialite\Domain\Repositories\SocialiteUserReadRepositoryInterface;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
 use RedJasmine\Support\Data\UserData;
 
@@ -14,7 +13,6 @@ beforeEach(function () {
 
     $this->commandService = app(SocialiteUserApplicationService::class);
     $this->repository     = app(SocialiteUserRepositoryInterface::class);
-    $this->readRepository = app(SocialiteUserReadRepositoryInterface::class);
 
 });
 
@@ -42,7 +40,7 @@ test('can  bind a user', function () {
 
     ]);
 
-    return $this->readRepository->findUser($query);
+    return $this->repository->findUser($query);
 
 });
 

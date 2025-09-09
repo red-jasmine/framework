@@ -7,22 +7,20 @@ use RedJasmine\Vip\Application\Services\VipProductApplicationService;
 use RedJasmine\Vip\Domain\Data\VipData;
 use RedJasmine\Vip\Domain\Data\VipProductData;
 use RedJasmine\Vip\Domain\Models\VipProduct;
-use RedJasmine\Vip\Domain\Repositories\VipProductReadRepositoryInterface;
 use RedJasmine\Vip\Domain\Repositories\VipProductRepositoryInterface;
-use RedJasmine\Vip\Domain\Repositories\VipReadRepositoryInterface;
+use RedJasmine\Vip\Domain\Repositories\VipRepositoryInterface;
 
 beforeEach(function () {
 
     $this->VipCommandService = app(VipApplicationService::class);
 
     $this->UserVipCommandService = app(UserVipApplicationService::class);
-    $this->VipReadRepository     = app(VipReadRepositoryInterface::class);
+    $this->VipRepository     = app(VipRepositoryInterface::class);
     $this->appId                 = 'test';
     $this->type                  = 'vip';
 
 
     $this->VipProductCommandService = app(VipProductApplicationService::class);
-    $this->VipProductReadRepository = app(VipProductReadRepositoryInterface::class);
     $this->VipProductRepository     = app(VipProductRepositoryInterface::class);
 
 });
@@ -38,7 +36,7 @@ test('create a vip', function () {
     try {
         $vip = $this->VipCommandService->create($command);
     } catch (Throwable $throwable) {
-        $vip = $this->VipReadRepository->findVipType($this->appId, $this->type);
+        $vip = $this->VipRepository->findVipType($this->appId, $this->type);
     }
 
 
