@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Announcement\Application\Services\Queries;
 
-use RedJasmine\Support\Application\Queries\PaginationQuery;
+use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
-class CategoryListQuery extends PaginationQuery
+class CategoryListQuery extends PaginateQuery
 {
     public ?string $biz = null;
     public ?string $ownerType = null;
