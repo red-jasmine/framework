@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->WalletCommandService = app(WalletApplicationService::class);
     $this->WalletRepository     = app(WalletRepositoryInterface::class);
 
-    $this->type     = 'integral';
+    $this->type     = 'points';
     $this->currency = 'ZJF';
 });
 test('can create a wallet', function () {
