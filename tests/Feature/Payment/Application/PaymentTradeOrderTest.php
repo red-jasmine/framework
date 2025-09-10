@@ -34,11 +34,12 @@ beforeEach(function () {
 });
 
 test('can paid a trade', function () {
-    $trade = $this->tradeRepository->findByNo('20250807093410506181601954394');
 
 
     $channelTradeData = new TradePaidCommand();
 
+    $trade = $this->tradeRepository->findByNo('20250807093410506181601954394');
+    // TODO 需要设置正确的单号
     $channelTradeData->tradeNo           = $trade->trade_no;
     $channelTradeData->channelTradeNo    = fake()->numerify('channel-trade-no-##########');
     $channelTradeData->channelCode       = 'alipay';

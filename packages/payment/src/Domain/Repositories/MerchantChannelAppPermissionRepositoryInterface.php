@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
-/**
- * @method MerchantChannelAppPermission find($id)
- */
-interface MerchantChannelAppPermissionRepositoryInterface extends RepositoryInterface
+
+interface MerchantChannelAppPermissionRepositoryInterface
 {
     public function find(int $merchantAppId, int $channelAppId) : ?MerchantChannelAppPermission;
 
@@ -20,5 +18,6 @@ interface MerchantChannelAppPermissionRepositoryInterface extends RepositoryInte
      */
     public function findMerchantAppAuthorizedChannelApps(int $merchantAppId) : Collection;
 
+    public function store(MerchantChannelAppPermission $permission);
 }
 

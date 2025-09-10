@@ -5,10 +5,12 @@ namespace RedJasmine\Payment\Infrastructure\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Payment\Domain\Repositories\MerchantChannelAppPermissionRepositoryInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class MerchantChannelAppPermissionRepository extends Repository implements MerchantChannelAppPermissionRepositoryInterface
+
+class MerchantChannelAppPermissionRepository  implements MerchantChannelAppPermissionRepositoryInterface
 {
+
+
 
     protected static string $modelClass = MerchantChannelAppPermission::class;
 
@@ -26,6 +28,11 @@ class MerchantChannelAppPermissionRepository extends Repository implements Merch
         return static::$modelClass::with(['channelApp'])
                                           ->where('merchant_app_id', $merchantAppId)
                                           ->get();
+    }
+
+    public function store(MerchantChannelAppPermission $permission) : void
+    {
+        $permission->push();
     }
 
 
