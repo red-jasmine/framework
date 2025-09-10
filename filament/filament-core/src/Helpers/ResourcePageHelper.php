@@ -27,7 +27,7 @@ trait ResourcePageHelper
     {
 
 
-        $query = app(static::$service)->repository->modelQuery();
+        $query = app(static::$service)->repository->query();
 
 
         if (static::onlyOwner()) {
