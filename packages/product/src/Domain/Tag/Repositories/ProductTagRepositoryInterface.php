@@ -14,7 +14,6 @@ interface ProductTagRepositoryInterface extends RepositoryInterface
 {
     /**
      * 根据名称查找标签
-     * 合并了原ProductTagReadRepositoryInterface中findByName方法
      */
     public function findByName($name) : ?ProductTag;
 }

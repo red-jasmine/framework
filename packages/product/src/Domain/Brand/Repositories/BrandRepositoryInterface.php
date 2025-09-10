@@ -17,6 +17,6 @@ interface BrandRepositoryInterface extends RepositoryInterface
      */
     public function findByName($name) : ?Brand;
 
-    // 合并了原BrandReadRepositoryInterface的功能
+
     // 所有读写操作都通过统一接口提供
 }

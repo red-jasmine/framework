@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Stock\Services;
 
-use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogReadRepositoryInterface;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -16,7 +16,7 @@ class StockLogQueryService extends ApplicationService
     public static string $hookNamePrefix = 'product.application.stock-log.query';
 
     public function __construct(
-        protected ProductStockLogReadRepositoryInterface $repository
+        protected ProductStockLogRepositoryInterface $repository
     ) {
 
     }

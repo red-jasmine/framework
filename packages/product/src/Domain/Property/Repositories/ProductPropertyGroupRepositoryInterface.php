@@ -15,7 +15,4 @@ interface ProductPropertyGroupRepositoryInterface extends RepositoryInterface
      * 根据名称查找属性组
      */
     public function findByName(string $name);
-
-    // 合并了原ProductPropertyGroupReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
 }

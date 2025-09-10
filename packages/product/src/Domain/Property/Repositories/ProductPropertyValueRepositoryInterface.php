@@ -22,7 +22,6 @@ interface ProductPropertyValueRepositoryInterface extends RepositoryInterface
 
     /**
      * 在指定属性中根据ID数组查找属性值列表
-     * 合并了原ProductPropertyValueReadRepositoryInterface中findByIdsInProperty方法
      */
     public function findByIdsInProperty(int $pid, array $ids);
 }

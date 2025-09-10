@@ -10,8 +10,8 @@ use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
 use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
 use RedJasmine\Product\Domain\Property\Models\ProductProperty;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyReadRepositoryInterface;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueReadRepositoryInterface;
+use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
+use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyValueRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 
 /**
@@ -20,8 +20,8 @@ use RedJasmine\Product\Exceptions\ProductPropertyException;
 class PropertyValidateService
 {
     public function __construct(
-        protected ProductPropertyReadRepositoryInterface $propertyReadRepository,
-        protected ProductPropertyValueReadRepositoryInterface $valueReadRepository,
+        protected ProductPropertyRepositoryInterface $propertyRepository,
+        protected ProductPropertyValueRepositoryInterface $valueRepository,
         protected PropertyFormatter $propertyFormatter,
     ) {
 
@@ -69,7 +69,7 @@ class PropertyValidateService
                     break;
                 case PropertyTypeEnum::SELECT:
 
-                    $propValues        = $this->valueReadRepository->findByIdsInProperty($basicProp->pid,
+                    $propValues        = $this->valueRepository->findByIdsInProperty($basicProp->pid,
                         collect($values)->pluck('vid')->toArray())->keyBy('id');
                     $basicProp->values = collect();
 
@@ -127,7 +127,7 @@ class PropertyValidateService
             return collect();
         }
 
-        $properties = collect($this->propertyReadRepository->findByIds($pid))->keyBy('id');
+        $properties = collect($this->propertyRepository->findByIds($pid))->keyBy('id');
 
 
         if (count($pid) !== count($properties)) {
@@ -210,7 +210,7 @@ class PropertyValidateService
             $values         = $prop['values'] ?? [];
 
             // 查询属性的值
-            $propValues = $this->valueReadRepository->findByIdsInProperty($saleProp->pid,
+            $propValues = $this->valueRepository->findByIdsInProperty($saleProp->pid,
                 collect($values)->pluck('vid')->toArray())->keyBy('id');
 
             $saleProp->values = collect();

@@ -60,7 +60,6 @@ interface ProductSkuRepositoryInterface extends RepositoryInterface
 
     /**
      * 根据ID数组查找SKU列表
-     * 合并了原ProductSkuReadRepositoryInterface中findList方法
      */
     public function findList(array $ids);
 }

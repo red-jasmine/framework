@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Property\Services\Pipelines;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupReadRepositoryInterface;
+use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyGroupRepositoryInterface;
 use RedJasmine\Product\Exceptions\ProductPropertyException;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -11,7 +11,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 class ProductPropertyGroupRulePipeline
 {
     public function __construct(
-        protected ProductPropertyGroupReadRepositoryInterface $repository,
+        protected ProductPropertyGroupRepositoryInterface $repository,
     ) {
     }
 
@@ -25,7 +25,7 @@ class ProductPropertyGroupRulePipeline
         $groupId = $command->{$attributeName};
         if ($groupId) {
             try {
-                $this->repository->find(FindQuery::from(['id'=>$groupId]));
+                $this->repository->findByQuery(FindQuery::from(['id'=>$groupId]));
             } catch (ModelNotFoundException) {
                 throw new ProductPropertyException('属性组不存在:'.$groupId);
             }

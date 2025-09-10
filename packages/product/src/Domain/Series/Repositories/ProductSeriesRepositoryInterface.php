@@ -15,7 +15,6 @@ interface ProductSeriesRepositoryInterface extends RepositoryInterface
 {
     /**
      * 根据商品ID查找商品系列
-     * 合并了原ProductSeriesReadRepositoryInterface中findProductSeries方法
      *
      * @param $productId
      * @return ProductSeries

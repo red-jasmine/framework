@@ -15,13 +15,13 @@ interface ProductGroupRepositoryInterface extends RepositoryInterface
 {
     /**
      * 获取树形结构
-     * 合并了原ProductGroupReadRepositoryInterface中tree方法
+     *
      */
     public function tree(Query $query) : array;
 
     /**
      * 根据名称查找分组
-     * 合并了原ProductGroupReadRepositoryInterface中findByName方法
+     *
      */
     public function findByName($name) : ?ProductGroup;
 }

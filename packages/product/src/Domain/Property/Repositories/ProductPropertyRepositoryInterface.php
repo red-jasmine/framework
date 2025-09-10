@@ -21,7 +21,6 @@ interface ProductPropertyRepositoryInterface extends RepositoryInterface
 
     /**
      * 根据ID数组查找属性列表
-     * 合并了原ProductPropertyReadRepositoryInterface中findByIds方法
      */
     public function findByIds(array $ids);
 }

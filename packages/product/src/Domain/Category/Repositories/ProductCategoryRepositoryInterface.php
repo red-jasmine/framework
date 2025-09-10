@@ -20,7 +20,7 @@ interface ProductCategoryRepositoryInterface extends RepositoryInterface
 
     /**
      * 获取树形结构
-     * 合并了原ProductCategoryReadRepositoryInterface中tree方法
+     *
      */
     public function tree(Query $query) : array;
 }

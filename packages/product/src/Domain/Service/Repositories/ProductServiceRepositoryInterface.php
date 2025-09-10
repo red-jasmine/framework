@@ -14,7 +14,6 @@ interface ProductServiceRepositoryInterface extends RepositoryInterface
 {
     /**
      * 根据名称查找服务
-     * 合并了原ProductServiceReadRepositoryInterface中findByName方法
      */
     public function findByName($name) : ?ProductService;
 }

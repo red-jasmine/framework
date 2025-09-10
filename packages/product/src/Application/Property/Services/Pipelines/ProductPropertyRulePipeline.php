@@ -3,14 +3,14 @@
 namespace RedJasmine\Product\Application\Property\Services\Pipelines;
 
 use Closure;
-use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyReadRepositoryInterface;
+use RedJasmine\Product\Domain\Property\Repositories\ProductPropertyRepositoryInterface;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class ProductPropertyRulePipeline
 {
     public function __construct(
-        protected ProductPropertyReadRepositoryInterface $repository,
+        protected ProductPropertyRepositoryInterface $repository,
     )
     {
     }
@@ -19,7 +19,7 @@ class ProductPropertyRulePipeline
     public function handle(Data $command, Closure $next) : mixed
     {
         $command = $command;
-        $this->repository->find(FindQuery::from(['id' => $command->pid]));
+        $this->repository->findByQuery(FindQuery::from(['id' => $command->pid]));
         return $next($command);
     }
 }
