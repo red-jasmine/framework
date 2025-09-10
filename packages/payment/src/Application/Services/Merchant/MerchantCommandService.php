@@ -16,7 +16,10 @@ use RedJasmine\Support\Application\ApplicationService;
  */
 class MerchantCommandService extends ApplicationService
 {
-            public MerchantTransformer $transformer) {
+    public function __construct(
+        public MerchantRepositoryInterface $repository,
+        public MerchantTransformer $transformer
+    ) {
     }
 
 

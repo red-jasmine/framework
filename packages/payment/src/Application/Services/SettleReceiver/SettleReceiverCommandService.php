@@ -13,7 +13,10 @@ use RedJasmine\Support\Data\Data;
  */
 class SettleReceiverCommandService extends ApplicationService
 {
-            public SettleReceiverTransformer $transformer) {
+    public function __construct(
+        public SettleReceiverRepositoryInterface $repository,
+        public SettleReceiverTransformer $transformer
+    ) {
     }
 
     /**

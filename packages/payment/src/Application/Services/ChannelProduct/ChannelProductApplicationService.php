@@ -13,7 +13,10 @@ use RedJasmine\Support\Data\Data;
  */
 class ChannelProductApplicationService extends ApplicationService
 {
-            public ChannelProductTransformer $transformer) {
+    public function __construct(
+        public ChannelProductRepositoryInterface $repository,
+        public ChannelProductTransformer $transformer
+    ) {
     }
 
     /**

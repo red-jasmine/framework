@@ -15,6 +15,7 @@ use RedJasmine\Payment\Domain\Repositories\MerchantAppRepositoryInterface;
 use RedJasmine\Payment\Domain\Repositories\TradeRepositoryInterface;
 use RedJasmine\Payment\Domain\Services\PaymentChannelService;
 use RedJasmine\Payment\Domain\Services\Routing\TradeRoutingService;
+use RedJasmine\Payment\Domain\Transformer\TradeTransformer;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -32,9 +33,11 @@ class TradeApplicationService extends ApplicationService
 
     public function __construct(
         public TradeRepositoryInterface $repository,
+        public TradeTransformer $transformer,
         public MerchantAppRepositoryInterface $merchantAppRepository,
         public TradeRoutingService $tradeRoutingService,
-        public PaymentChannelService $paymentChannelService) {
+        public PaymentChannelService $paymentChannelService
+    ) {
     }
 
     /**

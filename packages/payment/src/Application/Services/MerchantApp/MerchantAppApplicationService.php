@@ -11,8 +11,11 @@ use RedJasmine\Support\Application\ApplicationService;
 
 class MerchantAppApplicationService extends ApplicationService
 {
-            public MerchantRepositoryInterface $merchantRepository,
-        public ChannelAppRepositoryInterface $channelAppRepository) {
+    public function __construct(
+        public MerchantAppRepositoryInterface $repository,
+        public MerchantRepositoryInterface $merchantRepository,
+        public ChannelAppRepositoryInterface $channelAppRepository
+    ) {
     }
 
     /**

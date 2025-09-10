@@ -12,7 +12,9 @@ use RedJasmine\Support\Data\Data;
  */
 class ChannelCommandService extends ApplicationService
 {
-        ) {
+    public function __construct(
+        public ChannelRepositoryInterface $repository
+    ) {
     }
 
     /**
