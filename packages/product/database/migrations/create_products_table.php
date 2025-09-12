@@ -55,9 +55,9 @@ return new class extends Migration {
 
             // 价格
             $table->string('currency', 3)->default('CNY')->comment('货币');
-            $table->decimal('price', 10)->default(0)->comment('销售价');
-            $table->decimal('market_price')->nullable()->comment('市场价');
-            $table->decimal('cost_price')->nullable()->comment('成本价');
+            $table->decimal('price', 12, 2)->default(0)->comment('销售价');
+            $table->decimal('market_price', 12, 2)->nullable()->comment('市场价');
+            $table->decimal('cost_price', 12, 2)->nullable()->comment('成本价');
 
             $table->decimal('tax_rate')->default(0)->comment('税率%');
             $table->bigInteger('stock')->default(0)->comment('库存');
