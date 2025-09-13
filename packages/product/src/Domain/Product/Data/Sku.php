@@ -19,6 +19,12 @@ class Sku extends Data
     public ?string $outerId       = null;
     public ?int    $supplierSkuId = null;
 
+    /**
+     * 币种
+     * @var string
+     */
+    public string $currency = 'CNY';
+
     public Money $price;
     // 市场价格
     public ?Money $marketPrice;

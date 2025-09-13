@@ -240,6 +240,12 @@ class Product extends Data
     public ?string $size;
     // 产品价格
     //#[WithCast(AmountCast::class)]
+    /**
+     * 币种
+     * @var string
+     */
+    public string $currency = 'CNY';
+
     public Money $price;
     // 市场价格
     public ?Money $marketPrice;
