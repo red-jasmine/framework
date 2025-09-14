@@ -25,11 +25,20 @@ class Sku extends Data
      */
     public string $currency = 'CNY';
 
-    public Money $price;
-    // 市场价格
-    public ?Money $marketPrice;
-    // 成本价格
-    public ?Money $costPrice;
+    public string $price;
+    /**
+     * 市场价格
+     *
+     * @var string|null
+     */
+    public ?string $marketPrice = null;
+    /**
+     * 成本价格
+     *
+     * @var string|null
+     */
+    public ?string $costPrice = null;
+
 
     public int $stock       = 0;
     public int $safetyStock = 0;
