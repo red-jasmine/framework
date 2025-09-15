@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
+use Cknow\Money\Money;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Cknow\Money\Money;
+use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
@@ -19,6 +19,8 @@ use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Casts\CurrencyCast;
+use RedJasmine\Support\Domain\Casts\MoneyCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
@@ -241,25 +243,27 @@ class Product extends Data
     // 产品价格
     //#[WithCast(AmountCast::class)]
 
-   /**
-     * 币种
-     * @var string
+    /**
+     * @var Currency
      */
-    public string $currency = 'CNY';
+    #[WithCast(CurrencyCast::class)]
+    public Currency $currency;
 
-    public string $price;
+    #[WithCast(MoneyCast::class, 'currency', 'price', true)]
+    public Money $price;
     /**
      * 市场价格
      *
-     * @var string|null
+     * @var Money|null
      */
-    public ?string $marketPrice = null;
+    public ?Money $marketPrice;
     /**
      * 成本价格
      *
-     * @var string|null
+     * @var Money|null
      */
-    public ?string $costPrice = null;
+    public ?Money $costPrice = null;
+
 
     /**
      * 税率

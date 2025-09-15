@@ -30,6 +30,7 @@ use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
+use RedJasmine\Support\Domain\Casts\CurrencyCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -59,46 +60,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use HasSupplier;
 
-    public $incrementing = false;
-
-
     public static string $defaultPropertiesName = '';
-
-
     public static string $defaultPropertiesSequence = '';
-
-    public function casts() : array
-    {
-        return [
-            'product_type'              => ProductTypeEnum::class,  // 商品类型
-            'delivery_methods'          => 'array',// 配送方式  可选，多个
-            'status'                    => ProductStatusEnum::class,// 状态
-            'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
-            'freight_payer'             => FreightPayerEnum::class,// 运费承担方
-            'is_multiple_spec'          => 'boolean',
-            'is_brand_new'              => 'boolean',
-            'stop_sale_time'            => 'datetime',
-            'on_sale_time'              => 'datetime',
-            'sold_out_time'             => 'datetime',
-            'modified_time'             => 'datetime',
-            'start_sale_time'           => 'datetime',
-            'end_sale_time'             => 'datetime',
-            'is_hot'                    => 'boolean',
-            'is_new'                    => 'boolean',
-            'is_best'                   => 'boolean',
-            'is_benefit'                => 'boolean',
-            'is_customized'             => 'boolean',
-            'is_alone_order'            => 'boolean',
-            'is_pre_sale'               => 'boolean',
-            'is_from_supplier'          => 'boolean',
-            'price'                     => MoneyCast::class,
-            'market_price'              => MoneyCast::class,
-            'cost_price'                => MoneyCast::class,
-            'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
-        ];
-    }
-
-
+    public $incrementing = false;
     protected $appends = ['price', 'market_price', 'cost_price'];
 
     protected static function boot() : void
@@ -172,22 +136,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         });
     }
 
-    public function newInstance($attributes = [], $exists = false) : static
-    {
-        $instance = parent::newInstance($attributes, $exists);
-
-        if (!$instance->exists) {
-            $instance->setUniqueIds();
-            $instance->setRelation('extension', ProductExtension::make());
-            $instance->setRelation('skus', Collection::make());
-            $instance->setRelation('extendProductGroups', Collection::make());
-            $instance->setRelation('tags', Collection::make());
-        }
-
-        return $instance;
-    }
-
-
     public function extendProductGroups() : BelongsToMany
     {
 
@@ -244,6 +192,52 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(ProductSku::class, 'product_id', 'id');
     }
 
+    public function casts() : array
+    {
+        return [
+            'product_type'              => ProductTypeEnum::class,  // 商品类型
+            'delivery_methods'          => 'array',// 配送方式  可选，多个
+            'status'                    => ProductStatusEnum::class,// 状态
+            'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
+            'freight_payer'             => FreightPayerEnum::class,// 运费承担方
+            'is_multiple_spec'          => 'boolean',
+            'is_brand_new'              => 'boolean',
+            'stop_sale_time'            => 'datetime',
+            'on_sale_time'              => 'datetime',
+            'sold_out_time'             => 'datetime',
+            'modified_time'             => 'datetime',
+            'start_sale_time'           => 'datetime',
+            'end_sale_time'             => 'datetime',
+            'is_hot'                    => 'boolean',
+            'is_new'                    => 'boolean',
+            'is_best'                   => 'boolean',
+            'is_benefit'                => 'boolean',
+            'is_customized'             => 'boolean',
+            'is_alone_order'            => 'boolean',
+            'is_pre_sale'               => 'boolean',
+            'is_from_supplier'          => 'boolean',
+            'currency'                  => CurrencyCast::class,
+            'price'                     => MoneyCast::class.':currency,price,1',
+            'market_price'              => MoneyCast::class.':currency,market_price,1',
+            'cost_price'                => MoneyCast::class.':currency,cost_price,1',
+            'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
+        ];
+    }
+
+    public function newInstance($attributes = [], $exists = false) : static
+    {
+        $instance = parent::newInstance($attributes, $exists);
+
+        if (!$instance->exists) {
+            $instance->setUniqueIds();
+            $instance->setRelation('extension', ProductExtension::make());
+            $instance->setRelation('skus', Collection::make());
+            $instance->setRelation('extendProductGroups', Collection::make());
+            $instance->setRelation('tags', Collection::make());
+        }
+
+        return $instance;
+    }
 
     /**
      * 类目

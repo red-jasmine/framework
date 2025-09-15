@@ -33,6 +33,7 @@ class CurrencyCast implements CastsAttributes, Cast, Transformer
                 $key => null,
             ];
         }
+
         return [
             $key => $value instanceof Currency ? $value->getCode() : (string) $value,
         ];
@@ -57,6 +58,14 @@ class CurrencyCast implements CastsAttributes, Cast, Transformer
             return null;
         }
         return $value instanceof Currency ? $value->getCode() : (string) $value;
+    }
+
+    public function serialize($model, $key, $value, $attributes)
+    {
+        if ($value instanceof Currency) {
+            return $value->getCode();
+        }
+        return null;
     }
 
 

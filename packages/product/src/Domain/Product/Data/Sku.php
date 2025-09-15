@@ -3,8 +3,11 @@
 namespace RedJasmine\Product\Domain\Product\Data;
 
 use Cknow\Money\Money;
+use Money\Currency;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Casts\CurrencyCast;
+use Spatie\LaravelData\Attributes\WithCast;
 
 
 class Sku extends Data
@@ -19,25 +22,23 @@ class Sku extends Data
     public ?string $outerId       = null;
     public ?int    $supplierSkuId = null;
 
-    /**
-     * 币种
-     * @var string
-     */
-    public string $currency = 'CNY';
 
-    public string $price;
+    #[WithCast(CurrencyCast::class)]
+    public Currency $currency;
+
+    public Money $price;
     /**
      * 市场价格
      *
-     * @var string|null
+     * @var Money|null
      */
-    public ?string $marketPrice = null;
+    public ?Money $marketPrice ;
     /**
      * 成本价格
      *
-     * @var string|null
+     * @var Money|null
      */
-    public ?string $costPrice = null;
+    public ?Money $costPrice = null;
 
 
     public int $stock       = 0;

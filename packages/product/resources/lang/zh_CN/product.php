@@ -38,6 +38,7 @@ return [
         'is_brand_new'              => '是否全新',
         'sort'                      => '排序',
         'status'                    => '状态',
+        'currency'                  => '货币',
         'price'                     => '销售价',
         'market_price'              => '市场价',
         'cost_price'                => '成本价',

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Domain\Casts\CurrencyCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -33,23 +34,12 @@ class ProductSku extends Model implements OperatorInterface
     use HasOwner;
 
     public $incrementing = false;
-
-
-    protected $casts = [
-        'status'        => ProductStatusEnum::class,// 状态
-        'modified_time' => 'datetime',
-        'price'         => MoneyCast::class,
-        'market_price'  => MoneyCast::class,
-        'cost_price'    => MoneyCast::class,
-    ];
-
     protected $appends = ['price', 'market_price', 'cost_price'];
 
     public function product() : BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
-
 
     public function setDeleted() : void
     {
@@ -61,6 +51,18 @@ class ProductSku extends Model implements OperatorInterface
     {
         $this->deleted_at = null;
         $this->status     = ProductStatusEnum::ON_SALE;
+    }
+
+    protected function casts() : array
+    {
+        return [
+            'status'        => ProductStatusEnum::class,// 状态
+            'modified_time' => 'datetime',
+            'currency'      => CurrencyCast::class,
+            'price'         => MoneyCast::class.':currency,price,1',
+            'market_price'  => MoneyCast::class.':currency,market_price,1',
+            'cost_price'    => MoneyCast::class.':currency,cost_price,1',
+        ];
     }
 
 }

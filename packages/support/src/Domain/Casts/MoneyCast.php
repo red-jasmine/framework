@@ -16,28 +16,14 @@ use Spatie\LaravelData\Transformers\Transformer;
 class MoneyCast implements CastsAttributes, Cast, Transformer
 {
 
-    protected ?string $valueKey    = null;
-    protected ?string $currencyKey = null;
-
-
     public const string AMOUNT_TYPE_DECIMAL = 'decimal';
     public const string AMOUNT_TYPE_BIGINT  = 'bigint';
-
-    protected string $valueType            = self::AMOUNT_TYPE_DECIMAL;
-    protected string $valueSuffix          = 'amount';
-    protected string $currencySuffix       = 'currency';
-    protected bool   $isShareCurrencyField = false;
-
-
-    protected function getValueKey(string $key)
-    {
-        return $this->valueKey ?? $key.'_'.$this->valueSuffix;
-    }
-
-    protected function getCurrencyKey(string $key)
-    {
-        return $this->currencyKey ?? $key.'_'.$this->currencySuffix;
-    }
+    protected ?string $valueKey             = null;
+    protected ?string $currencyKey          = null;
+    protected string  $valueType            = self::AMOUNT_TYPE_DECIMAL;
+    protected string  $valueSuffix          = 'amount';
+    protected string  $currencySuffix       = 'currency';
+    protected bool    $isShareCurrencyField = false;
 
     public function __construct(
         $currencyKey = null,
@@ -69,6 +55,16 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         return $this->valueType === static::AMOUNT_TYPE_DECIMAL ?
             Money::parseByDecimal($moneyValue, $currency) : Money::parseByIntl($moneyValue, $currency);
 
+    }
+
+    protected function getValueKey(string $key)
+    {
+        return $this->valueKey ?? $key.'_'.$this->valueSuffix;
+    }
+
+    protected function getCurrencyKey(string $key)
+    {
+        return $this->currencyKey ?? $key.'_'.$this->currencySuffix;
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes) : ?array
@@ -105,29 +101,39 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context) : ?Money
     {
+
         if (blank($value)) {
             return null;
         }
-        $data = [];
+        $data        = [];
+        $valueKey    = $this->getValueKey($property->name);
+        $currencyKey = $this->getCurrencyKey($property->name);
 
         if (is_array($value)) {
             $data = $value;
         } elseif (is_string($value) || is_numeric($value)) {
-            $data[$this->valueSuffix] = $value;
+            $data[$valueKey] = $value;
         }
 
-        if (blank($data[$this->valueSuffix] ?? null) && blank($data[$this->currencySuffix] ?? null)) {
+        if (blank($data[$valueKey] ?? null) && blank($data[$currencyKey] ?? null)) {
             return null;
         }
-        if (blank($data[$this->valueSuffix] ?? null)) {
+        if (blank($data[$valueKey] ?? null)) {
             return null;
+        }
+
+        if (blank($data[$currencyKey] ?? null)) {
+            if ($this->isShareCurrencyField) {
+                $data[$currencyKey] = $properties[$currencyKey] ?? 'CNY';
+            }
         }
 
         if ($value instanceof Money) {
             return $value;
         }
-
-        return new Money($data[$this->valueSuffix], new Currency($data[$this->currencySuffix] ?? 'CNY'));
+        $currency = $data[$currencyKey] ?? 'CNY';
+        $currency = $currency instanceof Currency ? $currency : new Currency($currency);
+        return new Money($data[$valueKey], $currency);
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array
@@ -135,9 +141,11 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         if (blank($value)) {
             return null;
         }
+        $valueKey    = $this->getValueKey($property->name);
+        $currencyKey = $this->getCurrencyKey($property->name);
         return [
-            $this->currencySuffix => $value->getCurrency()->getCode(),
-            $this->valueSuffix    => $value->amount,
+            $currencyKey => $value->getCurrency()->getCode(),
+            $valueKey    => $value->amount,
         ];
     }
 
