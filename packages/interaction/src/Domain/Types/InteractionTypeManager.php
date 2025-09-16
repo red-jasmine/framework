@@ -10,7 +10,7 @@ use RedJasmine\Support\Helpers\Services\ServiceManager;
  */
 class InteractionTypeManager extends ServiceManager
 {
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         'like'    => LikeInteractionType::class,
         'comment' => CommentInteractionType::class,
     ];

@@ -19,7 +19,7 @@ interface PaymentServiceInterface
     /**
      * 业务标识
      */
-    public const string BIZ = 'shopping';
+    public const  BIZ = 'shopping';
     // 创建支付单
     // 发起支付
 

@@ -14,7 +14,7 @@ use Throwable;
 class SmsCaptchaSenderProvider implements CaptchaSenderInterface
 {
 
-    public const string  NAME = 'sms';
+    public const   NAME = 'sms';
 
     public function send(Captcha $captcha) : CaptchaSenderResult
     {

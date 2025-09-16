@@ -13,7 +13,7 @@ class CaptchaSenderProviderManager extends ServiceManager
 {
 
 
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         SmsCaptchaSenderProvider::NAME => SmsCaptchaSenderProvider::class,
 
     ];

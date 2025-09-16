@@ -15,7 +15,7 @@ use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 interface OrderServiceInterface
 {
 
-    public const string BIZ = 'shopping';
+    public const  BIZ = 'shopping';
 
     public function getOrderProductSplitKey(ProductPurchaseFactor $orderProductData) : string;
 

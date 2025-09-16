@@ -19,7 +19,7 @@ use RedJasmine\Wallet\Domain\Models\Wallet;
  */
 class WalletServiceIntegration implements WalletServiceInterface
 {
-    public const string WALLET_TYPE = 'points';
+    public const  WALLET_TYPE = 'points';
 
     public function __construct(
         protected WalletApplicationService $walletApplicationService,

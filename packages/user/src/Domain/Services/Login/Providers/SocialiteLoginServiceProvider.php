@@ -29,7 +29,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
     }
 
 
-    public const string NAME = 'socialite';
+    public const  NAME = 'socialite';
 
     public function captcha(UserLoginData $data)
     {

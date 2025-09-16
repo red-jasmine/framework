@@ -7,7 +7,7 @@ use RedJasmine\Support\Helpers\Services\ServiceManager;
 class UserChangeAccountServiceProviderManager extends ServiceManager
 {
 
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         PhoneUserChangeAccountServiceProvider::NAME => PhoneUserChangeAccountServiceProvider::class
     ];
 

@@ -24,7 +24,7 @@ class PurchasedOrderAmountCondition implements PromoterConditionInterface
         ];
     }
 
-    public const string NAME = 'purchased-order-amount';
+    public const  NAME = 'purchased-order-amount';
 
     /**
      * 名称

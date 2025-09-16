@@ -22,7 +22,7 @@ class ActivityTypeHandlerFactory extends ServiceManager
     /**
      * 内置的活动类型处理器映射
      */
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         ActivityTypeEnum::FLASH_SALE->value => FlashSaleActivityHandler::class,
         ActivityTypeEnum::GROUP_BUYING->value => GroupBuyingActivityHandler::class,
         ActivityTypeEnum::DISCOUNT->value => DiscountActivityHandler::class,

@@ -9,11 +9,11 @@ use RuntimeException;
 
 class Signer
 {
-    public const string ENCODE_POLICY_QUERY = 'QUERY';
-    public const string ENCODE_POLICY_JSON  = 'JSON';
+    public const  ENCODE_POLICY_QUERY = 'QUERY';
+    public const  ENCODE_POLICY_JSON  = 'JSON';
 
-    public const int KEY_TYPE_PUBLIC  = 1;
-    public const int KEY_TYPE_PRIVATE = 2;
+    public const  KEY_TYPE_PUBLIC  = 1;
+    public const  KEY_TYPE_PRIVATE = 2;
 
     protected array $ignores = [ 'sign' ];
 

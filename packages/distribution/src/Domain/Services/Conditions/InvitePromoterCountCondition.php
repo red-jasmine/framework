@@ -23,7 +23,7 @@ class InvitePromoterCountCondition implements PromoterConditionInterface
         ];
     }
 
-    public const string NAME = 'invite-promoter-count';
+    public const  NAME = 'invite-promoter-count';
 
     /**
      * 名称

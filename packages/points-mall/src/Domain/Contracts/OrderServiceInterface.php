@@ -18,7 +18,7 @@ use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
 interface OrderServiceInterface
 {
 
-    public const string BIZ = 'points-mall';
+    public const  BIZ = 'points-mall';
     /**
      * 获取订单商品拆分键
      *

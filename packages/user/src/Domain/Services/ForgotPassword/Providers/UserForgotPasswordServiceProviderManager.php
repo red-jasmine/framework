@@ -10,7 +10,7 @@ use RedJasmine\User\Domain\Services\ForgotPassword\Contracts\UserForgotPasswordS
  */
 class UserForgotPasswordServiceProviderManager extends ServiceManager
 {
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         SmsForgotPasswordServiceProvider::NAME => SmsForgotPasswordServiceProvider::class,
     ];
 

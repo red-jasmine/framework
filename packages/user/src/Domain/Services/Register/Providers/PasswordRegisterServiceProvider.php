@@ -12,7 +12,7 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
 {
 
 
-    public const string NAME = 'password';
+    public const  NAME = 'password';
 
 
     protected UserRepositoryInterface $repository;

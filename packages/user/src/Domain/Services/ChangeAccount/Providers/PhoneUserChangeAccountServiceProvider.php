@@ -25,7 +25,7 @@ class PhoneUserChangeAccountServiceProvider implements UserChannelAccountService
         $this->userReadRepository        = app(UserReadRepositoryInterface::class);
     }
 
-    public const string NAME = 'phone';
+    public const  NAME = 'phone';
 
     public function captcha(User $user, UserChangeAccountData $data) : bool
     {

@@ -16,7 +16,7 @@ use const Overtrue\Socialite\Contracts;
 
 class WechatMiniAppProvider extends WeChat
 {
-    public const string NAME = 'wechat_mini';
+    public const  NAME = 'wechat_mini';
 
     /**
      * @throws Exceptions\AuthorizeFailedException

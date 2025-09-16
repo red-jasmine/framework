@@ -9,7 +9,7 @@ class OrderPaymentException extends AbstractException
 
 
     // 状态类限制错误
-    public const int STATUS_NOT_ALLOW = 102510;
+    public const  STATUS_NOT_ALLOW = 102510;
 
 
     protected static array $codes = [

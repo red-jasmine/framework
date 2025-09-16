@@ -10,7 +10,7 @@ class OrderTypeManage extends ServiceManager
     /**
      * @var array<string,OrderTypeInterface>
      */
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         'standard' => OrderStandardType::class,
     ];
 

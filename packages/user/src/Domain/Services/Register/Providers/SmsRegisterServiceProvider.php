@@ -37,7 +37,7 @@ class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
     }
 
 
-    public const string NAME = 'sms';
+    public const  NAME = 'sms';
 
     public function captcha(UserRegisterData $data) : UserData
     {

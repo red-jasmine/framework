@@ -21,7 +21,7 @@ interface PaymentServiceInterface
     /**
      * 业务标识
      */
-    public const string BIZ = 'points-mall';
+    public const  BIZ = 'points-mall';
 
     /**
      * 创建支付单

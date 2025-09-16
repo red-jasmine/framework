@@ -20,9 +20,9 @@ interface OrderTypeInterface
      *
      * @param  Order  $order
      *
-     * @return mixed
+     * @return void
      */
-    public function calculateAmount(Order $order);
+    public function calculateAmount(Order $order) : void;
 
     /**
      * 订单初始化

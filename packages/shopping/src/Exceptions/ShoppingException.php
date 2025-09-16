@@ -11,9 +11,9 @@ class ShoppingException extends AbstractException
     /**
      * 商品异常
      */
-    public const  int PRODUCT_ERROR            = 210023;
-    public const  int PRODUCT_OFF_SHELF        = 210026;
-    public const  int PRODUCT_SKU_NOT_MATCHING = 210027;
+    public const   PRODUCT_ERROR            = 210023;
+    public const   PRODUCT_OFF_SHELF        = 210026;
+    public const   PRODUCT_SKU_NOT_MATCHING = 210027;
 
 
     protected static array $codes = [

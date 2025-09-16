@@ -8,7 +8,7 @@ use RedJasmine\Support\Helpers\Services\ServiceManager;
 class UserRegisterServiceProviderManager extends ServiceManager
 {
 
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         SmsRegisterServiceProvider::NAME      => SmsRegisterServiceProvider::class,
         PasswordRegisterServiceProvider::NAME => PasswordRegisterServiceProvider::class,
     ];

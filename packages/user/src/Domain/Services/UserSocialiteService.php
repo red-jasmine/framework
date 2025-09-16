@@ -17,7 +17,7 @@ class UserSocialiteService
     }
 
 
-    public const string  APP_ID = 'UserCenter';
+    public const   APP_ID = 'UserCenter';
 
 
     public function getBinds(User $user)

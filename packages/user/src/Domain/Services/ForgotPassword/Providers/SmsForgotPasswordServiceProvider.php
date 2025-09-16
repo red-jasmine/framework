@@ -15,7 +15,7 @@ use RedJasmine\User\Domain\Services\ForgotPassword\Data\ForgotPasswordData;
 class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProviderInterface
 {
 
-    public const string  NAME = 'sms';
+    public const   NAME = 'sms';
     protected CaptchaApplicationService   $captchaApplicationService;
     protected UserReadRepositoryInterface $userReadRepository;
 

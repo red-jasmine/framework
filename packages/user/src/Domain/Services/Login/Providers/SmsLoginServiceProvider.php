@@ -33,7 +33,7 @@ class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
     }
 
-    public const string NAME = 'sms';
+    public const  NAME = 'sms';
 
     /**
      * @param  UserLoginData  $data

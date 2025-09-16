@@ -12,7 +12,7 @@ use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInte
 class UserLoginServiceProviderManager extends ServiceManager
 {
 
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         SmsLoginServiceProvider::NAME       => SmsLoginServiceProvider::class,
         PasswordLoginServiceProvider::NAME  => PasswordLoginServiceProvider::class,
         SocialiteLoginServiceProvider::NAME => SocialiteLoginServiceProvider::class,

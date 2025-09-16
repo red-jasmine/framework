@@ -24,7 +24,7 @@ class SettleReceiver extends Model
 
     use HasOperator;
 
-    public const string ALL_CHANNEL_MERCHANT = 'ALL_CHANNEL_MERCHANT';// 所有渠道商户
+    public const  ALL_CHANNEL_MERCHANT = 'ALL_CHANNEL_MERCHANT';// 所有渠道商户
 
     public function getTable() : string
     {

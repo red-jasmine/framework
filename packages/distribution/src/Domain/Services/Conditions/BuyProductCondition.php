@@ -21,7 +21,7 @@ class BuyProductCondition implements PromoterConditionInterface
         ];
     }
 
-    public const string NAME = 'buy-product';
+    public const  NAME = 'buy-product';
 
     /**
      * 名称

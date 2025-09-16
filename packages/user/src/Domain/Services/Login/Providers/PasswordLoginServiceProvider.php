@@ -12,7 +12,7 @@ use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
 
 class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
 {
-    public const string NAME = 'password';
+    public const  NAME = 'password';
 
 
     protected UserRepositoryInterface $repository;

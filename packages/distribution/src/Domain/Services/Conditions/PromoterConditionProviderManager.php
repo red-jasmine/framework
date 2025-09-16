@@ -6,7 +6,7 @@ use RedJasmine\Support\Helpers\Services\ServiceManager;
 
 class PromoterConditionProviderManager extends ServiceManager
 {
-    protected const array PROVIDERS = [
+    protected const  PROVIDERS = [
         BuyProductCondition::NAME           => BuyProductCondition::class,
         PurchasedOrderAmountCondition::NAME => PurchasedOrderAmountCondition::class,
         PurchasedOrderCountCondition::NAME  => PurchasedOrderCountCondition::class,

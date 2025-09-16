@@ -24,7 +24,7 @@ class PromotionOrderAmountCondition implements PromoterConditionInterface
         ];
     }
 
-    public const string NAME = 'promotion-order-amount';
+    public const  NAME = 'promotion-order-amount';
 
     /**
      * 名称
