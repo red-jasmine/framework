@@ -12,7 +12,7 @@ abstract class ServiceManager
 
     protected array $config;
     protected array $resolved = [];
-    protected const array PROVIDERS = [];
+    protected const  PROVIDERS = [];
     protected static array $customCreators = [];
 
     public function __construct(array $config = [])

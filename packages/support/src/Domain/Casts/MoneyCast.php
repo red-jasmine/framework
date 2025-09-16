@@ -16,8 +16,8 @@ use Spatie\LaravelData\Transformers\Transformer;
 class MoneyCast implements CastsAttributes, Cast, Transformer
 {
 
-    public const string AMOUNT_TYPE_DECIMAL = 'decimal';
-    public const string AMOUNT_TYPE_BIGINT  = 'bigint';
+    public const  AMOUNT_TYPE_DECIMAL = 'decimal';
+    public const  AMOUNT_TYPE_BIGINT  = 'bigint';
     protected ?string $valueKey             = null;
     protected ?string $currencyKey          = null;
     protected string  $valueType            = self::AMOUNT_TYPE_DECIMAL;

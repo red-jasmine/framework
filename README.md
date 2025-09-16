@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/red-jasmine/framework.svg?style=flat-square)](https://github.com/red-jasmine/framework/blob/main/LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/red-jasmine/framework.svg?style=flat-square)](https://packagist.org/packages/red-jasmine/framework)
 
-> 基于 Laravel 12.0+ 和 PHP 8.4+ 的现代化SaaS电商框架，采用领域驱动设计（DDD）和模块化架构，为构建可扩展的电商系统提供完整解决方案。
+> 基于 Laravel 12.0+ 和 PHP 8.2+ 的现代化SaaS电商框架，采用领域驱动设计（DDD）和模块化架构，为构建可扩展的电商系统提供完整解决方案。
 
 ## ✨ 特性
 
@@ -22,7 +22,7 @@
 
 ## 📋 系统要求
 
-- **PHP**: >= 8.4
+- **PHP**: >= 8.2
 - **Laravel**: >= 12.0
 - **Composer**: 最新版本
 - **数据库**: MySQL 8.0+ / PostgreSQL 13+
@@ -34,7 +34,7 @@
 ### 技术栈
 
 - **核心框架**: Laravel 12.x
-- **PHP版本**: 8.4+
+- **PHP版本**: 8.2+
 - **数据封装**: Spatie Laravel Data
 - **查询构建**: Spatie Laravel Query Builder
 - **管理后台**: Filament Admin Panel

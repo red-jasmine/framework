@@ -260,7 +260,7 @@ public function toArray($request): array
 
 ## 技术规范
 
-- **PHP版本**: 8.4+
+- **PHP版本**: 8.2+
 - **Laravel版本**: 12.0+
 - **编码标准**: PSR-12
 - **架构模式**: DDD（领域驱动设计）

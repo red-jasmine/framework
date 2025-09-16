@@ -12,22 +12,22 @@ use RuntimeException;
 class Snowflake
 {
     // 时间起始标记点，最近的时间作为基准，一般取系统的最近时间（一旦确定不能变动）
-    public const int EPOCH = 1609430400000; // 2022-01-01 00:00:00
+    public const  EPOCH = 1609430400000; // 2022-01-01 00:00:00
 
     // 默认位分配
-    public const int DEFAULT_WORKER_ID_BITS     = 5; // 机器标识位数
-    public const int DEFAULT_DATACENTER_ID_BITS = 5; // 数据中心标识位数
-    public const int DEFAULT_SEQUENCE_BITS      = 12; // 毫秒内自增位
-    public const int DEFAULT_SEQUENCE_DIVISOR   = 1; // 秒 除数 1000 到秒  1  到毫秒
+    public const  DEFAULT_WORKER_ID_BITS     = 5; // 机器标识位数
+    public const  DEFAULT_DATACENTER_ID_BITS = 5; // 数据中心标识位数
+    public const  DEFAULT_SEQUENCE_BITS      = 12; // 毫秒内自增位
+    public const  DEFAULT_SEQUENCE_DIVISOR   = 1; // 秒 除数 1000 到秒  1  到毫秒
 
     // 53位ID配置
-    public const int FIFTY_THREE_BIT_SEQUENCE_BITS = 12;
+    public const  FIFTY_THREE_BIT_SEQUENCE_BITS = 12;
 
     // 64位ID配置
 
-    public const int SIXTY_FOUR_BIT_WORKER_ID_BITS     = 5;
-    public const int SIXTY_FOUR_BIT_DATACENTER_ID_BITS = 5;
-    public const int SIXTY_FOUR_BIT_SEQUENCE_BITS      = 12;
+    public const  SIXTY_FOUR_BIT_WORKER_ID_BITS     = 5;
+    public const  SIXTY_FOUR_BIT_DATACENTER_ID_BITS = 5;
+    public const  SIXTY_FOUR_BIT_SEQUENCE_BITS      = 12;
 
     private int $workerId; // 工作机器ID
     private int $datacenterId; // 数据中心ID

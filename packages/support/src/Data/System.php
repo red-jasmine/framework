@@ -15,7 +15,7 @@ class System extends UserData implements UserInterface, Arrayable, Stringable
     }
 
 
-    const string TYPE = 'system';
+    const  TYPE = 'system';
 
     public function __construct(
         public string|int $id = self::TYPE,
