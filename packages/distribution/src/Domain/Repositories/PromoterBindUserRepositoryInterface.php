@@ -4,7 +4,7 @@ namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 推广员绑定用户仓库接口
@@ -13,7 +13,7 @@ use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
  *
  * @method PromoterBindUser find($id)
  */
-interface PromoterBindUserRepositoryInterface extends BaseRepositoryInterface
+interface PromoterBindUserRepositoryInterface extends RepositoryInterface
 {
     /**
      * 查找用户与分销员的绑定关系

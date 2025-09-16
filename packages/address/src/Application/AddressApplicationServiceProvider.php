@@ -9,7 +9,7 @@ use RedJasmine\Address\Infrastructure\Repositories\AddressRepository;
 /**
  * 地址应用服务提供者
  *
- * 使用统一的BaseRepository实现，简化了依赖注册
+ * 使用统一的Repository实现，简化了依赖注册
  */
 class AddressApplicationServiceProvider extends ServiceProvider
 {

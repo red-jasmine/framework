@@ -19,7 +19,7 @@ use Throwable;
 /**
  * Repository 基础仓库实现
  *
- * 实现了BaseRepositoryInterface，合并了读写操作的功能。
+ * 实现了RepositoryInterface，合并了读写操作的功能。
  * 继承了EloquentRepository的写操作能力，同时集成了QueryBuilderReadRepository的读操作能力。
  * 提供了统一的数据访问接口，支持复杂查询、分页、过滤、排序等功能。
  *

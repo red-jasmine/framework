@@ -5,7 +5,7 @@ namespace RedJasmine\Distribution\Domain\Repositories;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 推广员仓库接口
@@ -14,7 +14,7 @@ use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
  *
  * @method Promoter find($id)
  */
-interface PromoterRepositoryInterface extends BaseRepositoryInterface
+interface PromoterRepositoryInterface extends RepositoryInterface
 {
     /**
      * 根据所有者查找推广员

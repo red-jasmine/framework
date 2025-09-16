@@ -11,7 +11,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 /**
- * BaseRepositoryInterface 基础仓库接口
+ * RepositoryInterface 基础仓库接口
  *
  * 定义了仓储模式的基础契约，包含读取和写入操作的统一接口。
  * 该接口遵循 DDD 架构原则，提供了数据访问层的抽象，使得具体的数据操作实现

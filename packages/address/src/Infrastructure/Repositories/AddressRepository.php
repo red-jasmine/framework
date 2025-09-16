@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 /**
  * 地址仓库实现
  *
- * 基于BaseRepository实现，提供地址实体的读写操作能力
+ * 基于Repository实现，提供地址实体的读写操作能力
  */
 class AddressRepository extends Repository implements AddressRepositoryInterface
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Distribution\Domain\Models\PromoterApply;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 推广员申请仓库接口
@@ -12,7 +12,7 @@ use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
  *
  * @method PromoterApply find($id)
  */
-interface PromoterApplyRepositoryInterface extends BaseRepositoryInterface
+interface PromoterApplyRepositoryInterface extends RepositoryInterface
 {
     // 合并了原PromoterApplyReadRepositoryInterface的功能
     // 所有读写操作都通过统一接口提供

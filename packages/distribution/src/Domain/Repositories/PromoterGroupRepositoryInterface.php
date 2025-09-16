@@ -4,7 +4,7 @@ namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Distribution\Domain\Models\PromoterGroup;
 use RedJasmine\Support\Domain\Data\Queries\Query;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 推广员分组仓库接口
@@ -13,7 +13,7 @@ use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
  *
  * @method PromoterGroup find($id)
  */
-interface PromoterGroupRepositoryInterface extends BaseRepositoryInterface
+interface PromoterGroupRepositoryInterface extends RepositoryInterface
 {
     /**
      * 获取分组树形结构

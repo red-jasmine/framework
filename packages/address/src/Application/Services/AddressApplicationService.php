@@ -10,7 +10,7 @@ use RedJasmine\Support\Application\ApplicationService;
 /**
  * 地址应用服务
  *
- * 使用统一的BaseRepository实现，简化了依赖注入
+ * 使用统一的Repository实现，简化了依赖注入
  */
 class AddressApplicationService extends ApplicationService
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Distribution\Domain\Repositories;
 
 use RedJasmine\Distribution\Domain\Models\PromoterLevel;
-use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
+use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 推广员等级仓库接口
@@ -12,7 +12,7 @@ use RedJasmine\Support\Domain\Repositories\BaseRepositoryInterface;
  *
  * @method PromoterLevel find($id)
  */
-interface PromoterLevelRepositoryInterface extends BaseRepositoryInterface
+interface PromoterLevelRepositoryInterface extends RepositoryInterface
 {
     /**
      * 根据等级查找推广员等级
