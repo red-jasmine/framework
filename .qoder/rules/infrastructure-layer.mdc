@@ -4,18 +4,17 @@ alwaysApply: true
 
 # 基础设施层(Infrastructure)代码规范
 
-## 仓库实现 (Eloquent)
+## 仓库接口实现
 
 ### 规范
-- **基类继承**: 继承 `RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository`
-- **接口实现**: 实现对应的领域仓库接口
-- **静态属性**: 定义 `$modelClass` 指定Eloquent模型
-- **命名规范**: 实现类名格式为 `{Entity}Repository`
-- **职责专一**: 只负责写操作的具体实现
+- **统一实现**: 仓库实现统一继承 `RedJasmine\Support\Infrastructure\Repositories\Repository`
+- **接口统一**: 仓库接口统一实现 `RedJasmine\Support\Domain\Repositories\RepositoryInterface`
+- **目录结构**: 仓库实现保留在 `src\Infrastructure\Repositories` 目录下，无需更深的一层目录结构
+- **简化配置**: 不再区分写仓库和读仓库，统一通过Repository实现所有操作
 
 ### 代码示例
 ```php
-class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
+class ArticleRepository extends Repository implements ArticleRepositoryInterface
 {
     protected static string $modelClass = Article::class;
     
@@ -23,73 +22,6 @@ class ArticleRepository extends EloquentRepository implements ArticleRepositoryI
     public function findBySlug(string $slug): ?Article
     {
         return static::$modelClass::where('slug', $slug)->first();
-    }
-}
-```
-
-## 只读仓库实现 (MySQL)
-
-### 规范
-- **基类继承**: 继承 `RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository`
-- **接口实现**: 实现对应的领域只读仓库接口
-- **静态属性**: 定义 `$modelClass` 指定模型类
-- **过滤器配置**: 实现 `allowedFilters()` 方法配置查询过滤器
-- **排序配置**: 实现 `allowedSorts()` 方法配置允许的排序字段
-- **包含关联**: 实现 `allowedIncludes()` 方法配置可包含的关联
-- **命名规范**: 实现类名格式为 `{Entity}ReadRepository`
-
-### 代码示例
-```php
-class ArticleReadRepository extends QueryBuilderReadRepository implements ArticleReadRepositoryInterface
-{
-    public static $modelClass = Article::class;
-
-    /**
-     * 允许的过滤器配置
-     */
-    public function allowedFilters(): array
-    {
-        return [
-            AllowedFilter::partial('title'),
-            AllowedFilter::exact('id'),
-            AllowedFilter::exact('category_id'),
-            AllowedFilter::exact('status'),
-            AllowedFilter::exact('is_show'),
-        ];
-    }
-
-    /**
-     * 允许的排序字段配置
-     */
-    public function allowedSorts(): array
-    {
-        return [
-            AllowedSort::field('id'),
-            AllowedSort::field('title'),
-            AllowedSort::field('created_at'),
-            AllowedSort::field('updated_at'),
-            AllowedSort::field('sort'),
-        ];
-    }
-
-    /**
-     * 允许包含的关联配置
-     */
-    public function allowedIncludes(): array
-    {
-        return [
-            'category',
-            'tags',
-            'extension',
-        ];
-    }
-    
-    /**
-     * 自定义查询方法
-     */
-    public function findList(array $ids): Collection
-    {
-        return $this->query()->whereIn('id', $ids)->get();
     }
 }
 ```
@@ -184,211 +116,16 @@ public function allowedIncludes(): array
 - **查询作用域**: 使用 `withQuery()` 方法添加查询作用域
 - **默认排序**: 设置 `$defaultSort` 属性指定默认排序
 - **查询优化**: 合理使用索引，避免N+1查询问题
-- **分页优化**: 根据需要选择 `paginate()` 或 `simplePaginate()`
+- **分页优化**: 根据需要选择 `paginate()` 或 `simplePaginate()` 方法
 
 ### 代码示例
 ```php
 // 在ApplicationService中使用查询作用域
-$this->service->readRepository->withQuery(function ($query) {
+$this->service->repository->withQuery(function ($query) {
     $query->onlyOwner($this->getOwner());
     $query->where('status', 'published');
 });
 
-// 在ReadRepository中设置默认排序
-protected mixed $defaultSort = '-created_at';
-```
-# 基础设施层(Infrastructure)代码规范
-
-## 仓库实现 (Eloquent)
-
-### 规范
-- **基类继承**: 继承 `RedJasmine\Support\Infrastructure\Repositories\Eloquent\EloquentRepository`
-- **接口实现**: 实现对应的领域仓库接口
-- **静态属性**: 定义 `$modelClass` 指定Eloquent模型
-- **命名规范**: 实现类名格式为 `{Entity}Repository`
-- **职责专一**: 只负责写操作的具体实现
-
-### 代码示例
-```php
-class ArticleRepository extends EloquentRepository implements ArticleRepositoryInterface
-{
-    protected static string $modelClass = Article::class;
-    
-    // 可以添加特定的方法
-    public function findBySlug(string $slug): ?Article
-    {
-        return static::$modelClass::where('slug', $slug)->first();
-    }
-}
-```
-
-## 只读仓库实现 (MySQL)
-
-### 规范
-- **基类继承**: 继承 `RedJasmine\Support\Infrastructure\ReadRepositories\QueryBuilderReadRepository`
-- **接口实现**: 实现对应的领域只读仓库接口
-- **静态属性**: 定义 `$modelClass` 指定模型类
-- **过滤器配置**: 实现 `allowedFilters()` 方法配置查询过滤器
-- **排序配置**: 实现 `allowedSorts()` 方法配置允许的排序字段
-- **包含关联**: 实现 `allowedIncludes()` 方法配置可包含的关联
-- **命名规范**: 实现类名格式为 `{Entity}ReadRepository`
-
-### 代码示例
-```php
-class ArticleReadRepository extends QueryBuilderReadRepository implements ArticleReadRepositoryInterface
-{
-    public static $modelClass = Article::class;
-
-    /**
-     * 允许的过滤器配置
-     */
-    public function allowedFilters(): array
-    {
-        return [
-            AllowedFilter::partial('title'),
-            AllowedFilter::exact('id'),
-            AllowedFilter::exact('category_id'),
-            AllowedFilter::exact('status'),
-            AllowedFilter::exact('is_show'),
-        ];
-    }
-
-    /**
-     * 允许的排序字段配置
-     */
-    public function allowedSorts(): array
-    {
-        return [
-            AllowedSort::field('id'),
-            AllowedSort::field('title'),
-            AllowedSort::field('created_at'),
-            AllowedSort::field('updated_at'),
-            AllowedSort::field('sort'),
-        ];
-    }
-
-    /**
-     * 允许包含的关联配置
-     */
-    public function allowedIncludes(): array
-    {
-        return [
-            'category',
-            'tags',
-            'extension',
-        ];
-    }
-    
-    /**
-     * 自定义查询方法
-     */
-    public function findList(array $ids): Collection
-    {
-        return $this->query()->whereIn('id', $ids)->get();
-    }
-}
-```
-
-## 过滤器配置规范
-
-### 常用过滤器类型
-- `AllowedFilter::exact()` - 精确匹配
-- `AllowedFilter::partial()` - 部分匹配（LIKE查询）
-- `AllowedFilter::scope()` - 使用模型作用域
-- `AllowedFilter::callback()` - 自定义回调
-
-### 代码示例
-```php
-public function allowedFilters(): array
-{
-    return [
-        // 精确匹配
-        AllowedFilter::exact('id'),
-        AllowedFilter::exact('status'),
-        AllowedFilter::exact('category_id'),
-        
-        // 部分匹配
-        AllowedFilter::partial('title'),
-        AllowedFilter::partial('content'),
-        
-        // 使用模型作用域
-        AllowedFilter::scope('published'),
-        AllowedFilter::scope('draft'),
-        
-        // 自定义回调
-        AllowedFilter::callback('created_between', function ($query, $value) {
-            [$start, $end] = $value;
-            return $query->whereBetween('created_at', [$start, $end]);
-        }),
-    ];
-}
-```
-
-## 排序配置规范
-
-### 常用排序类型
-- `AllowedSort::field()` - 字段排序
-- `AllowedSort::callback()` - 自定义排序逻辑
-
-### 代码示例
-```php
-public function allowedSorts(): array
-{
-    return [
-        // 字段排序
-        AllowedSort::field('id'),
-        AllowedSort::field('title'),
-        AllowedSort::field('created_at'),
-        AllowedSort::field('updated_at'),
-        AllowedSort::field('sort'),
-        
-        // 自定义排序
-        AllowedSort::callback('popularity', function ($query, $descending) {
-            return $query->orderBy('view_count', $descending ? 'desc' : 'asc')
-                         ->orderBy('like_count', $descending ? 'desc' : 'asc');
-        }),
-    ];
-}
-```
-
-## 关联包含配置规范
-
-### 规范
-- **关联名称**: 使用模型中定义的关联方法名
-- **嵌套关联**: 支持点号分隔的嵌套关联
-- **性能考虑**: 避免包含过多关联，影响查询性能
-
-### 代码示例
-```php
-public function allowedIncludes(): array
-{
-    return [
-        'category',
-        'tags',
-        'extension',
-        'author',
-        'category.parent',  // 嵌套关联
-        'tags.category',    // 嵌套关联
-    ];
-}
-```
-
-## 查询构建器使用规范
-
-### 规范
-- **查询作用域**: 使用 `withQuery()` 方法添加查询作用域
-- **默认排序**: 设置 `$defaultSort` 属性指定默认排序
-- **查询优化**: 合理使用索引，避免N+1查询问题
-- **分页优化**: 根据需要选择 `paginate()` 或 `simplePaginate()`
-
-### 代码示例
-```php
-// 在ApplicationService中使用查询作用域
-$this->service->readRepository->withQuery(function ($query) {
-    $query->onlyOwner($this->getOwner());
-    $query->where('status', 'published');
-});
-
-// 在ReadRepository中设置默认排序
+// 在Repository中设置默认排序
 protected mixed $defaultSort = '-created_at';
 ```
