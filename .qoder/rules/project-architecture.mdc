@@ -6,10 +6,10 @@ description: "Red Jasmine Framework 项目架构规则和DDD设计原则"
 # Red Jasmine Framework 项目架构
 
 ## 项目概述
-Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.4+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
+Red Jasmine Framework 是一个基于 Laravel 12.0+ 和 PHP 8.2+ 的现代化电商框架，采用领域驱动设计（DDD）架构，通过模块化的方式构建可扩展的电商系统。
 
 ## 技术栈要求
-- PHP 8.4+
+- PHP 8.2+
 - Laravel 12.0+
 - 依赖管理编辑器: Composer
 - 遵循PSR-12编码标准

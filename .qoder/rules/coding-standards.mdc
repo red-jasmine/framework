@@ -14,11 +14,11 @@ description: "PHP和Laravel代码规范，包括编码原则、最佳实践和�
 - 为变量、方法和类使用一致和描述性的名称，以提高可读性
 
 ## 技术栈要求
-- PHP 8.4+
+- PHP 8.2+
 - Laravel 12.0+
 - 遵循PSR-12编码标准
 
-## PHP 8.4+ 特性使用
+## PHP 8.2+ 特性使用
 - 利用类型化属性、匹配表达式
 - 使用联合类型和交集类型
 - 使用属性(Attributes)替代注释
@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    // 使用PHP 8.4+ 类型化属性
+ 
     public string $title;
     public ?string $content = null;
     public ArticleStatus $status;
