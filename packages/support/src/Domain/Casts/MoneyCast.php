@@ -133,7 +133,12 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         }
         $currency = $data[$currencyKey] ?? 'CNY';
         $currency = $currency instanceof Currency ? $currency : new Currency($currency);
-        return new Money($data[$valueKey], $currency);
+
+        $moneyValue = $data[$valueKey];
+
+
+        return $this->valueType === static::AMOUNT_TYPE_DECIMAL ?
+            Money::parseByDecimal($moneyValue, $currency) : Money::parseByIntl($moneyValue, $currency);
     }
 
     public function transform(DataProperty $property, mixed $value, TransformationContext $context) : ?array
