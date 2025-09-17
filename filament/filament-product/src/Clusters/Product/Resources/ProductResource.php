@@ -305,7 +305,7 @@ class ProductResource extends Resource
                 ,
                 Forms\Components\TextInput::make('cost_price')
                                           ->numeric()
-                    ->formatStateUsing(fn($state) => $state['formatted']??null)
+                                          ->formatStateUsing(fn($state) => $state['formatted']??null)
                                           ->label(__('red-jasmine-product::product.fields.cost_price'))
                 ,
 
@@ -435,9 +435,15 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('properties_name')->readOnly(),
                                 Forms\Components\FileUpload::make('image')->image()
                                 ,
-                                Forms\Components\TextInput::make('price')->hiddenLabel(),
-                                Forms\Components\TextInput::make('market_price')->hiddenLabel(),
-                                Forms\Components\TextInput::make('cost_price')->hiddenLabel(),
+                                Forms\Components\TextInput::make('price')
+                                    ->formatStateUsing(fn($state) => $state['formatted']??null)
+                                                          ->hiddenLabel(),
+                                Forms\Components\TextInput::make('market_price')
+                                    ->formatStateUsing(fn($state) => $state['formatted']??null)
+                                                          ->hiddenLabel(),
+                                Forms\Components\TextInput::make('cost_price')
+                                    ->formatStateUsing(fn($state) => $state['formatted']??null)
+                                                          ->hiddenLabel(),
                                 Forms\Components\TextInput::make('stock')->minValue(0)->integer()->required(),
                                 Forms\Components\TextInput::make('safety_stock')->numeric()->default(0),
                                 Forms\Components\Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
