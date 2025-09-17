@@ -3,8 +3,9 @@
 
 return [
 
-    'tables' => [
-        'prefix' => 'jasmine_', // 表前缀
-    ]
+    // 支持的货币
+    'currencies' => [
+        'CNY','USD'
+    ],
 
 ];

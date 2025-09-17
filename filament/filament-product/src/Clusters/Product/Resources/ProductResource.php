@@ -218,6 +218,8 @@ class ProductResource extends Resource
 
     protected static function specifications() : array
     {
+
+
         return [
             Forms\Components\Section::make('')->schema([
                 Forms\Components\Toggle::make('is_multiple_spec')
@@ -282,8 +284,8 @@ class ProductResource extends Resource
             Forms\Components\Section::make('')->schema([
 
                 //
-                Forms\Components\TextInput::make('currency')
-
+                Forms\Components\Select::make('currency')
+                        ->options(static::getService()::getCurrencies())
                                           //->formatStateUsing(fn(Currency $state) =>$state->getCode())
                                           ->label(__('red-jasmine-product::product.fields.currency'))
                                           ->required()

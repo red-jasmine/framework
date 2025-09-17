@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
+use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommandHandler;
@@ -60,5 +61,22 @@ class ProductApplicationService extends ApplicationService
         'getProductPrice' => GetProductPriceQueryHandler::class,
     ];
 
+    /**
+     * 获取货币
+     * @return array
+     */
+    public static function getCurrencies() : array
+    {
+        $currencies      = Money::getCurrencies();
+        $currenciesCodes = [];
+        $allowCurrencies = config('red-jasmine-product.currencies', []);
+
+        foreach ($currencies->getIterator() as $currency) {
+            if (in_array($currency->getCode(), $allowCurrencies)) {
+                $currenciesCodes[$currency->getCode()] = $currencies->getSymbol($currency).' '.trans('money::currencies.'.$currency->getCode()).'('.$currency->getCode().')';
+            }
+        }
+        return $currenciesCodes;
+    }
 
 }
