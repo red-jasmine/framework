@@ -6,6 +6,7 @@ use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
 use RedJasmine\Coupon\Domain\Repositories\UserCouponRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -88,11 +89,8 @@ class UserCouponRepository extends Repository implements UserCouponRepositoryInt
         ];
     }
 
-    /**
-     * 配置允许包含的关联
-     */
-    protected function allowedIncludes($query = null) : ?array
-    {
+   protected function allowedIncludes(?Query $query = null) : array
+   {
         return ['coupon', 'usage'];
-    }
+   }
 }

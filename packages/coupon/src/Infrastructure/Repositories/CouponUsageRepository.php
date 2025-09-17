@@ -4,6 +4,7 @@ namespace RedJasmine\Coupon\Infrastructure\Repositories;
 
 use RedJasmine\Coupon\Domain\Models\CouponUsage;
 use RedJasmine\Coupon\Domain\Repositories\CouponUsageRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -57,11 +58,7 @@ class CouponUsageRepository extends Repository implements CouponUsageRepositoryI
             AllowedSort::field('discount_amount'),
         ];
     }
-
-    /**
-     * 配置允许包含的关联
-     */
-    protected function allowedIncludes($query = null) : ?array
+    protected function allowedIncludes(?Query $query = null) : array
     {
         return ['coupon', 'userCoupon'];
     }

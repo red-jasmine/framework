@@ -4,6 +4,7 @@ namespace RedJasmine\Coupon\Infrastructure\Repositories;
 
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Repositories\CouponRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -55,11 +56,8 @@ class CouponRepository extends Repository implements CouponRepositoryInterface
         ];
     }
 
-    /**
-     * 配置允许包含的关联
-     */
-    protected function allowedIncludes($query = null): ?array
-    {
-        return ['issueStat', 'userCoupons'];
-    }
+   protected function allowedIncludes(?Query $query = null) : array
+   {
+       return ['issueStat', 'userCoupons'];
+   }
 }

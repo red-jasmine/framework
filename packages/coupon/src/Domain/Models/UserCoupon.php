@@ -103,7 +103,7 @@ class UserCoupon extends Model implements OperatorInterface, OwnerInterface
     {
 
         if (!$this->coupon_no) {
-            $this->coupon_no = new CouponNoGenerator()->generator($this);
+            $this->coupon_no = (new CouponNoGenerator())->generator($this);
         }
 
     }
