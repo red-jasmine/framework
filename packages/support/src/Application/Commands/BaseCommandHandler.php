@@ -13,9 +13,7 @@ use RedJasmine\Support\Application\ApplicationService;
  */
 abstract class BaseCommandHandler extends CommandHandler
 {
-    abstract protected string $name {
-        get;
-    }
+     protected string $name;
 
 
     /**
