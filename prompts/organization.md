@@ -1,148 +1,177 @@
-# Organization 组织架构领域技术方案（精简版：仅组织架构）
+# Organization 组织架构扩展包提示词（开箱即用蓝图）
 
-基于 Red Jasmine Framework，设计一个仅由成员、部门、岗位构成的独立组织架构系统（Organization）。抛开权限系统与审批系统，仅关注组织架构的建模、管理与查询。
+基于 Red Jasmine Framework，构建“组织-部门-岗位-员工-汇报线”核心域的 Composer 扩展包，满足 80% 通用场景并保留充足扩展点（接口、Trait、事件、Repository、Policy）。本提示词可直接用于生成迁移与骨架代码。
 
-## 核心领域模块
-> 使用 ownerType, ownerId 进行数据隔离
+## 目标
+- 支持多法人/多公司树（可选）与部门 NestedSet 树
+- 员工任职历史追溯、矩阵式汇报（部门与岗位关系通过任职表隐式关联）
+- 可扩展：事件、仓库、策略、Trait、接口
 
-### 1. 组织架构管理
+## ER 模型清单（字段/主外键/业务含义/约束）
 
-#### 成员管理 (Members)
-- **复用用户模型**: 复用现有用户基础信息，在组织架构中扩展员工属性
-- **员工档案**: 工号、入职日期、职级、状态等
-- **多重身份**: 同一用户可在不同部门担任不同岗位
-- **状态管理**: 在职、离职、停薪留职、实习等
+> 说明：如系统仅一家公司，可省 `organizations`，将 `org_id` 约定为 0。
 
-**技术要求**:
-- 创建 `Member` 模型
-- 实现员工状态枚举与生命周期管理
-- 支持员工信息批量导入与导出
+### organizations（集团/公司/法人实体）
+- id/uuid
+- parent_id（自引用，支持集团树）
+- name / short_name
+- code（统一社会信用代码或内部编码）
+- order（同级排序）
+- depth / path / lft+rgt（二选一，推荐 NestedSet）
+- status（0=停用 1=启用）
+- timestamps
 
-#### 部门管理 (Departments)
-- **层级结构**: 支持无限级部门层次
-- **部门信息**: 名称、编码、负责人、描述
-- **组织视图**: 支持可视化组织架构展示
+### departments（部门）【核心】
+- id
+- org_id → organizations.id
+- parent_id（自引用，无限级）
+- name / short_name
+- code（唯一索引，部门编号）
+- manager_id（负责人 employee_id，逻辑外键，可空）
+- order
+- depth / path / lft+rgt（推荐 NestedSet）
+- status
+- timestamps
 
-**技术要求**:
-- 使用 `nested set` 或 `adjacency list` 实现树形结构
-- 完整的部门树增删改查
-- 支持部门合并、拆分、层级调整
+必须：
+- 提供 ancestors()/descendants()，使用 NestedSet trait
+- 事件：DepartmentCreated / DepartmentMoved / DepartmentDeleted
 
-#### 岗位管理 (Positions)
-- **岗位定义**: 名称、职责、任职要求、级别
-- **岗位分配**: 成员与岗位的多对多关系（可带生效区间）
-- **岗位序列**: 技术序列、管理序列等职业发展路径
+### positions（岗位/职位）
+- id
+- name（如“Java 高级工程师”）
+- code（岗位编号）
+- job_grade_id → job_grades.id
+- description
+- is_manager（是否管理岗）
+- status
+- timestamps
 
-**技术要求**:
-- 设计 `Position` 模型与成员-岗位关联表
-- 支持岗位调动、任职履历记录
+### job_grades（职等/职级体系）
+- id
+- org_id → organizations.id
+- name（如 P6）
+- level（排序值）
+- band（通道：管理/专业 等）
+- timestamps
 
-## 技术架构要求
+注：若无职等体系，可降级为 positions.level 字段。
 
-### 1. DDD 分层架构
+### employees（员工，仅存“人”本身）
+- id/uuid
+- org_id → organizations.id
+- emp_num（工号，唯一）
+- real_name / avatar
+- id_card / phone / email
+- hired_at / resigned_at
+- status（1=在职 2=试用 3=离职）
+- timestamps
+
+注意：不在此表保存部门/岗位，使用中间表实现历史追溯。
+
+### employee_department_position（员工分配 & 历史）【核心中间表】
+- id
+- employee_id → employees.id
+- department_id → departments.id
+- position_id → positions.id
+- is_primary（是否主部门）
+- started_at / ended_at（历史时间区间）
+- created_by（操作者）
+- 约束：unique(employee_id, is_primary) 仅允许一条“当前主部门”记录生效（建议以 ended_at 为 NULL 表示当前）
+
+模型方法：
+- primaryAssignment() / assignments() / history()
+- 事件：EmployeeMoved / EmployeePromoted
+
+### employee_reports（汇报线/上下级）
+- id
+- employee_id（汇报人）→ employees.id
+- manager_id（被汇报人）→ employees.id
+- department_id（上下文部门，可空）→ departments.id
+- started_at / ended_at
+- 约束：unique(employee_id, department_id, ended_at is null)
+
+说明：采用“软历史”建模，便于回溯任意月份的汇报链。
+
+### 权限对接（spatie/laravel-permission）
+- 内置建议权限：
+  - department.view：可查看本部门数据
+  - department.manage：可管理本部门及子部门
+- 在 Policy 中通过 Department::isAncestorOf() 实现继承判断
+
+## 迁移生成提示（可直接据此生成）
+
+建议字段类型与索引：
+- 所有 id 使用雪花或 uuid；`code`、`emp_num` 建唯一索引
+- NestedSet 使用 `lft`、`rgt`、`depth`，并各建索引；或使用 `path`+`depth`
+- 历史表使用 `(started_at, ended_at)` 范围查询索引
+
+示例（伪结构清单，非 SQL）：
+```text
+organizations: id(pk), parent_id(idx), name, short_name, code(unique), order, lft(idx), rgt(idx), depth(idx), status, timestamps
+departments: id(pk), org_id(idx), parent_id(idx), name, short_name, code(unique), manager_id, lft(idx), rgt(idx), depth(idx), order, status, timestamps
+positions: id(pk), name, code(unique), job_grade_id(idx), description, is_manager, status, timestamps
+job_grades: id(pk), org_id(idx), name, level, band, timestamps
+employees: id/uuid(pk), org_id(idx), emp_num(unique), real_name, avatar, id_card, phone, email, hired_at(idx), resigned_at(idx), status, timestamps
+employee_department_position: id(pk), employee_id(idx), department_id(idx), position_id(idx), is_primary, started_at(idx), ended_at(idx), created_by, unique(employee_id, is_primary, ended_at is null)
+employee_reports: id(pk), employee_id(idx), manager_id(idx), department_id(idx), started_at(idx), ended_at(idx), unique(employee_id, department_id, ended_at is null)
 ```
-packages/organization/
-├── src/
-│   ├── Domain/              # 领域层
-│   │   ├── Models/          # 领域模型
-│   │   │   ├── Member/      # 成员聚合
-│   │   │   ├── Department/  # 部门聚合
-│   │   │   └── Position/    # 岗位聚合
-│   │   ├── Services/        # 领域服务
-│   │   ├── Events/          # 领域事件
-│   │   └── Repositories/    # 仓库接口
-│   ├── Application/         # 应用层
-│   │   └── Services/        # 应用服务
-│   ├── Infrastructure/      # 基础设施层
-│   │   └── Repositories/    # 仓库实现
-│   └── UI/                  # 用户界面层
-│       └── Http/            # HTTP 接口
+
+## 目录结构（PSR-4：YourOrg\\Organization）
+```
+src/
+├── Models/
+│   ├── Organization.php
+│   ├── Department.php
+│   ├── Position.php
+│   ├── JobGrade.php
+│   ├── Employee.php
+│   ├── EmployeeDepartmentPosition.php
+│   └── EmployeeReport.php
+├── Contracts/
+│   ├── OrganizationInterface.php
+│   ├── DepartmentTreeInterface.php
+│   └── EmployeeAssignmentInterface.php
+├── Repositories/
+│   ├── DepartmentRepository.php   # with move(), rebuildPath()
+│   └── EmployeeRepository.php
+├── Events/
+├── Policies/
+├── Traits/
+│   ├── BelongsToOrganization.php
+│   └── HasNestedDepartment.php
+└── database/
+    ├── migrations/
+    └── seeders/
 ```
 
-### 2. 核心模型设计
+## 代码骨架要求（契合 Red Jasmine 规范）
 
-#### 成员模型 (Member)
-```php
-class Member extends Model implements OwnerInterface
-{
-    use HasSnowflakeId;
-    use HasOwner;
-    use SoftDeletes;
+- 模型：实现 `HasSnowflakeId`、`SoftDeletes`（按需）、`HasOwner`（用于多租隔离）
+- 应用层：`ApplicationService` + `{Action}CommandHandler`/`{Action}QueryHandler`
+- 仓库：实现接口，树操作提供 `move(node, newParent)`、`rebuildPath()`；查询提供 `ancestorsOf()`、`descendantsOf()`
+- 事件：
+  - DepartmentCreated / DepartmentMoved / DepartmentDeleted
+  - EmployeeMoved / EmployeePromoted
+- Policy：
+  - `department.view` 与 `department.manage`；`isAncestorOf()` 处理继承
+- Trait：
+  - `BelongsToOrganization`（统一 org 归属）
+  - `HasNestedDepartment`（封装 NestedSet 常用方法）
 
-    // 员工编号、入职日期、职级、状态等
-    // 与 Department、Position 的多对多关系
-}
-```
+## API 与查询建议
+- RESTful：组织、部门、岗位、员工、任职、汇报线的标准 CRUD
+- 过滤/排序/包含：遵循 Infrastructure 过滤/排序/包含规范（AllowedFilter / AllowedSort / allowedIncludes）
+- 历史检索：按任意月份回溯员工主部门、岗位与汇报链（通过 ended_at=NULL + 时间区间判断）
 
-#### 部门模型 (Department)
-```php
-class Department extends Model
-{
-    use HasSnowflakeId;
-    use NestedSet; // 或使用其他树形结构实现
+## 生成器使用口令（示例）
+- 生成迁移：根据“迁移生成提示”的伪结构清单创建表与索引
+- 生成模型：为各模型添加关系
+  - Department: parent/children, employees (through employee_department_position)
+  - Employee: assignments/history, primaryAssignment, departments/positions (through employee_department_position)
+  - Position: employees/departments (through employee_department_position)
+- 生成仓库：`DepartmentRepository::move()`/`rebuildPath()`；`EmployeeRepository` 提供在某时点的组织快照查询
+- 生成事件与监听：按上文事件名占位
+- 生成 Policy：基于部门树的权限继承判断
 
-    // 部门信息、层级关系
-    // 与成员的关联关系
-}
-```
-
-#### 岗位模型 (Position)
-```php
-class Position extends Model
-{
-    use HasSnowflakeId;
-
-    // 岗位信息、级别、职责
-    // 与成员的多对多关联
-}
-```
-
-### 3. 关键功能实现
-
-#### 组织架构服务
-- 组织架构实时同步与更新
-- 支持大规模组织架构的高效查询
-- 变更留痕与审计（基础级，聚焦组织信息变更）
-
-#### 数据导入导出
-- 成员、部门、岗位的批量导入导出能力
-- 导入校验与幂等处理
-
-### 4. 集成要求
-
-#### 与现有系统集成（可选）
-- **用户系统**: 复用用户认证与基础信息
-- **消息系统**: 可选的组织变更通知
-- **文件系统**: 支持成员档案附件（如合同、证件）
-
-#### API 设计
-- 提供组织架构的 RESTful API
-- 支持批量操作与事务
-- 提供分页、过滤、排序查询
-
-### 5. 性能与数据一致性
-
-#### 性能优化
-- 组织架构查询优化（避免 N+1，按需加载）
-- 针对树结构的读优化（路径缓存、祖先/后代索引）
-- 合理的数据库索引
-
-#### 一致性与安全
-- 关键结构变更采用事务
-- 基础审计日志（仅记录组织数据变更，不涉及权限审批）
-
-## 实现优先级
-
-### 第一阶段：基础能力
-1. 组织架构管理（部门树、岗位、成员及关联）
-2. 批量导入导出
-3. 组织架构查询 API
-
-### 第二阶段：增强能力
-1. 岗位序列与履历
-2. 组织架构可视化
-3. 大规模组织优化（缓存与索引）
-
-请基于以上需求，设计并实现仅含组织架构的 Organization 技术方案，确保模型清晰、数据一致、查询高效并便于扩展。
-
-
+一句话总结：采用“5 主表 + 历史中间表 + NestedSet 树”的最小可行组织架构，覆盖 80% 通用需求，其余以字段/表扩展。
