@@ -1,0 +1,42 @@
+{
+    "name": "red-jasmine/organization",
+    "description": "Organization domain package for Red Jasmine Framework",
+    "keywords": [
+        "organization",
+        "department",
+        "position",
+        "member",
+        "laravel"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "red-jasmine",
+            "email": "dev@red-jasmine.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "laravel/framework": ">=12.0",
+        "red-jasmine/support": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Organization\\": "src/",
+            "RedJasmine\\Organization\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Organization\\OrganizationPackageServiceProvider",
+                "RedJasmine\\Organization\\Domain\\OrganizationDomainServiceProvider",
+                "RedJasmine\\Organization\\Application\\OrganizationApplicationServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+
