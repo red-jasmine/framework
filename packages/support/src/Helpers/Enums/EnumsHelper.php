@@ -42,12 +42,12 @@ trait EnumsHelper
 
     public function name() : string
     {
-        return self::label()[$this->value] ?? $this->value;
+        return self::labels()[$this->value] ?? $this->value;
     }
 
     public function label() : string
     {
-        return self::labels()[$this->value] ?? $this->name;
+        return self::labels()[$this->value] ?? $this->value;
     }
 
     public function getLabel() : ?string

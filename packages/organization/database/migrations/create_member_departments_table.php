@@ -9,15 +9,17 @@ return new class extends Migration {
     {
         Schema::create('member_departments', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->unsignedBigInteger('member_id')->index()->comment('成员ID');
-            $table->unsignedBigInteger('department_id')->index()->comment('部门ID');
-            $table->boolean('is_primary')->default(false)->index()->comment('是否主部门');
-            $table->timestamp('started_at')->nullable()->index()->comment('任职开始时间');
-            $table->timestamp('ended_at')->nullable()->index()->comment('任职结束时间(NULL为当前)');
-            $table->timestamps();
+            $table->unsignedBigInteger('member_id')->comment('成员ID');
+            $table->unsignedBigInteger('department_id')->comment('部门ID');
+            $table->boolean('is_primary')->default(false)->comment('是否主部门');
+             $table->operator();
 
-            $table->index(['member_id', 'department_id']);
-            $table->comment('成员-部门任职历史表');
+            // 索引定义
+            $table->index('member_id', 'idx_member_id');
+            $table->index('department_id', 'idx_department_id');
+            $table->index('is_primary', 'idx_is_primary');
+            $table->unique(['member_id', 'department_id'], 'uk_member_dept');
+            $table->comment('成员-部门关系表');
         });
     }
 

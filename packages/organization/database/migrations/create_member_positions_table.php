@@ -9,14 +9,15 @@ return new class extends Migration {
     {
         Schema::create('member_positions', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->unsignedBigInteger('member_id')->index()->comment('成员ID');
-            $table->unsignedBigInteger('position_id')->index()->comment('职位ID');
-            $table->timestamp('started_at')->nullable()->index()->comment('任职开始时间');
-            $table->timestamp('ended_at')->nullable()->index()->comment('任职结束时间(NULL为当前)');
-            $table->timestamps();
+            $table->unsignedBigInteger('member_id')->comment('成员ID');
+            $table->unsignedBigInteger('position_id')->comment('职位ID');
+             $table->operator();
 
-            $table->index(['member_id', 'position_id']);
-            $table->comment('成员-职位任职历史表');
+            // 索引定义
+            $table->index('member_id', 'idx_member_id');
+            $table->index('position_id', 'idx_position_id');
+            $table->unique(['member_id', 'position_id'], 'uk_member_position');
+            $table->comment('成员-职位关系表');
         });
     }
 
