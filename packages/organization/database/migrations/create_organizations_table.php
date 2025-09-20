@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Organization\Domain\Models\Enums\OrganizationStatusEnum;
+use RedJasmine\Organization\Domain\Models\Enums\OrganizationTypeEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -14,6 +15,7 @@ return new class extends Migration {
             $table->string('name')->comment('组织名称');
             $table->string('short_name')->nullable()->comment('组织简称');
             $table->string('code')->nullable()->comment('组织编码');
+            $table->enum('type', OrganizationTypeEnum::values())->default(OrganizationTypeEnum::COMPANY->value)->comment(OrganizationTypeEnum::comments('组织类型'));
             $table->unsignedInteger('sort')->default(0)->comment('同级排序');
             $table->enum('status', OrganizationStatusEnum::values())->default(OrganizationStatusEnum::ENABLE->value)->comment(OrganizationStatusEnum::comments('状态'));
             $table->operator();

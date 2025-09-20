@@ -3,6 +3,7 @@
 namespace RedJasmine\Organization\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -73,19 +74,15 @@ class Member extends Model
             ->where('member_departments.is_primary', true);
     }
 
+
     /**
-     * 成员的职位集合（通过中间表）
+     * 职位
+     *
+     * @return BelongsTo
      */
-    public function positions(): BelongsToMany
+    public function position(): BelongsTo
     {
-        return $this->belongsToMany(
-            Position::class,
-            'member_positions',
-            'member_id',
-            'position_id'
-        )
-            ->using(MemberPosition::class)
-            ->withTimestamps();
+        return $this->belongsTo(Position::class, 'position_id');
     }
 
     /**

@@ -22,9 +22,8 @@ return new class extends Migration {
             $table->timestamp('hired_at')->nullable()->comment('入职时间');
             $table->timestamp('resigned_at')->nullable()->comment('离职时间');
             $table->enum('status', MemberStatusEnum::values())->default(MemberStatusEnum::ACTIVE->value)->comment(MemberStatusEnum::comments('状态'));
-            $table->string('position_name')->nullable()->comment('当前主职位名称');
-            $table->unsignedInteger('position_level')->nullable()->comment('当前主职位级别(冗余)');
-            $table->unsignedBigInteger('main_department_id')->nullable()->comment('当前主部门ID(冗余)');
+            $table->unsignedInteger('position_id')->nullable()->comment('职位');
+            $table->unsignedBigInteger('main_department_id')->nullable()->comment('主部门');
             $table->json('departments')->nullable()->comment('当前有效部门ID集合(冗余)');
              $table->operator();
 
@@ -33,7 +32,7 @@ return new class extends Migration {
             $table->index('mobile', 'idx_mobile');
             $table->index('email', 'idx_email');
             $table->index('status', 'idx_status');
-            $table->index('position_level', 'idx_position_level');
+            $table->index('position_id', 'idx_position_id');
             $table->index('main_department_id', 'idx_main_department_id');
             $table->unique('member_no', 'uk_member_no');
             $table->comment('成员表');
