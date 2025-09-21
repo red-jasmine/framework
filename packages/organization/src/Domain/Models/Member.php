@@ -19,7 +19,9 @@ class Member extends Model
 
     public $incrementing = false;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'leader_id',
+    ];
 
     public function newInstance($attributes = [], $exists = false): static
     {
@@ -86,6 +88,26 @@ class Member extends Model
     }
 
     /**
+     * 上级
+     *
+     * @return BelongsTo
+     */
+    public function leader(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'leader_id');
+    }
+
+    /**
+     * 下级
+     *
+     * @return HasMany
+     */
+    public function subordinates(): HasMany
+    {
+        return $this->hasMany(Member::class, 'leader_id');
+    }
+
+    /**
      * 成员管理的部门集合（通过部门管理员中间表）
      */
     public function managedDepartments(): BelongsToMany
@@ -128,6 +150,88 @@ class Member extends Model
             ->where('department_id', $departmentId)
             ->wherePivot('is_primary', true)
             ->exists();
+    }
+
+    /**
+     * 获取上级
+     */
+    public function getLeaderAttribute(): ?Member
+    {
+        return $this->leader;
+    }
+
+    /**
+     * 获取下级
+     */
+    public function getSubordinatesAttribute(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->subordinates;
+    }
+
+    /**
+     * 检查是否为某成员的上级
+     */
+    public function isLeaderOf(int $memberId): bool
+    {
+        return $this->subordinates()
+            ->where('id', $memberId)
+            ->exists();
+    }
+
+    /**
+     * 检查是否为某成员的下级
+     */
+    public function isSubordinateOf(int $memberId): bool
+    {
+        return $this->leader_id === $memberId;
+    }
+
+    /**
+     * 设置上级
+     */
+    public function setLeader(?Member $leader): void
+    {
+        $this->leader_id = $leader?->id;
+    }
+
+    /**
+     * 移除上级
+     */
+    public function removeLeader(): void
+    {
+        $this->leader_id = null;
+    }
+
+    /**
+     * 获取所有上级（递归）
+     */
+    public function getAllLeaders(): \Illuminate\Database\Eloquent\Collection
+    {
+        $leaders = collect();
+        $currentLeader = $this->leader;
+
+        while ($currentLeader) {
+            $leaders->push($currentLeader);
+            $currentLeader = $currentLeader->leader;
+        }
+
+        return $leaders;
+    }
+
+    /**
+     * 获取所有下级（递归）
+     */
+    public function getAllSubordinates(): \Illuminate\Database\Eloquent\Collection
+    {
+        $subordinates = collect();
+        $directSubordinates = $this->subordinates;
+
+        foreach ($directSubordinates as $subordinate) {
+            $subordinates->push($subordinate);
+            $subordinates = $subordinates->merge($subordinate->getAllSubordinates());
+        }
+
+        return $subordinates;
     }
 }
 

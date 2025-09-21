@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('email')->nullable()->comment('邮箱');
             $table->string('gender')->nullable()->comment('性别');
             $table->string('telephone')->nullable()->comment('座机');
+            $table->unsignedBigInteger('leader_id')->nullable()->after('position_id')->comment('上级ID');
             $table->timestamp('hired_at')->nullable()->comment('入职时间');
             $table->timestamp('resigned_at')->nullable()->comment('离职时间');
             $table->enum('status', MemberStatusEnum::values())->default(MemberStatusEnum::ACTIVE->value)->comment(MemberStatusEnum::comments('状态'));
@@ -33,6 +34,7 @@ return new class extends Migration {
             $table->index('email', 'idx_email');
             $table->index('status', 'idx_status');
             $table->index('position_id', 'idx_position_id');
+            $table->index('leader_id', 'idx_leader_id');
             $table->index('main_department_id', 'idx_main_department_id');
             $table->unique('member_no', 'uk_member_no');
             $table->comment('成员表');
