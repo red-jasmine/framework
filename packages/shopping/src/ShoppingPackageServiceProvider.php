@@ -21,16 +21,12 @@ class ShoppingPackageServiceProvider extends PackageServiceProvider
             ->name('red-jasmine-shopping')
             ->hasConfigFile()
             ->hasRoutes(['api'])
-            ->hasMigrations([
-                '2024_01_01_000001_create_shopping_carts_table',
-                '2024_01_01_000002_create_shopping_cart_products_table',
-            ])
             ->runsMigrations();
     }
 
     public function packageRegistered() : void
     {
-        $this->app->register(ShoppingCartApplicationServiceProvider::class);
+        // 购物车迁移至独立包，不再在此注册
         $this->app->register(ShoppingInfrastructureServiceProvider::class);
     }
 }

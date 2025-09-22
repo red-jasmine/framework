@@ -1,0 +1,54 @@
+{
+    "name": "red-jasmine/shopping-cart",
+    "description": "Red Jasmine Shopping Cart Domain Package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/shopping-cart",
+    "keywords": ["Laravel", "ShoppingCart", "Ecommerce"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "red-jasmine/ecommerce": "1.0.x-dev",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\ShoppingCart\\": "src/",
+            "RedJasmine\\ShoppingCart\\Database\\Seeders\\": "./database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\ShoppingCart\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\RedJasmine\\ShoppingCart\\Application\\ShoppingCartApplicationServiceProvider",
+                "\\RedJasmine\\ShoppingCart\\ShoppingCartPackageServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}

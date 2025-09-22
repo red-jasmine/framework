@@ -32,7 +32,6 @@ class ShoppingBuyerRoute
 
 
             OrderBuyerApiRoute::api();
-            ShoppingCartRoute::api();
 
             AddressUserRoute::api();
 
