@@ -3,7 +3,6 @@
 namespace RedJasmine\Shopping;
 
 
-use RedJasmine\Shopping\Application\ShoppingCartApplicationServiceProvider;
 use RedJasmine\Shopping\Infrastructure\ShoppingInfrastructureServiceProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
