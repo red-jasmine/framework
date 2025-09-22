@@ -3,22 +3,6 @@
 namespace RedJasmine\ShoppingCart\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-class ShoppingCartProduct extends Model
-{
-    protected $fillable = [];
-
-    public function updateQuantity(int $quantity): void
-    {
-        $this->quantity = $quantity;
-    }
-}
-
-<?php
-
-namespace RedJasmine\ShoppingCart\Domain\Models;
-
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;

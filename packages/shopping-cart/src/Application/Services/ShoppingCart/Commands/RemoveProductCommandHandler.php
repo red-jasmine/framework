@@ -2,7 +2,7 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCartApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
@@ -13,6 +13,12 @@ class RemoveProductCommandHandler extends CommandHandler
     ) {
     }
 
+    /**
+     * @param  RemoveProductCommand  $command
+     *
+     * @return bool
+     * @throws Throwable
+     */
     public function handle(RemoveProductCommand $command) : bool
     {
         $this->beginDatabaseTransaction();
@@ -30,5 +36,3 @@ class RemoveProductCommandHandler extends CommandHandler
         return true;
     }
 }
-
-

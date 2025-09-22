@@ -2,7 +2,7 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCartApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
@@ -20,7 +20,9 @@ class UpdateQuantityCommandHandler extends CommandHandler
             $cart = $this->service->repository->findActiveByUser($command->buyer,$command->market);
             if ($cart) {
                 $cart->loadMissing('products');
+
                 $cart->updateQuantity($command->getKey(), $command->quantity);
+
                 $this->service->repository->store($cart);
             }
             $this->commitDatabaseTransaction();
@@ -28,8 +30,6 @@ class UpdateQuantityCommandHandler extends CommandHandler
             $this->rollBackDatabaseTransaction();
             throw $e;
         }
-        return $cart ?? null;
+        return $cart;
     }
 }
-
-

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\ShoppingCart\Application\Services\ShoppingCart\Commands;
 
-use RedJasmine\ShoppingCart\Application\Services\ShoppingCart\ShoppingCartApplicationService;
+use RedJasmine\ShoppingCart\Application\Services\ShoppingCartApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
 
@@ -13,10 +13,18 @@ class SelectProductCommandHandler extends CommandHandler
     ) {
     }
 
+    /**
+     * @param  SelectProductCommand  $command
+     *
+     * @return bool
+     * @throws Throwable
+     */
     public function handle(SelectProductCommand $command) : bool
     {
+
         $this->beginDatabaseTransaction();
         try {
+            // 查询购物车
             $cart = $this->service->repository->findActiveByUser($command->buyer, $command->market);
             if ($cart) {
                 $cart->load('products');
@@ -31,5 +39,3 @@ class SelectProductCommandHandler extends CommandHandler
         return true;
     }
 }
-
-

@@ -7,6 +7,5 @@ use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 class CalculateAmountCommand extends PurchaseFactor
 {
 
+
 }
-
-

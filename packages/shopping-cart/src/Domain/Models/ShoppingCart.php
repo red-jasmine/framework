@@ -9,199 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
 use RedJasmine\ShoppingCart\Domain\Models\Enums\ShoppingCartStatusEnum;
 use RedJasmine\ShoppingCart\Exceptions\ShoppingCartException;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
-use RedJasmine\Support\Domain\Models\Traits\HasOwner;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-
-/**
- * 购物车聚合根
- *
- * @property int $id
- * @property string $market
- * @property OwnerInterface $owner
- * @property OperatorInterface $operator
- * @property ShoppingCartStatusEnum $status
- * @property float $total_amount
- * @property float $discount_amount
- * @property float $final_amount
- * @property Carbon $expired_at
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Collection|ProductIdentity[] $products
- */
-class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
-{
-    use HasSnowflakeId;
-    use HasOwner;
-    use HasOperator;
-
-    public $incrementing = false;
-
-    protected function casts() : array
-    {
-        return [
-            'status'          => ShoppingCartStatusEnum::class,
-            'total_amount'    => 'decimal:2',
-            'discount_amount' => 'decimal:2',
-            'final_amount'    => 'decimal:2',
-            'expired_at'      => 'datetime',
-        ];
-    }
-
-    protected $fillable = [
-        'owner',
-        'market',
-        'status'
-    ];
-
-    protected static function boot() : void
-    {
-        parent::boot();
-    }
-
-    public function newInstance($attributes = [], $exists = false) : static
-    {
-        $instance = parent::newInstance($attributes, $exists);
-
-        if (!$instance->exists) {
-            $instance->setUniqueIds();
-            $instance->setRelation('products', Collection::make());
-        }
-
-        return $instance;
-    }
-
-    public function products() : HasMany
-    {
-        return $this->hasMany(ShoppingCartProduct::class, 'cart_id', 'id');
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', ShoppingCartStatusEnum::ACTIVE);
-    }
-
-    public function scopeExpired($query)
-    {
-        return $query->where('status', ShoppingCartStatusEnum::EXPIRED);
-    }
-
-    public function getSimilarProduct(ShoppingCartProduct $cartProduct)
-    {
-        return $this->products
-            ->where('shop_type', $cartProduct->shop_type)
-            ->where('shop_id', $cartProduct->shop_id)
-            ->where('product_type', $cartProduct->product_type)
-            ->where('product_id', $cartProduct->product_id)
-            ->where('sku_id', $cartProduct->sku_id)
-            ->first();
-    }
-
-    public function getProduct(int $id)
-    {
-        return $this->products->where('id', $id)->firstOrFail();
-    }
-
-    public function addProduct(ShoppingCartProduct $product) : ShoppingCartProduct
-    {
-        if ($this->status !== ShoppingCartStatusEnum::ACTIVE) {
-            throw new ShoppingCartException('购物车状态不允许添加商品');
-        }
-        $existingProduct = $this->getSimilarProduct($product);
-
-        if ($existingProduct) {
-            $existingProduct->updateQuantity($existingProduct->quantity + $product->quantity);
-            $existingProduct->quantity = $existingProduct->quantity;
-            return $existingProduct;
-        } else {
-            $product->cart_id = $this->id;
-            $this->products->add($product);
-            return $product;
-        }
-    }
-
-    public function removeProduct(int $id) : void
-    {
-        $product = $this->products->where('id', $id)->firstOrFail();
-        if ($product) {
-            $product->delete();
-        }
-        $this->load('products');
-        $this->calculateAmount();
-    }
-
-    public function updateQuantity(int $id, int $quantity) : void
-    {
-        $product = $this->getProduct($id);
-        $product->updateQuantity($quantity);
-    }
-
-    public function selectProduct(int $id, bool $selected) : void
-    {
-        $product           = $this->getProduct($id);
-        $product->selected = $selected;
-    }
-
-    public function calculateAmount() : void
-    {
-        $totalAmount    = 0;
-        $discountAmount = 0;
-
-        foreach ($this->products as $product) {
-            if ($product->selected) {
-                $totalAmount    += $product->original_price * $product->quantity;
-                $discountAmount += $product->discount_amount * $product->quantity;
-            }
-        }
-
-        $this->total_amount    = $totalAmount;
-        $this->discount_amount = $discountAmount;
-        $this->final_amount    = $totalAmount - $discountAmount;
-    }
-
-    public function clear() : void
-    {
-        $this->products = Collection::make();
-        $this->status   = ShoppingCartStatusEnum::CLEARED;
-        $this->calculateAmount();
-    }
-
-    public function isExpired() : bool
-    {
-        return $this->expired_at?->isPast() || $this->status === ShoppingCartStatusEnum::EXPIRED;
-    }
-
-    public function getSelectedProducts() : Collection
-    {
-        return $this->products->filter(function ($product) {
-            return $product->selected;
-        });
-    }
-
-    public function getProductCount() : int
-    {
-        return $this->products->sum('quantity');
-    }
-
-    public function getSelectedProductCount() : int
-    {
-        return $this->getSelectedProducts()->sum('quantity');
-    }
-}
-
-<?php
-
-namespace RedJasmine\ShoppingCart\Domain\Models;
-
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use RedJasmine\Ecommerce\Domain\Data\Product\ProductIdentity;
-use RedJasmine\ShoppingCart\Domain\Models\Enums\ShoppingCartStatusEnum;
-use RedJasmine\ShoppingCart\Exceptions\ShoppingCartException;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
@@ -310,6 +117,11 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
             ->first();
     }
 
+    public function getProduct(int $id)
+    {
+        return $this->products->where('id', $id)->firstOrFail();
+    }
+
     /**
      * 业务方法
      */
@@ -331,11 +143,6 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
         }
     }
 
-    public function getProduct(int $id)
-    {
-        return $this->products->where('id', $id)->firstOrFail();
-    }
-
     public function removeProduct(int $id): void
     {
         $product = $this->products->where('id', $id)->firstOrFail();
@@ -349,7 +156,6 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
     public function updateQuantity(int $id, int $quantity): void
     {
         $product = $this->getProduct($id);
-
         $product->updateQuantity($quantity);
     }
 
@@ -397,7 +203,7 @@ class ShoppingCart extends Model implements OperatorInterface, OwnerInterface
 
     public function isExpired(): bool
     {
-        return $this->expired_at->isPast() || $this->status === ShoppingCartStatusEnum::EXPIRED;
+        return $this->expired_at?->isPast() || $this->status === ShoppingCartStatusEnum::EXPIRED;
     }
 
     public function getSelectedProducts(): Collection

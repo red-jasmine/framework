@@ -9,75 +9,6 @@ use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
-class ShoppingCartRepository extends Repository implements ShoppingCartRepositoryInterface
-{
-    protected static string $modelClass = ShoppingCart::class;
-
-    public function findActiveByUser(UserInterface $user, string $market): ?ShoppingCart
-    {
-        return static::$modelClass::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->where('status', 'active')
-            ->where('market', $market)
-            ->first();
-    }
-
-    public function findExpiredCarts(): Collection
-    {
-        return static::$modelClass::query()->where('status', 'expired')->get();
-    }
-
-    public function clearExpiredCarts(): int
-    {
-        return static::$modelClass::query()->where('status', 'expired')->delete();
-    }
-
-    public function deleteProduct(ShoppingCartProduct $product): bool
-    {
-        return $product->delete();
-    }
-
-    public function findWithProducts(string $cartId): ?ShoppingCart
-    {
-        return ShoppingCart::with('products')->find($cartId);
-    }
-
-    public function findProductsByCart(string $cartId): Collection
-    {
-        return ShoppingCartProduct::query()->where('cart_id', $cartId)->get();
-    }
-
-    public function countUserCarts(UserInterface $user): int
-    {
-        return static::$modelClass::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->count();
-    }
-
-    public function findByMarketUser(UserInterface $user, string $market = 'default'): ?ShoppingCart
-    {
-        return $this->query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->where('market', $market)
-            ->where('status', 'active')
-            ->first();
-    }
-}
-
-<?php
-
-namespace RedJasmine\ShoppingCart\Infrastructure\Repositories;
-
-use Illuminate\Database\Eloquent\Collection;
-use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
-use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
-use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Infrastructure\Repositories\Repository;
-
 /**
  * 购物车仓库实现
  *
@@ -94,11 +25,11 @@ class ShoppingCartRepository extends Repository implements ShoppingCartRepositor
     public function findActiveByUser(UserInterface $user, string $market): ?ShoppingCart
     {
         return static::$modelClass::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->where('status', 'active')
-            ->where('market', $market)
-            ->first();
+                                  ->where('owner_type', $user->getType())
+                                  ->where('owner_id', $user->getID())
+                                  ->where('status', 'active')
+                                  ->where('market', $market)
+                                  ->first();
     }
 
     public function findExpiredCarts(): Collection
@@ -130,19 +61,19 @@ class ShoppingCartRepository extends Repository implements ShoppingCartRepositor
     public function countUserCarts(UserInterface $user): int
     {
         return ShoppingCart::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->count();
+                           ->where('owner_type', $user->getType())
+                           ->where('owner_id', $user->getID())
+                           ->count();
     }
 
     public function findByMarketUser(UserInterface $user, string $market = 'default'): ?ShoppingCart
     {
-        return static::$modelClass::query()
-            ->where('owner_type', $user->getType())
-            ->where('owner_id', $user->getID())
-            ->where('market', $market)
-            ->where('status', 'active')
-            ->first();
+        return $this->query()
+                    ->where('owner_type', $user->getType())
+                    ->where('owner_id', $user->getID())
+                    ->where('market', $market)
+                    ->where('status', 'active')
+                    ->first();
     }
 
     /**
