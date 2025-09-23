@@ -1,0 +1,65 @@
+{
+    "name": "red-jasmine/jwt-auth",
+    "description": "JWT Authentication package for Red Jasmine Framework",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "jwt",
+        "authentication"
+    ],
+    "homepage": "https://github.com/red-jasmine/jwt-auth",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev",
+        "tymon/jwt-auth": "^2.2"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\JwtAuth\\": "src/",
+            "RedJasmine\\JwtAuth\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\JwtAuth\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\JwtAuth\\JwtAuthServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
