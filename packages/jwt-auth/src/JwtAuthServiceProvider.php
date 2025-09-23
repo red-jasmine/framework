@@ -14,10 +14,10 @@ class JwtAuthServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/jwt-auth.php',
-            'jwt-auth'
-        );
+        // $this->mergeConfigFrom(
+        //     __DIR__ . '/../config/jwt-auth.php',
+        //     'jwt-auth'
+        // );
     }
 
     /**
@@ -45,15 +45,21 @@ class JwtAuthServiceProvider extends ServiceProvider
      */
     protected function registerJwtDriver(): void
     {
-        Auth::extend('jwt', function ($app, $name, array $config) {
-            $provider = Auth::createUserProvider($config['provider'] ?? null);
 
-            return new JwtGuard(
-                $provider,
-                $app['request'],
-                $app['tymon.jwt']
+
+        $this->app['auth']->extend('jwt', function ($app, $name, array $config) {
+            $guard = new JwtGuard(
+                $app['tymon.jwt'],
+                $app['auth']->createUserProvider($config['provider']),
+                $app['request']
             );
+
+            $app->refresh('request', $guard, 'setRequest');
+
+            return $guard;
         });
+
+
     }
 
     /**

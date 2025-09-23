@@ -20,13 +20,9 @@
         "red-jasmine/support": "1.0.x-dev",
         "tymon/jwt-auth": "^2.2"
     },
-    "require-dev": {
-
-    },
     "autoload": {
         "psr-4": {
-            "RedJasmine\\JwtAuth\\": "src/",
-            "RedJasmine\\JwtAuth\\Database\\Factories\\": "database/factories/"
+            "RedJasmine\\JwtAuth\\": "src/"
         }
     },
     "autoload-dev": {

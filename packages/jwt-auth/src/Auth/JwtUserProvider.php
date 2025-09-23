@@ -2,16 +2,18 @@
 
 namespace RedJasmine\JwtAuth\Auth;
 
+use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use RedJasmine\JwtAuth\Models\JwtUser;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class JwtUserProvider implements UserProvider
+class JwtUserProvider  implements UserProvider
 {
     protected array $models = [];
     protected ?Hasher $hasher = null;
@@ -21,13 +23,16 @@ class JwtUserProvider implements UserProvider
         $this->hasher = $hasher;
     }
 
+
+
     /**
      * 通过ID检索用户
      */
     public function retrieveById($identifier): ?Authenticatable
     {
-        // JWT认证通常不需要通过ID检索用户
-        return null;
+
+        return $this->createUserFromPayload($identifier);
+
     }
 
     /**
@@ -43,6 +48,7 @@ class JwtUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token): ?Authenticatable
     {
+        dd($identifier, $token);
         try {
             // 设置token到JWT
             JWTAuth::setToken($token);
@@ -82,6 +88,7 @@ class JwtUserProvider implements UserProvider
         unset($credentials['user_type']);
 
         $modelClass = $this->getModelClass($userType);
+
         if (!$modelClass) {
             return null;
         }
@@ -136,7 +143,7 @@ class JwtUserProvider implements UserProvider
     /**
      * 从JWT payload创建用户实例
      */
-    protected function createUserFromPayload($payload): ?Authenticatable
+    protected function createUserFromPayload(\Tymon\JWTAuth\Payload $payload): ?Authenticatable
     {
         $sub = $payload->get('sub');
         $userId = is_array($sub) ? $sub['id'] : $sub;
@@ -144,17 +151,20 @@ class JwtUserProvider implements UserProvider
         if (!$userId) {
             return null;
         }
+        $jwt = app('tymon.jwt');
+
+
+
 
         // 获取用户类型
         $userType = $payload->get('user_type', 'user');
 
-        // 获取自定义声明
-        $customClaims = $payload->get('custom_claims', []);
+
 
         // 构建用户属性
         $attributes = array_merge([
             'id' => $userId,
-        ], $customClaims);
+        ],Arr::except($payload->toArray(), $jwt->factory()->getDefaultClaims()));
 
         // 创建通用JWT用户实例
         $user = new JwtUser($attributes, $userType);
