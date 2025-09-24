@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Requests;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

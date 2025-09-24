@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Coupon\UI\Http\Shop;
+namespace RedJasmine\Coupon\UI\Http\Owner;
 
 use Illuminate\Support\Facades\Route;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Controllers\CouponController;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Controllers\UserCouponController;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Controllers\CouponUsageController;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Controllers\CouponController;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Controllers\UserCouponController;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Controllers\CouponUsageController;
 
 class CouponShopRoute
 {

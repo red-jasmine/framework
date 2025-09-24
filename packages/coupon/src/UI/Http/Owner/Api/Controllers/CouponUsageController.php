@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RedJasmine\Coupon\Application\Services\CouponUsage\CouponUsageApplicationService;
 use RedJasmine\Coupon\Domain\Models\CouponUsage as Model;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Resources\CouponUsageResource as Resource;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Resources\CouponUsageResource as Resource;
 use RedJasmine\Coupon\Application\Services\CouponUsage\Queries\CouponUsagePaginateQuery;
 use RedJasmine\Coupon\Application\Services\CouponUsage\Queries\CouponUsageFindQuery;
 

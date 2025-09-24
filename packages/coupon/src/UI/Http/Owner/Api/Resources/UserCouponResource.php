@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Resources;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Resources;
 
 use Illuminate\Http\Request;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;

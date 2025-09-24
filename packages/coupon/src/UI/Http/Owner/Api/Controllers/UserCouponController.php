@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ use RedJasmine\Coupon\Application\Services\UserCoupon\Queries\UserCouponFindQuer
 use RedJasmine\Coupon\Application\Services\UserCoupon\Queries\UserCouponPaginateQuery as PaginateQuery;
 use RedJasmine\Coupon\Application\Services\UserCoupon\UserCouponApplicationService;
 use RedJasmine\Coupon\Domain\Models\UserCoupon as Model;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Resources\UserCouponResource as Resource;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Resources\UserCouponResource as Resource;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 

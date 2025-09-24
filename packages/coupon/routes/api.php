@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use RedJasmine\Coupon\UI\Http\Admin\Api\Controllers\CouponController as AdminCouponController;
-use RedJasmine\Coupon\UI\Http\Shop\CouponShopRoute;
+use RedJasmine\Coupon\UI\Http\Owner\CouponShopRoute;
 use RedJasmine\Coupon\UI\Http\User\Api\Controllers\UserCouponController;
 use RedJasmine\Coupon\UI\Http\User\CouponUserRoute;
 

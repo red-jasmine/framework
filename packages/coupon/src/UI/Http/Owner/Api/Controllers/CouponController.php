@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Controllers;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Application\Services\Coupon\Queries\CouponPaginateQuery as PaginateQuery;
 use RedJasmine\Coupon\Domain\Data\CouponData as Data;
 use RedJasmine\Coupon\Domain\Models\Coupon as Model;
-use RedJasmine\Coupon\UI\Http\Shop\Api\Resources\CouponResource as Resource;
+use RedJasmine\Coupon\UI\Http\Owner\Api\Resources\CouponResource as Resource;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 
 class CouponController extends Controller

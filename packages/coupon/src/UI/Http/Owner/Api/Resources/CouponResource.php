@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Coupon\UI\Http\Shop\Api\Resources;
+namespace RedJasmine\Coupon\UI\Http\Owner\Api\Resources;
 
 use Illuminate\Http\Request;
 
