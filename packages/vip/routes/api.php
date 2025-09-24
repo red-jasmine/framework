@@ -7,7 +7,7 @@ use RedJasmine\Vip\UI\Http\User\Api\Controllers\VipProductController;
 
 Route::group([
     'prefix'     => 'api/vip',
-    'middleware' => ['api', 'auth:api']
+    'middleware' => ['api', 'auth:owner']
 ], function () {
 
     Route::group([

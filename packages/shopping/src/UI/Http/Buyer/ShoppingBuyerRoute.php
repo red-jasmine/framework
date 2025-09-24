@@ -14,7 +14,7 @@ class ShoppingBuyerRoute
 
     public static function api() : void
     {
-        Route::middleware('auth:api')->group(function () {
+        Route::middleware('auth:owner')->group(function () {
 
             Route::prefix('shopping')
                  ->group(function () {

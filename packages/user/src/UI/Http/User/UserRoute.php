@@ -37,7 +37,7 @@ class UserRoute
 
                           // 需要登录
                           Route::group([
-                              'middleware' => 'auth:api',
+                              'middleware' => 'auth:owner',
                           ], function () {
                               Route::get('info', 'AccountController@info')->name('user.info');
                           });
@@ -46,7 +46,7 @@ class UserRoute
                  Route::prefix('account')
                       ->name('account.')
                       ->middleware([
-                          'middleware' => 'auth:api',
+                          'middleware' => 'auth:owner',
                       ])
                       ->group(function () {
                           Route::get('info', 'AccountController@info')->name('account.info');

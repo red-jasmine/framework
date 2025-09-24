@@ -5,7 +5,7 @@ use RedJasmine\Distribution\UI\Http\User\DistributionUserRoute;
 
 Route::group([
     'prefix' => 'api/distribution',
-    'middleware' => ['auth:api']
+    'middleware' => ['auth:owner']
 ],function () {
 
     DistributionUserRoute::api();
