@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Address\UI\Http\User;
+namespace RedJasmine\Address\UI\Http\Owner;
 
 use Illuminate\Support\Facades\Route;
-use RedJasmine\Address\UI\Http\User\Api\Controllers\AddressController;
+use RedJasmine\Address\UI\Http\Owner\Api\Controllers\AddressController;
 
-class AddressUserRoute
+class AddressOwnerRoute
 {
 
     public static function api() : void

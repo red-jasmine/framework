@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Address\UI\Http\User\Api\Resources;
+namespace RedJasmine\Address\UI\Http\Owner\Api\Resources;
 
 use Illuminate\Http\Request;
 
