@@ -20,7 +20,7 @@ use Illuminate\Http\Response;
 class ArticleTagController extends Controller
 {
     use RestControllerActions;
-    use UserOwnerTools;
+
 
     protected static string $resourceClass = ArticleTagResource::class;
     protected static string $paginateQueryClass = ArticleTagListQuery::class;

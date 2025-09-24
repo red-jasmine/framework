@@ -21,7 +21,7 @@ use Illuminate\Http\JsonResponse;
 class ArticleCategoryController extends Controller
 {
     use RestControllerActions;
-    use UserOwnerTools;
+
 
     protected static string $resourceClass = ArticleCategoryResource::class;
     protected static string $paginateQueryClass = ArticleCategoryListQuery::class;

@@ -21,7 +21,7 @@ use Illuminate\Http\Response;
 class ArticleController extends Controller
 {
     use RestControllerActions;
-    use UserOwnerTools;
+
 
     protected static string $resourceClass = ArticleResource::class;
     protected static string $paginateQueryClass = ArticleListQuery::class;
