@@ -8,7 +8,7 @@ use RedJasmine\Captcha\Application\Services\Commands\CaptchaVerifyCommand;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\ForgotPassword\Contracts\UserForgotPasswordServiceProviderInterface;
 use RedJasmine\User\Domain\Services\ForgotPassword\Data\ForgotPasswordData;
 
@@ -17,13 +17,13 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
 
     public const   NAME = 'sms';
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserReadRepositoryInterface $userReadRepository;
+    protected UserRepositoryInterface $userRepository;
 
     public function __construct()
     {
 
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
-        $this->userReadRepository        = app(UserReadRepositoryInterface::class);
+        $this->userRepository        = app(UserRepositoryInterface::class);
     }
 
     public function captcha(ForgotPasswordData $data) : bool
@@ -49,7 +49,7 @@ class SmsForgotPasswordServiceProvider implements UserForgotPasswordServiceProvi
     {
         $phone = $data->data['phone'];
         // 发送验证码
-        $user = app(UserReadRepositoryInterface::class)->findByPhone($phone);
+        $user = app(UserRepositoryInterface::class)->findByPhone($phone);
         if (!$user) {
             throw new  LoginException('用户未注册');
         }

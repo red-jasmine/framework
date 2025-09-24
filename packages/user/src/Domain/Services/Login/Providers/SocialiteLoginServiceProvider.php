@@ -6,7 +6,7 @@ use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserLoginCommand
 use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
@@ -16,7 +16,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
 
-    protected UserReadRepositoryInterface $repository;
+    protected UserRepositoryInterface $repository;
     protected string                      $guard;
 
     public function init(UserRepositoryInterface $repository, string $guard) : static

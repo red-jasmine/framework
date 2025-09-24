@@ -6,7 +6,7 @@ use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Domain\Repositories\UserGroupReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserGroupRepositoryInterface;
 use Throwable;
 
 class UserSetGroupCommandHandler extends CommandHandler

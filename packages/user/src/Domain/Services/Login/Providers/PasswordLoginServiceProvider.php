@@ -5,7 +5,6 @@ namespace RedJasmine\User\Domain\Services\Login\Providers;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\User\Domain\Exceptions\LoginException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Login\Data\UserLoginData;
@@ -43,12 +42,11 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
     {
         // 按用户名称查询 用户
         if ($user = $this->repository->findByAccount($data->data['account'])) {
-
             // 手动验证密码
-            $Credentials = [
+            $credentials = [
                 'password' => $data->data['password']
             ];
-            if (!Auth::guard($this->guard)->getProvider()->validateCredentials($user, $Credentials)) {
+            if (!Auth::guard($this->guard)->getProvider()->validateCredentials($user, $credentials)) {
                 throw new LoginException('账号或者密码错误');
             }
 

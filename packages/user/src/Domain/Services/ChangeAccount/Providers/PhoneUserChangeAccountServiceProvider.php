@@ -8,7 +8,7 @@ use RedJasmine\Captcha\Application\Services\Commands\CaptchaVerifyCommand;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\User\Domain\Exceptions\UserRegisterException;
 use RedJasmine\User\Domain\Models\User;
-use RedJasmine\User\Domain\Repositories\UserReadRepositoryInterface;
+use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Contracts\UserChannelAccountServiceProviderInterface;
 use RedJasmine\User\Domain\Services\ChangeAccount\Data\UserChangeAccountData;
 
@@ -16,13 +16,13 @@ class PhoneUserChangeAccountServiceProvider implements UserChannelAccountService
 {
 
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserReadRepositoryInterface $userReadRepository;
+    protected UserRepositoryInterface $userRepository;
 
     public function __construct()
     {
 
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
-        $this->userReadRepository        = app(UserReadRepositoryInterface::class);
+        $this->userRepository        = app(UserRepositoryInterface::class);
     }
 
     public const  NAME = 'phone';
@@ -110,7 +110,7 @@ class PhoneUserChangeAccountServiceProvider implements UserChannelAccountService
 
         $phone = $data->data['phone'] ?? null;
 
-        $hasUser = $this->userReadRepository->findByPhone($phone);
+        $hasUser = $this->userRepository->findByPhone($phone);
         if ($hasUser) {
             throw  new UserRegisterException('手机号已经注册');
         }
