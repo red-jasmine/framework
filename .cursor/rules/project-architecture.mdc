@@ -70,15 +70,15 @@ framework/
 │   ├── UI/                     # 用户接口层
 │   │   └── Http/               # HTTP接口
 │   │       ├── Admin/          # 管理员接口 （按需）
-|   |       |   ├── {domain}{role}Route.php # 路由定义文件
-|   |       |   ├── Api/
-|   |       |   |   ├── Controllers/  #控制器
-|   |       |   |   ├── Requests/     # 请求验证 
-|   |       |   |   ├── Resources/    # 响应资源 
-|   |       |   |   └── Middlewares/  # 路由中间件  
-|   |       |   └── Web/
+│   │       │   ├── {domain}{role}Route.php # 路由定义文件
+│   │       │   ├── Api/
+│   │       │   │   ├── Controllers/  #控制器
+│   │       │   │   ├── Requests/     # 请求验证
+│   │       │   │   ├── Resources/    # 响应资源
+│   │       │   │   └── Middlewares/  # 路由中间件
+│   │       │   └── Web/
 │   │       ├── User/           # 用户接口 （按需）
-│   │       └── Shop/           # 商家接口（按需）
+│   │       └── Owner/          # 所有者接口
 │   └── Exceptions/             # 异常处理
 ├── config/                     # 配置文件
 ├── database/                   # 数据库相关
