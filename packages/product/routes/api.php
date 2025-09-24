@@ -1,7 +1,7 @@
 <?php
 
 
-use RedJasmine\Product\UI\Http\Buyer\ProductBuyerRoute;
+use RedJasmine\Product\UI\Http\User\ProductUserRoute;
 
 \Illuminate\Support\Facades\Route::group([
     'prefix'     => 'api/user',
@@ -9,6 +9,6 @@ use RedJasmine\Product\UI\Http\Buyer\ProductBuyerRoute;
 ], function () {
 
 
-    ProductBuyerRoute::api();
+    ProductUserRoute::api();
 
 });
