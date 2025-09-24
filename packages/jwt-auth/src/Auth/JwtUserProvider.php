@@ -34,20 +34,24 @@ class JwtUserProvider implements UserProvider
      * 从JWT payload创建用户实例
      */
     protected function createUserFromPayload(Payload $payload) : ?Authenticatable
-    {
+    {    // 获取用户类型
+        $type   = $payload->get('type');
         $sub    = $payload->get('sub');
         $userId = is_array($sub) ? $sub['id'] : $sub;
-
         if (!$userId) {
             return null;
         }
+
+
+        $modelClass = $this->getModelClass($type);
+        // 如果有配置模型，则这个为
+        if ($modelClass) {
+            $model = new $modelClass();
+            return $model->newQuery()->findOrFail($userId);
+
+        }
+
         $jwt = app('tymon.jwt');
-
-
-        // 获取用户类型
-        $type = $payload->get('user_type', 'user');
-
-
         // 构建用户属性
         $attributes = array_merge([
             'id'   => $userId,
@@ -60,6 +64,31 @@ class JwtUserProvider implements UserProvider
         }
 
         return $user;
+    }
+
+    /**
+     * 根据用户类型获取模型类
+     */
+    protected function getModelClass(string $userType) : ?string
+    {
+        return $this->getModels()[$userType] ?? null;
+
+    }
+
+    /**
+     * 获取模型配置
+     */
+    public function getModels() : array
+    {
+        return $this->models;
+    }
+
+    /**
+     * 设置模型配置
+     */
+    public function setModels(array $models) : void
+    {
+        $this->models = $models;
     }
 
     /**
@@ -109,31 +138,6 @@ class JwtUserProvider implements UserProvider
         }
 
         return $query->first();
-    }
-
-    /**
-     * 根据用户类型获取模型类
-     */
-    protected function getModelClass(string $userType) : ?string
-    {
-        return $this->getModels()[$userType] ?? null;
-
-    }
-
-    /**
-     * 获取模型配置
-     */
-    public function getModels() : array
-    {
-        return $this->models;
-    }
-
-    /**
-     * 设置模型配置
-     */
-    public function setModels(array $models) : void
-    {
-        $this->models = $models;
     }
 
     /**

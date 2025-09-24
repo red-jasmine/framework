@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\UI\Http\Buyer;
 
 use Illuminate\Support\Facades\Route;
 use RedJasmine\Address\UI\Http\User\AddressUserRoute;
-use RedJasmine\Order\UI\Http\Buyer\Api\OrderBuyerApiRoute;
+use RedJasmine\Order\UI\Http\User\Api\OrderUserApiRoute;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers\OrderController;
 use RedJasmine\Wallet\UI\Http\User\WalletUserRoute;
 
@@ -14,7 +14,7 @@ class ShoppingBuyerRoute
 
     public static function api() : void
     {
-        Route::middleware('auth:user')->group(function () {
+        Route::middleware('auth:api')->group(function () {
 
             Route::prefix('shopping')
                  ->group(function () {
@@ -31,7 +31,7 @@ class ShoppingBuyerRoute
                  });
 
 
-            OrderBuyerApiRoute::api();
+            OrderUserApiRoute::api();
 
             AddressUserRoute::api();
 

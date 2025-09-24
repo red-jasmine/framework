@@ -25,7 +25,6 @@ trait AccountActions
     {
         $user = Auth::user();
 
-
         return UserBaseResource::make($user);
     }
 

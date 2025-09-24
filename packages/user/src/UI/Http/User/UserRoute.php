@@ -3,11 +3,6 @@
 namespace RedJasmine\User\UI\Http\User;
 
 use Illuminate\Support\Facades\Route;
-use RedJasmine\User\UI\Http\User\Api\Controllers\ChangeAccountController;
-use RedJasmine\User\UI\Http\User\Api\Controllers\ForgotPasswordController;
-use RedJasmine\User\UI\Http\User\Api\Controllers\RegisterController;
-use RedJasmine\User\UI\Http\User\Api\Controllers\AccountController;
-use RedJasmine\User\UI\Http\User\Api\Controllers\LoginController;
 
 class UserRoute
 {
@@ -42,7 +37,7 @@ class UserRoute
 
                           // 需要登录
                           Route::group([
-                              'middleware' => 'auth:'.static::$guard,
+                              'middleware' => 'auth:api',
                           ], function () {
                               Route::get('info', 'AccountController@info')->name('user.info');
                           });
@@ -51,7 +46,7 @@ class UserRoute
                  Route::prefix('account')
                       ->name('account.')
                       ->middleware([
-                          'middleware' => 'auth:'.static::$guard,
+                          'middleware' => 'auth:api',
                       ])
                       ->group(function () {
                           Route::get('info', 'AccountController@info')->name('account.info');
