@@ -92,19 +92,20 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
     public function getJWTCustomClaims() : array
     {
         return [
+            'type'     => $this->getType(),
             'name'     => $this->name,
             'nickname' => $this->nickname
         ];
     }
 
+    public function getType() : string
+    {
+        return 'user';
+    }
+
     public function login() : void
     {
         $this->fireModelEvent('login', false);
-    }
-
-    public function getAvatar() : ?string
-    {
-        return $this->avatar;
     }
 
     public function setUserBaseInfo(UserBaseInfoData $data) : void
@@ -204,6 +205,16 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         );
     }
 
+    public function getID() : string
+    {
+        return $this->getKey();
+    }
+
+    public function getNickname() : ?string
+    {
+        return $this->nickname;
+    }
+
     public function getInvitationCode() : string
     {
         return $this->invitation_code;
@@ -215,20 +226,19 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         return $this;
     }
 
-
-    public function getType() : string
+    public function getUserData() : array
     {
-        return 'user';
+        return [
+            'type'     => $this->getType(),
+            'id'       => $this->getID(),
+            'nickname' => $this->getNickname(),
+            'avatar'   => $this->getAvatar(),
+        ];
     }
 
-    public function getID() : string
+    public function getAvatar() : ?string
     {
-        return $this->getKey();
-    }
-
-    public function getNickname() : ?string
-    {
-        return $this->nickname;
+        return $this->avatar;
     }
 
     protected function casts() : array
@@ -242,16 +252,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
             'status'       => UserStatusEnum::class,
             'password'     => 'hashed',
             'cancel_time'  => 'datetime',
-        ];
-    }
-
-    public function getUserData() : array
-    {
-        return [
-            'type'     => $this->getType(),
-            'id'       => $this->getID(),
-            'nickname' => $this->getNickname(),
-            'avatar'   => $this->getAvatar(),
         ];
     }
 

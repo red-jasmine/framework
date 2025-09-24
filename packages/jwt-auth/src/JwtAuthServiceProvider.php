@@ -36,8 +36,7 @@ class JwtAuthServiceProvider extends ServiceProvider
         // 注册JWT用户提供者
         $this->registerJwtUserProvider();
 
-        // 注册中间件
-        $this->registerMiddleware();
+
     }
 
     /**
@@ -79,20 +78,5 @@ class JwtAuthServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * 注册中间件
-     */
-    protected function registerMiddleware(): void
-    {
-        $router = $this->app['router'];
-
-        // 注册JWT认证中间件
-        $router->aliasMiddleware('jwt.auth', \RedJasmine\JwtAuth\Http\Middleware\JwtAuthenticate::class);
-
-        // 注册JWT用户类型验证中间件（基于token）
-        $router->aliasMiddleware('jwt.auth.type', \RedJasmine\JwtAuth\Http\Middleware\JwtAuthenticateWithUserType::class);
-
-        // 注册JWT用户类型验证中间件（基于当前用户）
-        $router->aliasMiddleware('jwt.auth.user.type', \RedJasmine\JwtAuth\Http\Middleware\JwtAuthenticateWithCurrentUserType::class);
-    }
+    
 }

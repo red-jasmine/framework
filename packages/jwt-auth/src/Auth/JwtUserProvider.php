@@ -2,20 +2,16 @@
 
 namespace RedJasmine\JwtAuth\Auth;
 
-use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use RedJasmine\JwtAuth\Models\JwtUser;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Payload;
 
-class JwtUserProvider  implements UserProvider
+class JwtUserProvider implements UserProvider
 {
-    protected array $models = [];
+    protected array   $models = [];
     protected ?Hasher $hasher = null;
 
     public function __construct(?Hasher $hasher = null)
@@ -24,11 +20,10 @@ class JwtUserProvider  implements UserProvider
     }
 
 
-
     /**
      * 通过ID检索用户
      */
-    public function retrieveById($identifier): ?Authenticatable
+    public function retrieveById($identifier) : ?Authenticatable
     {
 
         return $this->createUserFromPayload($identifier);
@@ -36,9 +31,41 @@ class JwtUserProvider  implements UserProvider
     }
 
     /**
+     * 从JWT payload创建用户实例
+     */
+    protected function createUserFromPayload(Payload $payload) : ?Authenticatable
+    {
+        $sub    = $payload->get('sub');
+        $userId = is_array($sub) ? $sub['id'] : $sub;
+
+        if (!$userId) {
+            return null;
+        }
+        $jwt = app('tymon.jwt');
+
+
+        // 获取用户类型
+        $type = $payload->get('user_type', 'user');
+
+
+        // 构建用户属性
+        $attributes = array_merge([
+            'id'   => $userId,
+            'type' => $type,
+        ], Arr::except($payload->toArray(), $jwt->factory()->getDefaultClaims()));
+        // 创建通用JWT用户实例
+        $user = new JwtUser();
+        foreach ($attributes as $key => $value) {
+            $user->{$key} = $value;
+        }
+
+        return $user;
+    }
+
+    /**
      * 如果需要，重新哈希密码
      */
-    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false) : void
     {
         // JWT认证不需要重新哈希密码
     }
@@ -46,37 +73,16 @@ class JwtUserProvider  implements UserProvider
     /**
      * 从token中检索用户，无需查询数据库
      */
-    public function retrieveByToken($identifier, $token): ?Authenticatable
+    public function retrieveByToken($identifier, $token) : ?Authenticatable
     {
-        dd($identifier, $token);
-        try {
-            // 设置token到JWT
-            JWTAuth::setToken($token);
-
-            // 解析token获取payload
-            $payload = JWTAuth::getPayload();
-
-            if (!$payload || !$payload->get('sub')) {
-                return null;
-            }
-
-            // 获取用户类型和ID
-            $sub = $payload->get('sub');
-            $userType = $payload->get('user_type', 'user');
-            $userId = is_array($sub) ? $sub['id'] : $sub;
-
-            // 创建用户实例，不查询数据库
-            return $this->createUserFromPayload($payload);
-
-        } catch (JWTException $e) {
-            return null;
-        }
+        // TODO  从记住我 的token中检索用户
+        return null;
     }
 
     /**
      * 通过凭据检索用户（登录时使用）
      */
-    public function retrieveByCredentials(array $credentials): ?Authenticatable
+    public function retrieveByCredentials(array $credentials) : ?Authenticatable
     {
         if (empty($credentials) ||
             (count($credentials) === 1 && array_key_exists('password', $credentials))) {
@@ -106,9 +112,34 @@ class JwtUserProvider  implements UserProvider
     }
 
     /**
+     * 根据用户类型获取模型类
+     */
+    protected function getModelClass(string $userType) : ?string
+    {
+        return $this->getModels()[$userType] ?? null;
+
+    }
+
+    /**
+     * 获取模型配置
+     */
+    public function getModels() : array
+    {
+        return $this->models;
+    }
+
+    /**
+     * 设置模型配置
+     */
+    public function setModels(array $models) : void
+    {
+        $this->models = $models;
+    }
+
+    /**
      * 验证用户凭据
      */
-    public function validateCredentials(Authenticatable $user, array $credentials): bool
+    public function validateCredentials(Authenticatable $user, array $credentials) : bool
     {
         $plain = $credentials['password'] ?? null;
 
@@ -125,67 +156,9 @@ class JwtUserProvider  implements UserProvider
     /**
      * 更新用户的"记住我"token
      */
-    public function updateRememberToken(Authenticatable $user, $token): void
+    public function updateRememberToken(Authenticatable $user, $token) : void
     {
         // JWT认证不需要记住我token
         return;
-    }
-
-    /**
-     * 根据用户类型获取模型类
-     */
-    protected function getModelClass(string $userType): ?string
-    {
-        return $this->getModels()[$userType]??null;
-
-    }
-
-    /**
-     * 从JWT payload创建用户实例
-     */
-    protected function createUserFromPayload(\Tymon\JWTAuth\Payload $payload): ?Authenticatable
-    {
-        $sub = $payload->get('sub');
-        $userId = is_array($sub) ? $sub['id'] : $sub;
-
-        if (!$userId) {
-            return null;
-        }
-        $jwt = app('tymon.jwt');
-
-
-
-
-        // 获取用户类型
-        $userType = $payload->get('user_type', 'user');
-
-
-
-        // 构建用户属性
-        $attributes = array_merge([
-            'id' => $userId,
-        ],Arr::except($payload->toArray(), $jwt->factory()->getDefaultClaims()));
-
-        // 创建通用JWT用户实例
-        $user = new JwtUser($attributes, $userType);
-
-        return $user;
-    }
-
-
-    /**
-     * 设置模型配置
-     */
-    public function setModels(array $models): void
-    {
-        $this->models = $models;
-    }
-
-    /**
-     * 获取模型配置
-     */
-    public function getModels(): array
-    {
-        return $this->models;
     }
 }
