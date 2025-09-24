@@ -26,7 +26,7 @@ interface InvitationCodeRepositoryInterface extends RepositoryInterface
 
     /**
      * 获取用户的邀请码统计
-     * 合并了原InvitationCodeReadRepositoryInterface中的方法
+     *
      */
     public function getUserInvitationStatistics($userId, $userType): array;
 

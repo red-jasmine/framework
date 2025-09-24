@@ -20,10 +20,9 @@ interface TopicCategoryRepositoryInterface extends RepositoryInterface
 
     /**
      * 获取树形结构
-     * 合并了原TopicCategoryReadRepositoryInterface中tree方法
+     *
      */
     public function tree(Query $query) : array;
 
-    // 合并了原TopicCategoryReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

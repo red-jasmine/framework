@@ -28,7 +28,7 @@ class PromoterUpgradeCommandHandler extends CommandHandler
             /** @var Promoter $model */
             $model = $this->service->repository->find($command->id);
 
-            $promoterService = new PromoterService($this->service->levelReadRepository);
+            $promoterService = new PromoterService($this->service->levelRepository);
 
             $promoterService->apply($model, $command);
 

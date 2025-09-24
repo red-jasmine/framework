@@ -30,7 +30,7 @@ interface MessageRepositoryInterface extends RepositoryInterface
 
     /**
      * 获取未读消息数量
-     * 合并了原MessageReadRepositoryInterface中的方法
+     *
      *
      * @param  UserInterface  $owner
      * @param  string  $biz

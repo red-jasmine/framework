@@ -1,10 +1,10 @@
 <?php
 
-namespace RedJasmine\Order\UI\Http\Buyer\Api;
+namespace RedJasmine\Order\UI\Http\User\Api;
 
 use Illuminate\Support\Facades\Route;
-use RedJasmine\Order\UI\Http\Buyer\Api\Controller\OrderController;
-use RedJasmine\Order\UI\Http\Buyer\Api\Controller\RefundController;
+use RedJasmine\Order\UI\Http\User\Api\Controller\OrderController;
+use RedJasmine\Order\UI\Http\User\Api\Controller\RefundController;
 
 
 class OrderUserApiRoute

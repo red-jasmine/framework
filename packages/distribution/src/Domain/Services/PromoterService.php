@@ -13,7 +13,7 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Models\PromoterApply;
 use RedJasmine\Distribution\Domain\Models\PromoterLevel;
-use RedJasmine\Distribution\Domain\Repositories\PromoterLevelReadRepositoryInterface;
+use RedJasmine\Distribution\Domain\Repositories\PromoterLevelRepositoryInterface;
 use RedJasmine\Distribution\Exceptions\PromoterApplyException;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\System;
@@ -27,7 +27,7 @@ class PromoterService extends Service
 {
 
     public function __construct(
-        protected PromoterLevelReadRepositoryInterface $levelReadRepository
+        protected PromoterLevelRepositoryInterface $levelRepository
     ) {
     }
 
@@ -114,7 +114,7 @@ class PromoterService extends Service
         }
 
         // 查询推广员等级
-        $promoterLevel = $this->levelReadRepository->findLevel($applyData->level);
+        $promoterLevel = $this->levelRepository->findLevel($applyData->level);
 
 
         // 查询是否符合资格

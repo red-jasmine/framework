@@ -21,6 +21,5 @@ interface OrderLogisticsRepositoryInterface extends RepositoryInterface
      */
     public function getByLogisticsNo(string $logisticsCompanyCode, string $logisticsNo): Collection;
     
-    // 合并了原OrderLogisticsReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

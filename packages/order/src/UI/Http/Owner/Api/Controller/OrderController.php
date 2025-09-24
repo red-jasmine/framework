@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\UI\Http\Seller\Api\Controller;
+namespace RedJasmine\Order\UI\Http\Owner\Api\Controller;
 
 
 use Illuminate\Http\JsonResponse;
@@ -17,7 +17,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderPayingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderProgressCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
-use RedJasmine\Order\UI\Http\Seller\Api\Resources\OrderResource;
+use RedJasmine\Order\UI\Http\Owner\Api\Resources\OrderResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 

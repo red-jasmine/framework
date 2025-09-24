@@ -18,6 +18,5 @@ interface CardGroupBindProductRepositoryInterface extends RepositoryInterface
      */
     public function findByProduct(UserInterface $owner, string $productType, int $productId, int $skuId) : ?CardGroupBindProduct;
 
-    // 合并了原CardGroupBindProductReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

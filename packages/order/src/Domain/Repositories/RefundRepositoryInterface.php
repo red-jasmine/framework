@@ -16,6 +16,5 @@ interface RefundRepositoryInterface extends RepositoryInterface
 {
     public function findByNo(string $no) : Refund;
 
-    // 合并了原RefundReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

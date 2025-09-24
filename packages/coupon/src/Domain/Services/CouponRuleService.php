@@ -8,7 +8,7 @@ use RedJasmine\Coupon\Domain\Models\Enums\RuleObjectTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleTypeEnum;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleItem;
 use RedJasmine\Coupon\Domain\Models\ValueObjects\RuleValue;
-use RedJasmine\Coupon\Domain\Repositories\UserCouponReadRepositoryInterface;
+use RedJasmine\Coupon\Domain\Repositories\UserCouponRepositoryInterface;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Support\Foundation\Service\Service;
@@ -16,7 +16,7 @@ use RedJasmine\Support\Foundation\Service\Service;
 class CouponRuleService extends Service
 {
     public function __construct(
-        protected UserCouponReadRepositoryInterface $userCouponReadRepository,
+        protected UserCouponRepositoryInterface $userCouponRepository,
     ) {
     }
 
@@ -38,7 +38,7 @@ class CouponRuleService extends Service
         // 查询用户领取次数
         $factors[] = [
             'objectType'  => RuleObjectTypeEnum::USER_RECEIVE_LIMIT,
-            'objectValue' => $this->userCouponReadRepository->getUserCouponCountByCoupon($purchaseFactor->buyer, $coupon),
+            'objectValue' => $this->userCouponRepository->getUserCouponCountByCoupon($purchaseFactor->buyer, $coupon),
         ];
         // TODO
         // 于商家的领取规则、客户分组、客户标签、客户VIP、等

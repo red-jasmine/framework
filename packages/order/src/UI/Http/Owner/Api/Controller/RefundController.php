@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\UI\Http\Seller\Api\Controller;
+namespace RedJasmine\Order\UI\Http\Owner\Api\Controller;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ use RedJasmine\Order\Application\Services\Refunds\Commands\RefundLogisticsReship
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundReturnGoodsCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
-use RedJasmine\Order\UI\Http\Seller\Api\Resources\OrderRefundResource;
+use RedJasmine\Order\UI\Http\Owner\Api\Resources\OrderRefundResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 

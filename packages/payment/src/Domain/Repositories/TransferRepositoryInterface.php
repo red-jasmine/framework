@@ -17,6 +17,5 @@ interface TransferRepositoryInterface extends RepositoryInterface
 {
     public function findByNo(string $no) : ?Transfer;
 
-    // 合并了原TransferReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

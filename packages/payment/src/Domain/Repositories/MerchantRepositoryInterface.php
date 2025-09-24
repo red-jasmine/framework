@@ -14,6 +14,5 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface MerchantRepositoryInterface extends RepositoryInterface
 {
-    // 合并了原MerchantReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

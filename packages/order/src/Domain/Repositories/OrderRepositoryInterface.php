@@ -17,6 +17,5 @@ interface OrderRepositoryInterface extends RepositoryInterface
 {
     public function findByNo(string $no) : Order;
 
-    // 合并了原OrderReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

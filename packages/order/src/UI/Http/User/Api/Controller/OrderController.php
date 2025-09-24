@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\UI\Http\Buyer\Api\Controller;
+namespace RedJasmine\Order\UI\Http\User\Api\Controller;
 
 
 use Illuminate\Auth\Access\AuthorizationException;
@@ -16,7 +16,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Application\Services\Orders\Queries\FindQuery;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Order\UI\Http\Buyer\Api\Resources\OrderResource;
+use RedJasmine\Order\UI\Http\User\Api\Resources\OrderResource;
 use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
 class OrderController extends Controller

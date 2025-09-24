@@ -16,7 +16,7 @@ interface InteractionRecordRepositoryInterface extends RepositoryInterface
 
     /**
      * 根据资源用户查找最后的记录
-     * 合并了原InteractionRecordReadRepositoryInterface中的方法
+     *
      */
     public function findByResourceUserLast(FindQuery $query);
 }

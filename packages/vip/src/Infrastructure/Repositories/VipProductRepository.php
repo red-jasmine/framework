@@ -25,6 +25,22 @@ use RedJasmine\Vip\Infrastructure\ProductDomainConverter;
  */
 class VipProductRepository implements VipProductRepositoryInterface
 {
+    public function findLock(mixed $id) : ?Model
+    {
+        // TODO: Implement findLock() method.
+    }
+
+    public function delete(Model $model) : bool
+    {
+        // TODO: Implement delete() method.
+    }
+
+    public function findByQuery(FindQuery $query) : ?Model
+    {
+        // TODO: Implement findByQuery() method.
+    }
+
+
     /**
      * @var string Eloquent模型类
      */
@@ -77,12 +93,7 @@ class VipProductRepository implements VipProductRepositoryInterface
 
     }
 
-    /**
-     * @param  Model|VipProduct  $model
-     *
-     * @return Model
-     */
-    public function update(Model $model)
+    public function update(Model $model) : Model
     {
         $command = ProductUpdateCommand::from([
             'owner'         => $this->productDomainConverter->seller(),
@@ -106,12 +117,7 @@ class VipProductRepository implements VipProductRepositoryInterface
         return $model;
     }
 
-    public function delete(Model $model)
-    {
-        // TODO 不支持操作
-    }
 
-    // 以下方法合并自 VipProductReadRepository
 
     /**
      * 查询构建器

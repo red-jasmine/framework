@@ -17,7 +17,7 @@ interface MessageCategoryRepositoryInterface extends RepositoryInterface
 {
     /**
      * 获取分类树
-     * 合并了原MessageCategoryReadRepositoryInterface中的方法
+     *
      */
     public function tree(?Query $query = null): array;
 }

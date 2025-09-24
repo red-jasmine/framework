@@ -11,6 +11,5 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface LogisticsFreightTemplateRepositoryInterface extends RepositoryInterface
 {
-    // 合并了原LogisticsFreightTemplateReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

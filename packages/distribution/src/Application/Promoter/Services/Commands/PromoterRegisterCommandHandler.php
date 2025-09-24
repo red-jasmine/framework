@@ -37,7 +37,7 @@ class PromoterRegisterCommandHandler extends CommandHandler
 
 
 
-            $promoterService = new PromoterService($this->service->levelReadRepository);
+            $promoterService = new PromoterService($this->service->levelRepository);
 
             $promoterService->apply($model, $command);
 

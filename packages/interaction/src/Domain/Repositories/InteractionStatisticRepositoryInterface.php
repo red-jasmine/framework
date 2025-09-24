@@ -18,6 +18,5 @@ interface InteractionStatisticRepositoryInterface extends RepositoryInterface
 
     public function findByResource(string $resourceType, string $resourceId, string $interactionType) : ?InteractionStatistic;
 
-    // 合并了原InteractionStatisticReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

@@ -28,10 +28,9 @@ interface UserCouponRepositoryInterface extends RepositoryInterface
 
     /**
      * 获取用户优惠券数量
-     * 合并了原UserCouponReadRepositoryInterface中的方法
+     *
      */
     public function getUserCouponCountByCoupon(UserInterface $user, Coupon $coupon) : int;
 
-    // 合并了原UserCouponReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

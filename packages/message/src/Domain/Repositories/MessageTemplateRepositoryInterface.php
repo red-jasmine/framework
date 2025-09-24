@@ -79,7 +79,6 @@ interface MessageTemplateRepositoryInterface extends RepositoryInterface
      */
     public function createVersion(int $templateId, string $version, array $changes): bool;
 
-    // ===== 以下方法合并自原MessageTemplateReadRepositoryInterface =====
 
     /**
      * 根据ID列表查找模板

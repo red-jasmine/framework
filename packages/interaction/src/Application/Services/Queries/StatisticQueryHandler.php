@@ -22,7 +22,7 @@ class StatisticQueryHandler extends QueryHandler
         $resource = InteractionResource::create($query->resourceType);
         $query->setIsWithCount(false);
 
-        $result = $this->service->statisticReadRepository->paginate($query);
+        $result = $this->service->statisticRepository->paginate($query);
         $result = $result->pluck('quantity', 'interaction_type');
         foreach ($resource->allowInteractionType() as $value) {
             $result[$value] = $result[$value] ?? 0;

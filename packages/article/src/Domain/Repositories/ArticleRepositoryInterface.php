@@ -14,6 +14,5 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
  */
 interface ArticleRepositoryInterface extends RepositoryInterface
 {
-    // 合并了原ArticleReadRepositoryInterface的功能
-    // 所有读写操作都通过统一接口提供
+
 }

@@ -84,7 +84,6 @@ interface MessagePushLogRepositoryInterface extends RepositoryInterface
      */
     public function updatePushResult(int $logId, array $result): bool;
 
-    // ===== 以下方法合并自原MessagePushLogReadRepositoryInterface =====
 
     /**
      * 根据ID列表查找推送日志

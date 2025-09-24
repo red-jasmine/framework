@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Order\UI\Http\Seller\Api\Resources;
+namespace RedJasmine\Order\UI\Http\Owner\Api\Resources;
 
 use Illuminate\Http\Request;
 use RedJasmine\Order\Domain\Models\OrderLogistics;

@@ -108,10 +108,9 @@ $announcement = $announcementService->revoke($id);
 
 ## 仓库接口
 
-- `AnnouncementRepositoryInterface`: 公告写操作仓库
-- `AnnouncementReadRepositoryInterface`: 公告读操作仓库
-- `CategoryRepositoryInterface`: 分类写操作仓库
-- `CategoryReadRepositoryInterface`: 分类读操作仓库
+- `AnnouncementRepositoryInterface`: 公告仓库
+- `CategoryRepositoryInterface`: 分类仓库
+
 
 ## 应用服务
 
