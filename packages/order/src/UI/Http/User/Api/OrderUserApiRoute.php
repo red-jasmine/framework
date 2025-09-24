@@ -7,7 +7,7 @@ use RedJasmine\Order\UI\Http\Buyer\Api\Controller\OrderController;
 use RedJasmine\Order\UI\Http\Buyer\Api\Controller\RefundController;
 
 
-class OrderBuyerApiRoute
+class OrderUserApiRoute
 {
 
     public static function api() : void
