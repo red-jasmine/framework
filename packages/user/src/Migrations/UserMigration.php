@@ -20,10 +20,15 @@ class UserMigration extends \Illuminate\Database\Migrations\Migration
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('account_type', 64)->nullable()->comment(AccountTypeEnum::comments('账号类型'));
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
+
+            // 账号信息
             $table->string('name', 64)->comment('账号');
             $table->string('phone')->nullable()->comment('*手机号');
             $table->string('email')->nullable()->comment('*邮箱');
             $table->string('password')->nullable()->comment('密码');
+            $table->rememberToken();
+
+            // 基础信息
             $table->string('nickname')->nullable()->comment('昵称');
             $table->string('realname')->nullable()->comment('姓名');
             $table->string('gender', 32)->nullable()->comment('性别');
@@ -37,13 +42,19 @@ class UserMigration extends \Illuminate\Database\Migrations\Migration
             $table->string('school')->nullable()->comment('学校');
 
 
-            $table->timestamp('email_verified_at')->nullable();
-            $table->timestamp('last_active_at')->nullable()->comment('最后活跃时间');
-            $table->string('ip')->nullable()->comment('IP');
-            $table->timestamp('cancel_time')->nullable()->comment('注销时间');
-            $table->rememberToken();
-            $table->string('invitation_code', 64)->comment('邀请码')->nullable();
+            // 激活时间
+            $table->timestamp('activated_at')->nullable()->comment('激活时间');
+            // 注册时间
+            $table->timestamp('registered_at')->nullable()->comment('注册时间');
+            // 注销时间
+            $table->timestamp('canceled_at')->nullable()->comment('注销时间');
+            // 邀请人
             $table->userMorphs('inviter', '邀请人');
+
+            // 活跃时间
+            $table->string('ip')->nullable()->comment('IP');
+            $table->timestamp('active_at')->nullable()->comment('活跃时间');
+
             $table->operator();
 
             $table->index(['name'], 'idx_name');
