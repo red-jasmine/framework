@@ -1,12 +1,14 @@
 {
-    "name": "red-jasmine/user",
-    "description": "This is my package user",
+    "name": "red-jasmine/user-core",
+    "description": "用户通用组件包，提供用户相关的通用功能和组件",
     "keywords": [
         "red-jasmine",
         "laravel",
-        "user"
+        "user-core",
+        "user",
+        "core"
     ],
-    "homepage": "https://github.com/red-jasmine/user",
+    "homepage": "https://github.com/red-jasmine/user-core",
     "license": "MIT",
     "authors": [
         {
@@ -16,24 +18,17 @@
         }
     ],
     "require": {
-        "red-jasmine/support":  "1.0.x-dev",
-        "red-jasmine/socialite": "1.0.x-dev",
-        "red-jasmine/captcha": "1.0.x-dev",
-        "red-jasmine/user-core": "1.0.x-dev",
-        "tymon/jwt-auth": "^2.2"
-    },
-    "require-dev": {
-
+        "red-jasmine/support": "1.0.x-dev"
     },
     "autoload": {
         "psr-4": {
-            "RedJasmine\\User\\": "src/",
-            "RedJasmine\\User\\Database\\Factories\\": "database/factories/"
+            "RedJasmine\\UserCore\\": "src/",
+            "RedJasmine\\UserCore\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "RedJasmine\\User\\Tests\\": "tests/"
+            "RedJasmine\\UserCore\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -54,8 +49,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "RedJasmine\\User\\UserPackageServiceProvider",
-                "RedJasmine\\User\\Application\\UserApplicationServiceProvider"
+                "RedJasmine\\UserCore\\UserCorePackageServiceProvider"
             ]
         },
         "branch-alias": {

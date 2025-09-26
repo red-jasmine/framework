@@ -7,11 +7,11 @@ use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\User\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\User\Domain\Services\Login\UserLoginService;
 use RedJasmine\User\Domain\Services\Register\UserRegisterService;
+use RedJasmine\UserCore\Domain\Data\UserData;
 use Throwable;
 
 class UserLoginOrRegisterCommandHandler extends CommandHandler

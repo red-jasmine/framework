@@ -5,7 +5,7 @@ namespace Workbench\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use RedJasmine\User\Domain\Enums\AccountTypeEnum;
+use RedJasmine\UserCore\Domain\Enums\AccountTypeEnum;
 use Workbench\App\Models\User;
 
 /**

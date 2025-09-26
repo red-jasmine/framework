@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\User\Domain\Enums;
+namespace RedJasmine\UserCore\Domain\Enums;
 
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 

@@ -1,13 +1,19 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use RedJasmine\Organization\Domain\Models\Enums\MemberStatusEnum;
+use RedJasmine\UserCore\UserMigration;
 
-return new class extends Migration {
+return new class extends UserMigration {
+
+    protected string $name = 'member';
+    protected string $label = '成员';
+
     public function up() : void
     {
+        parent::up();
+
         Schema::create('members', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->unsignedBigInteger('org_id')->default(0)->comment('组织ID');
@@ -48,7 +54,7 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('members');
+        parent::down();
     }
 };
 

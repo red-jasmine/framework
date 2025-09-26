@@ -1,9 +1,9 @@
 <?php
 
-namespace RedJasmine\User\Domain\Data;
+namespace RedJasmine\UserCore\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
-use RedJasmine\User\Domain\Enums\UserGenderEnum;
+use RedJasmine\UserCore\Domain\Enums\UserGenderEnum;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

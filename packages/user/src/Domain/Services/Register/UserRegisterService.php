@@ -4,11 +4,11 @@ namespace RedJasmine\User\Domain\Services\Register;
 
 use Illuminate\Support\Str;
 use RedJasmine\Support\Foundation\Service\Service;
-use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
 use RedJasmine\User\Domain\Services\Register\Facades\UserRegisterServiceProvider;
+use RedJasmine\UserCore\Domain\Data\UserData;
 
 /**
  * 注册服务

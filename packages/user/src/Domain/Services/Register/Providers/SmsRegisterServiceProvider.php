@@ -6,11 +6,11 @@ use RedJasmine\Captcha\Application\Services\CaptchaApplicationService;
 use RedJasmine\Captcha\Application\Services\Commands\CaptchaCreateCommand;
 use RedJasmine\Captcha\Application\Services\Commands\CaptchaVerifyCommand;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
-use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Exceptions\UserRegisterException;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
+use RedJasmine\UserCore\Domain\Data\UserData;
 
 class SmsRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {

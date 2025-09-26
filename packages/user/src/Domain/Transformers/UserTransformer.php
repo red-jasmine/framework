@@ -2,12 +2,10 @@
 
 namespace RedJasmine\User\Domain\Transformers;
 
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
-use RedJasmine\User\Domain\Data\UserBaseInfoData;
-use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\UserCore\Domain\Data\UserBaseInfoData;
+use RedJasmine\UserCore\Domain\Data\UserData;
 
 class UserTransformer implements TransformerInterface
 {

@@ -1,10 +1,8 @@
 <?php
 
-namespace RedJasmine\User\Domain\Models;
+namespace RedJasmine\UserCore\Domain\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -14,46 +12,26 @@ use RedJasmine\Support\Domain\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\Traits\HasTags;
-use RedJasmine\User\Domain\Events\UseCancelEvent;
-use RedJasmine\User\Domain\Events\UserLoginEvent;
-use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use RedJasmine\UserCore\Domain\Data\UserBaseInfoData;
 use RedJasmine\UserCore\Domain\Enums\AccountTypeEnum;
 use RedJasmine\UserCore\Domain\Enums\UserGenderEnum;
 use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
-/**
- * @property string $phone
- * @property string $name
- * @property string $invitation_code
- */
 class User extends Authenticatable implements JWTSubject, UserInterface, OperatorInterface
 {
 
     use HasOperator;
 
-    public static string $tagModelClass = UserTag::class;
-    public static string $tagTable      = 'user_tag_pivot';
 
     use HasSnowflakeId;
 
     use Notifiable;
 
 
-    use HasTags;
+    public    $incrementing         = false;
+    protected $withOperatorNickname = true;
 
-    public static string $groupModelClass      = UserGroup::class;
-    public               $incrementing         = false;
-    protected            $withOperatorNickname = true;
-
-    protected $dispatchesEvents = [
-        'login'    => UserLoginEvent::class,
-        'register' => UserRegisteredEvent::class,
-        'cancel'   => UseCancelEvent::class,
-    ];
 
     protected $fillable = [
         'email',
@@ -62,10 +40,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         'password',
     ];
 
-    protected static function boot() : void
-    {
-        parent::boot();
-    }
 
     public function isAdmin()
     {
@@ -78,8 +52,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
 
         if (!$instance->exists) {
             $instance->setUniqueIds();
-            $instance->setRelation('tags', Collection::make());
-
         }
         return $instance;
     }
@@ -162,10 +134,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         $this->email = $email;
     }
 
-    public function group() : BelongsTo
-    {
-        return $this->belongsTo(static::$groupModelClass, 'group_id', 'id');
-    }
 
     /**
      * 注销账户
@@ -215,16 +183,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         return $this->nickname;
     }
 
-    public function getInvitationCode() : string
-    {
-        return $this->invitation_code;
-    }
-
-    public function setInvitationCode(string $invitation_code) : static
-    {
-        $this->invitation_code = $invitation_code;
-        return $this;
-    }
 
     public function getUserData() : array
     {

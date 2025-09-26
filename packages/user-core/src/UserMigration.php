@@ -1,14 +1,15 @@
 <?php
 
-namespace RedJasmine\User\Migrations;
+namespace RedJasmine\UserCore;
 
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use RedJasmine\User\Domain\Enums\AccountTypeEnum;
+use RedJasmine\UserCore\Domain\Enums\AccountTypeEnum;
+use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
 
-class UserMigration extends \Illuminate\Database\Migrations\Migration
+class UserMigration extends Migration
 {
     protected string $name  = 'user';
     protected string $label = '用户';
@@ -22,7 +23,7 @@ class UserMigration extends \Illuminate\Database\Migrations\Migration
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
 
             // 账号信息
-            $table->string('name', 64)->comment('账号');
+            $table->string('name', 64)->comment('帐号');
             $table->string('phone')->nullable()->comment('*手机号');
             $table->string('email')->nullable()->comment('*邮箱');
             $table->string('password')->nullable()->comment('密码');

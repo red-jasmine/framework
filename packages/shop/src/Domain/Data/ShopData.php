@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Shop\Domain\Data;
 
-use RedJasmine\User\Domain\Data\UserData;
+use RedJasmine\UserCore\Domain\Data\UserData;
 
 class ShopData extends UserData
 {

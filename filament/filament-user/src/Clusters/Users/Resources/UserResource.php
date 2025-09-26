@@ -15,11 +15,11 @@ use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Pages;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\RelationManagers;
 use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
-use RedJasmine\User\Domain\Data\UserData;
-use RedJasmine\User\Domain\Enums\UserGenderEnum;
-use RedJasmine\User\Domain\Enums\UserStatusEnum;
-use RedJasmine\User\Domain\Enums\AccountTypeEnum;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\UserCore\Domain\Data\UserData;
+use RedJasmine\UserCore\Domain\Enums\AccountTypeEnum;
+use RedJasmine\UserCore\Domain\Enums\UserGenderEnum;
+use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
 
 class UserResource extends Resource implements HasShieldPermissions
 {

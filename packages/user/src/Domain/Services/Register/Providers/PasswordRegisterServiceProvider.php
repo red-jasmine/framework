@@ -2,11 +2,11 @@
 
 namespace RedJasmine\User\Domain\Services\Register\Providers;
 
-use RedJasmine\User\Domain\Data\UserData;
 use RedJasmine\User\Domain\Exceptions\UserRegisterException;
 use RedJasmine\User\Domain\Repositories\UserRepositoryInterface;
 use RedJasmine\User\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\User\Domain\Services\Register\Data\UserRegisterData;
+use RedJasmine\UserCore\Domain\Data\UserData;
 
 class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInterface
 {

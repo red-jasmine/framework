@@ -6,9 +6,6 @@ use Filament\Forms;
 use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\Commands\UserSetAccountCommand;
-use RedJasmine\User\Application\Services\Commands\UserSetStatusCommand;
-use RedJasmine\User\Application\Services\UserApplicationService;
-use RedJasmine\User\Domain\Enums\UserStatusEnum;
 
 class UserSetAccountAction extends Action
 {

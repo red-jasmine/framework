@@ -2,7 +2,7 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\User\Domain\Data\UserBaseInfoData;
+use RedJasmine\UserCore\Domain\Data\UserBaseInfoData;
 
 class UserUpdateBaseInfoCommand extends UserBaseInfoData
 {
