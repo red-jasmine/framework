@@ -5,7 +5,7 @@ namespace RedJasmine\User\Migrations;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\UserCore\UserMigration;
+use RedJasmine\UserCore\Infrastructure\Migrations\UserMigration;
 
 abstract class Migration extends UserMigration
 {
@@ -19,7 +19,6 @@ abstract class Migration extends UserMigration
 
         Schema::create($this->name.'_groups', function (Blueprint $table) {
             $table->category($this->label.'分组');
-
         });
 
         Schema::create($this->name.'_tags', function (Blueprint $table) {

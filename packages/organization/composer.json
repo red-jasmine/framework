@@ -17,8 +17,7 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
-        "laravel/framework": ">=12.0",
+        "red-jasmine/user-core": "^1.0-dev",
         "red-jasmine/support": "^1.0"
     },
     "autoload": {
@@ -34,6 +33,10 @@
                 "RedJasmine\\Organization\\Domain\\OrganizationDomainServiceProvider",
                 "RedJasmine\\Organization\\Application\\OrganizationApplicationServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     },
     "minimum-stability": "dev",

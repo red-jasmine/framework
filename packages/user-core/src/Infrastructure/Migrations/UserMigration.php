@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\UserCore;
+namespace RedJasmine\UserCore\Infrastructure\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,10 +14,15 @@ class UserMigration extends Migration
     protected string $name  = 'user';
     protected string $label = '用户';
 
+
+    protected function getTableName():string
+    {
+        return Str::plural($this->name);
+    }
     public function up(): void
     {
-        Schema::dropIfExists(Str::plural($this->name));
-        Schema::create(Str::plural($this->name), function (Blueprint $table) {
+        Schema::dropIfExists($this->getTableName());
+        Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->string('account_type', 64)->nullable()->comment(AccountTypeEnum::comments('账号类型'));
             $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
@@ -68,6 +73,6 @@ class UserMigration extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(Str::plural($this->name));
+        Schema::dropIfExists($this->getTableName());
     }
 }
