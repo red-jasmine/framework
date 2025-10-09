@@ -5,17 +5,25 @@ namespace RedJasmine\Organization\Application\Services\Member;
 use RedJasmine\Organization\Domain\Models\Member;
 use RedJasmine\Organization\Domain\Repositories\MemberRepositoryInterface;
 use RedJasmine\Organization\Domain\Transformer\MemberTransformer;
-use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\User\Application\Services\BaseUserApplicationService;
 
-class MemberApplicationService extends ApplicationService
+class MemberApplicationService extends BaseUserApplicationService
 {
+
+    public static string    $hookNamePrefix = 'organization.application.member';
+
+    protected static string $modelClass     = Member::class;
+
     public function __construct(
         public MemberRepositoryInterface $repository,
         public MemberTransformer $transformer
     ) {
     }
 
-    protected static string $modelClass = Member::class;
+    public function getGuard() : string
+    {
+        return 'member';
+    }
 }
 
 

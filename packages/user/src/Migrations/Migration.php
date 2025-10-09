@@ -17,6 +17,9 @@ abstract class Migration extends UserMigration
     {
         parent::up();
 
+        Schema::table($this->getTableName(), function (Blueprint $table) {
+            $table->unique(['name'],'uk_name');
+        });
         Schema::create($this->name.'_groups', function (Blueprint $table) {
             $table->category($this->label.'分组');
         });
