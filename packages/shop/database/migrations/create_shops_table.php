@@ -1,8 +1,6 @@
 <?php
 
-use RedJasmine\User\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use RedJasmine\User\Infrastructure\Migrations\Migration;
 
 return new class extends Migration
 {

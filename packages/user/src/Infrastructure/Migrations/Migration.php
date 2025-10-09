@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\User\Migrations;
+namespace RedJasmine\User\Infrastructure\Migrations;
 
 
 use Illuminate\Database\Schema\Blueprint;

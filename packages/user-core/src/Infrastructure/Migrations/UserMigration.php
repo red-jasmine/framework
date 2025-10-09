@@ -24,8 +24,8 @@ class UserMigration extends Migration
         Schema::dropIfExists($this->getTableName());
         Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('account_type', 64)->nullable()->comment(AccountTypeEnum::comments('账号类型'));
-            $table->string('status')->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
+            $table->enum('account_type',AccountTypeEnum::values())->default(AccountTypeEnum::PERSONAL)->comment(AccountTypeEnum::comments('账号类型'));
+            $table->enum('status',UserStatusEnum::values())->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
 
             // 账号信息
             $table->string('name', 64)->comment('帐号');
