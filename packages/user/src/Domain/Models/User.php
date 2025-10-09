@@ -45,6 +45,11 @@ class User extends UserCoreUser
         return $instance;
     }
 
+    public function setGroup(?int $groupId = null) : void
+    {
+        $this->group_id = $groupId;
+    }
+
     public function group() : BelongsTo
     {
         return $this->belongsTo(static::$groupModelClass, 'group_id', 'id');

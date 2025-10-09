@@ -114,12 +114,6 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         $this->password            = $password;
         $this->password_updated_at = Carbon::now();
     }
-
-    public function setGroup(?int $groupId = null) : void
-    {
-        $this->group_id = $groupId;
-    }
-
     public function setStatus(UserStatusEnum $status) : void
     {
         $this->status = $status;

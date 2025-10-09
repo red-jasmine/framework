@@ -32,7 +32,6 @@ return [
         'city'              => '城市',
         'district'          => '区县',
         'school'            => '学校',
-        'group_id'          => '分组ID',
         'ip'                => 'IP',
 
 
