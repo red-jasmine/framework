@@ -5,7 +5,7 @@ namespace RedJasmine\UserCore\Domain\Services\ChangeAccount;
 use RedJasmine\UserCore\Domain\Data\UserSetAccountData;
 use RedJasmine\UserCore\Domain\Exceptions\UserRegisterException;
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\Contracts\UserChannelAccountServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\Data\UserChangeAccountData;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\Facades\UserChangeAccountServiceProvider;
@@ -13,7 +13,7 @@ use RedJasmine\UserCore\Domain\Services\ChangeAccount\Facades\UserChangeAccountS
 class UserChangeAccountService implements UserChannelAccountServiceProviderInterface
 {
     public function __construct(
-        protected UserRepositoryInterface $userRepository
+        protected BaseUserRepositoryInterface $userRepository
     ) {
     }
 

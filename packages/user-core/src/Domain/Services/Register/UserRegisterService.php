@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\UserCore\Domain\Models\User;
 use RedJasmine\UserCore\Domain\Data\UserData;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Register\Data\UserRegisterData;
 use RedJasmine\UserCore\Domain\Services\Register\Facades\UserRegisterServiceProvider;
 
@@ -17,7 +17,7 @@ class UserRegisterService extends Service
 {
 
     public function __construct(
-        protected UserRepositoryInterface $repository,
+        protected BaseUserRepositoryInterface $repository,
         protected string $guard,
         protected User $newUser,
     ) {

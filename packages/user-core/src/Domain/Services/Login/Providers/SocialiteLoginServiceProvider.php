@@ -6,7 +6,7 @@ use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserLoginCommand
 use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\UserCore\Domain\Exceptions\UserNotFoundException;
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Data\UserLoginData;
 use Throwable;
@@ -15,10 +15,10 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
 {
 
 
-    protected UserRepositoryInterface $repository;
+    protected BaseUserRepositoryInterface $repository;
     protected string                      $guard;
 
-    public function init(UserRepositoryInterface $repository, string $guard) : static
+    public function init(BaseUserRepositoryInterface $repository, string $guard) : static
     {
         $this->repository = $repository;
 
@@ -52,7 +52,7 @@ class SocialiteLoginServiceProvider implements UserLoginServiceProviderInterface
         $socialiteUser = app(SocialiteUserApplicationService::class)->login($command);
         // 根据社交账号绑定的信息 查询用户信息
         try {
-            $user = app(UserRepositoryInterface::class)->find($socialiteUser->owner_id);
+            $user = app(BaseUserRepositoryInterface::class)->find($socialiteUser->owner_id);
         } catch (Throwable $throwable) {
             $exception = new UserNotFoundException();
             $exception->setSocialiteUser($socialiteUser);

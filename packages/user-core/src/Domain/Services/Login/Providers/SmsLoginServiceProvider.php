@@ -8,17 +8,17 @@ use RedJasmine\Captcha\Application\Services\Commands\CaptchaVerifyCommand;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\UserCore\Domain\Exceptions\LoginException;
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Data\UserLoginData;
 
 class SmsLoginServiceProvider implements UserLoginServiceProviderInterface
 {
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserRepositoryInterface $repository;
+    protected BaseUserRepositoryInterface $repository;
     protected string                      $guard;
 
-    public function init(UserRepositoryInterface $repository, string $guard) : static
+    public function init(BaseUserRepositoryInterface $repository, string $guard) : static
     {
         $this->repository = $repository;
 

@@ -56,7 +56,7 @@ class JwtUser extends Authenticatable implements JWTSubject, UserInterface, Belo
 
     public function getType() : string
     {
-        return $this->userType;
+        return $this->type;
     }
 
     // 合并属性

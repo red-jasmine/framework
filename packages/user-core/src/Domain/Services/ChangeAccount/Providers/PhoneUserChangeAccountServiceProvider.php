@@ -8,7 +8,7 @@ use RedJasmine\Captcha\Application\Services\Commands\CaptchaVerifyCommand;
 use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
 use RedJasmine\UserCore\Domain\Models\User;
 use RedJasmine\UserCore\Domain\Exceptions\UserRegisterException;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\Contracts\UserChannelAccountServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\Data\UserChangeAccountData;
 
@@ -16,13 +16,13 @@ class PhoneUserChangeAccountServiceProvider implements UserChannelAccountService
 {
 
     protected CaptchaApplicationService   $captchaApplicationService;
-    protected UserRepositoryInterface $userRepository;
+    protected BaseUserRepositoryInterface $userRepository;
 
     public function __construct()
     {
 
         $this->captchaApplicationService = app(CaptchaApplicationService::class);
-        $this->userRepository        = app(UserRepositoryInterface::class);
+        $this->userRepository        = app(BaseUserRepositoryInterface::class);
     }
 
     public const  NAME = 'phone';

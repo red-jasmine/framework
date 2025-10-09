@@ -4,7 +4,7 @@ namespace RedJasmine\UserCore\Domain\Services\Register\Providers;
 
 use RedJasmine\UserCore\Domain\Data\UserData;
 use RedJasmine\UserCore\Domain\Exceptions\UserRegisterException;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Register\Contracts\UserRegisterServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\Register\Data\UserRegisterData;
 
@@ -15,10 +15,10 @@ class PasswordRegisterServiceProvider implements UserRegisterServiceProviderInte
     public const  NAME = 'password';
 
 
-    protected UserRepositoryInterface $repository;
-    protected string                  $guard;
+    protected BaseUserRepositoryInterface $repository;
+    protected string                      $guard;
 
-    public function init(UserRepositoryInterface $repository, string $guard) : static
+    public function init(BaseUserRepositoryInterface $repository, string $guard) : static
     {
         $this->repository = $repository;
 

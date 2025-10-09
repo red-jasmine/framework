@@ -6,7 +6,7 @@ namespace RedJasmine\UserCore\Domain\Services\Login;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\UserCore\Domain\Exceptions\LoginException;
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Data\UserTokenData;
 use RedJasmine\UserCore\Domain\Services\Login\Facades\UserLoginServiceProvider;
 
@@ -14,7 +14,7 @@ class UserLoginService
 {
 
     public function __construct(
-        protected UserRepositoryInterface $repository,
+        protected BaseUserRepositoryInterface $repository,
         protected string $guard
     ) {
     }

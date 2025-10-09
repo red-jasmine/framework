@@ -8,7 +8,7 @@ use RedJasmine\UserCore\Domain\Models\User;
 /**
  * @method User  find($id)
  */
-interface UserRepositoryInterface extends RepositoryInterface
+interface BaseUserRepositoryInterface extends RepositoryInterface
 {
     public function findByName(string $name) : ?User;
 

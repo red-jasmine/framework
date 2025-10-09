@@ -3,7 +3,7 @@
 namespace RedJasmine\UserCore\Domain\Services\ForgotPassword;
 
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\ForgotPassword\Contracts\UserForgotPasswordServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\ForgotPassword\Data\ForgotPasswordData;
 use RedJasmine\UserCore\Domain\Services\ForgotPassword\Facades\UserForgotPasswordServiceProvider;
@@ -12,7 +12,7 @@ class ForgotPasswordService
 {
 
     public function __construct(
-        public UserRepositoryInterface $repository,
+        public BaseUserRepositoryInterface $repository,
     ) {
     }
 

@@ -2,7 +2,9 @@
 
 namespace RedJasmine\User\Domain\Repositories;
 
-interface UserRepositoryInterface extends \RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
+
+interface UserRepositoryInterface extends BaseUserRepositoryInterface
 {
 
 }

@@ -30,11 +30,11 @@ use RedJasmine\UserCore\Application\Services\Commands\SetPassword\UserSetPasswor
 use RedJasmine\UserCore\Application\Services\Commands\SetPassword\UserSetStatusCommand;
 use RedJasmine\UserCore\Application\Services\Commands\SetStatus\UserSetPasswordCommand;
 use RedJasmine\UserCore\Application\Services\Commands\SetStatus\UserSetStatusCommandHandler;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Data\UserTokenData;
 
 /**
- * @property UserRepositoryInterface $repository
+ * @property BaseUserRepositoryInterface $repository
  * @see UserRegisterCommandHandler::handle()
  * @method UserTokenData register(UserRegisterCommand $command)
  * @see UserRegisterCaptchaCommandHandler::handle()

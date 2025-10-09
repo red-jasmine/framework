@@ -5,7 +5,7 @@ namespace RedJasmine\UserCore\Domain\Services\Login\Providers;
 use Illuminate\Support\Facades\Auth;
 use RedJasmine\UserCore\Domain\Exceptions\LoginException;
 use RedJasmine\UserCore\Domain\Models\User;
-use RedJasmine\UserCore\Domain\Repositories\UserRepositoryInterface;
+use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 use RedJasmine\UserCore\Domain\Services\Login\Data\UserLoginData;
 
@@ -14,10 +14,10 @@ class PasswordLoginServiceProvider implements UserLoginServiceProviderInterface
     public const  NAME = 'password';
 
 
-    protected UserRepositoryInterface $repository;
-    protected string                  $guard;
+    protected BaseUserRepositoryInterface $repository;
+    protected string                      $guard;
 
-    public function init(UserRepositoryInterface $repository, string $guard) : static
+    public function init(BaseUserRepositoryInterface $repository, string $guard) : static
     {
         $this->repository = $repository;
 
