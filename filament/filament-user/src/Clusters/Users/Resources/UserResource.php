@@ -13,9 +13,9 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Pages;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\RelationManagers;
-use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
 use RedJasmine\User\Domain\Models\User;
+use RedJasmine\UserCore\Application\Services\Commands\SetBaseInfo\UserSetBaseInfoCommand;
 use RedJasmine\UserCore\Domain\Data\UserData;
 use RedJasmine\UserCore\Domain\Enums\AccountTypeEnum;
 use RedJasmine\UserCore\Domain\Enums\UserGenderEnum;
@@ -38,7 +38,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
     public static string $createCommand = UserData::class;
 
-    public static string $updateCommand = UserUpdateBaseInfoCommand::class;
+    public static string $updateCommand = UserSetBaseInfoCommand::class;
 
     protected static ?string $model = User::class;
 

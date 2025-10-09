@@ -3,7 +3,7 @@
 namespace RedJasmine\User\Domain;
 
 use Illuminate\Support\ServiceProvider;
-use RedJasmine\User\Domain\Services\Login\Providers\UserLoginServiceProviderManager;
+use RedJasmine\UserCore\Domain\Services\Login\Providers\UserLoginServiceProviderManager;
 use function config;
 
 class UserDomainServiceProvider extends ServiceProvider

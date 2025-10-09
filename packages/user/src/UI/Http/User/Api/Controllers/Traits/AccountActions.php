@@ -5,13 +5,13 @@ namespace RedJasmine\User\UI\Http\User\Api\Controllers\Traits;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Application\Services\Commands\UserSetPasswordCommand;
 use RedJasmine\User\Application\Services\Commands\UserUnbindSocialiteCommand;
-use RedJasmine\User\Application\Services\Commands\UserUpdateBaseInfoCommand;
 use RedJasmine\User\Application\Services\Queries\GetSocialitesQuery;
 use RedJasmine\User\UI\Http\User\Api\Requests\PasswordRequest;
 use RedJasmine\User\UI\Http\User\Api\Resources\UserBaseResource;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
+use RedJasmine\UserCore\Application\Services\Commands\SetBaseInfo\UserSetBaseInfoCommand;
+use RedJasmine\UserCore\Application\Services\Commands\SetStatus\UserSetPasswordCommand;
 
 /**
  * @property BaseUserApplicationService $service
@@ -55,7 +55,7 @@ trait AccountActions
 
         $request->offsetSet('id', Auth::id());
 
-        $this->service->updateBaseInfo(UserUpdateBaseInfoCommand::from($request));
+        $this->service->updateBaseInfo(UserSetBaseInfoCommand::from($request));
 
         return static::success();
     }

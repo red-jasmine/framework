@@ -4,9 +4,9 @@ namespace RedJasmine\User\UI\Http\User\Api\Controllers\Traits;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Application\Services\Commands\ForgotPasswordCaptchaCommand;
-use RedJasmine\User\Application\Services\Commands\ForgotPasswordCommand;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
+use RedJasmine\UserCore\Application\Services\Commands\ForgotPassword\ForgotPasswordCaptchaCommand;
+use RedJasmine\UserCore\Application\Services\Commands\ForgotPassword\ForgotPasswordCommand;
 
 /**
  * @property BaseUserApplicationService $service

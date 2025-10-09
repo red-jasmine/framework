@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\
 use Filament\Forms;
 use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\Commands\UserSetAccountCommand;
+use RedJasmine\UserCore\Application\Services\Commands\SetAccount\UserSetAccountCommand;
 
 class UserSetAccountAction extends Action
 {

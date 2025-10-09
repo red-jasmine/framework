@@ -2,11 +2,9 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Application\Services\UserApplicationService;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
 
 class UserSetTagsCommandHandler extends CommandHandler

@@ -4,8 +4,8 @@ namespace RedJasmine\User\Application\Services\Queries;
 
 use RedJasmine\Support\Application\Queries\QueryHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
 use RedJasmine\User\Domain\Services\UserSocialiteService;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 
 class GetSocialitesQueryHandler extends QueryHandler
 {

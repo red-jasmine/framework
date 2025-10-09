@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\
 use Filament\Forms;
 use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\Commands\UserSetStatusCommand;
+use RedJasmine\UserCore\Application\Services\Commands\SetPassword\UserSetStatusCommand;
 use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
 
 class UserSetStatusAction extends Action

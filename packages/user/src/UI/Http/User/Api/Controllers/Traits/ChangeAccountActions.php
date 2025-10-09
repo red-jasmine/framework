@@ -4,10 +4,10 @@ namespace RedJasmine\User\UI\Http\User\Api\Controllers\Traits;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommand;
-use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountChangeCommand;
-use RedJasmine\User\Application\Services\Commands\ChangeAccount\ChangeAccountVerifyCommand;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
+use RedJasmine\UserCore\Application\Services\Commands\ChangeAccount\ChangeAccountCaptchaCommand;
+use RedJasmine\UserCore\Application\Services\Commands\ChangeAccount\ChangeAccountChangeCommand;
+use RedJasmine\UserCore\Application\Services\Commands\ChangeAccount\ChangeAccountVerifyCommand;
 
 /**
  * @property BaseUserApplicationService $service

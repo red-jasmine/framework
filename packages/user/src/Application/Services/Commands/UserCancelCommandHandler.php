@@ -4,7 +4,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Exceptions\AbstractException;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
 
 class UserCancelCommandHandler extends CommandHandler
@@ -16,6 +16,13 @@ class UserCancelCommandHandler extends CommandHandler
     }
 
 
+    /**
+     * @param  UserCancelCommand  $command
+     *
+     * @return bool
+     * @throws AbstractException
+     * @throws Throwable
+     */
     public function handle(UserCancelCommand $command) : bool
     {
         $this->beginDatabaseTransaction();

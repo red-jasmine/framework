@@ -4,10 +4,10 @@ namespace RedJasmine\User\UI\Http\User\Api\Controllers\Traits;
 
 
 use Illuminate\Http\JsonResponse;
-use RedJasmine\User\Application\Services\BaseUserApplicationService;
-use RedJasmine\User\Application\Services\Commands\UserRegisterCaptchaCommand;
-use RedJasmine\User\Application\Services\Commands\UserRegisterCommand;
 use RedJasmine\User\UI\Http\User\Api\Requests\RegisterRequest;
+use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
+use RedJasmine\UserCore\Application\Services\Commands\Register\UserRegisterCaptchaCommand;
+use RedJasmine\UserCore\Application\Services\Commands\Register\UserRegisterCommand;
 
 /**
  * @property BaseUserApplicationService $service
