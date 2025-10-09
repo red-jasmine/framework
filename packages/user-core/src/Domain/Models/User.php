@@ -3,6 +3,7 @@
 namespace RedJasmine\UserCore\Domain\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -23,6 +24,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
 
     use HasOperator;
 
+    use SoftDeletes;
 
     use HasSnowflakeId;
 
@@ -114,6 +116,7 @@ class User extends Authenticatable implements JWTSubject, UserInterface, Operato
         $this->password            = $password;
         $this->password_updated_at = Carbon::now();
     }
+
     public function setStatus(UserStatusEnum $status) : void
     {
         $this->status = $status;

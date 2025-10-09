@@ -14,18 +14,14 @@ class UserMigration extends Migration
     protected string $name  = 'user';
     protected string $label = '用户';
 
-
-    protected function getTableName():string
-    {
-        return Str::plural($this->name);
-    }
-    public function up(): void
+    public function up() : void
     {
         Schema::dropIfExists($this->getTableName());
         Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->enum('account_type',AccountTypeEnum::values())->default(AccountTypeEnum::PERSONAL)->comment(AccountTypeEnum::comments('账号类型'));
-            $table->enum('status',UserStatusEnum::values())->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
+            $table->enum('account_type',
+                AccountTypeEnum::values())->default(AccountTypeEnum::PERSONAL)->comment(AccountTypeEnum::comments('账号类型'));
+            $table->enum('status', UserStatusEnum::values())->default(UserStatusEnum::ACTIVATED)->comment(UserStatusEnum::comments('状态'));
 
             // 账号信息
             $table->string('name', 64)->comment('帐号');
@@ -64,6 +60,9 @@ class UserMigration extends Migration
             $table->timestamp('active_at')->nullable()->comment('活跃时间');
 
             $table->operator();
+            $table->softDeletes();
+
+
 
             $table->index(['name'], 'idx_name');
             $table->index(['phone'], 'idx_phone');
@@ -73,7 +72,12 @@ class UserMigration extends Migration
         });
     }
 
-    public function down(): void
+    protected function getTableName() : string
+    {
+        return Str::plural($this->name);
+    }
+
+    public function down() : void
     {
         Schema::dropIfExists($this->getTableName());
     }
