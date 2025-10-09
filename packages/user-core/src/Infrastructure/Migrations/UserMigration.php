@@ -54,6 +54,8 @@ class UserMigration extends Migration
             $table->timestamp('registered_at')->nullable()->comment('注册时间');
             // 注销时间
             $table->timestamp('canceled_at')->nullable()->comment('注销时间');
+            // 密码更新时间
+            $table->timestamp('password_updated_at')->nullable()->comment('密码更新时间');
             // 邀请人
             $table->userMorphs('inviter', '邀请人');
 
