@@ -12,8 +12,8 @@ class ProductExtensionResource extends JsonResource
     {
         return [
             'id'               => $this->id,
-            'basic_props'      => $this->basic_props,
-            'sale_props'       => $this->sale_props,
+            'basic_attrs'      => $this->basic_attrs,
+            'sale_attrs'       => $this->sale_attrs,
             'keywords'         => $this->keywords,
             'description'      => $this->description,
             'images'           => $this->images,

@@ -10,7 +10,7 @@ use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttribute
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeValueUpdatePipeline;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -38,8 +38,8 @@ class ProductAttributeValueApplicationService extends ApplicationService
 
     public function newModel($data = null) : Model
     {
-        if ($model = $this->repository->findByNameInProperty($data->pid, $data->name)) {
-            throw new ProductPropertyException('名称已存在');
+        if ($model = $this->repository->findByNameInAttribute($data->pid, $data->name)) {
+            throw new ProductAttributeException('名称已存在');
             return $model;
         }
         return parent::newModel($data);

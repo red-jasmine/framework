@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\SeriesController;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\SkuController;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\ProductController;
-use RedJasmine\Product\UI\Http\Owner\Api\Controllers\PropertyController;
-use RedJasmine\Product\UI\Http\Owner\Api\Controllers\PropertyGroupController;
-use RedJasmine\Product\UI\Http\Owner\Api\Controllers\PropertyValueController;
+use RedJasmine\Product\UI\Http\Owner\Api\Controllers\AttributeController;
+use RedJasmine\Product\UI\Http\Owner\Api\Controllers\AttributeGroupController;
+use RedJasmine\Product\UI\Http\Owner\Api\Controllers\AttributeValueController;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\BrandController;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\CategoryController;
 use RedJasmine\Product\UI\Http\Owner\Api\Controllers\GroupController;
@@ -23,9 +23,9 @@ class ProductOwnerRoute
             Route::apiResource('brands', BrandController::class)->only([ 'index', 'show' ])->names('seller.product.brands.index');
 
 
-            Route::apiResource('property/properties', PropertyController::class)->only([ 'index', 'show' ])->names('seller.product.property.properties');
-            Route::apiResource('property/values', PropertyValueController::class)->only([ 'index', 'show' ])->names('seller.product.property.values');
-            Route::apiResource('property/groups', PropertyGroupController::class)->only([ 'index', 'show' ])->names('seller.product.property.groups');
+            Route::apiResource('attribute/attributes', AttributeController::class)->only([ 'index', 'show' ])->names('seller.product.attribute.attributes');
+            Route::apiResource('attribute/values', AttributeValueController::class)->only([ 'index', 'show' ])->names('seller.product.attribute.values');
+            Route::apiResource('attribute/groups', AttributeGroupController::class)->only([ 'index', 'show' ])->names('seller.product.attribute.groups');
 
 
             Route::get('categories/tree', [ CategoryController::class, 'tree' ])->name('seller.product.categories.tree');

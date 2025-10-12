@@ -9,10 +9,10 @@ use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Product\PropertyFormatter;
+use RedJasmine\Product\Domain\Product\AttributeFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;
@@ -27,8 +27,8 @@ class ProductSetStatusCommandHandler extends CommandHandler
     public function __construct(
         protected ProductApplicationService $service,
         protected StockApplicationService $stockCommandService,
-        protected PropertyFormatter $propertyFormatter,
-        protected ProductAttributeValidateService $propertyValidateService,
+        protected AttributeFormatter $attributeFormatter,
+        protected ProductAttributeValidateService $attributeValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer
@@ -45,7 +45,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
      * @throws Throwable
      * @throws JsonException
      * @throws ProductException
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      * @throws StockException
      */
     public function handle(ProductSetStatusCommand $command) : ?Product

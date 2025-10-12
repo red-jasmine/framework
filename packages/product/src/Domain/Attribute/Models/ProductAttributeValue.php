@@ -58,7 +58,7 @@ class ProductAttributeValue extends Model implements OperatorInterface
     }
 
 
-    public function property() : BelongsTo
+    public function attribute() : BelongsTo
     {
         return $this->belongsTo(ProductAttribute::class, 'pid', 'id');
     }

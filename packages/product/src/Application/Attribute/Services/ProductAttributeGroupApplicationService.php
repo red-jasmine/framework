@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeG
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupUpdateCommand;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeGroup;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeGroupRepositoryInterface;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
@@ -37,7 +37,7 @@ class ProductAttributeGroupApplicationService extends ApplicationService
     public function newModel($data = null) : Model
     {
         if ($model = $this->repository->findByName($data->name)) {
-            throw new ProductPropertyException('名称已存在');
+            throw new ProductAttributeException('名称已存在');
 
         }
         return parent::newModel($data);

@@ -9,13 +9,13 @@ use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\ProductSku;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 
 class ProductTransformer
 {
 
     public function __construct(
-        protected ProductAttributeValidateService $propertyValidateService,
+        protected ProductAttributeValidateService $attributeValidateService,
 
     ) {
     }
@@ -27,7 +27,7 @@ class ProductTransformer
      *
      * @return Product
      * @throws JsonException
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
     public function transform(Product $product, Command $command) : Product
     {
@@ -45,7 +45,7 @@ class ProductTransformer
      * @param  Command  $command
      *
      * @return void
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
@@ -103,8 +103,8 @@ class ProductTransformer
         $product->extension->tools                = $command->tools;
         $product->extension->extra                = $command->extra;
         $product->extension->form                 = $command->form;
-        $product->extension->basic_props          = $this->propertyValidateService->basicProps($command->basicProps?->toArray() ?? []);
-        $product->extension->customize_props      = $command->customizeProps?->toArray() ?? [];
+        $product->extension->basic_attrs          = $this->attributeValidateService->basicProps($command->basicProps?->toArray() ?? []);
+        $product->extension->customize_attrs      = $command->customizeProps?->toArray() ?? [];
 
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
@@ -123,7 +123,7 @@ class ProductTransformer
      *
      * @return void
      * @throws JsonException
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
     protected function handleMultipleSpec(Product $product, Command $command) : void
     {
@@ -131,12 +131,12 @@ class ProductTransformer
         switch ($command->isMultipleSpec) {
             case true: // 多规格
 
-                $saleProps                      = $this->propertyValidateService->saleProps($command->saleProps->toArray());
-                $product->extension->sale_props = $saleProps->toArray();
+                $saleProps                      = $this->attributeValidateService->saleProps($command->saleProps->toArray());
+                $product->extension->sale_attrs = $saleProps->toArray();
                 // 验证规格
 
 
-                $this->propertyValidateService->validateSkus($saleProps, $command->skus);
+                $this->attributeValidateService->validateSkus($saleProps, $command->skus);
                 $command->skus?->each(function (Sku $skuData) use ($product) {
                     $sku = $product->skus
                                ->where('properties_sequence', $skuData->propertiesSequence)
@@ -175,7 +175,7 @@ class ProductTransformer
                 $product->cost_price            = $command->costPrice;
                 $product->market_price          = $command->marketPrice;
                 $product->safety_stock          = $command->safetyStock;
-                $product->extension->sale_props = [];
+                $product->extension->sale_attrs = [];
 
 
                 $defaultSku = $product->skus

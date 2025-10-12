@@ -20,10 +20,10 @@ interface ProductAttributeValueRepositoryInterface extends RepositoryInterface
      *
      * @return ProductAttributeValue
      */
-    public function findByNameInProperty(int $pid, string $name);
+    public function findByNameInAttribute(int $pid, string $name);
 
     /**
      * 在指定属性中根据ID数组查找属性值列表
      */
-    public function findByIdsInProperty(int $pid, array $ids);
+    public function findByIdsInAttribute(int $pid, array $ids);
 }

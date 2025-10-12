@@ -23,9 +23,9 @@ class ProductExtensionResource extends JsonResource
             'remarks'          => $this->remarks,
             'tools'            => $this->tools,
             'extra'          => $this->extra,
-            'basic_props'      => $this->basic_props,
-            'sale_props'       => $this->sale_props,
-            'customize_props'  => $this->customize_props,
+            'basic_attrs'      => $this->basic_attrs,
+            'sale_attrs'       => $this->sale_attrs,
+            'customize_attrs'  => $this->customize_attrs,
             'form'             => $this->form,
         ];
     }

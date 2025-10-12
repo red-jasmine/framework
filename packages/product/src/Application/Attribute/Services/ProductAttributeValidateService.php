@@ -9,10 +9,10 @@ use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
 use RedJasmine\Product\Domain\Product\Data\Sku;
-use RedJasmine\Product\Domain\Product\Models\ValueObjects\Property;
+use RedJasmine\Product\Domain\Product\Models\ValueObjects\Attribute;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
-use RedJasmine\Product\Domain\Product\PropertyFormatter;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 
 /**
  * 属性验证服务
@@ -20,9 +20,9 @@ use RedJasmine\Product\Exceptions\ProductPropertyException;
 class ProductAttributeValidateService
 {
     public function __construct(
-        protected ProductAttributeRepositoryInterface $propertyRepository,
+        protected ProductAttributeRepositoryInterface $attributeRepository,
         protected ProductAttributeValueRepositoryInterface $valueRepository,
-        protected PropertyFormatter $propertyFormatter,
+        protected AttributeFormatter $attributeFormatter,
     ) {
 
     }
@@ -30,60 +30,60 @@ class ProductAttributeValidateService
     /**
      * 基础属性验证
      *
-     * @param  array  $props
+     * @param  array  $attributes
      *
      * @return Collection
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
-    public function basicProps(array $props = []) : Collection
+    public function basicProps(array $attributes = []) : Collection
     {
 
-        $properties = $this->getProperties($props);
+        $attributeModels = $this->getAttributes($attributes);
 
-        $basicProps = collect();
-        foreach ($props as $prop) {
-            $basicProp = new Property();
+        $basicAttrs = collect();
+        foreach ($attributes as $attr) {
+            $basicAttr = new Attribute();
             /**
-             * @var $property ProductAttribute
+             * @var $attributeModel ProductAttribute
              */
-            $property          = $properties[$prop['pid']];
-            $basicProp->pid    = $property->id;
-            $basicProp->name   = $property->name;
-            $basicProp->unit   = $property->unit;
-            $basicProp->values = collect();
+            $attributeModel       = $attributeModels[$attr['pid']];
+            $basicAttr->pid       = $attributeModel->id;
+            $basicAttr->name      = $attributeModel->name;
+            $basicAttr->unit      = $attributeModel->unit;
+            $basicAttr->values    = collect();
 
-            $values = $prop['values'] ?? [];
+            $values = $attr['values'] ?? [];
 
-            switch ($property->type) {
+            switch ($attributeModel->type) {
                 case ProductAttributeTypeEnum::TEXT:
                 case ProductAttributeTypeEnum::DATE:
 
-                    $salePropValue        = new PropValue();
-                    $salePropValue->vid   = 0;
-                    $salePropValue->name  = (string) ($values[0]['name'] ?? '');
-                    $salePropValue->alias = (string) ($values[0]['alias'] ?? '');
-                    $basicProp->values->add($salePropValue);
-                    if (!$this->isAllowAlias($property)) {
-                        $salePropValue->alias = null;
+                    $saleAttrValue        = new PropValue();
+                    $saleAttrValue->vid   = 0;
+                    $saleAttrValue->name  = (string) ($values[0]['name'] ?? '');
+                    $saleAttrValue->alias = (string) ($values[0]['alias'] ?? '');
+                    $basicAttr->values->add($saleAttrValue);
+                    if (!$this->isAllowAlias($attributeModel)) {
+                        $saleAttrValue->alias = null;
                     }
                     break;
                 case ProductAttributeTypeEnum::SELECT:
 
-                    $propValues        = $this->valueRepository->findByIdsInProperty($basicProp->pid,
+                    $attrValues        = $this->valueRepository->findByIdsInAttribute($basicAttr->pid,
                         collect($values)->pluck('vid')->toArray())->keyBy('id');
-                    $basicProp->values = collect();
+                    $basicAttr->values = collect();
 
                     foreach ($values as $value) {
                         $vid                  = $value['vid'];
                         $alias                = $value['alias'] ?? '';
-                        $salePropValue        = new PropValue();
-                        $salePropValue->vid   = $vid;
-                        $salePropValue->name  = $propValues[$salePropValue->vid]->name;
-                        $salePropValue->alias = $alias;
-                        if (!$this->isAllowAlias($property)) {
-                            $salePropValue->alias = null;
+                        $saleAttrValue        = new PropValue();
+                        $saleAttrValue->vid   = $vid;
+                        $saleAttrValue->name  = $attrValues[$saleAttrValue->vid]->name;
+                        $saleAttrValue->alias = $alias;
+                        if (!$this->isAllowAlias($attributeModel)) {
+                            $saleAttrValue->alias = null;
                         }
-                        $basicProp->values->add($salePropValue);
+                        $basicAttr->values->add($saleAttrValue);
                     }
 
 
@@ -92,17 +92,17 @@ class ProductAttributeValidateService
 
 
             //
-            if ($basicProp->values->count() > 1 && !$this->isAllowMultipleValues($property)) {
-                throw new ProductPropertyException('属性不支持多选!');
+            if ($basicAttr->values->count() > 1 && !$this->isAllowMultipleValues($attributeModel)) {
+                throw new ProductAttributeException('属性不支持多选!');
             }
 
 
-            $basicProps->add($basicProp);
+            $basicAttrs->add($basicAttr);
 
         }
 
 
-        return $basicProps;
+        return $basicAttrs;
 
 
     }
@@ -110,74 +110,74 @@ class ProductAttributeValidateService
     /**
      * 获取属性
      *
-     * @param  array  $props
+     * @param  array  $attributes
      *
      * @return Collection
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
-    protected function getProperties(array $props = []) : Collection
+    protected function getAttributes(array $attributes = []) : Collection
     {
 
-        $pid = collect($props)->pluck('pid')->unique()->toArray();
+        $pid = collect($attributes)->pluck('pid')->unique()->toArray();
         // 验证重复
-        if (count($pid) !== count($props)) {
-            throw new ProductPropertyException('属性重复');
+        if (count($pid) !== count($attributes)) {
+            throw new ProductAttributeException('属性重复');
         }
         if (blank($pid)) {
             return collect();
         }
 
-        $properties = collect($this->propertyRepository->findByIds($pid))->keyBy('id');
+        $attributeModels = collect($this->attributeRepository->findByIds($pid))->keyBy('id');
 
 
-        if (count($pid) !== count($properties)) {
-            throw new ProductPropertyException('属性ID存在错误');
+        if (count($pid) !== count($attributeModels)) {
+            throw new ProductAttributeException('属性ID存在错误');
         }
 
 
-        return $properties;
+        return $attributeModels;
 
     }
 
     /**
      * 是否允许多个值
      *
-     * @param  ProductAttribute  $property
+     * @param  ProductAttribute  $attribute
      *
      * @return bool
      */
-    protected function isAllowMultipleValues(ProductAttribute $property) : bool
+    protected function isAllowMultipleValues(ProductAttribute $attribute) : bool
     {
-        return $property->isAllowMultipleValues();
+        return $attribute->isAllowMultipleValues();
     }
 
-    protected function isAllowAlias(ProductAttribute $property) : bool
+    protected function isAllowAlias(ProductAttribute $attribute) : bool
     {
 
-        return $property->isAllowAlias();
+        return $attribute->isAllowAlias();
     }
 
     /**
-     * @param  array  $props
+     * @param  array  $attributes
      *
      * @return array|null
      * @throws JsonException
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
-    public function crossJoin(array $props = []) : ?array
+    public function crossJoin(array $attributes = []) : ?array
     {
 
-        $saleProps = $this->saleProps($props);
+        $saleAttrs = $this->saleProps($attributes);
 
-        if (count($props) <= 0) {
+        if (count($attributes) <= 0) {
             return [];
         }
 
-        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512,
+        $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
             JSON_THROW_ON_ERROR));
         $crossJoin       = [];
-        foreach ($crossJoinString as $properties) {
-            $crossJoin[$properties] = $this->buildSkuName($saleProps, $properties);
+        foreach ($crossJoinString as $attributeString) {
+            $crossJoin[$attributeString] = $this->buildSkuName($saleAttrs, $attributeString);
         }
         return $crossJoin;
 
@@ -186,130 +186,130 @@ class ProductAttributeValidateService
     /**
      * 验证销售属性
      *
-     * @param  array  $props
+     * @param  array  $attributes
      *
-     * @return Collection<Property>
-     * @throws ProductPropertyException
+     * @return Collection<Attribute>
+     * @throws ProductAttributeException
      */
-    public function saleProps(array $props = []) : Collection
+    public function saleProps(array $attributes = []) : Collection
     {
 
-        $properties = $this->getProperties($props);
+        $attributeModels = $this->getAttributes($attributes);
 
 
-        $saleProps = collect();
-        foreach ($props as $prop) {
-            $saleProp = new Property();
+        $saleAttrs = collect();
+        foreach ($attributes as $attr) {
+            $saleAttr = new Attribute();
             /**
-             * @var $property ProductAttribute
+             * @var $attributeModel ProductAttribute
              */
-            $property       = $properties[$prop['pid']];
-            $saleProp->pid  = $property->id;
-            $saleProp->name = $property->name;
-            $saleProp->unit = $property->unit;
-            $values         = $prop['values'] ?? [];
+            $attributeModel     = $attributeModels[$attr['pid']];
+            $saleAttr->pid      = $attributeModel->id;
+            $saleAttr->name     = $attributeModel->name;
+            $saleAttr->unit     = $attributeModel->unit;
+            $values             = $attr['values'] ?? [];
 
             // 查询属性的值
-            $propValues = $this->valueRepository->findByIdsInProperty($saleProp->pid,
+            $attrValues = $this->valueRepository->findByIdsInAttribute($saleAttr->pid,
                 collect($values)->pluck('vid')->toArray())->keyBy('id');
 
-            $saleProp->values = collect();
+            $saleAttr->values = collect();
             foreach ($values as $value) {
 
                 $vid                  = $value['vid'];
                 $alias                = $value['alias'] ?? '';
-                $salePropValue        = new PropValue();
-                $salePropValue->vid   = $vid;
-                $salePropValue->name  = $propValues[$salePropValue->vid]->name;
-                $salePropValue->alias = $alias;
+                $saleAttrValue        = new PropValue();
+                $saleAttrValue->vid   = $vid;
+                $saleAttrValue->name  = $attrValues[$saleAttrValue->vid]->name;
+                $saleAttrValue->alias = $alias;
 
 
-                $saleProp->values->add($salePropValue);
+                $saleAttr->values->add($saleAttrValue);
             }
 
-            if ($saleProp->values->count() <= 0) {
-                throw new ProductPropertyException('属性值不支持为空');
+            if ($saleAttr->values->count() <= 0) {
+                throw new ProductAttributeException('属性值不支持为空');
             }
-            $saleProps->add($saleProp);
+            $saleAttrs->add($saleAttr);
         }
-        return $saleProps;
+        return $saleAttrs;
     }
 
     /**
      * 生成规格名称
      *
-     * @param  Collection  $saleProps
-     * @param  string  $properties
+     * @param  Collection  $saleAttrs
+     * @param  string  $attributesString
      *
      * @return string
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
-    public function buildSkuName(Collection $saleProps, string $properties) : string
+    public function buildSkuName(Collection $saleAttrs, string $attributesString) : string
     {
-        $propertiesArray = $this->propertyFormatter->toArray($properties);
+        $attributesArray = $this->attributeFormatter->toArray($attributesString);
         $labels          = [];
-        foreach ($propertiesArray as $property) {
-            $pid = $property['pid'];
-            $vid = $property['vid'][0];
+        foreach ($attributesArray as $attribute) {
+            $pid = $attribute['pid'];
+            $vid = $attribute['vid'][0];
 
-            $property = $saleProps->where('pid', $pid)->first();
+            $attributeItem = $saleAttrs->where('pid', $pid)->first();
 
-            if (blank($property)) {
-                throw new ProductPropertyException('属性不存在');
+            if (blank($attributeItem)) {
+                throw new ProductAttributeException('属性不存在');
             }
 
-            $value = $property->values->where('vid', $vid)->first();
+            $value = $attributeItem->values->where('vid', $vid)->first();
 
             if (blank($value)) {
-                throw new ProductPropertyException('属性值不存在');
+                throw new ProductAttributeException('属性值不存在');
             }
 
 
             $labels[] = [
-                'pid'   => $property->pid,
+                'pid'   => $attributeItem->pid,
                 'vid'   => $value->vid,
-                'name'  => $property->name,
+                'name'  => $attributeItem->name,
                 'value' => $value->name,
                 'alias' => $value->alias,
             ];
         }
 
-        return $this->propertyFormatter->toNameString($labels);
+        return $this->attributeFormatter->toNameString($labels);
     }
 
     /**
-     * @param  Collection<Property>  $saleProps
+     * @param  Collection<Attribute>  $saleAttrs
      * @param  Collection<Sku>  $skus
      *
      * @return Collection
-     * @throws ProductPropertyException|JsonException
+     * @throws ProductAttributeException|JsonException
      */
-    public function validateSkus(Collection $saleProps, Collection $skus) : Collection
+    public function validateSkus(Collection $saleAttrs, Collection $skus) : Collection
     {
 
-        $crossJoinString = $this->propertyFormatter->crossJoinToString(json_decode($saleProps->toJson(), true, 512,
+        $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
             JSON_THROW_ON_ERROR));
 
-        $skuProperties = $skus->pluck('propertiesSequence')->unique()->toArray();
+        $skuAttributes = $skus->pluck('propertiesSequence')->unique()->toArray();
 
 
         // 对比数量
         if (count($crossJoinString) !== count($skus)) {
-            throw new ProductPropertyException('规则数量不一致');
+            throw new ProductAttributeException('规则数量不一致');
         }
 
         // 验证总数量
         foreach ($skus as $sku) {
-            $sku->propertiesSequence = $this->propertyFormatter->formatString($sku->propertiesSequence);
-            $sku->propertiesName     = $this->buildSkuName($saleProps, $sku->propertiesSequence);
+            $sku->propertiesSequence = $this->attributeFormatter->formatString($sku->propertiesSequence);
+            $sku->propertiesName     = $this->buildSkuName($saleAttrs, $sku->propertiesSequence);
         }
 
 
-        $diff = collect($crossJoinString)->diff($skuProperties);
+        $diff = collect($crossJoinString)->diff($skuAttributes);
 
 
         if ($diff->count() > 0) {
-            throw new ProductPropertyException('cross join too many properties');
+            throw new ProductAttributeException('cross join too many attributes');
         }
 
         return $skus;

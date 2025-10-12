@@ -27,9 +27,9 @@ class ProductExtension extends Model
     protected $casts = [
         //'promise_services' => PromiseServicesCastTransformer::class,
         'after_sales_services'      => 'array',
-        'basic_props'      => 'array',
-        'sale_props'       => 'array',
-        'customize_props'  => 'array',
+        'basic_attrs'      => 'array',
+        'sale_attrs'       => 'array',
+        'customize_attrs'  => 'array',
         'images'           => 'array',
         'videos'           => 'array',
         'tools'            => 'array',

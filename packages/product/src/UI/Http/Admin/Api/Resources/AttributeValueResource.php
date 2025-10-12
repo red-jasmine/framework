@@ -24,7 +24,7 @@ class AttributeValueResource extends JsonResource
             'updater_type' => $this->updater_type,
             'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'   => $this->updated_at?->format('Y-m-d H:i:s'),
-            'property'     => new AttributeResource($this->whenLoaded('property')),
+            'attribute'     => new AttributeResource($this->whenLoaded('attribute')),
             'group'        => new AttributeGroupResource($this->whenLoaded('group')),
 
         ];

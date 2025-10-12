@@ -30,9 +30,9 @@ class ProductAdminRoute
             Route::apiResource('groups', GroupController::class)->names('admin.product.groups');
 
 
-            Route::apiResource('property/properties', AttributeController::class)->names('admin.product.property.properties');
-            Route::apiResource('property/values', AttributeValueController::class)->names('admin.product.property.values');
-            Route::apiResource('property/groups', AttributeGroupController::class)->names('admin.product.property.groups');
+            Route::apiResource('attribute/attributes', AttributeController::class)->names('admin.product.attribute.attributes');
+            Route::apiResource('attribute/values', AttributeValueController::class)->names('admin.product.attribute.values');
+            Route::apiResource('attribute/groups', AttributeGroupController::class)->names('admin.product.attribute.groups');
 
 
             Route::apiResource('products', ProductController::class)->names('admin.product.products');

@@ -11,7 +11,7 @@ use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Product\PropertyFormatter;
+use RedJasmine\Product\Domain\Product\AttributeFormatter;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
@@ -30,8 +30,8 @@ class ProductCommandHandler extends CommandHandler
         public ProductApplicationService $service,
         protected BrandApplicationService $brandQueryService,
         protected StockApplicationService $stockCommandService,
-        protected PropertyFormatter $propertyFormatter,
-        protected ProductAttributeValidateService $propertyValidateService,
+        protected AttributeFormatter $attributeFormatter,
+        protected ProductAttributeValidateService $attributeValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer

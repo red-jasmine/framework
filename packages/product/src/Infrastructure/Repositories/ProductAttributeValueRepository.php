@@ -22,7 +22,7 @@ class ProductAttributeValueRepository extends Repository implements ProductAttri
     /**
      * 在指定属性中根据名称查找属性值
      */
-    public function findByNameInProperty(int $pid, string $name)
+    public function findByNameInAttribute(int $pid, string $name)
     {
         return static::$modelClass::where('pid', $pid)->where('name', $name)->first();
     }
@@ -30,7 +30,7 @@ class ProductAttributeValueRepository extends Repository implements ProductAttri
     /**
      * 在指定属性中根据ID数组查找属性值列表
      */
-    public function findByIdsInProperty(int $pid, array $ids)
+    public function findByIdsInAttribute(int $pid, array $ids)
     {
         return $this->query()->where('pid', $pid)->whereIn('id', $ids)->get();
     }

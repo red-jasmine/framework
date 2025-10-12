@@ -28,16 +28,16 @@ class ProductAttributeCreateCommand extends Data
     {
 
         return [
-            'name'              => __('red-jasmine-product::product-property.fields.name'),
-            'type'              => __('red-jasmine-product::product-property.fields.type'),
-            'unit'              => __('red-jasmine-product::product-property.fields.unit'),
-            'description'       => __('red-jasmine-product::product-property.fields.description'),
-            'sort'              => __('red-jasmine-product::product-property.fields.sort'),
-            'group_id'          => __('red-jasmine-product::product-property.fields.group_id'),
-            'is_required'       => __('red-jasmine-product::product-property.fields.is_allow_multiple'),
-            'is_allow_multiple' => __('red-jasmine-product::product-property.fields.is_required'),
-            'is_allow_alias'    => __('red-jasmine-product::product-property.fields.is_allow_alias'),
-            'sort'              => __('red-jasmine-product::product-property.sort.name'),
+            'name'              => __('red-jasmine-product::product-attribute.fields.name'),
+            'type'              => __('red-jasmine-product::product-attribute.fields.type'),
+            'unit'              => __('red-jasmine-product::product-attribute.fields.unit'),
+            'description'       => __('red-jasmine-product::product-attribute.fields.description'),
+            'sort'              => __('red-jasmine-product::product-attribute.fields.sort'),
+            'group_id'          => __('red-jasmine-product::product-attribute.fields.group_id'),
+            'is_required'       => __('red-jasmine-product::product-attribute.fields.is_allow_multiple'),
+            'is_allow_multiple' => __('red-jasmine-product::product-attribute.fields.is_required'),
+            'is_allow_alias'    => __('red-jasmine-product::product-attribute.fields.is_allow_alias'),
+            'sort'              => __('red-jasmine-product::product-attribute.sort.name'),
 
         ];
     }

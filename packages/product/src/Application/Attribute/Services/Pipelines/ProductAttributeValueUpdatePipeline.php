@@ -6,7 +6,7 @@ namespace RedJasmine\Product\Application\Attribute\Services\Pipelines;
 use Closure;
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueApplicationService;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 
 class ProductAttributeValueUpdatePipeline
 {
@@ -21,7 +21,7 @@ class ProductAttributeValueUpdatePipeline
      * @param  Closure  $next
      *
      * @return mixed
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      */
     public function handle(ProductAttributeValueUpdateCommand $command, Closure $next) : mixed
     {
@@ -34,7 +34,7 @@ class ProductAttributeValueUpdatePipeline
                             ->count();
 
         if ($hasRepeatCount > 0) {
-            throw new ProductPropertyException('Property Value Update Failed:'.$command->name);
+            throw new ProductAttributeException('Attribute Value Update Failed:'.$command->name);
         }
         return $next($command);
     }

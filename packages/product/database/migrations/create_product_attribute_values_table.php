@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->comment('商品-属性值表');
-            $table->index('pid', 'idx_property');
+            $table->index('pid', 'idx_attribute');
             $table->index('group_id', 'idx_group');
         });
     }

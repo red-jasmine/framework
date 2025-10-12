@@ -1,0 +1,22 @@
+<?php
+
+namespace RedJasmine\Product\UI\Http\Owner\Api\Resources;
+
+use Illuminate\Http\Request;
+use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
+
+/** @mixin \RedJasmine\Product\Domain\Attribute\Models\ProductAttributeGroup */
+class AttributeGroupResource extends JsonResource
+{
+    public function toArray(Request $request) : array
+    {
+        return [
+            'id'           => $this->id,
+            'name'         => $this->name,
+            'sort'         => $this->sort,
+            'status'       => $this->status,
+            'extra'      => $this->extra,
+        ];
+    }
+}
+
