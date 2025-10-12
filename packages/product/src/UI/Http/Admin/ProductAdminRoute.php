@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\BrandController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\CategoryController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\ProductController;
-use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyController;
-use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyGroupController;
-use RedJasmine\Product\UI\Http\Admin\Api\Controllers\PropertyValueController;
+use RedJasmine\Product\UI\Http\Admin\Api\Controllers\AttributeController;
+use RedJasmine\Product\UI\Http\Admin\Api\Controllers\AttributeGroupController;
+use RedJasmine\Product\UI\Http\Admin\Api\Controllers\AttributeValueController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\GroupController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SeriesController;
 use RedJasmine\Product\UI\Http\Admin\Api\Controllers\SkuController;
@@ -30,9 +30,9 @@ class ProductAdminRoute
             Route::apiResource('groups', GroupController::class)->names('admin.product.groups');
 
 
-            Route::apiResource('property/properties', PropertyController::class)->names('admin.product.property.properties');
-            Route::apiResource('property/values', PropertyValueController::class)->names('admin.product.property.values');
-            Route::apiResource('property/groups', PropertyGroupController::class)->names('admin.product.property.groups');
+            Route::apiResource('property/properties', AttributeController::class)->names('admin.product.property.properties');
+            Route::apiResource('property/values', AttributeValueController::class)->names('admin.product.property.values');
+            Route::apiResource('property/groups', AttributeGroupController::class)->names('admin.product.property.groups');
 
 
             Route::apiResource('products', ProductController::class)->names('admin.product.products');

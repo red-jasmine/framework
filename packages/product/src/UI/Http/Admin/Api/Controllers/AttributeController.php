@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\UI\Http\Owner\Api\Controllers;
+namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,13 +10,14 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeD
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributePaginateQuery;
-use RedJasmine\Product\UI\Http\Owner\Api\Resources\PropertyResource;
+use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
-class PropertyController extends Controller
+class AttributeController extends Controller
 {
     public function __construct(
         protected ProductAttributeApplicationService $service,
+
 
     ) {
     }
@@ -24,20 +25,20 @@ class PropertyController extends Controller
     public function index(Request $request) : AnonymousResourceCollection
     {
         $result = $this->service->paginate(ProductAttributePaginateQuery::from($request));
-        return PropertyResource::collection($result);
+        return AttributeResource::collection($result);
     }
 
-    public function store(Request $request) : PropertyResource
+    public function store(Request $request) : AttributeResource
     {
         $result = $this->service->create(ProductAttributeCreateCommand::from($request));
-        return PropertyResource::make($result);
+        return AttributeResource::make($result);
     }
 
-    public function show($id, Request $request) : PropertyResource
+    public function show($id, Request $request) : AttributeResource
     {
         $result = $this->service->find(FindQuery::make($id, $request));
 
-        return PropertyResource::make($result);
+        return AttributeResource::make($result);
     }
 
     public function update(Request $request, $id) : JsonResponse

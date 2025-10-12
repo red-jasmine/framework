@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Transformer;
 
 use JsonException;
-use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
 use RedJasmine\Product\Domain\Product\Data\Sku;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
@@ -15,7 +15,7 @@ class ProductTransformer
 {
 
     public function __construct(
-        protected PropertyValidateService $propertyValidateService,
+        protected ProductAttributeValidateService $propertyValidateService,
 
     ) {
     }

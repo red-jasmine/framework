@@ -12,27 +12,27 @@ use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyResource\Pages\ListProductProperties;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyCreateCommand;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyDeleteCommand;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyUpdateCommand;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyApplicationService;
-use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
-use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
-use RedJasmine\Product\Domain\Property\Models\ProductProperty;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeCreateCommand;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeDeleteCommand;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeUpdateCommand;
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeApplicationService;
+use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
+use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
+use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 
 class ProductPropertyResource extends Resource
 {
-    protected static ?string $model = ProductProperty::class;
+    protected static ?string $model = ProductAttribute::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cube-transparent';
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductPropertyApplicationService::class;
-    protected static ?string $commandService = ProductPropertyApplicationService::class;
-    protected static ?string $createCommand = ProductPropertyCreateCommand::class;
-    protected static ?string $updateCommand = ProductPropertyUpdateCommand::class;
-    protected static ?string $deleteCommand = ProductPropertyDeleteCommand::class;
+    protected static ?string $service        = ProductAttributeApplicationService::class;
+    protected static ?string $commandService = ProductAttributeApplicationService::class;
+    protected static ?string $createCommand = ProductAttributeCreateCommand::class;
+    protected static ?string $updateCommand = ProductAttributeUpdateCommand::class;
+    protected static ?string $deleteCommand = ProductAttributeDeleteCommand::class;
 
 
     public static function getModelLabel() : string
@@ -58,8 +58,8 @@ class ProductPropertyResource extends Resource
                                               ->label(__('red-jasmine-product::product-property.fields.type'))
                                               ->required()
                                               ->inline()
-                                              ->default(PropertyTypeEnum::SELECT)
-                                              ->options(PropertyTypeEnum::options()),
+                                              ->default(ProductAttributeTypeEnum::SELECT)
+                                              ->options(ProductAttributeTypeEnum::options()),
                 Forms\Components\TextInput::make('name')->label(__('red-jasmine-product::product-property.fields.name'))
                                           ->required()
                                           ->maxLength(255),
@@ -99,8 +99,8 @@ class ProductPropertyResource extends Resource
                                               ->inline()
                                               ->required()
                                               ->grouped()
-                                              ->default(PropertyStatusEnum::ENABLE)
-                                              ->useEnum(PropertyStatusEnum::class)
+                                              ->default(ProductAttributeStatusEnum::ENABLE)
+                                              ->useEnum(ProductAttributeStatusEnum::class)
                 ,
 
                 ...static::operateFormSchemas()
@@ -138,7 +138,7 @@ class ProductPropertyResource extends Resource
                                            ->preload(),
                 Tables\Filters\SelectFilter::make('status')
                                            ->label(__('red-jasmine-product::product-property-value.fields.status'))
-                                           ->options(PropertyStatusEnum::options()),
+                                           ->options(ProductAttributeStatusEnum::options()),
 
                 Tables\Filters\TernaryFilter::make('is_required')
                                             ->label(__('red-jasmine-product::product-property.fields.is_required'))

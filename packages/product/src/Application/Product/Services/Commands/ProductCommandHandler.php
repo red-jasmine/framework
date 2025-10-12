@@ -3,11 +3,11 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
@@ -31,7 +31,7 @@ class ProductCommandHandler extends CommandHandler
         protected BrandApplicationService $brandQueryService,
         protected StockApplicationService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
-        protected PropertyValidateService $propertyValidateService,
+        protected ProductAttributeValidateService $propertyValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer

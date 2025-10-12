@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\UI\Http\Owner\Api\Controllers;
+namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,14 +10,13 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeG
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeGroupApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeGroupPaginateQuery;
-use RedJasmine\Product\UI\Http\Owner\Api\Resources\PropertyGroupResource;
+use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeGroupResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
-class PropertyGroupController extends Controller
+class AttributeGroupController extends Controller
 {
     public function __construct(
         protected ProductAttributeGroupApplicationService $service,
-
     ) {
 
     }
@@ -26,21 +25,21 @@ class PropertyGroupController extends Controller
     public function index(Request $request) : AnonymousResourceCollection
     {
         $result = $this->service->paginate(ProductAttributeGroupPaginateQuery::from($request));
-        return PropertyGroupResource::collection($result);
+        return AttributeGroupResource::collection($result);
     }
 
-    public function store(Request $request) : PropertyGroupResource
+    public function store(Request $request) : AttributeGroupResource
     {
 
         $result = $this->service->create(ProductAttributeGroupCreateCommand::from($request));
-        return PropertyGroupResource::make($result);
+        return AttributeGroupResource::make($result);
 
     }
 
-    public function show($id, Request $request) : PropertyGroupResource
+    public function show($id, Request $request) : AttributeGroupResource
     {
         $result = $this->service->find(FindQuery::make($id, $request));
-        return PropertyGroupResource::make($result);
+        return AttributeGroupResource::make($result);
 
     }
 

@@ -6,7 +6,6 @@ use App\Filament\Clusters\Product\Resources\ProductResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductResource\RelationManagers;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
-use Cknow\Money\Money;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
@@ -19,7 +18,6 @@ use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use LaraZeus\Quantity\Components\Quantity;
-use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
@@ -27,26 +25,24 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\FilamentCore\Filters\DateRangeFilter;
-use RedJasmine\FilamentCore\Forms\Fields\MoneyInput;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\CreateProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\EditProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ListProducts;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ViewProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Stock\StockTableAction;
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductSetStatusCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommand;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
+use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
+use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
+use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Domain\Property\Models\Enums\PropertyTypeEnum;
-use RedJasmine\Product\Domain\Property\Models\ProductProperty;
-use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Tapp\FilamentValueRangeFilter\Filters\ValueRangeFilter;
 use Throwable;
@@ -246,7 +242,7 @@ class ProductResource extends Resource
                               if ($oldSku === null) {
                                   $oldSku = [];
                               }
-                              $service   = app(PropertyValidateService::class);
+                              $service   = app(ProductAttributeValidateService::class);
                               $crossJoin = $service->crossJoin($saleProps);
 
 
@@ -342,9 +338,9 @@ class ProductResource extends Resource
                                                   ->columnSpan(1)
                                                   ->disabled(fn($state) => $state)
                                                   ->dehydrated()
-                                                  ->options(ProductProperty::limit(50)->pluck('name', 'id')->toArray())
+                                                  ->options(ProductAttribute::limit(50)->pluck('name', 'id')->toArray())
                                                   ->searchable()
-                                                  ->getSearchResultsUsing(fn(string $search) : array => ProductProperty::where('name',
+                                                  ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name',
                                                       'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
                                                   ->getOptionLabelUsing(fn($value, Forms\Get $get) : ?string => $get('name')),
 
@@ -357,10 +353,10 @@ class ProductResource extends Resource
                                                               ->searchable()
                                                               ->required()
                                                               ->hiddenLabel()
-                                                              ->options(fn(Forms\Get $get) => ProductPropertyValue::where('pid',
+                                                              ->options(fn(Forms\Get $get) => ProductAttributeValue::where('pid',
                                                                   $get('../../pid'))->limit(50)->pluck('name', 'id')->toArray())
                                                               ->getSearchResultsUsing(fn(string $search
-                                                              ) : array => ProductPropertyValue::where('name', 'like',
+                                                              ) : array => ProductAttributeValue::where('name', 'like',
                                                                   "%{$search}%")->limit(50)->pluck('name',
                                                                   'id')->toArray())
                                                               ->getOptionLabelUsing(fn(
@@ -368,7 +364,7 @@ class ProductResource extends Resource
                                                                   Forms\Get $get
                                                               ) : ?string => $get('name'))
                                                               ->hidden(fn(Forms\Get $get
-                                                              ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                              ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                        Forms\Components\TextInput::make('name')
@@ -376,7 +372,7 @@ class ProductResource extends Resource
                                                                  ->maxLength(30)
                                                                  ->required()
                                                                  ->hidden(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
+                                                                 ) => ProductAttribute::find($get('../../pid'))?->type !== ProductAttributeTypeEnum::TEXT),
 
 
                                        Forms\Components\TextInput::make('alias')
@@ -385,7 +381,7 @@ class ProductResource extends Resource
                                                                  ->placeholder('请输入别名')
                                                                  ->maxLength(30)
                                                                  ->hidden(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                                 ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                    ])
@@ -569,10 +565,10 @@ class ProductResource extends Resource
                                                   ->required()
                                                   ->disabled(fn($state) => $state)
                                                   ->dehydrated()
-                                                  ->options(ProductProperty::limit(50)->pluck('name', 'id')->toArray())
+                                                  ->options(ProductAttribute::limit(50)->pluck('name', 'id')->toArray())
                                                   ->searchable()
                                                   ->getSearchResultsUsing(fn(string $search
-                                                  ) : array => ProductProperty::where('name', 'like',
+                                                  ) : array => ProductAttribute::where('name', 'like',
                                                       "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
                                                   ->getOptionLabelUsing(fn(
                                                       $value,
@@ -590,16 +586,16 @@ class ProductResource extends Resource
                                                               ->searchable()
                                                               ->hiddenLabel()
                                                               ->required()
-                                                              ->options(fn(Forms\Get $get) => ProductPropertyValue::where('pid',
+                                                              ->options(fn(Forms\Get $get) => ProductAttributeValue::where('pid',
                                                                   $get('../../pid'))->limit(50)->pluck('name', 'id')->toArray())
                                                               ->getSearchResultsUsing(fn(string $search
-                                                              ) : array => ProductPropertyValue::when($search,
+                                                              ) : array => ProductAttributeValue::when($search,
                                                                   function ($query) use ($search) {
                                                                       $query->where('name', 'like', "%{$search}%");
                                                                   })->limit(20)->pluck('name', 'id')->toArray())
                                                               ->getOptionLabelUsing(fn($value, Forms\Get $get) : ?string => $get('name'))
                                                               ->hidden(fn(Forms\Get $get
-                                                              ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                              ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                        Forms\Components\TextInput::make('name')
@@ -607,10 +603,10 @@ class ProductResource extends Resource
                                                                  ->hiddenLabel()
                                                                  ->required()
                                                                  ->suffix(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('../../pid'))?->unit)
+                                                                 ) => ProductAttribute::find($get('../../pid'))?->unit)
                                                                  ->inlineLabel()
                                                                  ->hidden(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('../../pid'))?->type !== PropertyTypeEnum::TEXT),
+                                                                 ) => ProductAttribute::find($get('../../pid'))?->type !== ProductAttributeTypeEnum::TEXT),
 
 
                                        Forms\Components\TextInput::make('alias')
@@ -618,7 +614,7 @@ class ProductResource extends Resource
                                                                  ->maxLength(30)
                                                                  ->hiddenLabel()
                                                                  ->hidden(fn(Forms\Get $get
-                                                                 ) => ProductProperty::find($get('../../pid'))?->type === PropertyTypeEnum::TEXT),
+                                                                 ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                    ])
@@ -629,7 +625,7 @@ class ProductResource extends Resource
                                    ->deletable(fn($state) => count($state) > 1)
                                    ->minItems(1)
                                    ->maxItems(fn(Forms\Get $get
-                                   ) => ProductProperty::find($get('pid'))?->is_allow_multiple ? 30 : 1)
+                                   ) => ProductAttribute::find($get('pid'))?->is_allow_multiple ? 30 : 1)
                                    ->hidden(fn(Forms\Get $get) => !$get('pid')),
 
 

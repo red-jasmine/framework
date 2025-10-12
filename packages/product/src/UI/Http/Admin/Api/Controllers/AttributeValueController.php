@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\UI\Http\Owner\Api\Controllers;
+namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,13 +10,14 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeV
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeValuePaginateQuery;
-use RedJasmine\Product\UI\Http\Owner\Api\Resources\PropertyValueResource;
+use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeValueResource;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
-class PropertyValueController extends Controller
+class AttributeValueController extends Controller
 {
     public function __construct(
         protected ProductAttributeValueApplicationService $service,
+
 
     ) {
     }
@@ -27,23 +28,23 @@ class PropertyValueController extends Controller
 
         $result = $this->service->paginate(ProductAttributeValuePaginateQuery::from($request));
 
-        return PropertyValueResource::collection($result);
+        return AttributeValueResource::collection($result);
 
     }
 
-    public function store(Request $request) : PropertyValueResource
+    public function store(Request $request) : AttributeValueResource
     {
 
         $result = $this->service->create(ProductAttributeValueCreateCommand::from($request));
 
-        return PropertyValueResource::make($result);
+        return AttributeValueResource::make($result);
     }
 
-    public function show($id, Request $request) : PropertyValueResource
+    public function show($id, Request $request) : AttributeValueResource
     {
         $result = $this->service->find(FindQuery::make($id, $request));
 
-        return PropertyValueResource::make($result);
+        return AttributeValueResource::make($result);
     }
 
     public function update(Request $request, $id) : JsonResponse

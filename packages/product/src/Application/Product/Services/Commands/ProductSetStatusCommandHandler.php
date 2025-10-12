@@ -3,10 +3,10 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use JsonException;
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Application\Property\Services\PropertyValidateService;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\PropertyFormatter;
@@ -28,7 +28,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
         protected ProductApplicationService $service,
         protected StockApplicationService $stockCommandService,
         protected PropertyFormatter $propertyFormatter,
-        protected PropertyValidateService $propertyValidateService,
+        protected ProductAttributeValidateService $propertyValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
         protected ProductTransformer $productTransformer

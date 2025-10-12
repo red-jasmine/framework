@@ -14,16 +14,16 @@ use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyValueResource\Pages\EditProductPropertyValue;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyValueResource\Pages\ListProductPropertyValues;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductPropertyValueResource\Pages\ViewProductPropertyValue;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueCreateCommand;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueDeleteCommand;
-use RedJasmine\Product\Application\Property\Services\Commands\ProductPropertyValueUpdateCommand;
-use RedJasmine\Product\Application\Property\Services\ProductPropertyValueApplicationService;
-use RedJasmine\Product\Domain\Property\Models\Enums\PropertyStatusEnum;
-use RedJasmine\Product\Domain\Property\Models\ProductPropertyValue;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueCreateCommand;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueDeleteCommand;
+use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
+use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueApplicationService;
+use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
+use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 
 class ProductPropertyValueResource extends Resource
 {
-    protected static ?string $model = ProductPropertyValue::class;
+    protected static ?string $model = ProductAttributeValue::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $cluster        = Product::class;
@@ -31,11 +31,11 @@ class ProductPropertyValueResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductPropertyValueApplicationService::class;
-    protected static ?string $commandService = ProductPropertyValueApplicationService::class;
-    protected static ?string $createCommand  = ProductPropertyValueCreateCommand::class;
-    protected static ?string $updateCommand  = ProductPropertyValueUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductPropertyValueDeleteCommand::class;
+    protected static ?string $service        = ProductAttributeValueApplicationService::class;
+    protected static ?string $commandService = ProductAttributeValueApplicationService::class;
+    protected static ?string $createCommand  = ProductAttributeValueCreateCommand::class;
+    protected static ?string $updateCommand  = ProductAttributeValueUpdateCommand::class;
+    protected static ?string $deleteCommand  = ProductAttributeValueDeleteCommand::class;
 
     public static function getModelLabel() : string
     {
@@ -86,8 +86,8 @@ class ProductPropertyValueResource extends Resource
                                               ->label(__('red-jasmine-product::product-property-value.fields.status'))
                                               ->required()
                                               ->inline()
-                                              ->default(PropertyStatusEnum::ENABLE)
-                                              ->useEnum(PropertyStatusEnum::class),
+                                              ->default(ProductAttributeStatusEnum::ENABLE)
+                                              ->useEnum(ProductAttributeStatusEnum::class),
 
                 ...static::operateFormSchemas()
             ]);
@@ -133,7 +133,7 @@ class ProductPropertyValueResource extends Resource
                                            ->preload(),
                 Tables\Filters\SelectFilter::make('status')
                                            ->label(__('red-jasmine-product::product-property-value.fields.status'))
-                                           ->options(PropertyStatusEnum::options())
+                                           ->options(ProductAttributeStatusEnum::options())
                 ,
                 Tables\Filters\TrashedFilter::make(),
 
