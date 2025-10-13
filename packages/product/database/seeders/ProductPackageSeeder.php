@@ -12,7 +12,7 @@ class ProductPackageSeeder extends Seeder
     {
         $this->brand();
         $this->category();
-        $this->property();
+        $this->attributes();
         $this->groups();
     }
 
@@ -64,7 +64,7 @@ class ProductPackageSeeder extends Seeder
     }
 
 
-    protected function property() : void
+    protected function attributes() : void
     {
 
         $groups = [
@@ -80,10 +80,10 @@ class ProductPackageSeeder extends Seeder
 
         foreach ($groups as $group) {
             $group['status'] = 'enable';
-            DB::table('product_property_groups')->insert($group);
+            DB::table('product_attribute_groups')->insert($group);
         }
 
-        $properties = [
+        $attributes = [
 
             [
                 'id'     => 20000,
@@ -117,8 +117,8 @@ class ProductPackageSeeder extends Seeder
             ]
         ];
 
-        foreach ($properties as $property) {
-            DB::table('product_properties')->insert($property);
+        foreach ($attributes as $attribute) {
+            DB::table('product_attributes')->insert($attribute);
         }
 
 
@@ -323,7 +323,7 @@ class ProductPackageSeeder extends Seeder
 
         foreach ([...$colors, ...$sizes, ...$styles, ...$years] as $value) {
             $value['status'] = 'enable';
-            DB::table('product_property_values')->insert($value);
+            DB::table('product_attribute_values')->insert($value);
         }
 
 

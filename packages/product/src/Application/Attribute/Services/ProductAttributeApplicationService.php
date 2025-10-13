@@ -23,7 +23,7 @@ class ProductAttributeApplicationService extends ApplicationService
     protected static string $modelClass = ProductAttribute::class;
 
 
-    public static string $hookNamePrefix = 'product.application.product-property.command';
+    public static string $hookNamePrefix = 'product.application.product-attribute.command';
 
 
     public function __construct(

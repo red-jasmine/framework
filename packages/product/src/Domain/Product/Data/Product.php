@@ -198,19 +198,19 @@ class Product extends Data
 
     /**
      * 基础属性
-     * @var Collection<Property>|null
+     * @var Collection<Attribute>|null
      */
     public ?Collection $basicProps = null;
 
     /**
      * 销售属性
-     * @var Collection<Property>|null
+     * @var Collection<Attribute>|null
      */
     public ?Collection $saleProps = null;
 
     /**
      * 自定义属性
-     * @var Collection<Property>|null
+     * @var Collection<Attribute>|null
      */
     public ?Collection $customizeProps = null;
 

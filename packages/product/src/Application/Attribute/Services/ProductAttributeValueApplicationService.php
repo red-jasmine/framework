@@ -25,7 +25,7 @@ class ProductAttributeValueApplicationService extends ApplicationService
      * 钩子前缀
      * @var string
      */
-    public static string $hookNamePrefix = 'product.application.product-property-value';
+    public static string $hookNamePrefix = 'product.application.product-attribute-value';
 
 
     protected static string $modelClass = ProductAttributeValue::class;
@@ -54,7 +54,7 @@ class ProductAttributeValueApplicationService extends ApplicationService
                 ProductAttributeGroupRulePipeline::class,
             ],
             'update' => [
-                //ProductPropertyRulePipeline::class,
+                //ProductAttributeRulePipeline::class,
                 ProductAttributeValueUpdatePipeline::class,
                 ProductAttributeGroupRulePipeline::class,
             ],

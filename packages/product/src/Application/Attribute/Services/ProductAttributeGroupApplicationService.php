@@ -18,7 +18,7 @@ class ProductAttributeGroupApplicationService extends ApplicationService
 {
 
 
-    public static string $hookNamePrefix = 'product.application.product-property-group';
+    public static string $hookNamePrefix = 'product.application.product-attribute-group';
 
 
     /**

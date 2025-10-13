@@ -6,7 +6,7 @@ use JsonException;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Product\Exceptions\ProductPropertyException;
+use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Product\Exceptions\StockException;
 use Throwable;
 
@@ -24,7 +24,7 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
      * @throws Throwable
      * @throws JsonException
      * @throws ProductException
-     * @throws ProductPropertyException
+     * @throws ProductAttributeException
      * @throws StockException
      */
     public function handle(ProductUpdateCommand $command) : ?Product

@@ -60,8 +60,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use HasSupplier;
 
-    public static string $defaultPropertiesName = '';
-    public static string $defaultPropertiesSequence = '';
+    public static string $defaultAttributesName = '';
+    public static string $defaultAttributesSequence = '';
     public $incrementing = false;
     protected $appends = ['price', 'market_price', 'cost_price'];
 
