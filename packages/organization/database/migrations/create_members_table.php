@@ -20,6 +20,7 @@ return new class extends UserMigration {
             $table->unsignedBigInteger('main_department_id')->nullable()->comment('主部门ID');
             $table->json('departments')->nullable()->comment('当前有效部门ID集合(冗余)');
 
+
             $table->unique(['org_id', 'name']);
         });
 

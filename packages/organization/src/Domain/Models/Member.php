@@ -2,25 +2,33 @@
 
 namespace RedJasmine\Organization\Domain\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use RedJasmine\Organization\Domain\Models\Enums\MemberStatusEnum;
+use RedJasmine\Organization\Domain\Models\Extensions\MemberDepartment;
+use RedJasmine\Organization\Domain\Models\Extensions\DepartmentManager;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\UserCore\Domain\Models\User as UserCoreUser;
 
-class Member extends Model
+class Member extends UserCoreUser
 {
-    use HasSnowflakeId;
     use HasDateTimeFormatter;
 
     public $incrementing = false;
 
     protected $fillable = [
+        'org_id',
+        'position_id',
         'leader_id',
+        'main_department_id',
+        'departments',
+    ];
+
+    protected $dispatchesEvents = [
+        'login' => \RedJasmine\Organization\Domain\Events\MemberLoginEvent::class,
+        'register' => \RedJasmine\Organization\Domain\Events\MemberRegisteredEvent::class,
+        'cancel' => \RedJasmine\Organization\Domain\Events\MemberCancelEvent::class,
     ];
 
     public function newInstance($attributes = [], $exists = false): static
@@ -28,7 +36,6 @@ class Member extends Model
         /** @var static $instance */
         $instance = parent::newInstance($attributes, $exists);
         if (!$instance->exists) {
-            $instance->status = MemberStatusEnum::ACTIVE;
             $instance->setUniqueIds();
         }
         return $instance;
@@ -36,12 +43,110 @@ class Member extends Model
 
     protected function casts(): array
     {
-        return [
-            'status' => MemberStatusEnum::class,
-            'hired_at' => 'datetime',
-            'resigned_at' => 'datetime',
+        return array_merge(parent::casts(), [
             'departments' => 'array',
-        ];
+        ]);
+    }
+
+    /**
+     * 重写getType方法，返回member类型
+     */
+    public function getType(): string
+    {
+        return 'member';
+    }
+
+    /**
+     * 重写JWT自定义声明，包含成员特有信息
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return array_merge(parent::getJWTCustomClaims(), [
+            'organization_id' => $this->org_id,
+        ]);
+    }
+
+    /**
+     * 成员入职
+     */
+    public function hire(): void
+    {
+        $this->setStatus(\RedJasmine\UserCore\Domain\Enums\UserStatusEnum::ACTIVATED);
+        $this->registered_at = now();
+        $this->save();
+
+        // 触发入职事件
+        event(new \RedJasmine\Organization\Domain\Events\MemberHiredEvent($this));
+    }
+
+    /**
+     * 成员离职
+     */
+    public function resign(): void
+    {
+        $this->cancel();
+
+        // 触发离职事件
+        event(new \RedJasmine\Organization\Domain\Events\MemberResignedEvent($this));
+    }
+
+    /**
+     * 检查成员是否活跃
+     */
+    public function isActive(): bool
+    {
+        return $this->status === \RedJasmine\UserCore\Domain\Enums\UserStatusEnum::ACTIVATED;
+    }
+
+    /**
+     * 检查成员是否已离职
+     */
+    public function isResigned(): bool
+    {
+        return $this->status === \RedJasmine\UserCore\Domain\Enums\UserStatusEnum::CANCELED;
+    }
+
+    /**
+     * 重写登录方法，添加成员特有逻辑
+     */
+    public function login(): void
+    {
+        // 检查成员状态
+        if (!$this->isActive()) {
+            throw new \Exception('成员状态不允许登录');
+        }
+
+        parent::login();
+    }
+
+    /**
+     * 重写注册方法，添加成员特有逻辑
+     */
+    public function register(): void
+    {
+        parent::register();
+    }
+
+    /**
+     * 重写注销方法，添加成员特有逻辑
+     */
+    public function cancel(): void
+    {
+        parent::cancel();
+    }
+
+    /**
+     * 检查成员是否允许活动（重写父类方法）
+     */
+    public function isAllowActivity(): bool
+    {
+        // 先检查用户状态
+        if (!parent::isAllowActivity()) {
+            return false;
+        }
+
+        // 再检查成员状态
+        return $this->isActive();
     }
 
     /**
