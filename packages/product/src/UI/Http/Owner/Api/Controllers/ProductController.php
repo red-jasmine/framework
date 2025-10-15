@@ -59,7 +59,7 @@ class ProductController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->queryService->find(FindQuery::make($id));
+        $this->service->find(FindQuery::make($id));
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
 
@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->queryService->find(FindQuery::make($id));
+        $this->service->find(FindQuery::make($id));
         $request->offsetSet('owner_type', $this->getOwner()->getType());
         $request->offsetSet('owner_id', $this->getOwner()->getID());
 

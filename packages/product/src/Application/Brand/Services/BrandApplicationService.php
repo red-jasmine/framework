@@ -2,17 +2,15 @@
 
 namespace RedJasmine\Product\Application\Brand\Services;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\ValidationException;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandCreateCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandDeleteCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandUpdateCommand;
-use RedJasmine\Product\Application\Brand\Services\Handlers\BrandCreateCommandHandler;
-use RedJasmine\Product\Application\Brand\Services\Handlers\BrandDeleteCommandHandler;
-use RedJasmine\Product\Application\Brand\Services\Handlers\BrandUpdateCommandHandler;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Application\Commands\CreateCommandHandler;
+use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
+use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 /**
@@ -45,17 +43,16 @@ class BrandApplicationService extends ApplicationService
     ) {
     }
 
-    public function newModel($data = null) : Model
-    {
-        if ($this->repository->findByName($data->name)) {
-
-            throw ValidationException::withMessages(
-                ['name' => [__('名称存在重复')]]
-            );
-
-        }
-        return parent::newModel($data);
-    }
+    /**
+     * 配置宏方法
+     *
+     * @var array
+     */
+    protected static $macros = [
+        'create' => CreateCommandHandler::class,
+        'update' => UpdateCommandHandler::class,
+        'delete' => DeleteCommandHandler::class,
+    ];
 
     public function isAllowUse(int $id) : bool
     {
