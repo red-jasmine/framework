@@ -29,10 +29,7 @@ class User extends UserCoreUser
         'cancel'   => UseCancelEvent::class,
     ];
 
-    protected static function boot() : void
-    {
-        parent::boot();
-    }
+
 
     public function newInstance($attributes = [], $exists = false) : static
     {

@@ -17,7 +17,7 @@ class SalePropsCast implements CastsAttributes
 
     public function set(Model $model, string $key, mixed $value, array $attributes)
     {
-        dd($value);
+
     }
 
 
