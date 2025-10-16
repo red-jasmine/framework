@@ -13,6 +13,8 @@
         "php": "^8.2",
         "symfony/console": "7.3.*",
         "filament/filament": "~4.0",
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/filament-product": "1.0.x-dev",
         "red-jasmine/ecommerce": "1.0.x-dev",
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/order": "1.0.x-dev",

@@ -125,6 +125,8 @@ trait ResourcePageHelper
         try {
             $commandService = app($resource::getService());
 
+
+
             $command = ($resource::getCreateCommand())::from($data);
 
             return $commandService->create($command);

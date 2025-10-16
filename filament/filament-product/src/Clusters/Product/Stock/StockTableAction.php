@@ -24,7 +24,7 @@ class StockTableAction extends Action
 
     protected function setUp() : void
     {
-        parent::setUp(); 
+        parent::setUp();
 
         $this->label(__('red-jasmine-product::product-stock.labels.edit'))
              ->modalWidth('7xl')
@@ -33,54 +33,54 @@ class StockTableAction extends Action
              ->stickyModalFooter()
              ->schema([
 
-                        TextInput::make('id')
-                                                  ->label(__('red-jasmine-product::product.fields.id'))
-                                                  ->readOnly(),
-                        TextInput::make('title')
-                                                  ->label(__('red-jasmine-product::product.fields.title'))
-                                                  ->readOnly(),
-                        TextInput::make('outer_id')
-                                                  ->label(__('red-jasmine-product::product.fields.outer_id'))
-                                                  ->readOnly(),
-                        FileUpload::make('image')->image()->disabled()
-                                                   ->label(__('red-jasmine-product::product.fields.image'))
-                        ,
-                        TableRepeater::make('skus')
-                            ->label(__('red-jasmine-product::product.fields.skus'))
-                                     ->headers([
-                                                   Header::make('SKU ID')->label(__('red-jasmine-product::product.fields.sku_id')),
-                                                   Header::make('properties_name')->label(__('red-jasmine-product::product.fields.properties_name')),
-                                                   Header::make('barcode')->label(__('red-jasmine-product::product.fields.barcode')),
-                                                   Header::make('outer_id')->label(__('red-jasmine-product::product.fields.outer_id')),
-                                                   Header::make('status')->label(__('red-jasmine-product::product.fields.status')),
-                                                   Header::make('stock')->label(__('red-jasmine-product::product.fields.stock')),
-                                                   Header::make('lock_stock')->label(__('red-jasmine-product::product.fields.lock_stock')),
-                                                   Header::make('action_type')->label(__('red-jasmine-product::product-stock-log.fields.action_type')),
-                                                   Header::make('action_stock')->label(__('red-jasmine-product::product-stock-log.fields.action_stock')),
+                 TextInput::make('id')
+                          ->label(__('red-jasmine-product::product.fields.id'))
+                          ->readOnly(),
+                 TextInput::make('title')
+                          ->label(__('red-jasmine-product::product.fields.title'))
+                          ->readOnly(),
+                 TextInput::make('outer_id')
+                          ->label(__('red-jasmine-product::product.fields.outer_id'))
+                          ->readOnly(),
+                 FileUpload::make('image')->image()->disabled()
+                           ->label(__('red-jasmine-product::product.fields.image'))
+                 ,
+                 Forms\Components\Repeater::make('skus')
+                                          ->label(__('red-jasmine-product::product.fields.skus'))
+                                          ->table([
+                                              Forms\Components\Repeater\TableColumn::make('id'),
+                                              Forms\Components\Repeater\TableColumn::make('properties_name'),
+                                              Forms\Components\Repeater\TableColumn::make('barcode'),
+                                              Forms\Components\Repeater\TableColumn::make('outer_id'),
+                                              Forms\Components\Repeater\TableColumn::make('status'),
+                                              Forms\Components\Repeater\TableColumn::make('stock'),
+                                              Forms\Components\Repeater\TableColumn::make('lock_stock'),
+                                              Forms\Components\Repeater\TableColumn::make('action_type'),
+                                              Forms\Components\Repeater\TableColumn::make('action_stock'),
 
-                                               ])
-                                     ->schema([
-                                                  Hidden::make('properties_sequence'),
-                                                  TextInput::make('id')->readOnly(),
-                                                  TextInput::make('properties_name')->readOnly(),
-                                                  TextInput::make('barcode')->readOnly(),
-                                                  TextInput::make('outer_id')->readOnly(),
-                                                  Select::make('status')->disabled()->options(ProductStatusEnum::options()),
-                                                  TextInput::make('stock')->readOnly(),
-                                                  TextInput::make('safety_stock')->readOnly(),
-                                                  Select::make('action_type')->required()
-                                                                         ->default(ProductStockActionTypeEnum::ADD->value)
-                                                                         ->options(ProductStockActionTypeEnum::allowActionTypes()),
-                                                  TextInput::make('action_stock')->numeric()->default(null),
+                                          ])
+                                          ->schema([
+                                              Hidden::make('properties_sequence'),
+                                              TextInput::make('id')->readOnly(),
+                                              TextInput::make('properties_name')->readOnly(),
+                                              TextInput::make('barcode')->readOnly(),
+                                              TextInput::make('outer_id')->readOnly(),
+                                              Select::make('status')->disabled()->options(ProductStatusEnum::options()),
+                                              TextInput::make('stock')->readOnly(),
+                                              TextInput::make('safety_stock')->readOnly(),
+                                              Select::make('action_type')->required()
+                                                    ->default(ProductStockActionTypeEnum::ADD->value)
+                                                    ->options(ProductStockActionTypeEnum::allowActionTypes()),
+                                              TextInput::make('action_stock')->numeric()->default(null),
 
-                                              ])
-                                     ->inlineLabel(false)
-                                     ->columnSpan('full')
-                                     ->streamlined()
-                                     ->reorderable(false)
-                                     ->addable(false)
-                                     ->deletable(false)
-                    ])
+                                          ])
+                                          ->inlineLabel(false)
+                                          ->columnSpan('full')
+
+                                          ->reorderable(false)
+                                          ->addable(false)
+                                          ->deletable(false)
+             ])
              ->fillForm(function ($record) : array {
                  /**
                   * @var $sku \RedJasmine\Product\Domain\Stock\Models\Product
@@ -93,7 +93,6 @@ class StockTableAction extends Action
                      $sku->action_type = ProductStockActionTypeEnum::ADD->value;
                      $sku->makeHidden(['price']);
                  });
-
 
 
                  return [

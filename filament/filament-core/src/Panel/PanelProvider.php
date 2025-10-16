@@ -3,6 +3,7 @@
 namespace RedJasmine\FilamentCore\Panel;
 
 use Filament\Pages\Dashboard;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -29,6 +30,7 @@ class PanelProvider extends FilamentPanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
+            ->maxContentWidth(Width::Full)
             ->pages([
                 Dashboard::class,
             ])
