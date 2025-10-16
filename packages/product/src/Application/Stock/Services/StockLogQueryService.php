@@ -16,7 +16,7 @@ class StockLogQueryService extends ApplicationService
     public static string $hookNamePrefix = 'product.application.stock-log.query';
 
     public function __construct(
-        protected ProductStockLogRepositoryInterface $repository
+        public ProductStockLogRepositoryInterface $repository
     ) {
 
     }

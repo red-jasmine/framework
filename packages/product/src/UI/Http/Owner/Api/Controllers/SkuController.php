@@ -24,12 +24,12 @@ class SkuController extends Controller
     ) {
 
 
-        $this->queryService->getRepository()->withQuery(function ($query) {
+        $this->queryService->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
 
 
-        $this->logQueryService->getRepository()->withQuery(function ($query) {
+        $this->logQueryService->repository->withQuery(function ($query) {
             $query->onlyOwner($this->getOwner());
         });
 

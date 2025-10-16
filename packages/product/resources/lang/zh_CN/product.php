@@ -110,7 +110,7 @@ return [
         'services'                  => '服务保障',
     ],
 
-    'props' => [
+    'attrs' => [
         'pid'    => '属性名称',
         'vid'    => '属性值',
         'values' => '属性值',

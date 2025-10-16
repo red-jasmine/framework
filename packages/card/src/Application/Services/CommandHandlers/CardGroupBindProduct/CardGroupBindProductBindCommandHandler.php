@@ -19,12 +19,12 @@ class CardGroupBindProductBindCommandHandler extends CommandHandler
         $service = $this->getService();
 
 
-        $model = $service->getRepository()->findByProduct($command->owner, $command->productType, $command->productId, $command->skuId);
+        $model = $service->repository->findByProduct($command->owner, $command->productType, $command->productId, $command->skuId);
 
 
         if ($model) {
             $model->group_id = $command->groupId;
-            $service->getRepository()->update($model);
+            $service->repository->update($model);
         } else {
             return $this->getService()->create($command);
         }

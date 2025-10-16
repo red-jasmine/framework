@@ -15,9 +15,9 @@ class ProductDeleteCommandHandler extends CommandHandler
 
     public function handle(ProductDeleteCommand $command) : void
     {
-        $product = $this->getService()->getRepository()->find($command->id);
+        $product = $this->getService()->repository->find($command->id);
 
-        $this->getService()->getRepository()->delete($product);
+        $this->getService()->repository->delete($product);
 
     }
 

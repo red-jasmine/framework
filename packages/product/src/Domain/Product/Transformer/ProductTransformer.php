@@ -179,7 +179,7 @@ class ProductTransformer
 
 
                 $defaultSku = $product->skus
-                                  ->where('properties_sequence', $product::$defaultPropertiesSequence)
+                                  ->where('properties_sequence', $product::$defaultAttributesSequence)
                                   ->first()
                               ?? $this->defaultSku($product);
 
@@ -216,8 +216,8 @@ class ProductTransformer
 
         $sku                      = new ProductSku();
         $sku->id                  = $product->id;
-        $sku->properties_sequence = $product::$defaultPropertiesSequence;
-        $sku->properties_name     = $product::$defaultPropertiesName;
+        $sku->properties_sequence = $product::$defaultAttributesSequence;
+        $sku->properties_name     = $product::$defaultAttributesName;
         return $sku;
     }
 

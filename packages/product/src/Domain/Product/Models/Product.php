@@ -153,7 +153,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
 
         return $this->belongsToMany(ProductTag::class,
-            (new ProductTagPivot)->getTable(),
+            'product_tag_pivot',
             'product_id',
             'product_tag_id')
                     ->using(ProductTagPivot::class)

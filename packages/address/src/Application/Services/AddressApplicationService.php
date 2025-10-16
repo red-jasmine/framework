@@ -23,13 +23,6 @@ class AddressApplicationService extends ApplicationService
     ) {
     }
 
-    /**
-     * 获取仓库实例（写操作）
-     */
-    public function getRepository() : AddressRepositoryInterface
-    {
-        return $this->repository;
-    }
 
 
     protected function hooks() : array

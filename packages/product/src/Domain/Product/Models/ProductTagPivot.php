@@ -13,6 +13,8 @@ class ProductTagPivot extends Pivot
 
     public $incrementing = true;
 
+    protected $table = 'product_tag_pivot';
+
     use HasDateTimeFormatter;
 
 

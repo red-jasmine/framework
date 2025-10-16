@@ -33,7 +33,7 @@ class AddressController extends Controller
         public AddressApplicationService $service
     ) {
         // 使用统一仓库的查询回调功能
-        $this->service->getRepository()->withQuery(function ($query) {
+        $this->service->repository->withQuery(function ($query) {
             return $query->onlyOwner($this->getOwner());
         });
     }

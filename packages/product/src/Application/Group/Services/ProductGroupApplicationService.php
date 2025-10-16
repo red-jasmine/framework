@@ -53,9 +53,9 @@ class ProductGroupApplicationService extends ApplicationService
     public function isAllowUse(int $id, UserInterface $owner) : bool
     {
 
-        return (bool) ($this->getRepository()->withQuery(function ($query) use ($owner) {
+        return (bool) ($this->repository->withQuery(function ($query) use ($owner) {
             return $query->onlyOwner($owner);
-        })->find(FindQuery::make($id))?->isAllowUse());
+        })->find($id)?->isAllowUse());
     }
 
     public function tree(Query $query) : array
