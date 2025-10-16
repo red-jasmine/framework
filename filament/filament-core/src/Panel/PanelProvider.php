@@ -1,18 +1,18 @@
 <?php
 
-namespace RedJasmine\FilamentAdmin;
+namespace RedJasmine\FilamentCore\Panel;
 
-
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\Pages\Dashboard;
+use Filament\Widgets\AccountWidget;
+use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
 use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
+use Filament\Pages;
+use Filament\PanelProvider as FilamentPanelProvider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -20,10 +20,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class PanelProvider extends FilamentPanelProvider
 {
-
-
     public function panel(Panel $panel) : Panel
     {
         return $panel
@@ -31,13 +29,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
-            ->maxContentWidth(MaxWidth::Full)
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                AccountWidget::class,
+                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -54,14 +51,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarWidth('10rem')
-            ->authGuard('admin-panel')
             ->passwordReset()
             ->emailVerification()
-            ->profile()
-            ->plugins([
-                FilamentShieldPlugin::make(),
-                FilamentAdminPlugin::make(),
-            ]);
+            ->profile();
     }
-
 }

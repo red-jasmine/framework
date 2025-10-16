@@ -2,6 +2,8 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages;
 
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource;
@@ -16,8 +18,8 @@ class EditCoupon extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            ViewAction::make(),
+            DeleteAction::make(),
         ];
     }
 } 

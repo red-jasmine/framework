@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource;
 use Filament\Actions;
@@ -15,7 +16,7 @@ class ListUserTags extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

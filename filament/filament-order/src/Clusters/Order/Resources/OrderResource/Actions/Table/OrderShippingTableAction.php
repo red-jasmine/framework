@@ -2,7 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions\Table;
 
-use Filament\Tables\Actions\Action;
+use Filament\Actions\Action;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions\Shipping;
 
 class OrderShippingTableAction extends Action

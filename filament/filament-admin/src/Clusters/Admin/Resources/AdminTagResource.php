@@ -2,6 +2,9 @@
 
 namespace RedJasmine\FilamentAdmin\Clusters\Admin\Resources;
 
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminTagResource\Pages\ListAdminTags;
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminTagResource\Pages\CreateAdminTag;
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminTagResource\Pages\EditAdminTag;
 use RedJasmine\Admin\Application\Services\AdminTagApplicationService;
 use RedJasmine\Admin\Domain\Models\AdminTag;
 use RedJasmine\FilamentAdmin\Clusters\Admin;
@@ -32,9 +35,9 @@ class AdminTagResource extends UserTagResource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListAdminTags::route('/'),
-            'create' => Pages\CreateAdminTag::route('/create'),
-            'edit'   => Pages\EditAdminTag::route('/{record}/edit'),
+            'index'  => ListAdminTags::route('/'),
+            'create' => CreateAdminTag::route('/create'),
+            'edit'   => EditAdminTag::route('/{record}/edit'),
         ];
     }
 }

@@ -2,12 +2,21 @@
 
 namespace RedJasmine\FilamentWallet\Clusters\Wallet\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\Pages\ListWalletTransactions;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\Pages\CreateWalletTransaction;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\Pages\EditWalletTransaction;
 use RedJasmine\FilamentWallet\Clusters\Wallet;
 use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\Pages;
 use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\RelationManagers;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,74 +27,74 @@ class WalletTransactionResource extends Resource
 {
     protected static ?string $model = WalletTransaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Wallet::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('transaction_no')
+        return $schema
+            ->components([
+                TextInput::make('transaction_no')
                     ->required()
                     ->maxLength(64),
-                Forms\Components\TextInput::make('wallet_id')
+                TextInput::make('wallet_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('wallet_type')
+                TextInput::make('wallet_type')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('direction')
+                TextInput::make('direction')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('amount_currency')
+                TextInput::make('amount_currency')
                     ->required()
                     ->maxLength(3),
-                Forms\Components\TextInput::make('amount_total')
+                TextInput::make('amount_total')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('balance')
+                TextInput::make('balance')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('freeze')
+                TextInput::make('freeze')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                     ->required()
                     ->maxLength(255)
                     ->default('success'),
-                Forms\Components\DateTimePicker::make('trade_time')
+                DateTimePicker::make('trade_time')
                     ->required(),
-                Forms\Components\TextInput::make('app_id')
+                TextInput::make('app_id')
                     ->required()
                     ->maxLength(64),
-                Forms\Components\TextInput::make('transaction_type')
+                TextInput::make('transaction_type')
                     ->required()
                     ->maxLength(32),
-                Forms\Components\TextInput::make('title')
+                TextInput::make('title')
                     ->maxLength(64),
-                Forms\Components\TextInput::make('description')
+                TextInput::make('description')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('bill_type')
+                TextInput::make('bill_type')
                     ->maxLength(30),
-                Forms\Components\TextInput::make('out_trade_no')
+                TextInput::make('out_trade_no')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('tags')
+                TextInput::make('tags')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('remarks')
+                TextInput::make('remarks')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('extra'),
-                Forms\Components\TextInput::make('version')
+                TextInput::make('extra'),
+                TextInput::make('version')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('creator_type')
+                TextInput::make('creator_type')
                     ->maxLength(32),
-                Forms\Components\TextInput::make('creator_id')
+                TextInput::make('creator_id')
                     ->maxLength(64),
-                Forms\Components\TextInput::make('updater_type')
+                TextInput::make('updater_type')
                     ->maxLength(32),
-                Forms\Components\TextInput::make('updater_id')
+                TextInput::make('updater_id')
                     ->maxLength(64),
             ]);
     }
@@ -94,67 +103,67 @@ class WalletTransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('transaction_no')
+                TextColumn::make('transaction_no')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wallet_id')
+                TextColumn::make('wallet_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('wallet_type')
+                TextColumn::make('wallet_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('direction')
+                TextColumn::make('direction')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('amount_currency')
+                TextColumn::make('amount_currency')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('amount_total')
+                TextColumn::make('amount_total')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('balance')
+                TextColumn::make('balance')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('freeze')
+                TextColumn::make('freeze')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('trade_time')
+                TextColumn::make('trade_time')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('app_id')
+                TextColumn::make('app_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('transaction_type')
+                TextColumn::make('transaction_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bill_type')
+                TextColumn::make('bill_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('out_trade_no')
+                TextColumn::make('out_trade_no')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tags')
+                TextColumn::make('tags')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('remarks')
+                TextColumn::make('remarks')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('version')
+                TextColumn::make('version')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('creator_type')
+                TextColumn::make('creator_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('creator_id')
+                TextColumn::make('creator_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updater_type')
+                TextColumn::make('updater_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updater_id')
+                TextColumn::make('updater_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -162,12 +171,12 @@ class WalletTransactionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -182,9 +191,9 @@ class WalletTransactionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWalletTransactions::route('/'),
-            'create' => Pages\CreateWalletTransaction::route('/create'),
-            'edit' => Pages\EditWalletTransaction::route('/{record}/edit'),
+            'index' => ListWalletTransactions::route('/'),
+            'create' => CreateWalletTransaction::route('/create'),
+            'edit' => EditWalletTransaction::route('/{record}/edit'),
         ];
     }
 }

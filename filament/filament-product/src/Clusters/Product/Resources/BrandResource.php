@@ -2,8 +2,8 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\BrandResource\RelationManagers;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
@@ -23,7 +23,7 @@ class BrandResource extends Resource
     protected static ?string $cluster        = Product::class;
     protected static ?string $model          = Brand::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-swatch';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-swatch';
 
     use ResourcePageHelper;
 
@@ -44,9 +44,9 @@ class BrandResource extends Resource
         return __('red-jasmine-product::product.labels.brand-category-service');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table

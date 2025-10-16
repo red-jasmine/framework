@@ -2,8 +2,9 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages;
 
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
@@ -19,7 +20,7 @@ class ListCoupons extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

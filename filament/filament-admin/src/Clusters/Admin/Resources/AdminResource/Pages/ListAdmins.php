@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -15,7 +16,7 @@ class ListAdmins extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

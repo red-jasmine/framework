@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages;
 
+use Filament\Actions\EditAction;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource;
@@ -16,7 +17,7 @@ class ViewCoupon extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 } 

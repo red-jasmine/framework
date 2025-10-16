@@ -2,9 +2,10 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages;
 
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Actions\CreateAction;
 use Filament\Actions;
 use Filament\Infolists\Infolist;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource;
@@ -40,7 +41,7 @@ class ListProducts extends ListRecords
     protected function getHeaderActions() : array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

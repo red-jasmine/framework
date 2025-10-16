@@ -1,10 +1,10 @@
 <?php
 
-namespace RedJasmine\FilamentAdmin;
+namespace RedJasmine\FilamentCore\Panel;
 
 use RedJasmine\Support\Facades\AES;
 
-class Login extends \Filament\Pages\Auth\Login
+class Login extends \Filament\Auth\Pages\Login
 {
 
 

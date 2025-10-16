@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource;
@@ -13,7 +14,7 @@ class EditProductStockLog extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

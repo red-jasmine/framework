@@ -11,9 +11,6 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\BaseFilter;
-use Filament\Tables\Table;
-use Livewire\Livewire;
-use RedJasmine\FilamentCore\Commands\FilamentCoreCommand;
 use RedJasmine\FilamentCore\Livewire\MoneySynth;
 use RedJasmine\FilamentCore\Testing\TestsFilamentCore;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -68,7 +65,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
     protected function getCommands() : array
     {
         return [
-            FilamentCoreCommand::class,
+
         ];
     }
 
@@ -131,7 +128,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
         });
         ExportColumn::macro('useEnum', function () {
             if (method_exists($this, 'formatStateUsing')) {
-                $this->formatStateUsing(fn($state):string => $state->getLabel());
+                $this->formatStateUsing(fn($state) : string => $state->getLabel());
             }
             return $this;
         });
@@ -174,7 +171,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
             return $this;
         });
 
-        Table::$defaultDateTimeDisplayFormat = 'Y-m-d H:i:s';
+        //Table::$defaultDateTimeDisplayFormat = 'Y-m-d H:i:s';
 
 
     }

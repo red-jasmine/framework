@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages;
 
+use Filament\Actions\EditAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource;
 use Filament\Actions;
@@ -16,7 +17,7 @@ class ViewProductSeries extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 }

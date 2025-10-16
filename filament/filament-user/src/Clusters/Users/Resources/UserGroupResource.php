@@ -2,9 +2,12 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\ListUserGroups;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\CreateUserGroup;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\EditUserGroup;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -31,7 +34,7 @@ class UserGroupResource extends Resource
 
     protected static ?string $model = UserGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-plus';
 
     protected static ?string $cluster = Users::class;
 
@@ -42,9 +45,9 @@ class UserGroupResource extends Resource
         return __('red-jasmine-user::user-group.labels.title');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
@@ -62,9 +65,9 @@ class UserGroupResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListUserGroups::route('/'),
-            'create' => Pages\CreateUserGroup::route('/create'),
-            'edit'   => Pages\EditUserGroup::route('/{record}/edit'),
+            'index'  => ListUserGroups::route('/'),
+            'create' => CreateUserGroup::route('/create'),
+            'edit'   => EditUserGroup::route('/{record}/edit'),
         ];
     }
 }

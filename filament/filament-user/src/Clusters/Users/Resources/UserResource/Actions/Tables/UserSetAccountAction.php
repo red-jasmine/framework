@@ -2,8 +2,9 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms;
-use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\UserCore\Application\Services\Commands\SetAccount\UserSetAccountCommand;
 
@@ -46,18 +47,18 @@ class UserSetAccountAction extends Action
         $this->form(function ($record) {
 
             return [
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->label(__('red-jasmine-user::user.fields.name'))
                                           ->required()
                                           ->maxLength(64)
 
                 ,
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
                                           ->label(__('red-jasmine-user::user.fields.phone'))
                                           ->maxLength(64)
 
                 ,
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                                           ->label(__('red-jasmine-user::user.fields.email'))
                                           ->email()
                                           ->maxLength(255)

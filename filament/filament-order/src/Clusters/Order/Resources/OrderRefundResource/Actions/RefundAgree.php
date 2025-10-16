@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeRefundCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
@@ -30,10 +31,10 @@ trait RefundAgree
             'freight_amount' => $record->freight_amount->value(),
         ]);
         $this->form([
-                        Forms\Components\TextInput::make('amount')
+                        TextInput::make('amount')
                                                   ->numeric()
                                                   ->label(__('red-jasmine-order::refund.fields.refund_amount')),
-                        Forms\Components\TextInput::make('freight_amount')
+                        TextInput::make('freight_amount')
                                                   ->numeric()
                                                   ->label(__('red-jasmine-order::refund.fields.freight_amount'))
                     ]);

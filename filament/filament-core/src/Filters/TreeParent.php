@@ -15,7 +15,7 @@ class TreeParent extends Filter
     {
         parent::setUp();
 
-        $this->form([
+        $this->schema([
                         SelectTree::make($this->getName())
                                   ->label(fn() => $this->getLabel())
                                   ->relationship('parent', 'name', 'parent_id')

@@ -2,6 +2,9 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\BulkActionGroup;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource\Pages\ListProductStockLogs;
 use App\Filament\Clusters\Product\Resources\ProductStockLogResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductStockLogResource\RelationManagers;
 use Filament\Forms;
@@ -17,7 +20,7 @@ class ProductStockLogResource extends Resource
 {
     protected static ?string $model = ProductStockLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-queue-list';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-queue-list';
 
     protected static ?string $cluster = Product::class;
 
@@ -44,60 +47,60 @@ class ProductStockLogResource extends Resource
             ->defaultSort('id','desc')
             ->paginated([10, 25, 50, 100])
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label(__('red-jasmine-product::product-stock-log.fields.id'))
                                                      ->sortable(),
-                Tables\Columns\TextColumn::make('owner_type')
+                TextColumn::make('owner_type')
                     ->label(__('red-jasmine-product::product-stock-log.fields.owner_type')),
-                Tables\Columns\TextColumn::make('owner_id')
+                TextColumn::make('owner_id')
                     ->label(__('red-jasmine-product::product-stock-log.fields.owner_id'))
                 ,
-                Tables\Columns\TextColumn::make('product.title')
+                TextColumn::make('product.title')
                     ->label(__('red-jasmine-product::product.fields.title')),
-                Tables\Columns\TextColumn::make('sku.properties_name')
+                TextColumn::make('sku.properties_name')
                 ->label(__('red-jasmine-product::product.fields.properties_name')),
-                Tables\Columns\TextColumn::make('sku_id')
+                TextColumn::make('sku_id')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.sku_id')),
-                Tables\Columns\TextColumn::make('action_type')
+                TextColumn::make('action_type')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.action_type'))
                                          ->useEnum(),
 
-                Tables\Columns\TextColumn::make('before_stock')
+                TextColumn::make('before_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.before_stock'))
                                          ->numeric()
                 ,
-                Tables\Columns\TextColumn::make('action_stock')
+                TextColumn::make('action_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.action_stock'))
                                          ->numeric()
                 ,
-                Tables\Columns\TextColumn::make('after_stock')
+                TextColumn::make('after_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.after_stock'))
                                          ->numeric()
                 ,
 
-                Tables\Columns\TextColumn::make('change_type')
+                TextColumn::make('change_type')
                     ->label(__('red-jasmine-product::product-stock-log.fields.change_type'))->useEnum()
                    ,
-                Tables\Columns\TextColumn::make('change_detail')
+                TextColumn::make('change_detail')
                     ->label(__('red-jasmine-product::product-stock-log.fields.change_detail'))
                     ,
-                Tables\Columns\TextColumn::make('before_lock_stock')
+                TextColumn::make('before_lock_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.before_lock_stock'))
                                          ->numeric()
                 ,
-                Tables\Columns\TextColumn::make('lock_stock')
+                TextColumn::make('lock_stock')
                     ->label(__('red-jasmine-product::product-stock-log.fields.lock_stock'))
                     ->numeric()
                    ,
-                Tables\Columns\TextColumn::make('after_lock_stock')
+                TextColumn::make('after_lock_stock')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.after_lock_stock'))
                                          ->numeric()
                 ,
-                Tables\Columns\TextColumn::make('channel_type')->badge()
+                TextColumn::make('channel_type')->badge()
 
                     ->label(__('red-jasmine-product::product-stock-log.fields.channel_type'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('channel_id')
+                TextColumn::make('channel_id')
                     ->label(__('red-jasmine-product::product-stock-log.fields.channel_id'))
                     ->numeric()
                     ,
@@ -107,11 +110,11 @@ class ProductStockLogResource extends Resource
                 //
             ])
             ->recordUrl(null)
-            ->actions([
+            ->recordActions([
 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
 
                 ]),
             ]);
@@ -127,7 +130,7 @@ class ProductStockLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource\Pages\ListProductStockLogs::route('/')
+            'index' => ListProductStockLogs::route('/')
         ];
     }
 }

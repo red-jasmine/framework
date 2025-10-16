@@ -7,7 +7,7 @@ use Filament\Clusters\Cluster;
 class Logistics extends Cluster
 {
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
 
 
     public static function getNavigationLabel() : string

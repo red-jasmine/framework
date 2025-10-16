@@ -2,12 +2,22 @@
 
 namespace RedJasmine\FilamentWallet\Clusters\Wallet\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletRechargeResource\Pages\ListWalletRecharges;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletRechargeResource\Pages\CreateWalletRecharge;
+use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletRechargeResource\Pages\EditWalletRecharge;
 use RedJasmine\FilamentWallet\Clusters\Wallet;
 use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletRechargeResource\Pages;
 use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletRechargeResource\RelationManagers;
 use RedJasmine\Wallet\Domain\Models\WalletRecharge;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,67 +28,67 @@ class WalletRechargeResource extends Resource
 {
     protected static ?string $model = WalletRecharge::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Wallet::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('recharge_no')
+        return $schema
+            ->components([
+                TextInput::make('recharge_no')
                     ->required()
                     ->maxLength(64),
-                Forms\Components\Select::make('wallet_id')
+                Select::make('wallet_id')
                     ->relationship('wallet', 'id')
                     ->required(),
-                Forms\Components\TextInput::make('wallet_type')
+                TextInput::make('wallet_type')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('owner_type')
+                TextInput::make('owner_type')
                     ->required()
                     ->maxLength(32),
-                Forms\Components\TextInput::make('owner_id')
+                TextInput::make('owner_id')
                     ->required()
                     ->maxLength(64),
-                Forms\Components\TextInput::make('amount_currency')
+                TextInput::make('amount_currency')
                     ->required()
                     ->maxLength(3),
-                Forms\Components\TextInput::make('amount_total')
+                TextInput::make('amount_total')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('fee')
+                TextInput::make('fee')
                     ->required()
                     ->numeric()
                     ->default(0.00),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('pay_amount')
+                TextInput::make('pay_amount')
                     ->required()
                     ->numeric()
                     ->default(0.00),
-                Forms\Components\TextInput::make('payment_type')
+                TextInput::make('payment_type')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('payment_id')
+                TextInput::make('payment_id')
                     ->numeric(),
-                Forms\Components\TextInput::make('payment_channel_trade_no')
+                TextInput::make('payment_channel_trade_no')
                     ->maxLength(64),
-                Forms\Components\TextInput::make('payment_mode')
+                TextInput::make('payment_mode')
                     ->maxLength(32),
-                Forms\Components\DateTimePicker::make('payment_time'),
-                Forms\Components\TextInput::make('extra'),
-                Forms\Components\TextInput::make('version')
+                DateTimePicker::make('payment_time'),
+                TextInput::make('extra'),
+                TextInput::make('version')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('creator_type')
+                TextInput::make('creator_type')
                     ->maxLength(32),
-                Forms\Components\TextInput::make('creator_id')
+                TextInput::make('creator_id')
                     ->maxLength(64),
-                Forms\Components\TextInput::make('updater_type')
+                TextInput::make('updater_type')
                     ->maxLength(32),
-                Forms\Components\TextInput::make('updater_id')
+                TextInput::make('updater_id')
                     ->maxLength(64),
             ]);
     }
@@ -87,62 +97,62 @@ class WalletRechargeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('recharge_no')
+                TextColumn::make('recharge_no')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wallet.id')
+                TextColumn::make('wallet.id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('wallet_type')
+                TextColumn::make('wallet_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('owner_type')
+                TextColumn::make('owner_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('owner_id')
+                TextColumn::make('owner_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('amount_currency')
+                TextColumn::make('amount_currency')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('amount_total')
+                TextColumn::make('amount_total')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('fee')
+                TextColumn::make('fee')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pay_amount')
+                TextColumn::make('pay_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_type')
+                TextColumn::make('payment_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('payment_id')
+                TextColumn::make('payment_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_channel_trade_no')
+                TextColumn::make('payment_channel_trade_no')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('payment_mode')
+                TextColumn::make('payment_mode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('payment_time')
+                TextColumn::make('payment_time')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('version')
+                TextColumn::make('version')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('creator_type')
+                TextColumn::make('creator_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('creator_id')
+                TextColumn::make('creator_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updater_type')
+                TextColumn::make('updater_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updater_id')
+                TextColumn::make('updater_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -150,12 +160,12 @@ class WalletRechargeResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -170,9 +180,9 @@ class WalletRechargeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWalletRecharges::route('/'),
-            'create' => Pages\CreateWalletRecharge::route('/create'),
-            'edit' => Pages\EditWalletRecharge::route('/{record}/edit'),
+            'index' => ListWalletRecharges::route('/'),
+            'create' => CreateWalletRecharge::route('/create'),
+            'edit' => EditWalletRecharge::route('/{record}/edit'),
         ];
     }
 }

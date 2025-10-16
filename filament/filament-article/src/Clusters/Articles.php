@@ -10,7 +10,7 @@ class Articles extends Cluster
 
 
 
-    protected static ?string $navigationIcon = 'heroicon-c-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-c-document-text';
 
 
     public static function getNavigationLabel() : string

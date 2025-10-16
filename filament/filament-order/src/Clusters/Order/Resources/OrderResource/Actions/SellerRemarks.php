@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions;
 
+use Filament\Forms\Components\Textarea;
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderMessageCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRemarksCommand;
@@ -29,7 +30,7 @@ trait SellerRemarks
             'content' => $record->extension->{$this->name}
         ]);
         $this->form([
-                        Forms\Components\Textarea::make('content')
+                        Textarea::make('content')
                                                  ->rows(10)
                                                  ->label(__('red-jasmine-order::order.fields.' . $name))
                     ]);

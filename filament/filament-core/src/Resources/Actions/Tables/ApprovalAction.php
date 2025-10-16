@@ -2,10 +2,12 @@
 
 namespace RedJasmine\FilamentCore\Resources\Actions\Tables;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Commands\ApprovalCommand;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
@@ -25,8 +27,8 @@ class ApprovalAction extends Action
              ->slideOver()
              ->icon(FilamentIcon::resolve('actions::edit-action') ?? 'heroicon-o-bell')
              ->form([
-                 Forms\Components\TextInput::make('message'),
-                 Forms\Components\ToggleButtons::make('approval_status')
+                 TextInput::make('message'),
+                 ToggleButtons::make('approval_status')
                                                ->required()
                                                ->label(__('red-jasmine-support::support.fields.approval_status'))
                                                ->inline()

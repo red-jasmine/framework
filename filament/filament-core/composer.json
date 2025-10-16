@@ -21,14 +21,12 @@
     ],
     "require": {
         "red-jasmine/support":  "1.0.x-dev",
-        "filament/filament": "^3",
-        "mokhosh/filament-rating": "^1.0",
+        "filament/filament": "^4",
+        "mokhosh/filament-rating": "^2.0",
         "icetalker/filament-table-repeatable-entry": "*",
-        "guava/filament-clusters": "*",
         "ibrahim-bougaoua/filaprogress": "*",
-        "awcodes/filament-table-repeater": "^3.0",
+        "lara-zeus/quantity": "^2.0",
         "codewithdennis/filament-select-tree": "*",
-        "lara-zeus/quantity": "^1.0",
         "malzariey/filament-daterangepicker-filter": "*"
     },
     "require-dev": {

@@ -63,9 +63,9 @@ class FilamentAdminServiceProvider extends PackageServiceProvider
     public function packageBooted() : void
     {
 
-        FilamentShield::configurePermissionIdentifierUsing(function ($resource) {
-            return Str::of($resource::getModel())->toString();
-        });
+        // FilamentShield::configurePermissionIdentifierUsing(function ($resource) {
+        //     return Str::of($resource::getModel())->toString();
+        // });
 
         // Asset Registration
         FilamentAsset::register(

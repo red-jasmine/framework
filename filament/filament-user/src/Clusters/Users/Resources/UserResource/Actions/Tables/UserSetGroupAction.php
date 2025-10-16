@@ -2,9 +2,9 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
+use Filament\Actions\Action;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;

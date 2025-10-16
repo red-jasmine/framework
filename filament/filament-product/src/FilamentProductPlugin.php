@@ -28,7 +28,6 @@ class FilamentProductPlugin implements Plugin
     public function register(Panel $panel) : void
     {
 
-
         $panel->discoverClusters(in: __DIR__ . '/Clusters/', for: 'RedJasmine\\FilamentProduct\\Clusters');
 
     }

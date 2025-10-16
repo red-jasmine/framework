@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource;
 use Filament\Actions;
@@ -15,7 +16,7 @@ class EditUserGroup extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

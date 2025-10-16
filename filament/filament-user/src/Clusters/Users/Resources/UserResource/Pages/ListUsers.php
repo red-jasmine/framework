@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource;
 use Filament\Actions;
@@ -17,7 +18,7 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

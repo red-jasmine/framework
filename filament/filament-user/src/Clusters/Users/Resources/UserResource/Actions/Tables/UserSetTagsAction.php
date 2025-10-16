@@ -2,9 +2,10 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\User\Application\Services\Commands\UserSetTagsCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
@@ -50,7 +51,7 @@ class UserSetTagsAction extends Action
         $this->form(function ($record) {
 
             return [
-                Forms\Components\Select::make('tags')
+                Select::make('tags')
                                        ->multiple()
                                        ->label(__('red-jasmine-user::user.relations.tags'))
                                        ->relationship(

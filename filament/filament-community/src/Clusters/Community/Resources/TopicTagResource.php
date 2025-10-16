@@ -2,8 +2,11 @@
 
 namespace RedJasmine\FilamentCommunity\Clusters\Community\Resources;
 
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicTagResource\Pages\ListTags;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicTagResource\Pages\CreateTag;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicTagResource\Pages\EditTag;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,7 +30,7 @@ class TopicTagResource extends Resource
 
     protected static ?string $model = TopicTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
 
     protected static ?string $cluster = Community::class;
 
@@ -36,9 +39,9 @@ class TopicTagResource extends Resource
         return __('red-jasmine-community::topic-tag.labels.title');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
@@ -56,9 +59,9 @@ class TopicTagResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListTags::route('/'),
-            'create' => Pages\CreateTag::route('/create'),
-            'edit'   => Pages\EditTag::route('/{record}/edit'),
+            'index'  => ListTags::route('/'),
+            'create' => CreateTag::route('/create'),
+            'edit'   => EditTag::route('/{record}/edit'),
         ];
     }
 }

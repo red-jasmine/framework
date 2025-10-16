@@ -2,6 +2,8 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\Components;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
@@ -11,9 +13,10 @@ use Filament\Tables\Table;
 use Livewire\Component;
 use RedJasmine\Order\Domain\Models\OrderCardKey;
 
-class OrderCardKeys extends Component implements HasTable, HasForms
+class OrderCardKeys extends Component implements HasTable, HasForms, HasActions
 {
 
+    use InteractsWithActions;
     use InteractsWithTable;
     use InteractsWithForms;
 
@@ -55,11 +58,11 @@ class OrderCardKeys extends Component implements HasTable, HasForms
             ->filters([
                           // ...
                       ])
-            ->actions([
+            ->recordActions([
 
 
                       ])
-            ->bulkActions([
+            ->toolbarActions([
                               // ...
                           ]);
     }

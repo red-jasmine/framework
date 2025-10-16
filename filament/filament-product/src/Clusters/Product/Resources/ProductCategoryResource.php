@@ -2,10 +2,10 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\ProductCategoryResource\RelationManagers;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -40,7 +40,7 @@ class ProductCategoryResource extends Resource
     protected static ?string $createCommand  = ProductCategoryCreateCommand::class;
     protected static ?string $updateCommand  = ProductCategoryUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductCategoryDeleteCommand::class;
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-2x2';
 
 
     public static function getModelLabel() : string
@@ -53,9 +53,9 @@ class ProductCategoryResource extends Resource
         return __('red-jasmine-product::product.labels.brand-category-service');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table

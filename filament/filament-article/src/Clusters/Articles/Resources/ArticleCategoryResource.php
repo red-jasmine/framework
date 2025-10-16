@@ -2,7 +2,10 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\ListArticleCategories;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\CreateArticleCategory;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\EditArticleCategory;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use RedJasmine\Article\Application\Services\ArticleCategory\ArticleCategoryApplicationService;
@@ -29,7 +32,7 @@ class ArticleCategoryResource extends Resource
 
     protected static ?string $model = ArticleCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static ?string $cluster = Articles::class;
 
@@ -38,9 +41,9 @@ class ArticleCategoryResource extends Resource
         return __('red-jasmine-article::article-category.labels.title');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
@@ -58,9 +61,9 @@ class ArticleCategoryResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListArticleCategories::route('/'),
-            'create' => Pages\CreateArticleCategory::route('/create'),
-            'edit'   => Pages\EditArticleCategory::route('/{record}/edit'),
+            'index'  => ListArticleCategories::route('/'),
+            'create' => CreateArticleCategory::route('/create'),
+            'edit'   => EditArticleCategory::route('/{record}/edit'),
         ];
     }
 }

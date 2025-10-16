@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource;
 use Filament\Actions;
@@ -15,7 +16,7 @@ class ListProductServices extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

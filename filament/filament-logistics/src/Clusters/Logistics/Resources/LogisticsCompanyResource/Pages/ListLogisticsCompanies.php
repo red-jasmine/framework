@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource;
 use Filament\Actions;
@@ -15,7 +16,7 @@ class ListLogisticsCompanies extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

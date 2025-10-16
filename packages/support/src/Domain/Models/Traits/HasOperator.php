@@ -34,8 +34,7 @@ trait HasOperator
         });
         static::updating(callback: function ($model) {
             // TODO  logout 时存在问题?
-           $model->updater = ServiceContext::getOperator();
-
+           //$model->updater = ServiceContext::getOperator();
         });
     }
 

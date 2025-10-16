@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -16,7 +17,7 @@ class ListCardGroups extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

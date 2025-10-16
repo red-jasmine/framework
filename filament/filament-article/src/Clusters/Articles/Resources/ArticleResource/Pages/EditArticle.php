@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -15,7 +16,7 @@ class EditArticle extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

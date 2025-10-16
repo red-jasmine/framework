@@ -2,8 +2,16 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\BulkActionGroup;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderPaymentResource\Pages\ListOrderPayments;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -37,7 +45,7 @@ class OrderPaymentResource extends Resource
         return __(static::$translationNamespace.'.label');
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?int $navigationSort = 4;
 
@@ -46,64 +54,64 @@ class OrderPaymentResource extends Resource
 
     protected static ?string $cluster = Order::class;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('seller_type')
+        return $schema
+            ->components([
+                TextInput::make('seller_type')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('seller_id')
+                TextInput::make('seller_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('buyer_type')
+                TextInput::make('buyer_type')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('buyer_id')
+                TextInput::make('buyer_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\Select::make('order_id')
+                Select::make('order_id')
                                        ->relationship('order', 'title')
                                        ->required(),
-                Forms\Components\TextInput::make('entity_type')
+                TextInput::make('entity_type')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('entity_id')
-                                          ->required()
-                                          ->numeric(),
-                Forms\Components\TextInput::make('amount_type')
-                                          ->required()
-                                          ->maxLength(32),
-                Forms\Components\TextInput::make('payment_amount')
+                TextInput::make('entity_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('amount_type')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\DateTimePicker::make('payment_time'),
-                Forms\Components\TextInput::make('payment_type')
+                TextInput::make('payment_amount')
+                                          ->required()
+                                          ->numeric(),
+                TextInput::make('status')
+                                          ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('payment_id')
+                DateTimePicker::make('payment_time'),
+                TextInput::make('payment_type')
+                                          ->maxLength(32),
+                TextInput::make('payment_id')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('payment_method')
+                TextInput::make('payment_method')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('payment_channel')
+                TextInput::make('payment_channel')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('payment_channel_no')
+                TextInput::make('payment_channel_no')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('message')
+                TextInput::make('message')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('version')
+                TextInput::make('version')
                                           ->required()
                                           ->numeric()
                                           ->default(0),
-                Forms\Components\TextInput::make('creator_type')
+                TextInput::make('creator_type')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('creator_id')
+                TextInput::make('creator_id')
                                           ->numeric(),
-                Forms\Components\TextInput::make('updater_type')
+                TextInput::make('updater_type')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('updater_id')
+                TextInput::make('updater_id')
                                           ->numeric(),
             ]);
     }
@@ -113,33 +121,33 @@ class OrderPaymentResource extends Resource
         $table
             ->defaultSort('id', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('id')->copyable(),
-                Tables\Columns\TextColumn::make('order_id')->copyable(),
+                TextColumn::make('id')->copyable(),
+                TextColumn::make('order_id')->copyable(),
                 UserAbleColumn::make('seller')->toggleable(isToggledHiddenByDefault: true),
                 UserAbleColumn::make('buyer')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('entity_type')
+                TextColumn::make('entity_type')
                                          ->useEnum(),
-                Tables\Columns\TextColumn::make('entity_id'),
-                Tables\Columns\TextColumn::make('amount_type')
+                TextColumn::make('entity_id'),
+                TextColumn::make('amount_type')
                                          ->useEnum(),
-                Tables\Columns\TextColumn::make('payment_amount')
+                TextColumn::make('payment_amount')
                 ,
-                Tables\Columns\TextColumn::make('status')->useEnum()
+                TextColumn::make('status')->useEnum()
                 ,
-                Tables\Columns\TextColumn::make('payment_time')
+                TextColumn::make('payment_time')
                                          ->dateTime()
                 ,
-                Tables\Columns\TextColumn::make('payment_type')
+                TextColumn::make('payment_type')
                 ,
-                Tables\Columns\TextColumn::make('payment_id')
+                TextColumn::make('payment_id')
                 ,
-                Tables\Columns\TextColumn::make('payment_method')
+                TextColumn::make('payment_method')
                 ,
-                Tables\Columns\TextColumn::make('payment_channel')
+                TextColumn::make('payment_channel')
                 ,
-                Tables\Columns\TextColumn::make('payment_channel_no')
+                TextColumn::make('payment_channel_no')
                 ,
-                Tables\Columns\TextColumn::make('message')
+                TextColumn::make('message')
                 ,
                 ...static::operateTableColumns()
             ])
@@ -150,15 +158,15 @@ class OrderPaymentResource extends Resource
                 InputFilter::make('payment_id'),
                 InputFilter::make('payment_channel'),
                 InputFilter::make('payment_channel_no'),
-                Tables\Filters\SelectFilter::make('amount_type')->options(AmountTypeEnum::options()),
-                Tables\Filters\SelectFilter::make('status')->options(PaymentStatusEnum::options()),
+                SelectFilter::make('amount_type')->options(AmountTypeEnum::options()),
+                SelectFilter::make('status')->options(PaymentStatusEnum::options()),
                 DateRangeFilter::make('payment_time')
-            ], Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
+            ], FiltersLayout::AboveContent)
+            ->recordActions([
                 //Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     //Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -176,7 +184,7 @@ class OrderPaymentResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index' => Pages\ListOrderPayments::route('/'),
+            'index' => ListOrderPayments::route('/'),
         ];
     }
 }

@@ -6,7 +6,7 @@ use Filament\Clusters\Cluster;
 
 class Coupons extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-ticket';
 
     protected static ?int $navigationSort = 5;
 

@@ -2,6 +2,8 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Components;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\ImageColumn;
@@ -13,9 +15,10 @@ use Livewire\Component;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions\Table\OrderProductProgressTableAction;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 
-class OrderProducts extends Component implements HasTable, HasForms
+class OrderProducts extends Component implements HasTable, HasForms, HasActions
 {
 
+    use InteractsWithActions;
     use InteractsWithTable;
     use InteractsWithForms;
 
@@ -56,11 +59,11 @@ class OrderProducts extends Component implements HasTable, HasForms
             ->filters([
                           // ...
                       ])
-            ->actions([
+            ->recordActions([
 
                 OrderProductProgressTableAction::make('progress'),
                       ])
-            ->bulkActions([
+            ->toolbarActions([
                               // ...
                           ]);
     }

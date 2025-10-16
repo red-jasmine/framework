@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentWallet\Clusters\Wallet\Resources\WalletTransactionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,7 +14,7 @@ class ListWalletTransactions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

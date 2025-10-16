@@ -2,11 +2,11 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\RelationManagers;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -32,7 +32,7 @@ class ProductGroupResource extends Resource
     protected static ?int    $navigationSort = 4;
     protected static ?string $cluster        = Product::class;
     protected static ?string $model          = ProductGroup::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-group';
 
     use ResourcePageHelper;
     protected static ?string $service = ProductGroupApplicationService::class;
@@ -49,9 +49,9 @@ class ProductGroupResource extends Resource
         return __('red-jasmine-product::product-group.labels.group');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table

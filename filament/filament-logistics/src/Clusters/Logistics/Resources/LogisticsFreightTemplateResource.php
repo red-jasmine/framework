@@ -2,9 +2,22 @@
 
 namespace RedJasmine\FilamentLogistics\Clusters\Logistics\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\Repeater;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\ListLogisticsFreightTemplates;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\CreateLogisticsFreightTemplate;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\EditLogisticsFreightTemplate;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -32,7 +45,7 @@ class LogisticsFreightTemplateResource extends Resource
     public static string $translationNamespace = 'red-jasmine-logistics::freight-template';
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-table-cells';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-table-cells';
 
 
     public static function getModelLabel() : string
@@ -45,33 +58,33 @@ class LogisticsFreightTemplateResource extends Resource
 
     protected static ?string $cluster = Logistics::class;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        $form
-            ->schema([
+        $schema
+            ->components([
                 ...static::ownerFormSchemas(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\Toggle::make('is_free')
+                Toggle::make('is_free')
                                        ->required(),
-                Forms\Components\ToggleButtons::make('charge_type')
+                ToggleButtons::make('charge_type')
                                               ->required()
                                               ->inline()->inlineLabel()
                                               ->useEnum(FreightChargeTypeEnum::class)
                                               ->default(FreightChargeTypeEnum::QUANTITY),
 
 
-                Forms\Components\Repeater::make('strategies')
+                Repeater::make('strategies')
                                          ->relationship('strategies')
                                          ->schema([
-                                             Forms\Components\ToggleButtons::make('type')->required()
+                                             ToggleButtons::make('type')->required()
                                                                            ->inline()
                                                                            ->inlineLabel()
                                                                            ->useEnum(FreightTemplateStrategyTypeEnum::class)
                                                                            ->default(FreightTemplateStrategyTypeEnum::CHARGE),
 
-                                             Forms\Components\Toggle::make('is_all_regions')
+                                             Toggle::make('is_all_regions')
                                                                     ->default(true)
                                                                     ->live()
                                                                     ->required(),
@@ -90,10 +103,10 @@ class LogisticsFreightTemplateResource extends Resource
                                                         ->independent(false)
                                                        ->saveRelationshipsUsing(null)
                                                        ->dehydrated()
-                                                       ->visible(fn(Forms\Get $get) => !$get('is_all_regions'))
+                                                       ->visible(fn(Get $get) => !$get('is_all_regions'))
                                              ,
 
-                                             Forms\Components\TextInput::make('standard_quantity')
+                                             TextInput::make('standard_quantity')
                                                                        ->required()
                                                                        ->default(1)
                                                                        ->suffix('件')
@@ -105,7 +118,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                        ->default(['currency' => 'CNY', 'amount' => 0])
                                                        ->label(__(static::$translationNamespace.'.fields.strategies.standard_fee')),
 
-                                             Forms\Components\TextInput::make('extra_quantity')
+                                             TextInput::make('extra_quantity')
                                                                        ->required()
                                                                        ->default(0)
                                                                        ->suffix('件')
@@ -124,11 +137,11 @@ class LogisticsFreightTemplateResource extends Resource
                 ,
 
 
-                Forms\Components\TextInput::make('sort')
+                TextInput::make('sort')
                                           ->required()
                                           ->numeric()
                                           ->default(0),
-                Forms\Components\ToggleButtons::make('status')
+                ToggleButtons::make('status')
                                               ->required()
                                               ->inline()->inlineLabel()
                                               ->useEnum(FreightTemplateStatusEnum::class)
@@ -138,40 +151,40 @@ class LogisticsFreightTemplateResource extends Resource
             ->columns(1);
 
 
-        return static::translationLabels($form);
+        return static::translationLabels($schema);
     }
 
     public static function table(Table $table) : Table
     {
         $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->sortable(),
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('charge_type')
+                TextColumn::make('charge_type')
                                          ->useEnum()
                 ,
-                Tables\Columns\IconColumn::make('is_free')
+                IconColumn::make('is_free')
                                          ->boolean(),
-                Tables\Columns\TextColumn::make('sort')
+                TextColumn::make('sort')
                                          ->numeric()
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                                          ->useEnum(),
                 ...static::operateTableColumns(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
         return static::translationLabels($table);
@@ -187,9 +200,9 @@ class LogisticsFreightTemplateResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListLogisticsFreightTemplates::route('/'),
-            'create' => Pages\CreateLogisticsFreightTemplate::route('/create'),
-            'edit'   => Pages\EditLogisticsFreightTemplate::route('/{record}/edit'),
+            'index'  => ListLogisticsFreightTemplates::route('/'),
+            'create' => CreateLogisticsFreightTemplate::route('/create'),
+            'edit'   => EditLogisticsFreightTemplate::route('/{record}/edit'),
         ];
     }
 }

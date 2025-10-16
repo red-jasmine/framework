@@ -2,7 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages;
 
-use Filament\Resources\Components\Tab;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource;

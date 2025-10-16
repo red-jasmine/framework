@@ -2,6 +2,9 @@
 
 namespace RedJasmine\FilamentCore\Forms\Fields;
 
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Cknow\Money\Money;
 use Closure;
 use Filament\Forms;
@@ -53,15 +56,15 @@ class MoneyInput extends Field
         $this->schema(
             [
                 Cluster::make([
-                    Forms\Components\Select::make('currency')
+                    Select::make('currency')
                                            ->columnSpan(3)
                                            ->default(Money::getDefaultCurrency())
                                            ->options(static::getCurrenciesCodes())
                                            ->live()
                     ,
-                    Forms\Components\TextInput::make('amount')
+                    TextInput::make('amount')
                                               ->columnSpan(3)
-                                              ->mask(function (Forms\Get $get, $state) {
+                                              ->mask(function (Get $get, $state) {
                                                   if (filled($get('currency'))) {
                                                       $currencies = Money::getCurrencies();
                                                       $subunitFor = $currencies->subunitFor(new Currency($get('currency')));
@@ -70,7 +73,7 @@ class MoneyInput extends Field
                                                   return null;
                                               })
                                               ->stripCharacters(',')
-                                              ->mutateDehydratedStateUsing(function (Forms\Get $get, $state) : ?int {
+                                              ->mutateDehydratedStateUsing(function (Get $get, $state) : ?int {
                                                   if (filled($state) && filled($get('currency'))) {
                                                       $money = Money::parseByDecimal($state, $get('currency'));
                                                       return $money->getAmount();
@@ -92,7 +95,7 @@ class MoneyInput extends Field
     public function label(Htmlable|Closure|string|null $label) : static
     {
         parent::label($label);
-        foreach ($this->getChildComponents() as $component) {
+        foreach ($this->getDefaultChildComponents() as $component) {
 
             $component->label($label);
         }
@@ -102,7 +105,7 @@ class MoneyInput extends Field
     public function required(bool|Closure $condition = true) : static
     {
         parent::required($condition);
-        foreach ($this->getChildComponents() as $component) {
+        foreach ($this->getDefaultChildComponents() as $component) {
             $component->required($condition);
             foreach ($component->getChildComponents() as $component1) {
                 $component1->required($condition);
@@ -114,7 +117,7 @@ class MoneyInput extends Field
     public function hiddenLabel(bool|Closure $condition = true) : static
     {
         parent::required($condition);
-        foreach ($this->getChildComponents() as $component) {
+        foreach ($this->getDefaultChildComponents() as $component) {
             $component->hiddenLabel($condition);
         }
         return $this;

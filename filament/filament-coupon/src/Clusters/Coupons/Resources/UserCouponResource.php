@@ -2,8 +2,27 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Schemas\Components\Utilities\Get;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ListUserCoupons;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\CreateUserCoupon;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ViewUserCoupon;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\EditUserCoupon;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,7 +47,7 @@ class UserCouponResource extends Resource
     protected static bool    $onlyOwner     = true;
 
     protected static ?string $model          = UserCoupon::class;
-    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-ticket';
     protected static ?string $cluster        = Coupons::class;
     protected static ?int    $navigationSort = 2;
 
@@ -46,50 +65,50 @@ class UserCouponResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.id'))
                                          ->sortable()
                                          ->copyable(),
 
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('coupon_no')
+                TextColumn::make('coupon_no')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.coupon_no'))
 
                 ,
-                Tables\Columns\TextColumn::make('coupon.label')
+                TextColumn::make('coupon.label')
                                          ->label(__('red-jasmine-coupon::coupon.fields.label'))
 
                 ,
 
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('user_id')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.user_id'))
                                          ->copyable(),
 
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.status'))
                                          ->badge()
                                          ->useEnum()
                 ,
-                Tables\Columns\TextColumn::make('issue_time')
+                TextColumn::make('issue_time')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.issue_time'))
                                          ->dateTime()
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('validity_start_time')
+                TextColumn::make('validity_start_time')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.validity_start_time'))
                                          ->dateTime()
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('validity_end_time')
+                TextColumn::make('validity_end_time')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.validity_end_time'))
                                          ->dateTime()
                                          ->sortable(),
 
-                Tables\Columns\TextColumn::make('used_time')
+                TextColumn::make('used_time')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.used_time'))
                                          ->dateTime()
                                          ->sortable()
                                          ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('order_id')
+                TextColumn::make('order_id')
                                          ->label(__('red-jasmine-coupon::user_coupon.fields.order_id'))
                                          ->sortable()
                                          ->toggleable(isToggledHiddenByDefault: true),
@@ -98,22 +117,22 @@ class UserCouponResource extends Resource
                 ...static::operateTableColumns(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                                            ->label(__('red-jasmine-coupon::user_coupon.filters.status'))
                                            ->options(UserCouponStatusEnum::options())
                                            ->multiple(),
 
-                Tables\Filters\SelectFilter::make('coupon_id')
+                SelectFilter::make('coupon_id')
                                            ->label(__('red-jasmine-coupon::user_coupon.fields.coupon_id'))
                                            ->relationship('coupon', 'name')
                                            ->searchable()
                                            ->preload()
                                            ->multiple(),
 
-                Tables\Filters\Filter::make('user_id')
+                Filter::make('user_id')
                                      ->label(__('red-jasmine-coupon::user_coupon.filters.user_id'))
-                                     ->form([
-                                         Forms\Components\TextInput::make('user_id')
+                                     ->schema([
+                                         TextInput::make('user_id')
                                                                    ->label(__('red-jasmine-coupon::user_coupon.fields.user_id'))
                                                                    ->numeric(),
                                      ])
@@ -124,12 +143,12 @@ class UserCouponResource extends Resource
                                          );
                                      }),
 
-                Tables\Filters\Filter::make('expire_time')
+                Filter::make('expire_time')
                                      ->label(__('red-jasmine-coupon::user_coupon.filters.date_range'))
-                                     ->form([
-                                         Forms\Components\DatePicker::make('expire_from')
+                                     ->schema([
+                                         DatePicker::make('expire_from')
                                                                     ->label('过期时间从'),
-                                         Forms\Components\DatePicker::make('expire_until')
+                                         DatePicker::make('expire_until')
                                                                     ->label('过期时间至'),
                                      ])
                                      ->query(function ($query, array $data) {
@@ -144,18 +163,18 @@ class UserCouponResource extends Resource
                                              );
                                      }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
 
-                Tables\Actions\Action::make('use')
+                Action::make('use')
                                      ->label(__('red-jasmine-coupon::user_coupon.commands.use'))
                                      ->icon('heroicon-o-check-circle')
                                      ->color('success')
                                      ->requiresConfirmation()
-                                     ->form([
-                                         Forms\Components\TextInput::make('order_id')
+                                     ->schema([
+                                         TextInput::make('order_id')
                                                                    ->label(__('red-jasmine-coupon::user_coupon.fields.order_id'))
                                                                    ->numeric()
                                                                    ->required(),
@@ -165,7 +184,7 @@ class UserCouponResource extends Resource
                                      })
                                      ->visible(fn(UserCoupon $record) => $record->isAvailable()),
 
-                Tables\Actions\Action::make('expire')
+                Action::make('expire')
                                      ->label(__('red-jasmine-coupon::user_coupon.commands.expire'))
                                      ->icon('heroicon-o-x-circle')
                                      ->color('danger')
@@ -175,57 +194,57 @@ class UserCouponResource extends Resource
                                      })
                                      ->visible(fn(UserCoupon $record) => $record->status === UserCouponStatusEnum::AVAILABLE),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()
+        return $schema
+            ->components([
+                Section::make()
                                         ->schema([
                                             ...static::ownerFormSchemas(),
 
-                                            Forms\Components\Select::make('coupon_id')
+                                            Select::make('coupon_id')
                                                                    ->label(__('red-jasmine-coupon::user_coupon.fields.coupon_id'))
                                                                    ->relationship('coupon', 'name')
                                                                    ->searchable()
                                                                    ->preload()
                                                                    ->required(),
 
-                                            Forms\Components\TextInput::make('user_id')
+                                            TextInput::make('user_id')
                                                                       ->label(__('red-jasmine-coupon::user_coupon.fields.user_id'))
                                                                       ->numeric()
                                                                       ->required(),
 
-                                            Forms\Components\Select::make('status')
+                                            Select::make('status')
                                                                    ->label(__('red-jasmine-coupon::user_coupon.fields.status'))
                                                                    ->options(UserCouponStatusEnum::options())
                                                                    ->default(UserCouponStatusEnum::AVAILABLE)
                                                                    ->required(),
 
-                                            Forms\Components\DateTimePicker::make('issue_time')
+                                            DateTimePicker::make('issue_time')
                                                                            ->label(__('red-jasmine-coupon::user_coupon.fields.issue_time'))
                                                                            ->default(now())
                                                                            ->required(),
 
-                                            Forms\Components\DateTimePicker::make('expire_time')
+                                            DateTimePicker::make('expire_time')
                                                                            ->label(__('red-jasmine-coupon::user_coupon.fields.expire_time'))
                                                                            ->required(),
 
-                                            Forms\Components\DateTimePicker::make('used_time')
+                                            DateTimePicker::make('used_time')
                                                                            ->label(__('red-jasmine-coupon::user_coupon.fields.used_time'))
-                                                                           ->visible(fn(Forms\Get $get
+                                                                           ->visible(fn(Get $get
                                                                            ) => $get('status') === UserCouponStatusEnum::USED->value),
 
-                                            Forms\Components\TextInput::make('order_id')
+                                            TextInput::make('order_id')
                                                                       ->label(__('red-jasmine-coupon::user_coupon.fields.order_id'))
                                                                       ->numeric()
-                                                                      ->visible(fn(Forms\Get $get
+                                                                      ->visible(fn(Get $get
                                                                       ) => $get('status') === UserCouponStatusEnum::USED->value),
                                         ])
                                         ->columns(2),
@@ -244,10 +263,10 @@ class UserCouponResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListUserCoupons::route('/'),
-            'create' => Pages\CreateUserCoupon::route('/create'),
-            'view'   => Pages\ViewUserCoupon::route('/{record}'),
-            'edit'   => Pages\EditUserCoupon::route('/{record}/edit'),
+            'index'  => ListUserCoupons::route('/'),
+            'create' => CreateUserCoupon::route('/create'),
+            'view'   => ViewUserCoupon::route('/{record}'),
+            'edit'   => EditUserCoupon::route('/{record}/edit'),
         ];
     }
 } 

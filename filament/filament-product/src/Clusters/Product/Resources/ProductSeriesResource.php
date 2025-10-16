@@ -2,8 +2,21 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ListProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\CreateProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ViewProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\EditProductSeries;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,7 +43,7 @@ class ProductSeriesResource extends Resource
 
     protected static ?string $model = ProductSeries::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-view-columns';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-view-columns';
 
     protected static ?string $cluster = Product::class;
 
@@ -66,29 +79,29 @@ class ProductSeriesResource extends Resource
         return $model;
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 ...static::ownerFormSchemas(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->label(__('red-jasmine-product::product-series.fields.name'))
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('remarks')
+                TextInput::make('remarks')
                                           ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                           ->maxLength(255),
 
 
-                Forms\Components\Repeater::make('products')
+                Repeater::make('products')
                                          ->label(__('red-jasmine-product::product-series.fields.products'))
                                          ->schema(
                                              [
-                                                 Forms\Components\Select::make('product_id')
+                                                 Select::make('product_id')
                                                                         ->label(__('red-jasmine-product::product-series.fields.product.product_id'))
                                                                         ->searchable()
                                                                         ->inlineLabel()
-                                                                        ->options(fn(Forms\Get $get
+                                                                        ->options(fn(Get $get
                                                                         ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                             $get('../../owner_type'))
                                                                                                                               ->where('owner_id',
@@ -96,7 +109,7 @@ class ProductSeriesResource extends Resource
                                                                                 'id', 'title'
                                                                             ])->limit(10)->pluck('title', 'id')->toArray())
                                                                         ->getSearchResultsUsing(
-                                                                            fn(Forms\Get $get
+                                                                            fn(Get $get
                                                                             ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
                                                                                                                                   ->where('owner_id',
@@ -105,7 +118,7 @@ class ProductSeriesResource extends Resource
                                                                                 ])->limit(10)->pluck('title', 'id')->toArray())
                                                                         ->getOptionLabelUsing(
                                                                             fn(
-                                                                                Forms\Get $get,
+                                                                                Get $get,
                                                                                 $value
                                                                             ) => app(static::$productQueryService)->repository->query()->where('owner_type',
                                                                                 $get('../../owner_type'))
@@ -116,7 +129,7 @@ class ProductSeriesResource extends Resource
 
                                                                         )
                                                                         ->required(),
-                                                 Forms\Components\TextInput::make('name')
+                                                 TextInput::make('name')
                                                                            ->label(__('red-jasmine-product::product-series.fields.product.name'))
                                                                            ->required()
                                                                            ->inlineLabel()
@@ -139,17 +152,17 @@ class ProductSeriesResource extends Resource
         return $table
             ->modifyQueryUsing(fn(Builder $query) => $query->withCount('products'))
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->sortable(),
                 ... static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                                          ->label(__('red-jasmine-product::product-series.fields.name'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('products_count')
+                TextColumn::make('products_count')
                                          ->label('数量')
                 ,
-                Tables\Columns\TextColumn::make('remarks')
+                TextColumn::make('remarks')
                                          ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                          ->searchable(),
 
@@ -159,13 +172,13 @@ class ProductSeriesResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -180,10 +193,10 @@ class ProductSeriesResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListProductSeries::route('/'),
-            'create' => Pages\CreateProductSeries::route('/create'),
-            'view'   => Pages\ViewProductSeries::route('/{record}'),
-            'edit'   => Pages\EditProductSeries::route('/{record}/edit'),
+            'index'  => ListProductSeries::route('/'),
+            'create' => CreateProductSeries::route('/create'),
+            'view'   => ViewProductSeries::route('/{record}'),
+            'edit'   => EditProductSeries::route('/{record}/edit'),
         ];
     }
 }

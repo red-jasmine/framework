@@ -2,12 +2,16 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Stock;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Actions\Action;
 use RedJasmine\Product\Application\Stock\Services\Commands\BulkStockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
@@ -27,18 +31,18 @@ class StockTableAction extends Action
              ->slideOver()
              ->icon(FilamentIcon::resolve('actions::edit-action') ?? 'heroicon-m-pencil-square')
              ->stickyModalFooter()
-             ->form([
+             ->schema([
 
-                        Forms\Components\TextInput::make('id')
+                        TextInput::make('id')
                                                   ->label(__('red-jasmine-product::product.fields.id'))
                                                   ->readOnly(),
-                        Forms\Components\TextInput::make('title')
+                        TextInput::make('title')
                                                   ->label(__('red-jasmine-product::product.fields.title'))
                                                   ->readOnly(),
-                        Forms\Components\TextInput::make('outer_id')
+                        TextInput::make('outer_id')
                                                   ->label(__('red-jasmine-product::product.fields.outer_id'))
                                                   ->readOnly(),
-                        Forms\Components\FileUpload::make('image')->image()->disabled()
+                        FileUpload::make('image')->image()->disabled()
                                                    ->label(__('red-jasmine-product::product.fields.image'))
                         ,
                         TableRepeater::make('skus')
@@ -56,18 +60,18 @@ class StockTableAction extends Action
 
                                                ])
                                      ->schema([
-                                                  Forms\Components\Hidden::make('properties_sequence'),
-                                                  Forms\Components\TextInput::make('id')->readOnly(),
-                                                  Forms\Components\TextInput::make('properties_name')->readOnly(),
-                                                  Forms\Components\TextInput::make('barcode')->readOnly(),
-                                                  Forms\Components\TextInput::make('outer_id')->readOnly(),
-                                                  Forms\Components\Select::make('status')->disabled()->options(ProductStatusEnum::options()),
-                                                  Forms\Components\TextInput::make('stock')->readOnly(),
-                                                  Forms\Components\TextInput::make('safety_stock')->readOnly(),
-                                                  Forms\Components\Select::make('action_type')->required()
+                                                  Hidden::make('properties_sequence'),
+                                                  TextInput::make('id')->readOnly(),
+                                                  TextInput::make('properties_name')->readOnly(),
+                                                  TextInput::make('barcode')->readOnly(),
+                                                  TextInput::make('outer_id')->readOnly(),
+                                                  Select::make('status')->disabled()->options(ProductStatusEnum::options()),
+                                                  TextInput::make('stock')->readOnly(),
+                                                  TextInput::make('safety_stock')->readOnly(),
+                                                  Select::make('action_type')->required()
                                                                          ->default(ProductStockActionTypeEnum::ADD->value)
                                                                          ->options(ProductStockActionTypeEnum::allowActionTypes()),
-                                                  Forms\Components\TextInput::make('action_stock')->numeric()->default(null),
+                                                  TextInput::make('action_stock')->numeric()->default(null),
 
                                               ])
                                      ->inlineLabel(false)

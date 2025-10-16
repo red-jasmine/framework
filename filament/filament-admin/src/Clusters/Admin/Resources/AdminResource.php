@@ -2,7 +2,11 @@
 
 namespace RedJasmine\FilamentAdmin\Clusters\Admin\Resources;
 
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminResource\Pages\ListAdmins;
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminResource\Pages\CreateAdmin;
+use RedJasmine\FilamentAdmin\Clusters\Admin\Resources\AdminResource\Pages\EditAdmin;
 use Filament\Forms;
 use RedJasmine\Admin\Application\Services\AdminApplicationService;
 use RedJasmine\Admin\Domain\Models\Admin;
@@ -26,7 +30,7 @@ class AdminResource extends UserResource
 
     protected static ?string $model = Admin::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
 
     protected static ?string $cluster = AdminClusters::class;
 
@@ -35,13 +39,13 @@ class AdminResource extends UserResource
         return __('red-jasmine-admin::admin.labels.title');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        $form = parent::form($form); 
-        $form->schema([
-            ...$form->getComponents(),
+        $schema = parent::form($schema); 
+        $schema->components([
+            ...$schema->getComponents(),
 
-            Forms\Components\Select::make('roles')
+            Select::make('roles')
                                    ->label(__('red-jasmine-admin::admin.fields.roles'))
                                    ->relationship('roles', 'name')
                                    ->multiple()
@@ -50,7 +54,7 @@ class AdminResource extends UserResource
             ,
 
         ]);
-        return $form;
+        return $schema;
     }
 
 
@@ -64,9 +68,9 @@ class AdminResource extends UserResource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListAdmins::route('/'),
-            'create' => Pages\CreateAdmin::route('/create'),
-            'edit'   => Pages\EditAdmin::route('/{record}/edit'),
+            'index'  => ListAdmins::route('/'),
+            'create' => CreateAdmin::route('/create'),
+            'edit'   => EditAdmin::route('/{record}/edit'),
         ];
     }
 }

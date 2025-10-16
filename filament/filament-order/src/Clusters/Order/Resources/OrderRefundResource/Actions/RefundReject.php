@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRejectCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
@@ -26,7 +27,7 @@ trait RefundReject
             ]
         );
         $this->form([
-            Forms\Components\TextInput::make('reason')
+            TextInput::make('reason')
                                       ->label(__('red-jasmine-order::refund.fields.reason')),
 
         ]);

@@ -2,8 +2,16 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderLogisticsResource\Pages\ListOrderLogistics;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -36,67 +44,67 @@ class OrderLogisticsResource extends Resource
         return __(static::$translationNamespace.'.label');
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
     protected static ?int    $navigationSort = 3;
 
     protected static ?string $model   = OrderLogistics::class;
     protected static ?string $cluster = Order::class;
 
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('seller_type')
+        return $schema
+            ->components([
+                TextInput::make('seller_type')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('seller_id')
+                TextInput::make('seller_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('buyer_type')
+                TextInput::make('buyer_type')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('buyer_id')
+                TextInput::make('buyer_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('order_id')
+                TextInput::make('order_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('entity_type')
+                TextInput::make('entity_type')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('entity_id')
+                TextInput::make('entity_id')
                                           ->required()
                                           ->numeric(),
-                Forms\Components\TextInput::make('order_product_id')
+                TextInput::make('order_product_id')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('shipper')
+                TextInput::make('shipper')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                                           ->required()
                                           ->maxLength(32),
-                Forms\Components\TextInput::make('logistics_company_code')
+                TextInput::make('logistics_company_code')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('logistics_no')
+                TextInput::make('logistics_no')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\DateTimePicker::make('shipping_time'),
-                Forms\Components\DateTimePicker::make('collect_time'),
-                Forms\Components\DateTimePicker::make('dispatch_time'),
-                Forms\Components\DateTimePicker::make('signed_time'),
-                Forms\Components\TextInput::make('version')
+                DateTimePicker::make('shipping_time'),
+                DateTimePicker::make('collect_time'),
+                DateTimePicker::make('dispatch_time'),
+                DateTimePicker::make('signed_time'),
+                TextInput::make('version')
                                           ->required()
                                           ->numeric()
                                           ->default(0),
-                Forms\Components\TextInput::make('creator_type')
+                TextInput::make('creator_type')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('creator_id')
+                TextInput::make('creator_id')
                                           ->numeric(),
-                Forms\Components\TextInput::make('updater_type')
+                TextInput::make('updater_type')
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('updater_id')
+                TextInput::make('updater_id')
                                           ->numeric(),
             ]);
     }
@@ -108,31 +116,31 @@ class OrderLogisticsResource extends Resource
         $table
             ->defaultSort('id', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('id')->copyable(),
-                Tables\Columns\TextColumn::make('order_id')->copyable(),
+                TextColumn::make('id')->copyable(),
+                TextColumn::make('order_id')->copyable(),
                 UserAbleColumn::make('seller')->toggleable(isToggledHiddenByDefault: true),
                 UserAbleColumn::make('buyer'),
-                Tables\Columns\TextColumn::make('entity_type')->useEnum(),
-                Tables\Columns\TextColumn::make('entity_id')->copyable()
+                TextColumn::make('entity_type')->useEnum(),
+                TextColumn::make('entity_id')->copyable()
                 ,
-                Tables\Columns\TextColumn::make('order_product_id')->copyable()
+                TextColumn::make('order_product_id')->copyable()
                 ,
-                Tables\Columns\TextColumn::make('shipper')->useEnum(),
-                Tables\Columns\TextColumn::make('status')->useEnum(),
-                Tables\Columns\TextColumn::make('logistics_company_code')
+                TextColumn::make('shipper')->useEnum(),
+                TextColumn::make('status')->useEnum(),
+                TextColumn::make('logistics_company_code')
                 ,
-                Tables\Columns\TextColumn::make('logistics_no')->copyable()
+                TextColumn::make('logistics_no')->copyable()
                 ,
-                Tables\Columns\TextColumn::make('shipping_time')
+                TextColumn::make('shipping_time')
                                          ->dateTime()
                 ,
-                Tables\Columns\TextColumn::make('collect_time')
+                TextColumn::make('collect_time')
                                          ->dateTime()
                 ,
-                Tables\Columns\TextColumn::make('dispatch_time')
+                TextColumn::make('dispatch_time')
                                          ->dateTime()
                 ,
-                Tables\Columns\TextColumn::make('signed_time')
+                TextColumn::make('signed_time')
                                          ->dateTime()
                 ,
 
@@ -145,17 +153,17 @@ class OrderLogisticsResource extends Resource
                 InputFilter::make('logistics_company_code'),
                 InputFilter::make('logistics_no'),
                 //Tables\Filters\SelectFilter::make('shipper')->options(LogisticsShipperEnum::options()),
-                Tables\Filters\SelectFilter::make('status')->options(LogisticsStatusEnum::options()),
+                SelectFilter::make('status')->options(LogisticsStatusEnum::options()),
 
                 DateRangeFilter::make('shipping_time'),
                 DateRangeFilter::make('signed_time'),
-            ], Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
+            ], FiltersLayout::AboveContent)
+            ->recordActions([
                 //Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
 
@@ -172,7 +180,7 @@ class OrderLogisticsResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index' => Pages\ListOrderLogistics::route('/'),
+            'index' => ListOrderLogistics::route('/'),
             //'create' => Pages\CreateOrderLogistics::route('/create'),
             //'edit'   => Pages\EditOrderLogistics::route('/{record}/edit'),
         ];

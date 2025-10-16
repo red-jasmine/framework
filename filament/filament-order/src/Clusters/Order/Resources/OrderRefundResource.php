@@ -2,14 +2,42 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Fieldset;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundSellerRemarksInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundStarInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeReshipmentInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundReshipmentInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\Components\OrderPayments;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\Components\OrderLogistics;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\Components\OrderCardKeys;
+use Filament\Schemas\Components\Livewire;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeTableAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundRejectTableAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeReshipmentTableAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundReshipmentTableAction;
+use Filament\Actions\ActionGroup;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundStarTableAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions\Table\RefundSellerRemarksTableAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages\ListOrderRefunds;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages\CreateOrderRefund;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages\ViewOrderRefund;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Pages\EditOrderRefund;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\Livewire;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -45,7 +73,7 @@ class OrderRefundResource extends Resource
 
     public static string $translationNamespace = 'red-jasmine-order::refund';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Order::class;
 
@@ -56,10 +84,10 @@ class OrderRefundResource extends Resource
         return __('red-jasmine-order::refund.labels.refund');
     }
 
-    public static function infolist(Infolist $infoList) : Infolist
+    public static function infolist(Schema $infoList) : Schema
     {
 
-        $infoList->schema([
+        $infoList->components([
             Section::make(static fn(Model $record) => $record->id)
                    ->schema([
                        TextEntry::make('refund_status')->useEnum(),
@@ -70,7 +98,7 @@ class OrderRefundResource extends Resource
                                 ->hintIcon('heroicon-m-exclamation-circle')
                                 ->hintIconTooltip(__('red-jasmine-order::tips.seller_remarks'))
                                 ->hintAction(
-                                    Order\Resources\OrderRefundResource\Actions\InfoList\RefundSellerRemarksInfoListAction::make('seller-remarks')
+                                    RefundSellerRemarksInfoListAction::make('seller-remarks')
 
                                 ),
 
@@ -79,35 +107,35 @@ class OrderRefundResource extends Resource
                                   ->stars(10)
                                   ->allowZero()
                                   ->hintAction(
-                                      Order\Resources\OrderRefundResource\Actions\InfoList\RefundStarInfoListAction::make('star'),
+                                      RefundStarInfoListAction::make('star'),
                                   )
                        ,
                    ])
                    ->columns(2)
                    ->inlineLabel()
                    ->footerActions([
-                       Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeInfoListAction::make('agree')
+                       RefundAgreeInfoListAction::make('agree')
                                                                                                      ->successRedirectUrl(static fn(
                                                                                                          Model $model
                                                                                                      ) => static::getUrl('view',
                                                                                                          ['record' => $model->id]))
                        ,
 
-                       Order\Resources\OrderRefundResource\Actions\InfoList\RefundAgreeReshipmentInfoListAction::make('agree-reshipment')
+                       RefundAgreeReshipmentInfoListAction::make('agree-reshipment')
                                                                                                                ->successRedirectUrl(static fn(
                                                                                                                    Model $model
                                                                                                                ) => static::getUrl('view',
                                                                                                                    ['record' => $model->id]))
                        ,
 
-                       Order\Resources\OrderRefundResource\Actions\InfoList\RefundReshipmentInfoListAction::make('reshipment')
+                       RefundReshipmentInfoListAction::make('reshipment')
                                                                                                           ->successRedirectUrl(static fn(
                                                                                                               Model $model
                                                                                                           ) => static::getUrl('view',
                                                                                                               ['record' => $model->id]))
                        ,
 
-                       Order\Resources\OrderRefundResource\Actions\InfoList\RefundRejectInfoListAction::make('reject')
+                       RefundRejectInfoListAction::make('reject')
                                                                                                       ->successRedirectUrl(static fn(
                                                                                                           Model $model
                                                                                                       ) => static::getUrl('view',
@@ -141,7 +169,7 @@ class OrderRefundResource extends Resource
                            ], true)
                            && $record->refund_status === RefundStatusEnum::FINISHED
                        ) {
-                           $components[] = Order\Resources\Components\OrderPayments::class;
+                           $components[] = OrderPayments::class;
                        }
                        if (
                            $record->shipping_type === ShippingTypeEnum::LOGISTICS &&
@@ -152,13 +180,13 @@ class OrderRefundResource extends Resource
                            ], true)
 
                        ) {
-                           $components[] = Order\Resources\Components\OrderLogistics::class;
+                           $components[] = OrderLogistics::class;
                        }
                        if ($record->refund_type === RefundTypeEnum::RESHIPMENT
                            && $record->shipping_type === ShippingTypeEnum::CARD_KEY
                            && $record->refund_status === RefundStatusEnum::FINISHED
                        ) {
-                           $components[] = Order\Resources\Components\OrderCardKeys::class;
+                           $components[] = OrderCardKeys::class;
                        }
 
 
@@ -244,9 +272,9 @@ class OrderRefundResource extends Resource
         return $infoList;
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form;
+        return $schema;
     }
 
     public static function table(Table $table) : Table
@@ -255,16 +283,16 @@ class OrderRefundResource extends Resource
             ->defaultSort('id', 'DESC')
             ->recordUrl(null)
             ->columns([
-                Tables\Columns\TextColumn::make('id')->copyable()
+                TextColumn::make('id')->copyable()
                 ,
 
-                Tables\Columns\TextColumn::make('order_id')->copyable(),
+                TextColumn::make('order_id')->copyable(),
                 //                Tables\Columns\TextColumn::make('order_product_id') ,
 
-                Tables\Columns\TextColumn::make('order_product_type')->useEnum(),
-                Tables\Columns\TextColumn::make('shipping_type')->useEnum(),
+                TextColumn::make('order_product_type')->useEnum(),
+                TextColumn::make('shipping_type')->useEnum(),
 
-                Tables\Columns\TextColumn::make('title'),
+                TextColumn::make('title'),
                 //                Tables\Columns\TextColumn::make('sku_name'),
                 //                Tables\Columns\ImageColumn::make('image'),
                 //                Tables\Columns\TextColumn::make('product_type'),
@@ -289,17 +317,17 @@ class OrderRefundResource extends Resource
                 //
 
 
-                Tables\Columns\TextColumn::make('refund_type')->useEnum(),
-                Tables\Columns\TextColumn::make('phase')->useEnum(),
-                Tables\Columns\IconColumn::make('has_good_return')->boolean(),
-                Tables\Columns\TextColumn::make('good_status')->useEnum(),
-                Tables\Columns\TextColumn::make('reason'),
-                Tables\Columns\TextColumn::make('outer_refund_id'),
+                TextColumn::make('refund_type')->useEnum(),
+                TextColumn::make('phase')->useEnum(),
+                IconColumn::make('has_good_return')->boolean(),
+                TextColumn::make('good_status')->useEnum(),
+                TextColumn::make('reason'),
+                TextColumn::make('outer_refund_id'),
 
-                Tables\Columns\TextColumn::make('refund_status')->useEnum(),
-                Tables\Columns\TextColumn::make('freight_amount')->money(),
-                Tables\Columns\TextColumn::make('refund_amount')->money(),
-                Tables\Columns\TextColumn::make('total_refund_amount')->money(),
+                TextColumn::make('refund_status')->useEnum(),
+                TextColumn::make('freight_amount')->money(),
+                TextColumn::make('refund_amount')->money(),
+                TextColumn::make('total_refund_amount')->money(),
 
                 ...static::operateTableColumns()
             ])
@@ -307,35 +335,35 @@ class OrderRefundResource extends Resource
 
                 InputFilter::make('id'),
                 InputFilter::make('order_id'),
-                Tables\Filters\SelectFilter::make('refund_status'),
-                Tables\Filters\SelectFilter::make('refund_type'),
-                Tables\Filters\SelectFilter::make('phase'),
-                Tables\Filters\SelectFilter::make('good_status'),
+                SelectFilter::make('refund_status'),
+                SelectFilter::make('refund_type'),
+                SelectFilter::make('phase'),
+                SelectFilter::make('good_status'),
                 DateRangeFilter::make('created_time'),
                 DateRangeFilter::make('end_time'),
 
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
+            ], layout: FiltersLayout::AboveContent)
             ->deferFilters()
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
-                Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeTableAction::make('agree'),
-                Order\Resources\OrderRefundResource\Actions\Table\RefundRejectTableAction::make('reject'),
-                Order\Resources\OrderRefundResource\Actions\Table\RefundAgreeReshipmentTableAction::make('agree-reshipment'),
-                Order\Resources\OrderRefundResource\Actions\Table\RefundReshipmentTableAction::make('reshipment'),
+                RefundAgreeTableAction::make('agree'),
+                RefundRejectTableAction::make('reject'),
+                RefundAgreeReshipmentTableAction::make('agree-reshipment'),
+                RefundReshipmentTableAction::make('reshipment'),
 
-                Tables\Actions\ActionGroup::make([
+                ActionGroup::make([
 
-                    Order\Resources\OrderRefundResource\Actions\Table\RefundStarTableAction::make('star'),
-                    Order\Resources\OrderRefundResource\Actions\Table\RefundSellerRemarksTableAction::make('seller-remarks'),
+                    RefundStarTableAction::make('star'),
+                    RefundSellerRemarksTableAction::make('seller-remarks'),
                 ])->label('more'),
 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
 
@@ -353,10 +381,10 @@ class OrderRefundResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListOrderRefunds::route('/'),
-            'create' => Pages\CreateOrderRefund::route('/create'),
-            'view'   => Pages\ViewOrderRefund::route('/{record}'),
-            'edit'   => Pages\EditOrderRefund::route('/{record}/edit'),
+            'index'  => ListOrderRefunds::route('/'),
+            'create' => CreateOrderRefund::route('/create'),
+            'view'   => ViewOrderRefund::route('/{record}'),
+            'edit'   => EditOrderRefund::route('/{record}/edit'),
         ];
     }
 

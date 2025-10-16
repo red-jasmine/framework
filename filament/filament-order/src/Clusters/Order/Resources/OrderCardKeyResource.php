@@ -2,8 +2,16 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\BulkActionGroup;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderCardKeyResource\Pages\ListOrderCardKeys;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -36,7 +44,7 @@ class OrderCardKeyResource extends Resource
         return __(static::$translationNamespace . '.label');
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-key';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-key';
 
     protected static ?int $navigationSort = 5;
 
@@ -45,57 +53,57 @@ class OrderCardKeyResource extends Resource
 
     protected static ?string $cluster = Order::class;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
-                         Forms\Components\TextInput::make('seller_type')
+        return $schema
+            ->components([
+                         TextInput::make('seller_type')
                                                    ->required()
                                                    ->maxLength(32),
-                         Forms\Components\TextInput::make('seller_id')
+                         TextInput::make('seller_id')
                                                    ->required()
                                                    ->numeric(),
-                         Forms\Components\TextInput::make('buyer_type')
+                         TextInput::make('buyer_type')
                                                    ->required()
                                                    ->maxLength(32),
-                         Forms\Components\TextInput::make('buyer_id')
+                         TextInput::make('buyer_id')
                                                    ->required()
                                                    ->numeric(),
-                         Forms\Components\Select::make('order_id')
+                         Select::make('order_id')
                                                 ->relationship('order', 'title')
                                                 ->required(),
-                         Forms\Components\TextInput::make('entity_type')
+                         TextInput::make('entity_type')
                                                    ->required()
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('entity_id')
+                         TextInput::make('entity_id')
                                                    ->required()
                                                    ->numeric(),
-                         Forms\Components\Select::make('order_product_id')
+                         Select::make('order_product_id')
                                                 ->relationship('orderProduct', 'title')
                                                 ->required(),
-                         Forms\Components\TextInput::make('quantity')
+                         TextInput::make('quantity')
                                                    ->required()
                                                    ->numeric()
                                                    ->default(1),
-                         Forms\Components\TextInput::make('content_type')
+                         TextInput::make('content_type')
                                                    ->required()
                                                    ->maxLength(255)
                                                    ->default('text'),
-                         Forms\Components\Textarea::make('content')
+                         Textarea::make('content')
                                                   ->columnSpanFull(),
-                         Forms\Components\TextInput::make('source_type')
+                         TextInput::make('source_type')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('source_id')
+                         TextInput::make('source_id')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('status')
+                         TextInput::make('status')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('creator_type')
+                         TextInput::make('creator_type')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('creator_id')
+                         TextInput::make('creator_id')
                                                    ->numeric(),
-                         Forms\Components\TextInput::make('updater_type')
+                         TextInput::make('updater_type')
                                                    ->maxLength(255),
-                         Forms\Components\TextInput::make('updater_id')
+                         TextInput::make('updater_id')
                                                    ->numeric(),
                      ]);
     }
@@ -105,31 +113,31 @@ class OrderCardKeyResource extends Resource
         $table
             ->defaultSort('id', 'desc')
             ->columns([
-                          Tables\Columns\TextColumn::make('id')->copyable(),
-                          Tables\Columns\TextColumn::make('order_id')->copyable(),
+                          TextColumn::make('id')->copyable(),
+                          TextColumn::make('order_id')->copyable(),
                           UserAbleColumn::make('seller')->toggleable(isToggledHiddenByDefault: true),
                           UserAbleColumn::make('buyer'),
-                          Tables\Columns\TextColumn::make('entity_type')->useEnum(),
-                          Tables\Columns\TextColumn::make('entity_id')->copyable(),
-                          Tables\Columns\TextColumn::make('quantity'),
-                          Tables\Columns\TextColumn::make('content_type')->useEnum(),
-                          Tables\Columns\TextColumn::make('source_type'),
-                          Tables\Columns\TextColumn::make('source_id'),
-                          Tables\Columns\TextColumn::make('status')->useEnum(),
+                          TextColumn::make('entity_type')->useEnum(),
+                          TextColumn::make('entity_id')->copyable(),
+                          TextColumn::make('quantity'),
+                          TextColumn::make('content_type')->useEnum(),
+                          TextColumn::make('source_type'),
+                          TextColumn::make('source_id'),
+                          TextColumn::make('status')->useEnum(),
                           ...static::operateTableColumns()
                       ])
             ->deferFilters()
             ->filters([
                           InputFilter::make('id'),
                           InputFilter::make('order_id'),
-                          Tables\Filters\SelectFilter::make('status')->options(OrderCardKeyStatusEnum::options()),
+                          SelectFilter::make('status')->options(OrderCardKeyStatusEnum::options()),
                           DateRangeFilter::make('created_at'),
-                      ], Tables\Enums\FiltersLayout::AboveContent)
-            ->actions([
+                      ], FiltersLayout::AboveContent)
+            ->recordActions([
 
                       ])
-            ->bulkActions([
-                              Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                              BulkActionGroup::make([
 
                                                                    ]),
                           ]);
@@ -147,7 +155,7 @@ class OrderCardKeyResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index' => Pages\ListOrderCardKeys::route('/'),
+            'index' => ListOrderCardKeys::route('/'),
 
         ];
     }

@@ -2,8 +2,11 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\ListProductTags;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\CreateProductTag;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\EditProductTag;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -22,7 +25,7 @@ class ProductTagResource extends Resource
 {
     protected static ?string $model = ProductTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
     protected static ?string $cluster        = Product::class;
     protected static ?int    $navigationSort = 5;
 
@@ -40,9 +43,9 @@ class ProductTagResource extends Resource
         return __('red-jasmine-product::product-tag.labels.tag');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
@@ -60,9 +63,9 @@ class ProductTagResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListProductTags::route('/'),
-            'create' => Pages\CreateProductTag::route('/create'),
-            'edit'   => Pages\EditProductTag::route('/{record}/edit'),
+            'index'  => ListProductTags::route('/'),
+            'create' => CreateProductTag::route('/create'),
+            'edit'   => EditProductTag::route('/{record}/edit'),
         ];
     }
 

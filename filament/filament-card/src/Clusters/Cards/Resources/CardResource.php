@@ -2,8 +2,27 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\ListCards;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\CreateCard;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\EditCard;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,7 +48,7 @@ class CardResource extends Resource
     protected static ?string $model          = Card::class;
     protected static bool    $onlyOwner      = true;
     protected static ?int    $navigationSort = 2;
-    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-ticket';
 
     public static function getModelLabel() : string
     {
@@ -39,17 +58,17 @@ class CardResource extends Resource
 
     protected static ?string $cluster = Cards::class;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
                 ...static::ownerFormSchemas(),
-                Forms\Components\Split::make([
+                Flex::make([
 
-                    Forms\Components\Section::make([
+                    Section::make([
 
-                        Forms\Components\Select::make('group_id')
+                        Select::make('group_id')
                                                ->label(__('red-jasmine-card::card.fields.group_id'))
                                                ->relationship('group', 'name',
                                                    modifyQueryUsing: static::ownerQueryUsing()
@@ -57,28 +76,28 @@ class CardResource extends Resource
                                                ->required()
                                                ->default(0),
 
-                        Forms\Components\Textarea::make('content')
+                        Textarea::make('content')
                                                  ->label(__('red-jasmine-card::card.fields.content'))
                                                  ->required()
                                                  ->columnSpanFull(),
 
 
                     ]),
-                    Forms\Components\Section::make([
-                        Forms\Components\Toggle::make('is_loop')
+                    Section::make([
+                        Toggle::make('is_loop')
                                                ->label(__('red-jasmine-card::card.fields.is_loop'))
                                                ->required(),
-                        Forms\Components\ToggleButtons::make('status')
+                        ToggleButtons::make('status')
                                                       ->label(__('red-jasmine-card::card.fields.status'))
                                                       ->required()
                                                       ->grouped()
                                                       ->default(CardStatus::ENABLE)
                                                       ->useEnum(CardStatus::class),
-                        Forms\Components\DateTimePicker::make('sold_time')
+                        DateTimePicker::make('sold_time')
                                                        ->label(__('red-jasmine-card::card.fields.sold_time'))
                                                        ->disabled(),
 
-                        Forms\Components\TextInput::make('remarks')
+                        TextInput::make('remarks')
                                                   ->label(__('red-jasmine-card::card.fields.remarks'))
                                                   ->maxLength(255),
 
@@ -95,40 +114,40 @@ class CardResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->sortable(),
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('group.name')
+                TextColumn::make('group.name')
                                          ->label(__('red-jasmine-card::card.fields.group_id'))
                                          ->numeric()
                                          ->sortable(),
-                Tables\Columns\IconColumn::make('is_loop')
+                IconColumn::make('is_loop')
                                          ->label(__('red-jasmine-card::card.fields.is_loop'))
                                          ->boolean(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                                          ->label(__('red-jasmine-card::card.fields.status'))
                                          ->useEnum(),
-                Tables\Columns\TextColumn::make('sold_time')
+                TextColumn::make('sold_time')
                                          ->label(__('red-jasmine-card::card.fields.sold_time'))
                                          ->dateTime()
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('remarks')
+                TextColumn::make('remarks')
                                          ->label(__('red-jasmine-card::card.fields.remarks'))
                                          ->searchable(),
                 ...static::operateTableColumns(),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -143,9 +162,9 @@ class CardResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListCards::route('/'),
-            'create' => Pages\CreateCard::route('/create'),
-            'edit'   => Pages\EditCard::route('/{record}/edit'),
+            'index'  => ListCards::route('/'),
+            'create' => CreateCard::route('/create'),
+            'edit'   => EditCard::route('/{record}/edit'),
         ];
     }
 

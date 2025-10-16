@@ -51,7 +51,7 @@ class ProductSeriesRepository extends Repository implements ProductSeriesReposit
     /**
      * 更新商品系列
      */
-    public function update(Model $model): void
+    public function update(Model $model): Model
     {
         $products = $model->products;
         unset($model->products);
@@ -67,15 +67,17 @@ class ProductSeriesRepository extends Repository implements ProductSeriesReposit
             ];
             ProductSeriesProduct::updateOrCreate(['product_id' => $product->product_id], $values);
         });
+        return $model;
     }
 
     /**
      * 删除商品系列
      */
-    public function delete(Model $model)
+    public function delete(Model $model):bool
     {
         $model->products()->delete();
-        $model->delete();
+        return  $model->delete();
+
     }
 
     /**

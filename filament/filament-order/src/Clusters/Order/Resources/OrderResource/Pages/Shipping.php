@@ -2,10 +2,13 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
@@ -18,8 +21,8 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShipping
 use RedJasmine\Support\Exceptions\AbstractException;
 
 /**
- * @property Form $dummy
- * @property Form $logistics
+ * @property Schema $dummy
+ * @property Schema $logistics
  */
 class Shipping extends Page
 {
@@ -42,12 +45,12 @@ class Shipping extends Page
 
     use InteractsWithFormActions;
 
-    public function infolist(Infolist $infolist) : Infolist
+    public function infolist(Schema $schema) : Schema
     {
-        return static::getResource()::infolist($infolist);
+        return static::getResource()::infolist($schema);
     }
 
-    protected function makeInfolist() : Infolist
+    protected function makeInfolist() : Schema
     {
         return parent::makeInfolist()
                      ->record($this->getRecord())
@@ -96,7 +99,7 @@ class Shipping extends Page
     }
 
 
-    protected static string $view = 'red-jasmine-filament-order::resources.order-resource.pages.shipping';
+    protected string $view = 'red-jasmine-filament-order::resources.order-resource.pages.shipping';
 
     public function getHeading() : string
     {
@@ -118,16 +121,16 @@ class Shipping extends Page
         ];
     }
 
-    public function dummy(Form $form) : Form
+    public function dummy(Schema $schema) : Schema
     {
         $record = $this->record;
-        return $form->schema([
+        return $schema->components([
 
-                                 Forms\Components\CheckboxList::make('order_products')
+                                 CheckboxList::make('order_products')
                                                               ->label(__('red-jasmine-order::order.fields.products'))
                                                               ->options($record->products->pluck('title', 'id')->toArray()),
 
-                                 Forms\Components\ToggleButtons::make('is_finished')
+                                 ToggleButtons::make('is_finished')
                                                                ->label(__('red-jasmine-order::commands.shipping.is_finished'))
                                                                ->default(true)
                                                                ->grouped()
@@ -161,27 +164,27 @@ class Shipping extends Page
 
     }
 
-    public function logistics(Form $form) : Form
+    public function logistics(Schema $schema) : Schema
     {
 
         $record = $this->record;
-        return $form->schema([
+        return $schema->components([
 
-                                 Forms\Components\ToggleButtons::make('is_split')
+                                 ToggleButtons::make('is_split')
                                                                ->label(__('red-jasmine-order::commands.shipping.is_split'))
                                                                ->default(false)
                                                                ->grouped()
                                                                ->live()
                                                                ->boolean(),
-                                 Forms\Components\CheckboxList::make('order_products')
+                                 CheckboxList::make('order_products')
                                                               ->label(__('red-jasmine-order::commands.shipping.products'))
-                                                              ->visible(fn(Forms\Get $get) => $get('is_split'))
+                                                              ->visible(fn(Get $get) => $get('is_split'))
                                                               ->options($record->products->pluck('title', 'id')->toArray()),
 
-                                 Forms\Components\TextInput::make('logistics_company_code')
+                                 TextInput::make('logistics_company_code')
                                                            ->label(__('red-jasmine-order::commands.shipping.logistics_company_code'))
                                                            ->required(),
-                                 Forms\Components\TextInput::make('logistics_no')
+                                 TextInput::make('logistics_no')
                                                            ->label(__('red-jasmine-order::commands.shipping.logistics_no'))
                                                            ->required(),
 

@@ -14,7 +14,7 @@ class Dashboard extends Page
 
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-home';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
 
     public static function getNavigationLabel() : string
     {
@@ -30,7 +30,7 @@ class Dashboard extends Page
     protected static ?string $slug           = 'dashboard';
     protected static ?int    $navigationSort = -3;
     protected static ?string $cluster        = Product::class;
-    protected static string  $view           = 'filament-panels::pages.dashboard';
+
 
     /**
      * @return array<class-string<Widget> | WidgetConfiguration>

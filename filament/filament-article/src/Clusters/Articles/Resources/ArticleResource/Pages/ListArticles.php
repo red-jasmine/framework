@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages;
 
+use Filament\Actions\CreateAction;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -15,7 +16,7 @@ class ListArticles extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
@@ -14,7 +15,7 @@ class EditProduct extends EditRecord
     protected function getHeaderActions() : array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

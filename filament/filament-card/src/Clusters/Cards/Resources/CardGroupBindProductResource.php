@@ -2,8 +2,22 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\MorphToSelect\Type;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\ListCardGroupBindProducts;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\CreateCardGroupBindProduct;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\EditCardGroupBindProduct;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -37,7 +51,7 @@ class CardGroupBindProductResource extends Resource
 
     protected static bool $onlyOwner = true;
 
-    protected static ?string $navigationIcon = 'heroicon-o-link';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-link';
 
     protected static ?string $cluster = Cards::class;
 
@@ -52,33 +66,33 @@ class CardGroupBindProductResource extends Resource
         return $model;
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
+        return $schema
             ->columns(1)
             ->schema([
                 ...static::ownerFormSchemas(),
-                Forms\Components\Select::make('group_id')
+                Select::make('group_id')
                                        ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
                                        ->relationship('group', 'name',
                                            modifyQueryUsing: fn(
                                                Builder $query,
-                                               Forms\Get $get
+                                               Get $get
                                            ) => $query->onlyOwner(UserData::from(['type' => $get('owner_type'), 'id' => $get('owner_id')]))
                                        )
                                        ->searchable()
                                        ->preload()
                                        ->optionsLimit(30)
                                        ->required(),
-                Forms\Components\MorphToSelect::make('product')
+                MorphToSelect::make('product')
                                               ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
                                               ->types([
                                                   ...collect(static::$model::$morphLabels)
-                                                      ->map(fn($label, $item) => Forms\Components\MorphToSelect\Type::make($item)
+                                                      ->map(fn($label, $item) => Type::make($item)
                                                                                                                     ->titleAttribute('title')
                                                                                                                     ->modifyOptionsQueryUsing(fn(
                                                                                                                         Builder $query,
-                                                                                                                        Forms\Get $get
+                                                                                                                        Get $get
                                                                                                                     ) => $query->onlyOwner(UserData::from([
                                                                                                                         'type' => $get('owner_type'),
                                                                                                                         'id'   => $get('owner_id')
@@ -88,7 +102,7 @@ class CardGroupBindProductResource extends Resource
                                               ])
 
                 ,
-                Forms\Components\TextInput::make('sku_id')
+                TextInput::make('sku_id')
                                           ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
                                           ->numeric()
                                           ->default(0),
@@ -100,20 +114,20 @@ class CardGroupBindProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->sortable(),
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('product.title')
+                TextColumn::make('product.title')
                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.product'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('product_id')
+                TextColumn::make('product_id')
                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.product_id'))
                 ,
-                Tables\Columns\TextColumn::make('sku_id')
+                TextColumn::make('sku_id')
                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
                                          ->copyable(),
-                Tables\Columns\TextColumn::make('group.name')
+                TextColumn::make('group.name')
                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
                                          ->numeric()
                                          ->sortable(),
@@ -122,14 +136,14 @@ class CardGroupBindProductResource extends Resource
             ->filters([
                 //Tables\Filters\TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -144,9 +158,9 @@ class CardGroupBindProductResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index' => Pages\ListCardGroupBindProducts::route('/'),
-            'create' => Pages\CreateCardGroupBindProduct::route('/create'),
-            'edit' => Pages\EditCardGroupBindProduct::route('/{record}/edit'),
+            'index' => ListCardGroupBindProducts::route('/'),
+            'create' => CreateCardGroupBindProduct::route('/create'),
+            'edit' => EditCardGroupBindProduct::route('/{record}/edit'),
         ];
     }
 

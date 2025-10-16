@@ -2,10 +2,32 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\RichEditor;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Component;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages\ListArticles;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages\CreateArticle;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleResource\Pages\EditArticle;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -42,7 +64,7 @@ class ArticleResource extends Resource
 
     protected static ?string $model = Article::class;
 
-    protected static ?string $navigationIcon = 'heroicon-c-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-c-document-text';
 
     protected static ?string $cluster = Articles::class;
 
@@ -58,24 +80,24 @@ class ArticleResource extends Resource
     }
 
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
-                Forms\Components\Split::make([
-                    Forms\Components\Section::make([
-                        Forms\Components\TextInput::make('title')
+                Flex::make([
+                    Section::make([
+                        TextInput::make('title')
                                                   ->label(__('red-jasmine-article::article.fields.title'))
                                                   ->required()
                                                   ->maxLength(255),
-                        Forms\Components\FileUpload::make('image')
+                        FileUpload::make('image')
                                                    ->label(__('red-jasmine-article::article.fields.image'))
                                                    ->image(),
-                        Forms\Components\TextInput::make('description')
+                        TextInput::make('description')
                                                   ->label(__('red-jasmine-article::article.fields.description'))
                                                   ->maxLength(255),
-                        Forms\Components\TagsInput::make('keywords')
+                        TagsInput::make('keywords')
                                                   ->label(__('red-jasmine-article::article.fields.keywords'))
                                                   ->nestedRecursiveRules([
                                                       'min:1',
@@ -84,7 +106,7 @@ class ArticleResource extends Resource
                                                   ->reorderable()
                                                   ->separator(' '),
 
-                        Forms\Components\ToggleButtons::make('content_type')
+                        ToggleButtons::make('content_type')
                                                       ->label(__('red-jasmine-article::article.fields.content_type'))
                                                       ->required()
                                                       ->inline()
@@ -93,23 +115,23 @@ class ArticleResource extends Resource
                                                       ->useEnum(ContentTypeEnum::class),
 
 
-                        Forms\Components\RichEditor::make('content')
-                                                   ->visible(fn(Forms\Get $get
+                        RichEditor::make('content')
+                                                   ->visible(fn(Get $get
                                                    ) : bool => $get('content_type') === ContentTypeEnum::RICH)
                                                    ->required()->label(__('red-jasmine-article::article.fields.content')),
-                        Forms\Components\MarkdownEditor::make('content')
-                                                       ->visible(fn(Forms\Get $get
+                        MarkdownEditor::make('content')
+                                                       ->visible(fn(Get $get
                                                        ) : bool => $get('content_type') === ContentTypeEnum::MARKDOWN)
                                                        ->required()->label(__('red-jasmine-article::article.fields.content')),
 
-                        Forms\Components\Textarea::make('content')
-                                                 ->visible(fn(Forms\Get $get
+                        Textarea::make('content')
+                                                 ->visible(fn(Get $get
                                                  ) : bool => $get('content_type') === ContentTypeEnum::TEXT)
                                                  ->required()->label(__('red-jasmine-article::article.fields.content')),
 
 
                     ]),
-                    Forms\Components\Section::make([
+                    Section::make([
                         ...static::ownerFormSchemas(),
 
 
@@ -119,11 +141,11 @@ class ArticleResource extends Resource
                                       relationship: 'category',
                                       titleAttribute: 'name',
                                       parentAttribute: 'parent_id',
-                                      modifyQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type',
+                                      modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query->where('owner_type',
                                           $get('owner_type'))
                                                                                                             ->where('owner_id',
                                                                                                                 $get('owner_id')),
-                                      modifyChildQueryUsing: fn($query, Forms\Get $get, ?Model $record) => $query->where('owner_type',
+                                      modifyChildQueryUsing: fn($query, Get $get, ?Model $record) => $query->where('owner_type',
                                           $get('owner_type'))
                                                                                                                  ->where('owner_id',
                                                                                                                      $get('owner_id'))
@@ -135,7 +157,7 @@ class ArticleResource extends Resource
                                   ->parentNullValue(0)
                                   ->dehydrateStateUsing(fn($state) => (int) $state),
 
-                        Forms\Components\Select::make('tags')
+                        Select::make('tags')
                                                ->multiple()
                                                ->label(__('red-jasmine-article::article.fields.tags'))
                                                ->relationship(
@@ -143,7 +165,7 @@ class ArticleResource extends Resource
                                                    titleAttribute: 'name',
                                                    modifyQueryUsing: fn(
                                                        $query,
-                                                       Forms\Get $get,
+                                                       Get $get,
                                                        ?Model $record
                                                    ) => $query->where('owner_type',
                                                        $get('owner_type'))
@@ -165,28 +187,28 @@ class ArticleResource extends Resource
                                                ->default([])
                         ,
 
-                        Forms\Components\Toggle::make('is_top')
+                        Toggle::make('is_top')
                                                ->label(__('red-jasmine-article::article.fields.is_top'))
                                                ->required()
                                                ->default(false),
-                        Forms\Components\Toggle::make('is_show')
+                        Toggle::make('is_show')
                                                ->label(__('red-jasmine-article::article.fields.is_show'))
                                                ->required()
                                                ->default(true),
-                        Forms\Components\TextInput::make('sort')
+                        TextInput::make('sort')
                                                   ->label(__('red-jasmine-article::article.fields.sort'))
                                                   ->required()
                                                   ->numeric()
                                                   ->default(0)
                                                   ->maxLength(255),
-                        Forms\Components\ToggleButtons::make('status')
+                        ToggleButtons::make('status')
                                                       ->label(__('red-jasmine-article::article.fields.status'))
                                                       ->required()
                                                       ->inline()
                                                       ->disabled()
                                                       ->default(ArticleStatusEnum::DRAFT)
                                                       ->useEnum(ArticleStatusEnum::class),
-                        Forms\Components\Select::make('approval_status')
+                        Select::make('approval_status')
                                                ->label(__('red-jasmine-support::support.fields.approval_status'))
                                                ->disabled()
                                                ->useEnum(ApprovalStatusEnum::class),
@@ -204,39 +226,39 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label(__('red-jasmine-article::article.fields.id'))
                                          ->sortable(),
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                                          ->searchable()
                                          ->label(__('red-jasmine-article::article.fields.title')),
-                Tables\Columns\ImageColumn::make('image')
+                ImageColumn::make('image')
                                           ->label(__('red-jasmine-article::article.fields.image')),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                                          ->label(__('red-jasmine-article::article.fields.description'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('keywords')
+                TextColumn::make('keywords')
                                          ->label(__('red-jasmine-article::article.fields.keywords'))
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('category.name')
+                TextColumn::make('category.name')
                                          ->label(__('red-jasmine-article::article.fields.category'))
                                          ->numeric()
                                          ->sortable(),
-                Tables\Columns\IconColumn::make('is_top')
+                IconColumn::make('is_top')
                                          ->label(__('red-jasmine-article::article.fields.is_top'))
                                          ->boolean(),
-                Tables\Columns\TextColumn::make('sort')
+                TextColumn::make('sort')
                                          ->label(__('red-jasmine-article::article.fields.sort'))
                                          ->numeric()
                                          ->sortable(),
-                Tables\Columns\IconColumn::make('is_show')
+                IconColumn::make('is_show')
                                          ->label(__('red-jasmine-article::article.fields.is_show'))
                                          ->boolean(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                                          ->label(__('red-jasmine-article::article.fields.status'))
                                          ->useEnum(),
-                Tables\Columns\TextColumn::make('approval_status')
+                TextColumn::make('approval_status')
                                          ->useEnum()
                                          ->label(__('red-jasmine-article::article.fields.approval_status'))
                 ,
@@ -246,13 +268,13 @@ class ArticleResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
                 ApprovalAction::make('approval')
                               ->service(static::$service),
                 SubmitApprovalAction::make('submit-approval')
                                     ->service(static::$service),
-                Tables\Actions\Action::make('publish')
+                Action::make('publish')
                                      ->label(__('red-jasmine-article::article.commands.publish'))
                                      ->action(function ($record) {
 
@@ -262,9 +284,9 @@ class ArticleResource extends Resource
 
                                      })->visible(fn($record) => $record->canPublish()),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -279,9 +301,9 @@ class ArticleResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListArticles::route('/'),
-            'create' => Pages\CreateArticle::route('/create'),
-            'edit'   => Pages\EditArticle::route('/{record}/edit'),
+            'index'  => ListArticles::route('/'),
+            'create' => CreateArticle::route('/create'),
+            'edit'   => EditArticle::route('/{record}/edit'),
         ];
     }
 }

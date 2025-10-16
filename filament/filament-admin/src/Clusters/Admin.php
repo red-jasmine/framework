@@ -8,7 +8,7 @@ class Admin extends Cluster
 {
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shield-check';
 
 
     public static function getNavigationLabel() : string

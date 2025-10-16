@@ -1,10 +1,12 @@
 {
     "name": "red-jasmine/filament-card",
-    "description": "This is my package filament-card",
+    "description": "Filament card management plugin for Red Jasmine Framework",
     "keywords": [
         "red-jasmine",
         "laravel",
-        "filament-card"
+        "filament",
+        "filament-card",
+        "card"
     ],
     "homepage": "https://github.com/red-jasmine/filament-card",
     "support": {
@@ -20,6 +22,8 @@
         }
     ],
     "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0",
         "red-jasmine/filament-core": "1.0.x-dev",
         "red-jasmine/card": "1.0.x-dev"
     },

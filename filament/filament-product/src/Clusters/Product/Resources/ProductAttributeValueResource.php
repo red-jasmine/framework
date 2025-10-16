@@ -2,10 +2,25 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeValueResource\Pages\CreateProductAttributeValue;
 use App\Filament\Clusters\Product\Resources\ProductAttributeValueResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductAttributeValueResource\RelationManagers;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,7 +40,7 @@ class ProductAttributeValueResource extends Resource
 {
     protected static ?string $model = ProductAttributeValue::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $cluster        = Product::class;
 
 
@@ -47,13 +62,13 @@ class ProductAttributeValueResource extends Resource
         return __('red-jasmine-product::product-attribute.labels.attribute');
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
+        return $schema
             ->columns(1)
             ->inlineLabel()
-            ->schema([
-                Forms\Components\Select::make('pid')
+            ->components([
+                Select::make('pid')
                                        ->label(__('red-jasmine-product::product-attribute-value.fields.pid'))
                                        ->required()
                                        ->relationship('attribute', 'name')
@@ -61,11 +76,11 @@ class ProductAttributeValueResource extends Resource
                                        ->preload()
                                        ->optionsLimit(50)
                 ,
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
                                           ->required()
                                           ->maxLength(64),
-                Forms\Components\Select::make('group_id')
+                Select::make('group_id')
                                        ->label(__('red-jasmine-product::product-attribute-value.fields.group_id'))
                                        ->relationship('group', 'name')
                                        ->searchable(['name'])
@@ -77,12 +92,12 @@ class ProductAttributeValueResource extends Resource
                 ,
 
 
-                Forms\Components\TextInput::make('description')
+                TextInput::make('description')
                                           ->label(__('red-jasmine-product::product-attribute-value.fields.description'))->maxLength(255),
-                Forms\Components\TextInput::make('sort')
+                TextInput::make('sort')
                                           ->label(__('red-jasmine-product::product-attribute-value.fields.sort'))
                                           ->required()->integer()->default(0),
-                Forms\Components\ToggleButtons::make('status')
+                ToggleButtons::make('status')
                                               ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
                                               ->required()
                                               ->inline()
@@ -97,59 +112,59 @@ class ProductAttributeValueResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->label(__('red-jasmine-product::product-attribute-value.fields.id'))
                                          ->copyable()
                                          ->sortable(),
-                Tables\Columns\TextColumn::make('attribute.name')
+                TextColumn::make('attribute.name')
                                          ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name')),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                                          ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
                                          ->copyable()
                                          ->searchable()
                 ,
-                Tables\Columns\TextColumn::make('group.name')->label(__('red-jasmine-product::product-attribute-value.fields.group.name')),
-                Tables\Columns\TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute-value.fields.sort'))->sortable(),
-                Tables\Columns\TextColumn::make('status')->label(__('red-jasmine-product::product-attribute-value.fields.status'))
+                TextColumn::make('group.name')->label(__('red-jasmine-product::product-attribute-value.fields.group.name')),
+                TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute-value.fields.sort'))->sortable(),
+                TextColumn::make('status')->label(__('red-jasmine-product::product-attribute-value.fields.status'))
                                          ->useEnum(),
 
                 ...static::operateTableColumns()
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('pid')
+                SelectFilter::make('pid')
                                            ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name'))
                                            ->relationship('attribute', 'name')
                                            ->searchable()
                                            ->optionsLimit(50)
                                            ->preload(),
 
-                Tables\Filters\SelectFilter::make('group_id')
+                SelectFilter::make('group_id')
                                            ->label(__('red-jasmine-product::product-attribute-value.fields.group.name'))
                                            ->relationship('group', 'name')
                                            ->searchable()
                                            ->optionsLimit(50)
                                            ->preload(),
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                                            ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
                                            ->options(ProductAttributeStatusEnum::options())
                 ,
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
 
 
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                RestoreAction::make(),
+                ForceDeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -165,7 +180,7 @@ class ProductAttributeValueResource extends Resource
     {
         return [
             'index'  => ListProductAttributeValues::route('/'),
-            'create' => Product\Resources\ProductAttributeValueResource\Pages\CreateProductAttributeValue::route('/create'),
+            'create' => CreateProductAttributeValue::route('/create'),
             'view'   => ViewProductAttributeValue::route('/{record}'),
             'edit'   => EditProductAttributeValue::route('/{record}/edit'),
         ];

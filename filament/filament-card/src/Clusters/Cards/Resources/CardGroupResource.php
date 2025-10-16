@@ -2,8 +2,18 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\ListCardGroups;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\CreateCardGroup;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\EditCardGroup;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -33,7 +43,7 @@ class CardGroupResource extends Resource
     protected static ?string $model          = CardGroup::class;
     protected static bool    $onlyOwner      = true;
     protected static ?int    $navigationSort = 1;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-group';
 
     public static function getModelLabel() : string
     {
@@ -43,16 +53,16 @@ class CardGroupResource extends Resource
 
     protected static ?string $cluster = Cards::class;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 ...static::ownerFormSchemas(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->label(__('red-jasmine-card::card-group.fields.name'))
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('remarks')
+                TextInput::make('remarks')
                                           ->label(__('red-jasmine-card::card-group.fields.remarks'))
                                           ->maxLength(255),
                 ...static::operateFormSchemas(),
@@ -63,25 +73,25 @@ class CardGroupResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                                          ->label('ID')
                                          ->sortable(),
                 ...static::ownerTableColumns(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                                          ->label(__('red-jasmine-card::card-group.fields.name'))
                                          ->searchable(),
 
-                Tables\Columns\TextColumn::make('cards_count')
+                TextColumn::make('cards_count')
                                          ->badge()
                                          ->label(__('red-jasmine-card::card.enums.status.enable').__('red-jasmine-card::card-group.labels.cards_count'))
                                          ->counts(['cards' => fn(Builder $query) => $query->enable()])
                 ,
-                Tables\Columns\TextColumn::make('products_count')
+                TextColumn::make('products_count')
                                          ->label(__('red-jasmine-card::card-group.labels.products_counts'))
                                          ->badge()
                                          ->counts('products')
                 ,
-                Tables\Columns\TextColumn::make('remarks')
+                TextColumn::make('remarks')
                                          ->label(__('red-jasmine-card::card-group.fields.remarks'))
                                          ->searchable(),
                 ...static::operateTableColumns(),
@@ -89,14 +99,14 @@ class CardGroupResource extends Resource
             ->filters([
                 // Tables\Filters\TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -111,9 +121,9 @@ class CardGroupResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListCardGroups::route('/'),
-            'create' => Pages\CreateCardGroup::route('/create'),
-            'edit'   => Pages\EditCardGroup::route('/{record}/edit'),
+            'index'  => ListCardGroups::route('/'),
+            'create' => CreateCardGroup::route('/create'),
+            'edit'   => EditCardGroup::route('/{record}/edit'),
         ];
     }
 

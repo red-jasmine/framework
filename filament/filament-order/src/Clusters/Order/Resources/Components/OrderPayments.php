@@ -2,6 +2,8 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\Components;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\ImageColumn;
@@ -14,9 +16,10 @@ use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Actions\Tabl
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Models\OrderProduct;
 
-class OrderPayments extends Component implements HasTable, HasForms
+class OrderPayments extends Component implements HasTable, HasForms, HasActions
 {
 
+    use InteractsWithActions;
     use InteractsWithTable;
     use InteractsWithForms;
 
@@ -62,11 +65,11 @@ class OrderPayments extends Component implements HasTable, HasForms
             ->filters([
                           // ...
                       ])
-            ->actions([
+            ->recordActions([
 
 
                       ])
-            ->bulkActions([
+            ->toolbarActions([
                               // ...
                           ]);
     }

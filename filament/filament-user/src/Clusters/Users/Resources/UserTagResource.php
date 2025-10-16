@@ -2,10 +2,13 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\ListUserTags;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\CreateUserTag;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\EditUserTag;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -45,14 +48,14 @@ class UserTagResource extends Resource  implements HasShieldPermissions
 
     protected static ?string $model = UserTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
 
     protected static ?string $cluster        = Users::class;
     protected static ?int    $navigationSort = 4;
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return static::categoryForm($form, static::$onlyOwner ?? false);
+        return static::categoryForm($schema, static::$onlyOwner ?? false);
     }
 
     public static function table(Table $table) : Table
@@ -69,9 +72,9 @@ class UserTagResource extends Resource  implements HasShieldPermissions
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListUserTags::route('/'),
-            'create' => Pages\CreateUserTag::route('/create'),
-            'edit'   => Pages\EditUserTag::route('/{record}/edit'),
+            'index'  => ListUserTags::route('/'),
+            'create' => CreateUserTag::route('/create'),
+            'edit'   => EditUserTag::route('/{record}/edit'),
         ];
     }
 }

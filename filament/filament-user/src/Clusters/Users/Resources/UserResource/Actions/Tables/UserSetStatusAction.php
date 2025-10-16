@@ -2,8 +2,9 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\Tables;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms;
-use Filament\Tables\Actions\Action;
 use RedJasmine\Support\Exceptions\AbstractException;
 use RedJasmine\UserCore\Application\Services\Commands\SetPassword\UserSetStatusCommand;
 use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
@@ -50,7 +51,7 @@ class UserSetStatusAction extends Action
 
             return [
 
-                Forms\Components\ToggleButtons::make('status')
+                ToggleButtons::make('status')
                                               ->label(__('red-jasmine-user::user.fields.status'))
                                               ->inline()
                                               ->default(UserStatusEnum::ACTIVATED)

@@ -2,8 +2,18 @@
 
 namespace RedJasmine\FilamentLogistics\Clusters\Logistics\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\ListLogisticsCompanies;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\CreateLogisticsCompany;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\EditLogisticsCompany;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,7 +39,7 @@ class LogisticsCompanyResource extends Resource
 
     protected static ?string $model = LogisticsCompany::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $cluster = Logistics::class;
 
@@ -39,73 +49,73 @@ class LogisticsCompanyResource extends Resource
     }
 
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        $form
-            ->schema([
-                Forms\Components\TextInput::make('code')
+        $schema
+            ->components([
+                TextInput::make('code')
                                           ->required()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                                           ->required()
                                           ->maxLength(255),
 
-                Forms\Components\ToggleButtons::make('type')
+                ToggleButtons::make('type')
                                               ->required()
                                               ->inlineLabel()
                                               ->inline()
                                               ->useEnum(CompanyTypeEnum::class)
                                              ,
-                Forms\Components\ToggleButtons::make('status')
+                ToggleButtons::make('status')
                                               ->required()
                                               ->inlineLabel()
                                               ->inline()
                                               ->useEnum(UniversalStatusEnum::class)
                                               ->default(UniversalStatusEnum::ENABLE),
-                Forms\Components\FileUpload::make('logo')
+                FileUpload::make('logo')
                                           ->image(255),
-                Forms\Components\TextInput::make('tel')
+                TextInput::make('tel')
                                           ->tel()
                                           ->maxLength(255),
-                Forms\Components\TextInput::make('url')
+                TextInput::make('url')
                                           ->maxLength(255),
 
 
                 ...static::operateFormSchemas(),
             ]);
 
-        return static::translationLabels($form);
+        return static::translationLabels($schema);
     }
 
     public static function table(Table $table) : Table
     {
         $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
+                TextColumn::make('logo')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('tel')
+                TextColumn::make('tel')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('url')
+                TextColumn::make('url')
                                          ->searchable(),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                                          ->useEnum(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                                          ->useEnum(),
                 ...static::operateTableColumns()
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
 
@@ -122,9 +132,9 @@ class LogisticsCompanyResource extends Resource
     public static function getPages() : array
     {
         return [
-            'index'  => Pages\ListLogisticsCompanies::route('/'),
-            'create' => Pages\CreateLogisticsCompany::route('/create'),
-            'edit'   => Pages\EditLogisticsCompany::route('/{record}/edit'),
+            'index'  => ListLogisticsCompanies::route('/'),
+            'create' => CreateLogisticsCompany::route('/create'),
+            'edit'   => EditLogisticsCompany::route('/{record}/edit'),
         ];
     }
 }

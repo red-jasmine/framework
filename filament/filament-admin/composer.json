@@ -22,7 +22,7 @@
     "require": {
         "red-jasmine/filament-core": "1.0.x-dev",
         "red-jasmine/admin": "1.0.x-dev",
-        "bezhansalleh/filament-shield": "^3.3"
+        "bezhansalleh/filament-shield": "^4"
     },
     "require-dev": {
 

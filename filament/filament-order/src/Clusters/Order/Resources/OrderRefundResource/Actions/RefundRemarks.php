@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\Actions;
 
+use Filament\Forms\Components\Textarea;
 use Filament\Forms;
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundRemarksCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
@@ -21,7 +22,7 @@ trait RefundRemarks
             'remarks' => $record->info->seller_remarks
         ]);
         $this->form([
-                        Forms\Components\Textarea::make('remarks')
+                        Textarea::make('remarks')
                                                  ->rows(10)
                                                  ->label(__('red-jasmine-order::refund.fields.seller_remarks'))
                     ]);

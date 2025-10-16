@@ -3,7 +3,7 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockResource\Pages;
 
 
-use Filament\Infolists\Infolist;
+use Filament\Schemas\Schema;
 use Filament\Resources\Pages\ListRecords;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockResource;
 
@@ -11,10 +11,10 @@ class ListProductStocks extends ListRecords
 {
     protected static string $resource = ProductStockResource::class;
 
-    public function infolist(Infolist $infolist) : Infolist
+    public function infolist(Schema $schema) : Schema
     {
 
-        return parent::infolist($infolist); 
+        return parent::infolist($schema); 
     }
 
 

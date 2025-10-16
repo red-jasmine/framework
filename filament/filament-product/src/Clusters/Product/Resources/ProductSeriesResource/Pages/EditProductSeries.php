@@ -2,6 +2,8 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages;
 
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource;
 use Filament\Actions;
@@ -16,8 +18,8 @@ class EditProductSeries extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            ViewAction::make(),
+            DeleteAction::make(),
         ];
     }
 

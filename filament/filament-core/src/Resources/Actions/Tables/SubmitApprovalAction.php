@@ -2,10 +2,11 @@
 
 namespace RedJasmine\FilamentCore\Resources\Actions\Tables;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Commands\ApprovalCommand;
 use RedJasmine\Support\Application\Commands\SubmitApprovalCommand;
@@ -26,7 +27,7 @@ class SubmitApprovalAction extends Action
              ->slideOver()
              ->icon(FilamentIcon::resolve('actions::edit-action') ?? 'heroicon-o-bell')
              ->form([
-                 Forms\Components\TextInput::make('message'),
+                 TextInput::make('message'),
              ])
 
              ->action(function (array $data, $record) {

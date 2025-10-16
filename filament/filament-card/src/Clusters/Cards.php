@@ -7,7 +7,7 @@ use Filament\Clusters\Cluster;
 class Cards extends Cluster
 {
 
-    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-ticket';
 
 
     public static function getNavigationLabel() : string

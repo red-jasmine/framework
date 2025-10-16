@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentCore\Filters;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Forms;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +15,8 @@ class InputFilter extends Filter
     {
         parent::setUp(); 
 
-        $this->form([
-                        Forms\Components\TextInput::make('value')->label(fn() => $this->evaluate($this->label))
+        $this->schema([
+                        TextInput::make('value')->label(fn() => $this->evaluate($this->label))
 
 
                     ]);

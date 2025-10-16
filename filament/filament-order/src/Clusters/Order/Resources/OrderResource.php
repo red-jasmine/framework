@@ -2,13 +2,28 @@
 
 namespace RedJasmine\FilamentOrder\Clusters\Order\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Livewire;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Actions\ViewAction;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ExportAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages\ListOrders;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages\ViewOrder;
+use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource\Pages\Shipping;
 use Exception;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\Livewire;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
@@ -43,7 +58,7 @@ class OrderResource extends Resource
 
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $cluster        = OrderCluster::class;
     protected static ?int    $navigationSort = 1;
@@ -54,9 +69,9 @@ class OrderResource extends Resource
         return __('red-jasmine-order::order.labels.order');
     }
 
-    public static function infolist(Infolist $infoList) : Infolist
+    public static function infolist(Schema $infoList) : Schema
     {
-        $infoList->schema([
+        $infoList->components([
             Section::make(static fn(Model $record) => $record->id)
                    ->compact()
                    ->inlineLabel()
@@ -245,9 +260,9 @@ class OrderResource extends Resource
     }
 
 
-    public static function form(Form $form) : Form
+    public static function form(Schema $schema) : Schema
     {
-        return $form;
+        return $schema;
     }
 
     /**
@@ -261,12 +276,12 @@ class OrderResource extends Resource
         $table
             ->defaultSort('id', 'DESC')
             ->columns([
-                Tables\Columns\TextColumn::make('order_no')
+                TextColumn::make('order_no')
                                          ->copyable(),
                 OrderCluster\Resources\OrderResource\Columns\OrderProductShowColumn::make('products'),
                 //Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('order_type')->alignCenter(),
-                Tables\Columns\TextColumn::make('shipping_type')->alignCenter()->useEnum(),
+                TextColumn::make('order_type')->alignCenter(),
+                TextColumn::make('shipping_type')->alignCenter()->useEnum(),
                 UserAbleColumn::make('seller')
                               ->toggleable(isToggledHiddenByDefault: true),
                 UserAbleColumn::make('buyer')
@@ -274,18 +289,18 @@ class OrderResource extends Resource
                               ->grow(),
 
 
-                Tables\Columns\ColumnGroup::make(__('red-jasmine-order::order.labels.status'))
+                ColumnGroup::make(__('red-jasmine-order::order.labels.status'))
                                           ->alignCenter()
                                           ->columns([
 
-                                              Tables\Columns\ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
+                                              ViewColumn::make('order_status')->view('red-jasmine-filament-order::resources.order-resource.columns.order-status')
                                               ,
-                                              Tables\Columns\TextColumn::make('payment_status')->useEnum(),
-                                              Tables\Columns\TextColumn::make('settlement_status')->badge()->toggleable(isToggledHiddenByDefault: true),
-                                              Tables\Columns\TextColumn::make('seller_custom_status')->toggleable(isToggledHiddenByDefault: true),
+                                              TextColumn::make('payment_status')->useEnum(),
+                                              TextColumn::make('settlement_status')->badge()->toggleable(isToggledHiddenByDefault: true),
+                                              TextColumn::make('seller_custom_status')->toggleable(isToggledHiddenByDefault: true),
                                           ]),
 
-                Tables\Columns\ColumnGroup::make(__('red-jasmine-order::order.labels.amount'))
+                ColumnGroup::make(__('red-jasmine-order::order.labels.amount'))
                                           ->alignCenter()
                                           ->columns([
 //                                                                                  Tables\Columns\TextColumn::make('product_payable_amount')
@@ -302,54 +317,54 @@ class OrderResource extends Resource
 //                                                                                  Tables\Columns\TextColumn::make('discount_amount')
 //                                                                                                           ->numeric()
 //                                                                                                           ,
-Tables\Columns\TextColumn::make('payable_amount')
+TextColumn::make('payable_amount')
                          ->numeric()
 ,
-Tables\Columns\TextColumn::make('payment_amount')
+TextColumn::make('payment_amount')
                          ->numeric()
 ,
-Tables\Columns\TextColumn::make('refund_amount')
+TextColumn::make('refund_amount')
                          ->numeric()
 ,
-Tables\Columns\TextColumn::make('commission_amount')
+TextColumn::make('commission_amount')
                          ->numeric()
                          ->toggleable(isToggledHiddenByDefault: true),
-Tables\Columns\TextColumn::make('cost_amount')
+TextColumn::make('cost_amount')
                          ->numeric()
                          ->toggleable(isToggledHiddenByDefault: true),
                                           ]),
 
-                Tables\Columns\TextColumn::make('created_time')
+                TextColumn::make('created_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('payment_time')
+                TextColumn::make('payment_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('close_time')
+                TextColumn::make('close_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('shipping_time')
+                TextColumn::make('shipping_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('collect_time')
+                TextColumn::make('collect_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('dispatch_time')
+                TextColumn::make('dispatch_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('signed_time')
+                TextColumn::make('signed_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('confirm_time')
+                TextColumn::make('confirm_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('refund_time')
+                TextColumn::make('refund_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('rate_time')
+                TextColumn::make('rate_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('settlement_time')
+                TextColumn::make('settlement_time')
                                          ->dateTime()
                                          ->toggleable(isToggledHiddenByDefault: true),
 
@@ -357,38 +372,38 @@ Tables\Columns\TextColumn::make('cost_amount')
                 UserAbleColumn::make('guide')->setNickname('name'),
                 UserAbleColumn::make('store')->setNickname('name'),
 
-                Tables\Columns\TextColumn::make('client_type')
+                TextColumn::make('client_type')
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('client_version')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('client_ip')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('source_type')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('source_id')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('contact')
+                TextColumn::make('client_version')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('client_ip')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('source_type')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('source_id')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('contact')
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('star')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('urge')
+                TextColumn::make('star')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('urge')
                                          ->badge()
                                          ->tooltip(fn(Order $record) => $record->urge_time)
                                          ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('urge_time')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\IconColumn::make('is_seller_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\IconColumn::make('is_buyer_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('outer_order_id')->toggleable(isToggledHiddenByDefault: true)->copyable(),
-                Tables\Columns\TextColumn::make('cancel_reason')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('version')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('urge_time')->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('is_seller_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('is_buyer_delete')->boolean()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('outer_order_id')->toggleable(isToggledHiddenByDefault: true)->copyable(),
+                TextColumn::make('cancel_reason')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('version')->toggleable(isToggledHiddenByDefault: true),
                 ...static::operateTableColumns()
 
             ])
             ->filters([
                 InputFilter::make('id')->label(__('red-jasmine-order::order.fields.id')),
 
-                Tables\Filters\SelectFilter::make('order_status')
+                SelectFilter::make('order_status')
                                            ->options(OrderStatusEnum::options()),
-                Tables\Filters\SelectFilter::make('order_type')
+                SelectFilter::make('order_type')
                                            ->options(OrderTypeEnum::options()),
-                Tables\Filters\SelectFilter::make('shipping_type')
+                SelectFilter::make('shipping_type')
                                            ->options(ShippingTypeEnum::options()),
-                Tables\Filters\SelectFilter::make('payment_status')
+                SelectFilter::make('payment_status')
                                            ->options(PaymentStatusEnum::options()),
                 DateRangeFilter::make('created_time'),
                 DateRangeFilter::make('payment_time'),
@@ -397,7 +412,7 @@ Tables\Columns\TextColumn::make('cost_amount')
 
 
                 //Tables\Filters\TrashedFilter::make(),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
+            ], layout: FiltersLayout::AboveContent)
             ->filtersFormColumns([
                 'sm'  => 2,
                 'lg'  => 3,
@@ -405,14 +420,14 @@ Tables\Columns\TextColumn::make('cost_amount')
                 '2xl' => 6,
             ])
             ->deferFilters()
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 OrderCluster\Resources\OrderResource\Actions\Table\OrderShippingTableAction::make('shipping'),
                 OrderCluster\Resources\OrderResource\Actions\Table\OrderAcceptTableAction::make('accept'),
                 OrderCluster\Resources\OrderResource\Actions\Table\OrderAcceptTableAction::make('reject'),
                 // 其他操作
 
-                Tables\Actions\ActionGroup::make([
+                ActionGroup::make([
 
                     OrderCluster\Resources\OrderResource\Actions\Table\SellerRemarksTableAction::make('seller_remarks'),
                     OrderCluster\Resources\OrderResource\Actions\Table\SellerRemarksTableAction::make('seller_message'),
@@ -423,13 +438,13 @@ Tables\Columns\TextColumn::make('cost_amount')
 
             ])
             ->headerActions([
-                Tables\Actions\ExportAction::make()->exporter(OrderCluster\Resources\OrderResource\Actions\OrderExport::class)
+                ExportAction::make()->exporter(OrderCluster\Resources\OrderResource\Actions\OrderExport::class)
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ])
             ->recordUrl(null);
@@ -447,11 +462,11 @@ Tables\Columns\TextColumn::make('cost_amount')
     public static function getPages() : array
     {
         return [
-            'index'    => Pages\ListOrders::route('/'),
+            'index'    => ListOrders::route('/'),
             //'create' => Pages\CreateOrder::route('/create'),
-            'view'     => Pages\ViewOrder::route('/{record}'),
+            'view'     => ViewOrder::route('/{record}'),
             //            'edit' => Pages\EditOrder::route('/{record}/edit'),
-            'shipping' => Pages\Shipping::route('/{record}/shipping'),
+            'shipping' => Shipping::route('/{record}/shipping'),
         ];
     }
 
