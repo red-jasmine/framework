@@ -42,7 +42,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use LaraZeus\Quantity\Components\Quantity;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
@@ -68,7 +67,7 @@ use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Models\Product as Model;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Tapp\FilamentValueRangeFilter\Filters\ValueRangeFilter;
 use Throwable;
@@ -91,7 +90,7 @@ class ProductResource extends Resource
 
     protected static ?string $cluster = \RedJasmine\FilamentProduct\Clusters\Product::class;
 
-    protected static ?string $model = Product::class;
+    protected static ?string $model = Model::class;
 
     protected static ?int $navigationSort = 1;
 
@@ -118,17 +117,15 @@ class ProductResource extends Resource
     }
 
 
-    public static function callResolveRecord(Product $model) : Model
+    public static function callResolveRecord(Model $model) : Model
     {
 
         foreach ($model->extension->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->extension->{$key});
         }
-        $model->tags;
+
         $model->setAttribute('skus', $model->skus->toArray());
-        $model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
-        //$model->setAttribute('tags', $model->tags?->pluck('id')->toArray());
-        //$model->setAttribute('services', $model->services?->pluck('id')->toArray());
+        //$model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
         return $model;
     }
 
@@ -724,7 +721,7 @@ class ProductResource extends Resource
                                                                                                ->where('owner_id', $get('owner_id'))
                           ,
                       )
-                      ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                      //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
                       ->dehydrated()
                       ->saveRelationshipsUsing(null) // 不进行自动保存
                       ->parentNullValue(0)
@@ -741,8 +738,11 @@ class ProductResource extends Resource
                                                                                       ->where('owner_id',
                                                                                           $get('owner_id')),
                   )
-                  ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
-                  ->dehydrated()
+                ->pivotData([
+
+                ])
+                  //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                  //->dehydrated()
                   ->saveRelationshipsUsing(null) // 不进行自动保存
                   ->dehydrated()
                   ->preload()
@@ -952,7 +952,7 @@ class ProductResource extends Resource
                                         modifyQueryUsing: fn(Builder $query) => $query->enable()
                                     )
                                     ->columns(6)
-                                    ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                                    // ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
                                     ->dehydrated()
                                     ->saveRelationshipsUsing(null) // 不进行自动保存
                                     ->dehydrated()
