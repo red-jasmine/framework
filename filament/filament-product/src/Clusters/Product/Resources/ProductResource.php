@@ -191,9 +191,6 @@ class ProductResource extends Resource
             TextInput::make('slogan')
                      ->label(__('red-jasmine-product::product.fields.slogan'))
                      ->maxLength(255),
-            // Cluster::make([
-            //
-            // ])->label(__('red-jasmine-product::product.fields.brand_id')),
 
 
             SelectTree::make('brand_id')
@@ -316,7 +313,6 @@ class ProductResource extends Resource
 
                 TextInput::make('price')
                          ->numeric()
-                         //->formatStateUsing(fn($state) =>dd($state))
                          ->label(__('red-jasmine-product::product.fields.price'))
                          ->required()
                 ,
@@ -336,6 +332,7 @@ class ProductResource extends Resource
                         ->required()
                         ->default(100)
                         ->integer()
+                ->stacked()
                 ,
                 Quantity::make('safety_stock')
                         ->label(__('red-jasmine-product::product.fields.safety_stock'))
