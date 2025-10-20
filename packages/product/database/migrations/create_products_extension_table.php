@@ -18,8 +18,9 @@ return new class extends Migration {
             $table->json('sale_attrs')->nullable()->comment('销售属性');
             $table->json('customize_attrs')->nullable()->comment('自定义属性');
             // SEO
-            $table->string('keywords')->nullable()->comment('关键字');
-            $table->string('description')->nullable()->comment('描述');
+            $table->string('meta_title')->nullable()->comment('SEO 标题');
+            $table->string('meta_keywords')->nullable()->comment('SEO 关键字');
+            $table->text('meta_description')->nullable()->comment('SEO 描述');
             // 内容
             $table->json('images')->nullable()->comment('图片集');
             $table->json('videos')->nullable()->comment('视频集');

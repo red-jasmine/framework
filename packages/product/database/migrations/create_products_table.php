@@ -17,30 +17,42 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
 
-            $table->string('market', 64)->default('default')->comment('市场'); // 市场
-            // 卖家信息
-            $table->string('owner_type', 32);
-            $table->string('owner_id', 64);
             // 开放渠道 门店、网店 TODO
-            $table->string('title')->comment('标题');
+            // 卖家信息
+            $table->string('owner_type', 64);
+            $table->string('owner_id', 64);
+            $table->string('market', 64)->default('default')->comment('市场'); // 市场
+
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
-            // 配送方式
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+
+
+            // 基础信息
+            $table->string('title')->comment('标题');
+            $table->string('slogan')->nullable()->comment('广告语');
+
+
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
             $table->boolean('is_pre_sale')->default(false)->comment('是否预售');
-
-            // 基础信息
-            $table->string('image')->nullable()->comment('主图');
             $table->boolean('is_customized')->default(false)->comment('是否定制');
-            $table->boolean('is_multiple_spec')->default(false)->comment('是否为多规格');
-            $table->string('slogan')->nullable()->comment('广告语');
-            // 类目信息
 
+            // $table->boolean('is_multiple_spec')->default(false)->comment('是否为多规格');
+            $table->boolean('has_variants')->default(false)->comment('多规格');
+
+            // 媒体资源
+            $table->string('image')->nullable()->comment('主图');
+
+
+
+
+            // 类目信息
+            $table->unsignedBigInteger('standard_product_id')->nullable()->comment('标品ID');
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
-            $table->string('product_model')->nullable()->comment('产品型号');
-            $table->unsignedTinyInteger('spu_id')->nullable()->comment('标品ID');
+            // $table->string('product_model')->nullable()->comment('产品型号');
+            $table->string('model_code',64)->nullable()->comment('型号编码');
+
 
             $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
             // 运费
@@ -55,11 +67,17 @@ return new class extends Migration {
 
             // 价格
             $table->string('currency', 3)->default('CNY')->comment('货币');
-            $table->decimal('price', 12, 2)->default(0)->comment('销售价');
-            $table->decimal('market_price', 12, 2)->nullable()->comment('市场价');
-            $table->decimal('cost_price', 12, 2)->nullable()->comment('成本价');
+            $table->decimal('price', 12)->default(0)->comment('销售价');
+            //$table->decimal('market_price', 12)->nullable()->comment('市场价');
+            $table->decimal('compare_at_price', 12)->nullable()->comment('对比价');
+            $table->decimal('cost_price', 12)->nullable()->comment('成本价');
 
-            $table->decimal('tax_rate')->default(0)->comment('税率%');
+            // 税率 修改
+            //$table->decimal('tax_rate')->default(0)->comment('税率%');
+            $table->boolean('taxable')->default(true)->comment('交税');
+            $table->string('tax_code')->nullable()->comment('税码');
+
+
             $table->bigInteger('stock')->default(0)->comment('库存');
             $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
