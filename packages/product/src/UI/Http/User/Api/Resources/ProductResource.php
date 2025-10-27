@@ -51,7 +51,7 @@ class ProductResource extends JsonResource
             'on_sale_time'        => $this->on_sale_time?->format('Y-m-d H:i:s'),
             'sold_out_time'       => $this->sold_out_time?->format('Y-m-d H:i:s'),
             'stop_sale_time'      => $this->stop_sale_time?->format('Y-m-d H:i:s'),
-            'product_model'       => $this->product_model,
+            'model_code'       => $this->model_code,
             'brand_id'            => $this->brand_id,
             'category_id'         => $this->category_id,
             $this->mergeWhen($this->relationLoaded('extension'),

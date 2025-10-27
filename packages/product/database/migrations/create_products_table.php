@@ -50,7 +50,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('standard_product_id')->nullable()->comment('标品ID');
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
-            // $table->string('product_model')->nullable()->comment('产品型号');
+            // $table->string('model_code')->nullable()->comment('产品型号');
             $table->string('model_code',64)->nullable()->comment('型号编码');
 
 

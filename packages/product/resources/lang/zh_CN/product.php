@@ -29,7 +29,7 @@ return [
         'image'                     => '主图',
         'barcode'                   => '条形码',
         'outer_id'                  => '商家编码',
-        'product_model'             => '型号',
+        'model_code'             => '型号',
         'keywords'                  => '关键字',
         'is_pre_sale'               => '是否预售',
         'is_multiple_spec'          => '多规格',

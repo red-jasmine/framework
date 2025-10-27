@@ -202,9 +202,9 @@ class ProductResource extends Resource
                       ->default(0)
                       ->defaultZero()
             ,
-            TextInput::make('product_model')
-                     ->prefix(__('red-jasmine-product::product.fields.product_model'))
-                     ->label(__('red-jasmine-product::product.fields.product_model'))
+            TextInput::make('model_code')
+                     ->prefix(__('red-jasmine-product::product.fields.model_code'))
+                     ->label(__('red-jasmine-product::product.fields.model_code'))
                      ->maxLength(60),
 
             SelectTree::make('product_group_id')

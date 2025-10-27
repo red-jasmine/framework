@@ -88,7 +88,7 @@ class Product extends Data
     // 品牌ID（可选）
     public int $brandId = 0;
     // 产品型号（可选）
-    public ?string $productModel = null;
+    public ?string $modelCode = null;
     /**
      * 产品分组ID
      * @var int

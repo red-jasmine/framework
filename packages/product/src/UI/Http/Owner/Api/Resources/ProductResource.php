@@ -65,7 +65,7 @@ class ProductResource extends JsonResource
             'created_at'            => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'            => $this->updated_at?->format('Y-m-d H:i:s'),
             'brand_id'              => $this->brand_id,
-            'product_model'         => $this->product_model,
+            'model_code'         => $this->model_code,
             'category_id'           => $this->category_id,
             'product_group_id'      => $this->product_group_id,
             'brand'                 => new BrandResource($this->whenLoaded('brand')),

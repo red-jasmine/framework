@@ -56,7 +56,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             AllowedFilter::exact('category_id'),
             AllowedFilter::exact('product_group_id'),
             AllowedFilter::exact('barcode'),
-            AllowedFilter::exact('product_model'),
+            AllowedFilter::exact('model_code'),
         ];
     }
 

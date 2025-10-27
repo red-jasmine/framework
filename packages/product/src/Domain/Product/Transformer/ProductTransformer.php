@@ -69,7 +69,7 @@ class ProductTransformer
         $product->spu_id                          = $command->spuId;
         $product->category_id                     = $command->categoryId;
         $product->brand_id                        = $command->brandId;
-        $product->product_model                   = $command->productModel;
+        $product->model_code                   = $command->modelCode;
         $product->product_group_id                = $command->productGroupId;
         $product->delivery_methods                = $command->deliveryMethods;
         $product->freight_payer                   = $command->freightPayer;
