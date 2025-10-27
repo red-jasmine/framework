@@ -182,7 +182,7 @@ class ProductResource extends Resource
                          ->required()
                          ->inline()
                          ->live()
-                         ->default(ProductTypeEnum::GOODS->value)
+                         ->default(ProductTypeEnum::PHYSICAL->value)
                          ->useEnum(ProductTypeEnum::class),
             TextInput::make('title')
                      ->label(__('red-jasmine-product::product.fields.title'))
@@ -1137,9 +1137,9 @@ class ProductResource extends Resource
                          ->label(__('red-jasmine-product::product.fields.delivery_methods'))
                          ->icons(ShippingTypeEnum::icons())
                          ->required(fn(Get $get
-                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::GOODS)
+                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
                          ->visible(fn(Get $get
-                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::GOODS)
+                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
                          ->options(ShippingTypeEnum::deliveryMethods()),
 
             ToggleButtons::make('freight_payer')
@@ -1149,7 +1149,7 @@ class ProductResource extends Resource
                          ->useEnum(FreightPayerEnum::class)
                          ->live()
                          ->visible(fn(Get $get
-                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::GOODS)
+                         ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
                          ->inline(),
             Select::make('freight_template_id')
                   ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Get $get) {
@@ -1159,7 +1159,7 @@ class ProductResource extends Resource
                   ->formatStateUsing(fn($state) => (string) $state)
                   ->required(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
                   ->visible(fn(Get $get
-                  ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::GOODS)
+                  ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
                   ->label(__('red-jasmine-product::product.fields.freight_template_id')),
 
 

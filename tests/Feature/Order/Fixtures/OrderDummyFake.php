@@ -151,7 +151,7 @@ class OrderDummyFake
     {
         $fake = [
             'shipping_type'      => $this->shippingType->value,
-            'order_product_type' => ProductTypeEnum::GOODS->value,
+            'order_product_type' => ProductTypeEnum::PHYSICAL->value,
             'title'              => fake()->sentence(),
             'sku_name'           => fake()->words(1, true),
             'image'              => fake()->imageUrl,
