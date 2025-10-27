@@ -11,6 +11,9 @@ enum ProductStatusEnum: string
     use EnumsHelper;
 
 
+
+    case DRAFT = 'draft'; // 未发布
+
     case ON_SALE = 'on_sale'; // 在售
 
     case SOLD_OUT = 'sold_out'; // 售罄
@@ -19,9 +22,13 @@ enum ProductStatusEnum: string
 
     case FORBID_SALE = 'forbid_sale'; // 禁售
 
+    // 审批中
+    case PENDING = 'pending';
+    case FORBIDDEN = 'forbidden'; // 禁售
+    case ARCHIVED = 'archived'; // 已归档
+
     case DELETED = 'deleted'; // 删除 仅在 sku 中使用
 
-    case DRAFT = 'draft'; // 未发布
 
 
     public static function creatingAllowed() : array
