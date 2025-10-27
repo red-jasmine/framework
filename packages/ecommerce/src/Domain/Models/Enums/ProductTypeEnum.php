@@ -17,7 +17,7 @@ enum ProductTypeEnum: string
 
     case SERVICE = 'service'; // 服务
 
-    case CARD_KEY = 'cardKey'; // 数字卡密 数字 Digital
+    case DIGITAL = 'digital'; // 数字卡密 数字 DIGITAL
 
     case COUPONS = 'coupons'; // 卡券
 
@@ -70,7 +70,7 @@ enum ProductTypeEnum: string
                 ShippingTypeEnum::DUMMY,
                 //ShippingTypeEnum::CARD_KEY->value,
             ],
-            self::CARD_KEY->value => [
+            self::DIGITAL->value => [
                 //ShippingTypeEnum::LOGISTICS->value,
                 //ShippingTypeEnum::DELIVERY->value,
                 //ShippingTypeEnum::NONE->value,
@@ -106,7 +106,7 @@ enum ProductTypeEnum: string
         return [
             self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
             self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
-            self::CARD_KEY->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.cardKey'),
+            self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.cardKey'),
             self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
             self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
         ];
@@ -118,7 +118,7 @@ enum ProductTypeEnum: string
             self::PHYSICAL->value => 'heroicon-o-shopping-bag',
             self::VIRTUAL->value  => 'heroicon-o-cloud',
             self::COUPONS->value  => 'heroicon-o-ticket',
-            self::CARD_KEY->value => 'heroicon-o-key',
+            self::DIGITAL->value  => 'heroicon-o-key',
             self::SERVICE->value  => 'heroicon-o-shield-check',
 
         ];
