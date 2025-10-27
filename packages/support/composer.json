@@ -16,7 +16,8 @@
         "spatie/laravel-data": "^4",
         "spatie/laravel-query-builder": "^6",
         "spatie/laravel-package-tools": "^1",
-        "red-jasmine/laravel-money": "^8.4"
+        "red-jasmine/laravel-money": "^8.4",
+        "astrotomic/laravel-translatable": "^11.16"
     },
     "require-dev": {
 
