@@ -51,6 +51,7 @@ class Sku extends Data
     public ?string $height;
     // 长度（可选）
     public ?string $length;
+
     // 尺寸（可选）
-    public ?string $size;
+    public ?string $volume;
 }

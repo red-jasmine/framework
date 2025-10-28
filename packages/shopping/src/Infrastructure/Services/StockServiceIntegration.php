@@ -8,7 +8,7 @@ use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\Queries\FindSkuStockQuery;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Shopping\Domain\Contracts\StockServiceInterface;
 
 class StockServiceIntegration implements StockServiceInterface
@@ -19,7 +19,7 @@ class StockServiceIntegration implements StockServiceInterface
     ) {
     }
 
-    protected function getSku(ProductIdentity $product) : ProductSku
+    protected function getSku(ProductIdentity $product) : ProductVariant
     {
         $query = FindSkuStockQuery::from([]);
         $query->setKey($product->skuId);

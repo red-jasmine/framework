@@ -37,9 +37,9 @@ class ProductAdminRoute
 
             Route::apiResource('products', ProductController::class)->names('admin.product.products');
 
-            Route::get('skus/logs', [ SkuController::class, 'logs' ])->name('admin.product.skus.logs');
-            Route::post('skus/{id}', [ SkuController::class, 'action' ])->name('admin.product.skus.action');
-            Route::apiResource('skus', SkuController::class)->names('admin.product.skus');
+            Route::get('variants/logs', [ SkuController::class, 'logs' ])->name('admin.product.variants.logs');
+            Route::post('variants/{id}', [ SkuController::class, 'action' ])->name('admin.product.variants.action');
+            Route::apiResource('variants', SkuController::class)->names('admin.product.variants');
 
 
             Route::apiResource('series', SeriesController::class)->names('admin.product.series');

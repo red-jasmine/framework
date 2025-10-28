@@ -16,7 +16,7 @@ use RedJasmine\Product\Application\Stock\Services\Commands\BulkStockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Support\Exceptions\AbstractException;
 
 class StockTableAction extends Action
@@ -45,8 +45,8 @@ class StockTableAction extends Action
                  FileUpload::make('image')->image()->disabled()
                            ->label(__('red-jasmine-product::product.fields.image'))
                  ,
-                 Forms\Components\Repeater::make('skus')
-                                          ->label(__('red-jasmine-product::product.fields.skus'))
+                 Forms\Components\Repeater::make('variants')
+                                          ->label(__('red-jasmine-product::product.fields.variants'))
                                           ->table([
                                               Forms\Components\Repeater\TableColumn::make('id'),
                                               Forms\Components\Repeater\TableColumn::make('properties_name'),
@@ -86,9 +86,9 @@ class StockTableAction extends Action
                   * @var $sku \RedJasmine\Product\Domain\Stock\Models\Product
                   */
 
-                 $record->skus->each(function ($sku) {
+                 $record->variants->each(function ($sku) {
                      /**
-                      * @var $sku ProductSku
+                      * @var $sku ProductVariant
                       */
                      $sku->action_type = ProductStockActionTypeEnum::ADD->value;
                      $sku->makeHidden(['price']);
@@ -100,14 +100,14 @@ class StockTableAction extends Action
                      'title'    => $record->title,
                      'outer_id' => $record->outer_id,
                      'image'    => $record->image,
-                     'skus'     => $record->skus
+                     'variants'     => $record->variants
                  ];
              })
              ->action(function (array $data) {
 
                  try {
-                     foreach ($data['skus'] ?? [] as $index => $sku) {
-                         $data['skus'][$index]['sku_id'] = $sku['id'];
+                     foreach ($data['variants'] ?? [] as $index => $sku) {
+                         $data['variants'][$index]['sku_id'] = $sku['id'];
                      }
                      $service = app(StockApplicationService::class);
 

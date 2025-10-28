@@ -112,7 +112,7 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = ['skus', 'extension', 'extendProductGroups', 'tags'];
+        $findQuery->include = ['variants', 'extension', 'extendProductGroups', 'tags'];
         return $findQuery;
     }
 
@@ -124,7 +124,7 @@ class ProductResource extends Resource
             $model->setAttribute($key, $model->extension->{$key});
         }
 
-        $model->setAttribute('skus', $model->skus->toArray());
+        $model->setAttribute('variants', $model->variants->toArray());
         //$model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
         return $model;
     }
@@ -241,14 +241,14 @@ class ProductResource extends Resource
 
         return [
             Section::make('')->schema([
-                Toggle::make('is_multiple_spec')
+                Toggle::make('has_variants')
                       ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
                       ->required()
                       ->live()
                       ->inline()
                       ->default(0),
 
-                static::saleAttrs()->visible(fn(Get $get) => $get('is_multiple_spec'))
+                static::saleAttrs()->visible(fn(Get $get) => $get('has_variants'))
                       ->live()
                       ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
 
@@ -262,7 +262,7 @@ class ProductResource extends Resource
                               }, $saleAttrs);
 
 
-                              $oldSku = $get('skus') ?? [];
+                              $oldSku = $get('variants') ?? [];
                               if ($oldSku === null) {
                                   $oldSku = [];
                               }
@@ -272,7 +272,7 @@ class ProductResource extends Resource
 
                               $oldSku = collect($oldSku)->keyBy('properties_sequence');
 
-                              $skus = [];
+                              $variants = [];
                               foreach ($crossJoin as $properties => $propertyName) {
 
                                   $sku                    = $oldSku[$properties] ?? [
@@ -287,19 +287,19 @@ class ProductResource extends Resource
 
                                   ];
                                   $sku['properties_name'] = $propertyName;
-                                  $skus[]                 = $sku;
+                                  $variants[]                 = $sku;
                               }
 
-                              $set('skus', $skus);
+                              $set('variants', $variants);
                           } catch (Throwable $throwable) {
-                              $set('skus', []);
+                              $set('variants', []);
                           }
                       }),
 
-                static::skus()
+                static::variants()
                       ->deletable(false)
                       ->live()
-                      ->visible(fn(Get $get) => $get('is_multiple_spec')),
+                      ->visible(fn(Get $get) => $get('has_variants')),
             ]),
             Section::make('')->schema([
 
@@ -344,7 +344,7 @@ class ProductResource extends Resource
             ])
                    ->columns(3)
                    ->hidden(fn(Get $get
-                   ) => $get('is_multiple_spec')),
+                   ) => $get('has_variants')),
         ];
     }
 
@@ -425,10 +425,10 @@ class ProductResource extends Resource
                        ->reorderable(false);
     }
 
-    protected static function skus()
+    protected static function variants()
     {
 
-        return Repeater::make('skus')->table(
+        return Repeater::make('variants')->table(
             [
                 Repeater\TableColumn::make('properties_name'),
                 Repeater\TableColumn::make('properties_name'),
@@ -468,7 +468,7 @@ class ProductResource extends Resource
                      ->hiddenLabel(),
             TextInput::make('stock')->minValue(0)->integer()->required(),
             TextInput::make('safety_stock')->numeric()->default(0),
-            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::skusStatus()),
+            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::variantStatus()),
             TextInput::make('barcode')->maxLength(32),
             TextInput::make('outer_id')->maxLength(32),
             TextInput::make('supplier_sku_id')->maxLength(32),
@@ -521,7 +521,7 @@ class ProductResource extends Resource
                           ->label(__('red-jasmine-product::product.fields.outer_id'))
                           ->searchable()
                           ->toggleable(true, true),
-                TextColumn::make('is_multiple_spec')
+                TextColumn::make('has_variants')
                           ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
                           ->toggleable(isToggledHiddenByDefault: true),
 
@@ -1115,8 +1115,9 @@ class ProductResource extends Resource
     public static function seoFields() : array
     {
         return [
-            TextInput::make('keywords')->label(__('red-jasmine-product::product.fields.keywords'))->maxLength(255),
-            TextInput::make('description')->label(__('red-jasmine-product::product.fields.description'))->maxLength(255),
+            TextInput::make('meta_title')->label(__('red-jasmine-product::product.fields.meta_title'))->maxLength(255),
+            TextInput::make('meta_keywords')->label(__('red-jasmine-product::product.fields.meta_keywords'))->maxLength(255),
+            TextInput::make('meta_description')->label(__('red-jasmine-product::product.fields.meta_description'))->maxLength(255),
         ];
     }
 

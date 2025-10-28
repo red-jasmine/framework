@@ -20,7 +20,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property ?Money $market_price
  * @property ?Money $cost_price
  */
-class ProductSku extends Model implements OperatorInterface
+class ProductVariant extends Model implements OperatorInterface
 {
 
     use HasSnowflakeId;

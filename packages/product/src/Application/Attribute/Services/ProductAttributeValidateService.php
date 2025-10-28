@@ -279,27 +279,27 @@ class ProductAttributeValidateService
 
     /**
      * @param  Collection<Attribute>  $saleAttrs
-     * @param  Collection<Sku>  $skus
+     * @param  Collection<Sku>  $variants
      *
      * @return Collection
      * @throws ProductAttributeException|JsonException
      */
-    public function validateSkus(Collection $saleAttrs, Collection $skus) : Collection
+    public function validateSkus(Collection $saleAttrs, Collection $variants) : Collection
     {
 
         $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
             JSON_THROW_ON_ERROR));
 
-        $skuAttributes = $skus->pluck('propertiesSequence')->unique()->toArray();
+        $skuAttributes = $variants->pluck('propertiesSequence')->unique()->toArray();
 
 
         // 对比数量
-        if (count($crossJoinString) !== count($skus)) {
+        if (count($crossJoinString) !== count($variants)) {
             throw new ProductAttributeException('规则数量不一致');
         }
 
         // 验证总数量
-        foreach ($skus as $sku) {
+        foreach ($variants as $sku) {
             $sku->propertiesSequence = $this->attributeFormatter->formatString($sku->propertiesSequence);
             $sku->propertiesName     = $this->buildSkuName($saleAttrs, $sku->propertiesSequence);
         }
@@ -312,6 +312,6 @@ class ProductAttributeValidateService
             throw new ProductAttributeException('cross join too many attributes');
         }
 
-        return $skus;
+        return $variants;
     }
 }

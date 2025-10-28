@@ -84,7 +84,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
         return [
             'extension',
             'services',
-            'skus',
+            'variants',
             'brand',
             'category',
             'productGroups',

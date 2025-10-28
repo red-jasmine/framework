@@ -227,7 +227,7 @@ class ProductServiceIntegration implements ProductServiceInterface
     {
         $query = FindQuery::from([]);
         $query->setKey($product->id);
-        $query->include = ['skus'];
+        $query->include = ['variants'];
         return $this->productApplicationService->find($query);
     }
 } 

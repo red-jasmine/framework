@@ -5,7 +5,7 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Resources;
 use Illuminate\Http\Request;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
-/** @mixin \RedJasmine\Product\Domain\Product\Models\ProductSku */
+/** @mixin \RedJasmine\Product\Domain\Product\Models\ProductVariant */
 class ProductSkuResource extends JsonResource
 {
     public function toArray(Request $request)

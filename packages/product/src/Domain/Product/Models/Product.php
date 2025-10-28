@@ -41,6 +41,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
 /**
+ * @property $variants
+ * @property $has_variants
  * @property Money $price
  * @property ?Money $market_price
  * @property ?Money $cost_price
@@ -60,10 +62,10 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use HasSupplier;
 
-    public static string $defaultAttributesName = '';
+    public static string $defaultAttributesName     = '';
     public static string $defaultAttributesSequence = '';
-    public $incrementing = false;
-    protected $appends = ['price', 'market_price', 'cost_price'];
+    public               $incrementing              = false;
+    protected            $appends                   = ['price', 'market_price', 'cost_price'];
 
     protected static function boot() : void
     {
@@ -119,17 +121,17 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         });
         static::deleting(callback: static function (Product $product) {
             $product->extension()->delete();
-            $product->skus()->delete();
+            $product->variants()->delete();
 
         });
 
         static::restoring(callback: static function (Product $product) {
-            $product->skus()->withTrashed()->whereNot('status', ProductStatusEnum::DELETED)->restore();
+            $product->variants()->withTrashed()->whereNot('status', ProductStatusEnum::DELETED)->restore();
             $product->extension()->withTrashed()->restore();
         });
 
         static::forceDeleting(callback: static function (Product $product) {
-            $product->skus()->forceDelete();
+            $product->variants()->forceDelete();
             $product->extension()->forceDelete();
             $product->extendProductGroups()->detach();
             $product->tags()->detach();
@@ -187,9 +189,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      * 所有规格
      * @return HasMany
      */
-    public function skus() : HasMany
+    public function variants() : HasMany
     {
-        return $this->hasMany(ProductSku::class, 'product_id', 'id');
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id');
     }
 
     public function casts() : array
@@ -200,7 +202,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'status'                    => ProductStatusEnum::class,// 状态
             'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方
-            'is_multiple_spec'          => 'boolean',
+            'has_variants'              => 'boolean',
             'is_brand_new'              => 'boolean',
             'stop_sale_time'            => 'datetime',
             'on_sale_time'              => 'datetime',
@@ -231,7 +233,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         if (!$instance->exists) {
             $instance->setUniqueIds();
             $instance->setRelation('extension', ProductExtension::make());
-            $instance->setRelation('skus', Collection::make());
+            $instance->setRelation('variants', Collection::make());
             $instance->setRelation('extendProductGroups', Collection::make());
             $instance->setRelation('tags', Collection::make());
         }
@@ -258,13 +260,13 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $this->belongsTo(ProductGroup::class, 'product_group_id', 'id');
     }
 
-    public function addSku(ProductSku $sku) : static
+    public function addVariant(ProductVariant $variant) : static
     {
-        $sku->market     = $this->market;
-        $sku->owner      = $this->owner;
-        $sku->product_id = $this->id;
-        if (!$this->skus->where('id', $sku->id)->first()) {
-            $this->skus->push($sku);
+        $variant->market     = $this->market;
+        $variant->owner      = $this->owner;
+        $variant->product_id = $this->id;
+        if (!$this->variants->where('id', $variant->id)->first()) {
+            $this->variants->push($variant);
         }
         return $this;
 
@@ -406,9 +408,9 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
 
-    public function getSkuBySkuId(int $skuId) : ?ProductSku
+    public function getSkuBySkuId(int $skuId) : ?ProductVariant
     {
-        return $this->skus->where('id', $skuId)->firstOrFail();
+        return $this->variants->where('id', $skuId)->firstOrFail();
     }
 
 

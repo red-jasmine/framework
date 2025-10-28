@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Application\Stock\Services\Commands;
 
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\Exception;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\StockDomainService;
@@ -57,7 +57,7 @@ abstract class StockCommandHandler extends CommandHandler
     /**
      * 记录
      *
-     * @param  ProductSku  $sku
+     * @param  ProductVariant  $sku
      * @param  StockCommand  $command
      * @param  int|null  $restStock
      *
@@ -65,7 +65,7 @@ abstract class StockCommandHandler extends CommandHandler
      * @throws Exception
      */
     protected function log(
-        ProductSku $sku,
+        ProductVariant $sku,
         StockCommand $command,
         ?int $restStock = 0
     ) : void {

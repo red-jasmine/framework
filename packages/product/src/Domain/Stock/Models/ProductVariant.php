@@ -15,7 +15,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 
-class ProductSku extends Model implements OperatorInterface
+class ProductVariant extends Model implements OperatorInterface
 {
 
     use HasSnowflakeId;
@@ -72,7 +72,7 @@ class ProductSku extends Model implements OperatorInterface
         return $this->oldStock;
     }
 
-    public function setOldStock(int $oldStock) : ProductSku
+    public function setOldStock(int $oldStock) : ProductVariant
     {
         $this->oldStock = $oldStock;
         return $this;
@@ -83,7 +83,7 @@ class ProductSku extends Model implements OperatorInterface
         return $this->oldLockStock;
     }
 
-    public function setOldLockStock(int $oldLockStock) : ProductSku
+    public function setOldLockStock(int $oldLockStock) : ProductVariant
     {
         $this->oldLockStock = $oldLockStock;
         return $this;

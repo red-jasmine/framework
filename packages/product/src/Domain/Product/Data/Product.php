@@ -70,7 +70,7 @@ class Product extends Data
     // 外部ID（可选）
     public ?string $outerId = null;
     // 是否多规格
-    public bool $isMultipleSpec = false;
+    public bool $hasVariants = false;
     // 是否定制化
     public bool $isCustomized = false;
     // 单位数量
@@ -140,16 +140,22 @@ class Product extends Data
      * @var string|null
      */
     public ?string $tips = null;
+
     /**
      * 关键字
      * @var string|null
      */
-    public ?string $keywords = null;
+    public ?string $metaTitle = null;
+    /**
+     * 关键字
+     * @var string|null
+     */
+    public ?string $metaKeywords = null;
     /**
      * 描述
      * @var string|null
      */
-    public ?string $description = null;
+    public ?string $metaDescription = null;
 
     /**
      * 产品详情
@@ -218,7 +224,7 @@ class Product extends Data
      * 规格集合
      * @var Collection<Sku>|null
      */
-    public ?Collection $skus = null;
+    public ?Collection $variants = null;
 
     /**
      * @var Form|null

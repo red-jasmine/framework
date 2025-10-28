@@ -13,16 +13,16 @@ class BulkStockCommand extends Data
     /**
      * @var Collection<StockCommand>
      */
-    public Collection $skus;
+    public Collection $variants;
 
 
     public static function prepareForPipeline(array $properties) : array
     {
 
-        foreach ($properties['skus'] as $index => $sku) {
+        foreach ($properties['variants'] as $index => $sku) {
 
             if (blank($sku['action_stock'] ?? null)) {
-                unset($properties['skus'][$index]);
+                unset($properties['variants'][$index]);
             }
         }
         return $properties;

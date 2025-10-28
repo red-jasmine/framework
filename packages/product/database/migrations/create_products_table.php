@@ -68,8 +68,7 @@ return new class extends Migration {
             // 价格
             $table->string('currency', 3)->default('CNY')->comment('货币');
             $table->decimal('price', 12)->default(0)->comment('销售价');
-            //$table->decimal('market_price', 12)->nullable()->comment('市场价');
-            $table->decimal('compare_at_price', 12)->nullable()->comment('对比价');
+            $table->decimal('market_price', 12)->nullable()->comment('市场价');
             $table->decimal('cost_price', 12)->nullable()->comment('成本价');
 
             // 税率 修改

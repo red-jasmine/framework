@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Stock;
 
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Domain\Stock\Models\Product;
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -15,7 +15,7 @@ class StockDomainService extends Service
     public function init(int $skuId, int $productId, int $stock) : void
     {
         // TODO 改造
-        ProductSku::where('id', $skuId)->update(['stock' => $stock]);
+        ProductVariant::where('id', $skuId)->update(['stock' => $stock]);
         $stockUpdate = DB::raw("stock + $stock");
         Product::where('id', $productId)->update(['stock' => $stockUpdate]);
     }
@@ -33,10 +33,10 @@ class StockDomainService extends Service
      */
     public function reset(int $skuId, int $productId, int $stock) : int
     {
-        $sku = ProductSku::withTrashed()
-                         ->select(['id', 'product_id', 'stock', 'channel_stock', 'lock_stock'])
-                         ->lockForUpdate()
-                         ->find($skuId);
+        $sku = ProductVariant::withTrashed()
+                             ->select(['id', 'product_id', 'stock', 'channel_stock', 'lock_stock'])
+                             ->lockForUpdate()
+                             ->find($skuId);
         if (bccomp($sku->stock, $stock, 0) === 0) {
 
             return 0;
@@ -46,7 +46,7 @@ class StockDomainService extends Service
         }
         $quantity    = bcsub($stock, $sku->stock, 0);
         $stockUpdate = DB::raw("stock + $quantity");
-        ProductSku::withTrashed()->where('id', $sku->id)->update(['stock' => $stockUpdate]);
+        ProductVariant::withTrashed()->where('id', $sku->id)->update(['stock' => $stockUpdate]);
         Product::withTrashed()->where('id', $productId)->update(['stock' => $stockUpdate]);
 
         return $quantity;

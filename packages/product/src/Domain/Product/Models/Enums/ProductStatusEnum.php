@@ -112,7 +112,7 @@ enum ProductStatusEnum: string
 
     }
 
-    public static function skusStatus() : array
+    public static function variantStatus() : array
     {
         return [
             self::ON_SALE->value  => __('red-jasmine-product::product.enums.status.on_sale'),

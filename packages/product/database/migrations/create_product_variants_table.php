@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up() : void
     {
-        Schema::create('product_skus', function (Blueprint $table) {
+        Schema::create('product_variants', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
+            $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
+
+
             $table->string('market', 64)->default('default')->comment('市场'); // 市场
             $table->string('owner_type',64);
             $table->string('owner_id',64);
-            $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
+
 
             $table->string('properties_name')->nullable()->comment('规格名称');
             $table->string('properties_sequence')->nullable()->comment('规格属性序列');
@@ -39,9 +42,8 @@ return new class extends Migration {
 
 
 
-
-            $table->decimal('weight', 10, 3)->nullable()->comment('重量');
             $table->string('weight_unit', 10)->default('kg')->comment('重量单位:kg, g, lb, oz');
+            $table->decimal('weight', 10, 3)->nullable()->comment('重量');
 
             $table->decimal('length')->nullable()->comment('长度');
             $table->decimal('width')->nullable()->comment('宽度');
@@ -58,15 +60,7 @@ return new class extends Migration {
             // 操作
 
             $table->timestamp('modified_time')->nullable()->comment('修改时间');
-
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('updater_type', 64)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->string('updater_nickname', 64)->nullable();
-            $table->timestamps();
+            $table->operator();
             $table->softDeletes();
             $table->comment('商品-SKU表');
             $table->index([ 'product_id', ], 'idx_product');
@@ -75,6 +69,6 @@ return new class extends Migration {
 
     public function down() : void
     {
-        Schema::dropIfExists('product_skus');
+        Schema::dropIfExists('product_variants');
     }
 };

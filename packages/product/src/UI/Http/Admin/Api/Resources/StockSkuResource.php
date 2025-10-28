@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Product\UI\Http\Admin\Api\Resources;
 
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin ProductSku
+ * @mixin ProductVariant
  */
 class StockSkuResource extends JsonResource
 {

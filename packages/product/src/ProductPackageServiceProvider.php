@@ -69,17 +69,24 @@ class ProductPackageServiceProvider extends PackageServiceProvider
         return [
             'create_product_brands_table',
             'create_product_categories_table',
-            'create_product_channel_stocks_table',
+
             'create_product_attributes_table',
             'create_product_attribute_groups_table',
             'create_product_attribute_values_table',
             'create_product_groups_table',
-            'create_product_series_products_table',
+
             'create_product_series_table',
-            'create_product_skus_table',
-            'create_product_stock_logs_table',
+            'create_product_series_products_table',
+
+
+
             'create_products_table',
             'create_products_extension_table',
+            'create_product_variants_table',
+
+            'create_product_stock_logs_table',
+            'create_product_channel_stocks_table',
+
             'create_product_extend_group_pivot_table',
             'create_product_tags_table',
             'create_product_tag_pivots_table',

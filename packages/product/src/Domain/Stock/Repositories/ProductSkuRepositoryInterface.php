@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Stock\Repositories;
 
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
@@ -16,42 +16,42 @@ interface ProductSkuRepositoryInterface extends RepositoryInterface
     /**
      * 查找 SKU
      */
-    public function find($id) : ProductSku;
+    public function find($id) : ProductVariant;
 
     /**
      * 初始化库存
      */
-    public function init(ProductSku $sku, int $stock);
+    public function init(ProductVariant $sku, int $stock);
 
     /**
      * 重置库存
      */
-    public function reset(ProductSku $sku, int $stock): ProductSku;
+    public function reset(ProductVariant $sku, int $stock): ProductVariant;
 
     /**
      * 增加库存
      */
-    public function add(ProductSku $sku, int $stock) : ProductSku;
+    public function add(ProductVariant $sku, int $stock) : ProductVariant;
 
     /**
      * 减少库存
      */
-    public function sub(ProductSku $sku, int $stock) : ProductSku;
+    public function sub(ProductVariant $sku, int $stock) : ProductVariant;
 
     /**
      * 锁定库存
      */
-    public function lock(ProductSku $sku, int $stock) : ProductSku;
+    public function lock(ProductVariant $sku, int $stock) : ProductVariant;
 
     /**
      * 解锁库存
      */
-    public function unlock(ProductSku $sku, int $stock) : ProductSku;
+    public function unlock(ProductVariant $sku, int $stock) : ProductVariant;
 
     /**
      * 确认库存
      */
-    public function confirm(ProductSku $sku, int $stock) : ProductSku;
+    public function confirm(ProductVariant $sku, int $stock) : ProductVariant;
 
     /**
      * 存储日志

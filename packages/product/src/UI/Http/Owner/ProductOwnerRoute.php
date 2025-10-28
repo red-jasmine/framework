@@ -38,9 +38,9 @@ class ProductOwnerRoute
             Route::apiResource('products', ProductController::class)->names('seller.product.products');
 
 
-            Route::get('skus/logs', [ SkuController::class, 'logs' ])->name('seller.product.skus.logs');
-            Route::post('skus/{id}', [ SkuController::class, 'action' ])->name('seller.product.skus.action');
-            Route::apiResource('skus', SkuController::class)->only([ 'index', 'show' ])->names('seller.product.skus');
+            Route::get('variants/logs', [ SkuController::class, 'logs' ])->name('seller.product.variants.logs');
+            Route::post('variants/{id}', [ SkuController::class, 'action' ])->name('seller.product.variants.action');
+            Route::apiResource('variants', SkuController::class)->only([ 'index', 'show' ])->names('seller.product.variants');
 
             Route::apiResource('series', SeriesController::class)->names('seller.product.series');
 

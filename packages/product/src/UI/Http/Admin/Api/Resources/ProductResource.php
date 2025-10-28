@@ -21,7 +21,7 @@ class ProductResource extends JsonResource
             'product_type'        => $this->product_type,
             'shipping_type'       => $this->shipping_type,
             'status'              => $this->status,
-            'is_multiple_spec'    => $this->is_multiple_spec,
+            'has_variants'        => $this->has_variants,
             'image'               => $this->image,
             'barcode'             => $this->barcode,
             'outer_id'            => $this->outer_id,
@@ -66,7 +66,7 @@ class ProductResource extends JsonResource
             'created_at'       => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'       => $this->updated_at?->format('Y-m-d H:i:s'),
             'brand_id'         => $this->brand_id,
-            'model_code'    => $this->model_code,
+            'model_code'       => $this->model_code,
             'category_id'      => $this->category_id,
             'product_group_id' => $this->product_group_id,
             $this->mergeWhen($this->relationLoaded('extension'),
@@ -74,7 +74,7 @@ class ProductResource extends JsonResource
             'brand'            => new BrandResource($this->whenLoaded('brand')),
             'category'         => new CategoryResource($this->whenLoaded('category')),
             'productGroup'     => new GroupResource($this->whenLoaded('productGroup')),
-            'skus'             => ProductSkuResource::collection($this->whenLoaded('skus')),
+            'variants'         => ProductSkuResource::collection($this->whenLoaded('variants')),
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Infrastructure\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Domain\Stock\Models\Product;
-use RedJasmine\Product\Domain\Stock\Models\ProductSku;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Exceptions\StockException;
@@ -21,12 +21,12 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * @var string Eloquent模型类
      */
-    protected static string $modelClass = ProductSku::class;
+    protected static string $modelClass = ProductVariant::class;
 
     /**
      * 查找 SKU
      */
-    public function find($id): ProductSku
+    public function find($id): ProductVariant
     {
         return static::$modelClass::withTrashed()->findOrFail($id);
     }
@@ -50,9 +50,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 初始化库存
      */
-    public function init(ProductSku $sku, int $stock): void
+    public function init(ProductVariant $sku, int $stock): void
     {
-        ProductSku::where('id', $sku->id)->update(['stock' => $stock]);
+        ProductVariant::where('id', $sku->id)->update(['stock' => $stock]);
         $stockUpdate = DB::raw("stock + $stock");
         Product::where('id', $sku->product_id)->update(['stock' => $stockUpdate]);
     }
@@ -60,11 +60,11 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 重置库存
      */
-    public function reset(ProductSku $sku, int $stock): ProductSku
+    public function reset(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::withTrashed()
-                         ->lockForUpdate()
-                         ->find($sku->id);
+        $sku = ProductVariant::withTrashed()
+                             ->lockForUpdate()
+                             ->find($sku->id);
         if (bccomp($sku->stock, $stock, 0) === 0) {
             return $sku;
         }
@@ -87,9 +87,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 增加库存
      */
-    public function add(ProductSku $sku, int $stock): ProductSku
+    public function add(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku = ProductVariant::lockForUpdate()->find($sku->id);
         $sku->setOldLockStock($sku->lock_stock);
         $sku->setOldStock($sku->stock);
         $sku->stock = $sku->stock + $stock;
@@ -105,9 +105,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 减少库存
      */
-    public function sub(ProductSku $sku, int $stock): ProductSku
+    public function sub(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku = ProductVariant::lockForUpdate()->find($sku->id);
         if (bccomp($sku->stock, $stock, 0) < 0) {
             throw new StockException('库存不足');
         }
@@ -127,9 +127,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 锁定库存
      */
-    public function lock(ProductSku $sku, int $stock): ProductSku
+    public function lock(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku = ProductVariant::lockForUpdate()->find($sku->id);
         if (bccomp($sku->stock, $stock, 0) < 0) {
             throw new StockException('库存不足');
         }
@@ -151,9 +151,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 解锁库存
      */
-    public function unlock(ProductSku $sku, int $stock): ProductSku
+    public function unlock(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku = ProductVariant::lockForUpdate()->find($sku->id);
         if (bccomp($sku->lock_stock, $stock, 0) <= 0) {
             throw new StockException('锁定库存不足');
         }
@@ -175,9 +175,9 @@ class ProductSkuRepository extends Repository implements ProductSkuRepositoryInt
     /**
      * 确认库存
      */
-    public function confirm(ProductSku $sku, int $stock): ProductSku
+    public function confirm(ProductVariant $sku, int $stock): ProductVariant
     {
-        $sku = ProductSku::lockForUpdate()->find($sku->id);
+        $sku = ProductVariant::lockForUpdate()->find($sku->id);
 
         if (bccomp($sku->lock_stock, $stock, 0) <= 0) {
             throw new StockException('锁定库存不足');

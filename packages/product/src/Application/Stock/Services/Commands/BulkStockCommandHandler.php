@@ -24,7 +24,7 @@ class BulkStockCommandHandler extends StockCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            foreach ($command->skus as $stockCommand) {
+            foreach ($command->variants as $stockCommand) {
 
                 $restStock = 0;
                 $sku       = $this->repository->find($stockCommand->skuId);

@@ -52,9 +52,9 @@ class ProductCommandHandler extends CommandHandler
     {
 
 
-        $skuCommand = $command->skus?->keyBy('properties');
+        $skuCommand = $command->variants?->keyBy('properties');
 
-        foreach ($product->skus as $sku) {
+        foreach ($product->variants as $sku) {
 
             // 修改库存 把 删除的库存设置为 0
             if ($sku->deleted_at) {

@@ -34,9 +34,9 @@ class Product extends Model implements OperatorInterface
     ];
 
 
-    public function skus() : HasMany
+    public function variants() : HasMany
     {
-        return $this->hasMany(ProductSku::class, 'product_id', 'id');
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id');
     }
 
 }
