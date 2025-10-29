@@ -50,7 +50,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             AllowedFilter::exact('product_type'),
             AllowedFilter::exact('shipping_type'),
             AllowedFilter::exact('outer_id'),
-            AllowedFilter::exact('is_multiple_spec'),
+            AllowedFilter::exact('has_variants'),
             AllowedFilter::exact('status'),
             AllowedFilter::exact('brand_id'),
             AllowedFilter::exact('category_id'),

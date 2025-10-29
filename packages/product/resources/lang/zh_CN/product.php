@@ -34,7 +34,7 @@ return [
         'meta_keywords'             => 'SEO关键字',
         'meta_description'          => 'SEO描述',
         'is_pre_sale'               => '是否预售',
-        'is_multiple_spec'          => '多规格',
+        'has_variants'          => '多规格',
         'is_customized'             => '是的定制',
         'is_alone_order'            => '是否单独下单',
         'is_brand_new'              => '是否全新',

@@ -242,7 +242,7 @@ class ProductResource extends Resource
         return [
             Section::make('')->schema([
                 Toggle::make('has_variants')
-                      ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
+                      ->label(__('red-jasmine-product::product.fields.has_variants'))
                       ->required()
                       ->live()
                       ->inline()
@@ -522,7 +522,7 @@ class ProductResource extends Resource
                           ->searchable()
                           ->toggleable(true, true),
                 TextColumn::make('has_variants')
-                          ->label(__('red-jasmine-product::product.fields.is_multiple_spec'))
+                          ->label(__('red-jasmine-product::product.fields.has_variants'))
                           ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('brand.name')

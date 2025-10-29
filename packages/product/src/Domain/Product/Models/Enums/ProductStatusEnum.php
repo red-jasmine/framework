@@ -12,7 +12,7 @@ enum ProductStatusEnum: string
 
 
 
-    case DRAFT = 'draft'; // 未发布
+
 
     case ON_SALE = 'on_sale'; // 在售
 
@@ -23,10 +23,10 @@ enum ProductStatusEnum: string
     case FORBID_SALE = 'forbid_sale'; // 禁售
 
     // 审批中
-    case PENDING = 'pending';
+    case DRAFT = 'draft'; // 未发布
+    case PENDING = 'pending'; // 审批中
     case FORBIDDEN = 'forbidden'; // 禁售
     case ARCHIVED = 'archived'; // 已归档
-
     case DELETED = 'deleted'; // 删除 仅在 sku 中使用
 
 

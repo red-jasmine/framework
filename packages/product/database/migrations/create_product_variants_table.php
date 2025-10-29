@@ -10,19 +10,15 @@ return new class extends Migration {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
-
-
             $table->string('market', 64)->default('default')->comment('市场'); // 市场
-            $table->string('owner_type',64);
-            $table->string('owner_id',64);
-
+            $table->string('owner_type', 64);
+            $table->string('owner_id', 64);
 
             $table->string('properties_name')->nullable()->comment('规格名称');
             $table->string('properties_sequence')->nullable()->comment('规格属性序列');
 
-
             // 状态
-            $table->string('status',32)->comment('状态');
+            $table->string('status', 32)->comment('状态');
 
             // 价格
             $table->string('currency', 3)->default('CNY')->comment('货币');
@@ -37,21 +33,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
             // 信息
             $table->string('image')->nullable()->comment('主图');
-            $table->string('outer_id')->nullable()->comment('规格编码');
-            $table->string('barcode', 32)->nullable()->comment('规格条码');
+            $table->string('sku')->nullable()->comment('SKU编码');
+            $table->string('gtin', 64)->nullable()->comment('国际条码');
+            $table->string('barcode', 64)->nullable()->comment('自定义条码');
 
 
-
-            $table->string('weight_unit', 10)->default('kg')->comment('重量单位:kg, g, lb, oz');
             $table->decimal('weight', 10, 3)->nullable()->comment('重量');
-
+            $table->string('weight_unit', 10)->default('kg')->comment('重量单位');
             $table->decimal('length')->nullable()->comment('长度');
             $table->decimal('width')->nullable()->comment('宽度');
             $table->decimal('height')->nullable()->comment('高度');
+            $table->string('dimension_unit', 10)->default('m')->comment('尺寸单位');
             $table->decimal('volume')->nullable()->comment('体积');
-            $table->string('dimension_unit', 10)->default('m')->comment('尺寸单位:m, cm, in, ft');
-
-
 
             // 销量
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
@@ -63,7 +56,7 @@ return new class extends Migration {
             $table->operator();
             $table->softDeletes();
             $table->comment('商品-SKU表');
-            $table->index([ 'product_id', ], 'idx_product');
+            $table->index(['product_id',], 'idx_product');
         });
     }
 
