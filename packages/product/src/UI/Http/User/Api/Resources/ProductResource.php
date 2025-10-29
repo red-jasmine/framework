@@ -59,7 +59,7 @@ class ProductResource extends JsonResource
             'brand'          => new BrandResource($this->whenLoaded('brand')),
             //'category'            => new CategoryResource($this->whenLoaded('category')),
             //'productGroup'        => new GroupResource($this->whenLoaded('productGroup')),
-            'variants'       => ProductSkuResource::collection($this->whenLoaded('variants')),
+            'variants'       => ProductVariantResource::collection($this->whenLoaded('variants')),
             'services'       => ServiceResource::collection($this->whenLoaded('services')),
             'tags'           => TagResource::collection($this->whenLoaded('tags')),
         ];
