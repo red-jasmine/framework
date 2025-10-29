@@ -92,13 +92,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
             $table->unsignedBigInteger('step_limit')->default(1)->comment('数量倍数');
 
-            // 供应商
-            $table->boolean('is_from_supplier')->default(false)->comment('是否来自供应商');
-            $table->string('supplier_type')->nullable()->comment('供应商类型');
-            $table->unsignedBigInteger('supplier_id')->nullable()->comment('供应商ID');
-            $table->unsignedBigInteger('supplier_product_id')->nullable()->comment('供应商 商品ID');
-
-
             // ============ 国际化元数据 ============
             // （ISO 3166-1 alpha-2)
             $table->string('origin_country', 2)->nullable()->comment('原产国');

@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Ecommerce\Domain\Models\HasSupplier;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
 use RedJasmine\Product\Domain\Brand\Models\Brand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
@@ -59,8 +58,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     use HasOperator;
 
     use SoftDeletes;
-
-    use HasSupplier;
 
     public static string $defaultAttributesName     = '';
     public static string $defaultAttributesSequence = '';
@@ -217,7 +214,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'is_customized'             => 'boolean',
             'is_alone_order'            => 'boolean',
             'is_pre_sale'               => 'boolean',
-            'is_from_supplier'          => 'boolean',
             'currency'                  => CurrencyCast::class,
             'price'                     => MoneyCast::class.':currency,price,1',
             'market_price'              => MoneyCast::class.':currency,market_price,1',

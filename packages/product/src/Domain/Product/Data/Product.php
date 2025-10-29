@@ -125,16 +125,6 @@ class Product extends Data
     // 是否优惠
     public bool $isBenefit = false;
 
-
-    public bool $isFromSupplier = false;
-    /**
-     * 供应商
-     * @var UserInterface|null
-     */
-    public ?UserInterface $supplier;
-    // 供应商产品ID（可选）
-    public ?int $supplierProductId = null;
-
     /**
      * 提示
      * @var string|null

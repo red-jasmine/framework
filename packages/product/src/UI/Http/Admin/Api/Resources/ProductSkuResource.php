@@ -18,7 +18,6 @@ class ProductSkuResource extends JsonResource
             'barcode'         => $this->barcode,
             'outer_id'        => $this->outer_id,
             'status'          => $this->status,
-            'supplier_sku_id' => $this->supplier_sku_id,
             'price'           => (string)$this->price,
             'market_price'    => (string)$this->market_price,
             'cost_price'      => (string)$this->cost_price,

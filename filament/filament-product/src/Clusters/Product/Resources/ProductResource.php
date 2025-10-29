@@ -147,7 +147,6 @@ class ProductResource extends Resource
             Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->schema(static::operateFields()),
             Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
             Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
-            Tab::make('supplier')->label(__('red-jasmine-product::product.labels.supplier'))->columns(1)->schema(static::supplierFields()),
             Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->schema(static::otherFields()),
             //Forms\Components\Tabs\Tab::make('publish')->label(__('red-jasmine-product::product.labels.publish'))->columns(1)->inlineLabel()->schema(static::publishFields()),
 
@@ -441,7 +440,6 @@ class ProductResource extends Resource
                 Repeater\TableColumn::make('status'),
                 Repeater\TableColumn::make('barcode'),
                 Repeater\TableColumn::make('outer_id'),
-                Repeater\TableColumn::make('supplier_sku_id'),
                 Repeater\TableColumn::make('weight'),
                 Repeater\TableColumn::make('size'),
                 Repeater\TableColumn::make('length'),
@@ -471,7 +469,6 @@ class ProductResource extends Resource
             Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::variantStatus()),
             TextInput::make('barcode')->maxLength(32),
             TextInput::make('outer_id')->maxLength(32),
-            TextInput::make('supplier_sku_id')->maxLength(32),
             TextInput::make('weight')->nullable()->numeric()->maxLength(32),
             TextInput::make('size')->nullable()->numeric()->maxLength(32),
             TextInput::make('length')->nullable()->numeric()->maxLength(32),
@@ -1164,21 +1161,6 @@ class ProductResource extends Resource
                   ->label(__('red-jasmine-product::product.fields.freight_template_id')),
 
 
-        ];
-    }
-
-    public static function supplierFields() : array
-    {
-        return [
-            TextInput::make('supplier_type')
-                     ->label(__('red-jasmine-product::product.fields.supplier_type'))
-                     ->maxLength(255),
-            TextInput::make('supplier_id')
-                     ->label(__('red-jasmine-product::product.fields.supplier_id'))
-                     ->numeric(),
-            TextInput::make('supplier_product_id')
-                     ->label(__('red-jasmine-product::product.fields.supplier_product_id'))
-                     ->numeric(),
         ];
     }
 

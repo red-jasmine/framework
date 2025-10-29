@@ -20,8 +20,6 @@ class Sku extends Data
     public ?string $image         = null;
     public ?string $barcode       = null;
     public ?string $outerId       = null;
-    public ?int    $supplierSkuId = null;
-
 
     #[WithCast(CurrencyCast::class)]
     public Currency $currency;

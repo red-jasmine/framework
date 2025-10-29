@@ -48,8 +48,6 @@ return new class extends Migration {
 
             // 销量
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
-            // 供应商
-            $table->unsignedBigInteger('supplier_sku_id')->nullable()->comment('供应商 SKU ID');
             // 操作
 
             $table->timestamp('modified_time')->nullable()->comment('修改时间');

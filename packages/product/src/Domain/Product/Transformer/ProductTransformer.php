@@ -51,7 +51,6 @@ class ProductTransformer
     {
         $product->market         = $command->market;
         $product->owner          = $command->owner;
-        $product->supplier       = $command->supplier;
         $product->product_type   = $command->productType;
         $product->is_alone_order = $command->isAloneOrder;
         $product->is_pre_sale    = $command->isPreSale;
@@ -87,7 +86,6 @@ class ProductTransformer
         $product->is_new                    = $command->isNew;
         $product->is_best                   = $command->isBest;
         $product->is_benefit                = $command->isBenefit;
-        $product->supplier_product_id       = $command->supplierProductId;
         $product->start_sale_time           = $command->startSaleTime;
         $product->end_sale_time             = $command->endSaleTime;
         //$product->tax_rate                        = $command->taxRate;
@@ -202,7 +200,6 @@ class ProductTransformer
         $variant->safety_stock        = $skuData->safetyStock;
         $variant->market_price        = $skuData->marketPrice;
         $variant->cost_price          = $skuData->costPrice;
-        $variant->supplier_sku_id     = $skuData->supplierSkuId;
         $variant->weight              = $skuData->weight;
         $variant->width               = $skuData->width;
         $variant->height              = $skuData->height;
@@ -237,7 +234,6 @@ class ProductTransformer
         $variant->image           = $product->image;
         $variant->barcode         = $product->barcode;
         $variant->outer_id        = $product->outer_id;
-        $variant->supplier_sku_id = null;
 
         $variant->weight          = $product->extension->weight;
         $variant->width           = $product->extension->width;
