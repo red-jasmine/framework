@@ -6,7 +6,7 @@ use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
 
-class Brand extends BaseCategoryModel
+class ProductBrand extends BaseCategoryModel
 {
 
     public function isAllowUse() : bool

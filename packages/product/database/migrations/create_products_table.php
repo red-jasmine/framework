@@ -43,7 +43,7 @@ return new class extends Migration {
             // 类目信息
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
             $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
-            $table->string('model_code',64)->nullable()->comment('型号编码');
+            $table->string('model_code', 64)->nullable()->comment('型号编码');
             $table->string('spu')->nullable()->comment('商品编码');
             // 类目标准商品ID
             $table->unsignedBigInteger('standard_product_id')->nullable()->comment('类目标品ID');
@@ -60,8 +60,10 @@ return new class extends Migration {
             $table->string('order_quantity_limit_type')->default(OrderQuantityLimitTypeEnum::UNLIMITED)->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
             $table->unsignedBigInteger('order_quantity_limit_num')->default(0)->nullable()->comment('下单数量限制数量');
 
-            // 价格 所有规格的 最低价格
+            // 商品统一价格货币
             $table->string('currency', 3)->default('CNY')->comment('货币');
+
+            // 商品最低价
             $table->decimal('price', 12)->default(0)->comment('销售价');
             $table->decimal('market_price', 12)->nullable()->comment('市场价');
             $table->decimal('cost_price', 12)->nullable()->comment('成本价');
@@ -111,9 +113,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('likes')->default(0)->comment('喜欢量');
             $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
 
-            //  定时上架
-            $table->timestamp('start_sale_time')->nullable()->comment('定时上架时间');
-            $table->timestamp('end_sale_time')->nullable()->comment('定时下架时间');
             // 时间
             $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
             $table->timestamp('sold_out_time')->nullable()->comment('售停时间');

@@ -31,6 +31,10 @@ use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 class Product extends Data
 {
 
+    // 产品所属用户
+    public UserInterface $owner;
+
+
     public string $market = 'default';
     // 产品类型
     public ProductTypeEnum $productType;
@@ -40,12 +44,14 @@ class Product extends Data
      * @var array
      */
     public array $deliveryMethods = [];
-    // 产品所属用户
-    public UserInterface $owner;
+
     // 产品标题
     public string $title;
     // 产品副标题（可选）
     public ?string $slogan;
+
+
+    public ?string $spu;
 
     // 产品状态，默认为“在售”
     public ProductStatusEnum $status = ProductStatusEnum::ON_SALE;
@@ -65,12 +71,8 @@ class Product extends Data
 
     // 产品图片（可选）
     public ?string $image = null;
-    // 条形码（可选）
-    public ?string $barcode = null;
-    // 外部ID（可选）
-    public ?string $outerId = null;
-    // 是否多规格
-    public bool $hasVariants = false;
+
+
     // 是否定制化
     public bool $isCustomized = false;
     // 单位数量
@@ -210,9 +212,12 @@ class Product extends Data
      */
     public ?Collection $customizeProps = null;
 
+
+    // 有SKU多变体
+    public bool $hasVariants = false;
     /**
-     * 规格集合
-     * @var Collection<Sku>|null
+     * SKU变体集合
+     * @var Collection<Variant>|null
      */
     public ?Collection $variants = null;
 
@@ -226,51 +231,20 @@ class Product extends Data
     public int $stock = 0;
 
     public int $safetyStock = 0;
-    // 重量（可选）
-    public ?string $weight;
-    // 宽度（可选）
-    public ?string $width;
-    // 高度（可选）
-    public ?string $height;
-    // 长度（可选）
-    public ?string $length;
-    // 尺寸（可选）
-    public ?string $size;
-    // 产品价格
-    //#[WithCast(AmountCast::class)]
-
     /**
+     * 商品价格货币
      * @var Currency
      */
     #[WithCast(CurrencyCast::class)]
     public Currency $currency;
 
-    #[WithCast(MoneyCast::class, 'currency', 'price', true)]
-    public Money $price;
-    /**
-     * 市场价格
-     *
-     * @var Money|null
-     */
-    public ?Money $marketPrice;
-    /**
-     * 成本价格
-     *
-     * @var Money|null
-     */
-    public ?Money $costPrice = null;
-
+    // 商品中 没有价格 ， 所有的价格都在 SKU变体中设置
 
     /**
      * 税率
      * @var float
      */
     public float $taxRate = 0;
-
-    #[WithCast(DateTimeInterfaceCast::class)]
-    public ?Carbon $startSaleTime = null;
-    #[WithCast(DateTimeInterfaceCast::class)]
-    public ?Carbon $endSaleTime   = null;
 
 
     public function __construct()

@@ -8,7 +8,7 @@ use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
-use RedJasmine\Product\Domain\Product\Data\Sku;
+use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Attribute;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
 use RedJasmine\Product\Domain\Product\AttributeFormatter;
@@ -279,7 +279,7 @@ class ProductAttributeValidateService
 
     /**
      * @param  Collection<Attribute>  $saleAttrs
-     * @param  Collection<Sku>  $variants
+     * @param  Collection<Variant>  $variants
      *
      * @return Collection
      * @throws ProductAttributeException|JsonException

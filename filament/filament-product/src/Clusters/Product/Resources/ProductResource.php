@@ -286,7 +286,7 @@ class ProductResource extends Resource
 
                                   ];
                                   $sku['properties_name'] = $propertyName;
-                                  $variants[]                 = $sku;
+                                  $variants[]             = $sku;
                               }
 
                               $set('variants', $variants);
@@ -331,7 +331,7 @@ class ProductResource extends Resource
                         ->required()
                         ->default(100)
                         ->integer()
-                ->stacked()
+                        ->stacked()
                 ,
                 Quantity::make('safety_stock')
                         ->label(__('red-jasmine-product::product.fields.safety_stock'))
@@ -683,17 +683,6 @@ class ProductResource extends Resource
                              return ProductStatusEnum::options();
 
                          })->live()
-            ,
-            DateTimePicker::make('start_sale_time')
-                          ->nullable()
-                          ->label(__('red-jasmine-product::product.fields.start_sale_time'))
-                          ->format('Y-m-d\TH:i:sP')
-            ,
-
-            DateTimePicker::make('end_sale_time')
-                          ->nullable()
-                          ->label(__('red-jasmine-product::product.fields.end_sale_time'))
-                          ->format('Y-m-d\TH:i:sP'),
         ];
 
     }
@@ -715,7 +704,7 @@ class ProductResource extends Resource
                                                                                                ->where('owner_id', $get('owner_id'))
                           ,
                       )
-                      //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
                       ->dehydrated()
                       ->saveRelationshipsUsing(null) // 不进行自动保存
                       ->parentNullValue(0)
@@ -728,15 +717,15 @@ class ProductResource extends Resource
                       name: 'tags',
                       titleAttribute: 'name',
                       modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query->where('owner_type',
-                                                                                  $get('owner_type'))
+                          $get('owner_type'))
                                                                                       ->where('owner_id',
                                                                                           $get('owner_id')),
                   )
-                ->pivotData([
+                  ->pivotData([
 
-                ])
-                  //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
-                  //->dehydrated()
+                  ])
+                //->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+                //->dehydrated()
                   ->saveRelationshipsUsing(null) // 不进行自动保存
                   ->dehydrated()
                   ->preload()
@@ -946,7 +935,7 @@ class ProductResource extends Resource
                                         modifyQueryUsing: fn(Builder $query) => $query->enable()
                                     )
                                     ->columns(6)
-                                    // ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
+            // ->loadStateFromRelationshipsUsing(null) // 不进行从关联中获取数据
                                     ->dehydrated()
                                     ->saveRelationshipsUsing(null) // 不进行自动保存
                                     ->dehydrated()

@@ -5,7 +5,7 @@ namespace RedJasmine\Product\Domain\Product\Transformer;
 use JsonException;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
-use RedJasmine\Product\Domain\Product\Data\Sku;
+use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\ProductVariant;
@@ -49,23 +49,20 @@ class ProductTransformer
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
-        $product->market         = $command->market;
-        $product->owner          = $command->owner;
-        $product->product_type   = $command->productType;
-        $product->is_alone_order = $command->isAloneOrder;
-        $product->is_pre_sale    = $command->isPreSale;
-        $product->title          = $command->title;
-        $product->slogan         = $command->slogan;
-        $product->image          = $command->image;
-        $product->barcode        = $command->barcode;
-        $product->outer_id       = $command->outerId;
-        $product->is_customized  = $command->isCustomized;
-        $product->has_variants   = $command->hasVariants;
-        $product->is_brand_new   = $command->isBrandNew;
-        $product->sort           = $command->sort;
-        $product->unit           = $command->unit;
-        $product->unit_quantity  = $command->unitQuantity;
-        //$product->spu_id                          = $command->spuId;
+        $product->market                    = $command->market;
+        $product->owner                     = $command->owner;
+        $product->product_type              = $command->productType;
+        $product->is_alone_order            = $command->isAloneOrder;
+        $product->is_pre_sale               = $command->isPreSale;
+        $product->title                     = $command->title;
+        $product->slogan                    = $command->slogan;
+        $product->spu                       = $command->spu;
+        $product->image                     = $command->image;
+        $product->is_customized             = $command->isCustomized;
+        $product->is_brand_new              = $command->isBrandNew;
+        $product->sort                      = $command->sort;
+        $product->unit                      = $command->unit;
+        $product->unit_quantity             = $command->unitQuantity;
         $product->category_id               = $command->categoryId;
         $product->brand_id                  = $command->brandId;
         $product->model_code                = $command->modelCode;
@@ -86,9 +83,8 @@ class ProductTransformer
         $product->is_new                    = $command->isNew;
         $product->is_best                   = $command->isBest;
         $product->is_benefit                = $command->isBenefit;
-        $product->start_sale_time           = $command->startSaleTime;
-        $product->end_sale_time             = $command->endSaleTime;
-        //$product->tax_rate                        = $command->taxRate;
+
+
         $product->extension->id                   = $product->id;
         $product->extension->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
         $product->extension->videos               = $command->videos;
@@ -105,6 +101,8 @@ class ProductTransformer
         $product->extension->basic_attrs          = $this->attributeValidateService->basicProps($command->basicProps?->toArray() ?? []);
         $product->extension->customize_attrs      = $command->customizeProps?->toArray() ?? [];
 
+
+        $product->has_variants = $command->hasVariants;
 
         $product->setRelation('extendProductGroups', collect($command->extendProductGroups));
 
@@ -136,15 +134,15 @@ class ProductTransformer
 
 
                 $this->attributeValidateService->validateSkus($saleProps, $command->variants);
-                $command->variants?->each(function (Sku $skuData) use ($product) {
-                    $sku = $product->variants
-                               ->where('properties_sequence', $skuData->propertiesSequence)
-                               ->first() ?? ProductVariant::make();
-                    if (!$sku?->id) {
-                        $sku->setUniqueIds();
+                $command->variants?->each(function (Variant $skuData) use ($product) {
+                    $variant = $product->variants
+                                   ->where('properties_sequence', $skuData->propertiesSequence)
+                                   ->first() ?? ProductVariant::make();
+                    if (!$variant?->id) {
+                        $variant->setUniqueIds();
                     }
-                    $this->fillVariant($sku, $skuData);
-                    $product->addVariant($sku);
+                    $this->fillVariant($variant, $skuData);
+                    $product->addVariant($variant);
                 });
 
 
@@ -161,12 +159,12 @@ class ProductTransformer
 
 
                 // 加入默认规格
-                $defaultSku = $product->variants->where('properties_sequence',
+                $defaultVariant = $product->variants->where('properties_sequence',
                     $product::$defaultPropertiesSequence)->first() ?? $this->defaultVariant($product);
-                $this->setDefaultVariant($product, $defaultSku);
-                $defaultSku->setDeleted();
+                $this->setDefaultVariant($product, $defaultVariant);
+                $defaultVariant->setDeleted();
 
-                $product->addVariant($defaultSku);
+                $product->addVariant($defaultVariant);
 
                 break;
             case false: // 单规格
@@ -176,36 +174,38 @@ class ProductTransformer
                 $product->safety_stock          = $command->safetyStock;
                 $product->extension->sale_attrs = [];
 
-
-                $defaultSku = $product->variants
+                // 这里需要修改 单规格， 基础的规格 从 规格合集中获取
+                $defaultVariant = $product->variants
                                   ->where('properties_sequence', $product::$defaultAttributesSequence)
                                   ->first()
                               ?? $this->defaultVariant($product);
 
-                $this->setDefaultVariant($product, $defaultSku);
-                $defaultSku->setOnSale();
-                $product->addVariant($defaultSku);
+                $this->setDefaultVariant($product, $defaultVariant);
+                $defaultVariant->setOnSale();
+                $product->addVariant($defaultVariant);
                 break;
         }
     }
 
-    protected function fillVariant(ProductVariant $variant, Sku $skuData) : void
+    protected function fillVariant(ProductVariant $variant, Variant $variantData) : void
     {
-        $variant->properties_sequence = $skuData->propertiesSequence;
-        $variant->properties_name     = $skuData->propertiesName;
-        $variant->image               = $skuData->image;
-        $variant->barcode             = $skuData->barcode;
-        $variant->outer_id            = $skuData->outerId;
-        $variant->price               = $skuData->price;
-        $variant->safety_stock        = $skuData->safetyStock;
-        $variant->market_price        = $skuData->marketPrice;
-        $variant->cost_price          = $skuData->costPrice;
-        $variant->weight              = $skuData->weight;
-        $variant->width               = $skuData->width;
-        $variant->height              = $skuData->height;
-        $variant->length              = $skuData->length;
-        $variant->volume              = $skuData->volume;
-        $variant->status              = $skuData->status;
+        $variant->properties_sequence = $variantData->propertiesSequence;
+        $variant->properties_name     = $variantData->propertiesName;
+        $variant->sku                 = $variantData->sku;
+        $variant->image               = $variantData->image;
+        $variant->barcode             = $variantData->barcode;
+        $variant->price               = $variantData->price;
+        $variant->safety_stock        = $variantData->safetyStock;
+        $variant->market_price        = $variantData->marketPrice;
+        $variant->cost_price          = $variantData->costPrice;
+        $variant->weight              = $variantData->weight;
+        $variant->weight_unit         = $variantData->weightUnit;
+        $variant->width               = $variantData->width;
+        $variant->height              = $variantData->height;
+        $variant->length              = $variantData->length;
+        $variant->volume              = $variantData->volume;
+        $variant->dimension_unit      = $variantData->dimensionUnit;
+        $variant->status              = $variantData->status;
         $variant->deleted_at          = null;
     }
 
@@ -222,23 +222,15 @@ class ProductTransformer
 
     protected function setDefaultVariant(Product $product, ProductVariant $variant)
     {
-        $variant->status          = ProductStatusEnum::ON_SALE;
-        $variant->deleted_at      = null;
-        $variant->image           = $product->image;
-        $variant->barcode         = $product->barcode;
-        $variant->outer_id        = $product->outer_id;
-        $variant->price           = $product->price ?? 0;
-        $variant->cost_price      = $product->cost_price ?? null;
-        $variant->market_price    = $product->market_price ?? null;
-        $variant->safety_stock    = $product->safety_stock ?? 0;
-        $variant->image           = $product->image;
-        $variant->barcode         = $product->barcode;
-        $variant->outer_id        = $product->outer_id;
+        $variant->status       = ProductStatusEnum::ON_SALE;
+        $variant->deleted_at   = null;
+        $variant->image        = $product->image;
+        $variant->price        = $product->price ?? 0;
+        $variant->cost_price   = $product->cost_price ?? null;
+        $variant->market_price = $product->market_price ?? null;
+        $variant->safety_stock = $product->safety_stock ?? 0;
+        $variant->image        = $product->image;
+        $variant->barcode      = $product->barcode;
 
-        $variant->weight          = $product->extension->weight;
-        $variant->width           = $product->extension->width;
-        $variant->height          = $product->extension->height;
-        $variant->length          = $product->extension->length;
-        $variant->volume          = $product->extension->volume;
     }
 }

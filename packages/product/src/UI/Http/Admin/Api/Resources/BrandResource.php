@@ -7,7 +7,7 @@ use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 
 /**
- * @mixin \RedJasmine\Product\Domain\Brand\Models\Brand
+ * @mixin \RedJasmine\Product\Domain\Brand\Models\ProductBrand
  */
 class BrandResource extends JsonResource
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
-use RedJasmine\Product\Domain\Brand\Models\Brand;
+use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -18,12 +18,12 @@ class BrandRepository extends Repository implements BrandRepositoryInterface
     /**
      * @var string Eloquent模型类
      */
-    protected static string $modelClass = Brand::class;
+    protected static string $modelClass = ProductBrand::class;
 
     /**
      * 根据名称查找品牌
      */
-    public function findByName($name): ?Brand
+    public function findByName($name): ?ProductBrand
     {
         return static::$modelClass::where('name', $name)->first();
     }

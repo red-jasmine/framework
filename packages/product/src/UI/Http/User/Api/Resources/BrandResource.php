@@ -3,12 +3,12 @@
 namespace RedJasmine\Product\UI\Http\User\Api\Resources;
 
 use Illuminate\Http\Request;
-use RedJasmine\Product\Domain\Brand\Models\Brand;
+use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 
 /**
- * @mixin Brand
+ * @mixin ProductBrand
  */
 class BrandResource extends JsonResource
 {

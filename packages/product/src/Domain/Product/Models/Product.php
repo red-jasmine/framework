@@ -17,7 +17,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
-use RedJasmine\Product\Domain\Brand\Models\Brand;
+use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
@@ -248,7 +248,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public function brand() : BelongsTo
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+        return $this->belongsTo(ProductBrand::class, 'brand_id', 'id');
     }
 
     public function productGroup() : BelongsTo

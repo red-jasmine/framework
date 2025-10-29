@@ -15,13 +15,13 @@ use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandCreateCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandDeleteCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandUpdateCommand;
-use RedJasmine\Product\Domain\Brand\Models\Brand;
+use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 
 class BrandResource extends Resource
 {
     protected static ?int    $navigationSort = 2;
     protected static ?string $cluster        = Product::class;
-    protected static ?string $model          = Brand::class;
+    protected static ?string $model          = ProductBrand::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-swatch';
 
