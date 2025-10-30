@@ -21,8 +21,8 @@ class ListProducts extends ListRecords
         return [
             'all'            => Tab::make()
                                    ->label(__('red-jasmine-product::product.scopes.all')),
-            'on-sale'        => Tab::make()
-                                   ->badge(static::getResource()::getEloquentQuery()->onSale()->count())
+            'available'        => Tab::make()
+                                   ->badge(static::getResource()::getEloquentQuery()->available()->count())
                                    ->label(__('red-jasmine-product::product.scopes.on-sale'))
                                    ->modifyQueryUsing(fn(Builder $query) => $query->onSale()),
             'sold-out'       => Tab::make()->label(__('red-jasmine-product::product.scopes.sold-out'))

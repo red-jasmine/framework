@@ -18,7 +18,7 @@ class Variant extends Data
     // 属性序列名称 如 颜色:黑色,尺寸:L
     public ?string $propertiesName;
 
-    public ProductStatusEnum $status = ProductStatusEnum::ON_SALE;
+    public ProductStatusEnum $status = ProductStatusEnum::AVAILABLE;
     public Money             $price;
     /**
      * 市场价格

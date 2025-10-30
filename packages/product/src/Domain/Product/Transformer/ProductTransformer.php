@@ -222,7 +222,7 @@ class ProductTransformer
 
     protected function setDefaultVariant(Product $product, ProductVariant $variant)
     {
-        $variant->status       = ProductStatusEnum::ON_SALE;
+        $variant->status       = ProductStatusEnum::AVAILABLE;
         $variant->deleted_at   = null;
         $variant->image        = $product->image;
         $variant->price        = $product->price ?? 0;

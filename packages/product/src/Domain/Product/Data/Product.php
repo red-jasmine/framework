@@ -54,7 +54,7 @@ class Product extends Data
     public ?string $spu;
 
     // 产品状态，默认为“在售”
-    public ProductStatusEnum $status = ProductStatusEnum::ON_SALE;
+    public ProductStatusEnum $status = ProductStatusEnum::AVAILABLE;
     // 运费支付者，默认为“卖家”
     public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
     // 库存子类型，默认为“默认”

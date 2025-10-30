@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Product\Domain\Product\Models\Enums;
 
-use Filament\Support\Colors\Color;
 use Illuminate\Support\Arr;
 use RedJasmine\Support\Helpers\Enums\EnumsHelper;
 
@@ -11,70 +10,48 @@ enum ProductStatusEnum: string
     use EnumsHelper;
 
 
-
-
-
-    case ON_SALE = 'on_sale'; // 在售
+    case AVAILABLE = 'available'; // 在售
 
     case SOLD_OUT = 'sold_out'; // 售罄
 
     case STOP_SALE = 'stop_sale'; // 停售
 
-    case FORBID_SALE = 'forbid_sale'; // 禁售
+    case FORBIDDEN = 'forbidden'; // 禁售
 
     // 审批中
     case DRAFT = 'draft'; // 未发布
     case PENDING = 'pending'; // 审批中
-    case FORBIDDEN = 'forbidden'; // 禁售
+
+
     case ARCHIVED = 'archived'; // 已归档
     case DELETED = 'deleted'; // 删除 仅在 sku 中使用
-
 
 
     public static function creatingAllowed() : array
     {
         return Arr::only(self::labels(), [
-            self::ON_SALE->value,
+            self::AVAILABLE->value,
             self::DRAFT->value,
         ]);
     }
 
-
-    public function updatingAllowed() : array
+    public static function labels() : array
     {
-        return match ($this) {
-            self::ON_SALE => Arr::only(self::labels(), [
-                self::ON_SALE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
-                //                self::FORBID_SALE->value,
-                //                self::DRAFT->value,
-            ]),
-            self::SOLD_OUT => Arr::only(self::labels(), [
-                self::ON_SALE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
-                //                self::DRAFT->value,
-            ]),
-            self::STOP_SALE => Arr::only(self::labels(), [
-                self::ON_SALE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
+        return [
+            self::AVAILABLE->value => __('red-jasmine-product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value  => __('red-jasmine-product::product.enums.status.sold_out'),
+            self::STOP_SALE->value => __('red-jasmine-product::product.enums.status.stop_sale'),
+            self::FORBIDDEN->value => __('red-jasmine-product::product.enums.status.forbid_sale'),
+            self::DRAFT->value     => __('red-jasmine-product::product.enums.status.draft'),
+        ];
 
-            ]),
-            self::FORBID_SALE => Arr::only(self::labels(), [
-                self::FORBID_SALE->value,
-            ]),
-            self::DRAFT => Arr::only(self::labels(), [
-                self::ON_SALE->value,
-                self::DRAFT->value,
-            ]),
-            self::DELETED => [],
-
-        };
-        return [];
     }
 
+    public static function isAllowTimingSaleStatus($status) : bool
+    {
+        $status = self::from($status);
+        return in_array($status->value, self::allowTimingSaleStatus(), true);
+    }
 
     /**
      * 获取允许参加定时上架活动的状态
@@ -94,54 +71,71 @@ enum ProductStatusEnum: string
         ];
     }
 
-    public static function isAllowTimingSaleStatus($status) : bool
-    {
-        $status = self::from($status);
-        return in_array($status->value, self::allowTimingSaleStatus(), true);
-    }
-
-    public static function labels() : array
-    {
-        return [
-            self::ON_SALE->value     => __('red-jasmine-product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value    => __('red-jasmine-product::product.enums.status.sold_out'),
-            self::STOP_SALE->value   => __('red-jasmine-product::product.enums.status.stop_sale'),
-            self::FORBID_SALE->value => __('red-jasmine-product::product.enums.status.forbid_sale'),
-            self::DRAFT->value       => __('red-jasmine-product::product.enums.status.draft'),
-        ];
-
-    }
-
     public static function variantStatus() : array
     {
         return [
-            self::ON_SALE->value  => __('red-jasmine-product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value => __('red-jasmine-product::product.enums.status.sold_out'),
+            self::AVAILABLE->value => __('red-jasmine-product::product.enums.status.on_sale'),
+            self::SOLD_OUT->value  => __('red-jasmine-product::product.enums.status.sold_out'),
         ];
     }
 
-    //danger、gray、info、primary、success 或 warning
     public static function colors() : array
     {
 
         return [
-            self::ON_SALE->value     => 'success',
-            self::SOLD_OUT->value    => 'warning',
-            self::STOP_SALE->value   => 'danger',
-            self::FORBID_SALE->value => 'danger',
-            self::DRAFT->value       => 'primary',
+            self::AVAILABLE->value => 'success',
+            self::SOLD_OUT->value  => 'warning',
+            self::STOP_SALE->value => 'danger',
+            self::FORBIDDEN->value => 'danger',
+            self::DRAFT->value     => 'primary',
         ];
     }
 
+    //danger、gray、info、primary、success 或 warning
 
     public static function icons() : array
     {
         return [
-            self::ON_SALE->value     => 'heroicon-o-shopping-bag',
-            self::SOLD_OUT->value    => 'heroicon-o-bookmark-slash',
-            self::STOP_SALE->value   => 'heroicon-o-archive-box-x-mark',
-            self::FORBID_SALE->value => 'heroicon-o-no-symbol',
-            self::DRAFT->value       => 'heroicon-o-document',
+            self::AVAILABLE->value => 'heroicon-o-shopping-bag',
+            self::SOLD_OUT->value  => 'heroicon-o-bookmark-slash',
+            self::STOP_SALE->value => 'heroicon-o-archive-box-x-mark',
+            self::FORBIDDEN->value => 'heroicon-o-no-symbol',
+            self::DRAFT->value     => 'heroicon-o-document',
         ];
+    }
+
+    public function updatingAllowed() : array
+    {
+        return match ($this) {
+            self::AVAILABLE => Arr::only(self::labels(), [
+                self::AVAILABLE->value,
+                self::SOLD_OUT->value,
+                self::STOP_SALE->value,
+                //                self::FORBID_SALE->value,
+                //                self::DRAFT->value,
+            ]),
+            self::SOLD_OUT => Arr::only(self::labels(), [
+                self::AVAILABLE->value,
+                self::SOLD_OUT->value,
+                self::STOP_SALE->value,
+                //                self::DRAFT->value,
+            ]),
+            self::STOP_SALE => Arr::only(self::labels(), [
+                self::AVAILABLE->value,
+                self::SOLD_OUT->value,
+                self::STOP_SALE->value,
+
+            ]),
+            self::FORBIDDEN => Arr::only(self::labels(), [
+                self::FORBIDDEN->value,
+            ]),
+            self::DRAFT => Arr::only(self::labels(), [
+                self::AVAILABLE->value,
+                self::DRAFT->value,
+            ]),
+            self::DELETED => [],
+
+        };
+        return [];
     }
 }

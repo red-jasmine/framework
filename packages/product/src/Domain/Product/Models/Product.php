@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
@@ -45,6 +46,8 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property Money $price
  * @property ?Money $market_price
  * @property ?Money $cost_price
+ * @property Carbon  $on_sale_time
+ * @property Carbon  $sold_out_time
  */
 class Product extends Model implements OperatorInterface, OwnerInterface
 {
@@ -285,6 +288,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
 
+    public function scopeDraft(Builder $query)
+    {
+        return $query->where('status', ProductStatusEnum::DRAFT);
+    }
+
     /**
      * 销售中
      *
@@ -292,38 +300,31 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      *
      * @return Builder
      */
-    public function scopeOnSale(Builder $query)
+    public function scopeAvailable(Builder $query)
     {
         return $query->whereIn('status', [
-            ProductStatusEnum::ON_SALE,
+            ProductStatusEnum::AVAILABLE,
         ]);
     }
 
-    // 售罄的
-    public function scopeSoldOut(Builder $query)
-    {
-        return $query->where('status', ProductStatusEnum::SOLD_OUT);
-    }
 
     // 仓库中的
     public function scopeWarehoused(Builder $query)
     {
         return $query->whereIn('status', [
             ProductStatusEnum::STOP_SALE,
-            ProductStatusEnum::FORBID_SALE,
             ProductStatusEnum::DRAFT,
+            ProductStatusEnum::FORBIDDEN,
+            ProductStatusEnum::ARCHIVED,
         ]);
     }
+
 
     public function scopeStockAlarming(Builder $query)
     {
         return $query->whereRaw(DB::raw('stock <= safety_stock'));
     }
 
-    public function scopeDraft(Builder $query)
-    {
-        return $query->where('status', ProductStatusEnum::DRAFT);
-    }
 
     /**
      * 设置状态
@@ -341,13 +342,13 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             return;
         }
         switch ($status) {
-            case ProductStatusEnum::ON_SALE:
+            case ProductStatusEnum::AVAILABLE:
                 $this->on_sale_time = now();
                 break;
             case ProductStatusEnum::SOLD_OUT:
                 $this->sold_out_time = now();
                 break;
-            case ProductStatusEnum::FORBID_SALE:
+            case ProductStatusEnum::FORBIDDEN:
             case ProductStatusEnum::STOP_SALE:
                 $this->stop_sale_time = now();
                 break;
@@ -363,7 +364,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      */
     public function isAllowSale() : bool
     {
-        if ($this->status !== ProductStatusEnum::ON_SALE) {
+        if ($this->status !== ProductStatusEnum::AVAILABLE) {
 
             return false;
             throw  ProductException::newFromCodes(ProductException::PRODUCT_FORBID_SALE);

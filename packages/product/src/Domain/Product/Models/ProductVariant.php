@@ -50,7 +50,7 @@ class ProductVariant extends Model implements OperatorInterface
     public function setOnSale() : void
     {
         $this->deleted_at = null;
-        $this->status     = ProductStatusEnum::ON_SALE;
+        $this->status     = ProductStatusEnum::AVAILABLE;
     }
 
     protected function casts() : array

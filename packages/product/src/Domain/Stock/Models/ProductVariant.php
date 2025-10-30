@@ -48,7 +48,7 @@ class ProductVariant extends Model implements OperatorInterface
      */
     public function isAllowSale() : bool
     {
-        if (!in_array($this->status, [ProductStatusEnum::ON_SALE,], true)) {
+        if (!in_array($this->status, [ProductStatusEnum::AVAILABLE,], true)) {
             throw  StockException::newFromCodes(StockException::SKU_FORBID_SALE);
         }
         return true;

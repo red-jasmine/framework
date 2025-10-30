@@ -282,7 +282,7 @@ class ProductResource extends Resource
                                       'cost_price'          => null,
                                       'stock'               => null,
                                       'safety_stock'        => 0,
-                                      'status'              => ProductStatusEnum::ON_SALE->value,
+                                      'status'              => ProductStatusEnum::AVAILABLE->value,
 
                                   ];
                                   $sku['properties_name'] = $propertyName;
@@ -466,7 +466,7 @@ class ProductResource extends Resource
                      ->hiddenLabel(),
             TextInput::make('stock')->minValue(0)->integer()->required(),
             TextInput::make('safety_stock')->numeric()->default(0),
-            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::ON_SALE->value)->options(ProductStatusEnum::variantStatus()),
+            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
             TextInput::make('barcode')->maxLength(32),
             TextInput::make('outer_id')->maxLength(32),
             TextInput::make('weight')->nullable()->numeric()->maxLength(32),
@@ -618,7 +618,7 @@ class ProductResource extends Resource
                         DeleteAction::make(),
                         Action::make('listing-removal')
                               ->label(function (Model $record) {
-                                  return $record->status !== ProductStatusEnum::ON_SALE ?
+                                  return $record->status !== ProductStatusEnum::AVAILABLE ?
 
                                       __('red-jasmine-product::product.commands.listing')
                                       :
@@ -626,7 +626,7 @@ class ProductResource extends Resource
                               })
                               ->successNotificationTitle('ok')
                               ->icon(function (Model $record) {
-                                  return $record->status !== ProductStatusEnum::ON_SALE ?
+                                  return $record->status !== ProductStatusEnum::AVAILABLE ?
 
                                       FilamentIcon::resolve('product.commands.listing') ?? 'heroicon-o-arrow-up-circle'
                                       :
@@ -635,7 +635,7 @@ class ProductResource extends Resource
                               })
                               ->action(function (Model $record, Action $action) {
 
-                                  $status  = ($record->status === ProductStatusEnum::ON_SALE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::ON_SALE;
+                                  $status  = ($record->status === ProductStatusEnum::AVAILABLE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::AVAILABLE;
                                   $command = ProductSetStatusCommand::from(['id' => $record->id, 'status' => $status]);
                                   $service = app(static::getService());
 
@@ -671,7 +671,7 @@ class ProductResource extends Resource
                          ->label(__('red-jasmine-product::product.fields.status'))
                          ->required()
                          ->inline()
-                         ->default(ProductStatusEnum::ON_SALE)
+                         ->default(ProductStatusEnum::AVAILABLE)
                          ->useEnum(ProductStatusEnum::class)
                          ->options(function ($operation, ?Model $record) {
                              if ($operation == 'edit') {
