@@ -579,9 +579,9 @@ class ProductResource extends Resource
                           ->label(__('red-jasmine-product::product.fields.views'))
                           ->numeric()
                           ->sortable(),
-                TextColumn::make('on_sale_time')
+                TextColumn::make('available_at')
                           ->sortable()
-                          ->label(__('red-jasmine-product::product.fields.on_sale_time'))
+                          ->label(__('red-jasmine-product::product.fields.available_at'))
                           ->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('modified_time')
                           ->sortable()
@@ -635,7 +635,7 @@ class ProductResource extends Resource
                               })
                               ->action(function (Model $record, Action $action) {
 
-                                  $status  = ($record->status === ProductStatusEnum::AVAILABLE) ? ProductStatusEnum::STOP_SALE : ProductStatusEnum::AVAILABLE;
+                                  $status  = ($record->status === ProductStatusEnum::AVAILABLE) ? ProductStatusEnum::UNAVAILABLE : ProductStatusEnum::AVAILABLE;
                                   $command = ProductSetStatusCommand::from(['id' => $record->id, 'status' => $status]);
                                   $service = app(static::getService());
 

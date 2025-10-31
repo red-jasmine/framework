@@ -71,7 +71,9 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             AllowedSort::field('market_price'),
             AllowedSort::field('sales'),
             AllowedSort::field('stock'),
-            AllowedSort::field('on_sale_time'),
+            AllowedSort::field('available_at'),
+            AllowedSort::field('paused_at'),
+            AllowedSort::field('unavailable_at'),
             AllowedSort::field('modified_time'),
         ];
     }

@@ -114,9 +114,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
 
             // 时间
-            $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
-            $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
-            $table->timestamp('stop_sale_time')->nullable()->comment('下架时间');
+            $table->timestamp('available_at')->nullable()->comment('上架时间');
+            $table->timestamp('paused_at')->nullable()->comment('暂停销售时间');
+            $table->timestamp('unavailable_at')->nullable()->comment('下架时间');
             // 操作
             $table->timestamp('modified_time')->nullable()->comment('修改时间');
 

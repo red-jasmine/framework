@@ -73,9 +73,9 @@ return [
         'is_best'                   => '精品',
         'is_benefit'                => '特惠',
         'tips'                      => '提示',
-        'on_sale_time'              => '上架时间',
-        'sold_out_time'             => '售停时间',
-        'stop_sale_time'            => '下架时间',
+        'available_at'              => '上架时间',
+        'paused_at'                 => '暂停销售时间',
+        'unavailable_at'            => '下架时间',
         'modified_time'             => '修改时间',
         'start_sale_time'           => '定时上架时间',
         'end_sale_time'             => '定时下架时间',
@@ -122,12 +122,14 @@ return [
 
     'enums'   => [
         'status' => [
-            'on_sale'     => '在售',
-            'sold_out'    => '缺货',
-            'stop_sale'   => '停售',
-            'forbid_sale' => '禁售',
-            'deleted'     => '删除',
             'draft'       => '待售',
+            'pending'     => '审批中',
+            'on_sale'     => '在售',
+            'paused'      => '暂停销售',
+            'unavailable' => '已下架',
+            'forbid_sale' => '禁售',
+            'archived'    => '已归档',
+            'deleted'     => '删除',
         ],
     ],
     'options' => [
