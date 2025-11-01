@@ -68,9 +68,11 @@ use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product as Model;
+use RedJasmine\Product\Domain\Product\Models\ProductVariant;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use Tapp\FilamentValueRangeFilter\Filters\ValueRangeFilter;
 use Throwable;
+
 
 class ProductResource extends Resource
 {
@@ -159,6 +161,7 @@ class ProductResource extends Resource
                 )->persistTabInQueryString(),
                 //Forms\Components\Section::make(__('red-jasmine-product::product.labels.product'))->label(__('red-jasmine-product::product.labels.product'))->schema($schema),
             ])
+
             ->inlineLabel(true)
             ->columns(1);
     }
@@ -269,24 +272,24 @@ class ProductResource extends Resource
                               $crossJoin = $service->crossJoin($saleAttrs);
 
 
-                              $oldSku = collect($oldSku)->keyBy('properties_sequence');
+                              $oldSku = collect($oldSku)->keyBy('attrs_sequence');
 
                               $variants = [];
                               foreach ($crossJoin as $properties => $propertyName) {
 
-                                  $sku                    = $oldSku[$properties] ?? [
-                                      'properties_sequence' => $properties,
-                                      'properties_name'     => $propertyName,
-                                      'price'               => null,
-                                      'market_price'        => null,
-                                      'cost_price'          => null,
-                                      'stock'               => null,
-                                      'safety_stock'        => 0,
-                                      'status'              => ProductStatusEnum::AVAILABLE->value,
+                                  $sku               = $oldSku[$properties] ?? [
+                                      'attrs_sequence' => $properties,
+                                      'attrs_name'     => $propertyName,
+                                      'price'          => null,
+                                      'market_price'   => null,
+                                      'cost_price'     => null,
+                                      'stock'          => null,
+                                      'safety_stock'   => 0,
+                                      'status'         => ProductStatusEnum::AVAILABLE->value,
 
                                   ];
-                                  $sku['properties_name'] = $propertyName;
-                                  $variants[]             = $sku;
+                                  $sku['attrs_name'] = $propertyName;
+                                  $variants[]        = $sku;
                               }
 
                               $set('variants', $variants);
@@ -294,56 +297,10 @@ class ProductResource extends Resource
                               $set('variants', []);
                           }
                       }),
-
-                static::variants()
-                      ->deletable(false)
-                      ->live()
-                      ->visible(fn(Get $get) => $get('has_variants')),
             ]),
-            Section::make('')->schema([
-
-                //
-                Select::make('currency')
-                      ->options(static::getService()::getCurrencies())
-                    //->formatStateUsing(fn(Currency $state) =>$state->getCode())
-                      ->label(__('red-jasmine-product::product.fields.currency'))
-                      ->required()
-                ,
-
-                TextInput::make('price')
-                         ->numeric()
-                         ->label(__('red-jasmine-product::product.fields.price'))
-                         ->required()
-                ,
-                TextInput::make('market_price')
-                         ->numeric()
-                         ->formatStateUsing(fn($state) => $state['formatted'] ?? null)
-                         ->label(__('red-jasmine-product::product.fields.market_price'))
-
-                ,
-                TextInput::make('cost_price')
-                         ->numeric()
-                         ->formatStateUsing(fn($state) => $state['formatted'] ?? null)
-                         ->label(__('red-jasmine-product::product.fields.cost_price'))
-                ,
-
-                Quantity::make('stock')->label(__('red-jasmine-product::product.fields.stock'))
-                        ->required()
-                        ->default(100)
-                        ->integer()
-                        ->stacked()
-                ,
-                Quantity::make('safety_stock')
-                        ->label(__('red-jasmine-product::product.fields.safety_stock'))
-                        ->numeric()
-                        ->minValue(0)
-                        ->default(0),
-
-
-            ])
-                   ->columns(3)
-                   ->hidden(fn(Get $get
-                   ) => $get('has_variants')),
+            static::variants()
+                  ->deletable(false)
+                  ->live(),
         ];
     }
 
@@ -427,59 +384,53 @@ class ProductResource extends Resource
     protected static function variants()
     {
 
-        return Repeater::make('variants')->table(
-            [
-                Repeater\TableColumn::make('properties_name'),
-                Repeater\TableColumn::make('properties_name'),
-                Repeater\TableColumn::make('image'),
-                Repeater\TableColumn::make('price'),
-                Repeater\TableColumn::make('market_price'),
-                Repeater\TableColumn::make('cost_price'),
-                Repeater\TableColumn::make('stock'),
-                Repeater\TableColumn::make('safety_stock'),
-                Repeater\TableColumn::make('status'),
-                Repeater\TableColumn::make('barcode'),
-                Repeater\TableColumn::make('outer_id'),
-                Repeater\TableColumn::make('weight'),
-                Repeater\TableColumn::make('size'),
-                Repeater\TableColumn::make('length'),
-                Repeater\TableColumn::make('height'),
-                Repeater\TableColumn::make('width'),
+        return Repeater::make('variants')
+                       ->table(
+                           [
+                               // Repeater\TableColumn::make('attrs_sequence'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('200px'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.size')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.height')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.width')),
 
+                           ]
 
-            ]
+                       )
+                       ->schema([
+                           Hidden::make('attrs_sequence'),
+                           TextInput::make('attrs_name')->readOnly(),
+                           TextInput::make('sku'),
+                           FileUpload::make('image')->image(),
+                           TextInput::make('price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('market_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('stock')->minValue(0)->integer()->required(),
+                           TextInput::make('safety_stock')->numeric()->default(0),
+                           Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
+                           TextInput::make('barcode')->maxLength(32),
 
+                           // TextInput::make('weight')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('size')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('length')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('width')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('height')->nullable()->numeric()->maxLength(32),
 
-        )->schema([
-            Hidden::make('properties_sequence'),
-            TextInput::make('properties_name')->readOnly(),
-            FileUpload::make('image')->image()
-            ,
-            TextInput::make('price')
-                     ->formatStateUsing(fn($state) => $state['formatted'] ?? null)
-                     ->hiddenLabel(),
-            TextInput::make('market_price')
-                     ->formatStateUsing(fn($state) => $state['formatted'] ?? null)
-                     ->hiddenLabel(),
-            TextInput::make('cost_price')
-                     ->formatStateUsing(fn($state) => $state['formatted'] ?? null)
-                     ->hiddenLabel(),
-            TextInput::make('stock')->minValue(0)->integer()->required(),
-            TextInput::make('safety_stock')->numeric()->default(0),
-            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
-            TextInput::make('barcode')->maxLength(32),
-            TextInput::make('outer_id')->maxLength(32),
-            TextInput::make('weight')->nullable()->numeric()->maxLength(32),
-            TextInput::make('size')->nullable()->numeric()->maxLength(32),
-            TextInput::make('length')->nullable()->numeric()->maxLength(32),
-            TextInput::make('width')->nullable()->numeric()->maxLength(32),
-            TextInput::make('height')->nullable()->numeric()->maxLength(32),
-
-        ])->inlineLabel(false)
+                       ])
+                       ->inlineLabel(false)
                        ->columnSpan('full')
                        ->reorderable(false)
-                       ->addable(false)
-                       ->default([]);
+                       ->addable(false);
 
     }
 
@@ -498,8 +449,6 @@ class ProductResource extends Resource
                           ->label(__('red-jasmine-product::product.fields.title'))
                           ->copyable()
                           ->searchable(),
-
-
                 ImageColumn::make('image')->label(__('red-jasmine-product::product.fields.image')),
 
                 TextColumn::make('productGroup.name')
@@ -509,13 +458,12 @@ class ProductResource extends Resource
                           ->label(__('red-jasmine-product::product.fields.product_type'))
                           ->useEnum(),
 
-
                 TextColumn::make('barcode')
                           ->label(__('red-jasmine-product::product.fields.barcode'))
                           ->searchable()
                           ->toggleable(true, true),
-                TextColumn::make('outer_id')
-                          ->label(__('red-jasmine-product::product.fields.outer_id'))
+                TextColumn::make('spu')
+                          ->label(__('red-jasmine-product::product.fields.spu'))
                           ->searchable()
                           ->toggleable(true, true),
                 TextColumn::make('has_variants')
@@ -910,10 +858,6 @@ class ProductResource extends Resource
                      ->numeric()
                      ->default(1)
                      ->minValue(1),
-
-            TextInput::make('outer_id')
-                     ->label(__('red-jasmine-product::product.fields.outer_id'))
-                     ->maxLength(255),
             TextInput::make('barcode')
                      ->label(__('red-jasmine-product::product.fields.barcode'))
                      ->maxLength(32),
