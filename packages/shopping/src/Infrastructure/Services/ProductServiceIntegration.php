@@ -44,7 +44,7 @@ class ProductServiceIntegration implements ProductServiceInterface
             $productInfo->maxLimit        = $productModel->max_limit;
             $productInfo->minLimit        = $productModel->min_limit;
             $productInfo->stepLimit       = $productModel->step_limit;
-            $productInfo->propertiesName  = $sku->properties_name;
+            $productInfo->propertiesName  = $sku->attrs_name;
             // 获取可选的发货类型
             $productInfo->productType      = $productModel->product_type;
             $productInfo->shippingTypes    = $productModel->getAllowShippingTypes();

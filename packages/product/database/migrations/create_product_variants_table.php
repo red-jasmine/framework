@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
 
-            $table->string('properties_name')->nullable()->comment('规格名称');
-            $table->string('properties_sequence')->nullable()->comment('规格属性序列');
+            $table->string('attrs_name')->nullable()->comment('属性名称');
+            $table->string('attrs_sequence')->nullable()->comment('属性序列');
 
             // 状态
             $table->string('status', 32)->comment('状态');

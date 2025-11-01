@@ -13,7 +13,7 @@ class ProductVariantResource extends JsonResource
         return [
             'id'              => $this->id,
             'properties'      => $this->properties,
-            'properties_name' => $this->properties_name,
+            'attrs_name' => $this->attrs_name,
             'image'           => $this->image,
             'barcode'         => $this->barcode,
             'status'          => $this->status,

@@ -58,8 +58,8 @@ return new class extends Migration {
             $table->string('title')->comment('标题');
             $table->string('sku_name')->nullable()->comment('规格名称');
             $table->string('image')->nullable()->comment('图片');
-            $table->string('outer_product_id', 64)->nullable()->comment('外部商品编码');
-            $table->string('outer_sku_id', 64)->nullable()->comment('外部规格编码');
+            $table->string('spu', 64)->nullable()->comment('外部商品编码');
+            $table->string('sku', 64)->nullable()->comment('外部规格编码');
             $table->string('barcode', 64)->nullable()->comment('条形码');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
             $table->string('unit')->nullable()->comment('单位');

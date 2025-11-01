@@ -19,7 +19,7 @@ class ProductInfoResource extends JsonResource
             'shipping_types'    => $this->shippingTypes,
             'stock_info'        => $this->stockInfo,
             'title'             => $this->title,
-            'properties_name'   => $this->propertiesName,
+            'attrs_name'   => $this->propertiesName,
             'image'             => $this->image,
             'min_limit'         => $this->minLimit,
             'step_limit'        => $this->stepLimit,

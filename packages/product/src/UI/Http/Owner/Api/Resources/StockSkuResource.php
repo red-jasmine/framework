@@ -24,7 +24,7 @@ class StockSkuResource extends JsonResource
             'lock_stock'      => $this->lock_stock,
             'safety_stock'    => $this->safety_stock,
             'properties'      => $this->properties,
-            'properties_name' => $this->properties_name,
+            'attrs_name' => $this->attrs_name,
             'product'         => new StockProductResource($this->whenLoaded('product'))
         ];
     }

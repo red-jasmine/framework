@@ -49,7 +49,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             AllowedFilter::exact('owner_id'),
             AllowedFilter::exact('product_type'),
             AllowedFilter::exact('shipping_type'),
-            AllowedFilter::exact('outer_id'),
+            AllowedFilter::exact('spu'),
             AllowedFilter::exact('has_variants'),
             AllowedFilter::exact('status'),
             AllowedFilter::exact('brand_id'),

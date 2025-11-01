@@ -116,7 +116,7 @@ class ShoppingCartProduct extends Model
 
         $this->title = $productInfo->title;
         $this->image = $productInfo->image;
-        $this->properties_name = $productInfo->propertiesName;
+        $this->attrs_name = $productInfo->propertiesName;
     }
 
     public function setProduct(ProductIdentity $cartProduct): void

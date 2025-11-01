@@ -24,7 +24,6 @@ class ProductResource extends JsonResource
             'has_variants'        => $this->has_variants,
             'image'               => $this->image,
             'barcode'             => $this->barcode,
-            'outer_id'            => $this->outer_id,
             'sort'                => $this->sort,
             'unit_quantity'       => $this->unit_quantity,
             'unit'                => $this->unit,
@@ -71,7 +70,7 @@ class ProductResource extends JsonResource
             'brand'            => new BrandResource($this->whenLoaded('brand')),
             'category'         => new CategoryResource($this->whenLoaded('category')),
             'productGroup'     => new GroupResource($this->whenLoaded('productGroup')),
-            'variants'         => ProductSkuResource::collection($this->whenLoaded('variants')),
+            'variants'         => ProductVariantResource::collection($this->whenLoaded('variants')),
         ];
     }
 }

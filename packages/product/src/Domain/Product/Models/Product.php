@@ -63,10 +63,10 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use SoftDeletes;
 
-    public static string $defaultAttributesName     = '';
-    public static string $defaultAttributesSequence = '';
-    public               $incrementing              = false;
-    protected            $appends                   = ['price', 'market_price', 'cost_price'];
+    public static string $defaultAttrsName     = '';
+    public static string $defaultAttrsSequence = '';
+    public               $incrementing         = false;
+    protected            $appends              = ['price', 'market_price', 'cost_price'];
 
     protected static function boot() : void
     {
@@ -347,7 +347,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             case ProductStatusEnum::AVAILABLE:
                 $this->available_at = now();
                 // 清空其他状态时间
-                $this->paused_at = null;
+                $this->paused_at      = null;
                 $this->unavailable_at = null;
                 break;
             case ProductStatusEnum::PAUSED:
@@ -436,7 +436,24 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             }
         }
         return $allowShippingTypes;
+    }
 
 
+    // 获取默认的变体
+    public function getDefaultVariant() : ProductVariant
+    {
+        $defaultVariant = null;
+        // 判断当前是否为未创建的
+        if ($this->exists) {
+            // 查询数据的值
+            $defaultVariant = $this->variants->where('attrs_sequence', $this::$defaultAttrsSequence)->first();
+        }
+        if (!$defaultVariant) {
+            $defaultVariant = new ProductVariant();
+        }
+        $defaultVariant->product_id     = $this->id;
+        $defaultVariant->attrs_sequence = static::$defaultAttrsSequence;
+        $defaultVariant->attrs_name     = static::$defaultAttrsName;
+        return new ProductVariant();
     }
 }

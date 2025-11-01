@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->decimal('original_price', 10, 2)->default(0)->comment('原价');
             $table->decimal('discount_amount', 10, 2)->default(0)->comment('折扣金额');
             $table->string('title')->nullable()->comment('商品标题');
-            $table->string('properties_name')->nullable()->comment('SKU 属性名称');
+            $table->string('attrs_name')->nullable()->comment('SKU 属性名称');
             $table->string('image')->nullable()->comment('商品主图');
             $table->json('customized')->nullable()->comment('定制信息');
             $table->json('extra')->nullable()->comment('扩展信息');

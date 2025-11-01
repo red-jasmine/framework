@@ -35,7 +35,7 @@ class ProductAttributeValidateService
      * @return Collection
      * @throws ProductAttributeException
      */
-    public function basicProps(array $attributes = []) : Collection
+    public function basicAttrs(array $attributes = []) : Collection
     {
 
         $attributeModels = $this->getAttributes($attributes);
@@ -46,11 +46,11 @@ class ProductAttributeValidateService
             /**
              * @var $attributeModel ProductAttribute
              */
-            $attributeModel       = $attributeModels[$attr['pid']];
-            $basicAttr->pid       = $attributeModel->id;
-            $basicAttr->name      = $attributeModel->name;
-            $basicAttr->unit      = $attributeModel->unit;
-            $basicAttr->values    = collect();
+            $attributeModel    = $attributeModels[$attr['pid']];
+            $basicAttr->pid    = $attributeModel->id;
+            $basicAttr->name   = $attributeModel->name;
+            $basicAttr->unit   = $attributeModel->unit;
+            $basicAttr->values = collect();
 
             $values = $attr['values'] ?? [];
 
@@ -167,7 +167,7 @@ class ProductAttributeValidateService
     public function crossJoin(array $attributes = []) : ?array
     {
 
-        $saleAttrs = $this->saleProps($attributes);
+        $saleAttrs = $this->saleAttrs($attributes);
 
         if (count($attributes) <= 0) {
             return [];
@@ -177,7 +177,7 @@ class ProductAttributeValidateService
             JSON_THROW_ON_ERROR));
         $crossJoin       = [];
         foreach ($crossJoinString as $attributeString) {
-            $crossJoin[$attributeString] = $this->buildSkuName($saleAttrs, $attributeString);
+            $crossJoin[$attributeString] = $this->buildAttrName($saleAttrs, $attributeString);
         }
         return $crossJoin;
 
@@ -191,7 +191,7 @@ class ProductAttributeValidateService
      * @return Collection<Attribute>
      * @throws ProductAttributeException
      */
-    public function saleProps(array $attributes = []) : Collection
+    public function saleAttrs(array $attributes = []) : Collection
     {
 
         $attributeModels = $this->getAttributes($attributes);
@@ -203,11 +203,11 @@ class ProductAttributeValidateService
             /**
              * @var $attributeModel ProductAttribute
              */
-            $attributeModel     = $attributeModels[$attr['pid']];
-            $saleAttr->pid      = $attributeModel->id;
-            $saleAttr->name     = $attributeModel->name;
-            $saleAttr->unit     = $attributeModel->unit;
-            $values             = $attr['values'] ?? [];
+            $attributeModel = $attributeModels[$attr['pid']];
+            $saleAttr->pid  = $attributeModel->id;
+            $saleAttr->name = $attributeModel->name;
+            $saleAttr->unit = $attributeModel->unit;
+            $values         = $attr['values'] ?? [];
 
             // 查询属性的值
             $attrValues = $this->valueRepository->findByIdsInAttribute($saleAttr->pid,
@@ -244,7 +244,7 @@ class ProductAttributeValidateService
      * @return string
      * @throws ProductAttributeException
      */
-    public function buildSkuName(Collection $saleAttrs, string $attributesString) : string
+    public function buildAttrName(Collection $saleAttrs, string $attributesString) : string
     {
         $attributesArray = $this->attributeFormatter->toArray($attributesString);
         $labels          = [];
@@ -284,7 +284,7 @@ class ProductAttributeValidateService
      * @return Collection
      * @throws ProductAttributeException|JsonException
      */
-    public function validateSkus(Collection $saleAttrs, Collection $variants) : Collection
+    public function validateVariants(Collection $saleAttrs, Collection $variants) : Collection
     {
 
         $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
@@ -300,8 +300,8 @@ class ProductAttributeValidateService
 
         // 验证总数量
         foreach ($variants as $sku) {
-            $sku->propertiesSequence = $this->attributeFormatter->formatString($sku->propertiesSequence);
-            $sku->propertiesName     = $this->buildSkuName($saleAttrs, $sku->propertiesSequence);
+            $sku->attrsSequence = $this->attributeFormatter->formatString($sku->attrsSequence);
+            $sku->setAttrsName($this->buildAttrName($saleAttrs, $sku->attrsSequence));
         }
 
 
