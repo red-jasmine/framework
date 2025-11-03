@@ -3,6 +3,7 @@
 namespace RedJasmine\FilamentCore\Helpers;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\BaseFilter;
@@ -44,21 +45,21 @@ trait PageHelper
     {
         return [
             TextInput::make('creator_type')
-                                      ->label(__('red-jasmine-support::support.creator_type'))
-                                      ->maxLength(64)
-                                      ->visibleOn('view'),
+                     ->label(__('red-jasmine-support::support.creator_type'))
+                     ->maxLength(64)
+                     ->visibleOn('view'),
             TextInput::make('creator_id')
-                                      ->label(__('red-jasmine-support::support.creator_id'))
-                                      ->required()
-                                      ->visibleOn('view'),
+                     ->label(__('red-jasmine-support::support.creator_id'))
+                     ->required()
+                     ->visibleOn('view'),
             TextInput::make('updater_type')
-                                      ->label(__('red-jasmine-support::support.updater_type'))
-                                      ->maxLength(64)
-                                      ->visibleOn('view'),
+                     ->label(__('red-jasmine-support::support.updater_type'))
+                     ->maxLength(64)
+                     ->visibleOn('view'),
 
             TextInput::make('updater_id')
-                                      ->label(__('red-jasmine-support::support.updater_id'))
-                                      ->visibleOn('view'),
+                     ->label(__('red-jasmine-support::support.updater_id'))
+                     ->visibleOn('view'),
         ];
 
     }
@@ -169,58 +170,58 @@ trait PageHelper
                                   ->dehydrateStateUsing(fn($state) => (int) $state),
 
                         TextInput::make('name')
-                                                  ->label(__('red-jasmine-support::category.fields.name'))
-                                                  ->required()
-                                                  ->maxLength(255),
+                                 ->label(__('red-jasmine-support::category.fields.name'))
+                                 ->required()
+                                 ->maxLength(255),
 
                         ToggleButtons::make('is_leaf')
-                                                      ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                                      ->required()
-                                                      ->boolean()
-                                                      ->inline()
-                                                      ->inlineLabel()
-                                                      ->default(false),
+                                     ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                                     ->required()
+                                     ->boolean()
+                                     ->inline()
+                                     ->inlineLabel()
+                                     ->default(false),
                         TextInput::make('slug')
-                                                  ->label(__('red-jasmine-support::category.fields.slug'))
-                                                  ->maxLength(255),
+                                 ->label(__('red-jasmine-support::category.fields.slug'))
+                                 ->maxLength(255),
                         TextInput::make('description')
-                                                  ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
+                                 ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
                         FileUpload::make('image')
-                                                   ->label(__('red-jasmine-support::category.fields.image'))
-                                                   ->image(),
+                                  ->label(__('red-jasmine-support::category.fields.image'))
+                                  ->image(),
                         FileUpload::make('icon')
-                                                   ->label(__('red-jasmine-support::category.fields.icon'))
-                                                   ->image(),
+                                  ->label(__('red-jasmine-support::category.fields.icon'))
+                                  ->image(),
                         ColorPicker::make('color')
-                                                    ->label(__('red-jasmine-support::category.fields.color'))
+                                   ->label(__('red-jasmine-support::category.fields.color'))
                         ,
                         TextInput::make('cluster')
-                                                  ->label(__('red-jasmine-support::category.fields.cluster'))
-                                                  ->maxLength(255),
+                                 ->label(__('red-jasmine-support::category.fields.cluster'))
+                                 ->maxLength(255),
 
                         KeyValue::make('extra')
-                                                 ->label(__('red-jasmine-user::user-group.fields.extra')),
+                                ->label(__('red-jasmine-user::user-group.fields.extra')),
 
                     ]),
                     Section::make([
 
 
                         TextInput::make('sort')
-                                                  ->label(__('red-jasmine-support::category.fields.sort'))
-                                                  ->required()
-                                                  ->default(0),
+                                 ->label(__('red-jasmine-support::category.fields.sort'))
+                                 ->required()
+                                 ->default(0),
 
                         Toggle::make('is_show')
-                                               ->label(__('red-jasmine-support::category.fields.is_show'))
-                                               ->required()
-                                               ->inline()
-                                               ->default(true),
+                              ->label(__('red-jasmine-support::category.fields.is_show'))
+                              ->required()
+                              ->inline()
+                              ->default(true),
                         ToggleButtons::make('status')
-                                                      ->label(__('red-jasmine-support::category.fields.status'))
-                                                      ->required()
-                                                      ->inline()
-                                                      ->default(UniversalStatusEnum::ENABLE)
-                                                      ->useEnum(UniversalStatusEnum::class),
+                                     ->label(__('red-jasmine-support::category.fields.status'))
+                                     ->required()
+                                     ->inline()
+                                     ->default(UniversalStatusEnum::ENABLE)
+                                     ->useEnum(UniversalStatusEnum::class),
 
                     ])->grow(false),
 
@@ -239,20 +240,28 @@ trait PageHelper
         if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
             $disabled = false;
         }
+
+        // use Filament\Schemas\Components\FusedGroup;
         return [
-            TextInput::make($name.'_type')
-                                      ->label(__('red-jasmine-support::support.owner_type'))
-                                      ->default($owner->getType())
-                                      ->required()
-                                      ->maxLength(64)
-                                      ->disabled($disabled)
-                                      ->live(),
-            TextInput::make($name.'_id')
-                                      ->label(__('red-jasmine-support::support.owner_id'))
-                                      ->required()
-                                      ->default($owner->getID())
-                                      ->disabled($disabled)
-                                      ->live(),
+            FusedGroup::make([
+                TextInput::make($name.'_type')
+                         ->prefix(__('red-jasmine-support::support.owner_type'))
+                         ->label(__('red-jasmine-support::support.owner_type'))
+                         ->default($owner->getType())
+                         ->required()
+                         ->maxLength(64)
+                         ->disabled($disabled)
+                         ->live(),
+                TextInput::make($name.'_id')
+                    ->prefix(__('red-jasmine-support::support.owner_id'))
+                         ->label(__('red-jasmine-support::support.owner_id'))
+                         ->required()
+                         ->default($owner->getID())
+                         ->disabled($disabled)
+                         ->live(),
+            ])->columns(2)
+                      ->label(__('red-jasmine-support::support.owner')),
+
 
         ];
 
@@ -266,45 +275,45 @@ trait PageHelper
             ->columns([
                 ...$owner,
                 TextColumn::make('id')
-                                         ->label(__('red-jasmine-support::category.fields.id'))
-                                         ->copyable(),
+                          ->label(__('red-jasmine-support::category.fields.id'))
+                          ->copyable(),
                 TextColumn::make('parent.name')
-                                         ->label(__('red-jasmine-support::category.fields.parent_id'))
-                                         ->sortable(),
+                          ->label(__('red-jasmine-support::category.fields.parent_id'))
+                          ->sortable(),
                 TextColumn::make('name')
-                                         ->label(__('red-jasmine-support::category.fields.name'))
-                                         ->searchable()->copyable(),
+                          ->label(__('red-jasmine-support::category.fields.name'))
+                          ->searchable()->copyable(),
                 ImageColumn::make('image')
-                                          ->label(__('red-jasmine-support::category.fields.image'))
+                           ->label(__('red-jasmine-support::category.fields.image'))
                 ,
                 TextColumn::make('cluster')
-                                         ->label(__('red-jasmine-support::category.fields.cluster'))
-                                         ->searchable(),
+                          ->label(__('red-jasmine-support::category.fields.cluster'))
+                          ->searchable(),
                 IconColumn::make('is_leaf')
-                                         ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                         ->boolean()
-                                         ->toggleable(isToggledHiddenByDefault: true)
+                          ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                          ->boolean()
+                          ->toggleable(isToggledHiddenByDefault: true)
                 ,
 
                 TextColumn::make('sort')
-                                         ->label(__('red-jasmine-support::category.fields.sort'))
-                                         ->sortable(),
+                          ->label(__('red-jasmine-support::category.fields.sort'))
+                          ->sortable(),
                 TextColumn::make('status')
-                                         ->label(__('red-jasmine-support::category.fields.status'))
-                                         ->useEnum(),
+                          ->label(__('red-jasmine-support::category.fields.status'))
+                          ->useEnum(),
                 IconColumn::make('is_show')
-                                         ->label(__('red-jasmine-support::category.fields.is_show'))
-                                         ->boolean(),
+                          ->label(__('red-jasmine-support::category.fields.is_show'))
+                          ->boolean(),
 
                 ... static::operateTableColumns(),
             ])
             ->filters([
                 TreeParent::make('tree')->label(__('red-jasmine-support::category.fields.parent_id')),
                 SelectFilter::make('status')
-                                           ->label(__('red-jasmine-support::category.fields.status'))
-                                           ->options(UniversalStatusEnum::options()),
+                            ->label(__('red-jasmine-support::category.fields.status'))
+                            ->options(UniversalStatusEnum::options()),
                 TernaryFilter::make('is_show')
-                                            ->label(__('red-jasmine-support::category.fields.is_show'))
+                             ->label(__('red-jasmine-support::category.fields.is_show'))
                 ,
 
             ])
@@ -328,11 +337,11 @@ trait PageHelper
             //                          ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make($name.'_type')
-                                     ->label(__('red-jasmine-support::support.owner_type'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
+                      ->label(__('red-jasmine-support::support.owner_type'))
+                      ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make($name.'_id')
-                                     ->label(__('red-jasmine-support::support.owner_id'))
-                                     ->copyable()->toggleable(isToggledHiddenByDefault: true),
+                      ->label(__('red-jasmine-support::support.owner_id'))
+                      ->copyable()->toggleable(isToggledHiddenByDefault: true),
         ];
     }
 
@@ -340,9 +349,9 @@ trait PageHelper
     {
         return [
             TextColumn::make('creator')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname())
-                                     ->label(__('red-jasmine-support::support.creator'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
+                      ->formatStateUsing(fn($state) => $state?->getNickname())
+                      ->label(__('red-jasmine-support::support.creator'))
+                      ->toggleable(isToggledHiddenByDefault: true),
             // Tables\Columns\TextColumn::make('creator_type')
             //                          ->label(__('red-jasmine-support::support.creator_type'))
             //                          ->toggleable(isToggledHiddenByDefault: true),
@@ -351,9 +360,9 @@ trait PageHelper
             //                          ->toggleable(isToggledHiddenByDefault: true),
 
             TextColumn::make('updater')
-                                     ->formatStateUsing(fn($state) => $state?->getNickname() ?? $state?->getId())
-                                     ->label(__('red-jasmine-support::support.updater'))
-                                     ->toggleable(isToggledHiddenByDefault: true),
+                      ->formatStateUsing(fn($state) => $state?->getNickname() ?? $state?->getId())
+                      ->label(__('red-jasmine-support::support.updater'))
+                      ->toggleable(isToggledHiddenByDefault: true),
             // Tables\Columns\TextColumn::make('updater_type')
             //                          ->label(__('red-jasmine-support::support.updater_type'))
             //                          ->toggleable(isToggledHiddenByDefault: true),
@@ -362,15 +371,15 @@ trait PageHelper
             //
             //                          ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('created_at')
-                                     ->label(__('red-jasmine-support::support.created_at'))
-                                     ->dateTime()
-                                     ->sortable()
-                                     ->toggleable(isToggledHiddenByDefault: true),
+                      ->label(__('red-jasmine-support::support.created_at'))
+                      ->dateTime()
+                      ->sortable()
+                      ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('updated_at')
-                                     ->label(__('red-jasmine-support::support.updated_at'))
-                                     ->dateTime()
-                                     ->sortable()
-                                     ->toggleable(isToggledHiddenByDefault: true),
+                      ->label(__('red-jasmine-support::support.updated_at'))
+                      ->dateTime()
+                      ->sortable()
+                      ->toggleable(isToggledHiddenByDefault: true),
 
         ];
     }

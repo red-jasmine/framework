@@ -26,19 +26,19 @@ return [
         'product_type' => [
             'goods'   => '实物',
             'virtual' => '虚拟',
-            'cardKey' => '卡密',
+            'digital' => '数字卡',
             'coupons' => '优惠券',
             'service' => '服务',
         ],
 
         'shipping_type'             => [
-            'logistics'  => '快递',
-            'dummy'      => '虚拟',
-            'cardKey'    => '卡密',
-            'delivery'   => '配送',
-            'coupons'    => '卡券',
-            'selfPickup' => '自提',
-            'none'       => '免发',
+            'logistics' => '快递',
+            'dummy'     => '虚拟',
+            'cardKey'   => '卡密',
+            'delivery'  => '配送',
+            'coupons'   => '卡券',
+            'pickup'    => '自提',
+            'none'      => '免发',
         ],
         'order_quantity_limit_type' => [
 

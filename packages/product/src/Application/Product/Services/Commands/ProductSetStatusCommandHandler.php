@@ -67,7 +67,7 @@ class ProductSetStatusCommandHandler extends CommandHandler
             $this->service->hook('update.validate', $command, fn() => $this->validate($command));
 
 
-            $product->modified_time = now();
+            $product->modified_at = now();
 
             $this->service->repository->update($product);
 

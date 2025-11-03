@@ -52,11 +52,11 @@ enum ProductTypeEnum: string
     {
         return [
 
-
+            // 实物
             self::PHYSICAL->value => [
                 ShippingTypeEnum::LOGISTICS,
                 ShippingTypeEnum::DELIVERY,
-                ShippingTypeEnum::SELF_PICKUP,
+                ShippingTypeEnum::PICKUP,
                 //ShippingTypeEnum::NONE->value,
                 //ShippingTypeEnum::COUPONS->value,
                 //ShippingTypeEnum::DUMMY->value,
@@ -75,7 +75,7 @@ enum ProductTypeEnum: string
                 //ShippingTypeEnum::DELIVERY->value,
                 //ShippingTypeEnum::NONE->value,
                 //ShippingTypeEnum::DUMMY->value,
-                ShippingTypeEnum::CARD_KEY,
+                ShippingTypeEnum::DIGITAL,
             ],
 
 
@@ -106,7 +106,7 @@ enum ProductTypeEnum: string
         return [
             self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
             self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
-            self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.cardKey'),
+            self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.digital'),
             self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
             self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
         ];

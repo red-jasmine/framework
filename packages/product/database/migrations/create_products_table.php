@@ -28,17 +28,15 @@ return new class extends Migration {
             // 基础信息
             $table->string('title')->comment('标题');
             $table->string('slogan')->nullable()->comment('广告语');
-
+            $table->string('image')->nullable()->comment('主图');
 
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
             $table->boolean('is_pre_sale')->default(false)->comment('是否预售');
             $table->boolean('is_customized')->default(false)->comment('是否定制');
-
+            // 媒体资源
             $table->boolean('has_variants')->default(false)->comment('多规格');
 
-            // 媒体资源
-            $table->string('image')->nullable()->comment('主图');
 
             // 类目信息
             $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
@@ -69,8 +67,6 @@ return new class extends Migration {
             $table->decimal('cost_price', 12)->nullable()->comment('成本价');
 
             // 税率 修改
-            $table->boolean('taxable')->default(true)->comment('交税');
-            $table->string('tax_code')->nullable()->comment('税码');
 
 
             // 库存
@@ -83,28 +79,30 @@ return new class extends Migration {
 
             // 发货期限
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');
-
-            // 运营类
-            $table->unsignedInteger('gift_point')->default(0)->comment('积分');
             $table->string('unit')->nullable()->comment('单位名称');
             $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
 
+
+            // 运营类
+            $table->unsignedInteger('gift_point')->default(0)->comment('积分');
             // 数量范围
             $table->unsignedBigInteger('min_limit')->default(1)->comment('起售量');
             $table->unsignedBigInteger('max_limit')->default(0)->comment('限购量');
             $table->unsignedBigInteger('step_limit')->default(1)->comment('数量倍数');
 
             // ============ 国际化元数据 ============
+
+            $table->boolean('taxable')->default(false)->comment('交税');
+            $table->string('tax_code', 64)->nullable()->comment('税码');
             // （ISO 3166-1 alpha-2)
             $table->string('origin_country', 2)->nullable()->comment('原产国');
-            $table->string('hs_code')->nullable()->comment('海关编码');
+            $table->string('hs_code', 64)->nullable()->comment('海关编码');
 
             // 运营类
             $table->boolean('is_hot')->default(false)->comment('热销');
             $table->boolean('is_new')->default(false)->comment('新品');
             $table->boolean('is_best')->default(false)->comment('精品');
             $table->boolean('is_benefit')->default(false)->comment('特惠');
-
             $table->bigInteger('sort')->default(0)->comment('排序');
 
             // 统计项
@@ -114,16 +112,14 @@ return new class extends Migration {
             $table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
 
             // 时间
-            $table->timestamp('on_sale_time')->nullable()->comment('上架时间');
-            $table->timestamp('sold_out_time')->nullable()->comment('售停时间');
-            $table->timestamp('stop_sale_time')->nullable()->comment('下架时间');
+            $table->timestamp('available_at')->nullable()->comment('上架时间');
+            $table->timestamp('paused_at')->nullable()->comment('暂停销售时间');
+            $table->timestamp('unavailable_at')->nullable()->comment('下架时间');
             // 操作
-            $table->timestamp('modified_time')->nullable()->comment('修改时间');
+            $table->timestamp('modified_at')->nullable()->comment('修改时间');
 
             $table->operator();
             $table->softDeletes();
-
-
             // 审核状态
             // 是否违规
 

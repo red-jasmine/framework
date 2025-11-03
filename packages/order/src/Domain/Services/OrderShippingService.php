@@ -94,7 +94,7 @@ class OrderShippingService
     {
         $this->validateShipping($order);
 
-        if ($order->shipping_type !== ShippingTypeEnum::CARD_KEY) {
+        if ($order->shipping_type !== ShippingTypeEnum::DIGITAL) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW, '发货类型不支持操作');
         }
         /**

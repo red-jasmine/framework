@@ -35,7 +35,7 @@ beforeEach(function () {
 
     $orderFake               = new OrderDummyFake();
     $orderFake->orderType    = OrderTypeEnum::STANDARD;
-    $orderFake->shippingType = ShippingTypeEnum::CARD_KEY;
+    $orderFake->shippingType = ShippingTypeEnum::DIGITAL;
     $orderFake->productCount = 1;
     $this->orderFake         = $orderFake;
     //

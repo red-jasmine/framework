@@ -10,21 +10,19 @@ enum ProductStatusEnum: string
     use EnumsHelper;
 
 
-    case AVAILABLE = 'available'; // 在售
-
-    case SOLD_OUT = 'sold_out'; // 售罄
-
-    case STOP_SALE = 'stop_sale'; // 停售
-
-    case FORBIDDEN = 'forbidden'; // 禁售
-
     // 审批中
     case DRAFT = 'draft'; // 未发布
     case PENDING = 'pending'; // 审批中
 
+    case AVAILABLE = 'available'; // 在售
+    case PAUSED = 'paused'; // 暂停销售
+    case UNAVAILABLE = 'unavailable'; // 下架
+    case FORBIDDEN = 'forbidden'; // 禁售
+
+
 
     case ARCHIVED = 'archived'; // 已归档
-    case DELETED = 'deleted'; // 删除 仅在 sku 中使用
+    case DELETED = 'deleted'; // 删除
 
 
     public static function creatingAllowed() : array
@@ -38,11 +36,14 @@ enum ProductStatusEnum: string
     public static function labels() : array
     {
         return [
-            self::AVAILABLE->value => __('red-jasmine-product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value  => __('red-jasmine-product::product.enums.status.sold_out'),
-            self::STOP_SALE->value => __('red-jasmine-product::product.enums.status.stop_sale'),
-            self::FORBIDDEN->value => __('red-jasmine-product::product.enums.status.forbid_sale'),
-            self::DRAFT->value     => __('red-jasmine-product::product.enums.status.draft'),
+            self::DRAFT->value       => __('red-jasmine-product::product.enums.status.draft'),
+            self::PENDING->value     => __('red-jasmine-product::product.enums.status.pending'),
+            self::AVAILABLE->value   => __('red-jasmine-product::product.enums.status.available'),
+            self::PAUSED->value      => __('red-jasmine-product::product.enums.status.paused'),
+            self::UNAVAILABLE->value => __('red-jasmine-product::product.enums.status.unavailable'),
+            self::FORBIDDEN->value   => __('red-jasmine-product::product.enums.status.forbidden'),
+            self::ARCHIVED->value    => __('red-jasmine-product::product.enums.status.archived'),
+            self::DELETED->value     => __('red-jasmine-product::product.enums.status.deleted'),
         ];
 
     }
@@ -66,16 +67,17 @@ enum ProductStatusEnum: string
         // 返回允许参加定时上架活动的订单状态数组
         return [
             self::DRAFT->value, // 草稿状态
-            self::STOP_SALE->value, // 下架状态
-            self::SOLD_OUT->value, // 售罄状态
+            self::PAUSED->value, // 暂停销售状态
+            self::UNAVAILABLE->value, // 下架状态
+
         ];
     }
 
     public static function variantStatus() : array
     {
         return [
-            self::AVAILABLE->value => __('red-jasmine-product::product.enums.status.on_sale'),
-            self::SOLD_OUT->value  => __('red-jasmine-product::product.enums.status.sold_out'),
+            self::AVAILABLE->value => __('red-jasmine-product::product.enums.status.available'),
+            self::PAUSED->value      => __('red-jasmine-product::product.enums.status.paused'),
         ];
     }
 
@@ -83,11 +85,14 @@ enum ProductStatusEnum: string
     {
 
         return [
-            self::AVAILABLE->value => 'success',
-            self::SOLD_OUT->value  => 'warning',
-            self::STOP_SALE->value => 'danger',
-            self::FORBIDDEN->value => 'danger',
-            self::DRAFT->value     => 'primary',
+            self::DRAFT->value       => 'primary',
+            self::PENDING->value     => 'info',
+            self::AVAILABLE->value   => 'success',
+            self::PAUSED->value      => 'warning',
+            self::UNAVAILABLE->value => 'gray',
+            self::FORBIDDEN->value   => 'danger',
+            self::ARCHIVED->value    => 'gray',
+            self::DELETED->value     => 'gray',
         ];
     }
 
@@ -96,46 +101,52 @@ enum ProductStatusEnum: string
     public static function icons() : array
     {
         return [
-            self::AVAILABLE->value => 'heroicon-o-shopping-bag',
-            self::SOLD_OUT->value  => 'heroicon-o-bookmark-slash',
-            self::STOP_SALE->value => 'heroicon-o-archive-box-x-mark',
-            self::FORBIDDEN->value => 'heroicon-o-no-symbol',
-            self::DRAFT->value     => 'heroicon-o-document',
+            self::DRAFT->value       => 'heroicon-o-document',
+            self::PENDING->value     => 'heroicon-o-clock',
+            self::AVAILABLE->value   => 'heroicon-o-shopping-bag',
+            self::PAUSED->value      => 'heroicon-o-pause-circle',
+            self::UNAVAILABLE->value => 'heroicon-o-archive-box',
+            self::FORBIDDEN->value   => 'heroicon-o-no-symbol',
+            self::ARCHIVED->value    => 'heroicon-o-archive-box-arrow-down',
+            self::DELETED->value     => 'heroicon-o-trash',
         ];
     }
 
     public function updatingAllowed() : array
     {
         return match ($this) {
+            self::DRAFT => Arr::only(self::labels(), [
+                self::DRAFT->value,
+                self::PENDING->value,
+                self::AVAILABLE->value,
+            ]),
+            self::PENDING => Arr::only(self::labels(), [
+                self::PENDING->value,
+                self::AVAILABLE->value,
+                self::DRAFT->value,
+            ]),
             self::AVAILABLE => Arr::only(self::labels(), [
                 self::AVAILABLE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
-                //                self::FORBID_SALE->value,
-                //                self::DRAFT->value,
+                self::PAUSED->value,
+                self::UNAVAILABLE->value,
             ]),
-            self::SOLD_OUT => Arr::only(self::labels(), [
+            self::PAUSED => Arr::only(self::labels(), [
                 self::AVAILABLE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
-                //                self::DRAFT->value,
+                self::PAUSED->value,
+                self::UNAVAILABLE->value,
             ]),
-            self::STOP_SALE => Arr::only(self::labels(), [
+            self::UNAVAILABLE => Arr::only(self::labels(), [
                 self::AVAILABLE->value,
-                self::SOLD_OUT->value,
-                self::STOP_SALE->value,
-
+                self::UNAVAILABLE->value,
+                self::ARCHIVED->value,
             ]),
             self::FORBIDDEN => Arr::only(self::labels(), [
                 self::FORBIDDEN->value,
             ]),
-            self::DRAFT => Arr::only(self::labels(), [
-                self::AVAILABLE->value,
-                self::DRAFT->value,
+            self::ARCHIVED => Arr::only(self::labels(), [
+                self::ARCHIVED->value,
             ]),
             self::DELETED => [],
-
         };
-        return [];
     }
 }

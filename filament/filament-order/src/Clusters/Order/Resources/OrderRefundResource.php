@@ -183,7 +183,7 @@ class OrderRefundResource extends Resource
                            $components[] = OrderLogistics::class;
                        }
                        if ($record->refund_type === RefundTypeEnum::RESHIPMENT
-                           && $record->shipping_type === ShippingTypeEnum::CARD_KEY
+                           && $record->shipping_type === ShippingTypeEnum::DIGITAL
                            && $record->refund_status === RefundStatusEnum::FINISHED
                        ) {
                            $components[] = OrderCardKeys::class;

@@ -46,8 +46,10 @@ use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
  * @property Money $price
  * @property ?Money $market_price
  * @property ?Money $cost_price
- * @property Carbon  $on_sale_time
- * @property Carbon  $sold_out_time
+ * @property ?Carbon $available_at
+ * @property ?Carbon $paused_at
+ * @property ?Carbon $unavailable_at
+ * @property ?Carbon $modified_at
  */
 class Product extends Model implements OperatorInterface, OwnerInterface
 {
@@ -62,10 +64,10 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use SoftDeletes;
 
-    public static string $defaultAttributesName     = '';
-    public static string $defaultAttributesSequence = '';
-    public               $incrementing              = false;
-    protected            $appends                   = ['price', 'market_price', 'cost_price'];
+    public static string $defaultAttrsName     = '';
+    public static string $defaultAttrsSequence = '';
+    public               $incrementing         = false;
+    protected            $appends              = ['price', 'market_price', 'cost_price'];
 
     protected static function boot() : void
     {
@@ -204,10 +206,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方
             'has_variants'              => 'boolean',
             'is_brand_new'              => 'boolean',
-            'stop_sale_time'            => 'datetime',
-            'on_sale_time'              => 'datetime',
-            'sold_out_time'             => 'datetime',
-            'modified_time'             => 'datetime',
+            'taxable'                   => 'boolean',
+            'available_at'              => 'datetime',
+            'paused_at'                 => 'datetime',
+            'unavailable_at'            => 'datetime',
+            'modified_at'               => 'datetime',
             'start_sale_time'           => 'datetime',
             'end_sale_time'             => 'datetime',
             'is_hot'                    => 'boolean',
@@ -312,7 +315,8 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     public function scopeWarehoused(Builder $query)
     {
         return $query->whereIn('status', [
-            ProductStatusEnum::STOP_SALE,
+            ProductStatusEnum::PAUSED,
+            ProductStatusEnum::UNAVAILABLE,
             ProductStatusEnum::DRAFT,
             ProductStatusEnum::FORBIDDEN,
             ProductStatusEnum::ARCHIVED,
@@ -343,17 +347,23 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         }
         switch ($status) {
             case ProductStatusEnum::AVAILABLE:
-                $this->on_sale_time = now();
+                $this->available_at = now();
+                // 清空其他状态时间
+                $this->paused_at      = null;
+                $this->unavailable_at = null;
                 break;
-            case ProductStatusEnum::SOLD_OUT:
-                $this->sold_out_time = now();
+            case ProductStatusEnum::PAUSED:
+                $this->paused_at = now();
+                break;
+            case ProductStatusEnum::UNAVAILABLE:
+                $this->unavailable_at = now();
                 break;
             case ProductStatusEnum::FORBIDDEN:
-            case ProductStatusEnum::STOP_SALE:
-                $this->stop_sale_time = now();
-                break;
+            case ProductStatusEnum::ARCHIVED:
             case ProductStatusEnum::DELETED:
-                $this->stop_sale_time = now();
+                // 这些状态记录到 unavailable_at
+                $this->unavailable_at = now();
+                break;
         }
     }
 
@@ -428,7 +438,24 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             }
         }
         return $allowShippingTypes;
+    }
 
 
+    // 获取默认的变体
+    public function getDefaultVariant() : ProductVariant
+    {
+        $defaultVariant = null;
+        // 判断当前是否为未创建的
+        if ($this->exists) {
+            // 查询数据的值
+            $defaultVariant = $this->variants->where('attrs_sequence', $this::$defaultAttrsSequence)->first();
+        }
+        if (!$defaultVariant) {
+            $defaultVariant = new ProductVariant();
+        }
+        $defaultVariant->product_id     = $this->id;
+        $defaultVariant->attrs_sequence = static::$defaultAttrsSequence;
+        $defaultVariant->attrs_name     = static::$defaultAttrsName;
+        return new ProductVariant();
     }
 }

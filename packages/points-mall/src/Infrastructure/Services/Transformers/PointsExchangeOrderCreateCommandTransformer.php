@@ -26,7 +26,7 @@ class PointsExchangeOrderCreateCommandTransformer
     public function transform(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo) : OrderCreateCommand
     {
 
-        $order         = new OrderCreateCommand();
+        $order = new OrderCreateCommand();
 
         $order->buyer  = $exchangeOrder->user;
         $order->seller = $exchangeOrder->owner;
@@ -62,13 +62,13 @@ class PointsExchangeOrderCreateCommandTransformer
         $product->categoryId          = $productInfo->categoryId;
         $product->brandId             = $productInfo->brandId;
         $product->productGroupId      = $productInfo->productGroupId;
-        $product->outerProductId      = $productInfo->outerId;
-        $product->outerProductId      = $productInfo->barcode;
+        $product->spu                 = $productInfo->spu;
+        $product->sku                 = $productInfo->sku;
         $product->price               = $exchangeOrder->price;
         $product->discountAmount      = Money::parse(0, $exchangeOrder->total_amount_currency);
         $product->costPrice           = Money::parse(0, $exchangeOrder->total_amount_currency);
         $product->image               = $productInfo->image;
-        $product->outerProductId      = null;
+        $product->spu                 = null;
         $product->outerOrderProductId = null;
         $product->buyerRemarks        = null;
         $product->buyerMessage        = null;
@@ -82,7 +82,7 @@ class PointsExchangeOrderCreateCommandTransformer
         //$product->buyerRemarks    = $productData->buyerRemarks ?? null;
         //$product->buyerExtra      = $productData->buyerExtra ?? null;
         //$product->otherExtra      = null; // TODO
-        $product->customized =  [];
+        $product->customized = [];
 
         // TODO 优惠信息的存储
 

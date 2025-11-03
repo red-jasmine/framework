@@ -562,7 +562,7 @@ class Order extends Model implements OperatorInterface, UniqueNoInterface
         $orderProduct = $this->products->where('order_product_no', $orderProductNo)->firstOrFail();
 
         // 判断发货方式是否不支持设置进度
-        if ($orderProduct->shipping_type === ShippingTypeEnum::CARD_KEY) {
+        if ($orderProduct->shipping_type === ShippingTypeEnum::DIGITAL) {
             throw OrderException::newFromCodes(OrderException::SHIPPING_TYPE_NOT_ALLOW_SET_PROGRESS,
                 '进度不允许小于之前的值');
         }

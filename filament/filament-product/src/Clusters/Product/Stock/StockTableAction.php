@@ -49,7 +49,7 @@ class StockTableAction extends Action
                                           ->label(__('red-jasmine-product::product.fields.variants'))
                                           ->table([
                                               Forms\Components\Repeater\TableColumn::make('id'),
-                                              Forms\Components\Repeater\TableColumn::make('properties_name'),
+                                              Forms\Components\Repeater\TableColumn::make('attrs_name'),
                                               Forms\Components\Repeater\TableColumn::make('barcode'),
                                               Forms\Components\Repeater\TableColumn::make('outer_id'),
                                               Forms\Components\Repeater\TableColumn::make('status'),
@@ -60,9 +60,9 @@ class StockTableAction extends Action
 
                                           ])
                                           ->schema([
-                                              Hidden::make('properties_sequence'),
+                                              Hidden::make('attrs_sequence'),
                                               TextInput::make('id')->readOnly(),
-                                              TextInput::make('properties_name')->readOnly(),
+                                              TextInput::make('attrs_name')->readOnly(),
                                               TextInput::make('barcode')->readOnly(),
                                               TextInput::make('outer_id')->readOnly(),
                                               Select::make('status')->disabled()->options(ProductStatusEnum::options()),

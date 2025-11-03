@@ -13,11 +13,10 @@ class ProductSkuResource extends JsonResource
 
         return [
             'id'                  => $this->id,
-            'properties_sequence' => $this->properties_sequence,
-            'properties_name'     => $this->properties_name,
+            'attrs_sequence' => $this->attrs_sequence,
+            'attrs_name'     => $this->attrs_name,
             'image'               => $this->image,
             'barcode'             => $this->barcode,
-            'outer_id'            => $this->outer_id,
             'status'              => $this->status,
             'weight'              => $this->weight,
             'width'               => $this->width,
@@ -31,7 +30,7 @@ class ProductSkuResource extends JsonResource
             'stock'               => $this->stock,
             'safety_stock'        => $this->safety_stock,
             'version'             => $this->version,
-            'modified_time'       => $this->modified_time,
+            'modified_at'       => $this->modified_at,
             'creator_type'        => $this->creator_type,
             'creator_id'          => $this->creator_id,
             'updater_type'        => $this->updater_type,

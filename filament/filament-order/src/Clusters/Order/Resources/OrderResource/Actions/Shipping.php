@@ -34,7 +34,7 @@ trait Shipping
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
                 ShippingTypeEnum::LOGISTICS => $this->logisticsForm($record),
-                ShippingTypeEnum::CARD_KEY => $this->cardKeyForm($record),
+                ShippingTypeEnum::DIGITAL => $this->cardKeyForm($record),
                 ShippingTypeEnum::DELIVERY => $this->dummyForm($record),
                 ShippingTypeEnum::NONE => $this->dummyForm($record),
 
@@ -50,7 +50,7 @@ trait Shipping
                 match ($record->shipping_type) {
                     ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::LOGISTICS => $this->logisticsAction($data, $record),
-                    ShippingTypeEnum::CARD_KEY => $this->cardKeyAction($data, $record),
+                    ShippingTypeEnum::DIGITAL => $this->cardKeyAction($data, $record),
                     ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
 

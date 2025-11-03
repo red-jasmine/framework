@@ -47,14 +47,15 @@ class OrderCreateCommandTransformer
             $product->discountAmount      = $productData->getProductInfo()->getProductAmountInfo()->discountAmount;
             $product->costPrice           = $productData->getProductInfo()->getProductAmountInfo()->getCostPrice();
             $product->image               = $productData->getProductInfo()->image;
-            $product->outerProductId      = $productData->outerOrderProductId;
             $product->outerOrderProductId = $productData->outerOrderProductId;
             $product->buyerRemarks        = $productData->buyerRemarks;
             $product->buyerMessage        = $productData->buyerMessage;
             $product->categoryId          = $productData->getProductInfo()->categoryId;
             $product->brandId             = $productData->getProductInfo()->brandId;
             $product->productGroupId      = $productData->getProductInfo()->productGroupId;
-            $product->outerProductId      = $productData->getProductInfo()->outerId;
+            $product->spu                 = $productData->getProductInfo()->spu;
+            $product->sku                 = $productData->getProductInfo()->sku;
+            $product->barcode             = $productData->getProductInfo()->barcode;
             // TODO
             //$product->outerProductId  = $productData->getProduct()->outer_id;
             //$product->outerSkuId      = $productData->getSku()->outer_id;

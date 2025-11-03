@@ -57,8 +57,8 @@ class ProductStockLogResource extends Resource
                 ,
                 TextColumn::make('product.title')
                     ->label(__('red-jasmine-product::product.fields.title')),
-                TextColumn::make('sku.properties_name')
-                ->label(__('red-jasmine-product::product.fields.properties_name')),
+                TextColumn::make('sku.attrs_name')
+                ->label(__('red-jasmine-product::product.fields.attrs_name')),
                 TextColumn::make('sku_id')
                                          ->label(__('red-jasmine-product::product-stock-log.fields.sku_id')),
                 TextColumn::make('action_type')

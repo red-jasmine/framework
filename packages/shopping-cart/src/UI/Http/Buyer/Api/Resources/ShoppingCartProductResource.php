@@ -22,7 +22,7 @@ class ShoppingCartProductResource extends JsonResource
             'customized'      => $this->customized,
             'currency'        => $this->currency,
             'title'           => $this->title,
-            'properties_name' => $this->properties_name,
+            'attrs_name' => $this->attrs_name,
             'image'           => $this->image,
             'price'           => $this->price,
         ];

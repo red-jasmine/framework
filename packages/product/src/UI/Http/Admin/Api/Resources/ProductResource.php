@@ -24,7 +24,6 @@ class ProductResource extends JsonResource
             'has_variants'        => $this->has_variants,
             'image'               => $this->image,
             'barcode'             => $this->barcode,
-            'outer_id'            => $this->outer_id,
             'sort'                => $this->sort,
             'unit_quantity'       => $this->unit_quantity,
             'unit'                => $this->unit,
@@ -52,10 +51,10 @@ class ProductResource extends JsonResource
             'views'            => $this->views,
             'sales'            => $this->sales,
             'version'          => $this->version,
-            'on_sale_time'     => $this->on_sale_time?->format('Y-m-d H:i:s'),
-            'sold_out_time'    => $this->sold_out_time?->format('Y-m-d H:i:s'),
-            'stop_sale_time'   => $this->stop_sale_time?->format('Y-m-d H:i:s'),
-            'modified_time'    => $this->modified_time,
+            'available_at'     => $this->available_at?->format('Y-m-d H:i:s'),
+            'paused_at'        => $this->paused_at?->format('Y-m-d H:i:s'),
+            'unavailable_at'   => $this->unavailable_at?->format('Y-m-d H:i:s'),
+            'modified_at'      => $this->modified_at,
             'creator_id'       => $this->creator_id,
             'creator_type'     => $this->creator_type,
             'updater_id'       => $this->updater_id,
@@ -71,7 +70,7 @@ class ProductResource extends JsonResource
             'brand'            => new BrandResource($this->whenLoaded('brand')),
             'category'         => new CategoryResource($this->whenLoaded('category')),
             'productGroup'     => new GroupResource($this->whenLoaded('productGroup')),
-            'variants'         => ProductSkuResource::collection($this->whenLoaded('variants')),
+            'variants'         => ProductVariantResource::collection($this->whenLoaded('variants')),
         ];
     }
 }

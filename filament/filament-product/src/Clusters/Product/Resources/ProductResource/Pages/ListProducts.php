@@ -23,18 +23,11 @@ class ListProducts extends ListRecords
                                    ->label(__('red-jasmine-product::product.scopes.all')),
             'available'        => Tab::make()
                                    ->badge(static::getResource()::getEloquentQuery()->available()->count())
-                                   ->label(__('red-jasmine-product::product.scopes.on-sale'))
-                                   ->modifyQueryUsing(fn(Builder $query) => $query->onSale()),
-            'sold-out'       => Tab::make()->label(__('red-jasmine-product::product.scopes.sold-out'))
-                                   ->badge(static::getResource()::getEloquentQuery()->soldOut()->count())
-                                   ->modifyQueryUsing(fn(Builder $query) => $query->soldOut()),
+                                   ->label(__('red-jasmine-product::product.scopes.available'))
+                                   ->modifyQueryUsing(fn(Builder $query) => $query->available()),
             'warehoused'     => Tab::make()->label(__('red-jasmine-product::product.scopes.warehoused'))
                                    ->badge(static::getResource()::getEloquentQuery()->warehoused()->count())
                                    ->modifyQueryUsing(fn(Builder $query) => $query->warehoused()),
-//            'stock-alarming' => Tab::make()->label(__('red-jasmine-product::product.scopes.stock-alarming'))
-//                                   ->badge(static::getResource()::getEloquentQuery()->stockAlarming()->count())
-//                                   ->modifyQueryUsing(fn(Builder $query) => $query->stockAlarming()),
-
         ];
     }
 

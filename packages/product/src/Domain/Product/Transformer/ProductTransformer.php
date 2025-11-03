@@ -32,6 +32,7 @@ class ProductTransformer
     public function transform(Product $product, Command $command) : Product
     {
 
+
         $this->fillProduct($product, $command);
 
         $this->handleVariants($product, $command);
@@ -98,8 +99,8 @@ class ProductTransformer
         $product->extension->tools                = $command->tools;
         $product->extension->extra                = $command->extra;
         $product->extension->form                 = $command->form;
-        $product->extension->basic_attrs          = $this->attributeValidateService->basicProps($command->basicProps?->toArray() ?? []);
-        $product->extension->customize_attrs      = $command->customizeProps?->toArray() ?? [];
+        $product->extension->basic_attrs          = $this->attributeValidateService->basicAttrs($command->basicAttrs?->toArray() ?? []);
+        $product->extension->customize_attrs      = $command->customizeAttrs?->toArray() ?? [];
 
 
         $product->has_variants = $command->hasVariants;
@@ -128,97 +129,93 @@ class ProductTransformer
         switch ($command->hasVariants) {
             case true: // 多规格
 
-                $saleProps                      = $this->attributeValidateService->saleProps($command->saleProps->toArray());
-                $product->extension->sale_attrs = $saleProps->toArray();
+                $saleAttrs = $this->attributeValidateService->saleAttrs($command->saleAttrs->toArray());
+
+                $product->extension->sale_attrs = $saleAttrs->toArray();
                 // 验证规格
 
 
-                $this->attributeValidateService->validateSkus($saleProps, $command->variants);
-                $command->variants?->each(function (Variant $skuData) use ($product) {
+                $this->attributeValidateService->validateVariants($saleAttrs, $command->variants);
+
+
+                $command->variants?->each(function (Variant $variantData) use ($product) {
                     $variant = $product->variants
-                                   ->where('properties_sequence', $skuData->propertiesSequence)
+                                   ->where('attrs_sequence', $variantData->attrsSequence)
                                    ->first() ?? ProductVariant::make();
                     if (!$variant?->id) {
                         $variant->setUniqueIds();
                     }
-                    $this->fillVariant($variant, $skuData);
+                    $this->fillVariant($variant, $variantData);
                     $product->addVariant($variant);
                 });
 
 
                 // 统计项
 
-                $product->price        = $product->variants->where('properties_sequence', '<>',
-                    $product::$defaultPropertiesSequence)->min('price');
-                $product->market_price = $product->variants->where('properties_sequence', '<>',
-                    $product::$defaultPropertiesSequence)->min('market_price');
-                $product->cost_price   = $product->variants->where('properties_sequence', '<>',
-                    $product::$defaultPropertiesSequence)->min('cost_price');
-                $product->safety_stock = $product->variants->where('properties_sequence', '<>',
-                    $product::$defaultPropertiesSequence)->sum('safety_stock');
-
 
                 // 加入默认规格
-                $defaultVariant = $product->variants->where('properties_sequence',
-                    $product::$defaultPropertiesSequence)->first() ?? $this->defaultVariant($product);
+                $defaultVariant = $product->getDefaultVariant();
+
                 $this->setDefaultVariant($product, $defaultVariant);
+
                 $defaultVariant->setDeleted();
 
                 $product->addVariant($defaultVariant);
 
                 break;
             case false: // 单规格
-                $product->price                 = $command->price;
-                $product->cost_price            = $command->costPrice;
-                $product->market_price          = $command->marketPrice;
-                $product->safety_stock          = $command->safetyStock;
+
+                // 获取变体中的属性
+
+
+                if ($command->variants->count() != 1) {
+                    throw new ProductAttributeException('单变体属性数量错误');
+                }
+                $variantData = $command->variants->first();
+
+                // 深圳规格属性为空
                 $product->extension->sale_attrs = [];
-
                 // 这里需要修改 单规格， 基础的规格 从 规格合集中获取
-                $defaultVariant = $product->variants
-                                  ->where('properties_sequence', $product::$defaultAttributesSequence)
-                                  ->first()
-                              ?? $this->defaultVariant($product);
-
+                $defaultVariant = $product->getDefaultVariant();
+                // 设置变体基础信息
                 $this->setDefaultVariant($product, $defaultVariant);
-                $defaultVariant->setOnSale();
+                $this->fillVariant($defaultVariant, $variantData);
+
+                $defaultVariant->setAvailable();
+
                 $product->addVariant($defaultVariant);
                 break;
         }
+
+        // 统计项
+        $product->price        = $product->variants->min('price');
+        $product->market_price = $product->variants->min('market_price');
+        $product->cost_price   = $product->variants->min('cost_price');
+        $product->safety_stock = $product->variants->sum('safety_stock');
+
     }
 
     protected function fillVariant(ProductVariant $variant, Variant $variantData) : void
     {
-        $variant->properties_sequence = $variantData->propertiesSequence;
-        $variant->properties_name     = $variantData->propertiesName;
-        $variant->sku                 = $variantData->sku;
-        $variant->image               = $variantData->image;
-        $variant->barcode             = $variantData->barcode;
-        $variant->price               = $variantData->price;
-        $variant->safety_stock        = $variantData->safetyStock;
-        $variant->market_price        = $variantData->marketPrice;
-        $variant->cost_price          = $variantData->costPrice;
-        $variant->weight              = $variantData->weight;
-        $variant->weight_unit         = $variantData->weightUnit;
-        $variant->width               = $variantData->width;
-        $variant->height              = $variantData->height;
-        $variant->length              = $variantData->length;
-        $variant->volume              = $variantData->volume;
-        $variant->dimension_unit      = $variantData->dimensionUnit;
-        $variant->status              = $variantData->status;
-        $variant->deleted_at          = null;
+        $variant->attrs_sequence = $variantData->attrsSequence;
+        $variant->attrs_name     = $variantData->getAttrsName();
+        $variant->sku            = $variantData->sku;
+        $variant->image          = $variantData->image;
+        $variant->barcode        = $variantData->barcode;
+        $variant->price          = $variantData->price;
+        $variant->safety_stock   = $variantData->safetyStock;
+        $variant->market_price   = $variantData->marketPrice;
+        $variant->cost_price     = $variantData->costPrice;
+        $variant->weight         = $variantData->weight;
+        $variant->weight_unit    = $variantData->weightUnit;
+        $variant->width          = $variantData->width;
+        $variant->height         = $variantData->height;
+        $variant->length         = $variantData->length;
+        $variant->volume         = $variantData->volume;
+        $variant->dimension_unit = $variantData->dimensionUnit;
+        $variant->status         = $variantData->status;
+        $variant->deleted_at     = null;
     }
-
-    protected function defaultVariant(Product $product) : ProductVariant
-    {
-
-        $variant                      = new ProductVariant();
-        $variant->id                  = $product->id;
-        $variant->properties_sequence = $product::$defaultAttributesSequence;
-        $variant->properties_name     = $product::$defaultAttributesName;
-        return $variant;
-    }
-
 
     protected function setDefaultVariant(Product $product, ProductVariant $variant)
     {
@@ -232,5 +229,15 @@ class ProductTransformer
         $variant->image        = $product->image;
         $variant->barcode      = $product->barcode;
 
+    }
+
+    protected function defaultVariant(Product $product) : ProductVariant
+    {
+
+        $variant                 = new ProductVariant();
+        $variant->id             = $product->id;
+        $variant->attrs_sequence = $product::$defaultAttrsSequence;
+        $variant->attrs_name     = $product::$defaultAttrsName;
+        return $variant;
     }
 }

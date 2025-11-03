@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
 
-            $table->string('properties_name')->nullable()->comment('规格名称');
-            $table->string('properties_sequence')->nullable()->comment('规格属性序列');
+            $table->string('attrs_name')->nullable()->comment('属性名称');
+            $table->string('attrs_sequence')->nullable()->comment('属性序列');
 
             // 状态
             $table->string('status', 32)->comment('状态');
@@ -50,7 +50,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
             // 操作
 
-            $table->timestamp('modified_time')->nullable()->comment('修改时间');
+            $table->timestamp('modified_at')->nullable()->comment('修改时间');
             $table->operator();
             $table->softDeletes();
             $table->comment('商品-SKU表');

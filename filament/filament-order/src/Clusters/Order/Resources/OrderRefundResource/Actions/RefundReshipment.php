@@ -32,7 +32,7 @@ trait RefundReshipment
         $this->form(function (Refund $record) {
             return match ($record->shipping_type) {
                 ShippingTypeEnum::DUMMY => $this->dummyForm($record),
-                ShippingTypeEnum::CARD_KEY => $this->cardKeyForm($record),
+                ShippingTypeEnum::DIGITAL => $this->cardKeyForm($record),
                 ShippingTypeEnum::LOGISTICS => $this->logisticsForm($record),
                 ShippingTypeEnum::DELIVERY => $this->logisticsForm($record),
                 ShippingTypeEnum::NONE => []
@@ -48,7 +48,7 @@ trait RefundReshipment
             try {
                 match ($record->shipping_type) {
                     ShippingTypeEnum::DUMMY => $this->dummyAction($data, $record),
-                    ShippingTypeEnum::CARD_KEY => $this->cardKeyAction($data, $record),
+                    ShippingTypeEnum::DIGITAL => $this->cardKeyAction($data, $record),
                     ShippingTypeEnum::LOGISTICS => $this->dummyAction($data, $record),
                     ShippingTypeEnum::DELIVERY => $this->dummyAction($data, $record),
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),

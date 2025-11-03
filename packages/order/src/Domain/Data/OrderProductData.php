@@ -84,9 +84,11 @@ class OrderProductData extends Data
     public int     $brandId             = 0;
     public int     $categoryId          = 0;
     public int     $productGroupId      = 0;
-    public ?string $image               = null;
-    public ?string $outerProductId      = null;
-    public ?string $outerSkuId          = null;
+    public ?string $image      = null;
+    public ?string $spu = null;
+    public ?string $sku = null;
+
+
     public ?string $barcode             = null;
     public ?string $sellerCustomStatus  = null;
     public ?string $outerOrderProductId = null;

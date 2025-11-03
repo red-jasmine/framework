@@ -26,7 +26,7 @@ class ActivitySku extends Model implements OperatorInterface
         'product_id',
         'sku_id',
         'activity_product_id',
-        'properties_name',
+        'attrs_name',
         'image',
         'original_price',
         'activity_price',

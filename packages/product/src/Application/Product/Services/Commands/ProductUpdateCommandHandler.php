@@ -48,7 +48,7 @@ class ProductUpdateCommandHandler extends ProductCommandHandler
             $product = $this->service->hook('update.fill', $command,
                 fn() => $this->productTransformer->transform($product, $command));
 
-            $product->modified_time = now();
+            $product->modified_at = now();
 
             $this->service->repository->update($product);
 

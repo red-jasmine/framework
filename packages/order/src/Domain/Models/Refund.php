@@ -187,8 +187,8 @@ class Refund extends Model implements OperatorInterface, UniqueNoInterface
         $this->title                   = $orderProduct->title;
         $this->sku_name                = $orderProduct->sku_name;
         $this->image                   = $orderProduct->image;
-        $this->outer_product_id        = $orderProduct->outer_product_id;
-        $this->outer_sku_id            = $orderProduct->outer_sku_id;
+        $this->spu        = $orderProduct->spu;
+        $this->sku            = $orderProduct->sku;
         $this->barcode                 = $orderProduct->barcode;
         $this->unit_quantity           = $orderProduct->unit_quantity;
         $this->unit                    = $orderProduct->unit;

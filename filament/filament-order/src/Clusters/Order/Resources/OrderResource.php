@@ -218,7 +218,7 @@ class OrderResource extends Resource
                                       ) : array => ['orderNo' => $record->order_no,])->key('order-logistics')->columnSpanFull();
 
                                   }
-                                  if ($record->shipping_type === ShippingTypeEnum::CARD_KEY) {
+                                  if ($record->shipping_type === ShippingTypeEnum::DIGITAL) {
                                       $schema[] = Livewire::make(OrderCluster\Resources\Components\OrderCardKeys::class, fn(Model $record
                                       ) : array => ['orderNo' => $record->order_no,])->key('order-card-keys')->columnSpanFull();
 

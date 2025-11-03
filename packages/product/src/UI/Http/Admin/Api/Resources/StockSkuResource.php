@@ -15,15 +15,15 @@ class StockSkuResource extends JsonResource
     public function toArray($request) : array
     {
         return [
-            'id'              => $this->id,
-            'product_id'      => $this->product_id,
-            'stock'           => $this->stock,
-            'status'          => $this->status,
-            'lock_stock'      => $this->lock_stock,
-            'safety_stock'    => $this->safety_stock,
-            'properties'      => $this->properties,
-            'properties_name' => $this->properties_name,
-            'product'         => new StockProductResource($this->whenLoaded('product'))
+            'id'           => $this->id,
+            'product_id'   => $this->product_id,
+            'stock'        => $this->stock,
+            'status'       => $this->status,
+            'lock_stock'   => $this->lock_stock,
+            'safety_stock' => $this->safety_stock,
+            'properties'   => $this->properties,
+            'attrs_name'   => $this->attrs_name,
+            'product'      => new StockProductResource($this->whenLoaded('product'))
         ];
     }
 }
