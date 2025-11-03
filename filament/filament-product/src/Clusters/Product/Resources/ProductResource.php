@@ -28,13 +28,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
@@ -288,19 +291,18 @@ class ProductResource extends Resource
                              ->offColor('gray')
                              ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）'),
 
-                       static::saleAttrs()->visible(fn(Get $get) => $get('has_variants'))
+                       static::saleAttrs()
+                             ->visible(fn(Get $get) => $get('has_variants'))
                              ->live()
                              ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
 
                                  try {
                                      $saleAttrs = array_values($get('sale_attrs') ?? []);
 
-                                     //dd($saleAttrs);
                                      $saleAttrs = array_map(function ($item) {
                                          $item['values'] = array_values($item['values'] ?? []);
                                          return $item;
                                      }, $saleAttrs);
-
 
                                      $oldSku = $get('variants') ?? [];
                                      if ($oldSku === null) {
@@ -348,9 +350,13 @@ class ProductResource extends Resource
     protected static function saleAttrs() : Repeater
     {
         return Repeater::make('sale_attrs')
+                       ->table([
+                           Repeater\TableColumn::make('属性名称')->width('200px'),
+                           Repeater\TableColumn::make('属性值')->width('800px'),
+
+                       ])
                        ->label(__('red-jasmine-product::product.fields.sale_attrs'))
                        ->schema([
-
                            Select::make('pid')
                                  ->label(__('red-jasmine-product::product.attrs.pid'))
                                  ->live()
@@ -358,66 +364,90 @@ class ProductResource extends Resource
                                  ->required()
                                  ->columnSpan(1)
                                  ->disabled(fn($state) => $state)
-                                 ->dehydrated()
-                                 ->options(ProductAttribute::limit(50)->pluck('name', 'id')->toArray())
+                                 ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
                                  ->searchable()
                                  ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name',
                                      'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
                                  ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name')),
 
                            Repeater::make('values')
+                               ->live()
+                               ->table([
+                                   Repeater\TableColumn::make('属性值'),
+                                   Repeater\TableColumn::make('别名'),
+                               ])
                                    ->label(__('red-jasmine-product::product.attrs.values'))
-                                   ->hiddenLabel()
                                    ->schema([
-                                       Select::make('vid')
-                                             ->label(__('red-jasmine-product::product.attrs.vid'))
-                                             ->searchable()
-                                             ->required()
-                                             ->hiddenLabel()
-                                             ->options(fn(Get $get) => ProductAttributeValue::where('pid',
-                                                 $get('../../pid'))->limit(50)->pluck('name', 'id')->toArray())
-                                             ->getSearchResultsUsing(fn(string $search
-                                             ) : array => ProductAttributeValue::where('name', 'like',
-                                                 "%{$search}%")->limit(50)->pluck('name',
-                                                 'id')->toArray())
-                                             ->getOptionLabelUsing(fn(
-                                                 $value,
-                                                 Get $get
-                                             ) : ?string => $get('name'))
-                                             ->hidden(fn(Get $get
-                                             ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
-
-
+                                       Hidden::make('vid')
+                                             ->label(__('red-jasmine-product::product.attrs.alias'))
+                                           ->live()
+                                           ,
                                        TextInput::make('name')
-                                                ->hiddenLabel()
-                                                ->maxLength(30)
-                                                ->required()
-                                                ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../pid'))?->type !== ProductAttributeTypeEnum::TEXT),
-
-
+                                                ->label(__('red-jasmine-product::product.attrs.alias'))
+                                                ->readOnly(),
                                        TextInput::make('alias')
                                                 ->label(__('red-jasmine-product::product.attrs.alias'))
                                                 ->hiddenLabel()
                                                 ->placeholder('请输入别名')
                                                 ->maxLength(30)
-                                                ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
-
-
+                                       ,
                                    ])
-                                   ->grid(4)
-                                   ->columns()
+                                   ->hiddenLabel()
+                                   ->addAction(function (Action $action, Get $get, Set $set) {
+
+                                       $action->icon(Heroicon::Envelope)
+                                              ->schema([
+                                                  CheckboxList::make('vid')
+                                                              ->columns(6)
+                                                              ->label(__('red-jasmine-product::product.attrs.vid'))
+                                                      // ->searchable()
+                                                              ->required()
+                                                              ->hiddenLabel()
+                                                      //->options(fn()=>dd($get('pid')))
+                                                              ->options(fn() => ProductAttributeValue::where('pid',
+                                                          $get('pid'))->pluck('name', 'id')->toArray())
+
+                                                  // ->getSearchResultsUsing(fn(string $search) : array => ProductAttributeValue::where('name', 'like',
+                                                  //     "%{$search}%")->limit(50)->pluck('name',
+                                                  //     'id')->toArray())
+                                                  // ->getOptionLabelUsing(fn(
+                                                  //     $value,
+                                                  //     Get $get
+                                                  // ) : ?string => $get('name'))
+                                                  ,
+                                              ])
+                                              ->action(function (array $data, array $arguments, Repeater $component) use (
+                                                  $set,
+                                                  $get
+                                              ) : void {
+                                                  $vidList = $data['vid'] ?? [];
+                                                  $vidList = ProductAttributeValue::select(['name', 'id'])->find($vidList);
+                                                  $items   = [];
+                                                  foreach ($vidList as $attributeValue) {
+                                                      $items[] = [
+                                                          'vid'   => (string) $attributeValue->id,
+                                                          'alias' => '',
+                                                          'name'  => $attributeValue->name,
+                                                      ];
+                                                  }
+                                                  $values = $get('values');
+                                                  array_push($values, ...$items);
+                                                  $set('values', $values);
+                                              });
+
+                                   })
                                    ->columnSpanFull()
                                    ->minItems(1)
+                                   ->default([])
                                    ->reorderable(false)
-                                   ->hidden(fn(Get $get) => !$get('pid')),
+                                   ->hidden(fn(Get $get) => !$get('pid'))
+                           ,
 
 
                        ])
                        ->default([])
+                       ->addActionAlignment(Alignment::Start)
                        ->inlineLabel(false)
-                       ->columns(4)
                        ->columnSpan('full')
                        ->reorderable(false);
     }
@@ -1163,7 +1193,7 @@ class ProductResource extends Resource
                    ->icon('heroicon-o-document-text')
                    ->schema([
                        RichEditor::make('detail')
-                           ->inlineLabel(false)
+                                 ->inlineLabel(false)
                                  ->hiddenLabel()
                                  ->label(__('red-jasmine-product::product.fields.detail'))
                                  ->toolbarButtons([

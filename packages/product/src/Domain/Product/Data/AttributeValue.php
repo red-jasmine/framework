@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 
 use RedJasmine\Support\Data\Data;
 
-class PropValue extends Data
+class AttributeValue extends Data
 {
 
 

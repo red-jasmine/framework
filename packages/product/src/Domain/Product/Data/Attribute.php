@@ -14,13 +14,12 @@ class Attribute extends Data
      */
     public int $pid;
 
-
     public ?string $name;
 
     public ?string $unit;
 
     /**
-     * @var Collection<PropValue>|null
+     * @var Collection<AttributeValue>|null
      */
     public ?Collection $values = null;
 
