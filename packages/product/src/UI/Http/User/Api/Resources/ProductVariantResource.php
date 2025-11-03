@@ -21,9 +21,11 @@ class ProductVariantResource extends JsonResource
             'market_price'    => (string)$this->market_price,
             'cost_price'      => (string)$this->cost_price,
             'sales'           => $this->sales,
-            'stock'           => $this->stock,
-            'safety_stock'    => $this->safety_stock,
-            'version'         => $this->version
+            'stock'            => $this->stock,
+            'safety_stock'     => $this->safety_stock,
+            'package_unit'     => $this->package_unit,
+            'package_quantity' => $this->package_quantity,
+            'version'          => $this->version
         ];
     }
 

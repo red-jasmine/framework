@@ -438,6 +438,8 @@ class ProductResource extends Resource
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
                                // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
@@ -458,6 +460,17 @@ class ProductResource extends Resource
                            TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('stock')->minValue(0)->integer()->required(),
                            TextInput::make('safety_stock')->numeric()->default(0),
+                           TextInput::make('package_unit')
+                                    ->label(__('red-jasmine-product::product.fields.package_unit'))
+                                    ->maxLength(32)
+                                    ->placeholder('SKU的包装单位:件/个/套/箱')
+                           ,
+                           TextInput::make('package_quantity')
+                                    ->label(__('red-jasmine-product::product.fields.package_quantity'))
+                                    ->numeric()
+                                    ->default(1)
+                                    ->minValue(1)
+                                    ->placeholder('每个包装单位包含的数量'),
                            TextInput::make('barcode')->maxLength(32),
                            Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
                            Hidden::make('attrs_sequence'),
@@ -1004,21 +1017,6 @@ class ProductResource extends Resource
                                         false => 'gray',
                                     ])
                                     ->helperText('标识商品是否为全新商品'),
-
-                       TextInput::make('unit')
-                                ->label(__('red-jasmine-product::product.fields.unit'))
-                                ->maxLength(32)
-                                ->placeholder('件/个/套/箱')
-                                ->helperText('商品的计量单位')
-                                ->prefixIcon('heroicon-o-cube'),
-
-                       TextInput::make('unit_quantity')
-                                ->label(__('red-jasmine-product::product.fields.unit_quantity'))
-                                ->numeric()
-                                ->default(1)
-                                ->minValue(1)
-                                ->helperText('每单位包含的数量')
-                                ->prefixIcon('heroicon-o-calculator'),
                    ]),
         ];
     }

@@ -62,8 +62,6 @@ class ProductTransformer
         $product->is_customized             = $command->isCustomized;
         $product->is_brand_new              = $command->isBrandNew;
         $product->sort                      = $command->sort;
-        $product->unit                      = $command->unit;
-        $product->unit_quantity             = $command->unitQuantity;
         $product->category_id               = $command->categoryId;
         $product->brand_id                  = $command->brandId;
         $product->model_code                = $command->modelCode;
@@ -197,24 +195,26 @@ class ProductTransformer
 
     protected function fillVariant(ProductVariant $variant, Variant $variantData) : void
     {
-        $variant->attrs_sequence = $variantData->attrsSequence;
-        $variant->attrs_name     = $variantData->getAttrsName();
-        $variant->sku            = $variantData->sku;
-        $variant->image          = $variantData->image;
-        $variant->barcode        = $variantData->barcode;
-        $variant->price          = $variantData->price;
-        $variant->safety_stock   = $variantData->safetyStock;
-        $variant->market_price   = $variantData->marketPrice;
-        $variant->cost_price     = $variantData->costPrice;
-        $variant->weight         = $variantData->weight;
-        $variant->weight_unit    = $variantData->weightUnit;
-        $variant->width          = $variantData->width;
-        $variant->height         = $variantData->height;
-        $variant->length         = $variantData->length;
-        $variant->volume         = $variantData->volume;
-        $variant->dimension_unit = $variantData->dimensionUnit;
-        $variant->status         = $variantData->status;
-        $variant->deleted_at     = null;
+        $variant->attrs_sequence   = $variantData->attrsSequence;
+        $variant->attrs_name       = $variantData->getAttrsName();
+        $variant->sku              = $variantData->sku;
+        $variant->image            = $variantData->image;
+        $variant->barcode          = $variantData->barcode;
+        $variant->price            = $variantData->price;
+        $variant->safety_stock     = $variantData->safetyStock;
+        $variant->market_price     = $variantData->marketPrice;
+        $variant->cost_price       = $variantData->costPrice;
+        $variant->weight           = $variantData->weight;
+        $variant->weight_unit      = $variantData->weightUnit;
+        $variant->width            = $variantData->width;
+        $variant->height           = $variantData->height;
+        $variant->length           = $variantData->length;
+        $variant->volume           = $variantData->volume;
+        $variant->dimension_unit   = $variantData->dimensionUnit;
+        $variant->package_unit     = $variantData->packageUnit;
+        $variant->package_quantity = $variantData->packageQuantity;
+        $variant->status           = $variantData->status;
+        $variant->deleted_at       = null;
     }
 
     protected function setDefaultVariant(Product $product, ProductVariant $variant)

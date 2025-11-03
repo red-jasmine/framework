@@ -79,9 +79,6 @@ return new class extends Migration {
 
             // 发货期限
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');
-            $table->string('unit')->nullable()->comment('单位名称');
-            $table->unsignedBigInteger('unit_quantity')->default(1)->comment('单位数量');
-
 
             // 运营类
             $table->unsignedInteger('gift_point')->default(0)->comment('积分');

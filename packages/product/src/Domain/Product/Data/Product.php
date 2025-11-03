@@ -75,10 +75,6 @@ class Product extends Data
 
     // 是否定制化
     public bool $isCustomized = false;
-    // 单位数量
-    public int $unitQuantity = 1;
-    // 单位（可选）
-    public ?string $unit = null;
     // 发货时间
     public int $deliveryTime = 0;
     // 排序（可选）
