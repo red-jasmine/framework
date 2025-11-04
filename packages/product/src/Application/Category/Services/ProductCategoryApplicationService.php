@@ -56,7 +56,7 @@ class ProductCategoryApplicationService extends ApplicationService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->repository->find(FindQuery::make($id))?->isAllowUse());
+        return (bool)($this->repository->find($id)?->isAllowUse());
     }
 
 

@@ -14,6 +14,7 @@ use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 /**
+ *
  * @method ProductBrand create(BrandCreateCommand $command)
  * @method void update(BrandUpdateCommand $command)
  * @method void delete(BrandDeleteCommand $command)
@@ -56,7 +57,7 @@ class BrandApplicationService extends ApplicationService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool) ($this->repository->find(FindQuery::make($id))?->isAllowUse());
+        return (bool) ($this->repository->find($id)?->isAllowUse());
     }
 
 

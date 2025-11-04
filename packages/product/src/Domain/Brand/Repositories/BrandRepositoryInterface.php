@@ -3,11 +3,13 @@
 namespace RedJasmine\Product\Domain\Brand\Repositories;
 
 use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 品牌仓库接口
  *
+ * @method ProductBrand find(mixed $id)
  * 提供品牌实体的读写操作统一接口
  */
 interface BrandRepositoryInterface extends RepositoryInterface

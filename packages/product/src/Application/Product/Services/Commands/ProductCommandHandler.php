@@ -101,6 +101,7 @@ class ProductCommandHandler extends CommandHandler
     protected function validateBrand(\RedJasmine\Product\Domain\Product\Data\Product $command) : void
     {
         try {
+
             if ($command->brandId && !$this->brandQueryService->isAllowUse($command->brandId)) {
                 throw new ProductException('品牌不可使用');
             }

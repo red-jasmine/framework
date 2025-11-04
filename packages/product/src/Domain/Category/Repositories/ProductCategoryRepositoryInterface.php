@@ -8,8 +8,9 @@ use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**
  * 商品分类仓库接口
- *
  * 提供商品分类实体的读写操作统一接口
+ * @method ProductCategory find(mixed $id)
+ *
  */
 interface ProductCategoryRepositoryInterface extends RepositoryInterface
 {

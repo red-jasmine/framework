@@ -19,13 +19,11 @@ class ProductPackageSeeder extends Seeder
     protected function brand() : void
     {
         // 添加 品牌
-        DB::table('brands')->insert([
-            'id'           => 1,
-            'name'         => '测试',
-            'status'       => 'enable',
-            'english_name' => 'test',
-            'initial'      => 'T',
-            'logo'         => fake()->imageUrl(360, 360)
+        DB::table('product_brands')->insert([
+            'id'     => 1,
+            'name'   => '品牌',
+            'status' => 'enable',
+            'image'  => fake()->imageUrl(360, 360)
         ]);
 
     }
