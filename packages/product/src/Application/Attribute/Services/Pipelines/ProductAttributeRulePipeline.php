@@ -19,7 +19,7 @@ class ProductAttributeRulePipeline
     public function handle(Data $command, Closure $next) : mixed
     {
         $command = $command;
-        $this->repository->findByQuery(FindQuery::from(['id' => $command->pid]));
+        $this->repository->findByQuery(FindQuery::from(['id' => $command->aid]));
         return $next($command);
     }
 }

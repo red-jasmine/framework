@@ -68,8 +68,8 @@ class ProductAttributeValueResource extends Resource
             ->columns(1)
             ->inlineLabel()
             ->components([
-                Select::make('pid')
-                                       ->label(__('red-jasmine-product::product-attribute-value.fields.pid'))
+                Select::make('aid')
+                                       ->label(__('red-jasmine-product::product-attribute-value.fields.aid'))
                                        ->required()
                                        ->relationship('attribute', 'name')
                                        ->searchable(['name'])
@@ -133,7 +133,7 @@ class ProductAttributeValueResource extends Resource
                 ...static::operateTableColumns()
             ])
             ->filters([
-                SelectFilter::make('pid')
+                SelectFilter::make('aid')
                                            ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name'))
                                            ->relationship('attribute', 'name')
                                            ->searchable()

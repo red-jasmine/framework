@@ -37,7 +37,7 @@ class ProductAttributeValue extends Model implements OperatorInterface
 
     protected $fillable = [
         'vid',
-        'pid',
+        'aid',
         'name',
         'description',
         'group_id',
@@ -60,6 +60,6 @@ class ProductAttributeValue extends Model implements OperatorInterface
 
     public function attribute() : BelongsTo
     {
-        return $this->belongsTo(ProductAttribute::class, 'pid', 'id');
+        return $this->belongsTo(ProductAttribute::class, 'aid', 'id');
     }
 }

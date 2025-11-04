@@ -38,7 +38,7 @@ class ProductAttributeValueApplicationService extends ApplicationService
 
     public function newModel($data = null) : Model
     {
-        if ($model = $this->repository->findByNameInAttribute($data->pid, $data->name)) {
+        if ($model = $this->repository->findByNameInAttribute($data->aid, $data->name)) {
             throw new ProductAttributeException('名称已存在');
             return $model;
         }

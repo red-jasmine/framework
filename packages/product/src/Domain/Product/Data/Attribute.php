@@ -12,7 +12,7 @@ class Attribute extends Data
      * 属性ID
      * @var int
      */
-    public int $pid;
+    public int $aid;
 
     public ?string $name;
 

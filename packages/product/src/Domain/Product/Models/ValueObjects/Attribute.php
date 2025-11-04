@@ -12,7 +12,7 @@ class Attribute extends ValueObject
      * 属性ID
      * @var int
      */
-    public int $pid;
+    public int $aid;
 
     /**
      * 名称

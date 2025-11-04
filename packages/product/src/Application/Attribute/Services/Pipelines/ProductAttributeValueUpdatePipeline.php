@@ -30,7 +30,7 @@ class ProductAttributeValueUpdatePipeline
             ->repository->query()
                             ->where('id', '<>', $command->id)
                             ->where('name', $command->name)
-                            ->where('pid', $command->pid)
+                            ->where('aid', $command->aid)
                             ->count();
 
         if ($hasRepeatCount > 0) {

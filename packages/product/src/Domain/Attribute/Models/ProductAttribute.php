@@ -62,7 +62,7 @@ class ProductAttribute extends Model implements OperatorInterface
 
     public function values() : HasMany
     {
-        return $this->hasMany(ProductAttributeValue::class, 'id', 'pid');
+        return $this->hasMany(ProductAttributeValue::class, 'id', 'aid');
     }
 
 

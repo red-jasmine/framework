@@ -63,7 +63,7 @@ class AttributeFormatter
     /**
      * 属性笛卡尔积
      *
-     * @param  array{pid:int,vid:int|int[]}  $attributes
+     * @param  array{aid:int,vid:int|int[]}  $attributes
      *
      * @return string[]
      */
@@ -88,13 +88,13 @@ class AttributeFormatter
     {
         $skuAttributes = [];
         foreach ($attributes as $item) {
-            $pid             = (int) $item['pid'];
+            $aid             = (int) $item['aid'];
             $values          = $item['values'] ?? [];
             $attributeValues = [];
             foreach ($values as $value) {
                 $vid               = $value['vid'] ?? null;
                 $alias             = $value['alias'] ?? null;
-                $attributeValues[] = ['pid' => $pid, 'vid' => (int) $vid];
+                $attributeValues[] = ['aid' => $aid, 'vid' => (int) $vid];
             }
             $skuAttributes[] = $attributeValues;
         }
@@ -103,7 +103,7 @@ class AttributeFormatter
 
 
     /**
-     * @param  array{pid:int,vid:int|int[]}  $attributes
+     * @param  array{aid:int,vid:int|int[]}  $attributes
      *
      * @return string
      */
@@ -114,7 +114,7 @@ class AttributeFormatter
         }
         $attributeList = [];
         foreach ($attributes as $item) {
-            $pid    = (int) $item['pid'];
+            $aid    = (int) $item['aid'];
             $values = $item['vid'] ?? null;
             if (!is_array($values)) {
                 $values = [$values];
@@ -126,7 +126,7 @@ class AttributeFormatter
                 }
             }
             asort($newValues);
-            $attributeList[$pid] = $pid.':'.implode(',', $values);
+            $attributeList[$aid] = $aid.':'.implode(',', $values);
         }
         asort($attributeList);
         return implode(';', $attributeList);
@@ -154,10 +154,10 @@ class AttributeFormatter
                 if (blank($attribute)) {
                     continue;
                 }
-                [$pid, $values] = explode(':', $attribute);
+                [$aid, $values] = explode(':', $attribute);
                 $attributeItem        = [];
-                $pid                  = (int) $pid;
-                $attributeItem['pid'] = (int) $pid;
+                $aid                  = (int) $aid;
+                $attributeItem['aid'] = (int) $aid;
                 $attributeItem['vid'] = [];
 
                 $itemAttrValues = explode(',', $values);
@@ -170,7 +170,7 @@ class AttributeFormatter
                 $attributeItem['vid'] = array_unique($attributeItem['vid']);
                 asort($attributeItem['vid']);
 
-                $attributeList[$pid] = $attributeItem;
+                $attributeList[$aid] = $attributeItem;
 
             }
             asort($attributeList);

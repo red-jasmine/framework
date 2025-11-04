@@ -6,7 +6,7 @@ return [
     ],
     'fields'  => [
         'id'           => '属性值ID',
-        'pid'          => '属性ID',
+        'aid'          => '属性ID',
         'name'         => '名称',
         'description'  => '描述',
         'sort'         => '排序',

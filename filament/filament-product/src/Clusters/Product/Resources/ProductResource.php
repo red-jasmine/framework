@@ -358,14 +358,14 @@ class ProductResource extends Resource
                        ])
                        ->label(__('red-jasmine-product::product.fields.sale_attrs'))
                        ->schema([
-                           Hidden::make('pid')
-                                 ->label(__('red-jasmine-product::product.attrs.pid'))
+                           Hidden::make('aid')
+                                 ->label(__('red-jasmine-product::product.attrs.aid'))
                                  ->required()
                                  ->dehydrated()
                            ,
 
                            TextInput::make('name')
-                                    ->label(__('red-jasmine-product::product.attrs.pid'))
+                                    ->label(__('red-jasmine-product::product.attrs.aid'))
                                     ->readOnly()
                                     ->required()
                                     ->columnSpan(1),
@@ -400,7 +400,7 @@ class ProductResource extends Resource
                                                               ->label(__('red-jasmine-product::product.attrs.vid'))
                                                               ->required()
                                                               ->hiddenLabel()
-                                                              ->options(fn() => ProductAttributeValue::where('pid', $get('pid'))
+                                                              ->options(fn() => ProductAttributeValue::where('aid', $get('aid'))
                                                                                                      ->pluck('name', 'id')
                                                                                                      ->toArray())
                                                   ,
@@ -440,8 +440,8 @@ class ProductResource extends Resource
                            $action->icon(Heroicon::Plus)
                                   ->label('选择销售属性')
                                   ->schema([
-                                      Select::make('pid')
-                                            ->label(__('red-jasmine-product::product.attrs.pid'))
+                                      Select::make('aid')
+                                            ->label(__('red-jasmine-product::product.attrs.aid'))
                                             ->required()
                                             ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
                                             ->searchable()
@@ -453,13 +453,13 @@ class ProductResource extends Resource
                                             ),
                                   ])
                                   ->action(function (array $data) use ($get, $set) : void {
-                                      $pid = $data['pid'] ?? null;
-                                      if ($pid) {
-                                          $attribute = ProductAttribute::find($pid);
+                                      $aid = $data['aid'] ?? null;
+                                      if ($aid) {
+                                          $attribute = ProductAttribute::find($aid);
                                           if ($attribute) {
                                               $saleAttrs   = $get('sale_attrs') ?? [];
                                               $saleAttrs[] = [
-                                                  'pid'    => (string) $attribute->id,
+                                                  'aid'    => (string) $attribute->id,
                                                   'name'   => $attribute->name,
                                                   'values' => [],
                                               ];
@@ -893,10 +893,10 @@ class ProductResource extends Resource
         return Repeater::make('basic_attrs')
                        ->label(__('red-jasmine-product::product.fields.basic_attrs'))
                        ->schema([
-                           Select::make('pid')
+                           Select::make('aid')
 //                                                           ->hiddenLabel()
                                  ->inlineLabel(false)
-                                 ->label(__('red-jasmine-product::product.attrs.pid'))
+                                 ->label(__('red-jasmine-product::product.attrs.aid'))
                                  ->live()
                                  ->columnSpan(1)
                                  ->required()
@@ -923,8 +923,8 @@ class ProductResource extends Resource
                                              ->searchable()
                                              ->hiddenLabel()
                                              ->required()
-                                             ->options(fn(Get $get) => ProductAttributeValue::where('pid',
-                                                 $get('../../pid'))->limit(50)->pluck('name', 'id')->toArray())
+                                             ->options(fn(Get $get) => ProductAttributeValue::where('aid',
+                                                 $get('../../aid'))->limit(50)->pluck('name', 'id')->toArray())
                                              ->getSearchResultsUsing(fn(string $search
                                              ) : array => ProductAttributeValue::when($search,
                                                  function ($query) use ($search) {
@@ -932,7 +932,7 @@ class ProductResource extends Resource
                                                  })->limit(20)->pluck('name', 'id')->toArray())
                                              ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name'))
                                              ->hidden(fn(Get $get
-                                             ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
+                                             ) => ProductAttribute::find($get('../../aid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                        TextInput::make('name')
@@ -940,10 +940,10 @@ class ProductResource extends Resource
                                                 ->hiddenLabel()
                                                 ->required()
                                                 ->suffix(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../pid'))?->unit)
+                                                ) => ProductAttribute::find($get('../../aid'))?->unit)
                                                 ->inlineLabel()
                                                 ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../pid'))?->type !== ProductAttributeTypeEnum::TEXT),
+                                                ) => ProductAttribute::find($get('../../aid'))?->type !== ProductAttributeTypeEnum::TEXT),
 
 
                                        TextInput::make('alias')
@@ -951,7 +951,7 @@ class ProductResource extends Resource
                                                 ->maxLength(30)
                                                 ->hiddenLabel()
                                                 ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../pid'))?->type === ProductAttributeTypeEnum::TEXT),
+                                                ) => ProductAttribute::find($get('../../aid'))?->type === ProductAttributeTypeEnum::TEXT),
 
 
                                    ])
@@ -962,8 +962,8 @@ class ProductResource extends Resource
                                    ->deletable(fn($state) => count($state) > 1)
                                    ->minItems(1)
                                    ->maxItems(fn(Get $get
-                                   ) => ProductAttribute::find($get('pid'))?->is_allow_multiple ? 30 : 1)
-                                   ->hidden(fn(Get $get) => !$get('pid')),
+                                   ) => ProductAttribute::find($get('aid'))?->is_allow_multiple ? 30 : 1)
+                                   ->hidden(fn(Get $get) => !$get('aid')),
 
 
                        ])
@@ -980,15 +980,15 @@ class ProductResource extends Resource
         return Repeater::make('customize_attrs')
                        ->label(__('red-jasmine-product::product.fields.customize_attrs'))
                        ->schema([
-                           Hidden::make('pid')->default(0),
+                           Hidden::make('aid')->default(0),
                            Section::make()
                                   ->hiddenLabel()
                                   ->inlineLabel(false)
                                   ->schema(
                                       [
                                           TextInput::make('name')
-                                                   ->label(__('red-jasmine-product::product.attrs.pid'))
-                                                   ->placeholder(__('red-jasmine-product::product.attrs.pid'))
+                                                   ->label(__('red-jasmine-product::product.attrs.aid'))
+                                                   ->placeholder(__('red-jasmine-product::product.attrs.aid'))
                                                    ->hiddenLabel()
                                                    ->inlineLabel(false)
                                                    ->required()

@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 class ProductAttributeValueCreateCommand extends Data
 {
-    public int                $pid;
+    public int                $aid;
     public string             $name;
     public ?string            $description = null;
     public int                $sort        = 0;
@@ -22,7 +22,7 @@ class ProductAttributeValueCreateCommand extends Data
     {
 
         return [
-            'pid'         => __('red-jasmine-product::product-attribute-value.fields.pid'),
+            'aid'         => __('red-jasmine-product::product-attribute-value.fields.aid'),
             'name'        => __('red-jasmine-product::product-attribute-value.fields.name'),
             'description' => __('red-jasmine-product::product-attribute-value.fields.description'),
             'sort'        => __('red-jasmine-product::product-attribute-value.fields.sort'),
@@ -34,7 +34,7 @@ class ProductAttributeValueCreateCommand extends Data
     public static function rules(ValidationContext $context) : array
     {
         return [
-            'pid'         => [ 'required', 'integer' ],
+            'aid'         => [ 'required', 'integer' ],
             'name'        => [ 'required', 'max:64', new ProductAttributeNameRule() ],
             'sort'        => [ 'integer' ],
             'group_id'    => [ 'sometimes', 'nullable', 'integer' ],

@@ -46,8 +46,8 @@ class ProductAttributeValidateService
             /**
              * @var $attributeModel ProductAttribute
              */
-            $attributeModel    = $attributeModels[$attr['pid']];
-            $basicAttr->pid    = $attributeModel->id;
+            $attributeModel    = $attributeModels[$attr['aid']];
+            $basicAttr->aid    = $attributeModel->id;
             $basicAttr->name   = $attributeModel->name;
             $basicAttr->unit   = $attributeModel->unit;
             $basicAttr->values = collect();
@@ -69,7 +69,7 @@ class ProductAttributeValidateService
                     break;
                 case ProductAttributeTypeEnum::SELECT:
 
-                    $attrValues        = $this->valueRepository->findByIdsInAttribute($basicAttr->pid,
+                    $attrValues        = $this->valueRepository->findByIdsInAttribute($basicAttr->aid,
                         collect($values)->pluck('vid')->toArray())->keyBy('id');
                     $basicAttr->values = collect();
 
@@ -118,19 +118,19 @@ class ProductAttributeValidateService
     protected function getAttributes(array $attributes = []) : Collection
     {
 
-        $pid = collect($attributes)->pluck('pid')->unique()->toArray();
+        $aid = collect($attributes)->pluck('aid')->unique()->toArray();
         // 验证重复
-        if (count($pid) !== count($attributes)) {
+        if (count($aid) !== count($attributes)) {
             throw new ProductAttributeException('属性重复');
         }
-        if (blank($pid)) {
+        if (blank($aid)) {
             return collect();
         }
 
-        $attributeModels = collect($this->attributeRepository->findByIds($pid))->keyBy('id');
+        $attributeModels = collect($this->attributeRepository->findByIds($aid))->keyBy('id');
 
 
-        if (count($pid) !== count($attributeModels)) {
+        if (count($aid) !== count($attributeModels)) {
             throw new ProductAttributeException('属性ID存在错误');
         }
 
@@ -207,14 +207,14 @@ class ProductAttributeValidateService
             /**
              * @var $attributeModel ProductAttribute
              */
-            $attributeModel = $attributeModels[$attr['pid']];
-            $saleAttr->pid  = $attributeModel->id;
+            $attributeModel = $attributeModels[$attr['aid']];
+            $saleAttr->aid  = $attributeModel->id;
             $saleAttr->name = $attributeModel->name;
             $saleAttr->unit = $attributeModel->unit;
             $values         = $attr['values'] ?? [];
 
             // 查询属性的值
-            $attrValues = $this->valueRepository->findByIdsInAttribute($saleAttr->pid,
+            $attrValues = $this->valueRepository->findByIdsInAttribute($saleAttr->aid,
                 collect($values)->pluck('vid')->toArray())->keyBy('id');
 
             $saleAttr->values = collect();
@@ -253,10 +253,10 @@ class ProductAttributeValidateService
         $attributesArray = $this->attributeFormatter->toArray($attributesString);
         $labels          = [];
         foreach ($attributesArray as $attribute) {
-            $pid = $attribute['pid'];
+            $aid = $attribute['aid'];
             $vid = $attribute['vid'][0];
 
-            $attributeItem = $saleAttrs->where('pid', $pid)->first();
+            $attributeItem = $saleAttrs->where('aid', $aid)->first();
 
             if (blank($attributeItem)) {
                 throw new ProductAttributeException('属性不存在');
@@ -268,7 +268,7 @@ class ProductAttributeValidateService
                 throw new ProductAttributeException('属性值不存在');
             }
             $labels[] = [
-                'pid'   => $attributeItem->pid,
+                'aid'   => $attributeItem->aid,
                 'vid'   => $value->vid,
                 'name'  => $attributeItem->name,
                 'value' => $value->name,

@@ -22,17 +22,17 @@ class ProductAttributeValueRepository extends Repository implements ProductAttri
     /**
      * 在指定属性中根据名称查找属性值
      */
-    public function findByNameInAttribute(int $pid, string $name)
+    public function findByNameInAttribute(int $aid, string $name)
     {
-        return static::$modelClass::where('pid', $pid)->where('name', $name)->first();
+        return static::$modelClass::where('aid', $aid)->where('name', $name)->first();
     }
 
     /**
      * 在指定属性中根据ID数组查找属性值列表
      */
-    public function findByIdsInAttribute(int $pid, array $ids)
+    public function findByIdsInAttribute(int $aid, array $ids)
     {
-        return $this->query()->where('pid', $pid)->whereIn('id', $ids)->get();
+        return $this->query()->where('aid', $aid)->whereIn('id', $ids)->get();
     }
 
     /**
@@ -42,7 +42,7 @@ class ProductAttributeValueRepository extends Repository implements ProductAttri
     {
         return [
             AllowedFilter::exact('id'),
-            AllowedFilter::exact('pid'),
+            AllowedFilter::exact('aid'),
             AllowedFilter::partial('name'),
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
