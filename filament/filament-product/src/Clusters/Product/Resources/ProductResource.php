@@ -387,9 +387,7 @@ class ProductResource extends Resource
                                                 ->label(__('red-jasmine-product::product.attrs.alias'))
                                                 ->hiddenLabel()
                                                 ->placeholder('请输入别名')
-                                                ->maxLength(30)
-                                       ,
-                                   ])
+                                                ->maxLength(30) ])
                                    ->hiddenLabel()
                                    ->addAction(function (Action $action, Get $get, Set $set, $state) {
 
@@ -420,15 +418,25 @@ class ProductResource extends Resource
                                                           'name'  => $attributeValue->name,
                                                       ];
                                                   }
-                                                  $values = $get('values');
+                                                  $values = $get('values') ?? [];
+                                                  // 确保是数组类型
+                                                  if (!is_array($values)) {
+                                                      $values = [];
+                                                  }
                                                   array_push($values, ...$items);
+                                                  // 重新索引并过滤空值
+                                                  $values = array_values(array_filter($values, function($item) {
+                                                      return is_array($item) && isset($item['vid']) && !empty($item['vid']);
+                                                  }));
 
                                                   $set('values', $values, shouldCallUpdatedHooks: true);
                                               });
 
                                    })
                                    ->columnSpanFull()
+                                   ->deletable(true)
                                    ->minItems(1)
+                                   ->grid(4)
                                    ->default([])
                                    ->reorderable(false)
 
@@ -438,36 +446,72 @@ class ProductResource extends Resource
                        ])
                        ->addAction(function (Action $action, Get $get, Set $set) {
                            $action->icon(Heroicon::Plus)
-                                  ->label('选择销售属性')
+                                  ->label('快速添加销售属性')
                                   ->schema([
                                       Select::make('aid')
                                             ->label(__('red-jasmine-product::product.attrs.aid'))
+                                            ->live()
                                             ->required()
                                             ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
                                             ->searchable()
                                             ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
-                                                "%{$search}%")
-                                                                                                                  ->limit(50)
-                                                                                                                  ->pluck('name', 'id')
-                                                                                                                  ->toArray()
-                                            ),
+                                                "%{$search}%") ),
+
+                                      CheckboxList::make('vids')
+                                                  ->label(__('red-jasmine-product::product.attrs.values'))
+                                                  ->columns(6)
+                                                  ->required()
+                                                  ->options(fn(Get $get) => $get('aid')
+                                                      ? ProductAttributeValue::where('aid', $get('aid'))
+                                                          ->pluck('name', 'id')
+                                                          ->toArray()
+                                                      : []
+                                                  )
+                                                  ->hidden(fn(Get $get) => !$get('aid')),
                                   ])
                                   ->action(function (array $data) use ($get, $set) : void {
                                       $aid = $data['aid'] ?? null;
-                                      if ($aid) {
+                                      $vids = $data['vids'] ?? [];
+
+                                      if ($aid && !empty($vids)) {
                                           $attribute = ProductAttribute::find($aid);
                                           if ($attribute) {
-                                              $saleAttrs   = $get('sale_attrs') ?? [];
+                                              // 获取选中的属性值
+                                              $attributeValues = ProductAttributeValue::select(['id', 'name'])
+                                                  ->whereIn('id', $vids)
+                                                  ->get();
+
+                                              // 构建属性值列表
+                                              $values = [];
+                                              foreach ($attributeValues as $attrValue) {
+                                                  $values[] = [
+                                                      'vid'   => (string) $attrValue->id,
+                                                      'name'  => $attrValue->name,
+                                                      'alias' => '',
+                                                  ];
+                                              }
+
+                                              // 添加到销售属性列表
+                                              $saleAttrs = $get('sale_attrs') ?? [];
+                                              // 确保是数组类型
+                                              if (!is_array($saleAttrs)) {
+                                                  $saleAttrs = [];
+                                              }
                                               $saleAttrs[] = [
                                                   'aid'    => (string) $attribute->id,
                                                   'name'   => $attribute->name,
-                                                  'values' => [],
+                                                  'values' => $values,
                                               ];
+                                              // 重新索引并过滤空值
+                                              $saleAttrs = array_values(array_filter($saleAttrs, function($item) {
+                                                  return is_array($item) && isset($item['aid']) && !empty($item['aid']);
+                                              }));
                                               $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
                                           }
                                       }
                                   });
                        })
+                       ->deletable(true)
                        ->default([])
                        ->inlineLabel(false)
                        ->columnSpan('full')
