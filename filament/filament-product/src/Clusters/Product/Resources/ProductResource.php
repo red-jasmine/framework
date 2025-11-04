@@ -305,7 +305,6 @@ class ProductResource extends Resource
                                      }, $saleAttrs);
 
 
-
                                      $oldSku = $get('variants') ?? [];
                                      if ($oldSku === null) {
                                          $oldSku = [];
@@ -334,9 +333,9 @@ class ProductResource extends Resource
                                          $variants[]        = $sku;
                                      }
 
-                                     $set('variants', $variants);
+                                     $set('variants', $variants, shouldCallUpdatedHooks: true);
                                  } catch (Throwable $throwable) {
-                                     $set('variants', []);
+                                     $set('variants', [], shouldCallUpdatedHooks: true);
                                  }
                              }),
 
@@ -359,30 +358,28 @@ class ProductResource extends Resource
                        ])
                        ->label(__('red-jasmine-product::product.fields.sale_attrs'))
                        ->schema([
-                           Select::make('pid')
+                           Hidden::make('pid')
                                  ->label(__('red-jasmine-product::product.attrs.pid'))
-                                 ->live()
-                                 ->columns(1)
                                  ->required()
-                                 ->columnSpan(1)
-                                 ->disabled(fn($state) => $state)
                                  ->dehydrated()
-                                 ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
-                                 ->searchable()
-                                 ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name',
-                                     'like', "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
-                                 ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name')),
+                           ,
+
+                           TextInput::make('name')
+                                    ->label(__('red-jasmine-product::product.attrs.pid'))
+                                    ->readOnly()
+                                    ->required()
+                                    ->columnSpan(1),
 
                            Repeater::make('values')
-                               ->table([
-                                   Repeater\TableColumn::make('属性值'),
-                                   Repeater\TableColumn::make('别名'),
-                               ])
+                                   ->table([
+                                       Repeater\TableColumn::make('属性值'),
+                                       Repeater\TableColumn::make('别名'),
+                                   ])
                                    ->label(__('red-jasmine-product::product.attrs.values'))
                                    ->schema([
                                        Hidden::make('vid')
                                              ->label(__('red-jasmine-product::product.attrs.alias'))
-                                           ,
+                                       ,
                                        TextInput::make('name')
                                                 ->label(__('red-jasmine-product::product.attrs.alias'))
                                                 ->readOnly(),
@@ -394,27 +391,18 @@ class ProductResource extends Resource
                                        ,
                                    ])
                                    ->hiddenLabel()
-                                   ->addAction(function (Action $action, Get $get, Set $set,$state) {
+                                   ->addAction(function (Action $action, Get $get, Set $set, $state) {
 
                                        $action->icon(Heroicon::Envelope)
                                               ->schema([
                                                   CheckboxList::make('vid')
                                                               ->columns(6)
                                                               ->label(__('red-jasmine-product::product.attrs.vid'))
-                                                                // ->searchable()
                                                               ->required()
                                                               ->hiddenLabel()
-                                                            //->options(fn()=>dd($get('pid')))
-                                                              ->options(fn() => ProductAttributeValue::where('pid',
-                                                          $get('pid'))->pluck('name', 'id')->toArray())
-
-                                                  // ->getSearchResultsUsing(fn(string $search) : array => ProductAttributeValue::where('name', 'like',
-                                                  //     "%{$search}%")->limit(50)->pluck('name',
-                                                  //     'id')->toArray())
-                                                  // ->getOptionLabelUsing(fn(
-                                                  //     $value,
-                                                  //     Get $get
-                                                  // ) : ?string => $get('name'))
+                                                              ->options(fn() => ProductAttributeValue::where('pid', $get('pid'))
+                                                                                                     ->pluck('name', 'id')
+                                                                                                     ->toArray())
                                                   ,
                                               ])
                                               ->action(function (array $data, array $arguments, Repeater $component) use (
@@ -435,7 +423,7 @@ class ProductResource extends Resource
                                                   $values = $get('values');
                                                   array_push($values, ...$items);
 
-                                                  $set('values', $values, shouldCallUpdatedHooks:true);
+                                                  $set('values', $values, shouldCallUpdatedHooks: true);
                                               });
 
                                    })
@@ -443,11 +431,43 @@ class ProductResource extends Resource
                                    ->minItems(1)
                                    ->default([])
                                    ->reorderable(false)
-                                   ->hidden(fn(Get $get) => !$get('pid'))
+
                            ,
 
 
                        ])
+                       ->addAction(function (Action $action, Get $get, Set $set) {
+                           $action->icon(Heroicon::Plus)
+                                  ->label('选择销售属性')
+                                  ->schema([
+                                      Select::make('pid')
+                                            ->label(__('red-jasmine-product::product.attrs.pid'))
+                                            ->required()
+                                            ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
+                                            ->searchable()
+                                            ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
+                                                "%{$search}%")
+                                                                                                                  ->limit(50)
+                                                                                                                  ->pluck('name', 'id')
+                                                                                                                  ->toArray()
+                                            ),
+                                  ])
+                                  ->action(function (array $data) use ($get, $set) : void {
+                                      $pid = $data['pid'] ?? null;
+                                      if ($pid) {
+                                          $attribute = ProductAttribute::find($pid);
+                                          if ($attribute) {
+                                              $saleAttrs   = $get('sale_attrs') ?? [];
+                                              $saleAttrs[] = [
+                                                  'pid'    => (string) $attribute->id,
+                                                  'name'   => $attribute->name,
+                                                  'values' => [],
+                                              ];
+                                              $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
+                                          }
+                                      }
+                                  });
+                       })
                        ->default([])
                        ->inlineLabel(false)
                        ->columnSpan('full')
@@ -465,15 +485,15 @@ class ProductResource extends Resource
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
                                Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->markAsRequired()->width('120px'),
                                // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
                                // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.size')),
                                // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
@@ -499,7 +519,7 @@ class ProductResource extends Resource
                            ,
                            TextInput::make('package_quantity')
                                     ->label(__('red-jasmine-product::product.fields.package_quantity'))
-                                    ->numeric()
+                                    ->integer()
                                     ->default(1)
                                     ->minValue(1)
                                     ->placeholder('每个包装单位包含的数量'),

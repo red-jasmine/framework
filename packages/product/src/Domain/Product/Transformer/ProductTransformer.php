@@ -147,10 +147,6 @@ class ProductTransformer
                     $product->addVariant($variant);
                 });
 
-
-                // 统计项
-
-
                 // 加入默认规格
                 $defaultVariant = $product->getDefaultVariant();
 
@@ -159,7 +155,6 @@ class ProductTransformer
                 $defaultVariant->setDeleted();
 
                 $product->addVariant($defaultVariant);
-
                 break;
             case false: // 单规格
 

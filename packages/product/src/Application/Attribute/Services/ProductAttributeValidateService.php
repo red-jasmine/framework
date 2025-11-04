@@ -289,10 +289,11 @@ class ProductAttributeValidateService
     public function validateVariants(Collection $saleAttrs, Collection $variants) : Collection
     {
 
-        $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
-            JSON_THROW_ON_ERROR));
+        $saleAttrsData = json_decode($saleAttrs->toJson(), true, 512, JSON_THROW_ON_ERROR);
 
-        $skuAttributes = $variants->pluck('propertiesSequence')->unique()->toArray();
+        $crossJoinString = $this->attributeFormatter->crossJoinToString($saleAttrsData);
+
+        $skuAttributes = $variants->pluck('attrsSequence')->unique()->toArray();
 
 
         // 对比数量
@@ -308,7 +309,6 @@ class ProductAttributeValidateService
 
 
         $diff = collect($crossJoinString)->diff($skuAttributes);
-
 
         if ($diff->count() > 0) {
             throw new ProductAttributeException('cross join too many attributes');
