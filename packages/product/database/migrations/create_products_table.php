@@ -39,14 +39,14 @@ return new class extends Migration {
 
 
             // 类目信息
-            $table->unsignedBigInteger('category_id')->default(0)->comment('类目ID');
-            $table->unsignedBigInteger('brand_id')->default(0)->comment('品牌ID');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('类目ID');
+            $table->unsignedBigInteger('brand_id')->nullable()->comment('品牌ID');
             $table->string('model_code', 64)->nullable()->comment('型号编码');
             $table->string('spu')->nullable()->comment('商品编码');
             // 类目标准商品ID
             $table->unsignedBigInteger('standard_product_id')->nullable()->comment('类目标品ID');
             // 商家分组
-            $table->unsignedBigInteger('product_group_id')->default(0)->comment('商品分组');
+            $table->unsignedBigInteger('product_group_id')->nullable()->comment('商品分组');
             // 运费
             // 是否需要物流 requires_shipping TODO
             $table->string('delivery_methods')->nullable()->comment(ShippingTypeEnum::comments('配送方式'));

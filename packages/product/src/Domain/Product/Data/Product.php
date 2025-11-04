@@ -78,20 +78,20 @@ class Product extends Data
     // 发货时间
     public int $deliveryTime = 0;
     // 排序（可选）
-    public ?int $sort = 0;
+    public int $sort = 0;
     // SPU ID（可选）
     public ?int $spuId = null;
     // 类别ID（可选）
-    public int $categoryId = 0;
+    public ?int $categoryId = null;
     // 品牌ID（可选）
-    public int $brandId = 0;
+    public ?int $brandId = null;
     // 产品型号（可选）
     public ?string $modelCode = null;
     /**
      * 产品分组ID
-     * @var int
+     * @var ?int
      */
-    public int $productGroupId = 0;
+    public ?int $productGroupId = null;
 
     public array $extendProductGroups = [];
     public array $tags                = [];
@@ -152,7 +152,7 @@ class Product extends Data
     public ?string $detail = null;
 
     /**
-     * 基础属性
+     *  图片
      * @var Medium[]|null
      */
     public ?array $images = null;
