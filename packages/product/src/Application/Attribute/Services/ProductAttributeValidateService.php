@@ -172,10 +172,14 @@ class ProductAttributeValidateService
         if (count($attributes) <= 0) {
             return [];
         }
+        $saleAttrsData = json_decode($saleAttrs->toJson(), true, 512, JSON_THROW_ON_ERROR);
 
-        $crossJoinString = $this->attributeFormatter->crossJoinToString(json_decode($saleAttrs->toJson(), true, 512,
-            JSON_THROW_ON_ERROR));
+        $crossJoinString = $this->attributeFormatter->crossJoinToString($saleAttrsData);
+
+
+
         $crossJoin       = [];
+
         foreach ($crossJoinString as $attributeString) {
             $crossJoin[$attributeString] = $this->buildAttrName($saleAttrs, $attributeString);
         }
@@ -263,8 +267,6 @@ class ProductAttributeValidateService
             if (blank($value)) {
                 throw new ProductAttributeException('属性值不存在');
             }
-
-
             $labels[] = [
                 'pid'   => $attributeItem->pid,
                 'vid'   => $value->vid,

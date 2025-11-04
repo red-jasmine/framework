@@ -304,13 +304,14 @@ class ProductResource extends Resource
                                          return $item;
                                      }, $saleAttrs);
 
+
+
                                      $oldSku = $get('variants') ?? [];
                                      if ($oldSku === null) {
                                          $oldSku = [];
                                      }
                                      $service   = app(ProductAttributeValidateService::class);
                                      $crossJoin = $service->crossJoin($saleAttrs);
-
 
                                      $oldSku = collect($oldSku)->keyBy('attrs_sequence');
 
@@ -320,6 +321,7 @@ class ProductResource extends Resource
                                          $sku               = $oldSku[$properties] ?? [
                                              'attrs_sequence' => $properties,
                                              'attrs_name'     => $propertyName,
+                                             'image'          => null,
                                              'price'          => null,
                                              'market_price'   => null,
                                              'cost_price'     => null,
@@ -364,6 +366,7 @@ class ProductResource extends Resource
                                  ->required()
                                  ->columnSpan(1)
                                  ->disabled(fn($state) => $state)
+                                 ->dehydrated()
                                  ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
                                  ->searchable()
                                  ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name',
@@ -371,7 +374,6 @@ class ProductResource extends Resource
                                  ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name')),
 
                            Repeater::make('values')
-                               ->live()
                                ->table([
                                    Repeater\TableColumn::make('属性值'),
                                    Repeater\TableColumn::make('别名'),
@@ -380,7 +382,6 @@ class ProductResource extends Resource
                                    ->schema([
                                        Hidden::make('vid')
                                              ->label(__('red-jasmine-product::product.attrs.alias'))
-                                           ->live()
                                            ,
                                        TextInput::make('name')
                                                 ->label(__('red-jasmine-product::product.attrs.alias'))
@@ -393,17 +394,17 @@ class ProductResource extends Resource
                                        ,
                                    ])
                                    ->hiddenLabel()
-                                   ->addAction(function (Action $action, Get $get, Set $set) {
+                                   ->addAction(function (Action $action, Get $get, Set $set,$state) {
 
                                        $action->icon(Heroicon::Envelope)
                                               ->schema([
                                                   CheckboxList::make('vid')
                                                               ->columns(6)
                                                               ->label(__('red-jasmine-product::product.attrs.vid'))
-                                                      // ->searchable()
+                                                                // ->searchable()
                                                               ->required()
                                                               ->hiddenLabel()
-                                                      //->options(fn()=>dd($get('pid')))
+                                                            //->options(fn()=>dd($get('pid')))
                                                               ->options(fn() => ProductAttributeValue::where('pid',
                                                           $get('pid'))->pluck('name', 'id')->toArray())
 
@@ -418,7 +419,8 @@ class ProductResource extends Resource
                                               ])
                                               ->action(function (array $data, array $arguments, Repeater $component) use (
                                                   $set,
-                                                  $get
+                                                  $get,
+                                                  $state
                                               ) : void {
                                                   $vidList = $data['vid'] ?? [];
                                                   $vidList = ProductAttributeValue::select(['name', 'id'])->find($vidList);
@@ -432,7 +434,8 @@ class ProductResource extends Resource
                                                   }
                                                   $values = $get('values');
                                                   array_push($values, ...$items);
-                                                  $set('values', $values);
+
+                                                  $set('values', $values, shouldCallUpdatedHooks:true);
                                               });
 
                                    })
@@ -446,7 +449,6 @@ class ProductResource extends Resource
 
                        ])
                        ->default([])
-                       ->addActionAlignment(Alignment::Start)
                        ->inlineLabel(false)
                        ->columnSpan('full')
                        ->reorderable(false);
@@ -485,7 +487,7 @@ class ProductResource extends Resource
                            FileUpload::make('image')->image()->panelLayout('compact'),
                            TextInput::make('attrs_name')->readOnly(),
                            TextInput::make('sku'),
-                           TextInput::make('price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('price')->required()->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('market_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('stock')->minValue(0)->integer()->required(),
