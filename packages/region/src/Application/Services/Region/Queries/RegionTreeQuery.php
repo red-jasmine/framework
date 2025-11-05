@@ -6,10 +6,18 @@ use RedJasmine\Support\Domain\Data\Queries\Query;
 
 class RegionTreeQuery extends Query
 {
+    /**
+     * 国家代码 ISO 3166-1 alpha-2
+     */
+    public string $countryCode = 'CN';
 
-    public string $countryCode = 'CHN';
-    public int    $level       = 3;
-    public ?array $type        = [];
+    /**
+     * 树层级
+     */
+    public int $level = 3;
 
-
+    /**
+     * 类型过滤
+     */
+    public ?array $type = [];
 }

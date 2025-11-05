@@ -45,8 +45,9 @@ class CountryRepository extends Repository implements CountryRepositoryInterface
     protected function allowedFilters($query = null): array
     {
         return [
-            AllowedFilter::exact('name'),
             AllowedFilter::exact('code'),
+            AllowedFilter::exact('iso_alpha_3'),
+            AllowedFilter::exact('name'),
             AllowedFilter::exact('region'),
             AllowedFilter::exact('native'),
             AllowedFilter::exact('currency'),

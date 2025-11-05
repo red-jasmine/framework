@@ -8,16 +8,11 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('countries', function (Blueprint $table) {
-            $table->string('code', 3)->primary()->comment('code:ISO3166-3');
-            $table->string('name', 64);
-            $table->string('native', 64)->nullable();
-            $table->string('region', 64)->nullable();
-            $table->string('currency', 64);
-            $table->string('phone_code', 32)->nullable()->comment('电话区号');
-            $table->decimal('longitude', 11, 8)->nullable();
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->json('timezones')->nullable();
-            $table->json('translations')->nullable();
+            $table->string('code', 2)->primary()->comment('国家代码 ISO 3166-1 alpha-2');
+            $table->string('iso_alpha_3', 3)->unique()->comment('国家代码 ISO 3166-1 alpha-3');
+            $table->string('name')->comment('名称');
+            $table->string('region', 64)->nullable()->comment('大区');
+            $table->string('currency', 3)->comment('货币');
             $table->timestamps();
             $table->index('name', 'idx_name');
             $table->index('region', 'idx_region');

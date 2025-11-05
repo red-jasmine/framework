@@ -6,8 +6,13 @@ use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 class RegionChildrenQuery extends PaginateQuery
 {
-
+    /**
+     * 国家代码 ISO 3166-1 alpha-2
+     */
     public ?string $countryCode = null;
 
-    public string $parentCode = '0';
+    /**
+     * 父级编码
+     */
+    public string $parentCode = '';
 }

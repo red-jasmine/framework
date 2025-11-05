@@ -12,6 +12,15 @@ use RedJasmine\Support\Domain\Models\Traits\ModelTree;
 
 
 /**
+ * 行政区划模型
+ *
+ * @property string $code 代码
+ * @property string|null $parent_code 父级编码
+ * @property string $country_code 国家代码 ISO 3166-1 alpha-2
+ * @property RegionTypeEnum $type 类型
+ * @property string $name 名称
+ * @property string|null $region 大区
+ * @property int $level 树层级
  * @property int $tree_height
  */
 class Region extends Model
@@ -32,15 +41,13 @@ class Region extends Model
 
     protected $keyType = 'string';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
 
     protected function casts() : array
     {
         return [
-            'type'         => RegionTypeEnum::class,
-            'timezones'    => 'array',
-            'translations' => 'array'
+            'type' => RegionTypeEnum::class,
         ];
     }
 
@@ -53,8 +60,6 @@ class Region extends Model
         'level',
         'phone_code',
         'country_code',
-        'timezones',
-        'translations',
     ];
 
     // 父级ID字段名称，默认值为 parent_id
@@ -65,12 +70,20 @@ class Region extends Model
     // 标题字段名称，默认值为 title
     protected string $titleColumn = 'name';
 
-    public mixed $defaultParentId = '0';
+    public mixed $defaultParentId = '';
 
 
-    public function scopeLevel(Builder $query, int $height = 3)
+    public function scopeLevel(Builder $query, int $level = 3)
     {
-        return $query->where('level', '<=', $height);
+        return $query->where('level', '<=', $level);
+    }
+
+    /**
+     * 所属国家
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 
 }
