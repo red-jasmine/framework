@@ -10,7 +10,7 @@ enum RegionTypeEnum: string
     use EnumsHelper;
 
 
-    case  COUNTRY = 'country'; // 国家
+    // case  COUNTRY = 'country'; // 国家
     case  PROVINCE = 'province'; // 省
     case  CITY = 'city'; // 城市
     case  DISTRICT = 'district'; // 县市区
@@ -20,7 +20,7 @@ enum RegionTypeEnum: string
     public static function labels() : array
     {
         return [
-            self::COUNTRY->value  => '国家',
+            // self::COUNTRY->value  => '国家',
             self::PROVINCE->value => '省',
             self::CITY->value     => '城市',
             self::DISTRICT->value => '县区',

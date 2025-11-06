@@ -58,7 +58,6 @@ class Region extends Model
         'code',
         'type',
         'level',
-        'phone_code',
         'country_code',
     ];
 
@@ -76,6 +75,22 @@ class Region extends Model
     public function scopeLevel(Builder $query, int $level = 3)
     {
         return $query->where('level', '<=', $level);
+    }
+
+    /**
+     * 父级区划关系
+     */
+    public function parent()
+    {
+        return $this->belongsTo(static::class, 'parent_code', 'code');
+    }
+
+    /**
+     * 子级区划关系
+     */
+    public function children()
+    {
+        return $this->hasMany(static::class, 'parent_code', 'code');
     }
 
 }

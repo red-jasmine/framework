@@ -47,10 +47,5 @@ class RegionData extends Data
      * 树层级
      */
     public int $level = 0;
-
-    /**
-     * 电话区号
-     */
-    public ?string $phoneCode = null;
 }
 

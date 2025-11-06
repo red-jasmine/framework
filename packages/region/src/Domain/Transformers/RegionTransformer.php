@@ -32,7 +32,6 @@ class RegionTransformer implements TransformerInterface
         $model->name = $data->name;
         $model->region = $data->region;
         $model->level = $data->level;
-        $model->phone_code = $data->phoneCode;
 
         return $model;
     }
