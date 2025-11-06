@@ -4,13 +4,13 @@ namespace RedJasmine\FilamentCore\Forms\Fields;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Utilities\Get;
 use Cknow\Money\Money;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Field;
 use Filament\Support\RawJs;
-use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Contracts\Support\Htmlable;
 use Money\Currency;
 
@@ -55,7 +55,7 @@ class MoneyInput extends Field
 
         $this->schema(
             [
-                Cluster::make([
+                FusedGroup::make([
                     Select::make('currency')
                                            ->columnSpan(3)
                                            ->default(Money::getDefaultCurrency())
