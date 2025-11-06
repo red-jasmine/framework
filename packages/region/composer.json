@@ -12,7 +12,8 @@
     "homepage": "https://github.com/red-jasmine/region",
     "keywords": ["Laravel", "Region"],
     "require": {
-        "red-jasmine/support": "1.0.x-dev"
+        "red-jasmine/support": "1.0.x-dev",
+        "symfony/intl": "^7.3"
     },
     "require-dev": {
 

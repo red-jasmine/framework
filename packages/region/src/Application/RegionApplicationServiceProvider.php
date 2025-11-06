@@ -3,9 +3,8 @@
 namespace RedJasmine\Region\Application;
 
 use Illuminate\Support\ServiceProvider;
-use RedJasmine\Region\Domain\Repositories\CountryRepositoryInterface;
+use RedJasmine\Region\Application\Services\Country\CountryService;
 use RedJasmine\Region\Domain\Repositories\RegionRepositoryInterface;
-use RedJasmine\Region\Infrastructure\Repositories\CountryRepository;
 use RedJasmine\Region\Infrastructure\Repositories\RegionRepository;
 
 /**
@@ -19,6 +18,8 @@ class RegionApplicationServiceProvider extends ServiceProvider
     {
         // 统一仓库接口绑定，支持读写操作
         $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
-        $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
+        
+        // 注册国家服务
+        $this->app->singleton(CountryService::class);
     }
 }

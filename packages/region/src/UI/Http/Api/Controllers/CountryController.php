@@ -2,36 +2,48 @@
 
 namespace RedJasmine\Region\UI\Http\Api\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Region\Application\Services\Country\CountryApplicationService;
+use RedJasmine\Region\Application\Services\Country\CountryService;
 use RedJasmine\Region\Application\Services\Country\Queries\CountryPaginateQuery;
-use RedJasmine\Region\Domain\Models\Country;
 use RedJasmine\Region\UI\Http\Api\Resources\CountryResource;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
-use RedJasmine\Support\UI\Http\Controllers\RestQueryControllerActions;
 
 class CountryController extends Controller
 {
-
-
-    use RestQueryControllerActions;
-
-
-    public function authorize($ability, $arguments = [])
-    {
-        return true;
-    }
-
-    public static string $modelClass         = Country::class;
-    public static string $resourceClass      = CountryResource::class;
-    public static string $paginateQueryClass = CountryPaginateQuery::class;
-
     public function __construct(
-        protected CountryApplicationService $service
+        protected CountryService $service
     ) {
     }
 
+    /**
+     * 获取国家列表（分页）
+     */
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        $query = CountryPaginateQuery::from($request->all());
+        $locale = $request->input('locale', app()->getLocale());
+        
+        $paginator = $this->service->paginate($query, $locale);
+        
+        return CountryResource::collection($paginator);
+    }
 
+    /**
+     * 获取单个国家信息
+     */
+    public function show(string $code, Request $request): CountryResource|JsonResponse
+    {
+        $locale = $request->input('locale', app()->getLocale());
+        
+        $country = $this->service->find($code, $locale);
+        
+        if (!$country) {
+            return response()->json([
+                'message' => '国家不存在'
+            ], 404);
+        }
+        
+        return new CountryResource($country);
+    }
 }

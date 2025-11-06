@@ -3,32 +3,26 @@
 namespace RedJasmine\Region\UI\Http\Api\Resources;
 
 use Illuminate\Http\Request;
-use RedJasmine\Region\Domain\Models\Country;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin Country
+ * 国家资源
  */
 class CountryResource extends JsonResource
 {
-
-
-    public function toArray(Request $request) : array
+    public function toArray(Request $request): array
     {
+        // 如果是数组，直接返回
+        if (is_array($this->resource)) {
+            return $this->resource;
+        }
+
+        // 如果是对象，按属性访问
         return [
-            'code'         => $this->code,
-            'iso_alpha_3'  => $this->iso_alpha_3,
-            'name'         => $this->name,
-            'native'       => $this->native,
-            'region'       => $this->region,
-            'currency'     => $this->currency,
-            'phone_code'   => $this->phone_code,
-            'longitude'    => $this->longitude,
-            'latitude'     => $this->latitude,
-            'timezones'    => $this->timezones,
-            'translations' => $this->translations,
+            'code'         => $this->code ?? null,
+            'iso_alpha_3'  => $this->iso_alpha_3 ?? null,
+            'name'         => $this->name ?? null,
+            'native'       => $this->native ?? null,
         ];
-
     }
-
 }

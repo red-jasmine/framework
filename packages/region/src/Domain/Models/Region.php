@@ -78,12 +78,4 @@ class Region extends Model
         return $query->where('level', '<=', $level);
     }
 
-    /**
-     * 所属国家
-     */
-    public function country()
-    {
-        return $this->belongsTo(Country::class, 'country_code', 'code');
-    }
-
 }
