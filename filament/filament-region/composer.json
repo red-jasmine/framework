@@ -1,0 +1,62 @@
+{
+    "name": "red-jasmine/filament-region",
+    "description": "Filament plugin for region management with country selector",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament",
+        "filament-region",
+        "region",
+        "country"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-region",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-region/issues",
+        "source": "https://github.com/red-jasmine/filament-region"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/region": "1.0.x-dev"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentRegion\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentRegion\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentRegion\\FilamentRegionServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

@@ -16,6 +16,7 @@ use RedJasmine\Support\Exceptions\AbstractException;
  * @property string $createCommand
  * @property string $updateCommand
  * @property string $deleteCommand
+ * @property string $findQuery
  * @property string $dataClass
  */
 trait ResourcePageHelper
@@ -173,7 +174,10 @@ trait ResourcePageHelper
                 $queryService->repository->withQuery(fn($query) => $query->onlyOwner($owner));
             }
         }
-        $model = $queryService->find($resource::callFindQuery(FindQuery::make($key)));
+        $findQuery = static::getFindQuery()::make([]);
+        $findQuery->setKey($key);
+
+        $model = $queryService->find($resource::callFindQuery($findQuery));
 
         return $resource::callResolveRecord($model);
 
@@ -227,5 +231,9 @@ trait ResourcePageHelper
         return static::$updateCommand ?? static::$dataClass;
     }
 
+    public static function getFindQuery():string
+    {
+        return  static::$resource::$findQuery ?? FindQuery::class;
+    }
 
 }
