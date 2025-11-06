@@ -21,10 +21,13 @@ class CountryService
     public function all(string $locale = 'zh_CN'): array
     {
         $countries = [];
-        $codes = Countries::getCountryCodes();
+        $codes = Countries::getNames($locale);
+        foreach ($codes as $code=> $name) {
 
-        foreach ($codes as $code) {
-            $countries[] = $this->getCountryData($code, $locale);
+            $countries[] = [
+                'code'=>$code,
+                'name'=>$name,
+            ];
         }
 
         return $countries;

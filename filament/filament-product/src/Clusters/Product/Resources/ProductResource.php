@@ -60,6 +60,7 @@ use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ListProducts;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ViewProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Stock\StockTableAction;
+use RedJasmine\FilamentRegion\Forms\Components\CountrySelect;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommand;
@@ -290,6 +291,8 @@ class ProductResource extends Resource
                              ->onColor('success')
                              ->offColor('gray')
                              ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）'),
+
+
 
                        static::saleAttrs()
                              ->visible(fn(Get $get) => $get('has_variants'))
@@ -916,6 +919,10 @@ class ProductResource extends Resource
                    ->icon('heroicon-o-list-bullet')
                    ->collapsible()
                    ->schema([
+
+                       CountrySelect::make('origin_country')
+                                    ->label(__('red-jasmine-product::product.fields.origin_country')),
+
                        Fieldset::make('basicProps')
                                ->label(__('red-jasmine-product::product.fields.basic_attrs'))
                                ->columns(1)

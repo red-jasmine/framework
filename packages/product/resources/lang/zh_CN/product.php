@@ -107,6 +107,7 @@ return [
         'version'                   => '版本',
         'tags'                      => '标签',
         'services'                  => '服务保障',
+        'origin_country'            => '原产国',
     ],
 
     'attrs' => [
