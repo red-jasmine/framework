@@ -14,5 +14,12 @@ class RegionChildrenQuery extends PaginateQuery
     /**
      * 父级编码
      */
-    public string $parentCode = '';
+    public ?string $parentCode = null;
+
+    /**
+     * 地区类型
+     */
+    public ?string $type = null;
+
+    public ?int $perPage = 10000;
 }

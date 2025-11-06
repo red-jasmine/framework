@@ -55,7 +55,7 @@ class RegionRepository extends Repository implements RegionRepositoryInterface
     {
         return [
             AllowedFilter::exact('country_code'),
-            AllowedFilter::exact('parent_code'),
+            AllowedFilter::exact('parent_code')->nullable(),
             AllowedFilter::exact('code'),
             AllowedFilter::exact('type'),
             AllowedFilter::scope('level'),

@@ -31,6 +31,7 @@ use RedJasmine\Region\Domain\Data\RegionData;
 use RedJasmine\Region\Application\Services\Region\RegionApplicationService;
 use RedJasmine\Region\Domain\Enums\RegionTypeEnum;
 use RedJasmine\FilamentRegion\Forms\Components\CountrySelect;
+use RedJasmine\FilamentRegion\Forms\Components\RegionSelect;
 use Symfony\Component\Intl\Countries;
 
 class RegionResource extends Resource
@@ -58,6 +59,7 @@ class RegionResource extends Resource
     {
         return $schema
             ->components([
+                RegionSelect::make([],5),
                 CountrySelect::make('country_code')
                              ->label(__('red-jasmine-filament-region::region.fields.country_code'))
                              ->required()
