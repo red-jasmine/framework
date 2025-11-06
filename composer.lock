@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44954b44545363f35786572227fc68ff",
+    "content-hash": "86ca85732afac8d667ae515c1e411afe",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7070,7 +7070,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/address",
-                "reference": "827bfec85f2513e14e278f78d4bd85c7a95f0c89"
+                "reference": "aefa26c3ded44e53f83abcb332a3f3074f448b52"
             },
             "require": {
                 "red-jasmine/region": "1.0.x-dev",
@@ -7127,7 +7127,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/announcement",
-                "reference": "7cb799b2de633abb95323b14a2a4a8e8e3f60079"
+                "reference": "fa06549b48052787892d59ac0563e1064d030f3f"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -7181,7 +7181,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/captcha",
-                "reference": "688283d2b56d11662195425985e2839c3af7f907"
+                "reference": "53d2290ef21fe02447ad212370fd463a481b7862"
             },
             "require": {
                 "overtrue/laravel-easy-sms": "^2.1",
@@ -7246,7 +7246,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/coupon",
-                "reference": "c5ae57635fc989c746561da8fec879152d7cb900"
+                "reference": "77336a852ab862d7e10a65b3772da9c40facd3b1"
             },
             "require": {
                 "red-jasmine/ecommerce": "1.0.x-dev",
@@ -7296,7 +7296,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/distribution",
-                "reference": "7bb60ac4dd6323de731aa681a93527ffa837be7c"
+                "reference": "edfe3fba8c2dc131249f4bc0f4578acc722644d5"
             },
             "require": {
                 "red-jasmine/invitation": "^1.0.x-dev",
@@ -7375,7 +7375,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/ecommerce",
-                "reference": "c51cb8f5a264ed819364297403c87297a4a21bbf"
+                "reference": "3618f983f11b3d3ef9e269b641fef6637bf3c2fc"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -7430,7 +7430,7 @@
             "dist": {
                 "type": "path",
                 "url": "./filament/filament-core",
-                "reference": "254085a14719799ac72bfdbef3c6f0826aa0807e"
+                "reference": "80ef400b57a758d3f1ee72beafd7f02d402538dc"
             },
             "require": {
                 "codewithdennis/filament-select-tree": "*",
@@ -7510,7 +7510,7 @@
             "dist": {
                 "type": "path",
                 "url": "./filament/filament-product",
-                "reference": "624da34aa1eb3962f12cda24bfe6a639e37d5ace"
+                "reference": "c8090579155e7829c23c3453b96fbb3333fc012c"
             },
             "require": {
                 "red-jasmine/filament-core": "1.0.x-dev",
@@ -7578,12 +7578,81 @@
             }
         },
         {
+            "name": "red-jasmine/filament-region",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./filament/filament-region",
+                "reference": "2bc2b80610c979a7974fcc719d9dc0a8345abd5d"
+            },
+            "require": {
+                "red-jasmine/filament-core": "1.0.x-dev",
+                "red-jasmine/region": "1.0.x-dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\FilamentRegion\\FilamentRegionServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev",
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\FilamentRegion\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "RedJasmine\\FilamentRegion\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php ./vendor/bin/testbench package:discover --ansi"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liushoukun",
+                    "email": "liushoukun66@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Filament plugin for region management with country selector",
+            "homepage": "https://github.com/red-jasmine/filament-region",
+            "keywords": [
+                "country",
+                "filament",
+                "filament-region",
+                "laravel",
+                "red-jasmine",
+                "region"
+            ],
+            "support": {
+                "issues": "https://github.com/red-jasmine/filament-region/issues",
+                "source": "https://github.com/red-jasmine/filament-region"
+            },
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "red-jasmine/invitation",
             "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./packages/invitation",
-                "reference": "796c204e945e9bd4581385cb8b1172efa36f1b7a"
+                "reference": "ddb6e365b8b43c7dd8cf9831664b12477774b3da"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -7707,7 +7776,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/logistics",
-                "reference": "be95d73dd15f4d9e42705b06c452a4f7a69caea8"
+                "reference": "9d0797210621e5410d298eacdbcec19ed1c1c899"
             },
             "require": {
                 "red-jasmine/region": "1.0.x-dev",
@@ -7769,7 +7838,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/message",
-                "reference": "a1c73b953560e2492eee0ad0c949750b5de94177"
+                "reference": "8b54733d3bd0aa296849c0a7f2b9b39f83fd536d"
             },
             "require": {
                 "red-jasmine/support": "*",
@@ -7816,7 +7885,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/order",
-                "reference": "ee3ff37376be639606a94e20469ed4b3bf92c1f6"
+                "reference": "24b0e8acd21241280f3764df2b658e783ba772b2"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -7876,7 +7945,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/payment",
-                "reference": "c04233f16cc1b27fe27de39e38dbd2d603bb7218"
+                "reference": "c06897056c9062ce10566c881564a2ae4729d07b"
             },
             "require": {
                 "league/omnipay": "^3.2",
@@ -7939,7 +8008,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/points-mall",
-                "reference": "76f581a6f12df0644044a03ef300e1752bf740eb"
+                "reference": "18b2d27ea2df4ac954d01e0a96076f9d490a1e3c"
             },
             "require": {
                 "red-jasmine/address": "^1.0.x-dev",
@@ -8001,7 +8070,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/product",
-                "reference": "c2bc7b8e2f0184b40a2c86b5a7eac3f19db8d909"
+                "reference": "a6336cd0b387426eb94a87d1d71d1946796d8a89"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -8067,7 +8136,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/promotion",
-                "reference": "f6ccfcc6d73c65c25d0a941b5670723124642c6d"
+                "reference": "31d907b769ab7153ccbbb269b7bd086095933601"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -8155,7 +8224,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/region",
-                "reference": "0327aacca507f998c970d3d43896076dd6fb8a0b"
+                "reference": "40419fe8bced907388d59d1c762cfc1ae3578c59"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev",
@@ -8212,7 +8281,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/shop",
-                "reference": "f3cc06e6183b5fd286d5f3fdf4ffc0a79d470fae"
+                "reference": "255620228981bf50f1a3317964f32da6cf53514d"
             },
             "require": {
                 "red-jasmine/support": "^1.0",
@@ -8257,7 +8326,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/shopping",
-                "reference": "95f7d83fd01049a3a30e65950296d4feb0e6ae03"
+                "reference": "044c6588a67a92bc0685efd86987559eb3dcd445"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -8304,7 +8373,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/socialite",
-                "reference": "4e9db120823c142fb4242aa7ae3206f49fc5cdfd"
+                "reference": "43697a1ea5207bab5cdf943ef9d6114ceb5cbc56"
             },
             "require": {
                 "overtrue/laravel-socialite": "^4.1",
@@ -8387,7 +8456,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/support",
-                "reference": "9d722c5136a534486c4b4080e8f26339a1a9d4cd"
+                "reference": "366c8d1fb0afbeabc393b961e45bc6204074d672"
             },
             "require": {
                 "astrotomic/laravel-translatable": "^11.16",
@@ -8447,7 +8516,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/user",
-                "reference": "91b6fa7222f1017e7243ace672ac940bfb186884"
+                "reference": "e6127310852d327426449156591975f9f1addb6c"
             },
             "require": {
                 "red-jasmine/captcha": "1.0.x-dev",
@@ -8529,7 +8598,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/user-core",
-                "reference": "4ef56ab52a20c1096e2335a5091fc123625492ae"
+                "reference": "10ee620d23b25b448eccf43483fd6c6f3b2564bf"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -8608,7 +8677,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/wallet",
-                "reference": "fc2fd7986c351a274700f297bf6698a0fd49baf0"
+                "reference": "90ed99694eaf54e24da66dee441e41ceb8d51385"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -9956,12 +10025,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "f715d907fad0c3bac629c7459c64b5b49993c8e4"
+                "reference": "a696cb0cc2c0720cbff7a54240400e3c82e50925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/f715d907fad0c3bac629c7459c64b5b49993c8e4",
-                "reference": "f715d907fad0c3bac629c7459c64b5b49993c8e4",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a696cb0cc2c0720cbff7a54240400e3c82e50925",
+                "reference": "a696cb0cc2c0720cbff7a54240400e3c82e50925",
                 "shasum": ""
             },
             "require": {
@@ -10030,7 +10099,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-02T08:41:14+00:00"
+            "time": "2025-11-06T11:09:47+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -10038,12 +10107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "eef5bcc56e92aa8ab041583da2f0c770b1736761"
+                "reference": "b3c34d94421e47063d571b0405a60b6d6a575b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/eef5bcc56e92aa8ab041583da2f0c770b1736761",
-                "reference": "eef5bcc56e92aa8ab041583da2f0c770b1736761",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/b3c34d94421e47063d571b0405a60b6d6a575b09",
+                "reference": "b3c34d94421e47063d571b0405a60b6d6a575b09",
                 "shasum": ""
             },
             "require": {
@@ -10148,7 +10217,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-02T09:29:48+00:00"
+            "time": "2025-11-06T11:09:47+00:00"
         },
         {
             "name": "symfony/intl",
@@ -16015,6 +16084,7 @@
         "red-jasmine/ecommerce": 20,
         "red-jasmine/filament-core": 20,
         "red-jasmine/filament-product": 20,
+        "red-jasmine/filament-region": 20,
         "red-jasmine/message": 20,
         "red-jasmine/order": 20,
         "red-jasmine/payment": 20,

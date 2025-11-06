@@ -1,0 +1,49 @@
+{
+    "name": "red-jasmine/money",
+    "description": "Red Jasmine Money - 支持多种货币类型的金额处理扩展包",
+    "keywords": [
+        "laravel",
+        "money",
+        "currency",
+        "red-jasmine"
+    ],
+    "homepage": "https://github.com/red-jasmine/money",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Red Jasmine",
+            "email": "support@redjasmine.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "moneyphp/money": "^4.6",
+        "spatie/laravel-data": "^4.0|^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Money\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\Money\\MoneyServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+
