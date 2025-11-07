@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Services;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Support\Carbon;
 use Money\Currency;
 use RedJasmine\Support\Domain\Data\ApprovalData;

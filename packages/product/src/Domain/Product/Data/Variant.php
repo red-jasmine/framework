@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Support\Data\Data;
 

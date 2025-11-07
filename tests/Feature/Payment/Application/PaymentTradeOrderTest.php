@@ -1,7 +1,7 @@
 <?php
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradeCreateCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePaidCommand;
 use RedJasmine\Payment\Application\Services\Trade\Commands\TradePayingCommand;

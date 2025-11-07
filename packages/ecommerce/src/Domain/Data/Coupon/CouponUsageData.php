@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data\Coupon;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Data\Data;
 
 class CouponUsageData extends Data

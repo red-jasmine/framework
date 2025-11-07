@@ -3,7 +3,7 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;

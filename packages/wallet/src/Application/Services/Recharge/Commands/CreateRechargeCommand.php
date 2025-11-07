@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Application\Services\Recharge\Commands;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Wallet\Domain\Data\WalletRechargeData;
 

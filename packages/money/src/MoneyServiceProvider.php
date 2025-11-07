@@ -3,7 +3,11 @@
 namespace RedJasmine\Money;
 
 use Illuminate\Support\ServiceProvider;
+use Money\Currency;
+use RedJasmine\Money\Casts\CurrencyCast;
+use RedJasmine\Money\Casts\MoneyCast;
 use RedJasmine\Money\Currencies\AggregateCurrencies;
+use RedJasmine\Money\Data\Money;
 
 class MoneyServiceProvider extends ServiceProvider
 {
@@ -44,6 +48,14 @@ class MoneyServiceProvider extends ServiceProvider
 
         // 加载语言文件
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'money');
+
+        $config = $this->app->make('config');
+        $config->set('data.casts.'.Currency::class, CurrencyCast::class);
+        $config->set('data.transformers.'.Currency::class, CurrencyCast::class);
+
+
+        $config->set('data.casts.'.Money::class, MoneyCast::class);
+        $config->set('data.transformers.'.Money::class, MoneyCast::class);
     }
 
     /**

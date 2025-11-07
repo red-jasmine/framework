@@ -1,7 +1,7 @@
 '<?php
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderCreateCommand;

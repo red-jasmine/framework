@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;

@@ -140,6 +140,7 @@ class ProductTransformer
                     $variant = $product->variants
                                    ->where('attrs_sequence', $variantData->attrsSequence)
                                    ->first() ?? ProductVariant::make();
+
                     if (!$variant?->id) {
                         $variant->setUniqueIds();
                     }
@@ -149,12 +150,12 @@ class ProductTransformer
 
                 // 加入默认规格
                 $defaultVariant = $product->getDefaultVariant();
-
                 $this->setDefaultVariant($product, $defaultVariant);
-
                 $defaultVariant->setDeleted();
 
                 $product->addVariant($defaultVariant);
+
+
                 break;
             case false: // 单规格
 

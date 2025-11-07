@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86ca85732afac8d667ae515c1e411afe",
+    "content-hash": "555420dc457d6f372b30349a46fc23db",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -669,12 +669,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CodeWithDennis/filament-select-tree.git",
-                "reference": "89e782165519823019e6e7594434cbacbe55688a"
+                "reference": "6e9db026d34e95509d8d3d24138aa5ccef029473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CodeWithDennis/filament-select-tree/zipball/89e782165519823019e6e7594434cbacbe55688a",
-                "reference": "89e782165519823019e6e7594434cbacbe55688a",
+                "url": "https://api.github.com/repos/CodeWithDennis/filament-select-tree/zipball/6e9db026d34e95509d8d3d24138aa5ccef029473",
+                "reference": "6e9db026d34e95509d8d3d24138aa5ccef029473",
                 "shasum": ""
             },
             "require": {
@@ -733,7 +733,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-26T15:25:43+00:00"
+            "time": "2025-11-06T15:17:46+00:00"
         },
         {
             "name": "danharrin/date-format-converter",
@@ -2612,12 +2612,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "a7e7c8c22cdd16819fc697059df6b0e840490dfe"
+                "reference": "48fbe2181a64373f2cb3b7b666f8df7a8aebab16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/a7e7c8c22cdd16819fc697059df6b0e840490dfe",
-                "reference": "a7e7c8c22cdd16819fc697059df6b0e840490dfe",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/48fbe2181a64373f2cb3b7b666f8df7a8aebab16",
+                "reference": "48fbe2181a64373f2cb3b7b666f8df7a8aebab16",
                 "shasum": ""
             },
             "require": {
@@ -2824,7 +2824,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-11-05T22:54:57+00:00"
+            "time": "2025-11-06T15:23:09+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -3727,12 +3727,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri-components.git",
-                "reference": "06e39e6c454ffcc21a35feeae6c4023e54fc04d6"
+                "reference": "85e545ba0f1eccfe5e4c1d1f1320b4151f4ffe3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri-components/zipball/06e39e6c454ffcc21a35feeae6c4023e54fc04d6",
-                "reference": "06e39e6c454ffcc21a35feeae6c4023e54fc04d6",
+                "url": "https://api.github.com/repos/thephpleague/uri-components/zipball/85e545ba0f1eccfe5e4c1d1f1320b4151f4ffe3f",
+                "reference": "85e545ba0f1eccfe5e4c1d1f1320b4151f4ffe3f",
                 "shasum": ""
             },
             "require": {
@@ -3805,7 +3805,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-05T15:13:07+00:00"
+            "time": "2025-11-06T19:31:41+00:00"
         },
         {
             "name": "league/uri-interfaces",
@@ -4504,12 +4504,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "fa9852e9fd7be89313f492786ee643856618e112"
+                "reference": "3302bf5ce479c3b0533a9ecf64a1b935d9d96eed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/fa9852e9fd7be89313f492786ee643856618e112",
-                "reference": "fa9852e9fd7be89313f492786ee643856618e112",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/3302bf5ce479c3b0533a9ecf64a1b935d9d96eed",
+                "reference": "3302bf5ce479c3b0533a9ecf64a1b935d9d96eed",
                 "shasum": ""
             },
             "require": {
@@ -4602,7 +4602,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-02T12:16:11+00:00"
+            "time": "2025-11-06T13:34:08+00:00"
         },
         {
             "name": "nette/php-generator",
@@ -7070,7 +7070,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/address",
-                "reference": "aefa26c3ded44e53f83abcb332a3f3074f448b52"
+                "reference": "827bfec85f2513e14e278f78d4bd85c7a95f0c89"
             },
             "require": {
                 "red-jasmine/region": "1.0.x-dev",
@@ -7127,7 +7127,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/announcement",
-                "reference": "fa06549b48052787892d59ac0563e1064d030f3f"
+                "reference": "7cb799b2de633abb95323b14a2a4a8e8e3f60079"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -7181,7 +7181,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/captcha",
-                "reference": "53d2290ef21fe02447ad212370fd463a481b7862"
+                "reference": "688283d2b56d11662195425985e2839c3af7f907"
             },
             "require": {
                 "overtrue/laravel-easy-sms": "^2.1",
@@ -7246,7 +7246,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/coupon",
-                "reference": "77336a852ab862d7e10a65b3772da9c40facd3b1"
+                "reference": "c5ae57635fc989c746561da8fec879152d7cb900"
             },
             "require": {
                 "red-jasmine/ecommerce": "1.0.x-dev",
@@ -7296,7 +7296,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/distribution",
-                "reference": "edfe3fba8c2dc131249f4bc0f4578acc722644d5"
+                "reference": "7bb60ac4dd6323de731aa681a93527ffa837be7c"
             },
             "require": {
                 "red-jasmine/invitation": "^1.0.x-dev",
@@ -7375,7 +7375,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/ecommerce",
-                "reference": "3618f983f11b3d3ef9e269b641fef6637bf3c2fc"
+                "reference": "c51cb8f5a264ed819364297403c87297a4a21bbf"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -7430,7 +7430,7 @@
             "dist": {
                 "type": "path",
                 "url": "./filament/filament-core",
-                "reference": "80ef400b57a758d3f1ee72beafd7f02d402538dc"
+                "reference": "254085a14719799ac72bfdbef3c6f0826aa0807e"
             },
             "require": {
                 "codewithdennis/filament-select-tree": "*",
@@ -7510,10 +7510,11 @@
             "dist": {
                 "type": "path",
                 "url": "./filament/filament-product",
-                "reference": "c8090579155e7829c23c3453b96fbb3333fc012c"
+                "reference": "1b6dad6b55e1d086337224450625122db03a96ce"
             },
             "require": {
                 "red-jasmine/filament-core": "1.0.x-dev",
+                "red-jasmine/filament-region": "1.0.x-dev",
                 "red-jasmine/product": "1.0.x-dev"
             },
             "type": "library",
@@ -7583,7 +7584,7 @@
             "dist": {
                 "type": "path",
                 "url": "./filament/filament-region",
-                "reference": "2bc2b80610c979a7974fcc719d9dc0a8345abd5d"
+                "reference": "6ed7545595ab78c27442144a5b5a6adc47832c1c"
             },
             "require": {
                 "red-jasmine/filament-core": "1.0.x-dev",
@@ -7652,7 +7653,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/invitation",
-                "reference": "ddb6e365b8b43c7dd8cf9831664b12477774b3da"
+                "reference": "796c204e945e9bd4581385cb8b1172efa36f1b7a"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -7705,78 +7706,12 @@
             }
         },
         {
-            "name": "red-jasmine/laravel-money",
-            "version": "v8.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/red-jasmine/laravel-money.git",
-                "reference": "b06fa837b3463e1d4db7b2180b7a873b3363e168"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/red-jasmine/laravel-money/zipball/b06fa837b3463e1d4db7b2180b7a873b3363e168",
-                "reference": "b06fa837b3463e1d4db7b2180b7a873b3363e168",
-                "shasum": ""
-            },
-            "require": {
-                "ext-intl": "*",
-                "ext-json": "*",
-                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/view": "^9.0|^10.0|^11.0|^12.0",
-                "moneyphp/money": "^4.6",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "graham-campbell/testbench": "^6.1",
-                "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0",
-                "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^10.5"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cknow\\Money\\MoneyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Cknow\\Money\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ricardo Gobbo de Souza",
-                    "email": "ricardogobbosouza@yahoo.com.br"
-                }
-            ],
-            "description": "Laravel Money",
-            "homepage": "https://github.com/cknow/laravel-money",
-            "keywords": [
-                "currency",
-                "laravel",
-                "money"
-            ],
-            "support": {
-                "source": "https://github.com/red-jasmine/laravel-money/tree/v8.4.2"
-            },
-            "time": "2025-05-22T10:00:18+00:00"
-        },
-        {
             "name": "red-jasmine/logistics",
             "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./packages/logistics",
-                "reference": "9d0797210621e5410d298eacdbcec19ed1c1c899"
+                "reference": "be95d73dd15f4d9e42705b06c452a4f7a69caea8"
             },
             "require": {
                 "red-jasmine/region": "1.0.x-dev",
@@ -7838,7 +7773,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/message",
-                "reference": "8b54733d3bd0aa296849c0a7f2b9b39f83fd536d"
+                "reference": "a1c73b953560e2492eee0ad0c949750b5de94177"
             },
             "require": {
                 "red-jasmine/support": "*",
@@ -7880,12 +7815,66 @@
             }
         },
         {
+            "name": "red-jasmine/money",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/money",
+                "reference": "15041d4c4bfb6d6424bb220c54f29f0a62aff933"
+            },
+            "require": {
+                "illuminate/support": "^11.0|^12.0",
+                "moneyphp/money": "^4.6",
+                "php": "^8.2",
+                "spatie/laravel-data": "^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RedJasmine\\Money\\MoneyServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-main": "1.0.x-dev",
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RedJasmine\\Money\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Red Jasmine",
+                    "email": "support@redjasmine.com"
+                }
+            ],
+            "description": "Red Jasmine Money - 支持多种货币类型的金额处理扩展包",
+            "homepage": "https://github.com/red-jasmine/money",
+            "keywords": [
+                "currency",
+                "laravel",
+                "money",
+                "red-jasmine"
+            ],
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "red-jasmine/order",
             "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./packages/order",
-                "reference": "24b0e8acd21241280f3764df2b658e783ba772b2"
+                "reference": "ee3ff37376be639606a94e20469ed4b3bf92c1f6"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -7945,7 +7934,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/payment",
-                "reference": "c06897056c9062ce10566c881564a2ae4729d07b"
+                "reference": "c04233f16cc1b27fe27de39e38dbd2d603bb7218"
             },
             "require": {
                 "league/omnipay": "^3.2",
@@ -8008,7 +7997,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/points-mall",
-                "reference": "18b2d27ea2df4ac954d01e0a96076f9d490a1e3c"
+                "reference": "76f581a6f12df0644044a03ef300e1752bf740eb"
             },
             "require": {
                 "red-jasmine/address": "^1.0.x-dev",
@@ -8070,7 +8059,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/product",
-                "reference": "a6336cd0b387426eb94a87d1d71d1946796d8a89"
+                "reference": "c2bc7b8e2f0184b40a2c86b5a7eac3f19db8d909"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -8136,7 +8125,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/promotion",
-                "reference": "31d907b769ab7153ccbbb269b7bd086095933601"
+                "reference": "f6ccfcc6d73c65c25d0a941b5670723124642c6d"
             },
             "require": {
                 "red-jasmine/support": "^1.0"
@@ -8224,7 +8213,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/region",
-                "reference": "40419fe8bced907388d59d1c762cfc1ae3578c59"
+                "reference": "0327aacca507f998c970d3d43896076dd6fb8a0b"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev",
@@ -8281,7 +8270,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/shop",
-                "reference": "255620228981bf50f1a3317964f32da6cf53514d"
+                "reference": "f3cc06e6183b5fd286d5f3fdf4ffc0a79d470fae"
             },
             "require": {
                 "red-jasmine/support": "^1.0",
@@ -8326,7 +8315,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/shopping",
-                "reference": "044c6588a67a92bc0685efd86987559eb3dcd445"
+                "reference": "95f7d83fd01049a3a30e65950296d4feb0e6ae03"
             },
             "require": {
                 "ext-bcmath": "*",
@@ -8373,7 +8362,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/socialite",
-                "reference": "43697a1ea5207bab5cdf943ef9d6114ceb5cbc56"
+                "reference": "4e9db120823c142fb4242aa7ae3206f49fc5cdfd"
             },
             "require": {
                 "overtrue/laravel-socialite": "^4.1",
@@ -8456,12 +8445,12 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/support",
-                "reference": "366c8d1fb0afbeabc393b961e45bc6204074d672"
+                "reference": "29d31b0f42e5d24ef6ce6039a623ed2ef2716366"
             },
             "require": {
                 "astrotomic/laravel-translatable": "^11.16",
                 "illuminate/contracts": "^12.0",
-                "red-jasmine/laravel-money": "^8.4",
+                "red-jasmine/money": "1.0.x-dev",
                 "spatie/laravel-data": "^4",
                 "spatie/laravel-package-tools": "^1",
                 "spatie/laravel-query-builder": "^6"
@@ -8516,7 +8505,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/user",
-                "reference": "e6127310852d327426449156591975f9f1addb6c"
+                "reference": "91b6fa7222f1017e7243ace672ac940bfb186884"
             },
             "require": {
                 "red-jasmine/captcha": "1.0.x-dev",
@@ -8598,7 +8587,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/user-core",
-                "reference": "10ee620d23b25b448eccf43483fd6c6f3b2564bf"
+                "reference": "4ef56ab52a20c1096e2335a5091fc123625492ae"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -8677,7 +8666,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/wallet",
-                "reference": "90ed99694eaf54e24da66dee441e41ceb8d51385"
+                "reference": "fc2fd7986c351a274700f297bf6698a0fd49baf0"
             },
             "require": {
                 "red-jasmine/support": "1.0.x-dev"
@@ -16086,6 +16075,7 @@
         "red-jasmine/filament-product": 20,
         "red-jasmine/filament-region": 20,
         "red-jasmine/message": 20,
+        "red-jasmine/money": 20,
         "red-jasmine/order": 20,
         "red-jasmine/payment": 20,
         "red-jasmine/points-mall": 20,

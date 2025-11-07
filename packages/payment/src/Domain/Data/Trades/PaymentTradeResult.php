@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Data\Trades;
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Data\Data;
 
 

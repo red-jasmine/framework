@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
 use App\Filament\Clusters\Product\Resources\ProductResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductResource\RelationManagers;
+use BackedEnum;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -34,6 +35,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Facades\FilamentIcon;
@@ -44,7 +46,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Guava\FilamentClusters\Forms\Cluster;
 use Illuminate\Database\Eloquent\Builder;
 use LaraZeus\Quantity\Components\Quantity;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
@@ -70,6 +71,7 @@ use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
+use RedJasmine\Product\Domain\Product\Data\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product as Model;
@@ -101,7 +103,7 @@ class ProductResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static bool $onlyOwner = true;
 
@@ -130,8 +132,9 @@ class ProductResource extends Resource
         foreach ($model->extension->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->extension->{$key});
         }
+        //dd($model->variants->first()->toArray());
+        //$model->setAttribute('variants', $model->variants->toArray());
 
-        $model->setAttribute('variants', $model->variants->toArray());
         //$model->setAttribute('extend_product_groups', $model->extendProductGroups?->pluck('id')->toArray());
         return $model;
     }
@@ -293,7 +296,6 @@ class ProductResource extends Resource
                              ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）'),
 
 
-
                        static::saleAttrs()
                              ->visible(fn(Get $get) => $get('has_variants'))
                              ->live()
@@ -390,7 +392,8 @@ class ProductResource extends Resource
                                                 ->label(__('red-jasmine-product::product.attrs.alias'))
                                                 ->hiddenLabel()
                                                 ->placeholder('请输入别名')
-                                                ->maxLength(30) ])
+                                                ->maxLength(30)
+                                   ])
                                    ->hiddenLabel()
                                    ->addAction(function (Action $action, Get $get, Set $set, $state) {
 
@@ -428,7 +431,7 @@ class ProductResource extends Resource
                                                   }
                                                   array_push($values, ...$items);
                                                   // 重新索引并过滤空值
-                                                  $values = array_values(array_filter($values, function($item) {
+                                                  $values = array_values(array_filter($values, function ($item) {
                                                       return is_array($item) && isset($item['vid']) && !empty($item['vid']);
                                                   }));
 
@@ -458,7 +461,7 @@ class ProductResource extends Resource
                                             ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
                                             ->searchable()
                                             ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
-                                                "%{$search}%") ),
+                                                "%{$search}%")),
 
                                       CheckboxList::make('vids')
                                                   ->label(__('red-jasmine-product::product.attrs.values'))
@@ -466,14 +469,14 @@ class ProductResource extends Resource
                                                   ->required()
                                                   ->options(fn(Get $get) => $get('aid')
                                                       ? ProductAttributeValue::where('aid', $get('aid'))
-                                                          ->pluck('name', 'id')
-                                                          ->toArray()
+                                                                             ->pluck('name', 'id')
+                                                                             ->toArray()
                                                       : []
                                                   )
                                                   ->hidden(fn(Get $get) => !$get('aid')),
                                   ])
                                   ->action(function (array $data) use ($get, $set) : void {
-                                      $aid = $data['aid'] ?? null;
+                                      $aid  = $data['aid'] ?? null;
                                       $vids = $data['vids'] ?? [];
 
                                       if ($aid && !empty($vids)) {
@@ -481,8 +484,8 @@ class ProductResource extends Resource
                                           if ($attribute) {
                                               // 获取选中的属性值
                                               $attributeValues = ProductAttributeValue::select(['id', 'name'])
-                                                  ->whereIn('id', $vids)
-                                                  ->get();
+                                                                                      ->whereIn('id', $vids)
+                                                                                      ->get();
 
                                               // 构建属性值列表
                                               $values = [];
@@ -506,7 +509,7 @@ class ProductResource extends Resource
                                                   'values' => $values,
                                               ];
                                               // 重新索引并过滤空值
-                                              $saleAttrs = array_values(array_filter($saleAttrs, function($item) {
+                                              $saleAttrs = array_values(array_filter($saleAttrs, function ($item) {
                                                   return is_array($item) && isset($item['aid']) && !empty($item['aid']);
                                               }));
                                               $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
@@ -519,73 +522,6 @@ class ProductResource extends Resource
                        ->inlineLabel(false)
                        ->columnSpan('full')
                        ->reorderable(false);
-    }
-
-    protected static function variants()
-    {
-
-        return Repeater::make('variants')
-                       ->label(__('red-jasmine-product::product.fields.variants'))
-                       ->table(
-                           [
-                               // Repeater\TableColumn::make('attrs_sequence'),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
-                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->markAsRequired()->width('120px'),
-                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
-                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.size')),
-                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
-                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.height')),
-                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.width')),
-
-                           ]
-
-                       )
-                       ->schema([
-                           FileUpload::make('image')->image()->panelLayout('compact'),
-                           TextInput::make('attrs_name')->readOnly(),
-                           TextInput::make('sku'),
-                           TextInput::make('price')->required()->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('market_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('stock')->minValue(0)->integer()->required(),
-                           TextInput::make('safety_stock')->numeric()->default(0),
-                           TextInput::make('package_unit')
-                                    ->label(__('red-jasmine-product::product.fields.package_unit'))
-                                    ->maxLength(32)
-                                    ->placeholder('SKU的包装单位:件/个/套/箱')
-                           ,
-                           TextInput::make('package_quantity')
-                                    ->label(__('red-jasmine-product::product.fields.package_quantity'))
-                                    ->integer()
-                                    ->default(1)
-                                    ->minValue(1)
-                                    ->placeholder('每个包装单位包含的数量'),
-                           TextInput::make('barcode')->maxLength(32),
-                           Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
-                           Hidden::make('attrs_sequence'),
-
-                           // TextInput::make('weight')->nullable()->numeric()->maxLength(32),
-                           // TextInput::make('size')->nullable()->numeric()->maxLength(32),
-                           // TextInput::make('length')->nullable()->numeric()->maxLength(32),
-                           // TextInput::make('width')->nullable()->numeric()->maxLength(32),
-                           // TextInput::make('height')->nullable()->numeric()->maxLength(32),
-
-                       ])
-                       ->inlineLabel(false)
-                       ->columnSpan('full')
-                       ->reorderable(false)
-                       ->addable(false);
-
     }
 
     public static function table(Table $table) : Table
@@ -646,12 +582,7 @@ class ProductResource extends Resource
                 TextColumn::make('product_type')
                           ->label(__('red-jasmine-product::product.fields.product_type'))
                           ->badge()
-                          ->icon(fn($state) => match ($state) {
-                              ProductTypeEnum::PHYSICAL => 'heroicon-o-cube',
-                              ProductTypeEnum::VIRTUAL => 'heroicon-o-cloud',
-                              default => 'heroicon-o-shopping-bag'
-                          }),
-
+                          ->useEnum(),
                 // 规格信息
                 IconColumn::make('has_variants')
                           ->label(__('red-jasmine-product::product.fields.has_variants'))
@@ -666,26 +597,24 @@ class ProductResource extends Resource
                 TextColumn::make('price')
                           ->label(__('red-jasmine-product::product.fields.price'))
                           ->formatStateUsing(fn($state) => $state?->format())
-                          ->money('CNY', divideBy: 1)
-                          ->icon('heroicon-o-currency-yen')
-                          ->color('success')
+                          ->color('danger')
                           ->weight('bold')
                           ->sortable(),
 
                 TextColumn::make('market_price')
                           ->label(__('red-jasmine-product::product.fields.market_price'))
                           ->formatStateUsing(fn($state) => $state?->format())
-                          ->money('CNY', divideBy: 1)
-                          ->color('gray')
+                          ->color('success')
+                          ->weight('bold')
+                          ->sortable()
                           ->toggleable(true, true),
-
                 TextColumn::make('cost_price')
                           ->label(__('red-jasmine-product::product.fields.cost_price'))
                           ->formatStateUsing(fn($state) => $state?->format())
-                          ->money('CNY', divideBy: 1)
-                          ->color('warning')
+                          ->color('danger')
+                          ->weight('bold')
+                          ->sortable()
                           ->toggleable(true, true),
-
                 // 库存信息
                 TextColumn::make('stock')
                           ->label(__('red-jasmine-product::product.fields.stock'))
@@ -830,6 +759,76 @@ class ProductResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    protected static function variants()
+    {
+
+        return Repeater::make('variants')
+                       ->relationship('variants')
+                       ->dehydrated()
+                       ->saveRelationshipsUsing(null)
+                       ->label(__('red-jasmine-product::product.fields.variants'))
+                       ->table(
+                           [
+                               // Repeater\TableColumn::make('attrs_sequence'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
+                               Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->markAsRequired()->width('120px'),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.size')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.height')),
+                               // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.width')),
+
+                           ]
+
+                       )
+                       ->schema([
+                           FileUpload::make('image')->image()->panelLayout('compact'),
+                           TextInput::make('attrs_name')->readOnly(),
+                           TextInput::make('sku'),
+                           TextInput::make('price')->required()->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('market_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('stock')->minValue(0)->integer()->required(),
+                           TextInput::make('safety_stock')->numeric()->default(0),
+                           TextInput::make('package_unit')
+                                    ->label(__('red-jasmine-product::product.fields.package_unit'))
+                                    ->maxLength(32)
+                                    ->placeholder('SKU的包装单位:件/个/套/箱')
+                           ,
+                           TextInput::make('package_quantity')
+                                    ->label(__('red-jasmine-product::product.fields.package_quantity'))
+                                    ->integer()
+                                    ->default(1)
+                                    ->minValue(1)
+                                    ->placeholder('每个包装单位包含的数量'),
+                           TextInput::make('barcode')->maxLength(32),
+                           Select::make('status')->selectablePlaceholder(false)->required()->default(ProductStatusEnum::AVAILABLE->value)->options(ProductStatusEnum::variantStatus()),
+                           Hidden::make('attrs_sequence'),
+
+                           // TextInput::make('weight')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('size')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('length')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('width')->nullable()->numeric()->maxLength(32),
+                           // TextInput::make('height')->nullable()->numeric()->maxLength(32),
+
+                       ])
+                       ->inlineLabel(false)
+                       ->columnSpan('full')
+                       ->reorderable(false)
+                       ->addable(false);
+
     }
 
     public static function publishFields() : array
@@ -1154,7 +1153,7 @@ class ProductResource extends Resource
                                 ->reorderable(false)
                                 ->addable(false)
                                 ->deletable(false)
-                                ->default(collect(\RedJasmine\Product\Domain\Product\Data\Product::defaultAfterSalesServices())->toArray())
+                                ->default(collect(Product::defaultAfterSalesServices())->toArray())
                                 ->schema([
                                     Select::make('refund_type')
                                           ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))

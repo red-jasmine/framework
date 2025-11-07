@@ -22,7 +22,7 @@ use RedJasmine\Order\Domain\Models\Order;
 use RedJasmine\Order\Domain\Models\OrderPayment;
 use RedJasmine\Order\Domain\Repositories\OrderRepositoryInterface;
 use RedJasmine\Order\Domain\Repositories\RefundRepositoryInterface;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Tests\Feature\Order\Fixtures\OrderDummyFake;
 
 

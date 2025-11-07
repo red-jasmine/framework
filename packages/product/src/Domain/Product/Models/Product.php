@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +18,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
+use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
@@ -30,8 +31,7 @@ use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Support\Domain\Casts\CurrencyCast;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Money\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
@@ -450,12 +450,13 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             // 查询数据的值
             $defaultVariant = $this->variants->where('attrs_sequence', $this::$defaultAttrsSequence)->first();
         }
+
         if (!$defaultVariant) {
             $defaultVariant = new ProductVariant();
         }
         $defaultVariant->product_id     = $this->id;
         $defaultVariant->attrs_sequence = static::$defaultAttrsSequence;
         $defaultVariant->attrs_name     = static::$defaultAttrsName;
-        return new ProductVariant();
+        return $defaultVariant;
     }
 }

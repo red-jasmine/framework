@@ -1,7 +1,7 @@
 <?php
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Support\Collection;
 use RedJasmine\Payment\Application\Services\Refund\Commands\RefundCreateCommand;
 use RedJasmine\Payment\Application\Services\Refund\RefundApplicationService;

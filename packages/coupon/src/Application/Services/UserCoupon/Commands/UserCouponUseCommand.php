@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Coupon\Application\Services\UserCoupon\Commands;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Coupon\Domain\Data\UserCouponUseData;
 use RedJasmine\Support\Data\Data;
 

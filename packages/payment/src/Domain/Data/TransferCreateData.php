@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
 use RedJasmine\Support\Data\Data;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

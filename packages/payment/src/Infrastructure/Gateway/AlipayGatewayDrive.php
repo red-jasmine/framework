@@ -52,7 +52,7 @@ use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RuntimeException;
 use Throwable;
 

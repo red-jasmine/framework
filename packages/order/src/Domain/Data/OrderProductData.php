@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Domain\Data;
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;

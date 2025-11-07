@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Models;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use RedJasmine\Payment\Domain\Data\ChannelTransferData;

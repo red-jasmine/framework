@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use DateTime;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
 use RedJasmine\Support\Data\Data;

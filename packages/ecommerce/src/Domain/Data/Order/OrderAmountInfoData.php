@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use phpDocumentor\Reflection\Types\This;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;

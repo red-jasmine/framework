@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Domain\Data;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
 

@@ -1,6 +1,6 @@
 <?php
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;

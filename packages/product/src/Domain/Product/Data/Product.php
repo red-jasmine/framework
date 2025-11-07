@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use Cknow\Money\Money;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Field;
@@ -13,16 +11,14 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
+use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Casts\CurrencyCast;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
 use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 
 /**
  * 产品数据类

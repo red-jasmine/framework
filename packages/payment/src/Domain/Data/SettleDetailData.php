@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Spatie\LaravelData\Attributes\Validation\Max;
 
 class SettleDetailData extends Data

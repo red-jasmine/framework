@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Data;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Support\Contracts\UserInterface;

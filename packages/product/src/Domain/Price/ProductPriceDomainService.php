@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Price;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;

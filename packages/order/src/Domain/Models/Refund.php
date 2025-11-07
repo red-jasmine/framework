@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Data\Recharge;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Support\Carbon;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;

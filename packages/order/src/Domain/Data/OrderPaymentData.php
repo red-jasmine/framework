@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Data;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Data\Data;
 
 class OrderPaymentData extends Data

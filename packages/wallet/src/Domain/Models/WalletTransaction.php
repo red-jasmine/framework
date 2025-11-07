@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Models;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;

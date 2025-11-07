@@ -7,14 +7,25 @@ use Money\Currencies\AggregateCurrencies as BaseAggregateCurrencies;
 use Money\Currencies\BitcoinCurrencies;
 use Money\Currencies\ISOCurrencies;
 use Money\Currency;
+use Traversable;
 
 /**
  * 聚合货币类
  * 聚合 ISO 货币、比特币货币和自定义货币
  */
-class AggregateCurrencies extends BaseAggregateCurrencies
+class AggregateCurrencies implements Currencies
 {
     private static ?AggregateCurrencies $instance = null;
+
+    private BaseAggregateCurrencies $aggregate;
+
+    /**
+     * @param Currencies[] $currencies
+     */
+    private function __construct(array $currencies)
+    {
+        $this->aggregate = new BaseAggregateCurrencies($currencies);
+    }
 
     /**
      * 创建货币聚合器
@@ -61,6 +72,21 @@ class AggregateCurrencies extends BaseAggregateCurrencies
     public static function resetInstance(): void
     {
         self::$instance = null;
+    }
+
+    public function contains(Currency $currency): bool
+    {
+        return $this->aggregate->contains($currency);
+    }
+
+    public function subunitFor(Currency $currency): int
+    {
+        return $this->aggregate->subunitFor($currency);
+    }
+
+    public function getIterator(): Traversable
+    {
+        return $this->aggregate->getIterator();
     }
 
     /**

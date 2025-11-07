@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Product\Services;
 
-use Cknow\Money\Money;
+use RedJasmine\Money;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommandHandler;

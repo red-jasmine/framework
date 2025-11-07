@@ -7,8 +7,6 @@ use Cknow\Money\Money;
 use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\Str;
-use Money\Currency;
-use RedJasmine\Support\Domain\Casts\CurrencyCast;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
@@ -88,8 +86,7 @@ class SupportPackageServiceProvider extends PackageServiceProvider
         $config->set('data.casts.'.Money::class, MoneyCast::class);
         $config->set('data.transformers.'.Money::class, MoneyCast::class);
 
-        $config->set('data.casts.'.Currency::class, CurrencyCast::class);
-        $config->set('data.transformers.'.Currency::class, CurrencyCast::class);
+
 
 
     }

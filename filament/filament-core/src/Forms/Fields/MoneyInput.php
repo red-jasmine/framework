@@ -6,7 +6,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Utilities\Get;
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Field;

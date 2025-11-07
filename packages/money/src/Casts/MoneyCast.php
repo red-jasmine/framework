@@ -102,10 +102,14 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
         $currency = $this->createCurrency($currencyCode);
 
+
         try {
+
             if ($this->valueType === static::AMOUNT_TYPE_DECIMAL) {
                 // 使用 DecimalMoneyParser 解析小数金额
-                return $this->getParser()->parse((string)$moneyValue, $currency);
+
+                $base = $this->getParser()->parse((string)$moneyValue, $currency);
+                return new Money($base->getAmount(), $base->getCurrency());
             } else {
                 // bigint 类型，直接创建 Money 对象（金额已经是最小单位）
                 return new Money((int)$moneyValue, $currency);
@@ -219,7 +223,8 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
         try {
             if ($this->valueType === static::AMOUNT_TYPE_DECIMAL) {
                 // 使用 DecimalMoneyParser 解析小数金额
-                return $this->getParser()->parse((string)$moneyValue, $currency);
+                $base = $this->getParser()->parse((string)$moneyValue, $currency);
+                return new Money($base->getAmount(), $base->getCurrency());
             } else {
                 // bigint 类型，直接创建 Money 对象（金额已经是最小单位）
                 return new Money((int)$moneyValue, $currency);
@@ -311,7 +316,8 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
         if ($this->valueType === static::AMOUNT_TYPE_DECIMAL) {
             // decimal 类型：值视为元（如 100.50）
-            return $this->getParser()->parse((string)$value, $currency);
+            $base = $this->getParser()->parse((string)$value, $currency);
+            return new Money($base->getAmount(), $base->getCurrency());
         } else {
             // bigint 类型：值视为最小单位分（如 10050）
             return new Money((int)$value, $currency);
@@ -334,7 +340,8 @@ class MoneyCast implements CastsAttributes, Cast, Transformer
 
         if ($this->valueType === static::AMOUNT_TYPE_DECIMAL) {
             // decimal 类型：值视为元
-            return $this->getParser()->parse((string)$amount, $currency);
+            $base = $this->getParser()->parse((string)$amount, $currency);
+            return new Money($base->getAmount(), $base->getCurrency());
         } else {
             // bigint 类型：值视为最小单位分
             return new Money((int)$amount, $currency);

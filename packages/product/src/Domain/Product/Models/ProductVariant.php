@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Support\Domain\Casts\CurrencyCast;
-use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Money\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;

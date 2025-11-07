@@ -1,7 +1,7 @@
 <?php
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletCreateCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;

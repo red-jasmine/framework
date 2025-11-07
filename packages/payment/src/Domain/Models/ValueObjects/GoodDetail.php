@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Data\Data;
 
 

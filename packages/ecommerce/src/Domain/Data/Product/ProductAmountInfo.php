@@ -3,7 +3,7 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
 
-use Cknow\Money\Money;
+use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Support\Data\Data;
