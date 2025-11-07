@@ -131,7 +131,12 @@ class AggregateCurrencies implements Currencies
         }
         // 尝试使用 Symfony Intl Currencies 获取符号
         if($this->isISO($currency)){
-            return IntlCurrencies::getSymbol($currencyCode, $locale);
+            try {
+                return IntlCurrencies::getSymbol($currencyCode, $locale);
+            }catch (\Throwable $throwable){
+                return  $currencyCode;
+            }
+
         }
 
         try {
