@@ -5,18 +5,18 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Pages;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Contracts\Support\Htmlable;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Widgets\ProductStatsOverviewWidget;
-use RedJasmine\FilamentProduct\Clusters\Product\Widgets\ProductStatusChartWidget;
 use RedJasmine\FilamentProduct\Clusters\Product\Widgets\StockAlarmWidget;
 use RedJasmine\FilamentProduct\Clusters\Product\Widgets\TopSellingProductsWidget;
 
 class Dashboard extends Page
 {
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedPresentationChartBar;
 
     public static function getNavigationLabel() : string
     {
@@ -35,7 +35,7 @@ class Dashboard extends Page
     /**
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
-    protected function getWidgets(): array
+    protected function getWidgets() : array
     {
         return [
             ProductStatsOverviewWidget::class,
@@ -48,7 +48,7 @@ class Dashboard extends Page
     /**
      * @return int | array<string, ?int>
      */
-    public function getColumns(): int | array
+    public function getColumns() : int|array
     {
         return [
             'md' => 2,
@@ -56,12 +56,12 @@ class Dashboard extends Page
         ];
     }
 
-    public function content(Schema $schema): Schema
+    public function content(Schema $schema) : Schema
     {
         return $schema
             ->components([
                 Grid::make($this->getColumns())
-                    ->schema(fn (): array => $this->getWidgetsSchemaComponents($this->getWidgets())),
+                    ->schema(fn() : array => $this->getWidgetsSchemaComponents($this->getWidgets())),
             ]);
     }
 }

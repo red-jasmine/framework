@@ -2,7 +2,6 @@
 
 namespace RedJasmine\FilamentCore\Panel;
 
-use Filament\Pages\Dashboard;
 use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -21,40 +20,38 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class PanelProvider extends FilamentPanelProvider
+abstract class PanelProvider extends FilamentPanelProvider
 {
-    public function panel(Panel $panel) : Panel
+    public static function configure(Panel $panel) : Panel
     {
-        return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
-            ->login(Login::class)
-            ->maxContentWidth(Width::Full)
-            ->pages([
-                Dashboard::class,
-            ])
-            ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
-            ])
-            ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
-            ])
-            ->sidebarWidth('10rem')
-            ->passwordReset()
-            ->emailVerification()
-            ->profile();
+
+        $panel->login(Login::class)
+              ->maxContentWidth(Width::Full)
+              ->widgets([
+                  AccountWidget::class,
+                  FilamentInfoWidget::class,
+              ])
+              ->middleware([
+                  EncryptCookies::class,
+                  AddQueuedCookiesToResponse::class,
+                  StartSession::class,
+                  AuthenticateSession::class,
+                  ShareErrorsFromSession::class,
+                  VerifyCsrfToken::class,
+                  SubstituteBindings::class,
+                  DisableBladeIconComponents::class,
+                  DispatchServingFilamentEvent::class,
+              ])
+              ->authMiddleware([
+                  Authenticate::class,
+              ])
+              ->sidebarWidth('10rem')
+              ->passwordReset()
+              ->emailVerification()
+              ->profile();
+
+        return $panel;
+
     }
+
 }
