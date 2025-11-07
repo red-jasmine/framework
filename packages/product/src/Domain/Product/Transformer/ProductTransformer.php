@@ -127,6 +127,7 @@ class ProductTransformer
         switch ($command->hasVariants) {
             case true: // 多规格
 
+
                 $saleAttrs = $this->attributeValidateService->saleAttrs($command->saleAttrs->toArray());
 
                 $product->extension->sale_attrs = $saleAttrs->toArray();
@@ -181,11 +182,16 @@ class ProductTransformer
                 break;
         }
 
+
+        $variants = $product->variants->whereNotIn('status', [
+            ProductStatusEnum::ARCHIVED,
+            ProductStatusEnum::DELETED,
+        ]);
         // 统计项
-        $product->price        = $product->variants->min('price');
-        $product->market_price = $product->variants->min('market_price');
-        $product->cost_price   = $product->variants->min('cost_price');
-        $product->safety_stock = $product->variants->sum('safety_stock');
+        $product->price        = $variants->min('price');
+        $product->market_price = $variants->min('market_price');
+        $product->cost_price   = $variants->min('cost_price');
+        $product->safety_stock = $variants->sum('safety_stock');
 
     }
 
