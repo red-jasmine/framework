@@ -82,6 +82,8 @@ class ProductTransformer
         $product->is_new                    = $command->isNew;
         $product->is_best                   = $command->isBest;
         $product->is_benefit                = $command->isBenefit;
+        // 设置商品货币
+        $product->currency = $command->currency;
 
 
         $product->extension->id                   = $product->id;
@@ -145,7 +147,7 @@ class ProductTransformer
                     if (!$variant?->id) {
                         $variant->setUniqueIds();
                     }
-                    $this->fillVariant($variant, $variantData);
+                    $this->fillVariant($variant, $variantData, $product);
                     $product->addVariant($variant);
                 });
 
@@ -174,7 +176,7 @@ class ProductTransformer
                 $defaultVariant = $product->getDefaultVariant();
                 // 设置变体基础信息
                 $this->setDefaultVariant($product, $defaultVariant);
-                $this->fillVariant($defaultVariant, $variantData);
+                $this->fillVariant($defaultVariant, $variantData, $product);
 
                 $defaultVariant->setAvailable();
 
@@ -195,7 +197,7 @@ class ProductTransformer
 
     }
 
-    protected function fillVariant(ProductVariant $variant, Variant $variantData) : void
+    protected function fillVariant(ProductVariant $variant, Variant $variantData, Product $product) : void
     {
         $variant->attrs_sequence   = $variantData->attrsSequence;
         $variant->attrs_name       = $variantData->getAttrsName();
@@ -217,6 +219,10 @@ class ProductTransformer
         $variant->package_quantity = $variantData->packageQuantity;
         $variant->status           = $variantData->status;
         $variant->deleted_at       = null;
+
+        $variant->currency = $product->currency;
+        // 同步变体货币：优先从价格 Money 对象中获取货币，如果没有则从商品表继承
+
     }
 
     protected function setDefaultVariant(Product $product, ProductVariant $variant)
@@ -230,6 +236,8 @@ class ProductTransformer
         $variant->safety_stock = $product->safety_stock ?? 0;
         $variant->image        = $product->image;
         $variant->barcode      = $product->barcode;
+        // 同步变体货币：从商品表继承
+        $variant->currency = $product->currency;
 
     }
 
