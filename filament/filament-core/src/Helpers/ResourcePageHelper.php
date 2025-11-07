@@ -24,6 +24,9 @@ trait ResourcePageHelper
 
     use PageHelper;
 
+    //use HasClusterSubNavigation;
+
+
     public static function getEloquentQuery() : Builder
     {
 
@@ -53,19 +56,9 @@ trait ResourcePageHelper
         return static::$deleteCommand;
     }
 
-    public static function callResolveRecord(Model $model) : Model
+    public static function getQueryService() : ?string
     {
-
-
-        if ($model->relationLoaded('extension')) {
-
-            foreach ($model->extension->getAttributes() as $key => $value) {
-                $model->setAttribute($key, $model->extension->{$key});
-
-            }
-        }
-
-        return $model;
+        return static::$service;
     }
 
     /**
@@ -127,7 +120,6 @@ trait ResourcePageHelper
             $commandService = app($resource::getService());
 
 
-
             $command = ($resource::getCreateCommand())::from($data);
 
             return $commandService->create($command);
@@ -165,9 +157,8 @@ trait ResourcePageHelper
         $queryService = app($resource::getService());
 
 
-
         if (static::onlyOwner()) {
-            $user = auth()->user();
+            $user  = auth()->user();
             $owner = $user instanceof BelongsToOwnerInterface ? $user->owner() : $user;
             if (method_exists($user, 'isAdministrator') && $user->isAdministrator()) {
             } else {
@@ -183,14 +174,29 @@ trait ResourcePageHelper
 
     }
 
-    public static function getQueryService() : ?string
+    public static function getFindQuery() : string
     {
-        return static::$service;
+        return static::$resource::$findQuery ?? FindQuery::class;
     }
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
         return $findQuery;
+    }
+
+    public static function callResolveRecord(Model $model) : Model
+    {
+
+
+        if ($model->relationLoaded('extension')) {
+
+            foreach ($model->extension->getAttributes() as $key => $value) {
+                $model->setAttribute($key, $model->extension->{$key});
+
+            }
+        }
+
+        return $model;
     }
 
     /**
@@ -201,12 +207,12 @@ trait ResourcePageHelper
 
 
         try {
-            $resource       = static::getResource();
+            $resource = static::getResource();
 
             $commandService = app($resource::getService());
             $command        = ($resource::getUpdateCommand())::from($data);
             $command->setKey($record->getKey());
-            return  $commandService->update($command);
+            return $commandService->update($command);
 
         } catch (ValidationException $exception) {
 
@@ -228,11 +234,6 @@ trait ResourcePageHelper
     public static function getUpdateCommand() : ?string
     {
         return static::$updateCommand ?? static::$dataClass;
-    }
-
-    public static function getFindQuery():string
-    {
-        return  static::$resource::$findQuery ?? FindQuery::class;
     }
 
 }
