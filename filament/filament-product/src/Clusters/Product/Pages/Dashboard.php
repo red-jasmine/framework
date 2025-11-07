@@ -2,60 +2,66 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Pages;
 
-
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Schema;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Contracts\Support\Htmlable;
 use RedJasmine\FilamentProduct\Clusters\Product;
+use RedJasmine\FilamentProduct\Clusters\Product\Widgets\ProductStatsOverviewWidget;
+use RedJasmine\FilamentProduct\Clusters\Product\Widgets\ProductStatusChartWidget;
+use RedJasmine\FilamentProduct\Clusters\Product\Widgets\StockAlarmWidget;
+use RedJasmine\FilamentProduct\Clusters\Product\Widgets\TopSellingProductsWidget;
 
 class Dashboard extends Page
 {
-
-
-
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
 
     public static function getNavigationLabel() : string
     {
-       return  '商品中心';
+        return '商品中心';
     }
-
 
     public function getTitle() : string|Htmlable
     {
-        return  '商品中心';
+        return '商品中心';
     }
 
     protected static ?string $slug           = 'dashboard';
     protected static ?int    $navigationSort = -3;
     protected static ?string $cluster        = Product::class;
 
-
     /**
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
-    public function getVisibleWidgets() : array
+    protected function getWidgets(): array
     {
-        return $this->filterVisibleWidgets($this->getWidgets());
-    }
-
-    public function getWidgets() : array
-    {
-
-         // 商品数量
-         // 商品类型分布
-         // 商品状态分布
-         //  库存预警
-
         return [
-
+            ProductStatsOverviewWidget::class,
+            // ProductStatusChartWidget::class,
+            TopSellingProductsWidget::class,
+            StockAlarmWidget::class,
         ];
     }
 
-    public function getColumns() : int|string|array
+    /**
+     * @return int | array<string, ?int>
+     */
+    public function getColumns(): int | array
     {
-        return 2;
+        return [
+            'md' => 2,
+            'xl' => 3,
+        ];
     }
 
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Grid::make($this->getColumns())
+                    ->schema(fn (): array => $this->getWidgetsSchemaComponents($this->getWidgets())),
+            ]);
+    }
 }

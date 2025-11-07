@@ -1,0 +1,70 @@
+<?php
+
+namespace RedJasmine\FilamentProduct\Clusters\Product\Widgets;
+
+use Filament\Tables;
+use Filament\Tables\Table;
+use Filament\Widgets\TableWidget as BaseWidget;
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+
+class StockAlarmWidget extends BaseWidget
+{
+    protected static ?string $heading = '库存预警商品';
+
+    protected static ?int $sort = 4;
+
+    public static function canView(): bool
+    {
+        return true;
+    }
+
+    protected int | string | array $columnSpan = 'full';
+
+    public function table(Table $table): Table
+    {
+        $owner = auth()->user();
+
+        return $table
+            ->query(
+                Product::query()
+                    ->where('owner_type', get_class($owner))
+                    ->where('owner_id', $owner->id)
+                    ->whereRaw('stock <= safety_stock')
+                    ->where('status', ProductStatusEnum::AVAILABLE)
+                    ->orderBy('stock', 'asc')
+                    ->limit(10)
+            )
+            ->columns([
+                Tables\Columns\TextColumn::make('title')
+                    ->label('商品名称')
+                    ->searchable()
+                    ->limit(30),
+
+                Tables\Columns\TextColumn::make('stock')
+                    ->label('当前库存')
+                    ->numeric()
+                    ->sortable()
+                    ->color(fn ($record) => $record->stock <= 0 ? 'danger' : 'warning'),
+
+                Tables\Columns\TextColumn::make('safety_stock')
+                    ->label('安全库存')
+                    ->numeric()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('状态')
+                    ->badge()
+                    ->color(fn ($state) => ProductStatusEnum::colors()[$state->value] ?? 'gray'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('创建时间')
+                    ->dateTime()
+                    ->sortable(),
+            ])
+            ->defaultSort('stock', 'asc')
+            ->emptyStateHeading('暂无库存预警商品')
+            ->emptyStateDescription('所有商品库存充足');
+    }
+}
+
