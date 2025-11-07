@@ -113,6 +113,7 @@ class LogisticsFreightTemplateResource extends Resource
                                                                        ->inlineLabel()
                                                                        ->numeric()
                                              ,
+
                                              MoneyInput::make('standard_fee')
                                                        ->inlineLabel()
                                                        ->default(['currency' => 'CNY', 'amount' => 0])
@@ -150,7 +151,7 @@ class LogisticsFreightTemplateResource extends Resource
             ])
             ->columns(1);
 
-
+        return  $schema;
         return static::translationLabels($schema);
     }
 

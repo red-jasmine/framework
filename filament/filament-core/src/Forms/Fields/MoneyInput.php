@@ -85,7 +85,7 @@ class MoneyInput extends Field
                     ,
                 ])
                        ->columns(6)
-                       ->name($this->name)
+
 
             ]
         );
