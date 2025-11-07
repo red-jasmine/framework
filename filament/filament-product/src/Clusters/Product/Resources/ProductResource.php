@@ -61,7 +61,9 @@ use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ListProducts;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages\ViewProduct;
 use RedJasmine\FilamentProduct\Clusters\Product\Stock\StockTableAction;
+use RedJasmine\FilamentProduct\Forms\Components\ProductCurrencySelect;
 use RedJasmine\FilamentRegion\Forms\Components\CountrySelect;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductCreateCommand;
 use RedJasmine\Product\Application\Product\Services\Commands\ProductDeleteCommand;
@@ -345,6 +347,11 @@ class ProductResource extends Resource
                              }),
 
 
+
+                       ProductCurrencySelect::make('currency')
+                           ->label(__('red-jasmine-product::product.fields.currency'))
+
+                       ,
                        static::variants()
                              ->deletable(false)
                              ->live(),
