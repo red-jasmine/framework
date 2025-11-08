@@ -2,23 +2,21 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use Filament\Schemas\Schema;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\ListProductTags;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\CreateProductTag;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\EditProductTag;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\CreateProductTag;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\EditProductTag;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\Pages\ListProductTags;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductTagResource\RelationManagers;
 use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagCreateCommand;
 use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagDeleteCommand;
 use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagUpdateCommand;
 use RedJasmine\Product\Application\Tag\Services\ProductTagApplicationService;
-use RedJasmine\Product\Domain\Tag\Models\Enums\TagStatusEnum;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 
 class ProductTagResource extends Resource
@@ -43,15 +41,7 @@ class ProductTagResource extends Resource
         return __('red-jasmine-product::product-tag.labels.tag');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
 
     public static function getRelations() : array
     {

@@ -41,6 +41,8 @@ use RedJasmine\Coupon\Domain\Models\Enums\ThresholdTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\ValidityTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\FilamentCoupon\Clusters\Coupons;
 use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages\CreateCoupon;
 use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponResource\Pages\EditCoupon;
@@ -87,8 +89,9 @@ class CouponResource extends Resource
                            ->schema([
                                Section::make()
                                       ->schema([
-                                          ...static::ownerFormSchemas(),
-                                          ...static::ownerFormSchemas('cost_bearer'),
+                                          Owner::make(),
+                                          Owner::make([],'cost_bearer'),
+
 
                                           TextInput::make('name')
                                                    ->label(__('red-jasmine-coupon::coupon.fields.name'))
@@ -313,7 +316,7 @@ class CouponResource extends Resource
                     ])
                     ->columnSpanFull(),
 
-                ...static::operateFormSchemas(),
+                Operators::make(),
             ]);
     }
 
@@ -382,7 +385,7 @@ class CouponResource extends Resource
                           ->sortable()
                           ->toggleable(isToggledHiddenByDefault: true),
 
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 SelectFilter::make('status')

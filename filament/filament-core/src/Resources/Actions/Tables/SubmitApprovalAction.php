@@ -48,7 +48,7 @@ class SubmitApprovalAction extends Action
 
 
              })->visible(static function (Model $record) : bool {
-                return  $record->isAllowSubmitApproval();
+                return  $record->canApproval();
 
             });
 

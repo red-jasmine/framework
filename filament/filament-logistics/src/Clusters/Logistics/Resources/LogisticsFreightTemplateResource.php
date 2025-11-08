@@ -2,29 +2,28 @@
 
 namespace RedJasmine\FilamentLogistics\Clusters\Logistics\Resources;
 
-use Filament\Schemas\Schema;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\ListLogisticsFreightTemplates;
-use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\CreateLogisticsFreightTemplate;
-use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\EditLogisticsFreightTemplate;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Forms\Fields\MoneyInput;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\FilamentLogistics\Clusters\Logistics;
-use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\CreateLogisticsFreightTemplate;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\EditLogisticsFreightTemplate;
+use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\Pages\ListLogisticsFreightTemplates;
 use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsFreightTemplateResource\RelationManagers;
 use RedJasmine\Logistics\Application\Services\LogisticsFreightTemplateApplicationService;
 use RedJasmine\Logistics\Domain\Data\LogisticsFreightTemplateData;
@@ -62,7 +61,7 @@ class LogisticsFreightTemplateResource extends Resource
     {
         $schema
             ->components([
-                ...static::ownerFormSchemas(),
+                Owner::make(),
                 TextInput::make('name')
                                           ->required()
                                           ->maxLength(255),
@@ -147,7 +146,7 @@ class LogisticsFreightTemplateResource extends Resource
                                               ->inline()->inlineLabel()
                                               ->useEnum(FreightTemplateStatusEnum::class)
                                               ->default(FreightTemplateStatusEnum::ENABLE),
-                ...static::operateFormSchemas(),
+                Operators::make(),
             ])
             ->columns(1);
 
@@ -175,7 +174,7 @@ class LogisticsFreightTemplateResource extends Resource
                                          ->sortable(),
                 TextColumn::make('status')
                                          ->useEnum(),
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 //

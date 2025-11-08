@@ -1,15 +1,13 @@
 <?php
 
-namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages;
+namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Actions\CreateAction;
-use Filament\Actions;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource;
-use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\ProductResource;
 
 class ListProducts extends ListRecords
 {

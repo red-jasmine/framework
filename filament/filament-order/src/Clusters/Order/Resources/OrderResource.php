@@ -391,7 +391,7 @@ TextColumn::make('cost_amount')
                 TextColumn::make('outer_order_id')->toggleable(isToggledHiddenByDefault: true)->copyable(),
                 TextColumn::make('cancel_reason')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('version')->toggleable(isToggledHiddenByDefault: true),
-                ...static::operateTableColumns()
+                
 
             ])
             ->filters([

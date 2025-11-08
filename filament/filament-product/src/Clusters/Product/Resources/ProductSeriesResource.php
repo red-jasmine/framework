@@ -2,30 +2,29 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ListProductSeries;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\CreateProductSeries;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ViewProductSeries;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\EditProductSeries;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourceOwnerHelper;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\FilamentProduct\Clusters\Product;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\CreateProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\EditProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ListProductSeries;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\Pages\ViewProductSeries;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeriesResource\RelationManagers;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Series\Services\Commands\ProductSeriesCreateCommand;
@@ -83,7 +82,7 @@ class ProductSeriesResource extends Resource
     {
         return $schema
             ->components([
-                ...static::ownerFormSchemas(),
+                Owner::make(),
                 TextInput::make('name')
                                           ->label(__('red-jasmine-product::product-series.fields.name'))
                                           ->required()
@@ -143,7 +142,7 @@ class ProductSeriesResource extends Resource
                                          ->columnSpanFull()
                 ,
 
-                ... static::operateFormSchemas()
+                Operators::make(),
             ]);
     }
 
@@ -166,7 +165,7 @@ class ProductSeriesResource extends Resource
                                          ->label(__('red-jasmine-product::product-series.fields.remarks'))
                                          ->searchable(),
 
-                ... static::operateTableColumns()
+
 
             ])
             ->filters([

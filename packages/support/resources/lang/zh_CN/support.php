@@ -3,6 +3,7 @@
 return [
 
     'id'           => '序号',
+    'operators'    => '操作者',
     'owner_type'   => '所属者类型',
     'owner_id'     => '所属者ID',
     'owner'        => '所属者',

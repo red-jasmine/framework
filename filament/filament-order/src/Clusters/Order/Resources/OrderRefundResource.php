@@ -329,7 +329,7 @@ class OrderRefundResource extends Resource
                 TextColumn::make('refund_amount')->money(),
                 TextColumn::make('total_refund_amount')->money(),
 
-                ...static::operateTableColumns()
+                
             ])
             ->filters([
 

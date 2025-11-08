@@ -1,14 +1,11 @@
 <?php
 
-namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource\Pages;
+namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Pages;
 
 use Filament\Actions\EditAction;
-use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductResource;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\ProductResource;
 
 class ViewProduct extends ViewRecord
 {

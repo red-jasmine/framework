@@ -2,29 +2,24 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Flex;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Filters\TrashedFilter;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\ListCards;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\CreateCard;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\EditCard;
-use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use RedJasmine\Card\Application\Services\CardApplicationService;
 use RedJasmine\Card\Application\UserCases\Command\CardCreateCommand;
@@ -33,9 +28,13 @@ use RedJasmine\Card\Application\UserCases\Command\CardUpdateCommand;
 use RedJasmine\Card\Domain\Enums\CardStatus;
 use RedJasmine\Card\Domain\Models\Card;
 use RedJasmine\FilamentCard\Clusters\Cards;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\CreateCard;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\EditCard;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\Pages\ListCards;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 
 class CardResource extends Resource
 {
@@ -63,7 +62,7 @@ class CardResource extends Resource
         return $schema
             ->components([
 
-                ...static::ownerFormSchemas(),
+                Owner::make(),
                 Flex::make([
 
                     Section::make([
@@ -106,7 +105,7 @@ class CardResource extends Resource
                 ])->columnSpanFull(),
 
 
-                ...static::operateFormSchemas()
+                Operators::make(),
             ]);
     }
 
@@ -135,7 +134,7 @@ class CardResource extends Resource
                 TextColumn::make('remarks')
                                          ->label(__('red-jasmine-card::card.fields.remarks'))
                                          ->searchable(),
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 TrashedFilter::make(),

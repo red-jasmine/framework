@@ -149,7 +149,7 @@ class OrderPaymentResource extends Resource
                 ,
                 TextColumn::make('message')
                 ,
-                ...static::operateTableColumns()
+                
             ])
             ->deferFilters()
             ->filters([

@@ -144,7 +144,7 @@ class OrderLogisticsResource extends Resource
                                          ->dateTime()
                 ,
 
-                ...static::operateTableColumns()
+                
             ])
             ->deferFilters()
             ->filters([

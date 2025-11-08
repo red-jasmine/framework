@@ -2,20 +2,22 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
-use Filament\Schemas\Schema;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\ListArticleCategories;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\CreateArticleCategory;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\EditArticleCategory;
+use BackedEnum;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use RedJasmine\Article\Application\Services\ArticleCategory\ArticleCategoryApplicationService;
 use RedJasmine\Article\Domain\Data\ArticleCategoryData;
 use RedJasmine\Article\Domain\Models\ArticleCategory;
 use RedJasmine\FilamentArticle\Clusters\Articles;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\CreateArticleCategory;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\EditArticleCategory;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\Pages\ListArticleCategories;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleCategoryResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
+use RedJasmine\FilamentCore\Resources\Tables\CategoryTable;
 
 
 class ArticleCategoryResource extends Resource
@@ -24,15 +26,12 @@ class ArticleCategoryResource extends Resource
     use ResourcePageHelper;
 
     public static string  $service   = ArticleCategoryApplicationService::class;
-    protected static bool $onlyOwner = true;
-
     public static string $createCommand = ArticleCategoryData::class;
     public static string $updateCommand = ArticleCategoryData::class;
-
-
+    protected static bool $onlyOwner = true;
     protected static ?string $model = ArticleCategory::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static ?string $cluster = Articles::class;
 
@@ -40,16 +39,8 @@ class ArticleCategoryResource extends Resource
     {
         return __('red-jasmine-article::article-category.labels.title');
     }
+    use CategoryResource;
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
 
     public static function getRelations() : array
     {

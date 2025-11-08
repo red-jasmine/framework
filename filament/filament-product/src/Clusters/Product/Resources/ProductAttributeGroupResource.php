@@ -16,6 +16,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeGroupResource\Pages\CreateProductAttributeGroup;
 use App\Filament\Clusters\Product\Resources\ProductAttributeGroupResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductAttributeGroupResource\RelationManagers;
@@ -83,7 +84,7 @@ class ProductAttributeGroupResource extends Resource
                                               ->useEnum(ProductAttributeStatusEnum::class)
                 ,
 
-                ...static::operateFormSchemas()
+                Operators::make(),
             ])->columns(1);
     }
 
@@ -103,7 +104,7 @@ class ProductAttributeGroupResource extends Resource
                                          ->useEnum(),
 
 
-                ...static::operateTableColumns()
+                
             ])
             ->filters([
                 SelectFilter::make('status')

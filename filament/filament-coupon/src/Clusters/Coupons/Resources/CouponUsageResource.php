@@ -2,30 +2,29 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\DatePicker;
-use Filament\Actions\ViewAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\Action;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponUsageResource\Pages\ListCouponUsages;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponUsageResource\Pages\ViewCouponUsage;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use RedJasmine\Coupon\Application\Services\CouponUsage\CouponUsageApplicationService;
 use RedJasmine\Coupon\Domain\Data\CouponUsageData;
 use RedJasmine\Coupon\Domain\Models\CouponUsage;
-use RedJasmine\FilamentCoupon\Clusters\Coupons;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponUsageResource\Pages;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
+use RedJasmine\FilamentCoupon\Clusters\Coupons;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponUsageResource\Pages\ListCouponUsages;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\CouponUsageResource\Pages\ViewCouponUsage;
 
 class CouponUsageResource extends Resource
 {
@@ -75,7 +74,7 @@ class CouponUsageResource extends Resource
             ->components([
                 Section::make()
                     ->schema([
-                        ...static::ownerFormSchemas(),
+                        Owner::make(),
                         
                         Select::make('coupon_id')
                             ->label(__('red-jasmine-coupon::coupon_usage.fields.coupon_id'))
@@ -124,8 +123,8 @@ class CouponUsageResource extends Resource
                             ->disabled(),
                     ])
                     ->columns(2),
-                    
-                ...static::operateFormSchemas(),
+
+                Operators::make(),
             ]);
     }
 
@@ -173,7 +172,7 @@ class CouponUsageResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                     
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 SelectFilter::make('coupon_id')

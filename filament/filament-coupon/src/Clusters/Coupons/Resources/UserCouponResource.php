@@ -2,37 +2,36 @@
 
 namespace RedJasmine\FilamentCoupon\Clusters\Coupons\Resources;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Schemas\Components\Utilities\Get;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ListUserCoupons;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\CreateUserCoupon;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ViewUserCoupon;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\EditUserCoupon;
-use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use RedJasmine\Coupon\Application\Services\UserCoupon\UserCouponApplicationService;
 use RedJasmine\Coupon\Domain\Data\UserCouponData;
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Coupon\Domain\Models\UserCoupon;
-use RedJasmine\FilamentCoupon\Clusters\Coupons;
-use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
+use RedJasmine\FilamentCoupon\Clusters\Coupons;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\CreateUserCoupon;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\EditUserCoupon;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ListUserCoupons;
+use RedJasmine\FilamentCoupon\Clusters\Coupons\Resources\UserCouponResource\Pages\ViewUserCoupon;
 
 class UserCouponResource extends Resource
 {
@@ -114,7 +113,7 @@ class UserCouponResource extends Resource
                                          ->toggleable(isToggledHiddenByDefault: true),
 
 
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -207,7 +206,7 @@ class UserCouponResource extends Resource
             ->components([
                 Section::make()
                                         ->schema([
-                                            ...static::ownerFormSchemas(),
+                                            Owner::make(),
 
                                             Select::make('coupon_id')
                                                                    ->label(__('red-jasmine-coupon::user_coupon.fields.coupon_id'))
@@ -249,7 +248,7 @@ class UserCouponResource extends Resource
                                         ])
                                         ->columns(2),
 
-                ...static::operateFormSchemas(),
+                Operators::make(),
             ]);
     }
 

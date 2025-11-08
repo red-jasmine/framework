@@ -2,16 +2,13 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\ProductCategoryResource\RelationManagers;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\CreateProductCategory;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductCategoryResource\Pages\EditProductCategory;
@@ -20,7 +17,6 @@ use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryCre
 use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryDeleteCommand;
 use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryUpdateCommand;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
-use RedJasmine\Product\Domain\Category\Models\Enums\CategoryStatusEnum;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 
 class ProductCategoryResource extends Resource
@@ -53,15 +49,7 @@ class ProductCategoryResource extends Resource
         return __('red-jasmine-product::product.labels.brand-category-service');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
 
     public static function getPages() : array
     {

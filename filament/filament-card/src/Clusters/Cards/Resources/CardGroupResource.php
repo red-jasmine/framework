@@ -2,20 +2,15 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\ListCardGroups;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\CreateCardGroup;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\EditCardGroup;
-use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Card\Application\Services\CardGroupApplicationService;
@@ -24,9 +19,13 @@ use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupDeleteCommand;
 use RedJasmine\Card\Application\UserCases\Command\Groups\CardGroupUpdateCommand;
 use RedJasmine\Card\Domain\Models\CardGroup;
 use RedJasmine\FilamentCard\Clusters\Cards;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\CreateCardGroup;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\EditCardGroup;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\Pages\ListCardGroups;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 
 
 class CardGroupResource extends Resource
@@ -57,7 +56,7 @@ class CardGroupResource extends Resource
     {
         return $schema
             ->components([
-                ...static::ownerFormSchemas(),
+                Owner::make(),
                 TextInput::make('name')
                                           ->label(__('red-jasmine-card::card-group.fields.name'))
                                           ->required()
@@ -65,7 +64,7 @@ class CardGroupResource extends Resource
                 TextInput::make('remarks')
                                           ->label(__('red-jasmine-card::card-group.fields.remarks'))
                                           ->maxLength(255),
-                ...static::operateFormSchemas(),
+                Operators::make(),
             ]);
     }
 
@@ -94,7 +93,7 @@ class CardGroupResource extends Resource
                 TextColumn::make('remarks')
                                          ->label(__('red-jasmine-card::card-group.fields.remarks'))
                                          ->searchable(),
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 // Tables\Filters\TrashedFilter::make(),

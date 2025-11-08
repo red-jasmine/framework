@@ -16,6 +16,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\Pages\ListProductServices;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\Pages\CreateProductService;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServiceResource\Pages\EditProductService;
@@ -100,7 +101,7 @@ class ProductServiceResource extends Resource
                                               ->default(32)
                                               ->default(ServiceStatusEnum::ENABLE)
                                               ->useEnum(ServiceStatusEnum::class),
-                ...static::operateFormSchemas()
+                Operators::make(),
             ]);
     }
 
@@ -135,7 +136,7 @@ class ProductServiceResource extends Resource
                 TextColumn::make('status')
                                          ->label(__('red-jasmine-product::product-service.fields.status'))
                                          ->useEnum(),
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 TrashedFilter::make(),

@@ -20,6 +20,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeResource\Pages\CreateProductAttribute;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeResource\Pages\ViewProductAttribute;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeResource\Pages\EditProductAttribute;
@@ -123,7 +124,7 @@ class ProductAttributeResource extends Resource
                                               ->useEnum(ProductAttributeStatusEnum::class)
                 ,
 
-                ...static::operateFormSchemas()
+                Operators::make(),
 
 
             ])
@@ -147,7 +148,7 @@ class ProductAttributeResource extends Resource
                 TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute.fields.sort'))->sortable(),
                 TextColumn::make('status')->label(__('red-jasmine-product::product-attribute.fields.status'))
                                          ->useEnum(),
-                ...static::operateTableColumns()
+                
             ])
             ->filters([
                 SelectFilter::make('group_id')

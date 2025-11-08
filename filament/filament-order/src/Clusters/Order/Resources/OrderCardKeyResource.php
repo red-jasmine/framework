@@ -124,7 +124,7 @@ class OrderCardKeyResource extends Resource
                           TextColumn::make('source_type'),
                           TextColumn::make('source_id'),
                           TextColumn::make('status')->useEnum(),
-                          ...static::operateTableColumns()
+                          
                       ])
             ->deferFilters()
             ->filters([

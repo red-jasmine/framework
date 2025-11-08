@@ -2,11 +2,13 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\BrandResource\RelationManagers;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\BrandResource\Pages\CreateBrand;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\BrandResource\Pages\EditBrand;
@@ -44,15 +46,7 @@ class BrandResource extends Resource
         return __('red-jasmine-product::product.labels.brand-category-service');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
 
     public static function getRelations() : array
     {

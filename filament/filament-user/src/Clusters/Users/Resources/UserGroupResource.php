@@ -2,21 +2,17 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
+use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\ListUserGroups;
+use Filament\Tables\Table;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
+use RedJasmine\FilamentUser\Clusters\Users;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\CreateUserGroup;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\EditUserGroup;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
-use RedJasmine\FilamentUser\Clusters\Users;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\Pages\ListUserGroups;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserGroupResource\RelationManagers;
-use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 use RedJasmine\User\Application\Services\UserGroupApplicationService;
 use RedJasmine\User\Domain\Data\UserGroupData;
 use RedJasmine\User\Domain\Models\UserGroup;
@@ -45,15 +41,7 @@ class UserGroupResource extends Resource
         return __('red-jasmine-user::user-group.labels.title');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
 
     public static function getRelations() : array
     {

@@ -2,22 +2,20 @@
 
 namespace RedJasmine\FilamentArticle\Clusters\Articles\Resources;
 
-use Filament\Schemas\Schema;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\ListArticleTags;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\CreateArticleTag;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\EditArticleTag;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use RedJasmine\Article\Application\Services\ArticleTag\ArticleTagApplicationService;
 use RedJasmine\Article\Domain\Data\ArticleTagData;
 use RedJasmine\Article\Domain\Models\ArticleTag;
-use RedJasmine\Article\Domain\Models\Enums\TagStatusEnum;
 use RedJasmine\FilamentArticle\Clusters\Articles;
-use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\CreateArticleTag;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\EditArticleTag;
+use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\Pages\ListArticleTags;
 use RedJasmine\FilamentArticle\Clusters\Articles\Resources\ArticleTagResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 
 class ArticleTagResource extends Resource
 {
@@ -40,15 +38,7 @@ class ArticleTagResource extends Resource
         return __('red-jasmine-article::article-tag.labels.article-tag');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
 
     public static function getRelations() : array
     {

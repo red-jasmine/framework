@@ -2,23 +2,20 @@
 
 namespace RedJasmine\FilamentUser\Clusters\Users\Resources;
 
-use Filament\Schemas\Schema;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\ListUserTags;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\CreateUserTag;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\EditUserTag;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 use RedJasmine\FilamentUser\Clusters\Users;
-use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\CreateUserTag;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\EditUserTag;
+use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\Pages\ListUserTags;
 use RedJasmine\FilamentUser\Clusters\Users\Resources\UserTagResource\RelationManagers;
 use RedJasmine\User\Application\Services\UserTagApplicationService;
 use RedJasmine\User\Domain\Data\UserTagData;
-use RedJasmine\User\Domain\Enums\UserTagStatusEnum;
 use RedJasmine\User\Domain\Models\UserTag;
 
 class UserTagResource extends Resource  implements HasShieldPermissions
@@ -53,15 +50,7 @@ class UserTagResource extends Resource  implements HasShieldPermissions
     protected static ?string $cluster        = Users::class;
     protected static ?int    $navigationSort = 4;
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
+    use CategoryResource;
     public static function getRelations() : array
     {
         return [

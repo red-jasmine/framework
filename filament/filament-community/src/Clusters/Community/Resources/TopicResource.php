@@ -2,33 +2,28 @@
 
 namespace RedJasmine\FilamentCommunity\Clusters\Community\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Flex;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Components\RichEditor;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Component;
-use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\EditAction;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\ListTopics;
-use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\CreateTopic;
-use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\EditTopic;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Community\Application\Services\Topic\TopicApplicationService;
@@ -36,11 +31,15 @@ use RedJasmine\Community\Domain\Data\TopicData;
 use RedJasmine\Community\Domain\Models\Enums\TopicStatusEnum;
 use RedJasmine\Community\Domain\Models\Topic;
 use RedJasmine\FilamentCommunity\Clusters\Community;
-use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\CreateTopic;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\EditTopic;
+use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\Pages\ListTopics;
 use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\Actions\Tables\ApprovalAction;
 use RedJasmine\FilamentCore\Resources\Actions\Tables\SubmitApprovalAction;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\Enums\ContentTypeEnum;
@@ -123,7 +122,7 @@ class TopicResource extends Resource
 
                     ]),
                     Section::make([
-                        ...static::ownerFormSchemas(),
+                        Owner::make(),
 
 
                         SelectTree::make('category_id')
@@ -189,7 +188,7 @@ class TopicResource extends Resource
                 ])->columnSpanFull(),
 
 
-                ...static::operateFormSchemas()
+                Operators::make(),
             ]);
     }
 
@@ -233,7 +232,7 @@ class TopicResource extends Resource
                                          ->useEnum()
                                          ->label(__('red-jasmine-community::topic.fields.approval_status'))
                 ,
-                ...static::operateTableColumns()
+                
 
             ])
             ->filters([

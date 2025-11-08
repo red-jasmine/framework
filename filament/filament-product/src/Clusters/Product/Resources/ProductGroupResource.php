@@ -2,17 +2,14 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources;
 
-use Filament\Schemas\Schema;
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\RelationManagers;
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\FilamentCore\Filters\TreeParent;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
+use RedJasmine\FilamentCore\Resources\Schemas\CategoryForm;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\CreateProductGroup;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroupResource\Pages\EditProductGroup;
@@ -21,7 +18,6 @@ use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupCreateCom
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupDeleteCommand;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCommand;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
-use RedJasmine\Product\Domain\Group\Models\Enums\GroupStatusEnum;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 
 class ProductGroupResource extends Resource
@@ -49,16 +45,7 @@ class ProductGroupResource extends Resource
         return __('red-jasmine-product::product-group.labels.group');
     }
 
-    public static function form(Schema $schema) : Schema
-    {
-        return static::categoryForm($schema, static::$onlyOwner ?? false);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return static::categoryTable($table, static::$onlyOwner ?? false);
-    }
-
+    use CategoryResource;
 
     public static function getRelations() : array
     {

@@ -10,6 +10,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\ListLogisticsCompanies;
 use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\CreateLogisticsCompany;
 use RedJasmine\FilamentLogistics\Clusters\Logistics\Resources\LogisticsCompanyResource\Pages\EditLogisticsCompany;
@@ -81,7 +82,7 @@ class LogisticsCompanyResource extends Resource
                                           ->maxLength(255),
 
 
-                ...static::operateFormSchemas(),
+                Operators::make(),
             ]);
 
         return static::translationLabels($schema);
@@ -105,7 +106,7 @@ class LogisticsCompanyResource extends Resource
                                          ->useEnum(),
                 TextColumn::make('status')
                                          ->useEnum(),
-                ...static::operateTableColumns()
+                
             ])
             ->filters([
                 //

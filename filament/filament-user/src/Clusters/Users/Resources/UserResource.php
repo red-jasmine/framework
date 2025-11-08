@@ -215,7 +215,7 @@ class UserResource extends Resource implements HasShieldPermissions
                 TextColumn::make('school')
                                          ->label(__('red-jasmine-user::user.fields.school')),
 
-                ...static::operateTableColumns(),
+                
             ])
             ->filters([
                 SelectFilter::make('account_type')

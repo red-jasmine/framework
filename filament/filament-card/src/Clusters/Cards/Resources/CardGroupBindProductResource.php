@@ -2,24 +2,19 @@
 
 namespace RedJasmine\FilamentCard\Clusters\Cards\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Components\MorphToSelect\Type;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\ListCardGroupBindProducts;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\CreateCardGroupBindProduct;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\EditCardGroupBindProduct;
-use Filament\Forms;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\MorphToSelect\Type;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,9 +24,13 @@ use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBind
 use RedJasmine\Card\Application\UserCases\Command\GroupBindProduct\CardGroupBindProductUpdateCommand;
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
 use RedJasmine\FilamentCard\Clusters\Cards;
-use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\CreateCardGroupBindProduct;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\EditCardGroupBindProduct;
+use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\Pages\ListCardGroupBindProducts;
 use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\Support\Data\UserData;
 
 class CardGroupBindProductResource extends Resource
@@ -71,7 +70,7 @@ class CardGroupBindProductResource extends Resource
         return $schema
             ->columns(1)
             ->schema([
-                ...static::ownerFormSchemas(),
+                Owner::make(),
                 Select::make('group_id')
                                        ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
                                        ->relationship('group', 'name',
@@ -106,7 +105,7 @@ class CardGroupBindProductResource extends Resource
                                           ->label(__('red-jasmine-card::card-group-bind-product.fields.sku_id'))
                                           ->numeric()
                                           ->default(0),
-                ...static::operateFormSchemas()
+                Operators::make(),
             ]);
     }
 
@@ -131,7 +130,7 @@ class CardGroupBindProductResource extends Resource
                                          ->label(__('red-jasmine-card::card-group-bind-product.fields.group_id'))
                                          ->numeric()
                                          ->sortable(),
-                ...static::operateTableColumns()
+
             ])
             ->filters([
                 //Tables\Filters\TrashedFilter::make(),
