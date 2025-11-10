@@ -22,6 +22,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -275,6 +276,7 @@ class ProductForm
                     ->columnSpan(1),
 
                 Repeater::make('values')
+                    ->addActionAlignment(Alignment::Start)
                     ->table([
                         Repeater\TableColumn::make('属性值'),
                         Repeater\TableColumn::make('别名'),
@@ -398,6 +400,7 @@ class ProductForm
             })
             ->deletable(true)
             ->default([])
+            ->addActionAlignment(Alignment::Start)
             ->inlineLabel(false)
             ->columnSpan('full')
             ->reorderable(false);
