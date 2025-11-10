@@ -56,8 +56,6 @@ class ProductAttributeValidateService
 
             switch ($attributeModel->type) {
                 case ProductAttributeTypeEnum::TEXT:
-                case ProductAttributeTypeEnum::DATE:
-
                     $saleAttrValue        = new PropValue();
                     $saleAttrValue->vid   = 0;
                     $saleAttrValue->name  = (string) ($values[0]['name'] ?? '');
