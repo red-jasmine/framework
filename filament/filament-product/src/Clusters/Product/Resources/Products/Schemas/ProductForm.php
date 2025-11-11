@@ -191,6 +191,7 @@ class ProductForm
                              ->label(__('red-jasmine-product::product.fields.has_variants'))
                              ->required()
                              ->live()
+                             ->partiallyRenderComponentsAfterStateUpdated(['sale_attrs', 'variants'])
                              ->inline()
                              ->default(0)
                              ->onIcon('heroicon-o-check-circle')
@@ -199,49 +200,51 @@ class ProductForm
                              ->offColor('gray')
                              ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）'),
 
-                       static::saleAttrs()
-                             ->visible(fn(Get $get) => $get('has_variants'))
-                             ->live()
-                             ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
-                                 try {
-                                     $saleAttrs = array_values($get('sale_attrs') ?? []);
+                       SaleAttrsRepeater::make('sale_attrs')
+                                        ->partiallyRenderComponentsAfterStateUpdated(['variants'])
+                                        ->visible(fn(Get $get) => $get('has_variants'))
+                                        ->live()
+                                        ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
+                                            try {
+                                                $saleAttrs = array_values($get('sale_attrs') ?? []);
 
-                                     $saleAttrs = array_map(function ($item) {
-                                         $item['values'] = array_values($item['values'] ?? []);
-                                         return $item;
-                                     }, $saleAttrs);
+                                                $saleAttrs = array_map(function ($item) {
+                                                    $item['values'] = array_values($item['values'] ?? []);
+                                                    return $item;
+                                                }, $saleAttrs);
 
-                                     $oldSku = $get('variants') ?? [];
-                                     if ($oldSku === null) {
-                                         $oldSku = [];
-                                     }
-                                     $service   = app(ProductAttributeValidateService::class);
-                                     $crossJoin = $service->crossJoin($saleAttrs);
 
-                                     $oldSku = collect($oldSku)->keyBy('attrs_sequence');
+                                                $oldSku = $get('variants') ?? [];
+                                                if ($oldSku === null) {
+                                                    $oldSku = [];
+                                                }
+                                                $service   = app(ProductAttributeValidateService::class);
+                                                $crossJoin = $service->crossJoin($saleAttrs);
 
-                                     $variants = [];
-                                     foreach ($crossJoin as $properties => $propertyName) {
-                                         $sku               = $oldSku[$properties] ?? [
-                                             'attrs_sequence' => $properties,
-                                             'attrs_name'     => $propertyName,
-                                             'image'          => null,
-                                             'price'          => null,
-                                             'market_price'   => null,
-                                             'cost_price'     => null,
-                                             'stock'          => null,
-                                             'safety_stock'   => 0,
-                                             'status'         => ProductStatusEnum::AVAILABLE->value,
-                                         ];
-                                         $sku['attrs_name'] = $propertyName;
-                                         $variants[]        = $sku;
-                                     }
+                                                $oldSku = collect($oldSku)->keyBy('attrs_sequence');
 
-                                     $set('variants', $variants, shouldCallUpdatedHooks: true);
-                                 } catch (Throwable $throwable) {
-                                     $set('variants', [], shouldCallUpdatedHooks: true);
-                                 }
-                             }),
+                                                $variants = [];
+                                                foreach ($crossJoin as $properties => $propertyName) {
+                                                    $sku               = $oldSku[$properties] ?? [
+                                                        'attrs_sequence' => $properties,
+                                                        'attrs_name'     => $propertyName,
+                                                        'image'          => null,
+                                                        'price'          => null,
+                                                        'market_price'   => null,
+                                                        'cost_price'     => null,
+                                                        'stock'          => null,
+                                                        'safety_stock'   => 0,
+                                                        'status'         => ProductStatusEnum::AVAILABLE->value,
+                                                    ];
+                                                    $sku['attrs_name'] = $propertyName;
+                                                    $variants[]        = $sku;
+                                                }
+
+                                                $set('variants', $variants, shouldCallUpdatedHooks: true);
+                                            } catch (Throwable $throwable) {
+                                                $set('variants', [], shouldCallUpdatedHooks: true);
+                                            }
+                                        }),
 
                        ProductCurrencySelect::make('currency')
                                             ->label(__('red-jasmine-product::product.fields.currency')),
@@ -251,165 +254,6 @@ class ProductForm
                              ->live(),
                    ]),
         ];
-    }
-
-    /**
-     * 销售属性
-     */
-    protected static function saleAttrs() : Repeater
-    {
-        return Repeater::make('sale_attrs')
-                       ->table([
-                           Repeater\TableColumn::make('属性名称')->width('200px'),
-                           Repeater\TableColumn::make('属性值')->width('800px'),
-                       ])
-                       ->label(__('red-jasmine-product::product.fields.sale_attrs'))
-                       ->schema([
-                           Hidden::make('aid')
-                                 ->label(__('red-jasmine-product::product.attrs.aid'))
-                                 ->required()
-                                 ->dehydrated(),
-
-                           TextInput::make('name')
-                                    ->label(__('red-jasmine-product::product.attrs.aid'))
-                                    ->readOnly()
-                                    ->required()
-                                    ->columnSpan(1),
-
-                           Repeater::make('values')
-                                   ->addActionAlignment(Alignment::Start)
-                                   ->table([
-                                       Repeater\TableColumn::make('属性值'),
-                                       Repeater\TableColumn::make('别名'),
-                                   ])
-                                   ->label(__('red-jasmine-product::product.attrs.values'))
-                                   ->schema([
-                                       Hidden::make('vid')
-                                             ->label(__('red-jasmine-product::product.attrs.alias')),
-
-                                       TextInput::make('name')
-                                                ->label(__('red-jasmine-product::product.attrs.alias'))
-                                                ->readOnly(),
-
-                                       TextInput::make('alias')
-                                                ->label(__('red-jasmine-product::product.attrs.alias'))
-                                                ->hiddenLabel()
-                                                ->placeholder('请输入别名')
-                                                ->maxLength(30)
-                                   ])
-                                   ->hiddenLabel()
-                                   ->addAction(function (Action $action, Get $get, Set $set, $state) {
-                                       $action->icon(Heroicon::Envelope)
-                                              ->schema([
-                                                  CheckboxList::make('vid')
-                                                              ->columns(6)
-                                                              ->label(__('red-jasmine-product::product.attrs.vid'))
-                                                              ->required()
-                                                              ->hiddenLabel()
-                                                              ->options(fn() => ProductAttributeValue::where('aid', $get('aid'))
-                                                                                                     ->pluck('name', 'id')
-                                                                                                     ->toArray()),
-                                              ])
-                                              ->action(function (array $data, array $arguments, Repeater $component) use (
-                                                  $set,
-                                                  $get,
-                                                  $state
-                                              ) : void {
-                                                  $vidList = $data['vid'] ?? [];
-                                                  $vidList = ProductAttributeValue::select(['name', 'id'])->find($vidList);
-                                                  $items   = [];
-                                                  foreach ($vidList as $attributeValue) {
-                                                      $items[] = [
-                                                          'vid'   => (string) $attributeValue->id,
-                                                          'alias' => '',
-                                                          'name'  => $attributeValue->name,
-                                                      ];
-                                                  }
-                                                  $values = $get('values') ?? [];
-                                                  if (!is_array($values)) {
-                                                      $values = [];
-                                                  }
-                                                  array_push($values, ...$items);
-                                                  $values = array_values(array_filter($values, function ($item) {
-                                                      return is_array($item) && isset($item['vid']) && !empty($item['vid']);
-                                                  }));
-
-                                                  $set('values', $values, shouldCallUpdatedHooks: true);
-                                              });
-                                   })
-                                   ->columnSpanFull()
-                                   ->deletable(true)
-                                   ->minItems(1)
-                                   ->grid(4)
-                                   ->default([])
-                                   ->reorderable(false),
-                       ])
-                       ->addAction(function (Action $action, Get $get, Set $set) {
-                           $action->icon(Heroicon::Plus)
-                                  ->label('快速添加销售属性')
-                                  ->schema([
-                                      Select::make('aid')
-                                            ->label(__('red-jasmine-product::product.attrs.aid'))
-                                            ->live()
-                                            ->required()
-                                            ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
-                                            ->searchable()
-                                            ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
-                                                "%{$search}%")),
-
-                                      CheckboxList::make('vids')
-                                                  ->label(__('red-jasmine-product::product.attrs.values'))
-                                                  ->columns(6)
-                                                  ->required()
-                                                  ->options(fn(Get $get) => $get('aid')
-                                                      ? ProductAttributeValue::where('aid', $get('aid'))->pluck('name', 'id')->toArray()
-                                                      : []
-                                                  )
-                                                  ->hidden(fn(Get $get) => !$get('aid')),
-                                  ])
-                                  ->action(function (array $data) use ($get, $set) : void {
-                                      $aid  = $data['aid'] ?? null;
-                                      $vids = $data['vids'] ?? [];
-
-                                      if ($aid && !empty($vids)) {
-                                          $attribute = ProductAttribute::find($aid);
-                                          if ($attribute) {
-                                              $attributeValues = ProductAttributeValue::select(['id', 'name'])
-                                                                                      ->whereIn('id', $vids)
-                                                                                      ->get();
-
-                                              $values = [];
-                                              foreach ($attributeValues as $attrValue) {
-                                                  $values[] = [
-                                                      'vid'   => (string) $attrValue->id,
-                                                      'name'  => $attrValue->name,
-                                                      'alias' => '',
-                                                  ];
-                                              }
-
-                                              $saleAttrs = $get('sale_attrs') ?? [];
-                                              if (!is_array($saleAttrs)) {
-                                                  $saleAttrs = [];
-                                              }
-                                              $saleAttrs[] = [
-                                                  'aid'    => (string) $attribute->id,
-                                                  'name'   => $attribute->name,
-                                                  'values' => $values,
-                                              ];
-                                              $saleAttrs   = array_values(array_filter($saleAttrs, function ($item) {
-                                                  return is_array($item) && isset($item['aid']) && !empty($item['aid']);
-                                              }));
-                                              $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
-                                          }
-                                      }
-                                  });
-                       })
-                       ->deletable(true)
-                       ->default([])
-                       ->addActionAlignment(Alignment::Start)
-                       ->inlineLabel(false)
-                       ->columnSpan('full')
-                       ->reorderable(false);
     }
 
     /**
@@ -1111,130 +955,4 @@ class ProductForm
         ];
     }
 
-    /**
-     * 自定义属性
-     */
-    protected static function customizeProps() : Repeater
-    {
-        return Repeater::make('customize_attrs')
-                       ->label(__('red-jasmine-product::product.fields.customize_attrs'))
-                       ->schema([
-                           Hidden::make('aid')->default(0),
-                           Section::make()
-                                  ->hiddenLabel()
-                                  ->inlineLabel(false)
-                                  ->schema([
-                                      TextInput::make('name')
-                                               ->label(__('red-jasmine-product::product.attrs.aid'))
-                                               ->placeholder(__('red-jasmine-product::product.attrs.aid'))
-                                               ->hiddenLabel()
-                                               ->inlineLabel(false)
-                                               ->required()
-                                               ->maxLength(32),
-                                  ])
-                                  ->columnSpan(2),
-
-                           Repeater::make('values')
-                                   ->label(__('red-jasmine-product::product.attrs.values'))
-                                   ->hiddenLabel()
-                                   ->inlineLabel(false)
-                                   ->schema([
-                                       Hidden::make('vid')->default(0),
-                                       TextInput::make('name')
-                                                ->label(__('red-jasmine-product::product.attrs.vid'))
-                                                ->placeholder(__('red-jasmine-product::product.attrs.vid'))
-                                                ->inlineLabel(false)
-                                                ->hiddenLabel()
-                                                ->columnSpan(2)
-                                                ->required()
-                                                ->maxLength(32),
-                                   ])
-                                   ->columns(2)
-                                   ->columnSpan(2)
-                                   ->reorderable(false)
-                                   ->deletable(fn($state) => count($state) > 1)
-                                   ->minItems(1)
-                                   ->maxItems(1),
-                       ])
-                       ->default([])
-                       ->inlineLabel(false)
-                       ->grid(4)
-                       ->columns(4)
-                       ->columnSpan('full')
-                       ->reorderable(false);
-    }
-
-    /**
-     * 基础属性
-     */
-    protected static function basicProps() : Repeater
-    {
-        return Repeater::make('basic_attrs')
-                       ->label(__('red-jasmine-product::product.fields.basic_attrs'))
-                       ->schema([
-                           Select::make('aid')
-                                 ->inlineLabel(false)
-                                 ->label(__('red-jasmine-product::product.attrs.aid'))
-                                 ->live()
-                                 ->columnSpan(1)
-                                 ->required()
-                                 ->disabled(fn($state) => $state)
-                                 ->dehydrated()
-                                 ->options(ProductAttribute::limit(50)->pluck('name', 'id')->toArray())
-                                 ->searchable()
-                                 ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
-                                     "%{$search}%")->limit(50)->pluck('name', 'id')->toArray())
-                                 ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name')),
-
-                           Repeater::make('values')
-                                   ->label(__('red-jasmine-product::product.attrs.values'))
-                                   ->inlineLabel(false)
-                                   ->schema([
-                                       Select::make('vid')
-                                             ->label(__('red-jasmine-product::product.attrs.vid'))
-                                             ->searchable()
-                                             ->hiddenLabel()
-                                             ->required()
-                                             ->options(fn(Get $get) => ProductAttributeValue::where('aid',
-                                                 $get('../../aid'))->limit(50)->pluck('name', 'id')->toArray())
-                                             ->getSearchResultsUsing(fn(string $search) : array => ProductAttributeValue::when($search,
-                                                 function ($query) use ($search) {
-                                                     $query->where('name', 'like', "%{$search}%");
-                                                 })->limit(20)->pluck('name', 'id')->toArray())
-                                             ->getOptionLabelUsing(fn($value, Get $get) : ?string => $get('name'))
-                                             ->hidden(fn(Get $get
-                                             ) => ProductAttribute::find($get('../../aid'))?->type === ProductAttributeTypeEnum::TEXT),
-
-                                       TextInput::make('name')
-                                                ->maxLength(30)
-                                                ->hiddenLabel()
-                                                ->required()
-                                                ->suffix(fn(Get $get) => ProductAttribute::find($get('../../aid'))?->unit)
-                                                ->inlineLabel()
-                                                ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../aid'))?->type !== ProductAttributeTypeEnum::TEXT),
-
-                                       TextInput::make('alias')
-                                                ->placeholder('请输入别名')
-                                                ->maxLength(30)
-                                                ->hiddenLabel()
-                                                ->hidden(fn(Get $get
-                                                ) => ProductAttribute::find($get('../../aid'))?->type === ProductAttributeTypeEnum::TEXT),
-                                   ])
-                                   ->grid(1)
-                                   ->columns(2)
-                                   ->columnSpan(2)
-                                   ->reorderable(false)
-                                   ->deletable(fn($state) => count($state) > 1)
-                                   ->minItems(1)
-                                   ->maxItems(fn(Get $get) => ProductAttribute::find($get('aid'))?->is_allow_multiple ? 30 : 1)
-                                   ->hidden(fn(Get $get) => !$get('aid')),
-                       ])
-                       ->default([])
-                       ->inlineLabel(false)
-                       ->grid(2)
-                       ->columns(3)
-                       ->columnSpan('full')
-                       ->reorderable(false);
-    }
 }
