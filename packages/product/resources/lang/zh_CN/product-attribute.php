@@ -3,7 +3,7 @@ return [
     'labels'  => [
 
         'product-attribute' => '属性项',
-        'attribute'        => '属性库',
+        'attribute'         => '属性库',
     ],
     'fields'  => [
         'id'                => '属性ID',

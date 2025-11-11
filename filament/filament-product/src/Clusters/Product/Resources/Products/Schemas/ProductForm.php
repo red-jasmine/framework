@@ -36,8 +36,6 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentCore\Resources\Schemas\Owner;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\ProductResource;
-use RedJasmine\FilamentProduct\Forms\Components\ProductAttrsRepeater;
 use RedJasmine\FilamentProduct\Forms\Components\ProductCurrencySelect;
 use RedJasmine\FilamentRegion\Forms\Components\CountrySelect;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
@@ -553,87 +551,27 @@ class ProductForm
                              ->searchable(),
                    ]),
 
-            Section::make('商品属性')
+            Section::make(__('red-jasmine-product::product.fields.attrs'))
                    ->description('设置商品的基础属性和自定义属性')
                    ->icon('heroicon-o-list-bullet')
-                   ->collapsible()
+                   ->columns(2)
                    ->schema([
+                       BasicAttrsRepeater::make('basic_attrs')
+                                         ->label(__('red-jasmine-product::product.fields.basic_attrs'))
+                                         ->inlineLabel(false)
+                                         ->columnSpan(1)
+
+                       ,
+                       CustomizeAttrsRepeater::make('customize_attrs')
+                                             ->label(__('red-jasmine-product::product.fields.customize_attrs'))
+                                             ->inlineLabel(false)
+                                             ->inlineLabel(false)
+                                             ->columnSpan(1),
                        CountrySelect::make('origin_country')
                                     ->label(__('red-jasmine-product::product.fields.origin_country')),
 
-                       Fieldset::make('basicAttrs')
-                               ->label(__('red-jasmine-product::product.fields.basic_attrs'))
-                               ->columns(24)
-                               ->inlineLabel()
-                               ->schema([
-                                   ProductAttrsRepeater::make('basic_attrs')
-                                                       ->label(__('red-jasmine-product::product.fields.basic_attrs'))
-                                                       ->inlineLabel(false)
-                                                       ->hiddenLabel()
-                                                       ->columnSpan(12)
-                               ]),
-
-
-                       Fieldset::make('customizeProps')
-                               ->label(__('red-jasmine-product::product.fields.customize_attrs'))
-                               ->columns(1)
-                               ->inlineLabel()
-                               ->schema([static::customizeProps()->hiddenLabel()]),
                    ]),
         ];
-    }
-
-    /**
-     * 自定义属性
-     */
-    protected static function customizeProps() : Repeater
-    {
-        return Repeater::make('customize_attrs')
-                       ->label(__('red-jasmine-product::product.fields.customize_attrs'))
-                       ->schema([
-                           Hidden::make('aid')->default(0),
-                           Section::make()
-                                  ->hiddenLabel()
-                                  ->inlineLabel(false)
-                                  ->schema([
-                                      TextInput::make('name')
-                                               ->label(__('red-jasmine-product::product.attrs.aid'))
-                                               ->placeholder(__('red-jasmine-product::product.attrs.aid'))
-                                               ->hiddenLabel()
-                                               ->inlineLabel(false)
-                                               ->required()
-                                               ->maxLength(32),
-                                  ])
-                                  ->columnSpan(2),
-
-                           Repeater::make('values')
-                                   ->label(__('red-jasmine-product::product.attrs.values'))
-                                   ->hiddenLabel()
-                                   ->inlineLabel(false)
-                                   ->schema([
-                                       Hidden::make('vid')->default(0),
-                                       TextInput::make('name')
-                                                ->label(__('red-jasmine-product::product.attrs.vid'))
-                                                ->placeholder(__('red-jasmine-product::product.attrs.vid'))
-                                                ->inlineLabel(false)
-                                                ->hiddenLabel()
-                                                ->columnSpan(2)
-                                                ->required()
-                                                ->maxLength(32),
-                                   ])
-                                   ->columns(2)
-                                   ->columnSpan(2)
-                                   ->reorderable(false)
-                                   ->deletable(fn($state) => count($state) > 1)
-                                   ->minItems(1)
-                                   ->maxItems(1),
-                       ])
-                       ->default([])
-                       ->inlineLabel(false)
-                       ->grid(4)
-                       ->columns(4)
-                       ->columnSpan('full')
-                       ->reorderable(false);
     }
 
     /**
@@ -1154,6 +1092,59 @@ class ProductForm
 
             Operators::make(),
         ];
+    }
+
+    /**
+     * 自定义属性
+     */
+    protected static function customizeProps() : Repeater
+    {
+        return Repeater::make('customize_attrs')
+                       ->label(__('red-jasmine-product::product.fields.customize_attrs'))
+                       ->schema([
+                           Hidden::make('aid')->default(0),
+                           Section::make()
+                                  ->hiddenLabel()
+                                  ->inlineLabel(false)
+                                  ->schema([
+                                      TextInput::make('name')
+                                               ->label(__('red-jasmine-product::product.attrs.aid'))
+                                               ->placeholder(__('red-jasmine-product::product.attrs.aid'))
+                                               ->hiddenLabel()
+                                               ->inlineLabel(false)
+                                               ->required()
+                                               ->maxLength(32),
+                                  ])
+                                  ->columnSpan(2),
+
+                           Repeater::make('values')
+                                   ->label(__('red-jasmine-product::product.attrs.values'))
+                                   ->hiddenLabel()
+                                   ->inlineLabel(false)
+                                   ->schema([
+                                       Hidden::make('vid')->default(0),
+                                       TextInput::make('name')
+                                                ->label(__('red-jasmine-product::product.attrs.vid'))
+                                                ->placeholder(__('red-jasmine-product::product.attrs.vid'))
+                                                ->inlineLabel(false)
+                                                ->hiddenLabel()
+                                                ->columnSpan(2)
+                                                ->required()
+                                                ->maxLength(32),
+                                   ])
+                                   ->columns(2)
+                                   ->columnSpan(2)
+                                   ->reorderable(false)
+                                   ->deletable(fn($state) => count($state) > 1)
+                                   ->minItems(1)
+                                   ->maxItems(1),
+                       ])
+                       ->default([])
+                       ->inlineLabel(false)
+                       ->grid(4)
+                       ->columns(4)
+                       ->columnSpan('full')
+                       ->reorderable(false);
     }
 
     /**

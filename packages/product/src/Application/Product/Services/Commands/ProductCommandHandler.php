@@ -12,6 +12,7 @@ use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Domain\Product\Services\ProductDomainService;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
@@ -34,7 +35,8 @@ class ProductCommandHandler extends CommandHandler
         protected ProductAttributeValidateService $attributeValidateService,
         protected ProductCategoryApplicationService $categoryQueryService,
         protected ProductGroupApplicationService $groupQueryService,
-        protected ProductTransformer $productTransformer
+        protected ProductTransformer $productTransformer,
+        protected ProductDomainService $productDomainService
     ) {
 
 
@@ -152,19 +154,15 @@ class ProductCommandHandler extends CommandHandler
     }
 
 
-    protected function validateAttributes(\RedJasmine\Product\Domain\Product\Data\Product $command)
+    /**
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     *
+     * @return void
+     * @throws ProductException
+     */
+    protected function validateAttributes(\RedJasmine\Product\Domain\Product\Data\Product $command) : void
     {
-        // 验证销售属性 和 基础属性 不能有重复的属性项目
-
-        if($command->saleAttrs && $command->basicAttrs){
-            $saleAttrIds = $command->saleAttrs->pluck('aid');
-            $basicAttrIds = $command->basicAttrs->pluck('aid');
-
-            if ($saleAttrIds->intersect($basicAttrIds)->isNotEmpty()) {
-                throw new ProductException('属性不能重复');
-            }
-        }
-
-
+        // 使用领域服务验证商品属性规则
+        $this->productDomainService->validateAttributes($command);
     }
 }

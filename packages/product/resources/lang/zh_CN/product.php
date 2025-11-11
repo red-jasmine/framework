@@ -97,6 +97,7 @@ return [
         'size'                      => '体积',
         'remarks'                   => '备注',
         'after_sales_services'      => '售后服务',
+        'attrs'                     => '商品属性',
         'basic_attrs'               => '基础属性',
         'customize_attrs'           => '自定义属性',
         'sale_attrs'                => '销售属性',
@@ -108,6 +109,7 @@ return [
         'tags'                      => '标签',
         'services'                  => '服务保障',
         'origin_country'            => '原产国',
+
     ],
 
     'attrs' => [

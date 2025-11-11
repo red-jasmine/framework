@@ -1,8 +1,9 @@
 <?php
 
-namespace RedJasmine\FilamentProduct\Forms\Components;
+namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\ModalTableSelect;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -15,17 +16,16 @@ use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 
 
-class ProductAttrsRepeater extends Repeater
+class BasicAttrsRepeater extends Repeater
 {
 
-    //protected string $view = 'red-jasmine-filament-product::components.repeater.table';
 
     protected function setUp() : void
     {
         parent::setUp();
         $this->table([
-            Repeater\TableColumn::make('属性项')->width('30%'),
-            Repeater\TableColumn::make('属性值')->width('70%'),
+            Repeater\TableColumn::make(__('red-jasmine-product::product-attribute.labels.product-attribute'))->width('30%'),
+            Repeater\TableColumn::make(__('red-jasmine-product::product-attribute-value.labels.product-attribute-value'))->width('70%'),
         ]);
 
         $this->defaultItems(0);
@@ -49,6 +49,7 @@ class ProductAttrsRepeater extends Repeater
             ,
 
             FusedGroup::make([
+
                 Select::make('vids')
                       ->label(__('red-jasmine-product::product.attrs.vid'))
                       ->searchable()
@@ -59,8 +60,16 @@ class ProductAttrsRepeater extends Repeater
                       ->getSearchResultsUsing(fn(string $search) : array => ProductAttributeValue::when($search,
                           function ($query) use ($search) {
                               $query->where('name', 'like', "%{$search}%");
-                          })->limit(20)->pluck('name', 'id')->toArray())
+                          })->limit(20)->pluck('name', 'id')->all())
+                      ->getOptionLabelsUsing(function ($value, $values, $component) {
+                          if ($component->isMultiple()) {
+                              return ProductAttributeValue::whereIn('id', $values)->pluck('name', 'id')->all();
+                          } else {
+                              return ProductAttributeValue::find($value)?->name;
+                          }
+                      })
                       ->hidden(fn(Get $get) => ProductAttribute::find($get('aid'))?->type === ProductAttributeTypeEnum::TEXT),
+
 
                 TextInput::make('names')
                          ->maxLength(30)
@@ -69,26 +78,17 @@ class ProductAttrsRepeater extends Repeater
                          ->suffix(fn(Get $get) => ProductAttribute::find($get('aid'))?->unit)
                          ->inlineLabel()
                          ->visible(function (Get $get) {
-
                              $attr = ProductAttribute::find($get('aid'));
-
-                             return $attr?->type === ProductAttributeTypeEnum::TEXT
-                                    && $attr?->is_allow_multiple === false;
-
-
+                             return $attr?->type === ProductAttributeTypeEnum::TEXT && $attr?->is_allow_multiple === false;
                          }),
 
 
                 TagsInput::make('names')
-                    //->view('red-jasmine-filament-product::components.tags-input')
                          ->visible(function (Get $get) {
-
-                        $attr = ProductAttribute::find($get('aid'));
-                        return $attr?->type === ProductAttributeTypeEnum::TEXT
-                               && $attr?->is_allow_multiple === true;
-
-
-                    })
+                             $attr = ProductAttribute::find($get('aid'));
+                             return $attr?->type === ProductAttributeTypeEnum::TEXT
+                                    && $attr?->is_allow_multiple === true;
+                         })
                 ,
 
 
@@ -129,10 +129,14 @@ class ProductAttrsRepeater extends Repeater
                             break;
                         case ProductAttributeTypeEnum::SELECT:
                             if ($attrModel->is_allow_multiple === false) {
-                                $newItem['vids'] = array_column($item['values'], 'vid')[0] ?? null;
+                                $newItem['vids'] = (string) (array_column($item['values'], 'vid')[0] ?? null);
                             } else {
-                                $newItem['vids'] = array_column($item['values'], 'vid');
+                                $newItem['vids'] = array_map(function ($vid) {
+                                    return (string) $vid;
+                                }, array_column($item['values'], 'vid'));
                             }
+
+
                             break;
                     }
 
