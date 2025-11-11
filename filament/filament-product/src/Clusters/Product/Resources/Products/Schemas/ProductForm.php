@@ -18,6 +18,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\FusedGroup;
+use Filament\Schemas\Components\Icon;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -47,6 +48,7 @@ use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Product\Data\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use Symfony\Component\Intl\Currencies;
 use Throwable;
 
 class ProductForm
@@ -247,6 +249,7 @@ class ProductForm
                                         }),
 
                        ProductCurrencySelect::make('currency')
+                                            ->live()
                                             ->label(__('red-jasmine-product::product.fields.currency')),
 
                        static::variants()
@@ -271,23 +274,35 @@ class ProductForm
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
                            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->markAsRequired()->width('120px'),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
+                           Repeater\TableColumn::make('更多')->width('120px'),
                        ])
                        ->schema([
+                           Hidden::make('attrs_sequence'),
                            FileUpload::make('image')->image()->panelLayout('compact'),
                            TextInput::make('attrs_name')->readOnly(),
                            TextInput::make('sku'),
-                           TextInput::make('price')->required()->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('market_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('cost_price')->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('price')->required()
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('stock')->minValue(0)->integer()->required(),
+                           TextInput::make('market_price')
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('cost_price')
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
                            TextInput::make('safety_stock')->numeric()->default(0),
                            TextInput::make('package_unit')
                                     ->label(__('red-jasmine-product::product.fields.package_unit'))
@@ -300,12 +315,13 @@ class ProductForm
                                     ->minValue(1)
                                     ->placeholder('每个包装单位包含的数量'),
                            TextInput::make('barcode')->maxLength(32),
+                           TextInput::make('weight')->suffix('KG'),
                            Select::make('status')
                                  ->selectablePlaceholder(false)
                                  ->required()
                                  ->default(ProductStatusEnum::AVAILABLE->value)
                                  ->options(ProductStatusEnum::variantStatus()),
-                           Hidden::make('attrs_sequence'),
+
                        ])
                        ->inlineLabel(false)
                        ->columnSpan('full')

@@ -15,10 +15,13 @@ class ProductCurrencySelect extends Select
         parent::setUp();
 
         $this->options($this->getProductCurrencyOptions());
+
+        $this->default(config('red-jasmine-product.currency', 'CNY'));
     }
 
     public function getProductCurrencyOptions() : array
     {
+
 
         $allowedCurrencies = config('red-jasmine-product.currencies');
 

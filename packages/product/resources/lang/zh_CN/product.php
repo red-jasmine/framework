@@ -90,7 +90,7 @@ return [
         'videos'                    => '视频集',
         'images'                    => '图片集',
         'sku'                       => 'SKU',
-        'weight'                    => '重',
+        'weight'                    => '重量',
         'width'                     => '宽',
         'height'                    => '高',
         'length'                    => '长',
