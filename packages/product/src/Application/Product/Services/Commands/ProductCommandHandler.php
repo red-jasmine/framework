@@ -90,6 +90,8 @@ class ProductCommandHandler extends CommandHandler
 
         $this->validateSellerCategory($command);
 
+        $this->validateAttributes($command);
+
     }
 
     /**
@@ -147,5 +149,22 @@ class ProductCommandHandler extends CommandHandler
         } catch (Throwable $exception) {
             throw new ProductException('商品分组不可使用');
         }
+    }
+
+
+    protected function validateAttributes(\RedJasmine\Product\Domain\Product\Data\Product $command)
+    {
+        // 验证销售属性 和 基础属性 不能有重复的属性项目
+
+        if($command->saleAttrs && $command->basicAttrs){
+            $saleAttrIds = $command->saleAttrs->pluck('aid');
+            $basicAttrIds = $command->basicAttrs->pluck('aid');
+
+            if ($saleAttrIds->intersect($basicAttrIds)->isNotEmpty()) {
+                throw new ProductException('属性不能重复');
+            }
+        }
+
+
     }
 }
