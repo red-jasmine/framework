@@ -12,10 +12,12 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -625,62 +627,77 @@ class ProductForm
      */
     protected static function afterSalesServices() : array
     {
-        $components = [];
 
-        $components[] = CheckboxList::make('services')
-                                    ->label(__('red-jasmine-product::product.fields.services'))
-                                    ->relationship(
-                                        name: 'services',
-                                        titleAttribute: 'name',
-                                        modifyQueryUsing: fn(Builder $query) => $query->enable()
-                                    )
-                                    ->columns(6)
-                                    ->dehydrated()
-                                    ->saveRelationshipsUsing(null)
-                                    ->dehydrated()
-                                    ->default([]);
+        return [
+            Section::make('售后服务')
+                   ->icon('heroicon-o-shopping-cart')
+                   ->columns(2)
+                   ->schema([
+                       CheckboxList::make('services')
+                                   ->label(__('red-jasmine-product::product.fields.services'))
+                                   ->relationship(
+                                       name: 'services',
+                                       titleAttribute: 'name',
+                                       modifyQueryUsing: fn(Builder $query) => $query->enable()
+                                   )
+                                   ->columns(6)
+                                   ->columnSpanFull()
+                                   ->dehydrated()
+                                   ->saveRelationshipsUsing(null)
+                                   ->dehydrated()
+                                   ->default([]),
 
-        $components[] = Repeater::make('after_sales_services')
-                                ->label(__('red-jasmine-product::product.fields.after_sales_services'))
-                                ->columns(4)
-                                ->grid(1)
-                                ->hiddenLabel()
-                                ->inlineLabel(false)
-                                ->columnSpanFull()
-                                ->reorderable(false)
-                                ->addable(false)
-                                ->deletable(false)
-                                ->default(collect(Product::defaultAfterSalesServices())->toArray())
-                                ->schema([
-                                    Select::make('refund_type')
-                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))
-                                          ->selectablePlaceholder(false)
-                                          ->disabled()
-                                          ->dehydrated()
-                                          ->distinct()
-                                          ->fixIndistinctState()
-                                          ->options(RefundTypeEnum::options()),
-                                    Select::make('allow_stage')
-                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
-                                          ->selectablePlaceholder(false)
-                                          ->live()
-                                          ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                          ->options(OrderAfterSaleServiceAllowStageEnum::options()),
+                       Repeater::make('after_sales_services')
+                               ->label(__('red-jasmine-product::product.fields.after_sales_services'))
+                               ->table([
+                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type')),
+                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage')),
+                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit')),
+                               ])
+                               ->columnSpanFull()
+                               ->inlineLabel(false)
+                               ->reorderable(false)
+                               ->addable(false)
+                               ->deletable(false)
+                               ->default(collect(Product::defaultAfterSalesServices())->toArray())
+                               ->schema([
+                                   Select::make('refund_type')
+                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))
+                                         ->selectablePlaceholder(false)
+                                         ->disabled()
+                                         ->dehydrated()
+                                         ->distinct()
+                                         ->fixIndistinctState()
+                                         ->options(RefundTypeEnum::options()),
+                                   Select::make('allow_stage')
+                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
+                                         ->selectablePlaceholder(false)
+                                         ->live()
+                                         ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
+                                         ->options(OrderAfterSaleServiceAllowStageEnum::options()),
 
-                                    TextInput::make('time_limit')
+                                   FusedGroup::make([
+                                       TextInput::make('time_limit')
+                                                ->hiddenLabel()
+                                                ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
+                                       ,
+                                       Select::make('time_limit_unit')
+                                             ->hiddenLabel()
+                                             ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
+                                             ->nullable()
+                                             ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
+                                             ->options(OrderAfterSaleServiceTimeUnit::options()),
+                                   ])
                                              ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
+                                             ->columns(2)
                                              ->visible(fn(Get $get
                                              ) => $get('allow_stage') !== OrderAfterSaleServiceAllowStageEnum::NEVER->value),
-                                    Select::make('time_limit_unit')
-                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
-                                          ->nullable()
-                                          ->visible(fn(Get $get
-                                          ) => $get('allow_stage') !== OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                          ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
-                                          ->options(OrderAfterSaleServiceTimeUnit::options()),
-                                ]);
 
-        return $components;
+                               ])
+                   ])
+        ];
+
+
     }
 
     /**
@@ -953,12 +970,12 @@ class ProductForm
                                 ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
                                 ->prefixIcon('heroicon-o-hashtag'),
 
-                       TextInput::make('meta_description')
-                                ->label(__('red-jasmine-product::product.fields.meta_description'))
-                                ->maxLength(255)
-                                ->placeholder('商品简短描述')
-                                ->helperText('显示在搜索结果中的描述，建议120-160字')
-                                ->prefixIcon('heroicon-o-document-text'),
+                       Textarea::make('meta_description')
+                               ->label(__('red-jasmine-product::product.fields.meta_description'))
+                               ->maxLength(200)
+                               ->placeholder('商品简短描述')
+                               ->helperText('显示在搜索结果中的描述，建议120-160字')
+                       ,
                    ]),
         ];
     }
