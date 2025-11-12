@@ -5,10 +5,11 @@ namespace RedJasmine\JwtAuth\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Contracts\SystemAdmin;
 use RedJasmine\Support\Contracts\UserInterface;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class JwtUser extends Authenticatable implements JWTSubject, UserInterface, BelongsToOwnerInterface
+class JwtUser extends Authenticatable implements JWTSubject, UserInterface, BelongsToOwnerInterface,SystemAdmin
 {
 
 
@@ -17,6 +18,7 @@ class JwtUser extends Authenticatable implements JWTSubject, UserInterface, Belo
         'type',
         'nickname',
         'name',
+        'is_system_admin',
     ];
 
     public function getJWTIdentifier()
@@ -78,6 +80,15 @@ class JwtUser extends Authenticatable implements JWTSubject, UserInterface, Belo
     public function getUserData() : array
     {
         return $this->toArray();
+    }
+
+    /**
+     * 是否是系统管理员
+     * @return bool
+     */
+    public function isSystemAdmin() : bool
+    {
+        return  (bool)($this->is_system_admin ?? false);
     }
 
 }
