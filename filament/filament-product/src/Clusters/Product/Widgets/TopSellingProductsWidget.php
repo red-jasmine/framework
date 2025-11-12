@@ -7,6 +7,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class TopSellingProductsWidget extends BaseWidget
 {
@@ -23,11 +24,16 @@ class TopSellingProductsWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
+        $owner = auth()->user();
+        if($owner instanceof BelongsToOwnerInterface){
+            $owner = $owner->owner();
+        }
+
         return $table
             ->query(
                 Product::query()
-                    //->where('owner_type', get_class($owner))
-                    //->where('owner_id', $owner->id)
+                    ->where('owner_type',$owner->getType())
+                    ->where('owner_id', $owner->getId())
                     ->where('status', ProductStatusEnum::AVAILABLE)
                     ->where('sales', '>', 0)
                     ->orderBy('sales', 'desc')

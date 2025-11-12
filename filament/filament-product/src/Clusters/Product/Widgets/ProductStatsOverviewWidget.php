@@ -6,6 +6,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class ProductStatsOverviewWidget extends BaseWidget
 {
@@ -18,8 +19,11 @@ class ProductStatsOverviewWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $owner = auth()->user();
-
+        $user = auth()->user();
+        $owner = $user;
+        if($user instanceof BelongsToOwnerInterface){
+            $owner = $owner->owner();
+        }
 
 
         // 获取商品总数

@@ -6,6 +6,7 @@ use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class ProductTypeChartWidget extends ChartWidget
 {
@@ -21,10 +22,13 @@ class ProductTypeChartWidget extends ChartWidget
     protected function getData(): array
     {
         $owner = auth()->user();
+        if($owner instanceof BelongsToOwnerInterface){
+            $owner = $owner->owner();
+        }
 
         $typeCounts = Product::query()
-            // ->where('owner_type',$owner->getType())
-            //->where('owner_id', $owner->getId())
+            ->where('owner_type',$owner->getType())
+            ->where('owner_id', $owner->getId())
             ->select('product_type', DB::raw('count(*) as count'))
             ->groupBy('product_type')
             ->pluck('count', 'product_type')

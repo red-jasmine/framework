@@ -6,6 +6,7 @@ use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class ProductStatusChartWidget extends ChartWidget
 {
@@ -23,6 +24,9 @@ class ProductStatusChartWidget extends ChartWidget
     protected function getData(): array
     {
         $owner = auth()->user();
+        if($owner instanceof BelongsToOwnerInterface){
+            $owner = $owner->owner();
+        }
         
         $statusCounts = Product::query()
             ->where('owner_type', get_class($owner))
