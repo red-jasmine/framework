@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
+use Illuminate\Support\Carbon;
 use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,12 +17,14 @@ use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
+ * @property ProductStatusEnum $status
  * @property Money $price
  * @property ?Money $market_price
  * @property ?Money $cost_price
  * @property  $attrs_name
  * @property  $attrs_sequence
  * @property  $version
+ * @property ?Carbon $deleted_at
  */
 class ProductVariant extends Model implements OperatorInterface
 {
@@ -66,12 +69,12 @@ class ProductVariant extends Model implements OperatorInterface
     protected function casts() : array
     {
         return [
-            'status'        => ProductStatusEnum::class,// 状态
-            'modified_at' => 'datetime',
-            'currency'      => CurrencyCast::class,
-            'price'         => MoneyCast::class.':currency,price,1',
-            'market_price'  => MoneyCast::class.':currency,market_price,1',
-            'cost_price'    => MoneyCast::class.':currency,cost_price,1',
+            'status'       => ProductStatusEnum::class,// 状态
+            'modified_at'  => 'datetime',
+            'currency'     => CurrencyCast::class,
+            'price'        => MoneyCast::class.':currency,price,1',
+            'market_price' => MoneyCast::class.':currency,market_price,1',
+            'cost_price'   => MoneyCast::class.':currency,cost_price,1',
         ];
     }
 }

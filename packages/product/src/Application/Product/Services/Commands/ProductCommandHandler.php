@@ -3,15 +3,15 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 
-use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
-use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Services\ProductDomainService;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
@@ -47,7 +47,6 @@ class ProductCommandHandler extends CommandHandler
      * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
      * @return void
-     * @throws StockException
      * @throws Throwable
      */
     protected function handleStock(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void

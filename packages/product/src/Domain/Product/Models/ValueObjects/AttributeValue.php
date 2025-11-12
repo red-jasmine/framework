@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Product\Models\ValueObjects;
 
 use RedJasmine\Support\Domain\Models\ValueObjects\ValueObject;
 
-class PropValue extends ValueObject
+class AttributeValue extends ValueObject
 {
 
     /**

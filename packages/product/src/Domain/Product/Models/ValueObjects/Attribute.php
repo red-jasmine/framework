@@ -27,7 +27,7 @@ class Attribute extends ValueObject
     public ?string $unit;
     /**
      * 属性值
-     * @var Collection<PropValue>
+     * @var Collection<AttributeValue>
      */
     public Collection $values;
 

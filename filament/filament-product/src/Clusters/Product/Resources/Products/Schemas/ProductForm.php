@@ -3,7 +3,6 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
@@ -18,15 +17,12 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\FusedGroup;
-use Filament\Schemas\Components\Icon;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Alignment;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use LaraZeus\Quantity\Components\Quantity;
@@ -41,10 +37,7 @@ use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentCore\Resources\Schemas\Owner;
 use RedJasmine\FilamentProduct\Forms\Components\ProductCurrencySelect;
 use RedJasmine\FilamentRegion\Forms\Components\CountrySelect;
-use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
-use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
-use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
-use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
+use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
@@ -254,7 +247,7 @@ class ProductForm
 
                        static::variants()
                              ->deletable(false)
-                             ->live(),
+                             ,
                    ]),
         ];
     }

@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Transformer;
 
 use JsonException;
-use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
+use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
 use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
@@ -225,7 +225,7 @@ class ProductTransformer
 
     }
 
-    protected function setDefaultVariant(Product $product, ProductVariant $variant)
+    protected function setDefaultVariant(Product $product, ProductVariant $variant) : void
     {
         $variant->status       = ProductStatusEnum::AVAILABLE;
         $variant->deleted_at   = null;
@@ -235,19 +235,10 @@ class ProductTransformer
         $variant->market_price = $product->market_price ?? null;
         $variant->safety_stock = $product->safety_stock ?? 0;
         $variant->image        = $product->image;
-        $variant->barcode      = $product->barcode;
         // 同步变体货币：从商品表继承
         $variant->currency = $product->currency;
 
     }
 
-    protected function defaultVariant(Product $product) : ProductVariant
-    {
 
-        $variant                 = new ProductVariant();
-        $variant->id             = $product->id;
-        $variant->attrs_sequence = $product::$defaultAttrsSequence;
-        $variant->attrs_name     = $product::$defaultAttrsName;
-        return $variant;
-    }
 }

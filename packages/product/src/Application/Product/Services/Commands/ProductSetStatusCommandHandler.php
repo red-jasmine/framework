@@ -3,16 +3,16 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use JsonException;
-use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
-use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
-use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\ProductAttributeException;
+use RedJasmine\Product\Exceptions\ProductException;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use Throwable;

@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Product\Application\Attribute\Services;
+namespace RedJasmine\Product\Domain\Attribute\Services;
 
 use Illuminate\Support\Collection;
 use JsonException;
@@ -8,10 +8,10 @@ use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
+use RedJasmine\Product\Domain\Product\AttributeFormatter;
 use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Attribute;
-use RedJasmine\Product\Domain\Product\Models\ValueObjects\PropValue;
-use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Domain\Product\Models\ValueObjects\AttributeValue;
 use RedJasmine\Product\Exceptions\ProductAttributeException;
 
 /**
@@ -56,7 +56,7 @@ class ProductAttributeValidateService
 
             switch ($attributeModel->type) {
                 case ProductAttributeTypeEnum::TEXT:
-                    $saleAttrValue        = new PropValue();
+                    $saleAttrValue        = new AttributeValue();
                     $saleAttrValue->vid   = 0;
                     $saleAttrValue->name  = (string) ($values[0]['name'] ?? '');
                     $saleAttrValue->alias = (string) ($values[0]['alias'] ?? '');
@@ -67,14 +67,14 @@ class ProductAttributeValidateService
                     break;
                 case ProductAttributeTypeEnum::SELECT:
 
-                    $attrValues        = $this->valueRepository->findByIdsInAttribute($basicAttr->aid,
-                        collect($values)->pluck('vid')->toArray())->keyBy('id');
+                    $attrValues        = $this->valueRepository
+                        ->findByIdsInAttribute($basicAttr->aid, collect($values)->pluck('vid')->toArray())->keyBy('id');
                     $basicAttr->values = collect();
 
                     foreach ($values as $value) {
                         $vid                  = $value['vid'];
                         $alias                = $value['alias'] ?? '';
-                        $saleAttrValue        = new PropValue();
+                        $saleAttrValue        = new AttributeValue();
                         $saleAttrValue->vid   = $vid;
                         $saleAttrValue->name  = $attrValues[$saleAttrValue->vid]->name;
                         $saleAttrValue->alias = $alias;
@@ -137,6 +137,12 @@ class ProductAttributeValidateService
 
     }
 
+    protected function isAllowAlias(ProductAttribute $attribute) : bool
+    {
+
+        return $attribute->isAllowAlias();
+    }
+
     /**
      * 是否允许多个值
      *
@@ -147,12 +153,6 @@ class ProductAttributeValidateService
     protected function isAllowMultipleValues(ProductAttribute $attribute) : bool
     {
         return $attribute->isAllowMultipleValues();
-    }
-
-    protected function isAllowAlias(ProductAttribute $attribute) : bool
-    {
-
-        return $attribute->isAllowAlias();
     }
 
     /**
@@ -175,8 +175,7 @@ class ProductAttributeValidateService
         $crossJoinString = $this->attributeFormatter->crossJoinToString($saleAttrsData);
 
 
-
-        $crossJoin       = [];
+        $crossJoin = [];
 
         foreach ($crossJoinString as $attributeString) {
             $crossJoin[$attributeString] = $this->buildAttrName($saleAttrs, $attributeString);
@@ -220,7 +219,7 @@ class ProductAttributeValidateService
 
                 $vid                  = $value['vid'];
                 $alias                = $value['alias'] ?? '';
-                $saleAttrValue        = new PropValue();
+                $saleAttrValue        = new AttributeValue();
                 $saleAttrValue->vid   = $vid;
                 $saleAttrValue->name  = $attrValues[$saleAttrValue->vid]->name;
                 $saleAttrValue->alias = $alias;
