@@ -54,14 +54,13 @@ enum ProductTypeEnum: string
         return [];
     }
 
-    public function getAllowShippingType() : array
+
+    public function getAllowShippingTypes() : array
     {
-        return ProductTypeEnum::shippingTypes()[$this->value];
+        return ProductTypeEnum::shippingTypeList()[$this->value];
     }
 
-    // 服务
-
-    public static function shippingTypes() : array
+    protected static function shippingTypeList() : array
     {
 
         return [
@@ -70,7 +69,7 @@ enum ProductTypeEnum: string
             self::PHYSICAL->value => [
                 ShippingTypeEnum::LOGISTICS,
                 ShippingTypeEnum::DELIVERY,
-                ShippingTypeEnum::PICKUP,
+                ShippingTypeEnum::INSTORE,
 
             ],
 
@@ -97,10 +96,17 @@ enum ProductTypeEnum: string
 
             self::FOOD->value => [
                 ShippingTypeEnum::DELIVERY,
-                ShippingTypeEnum::TAKEAWAY,
-                ShippingTypeEnum::DINE,
+                ShippingTypeEnum::INSTORE,
             ],
         ];
+    }
+
+    // 服务
+
+    public function shippingTypes() : array
+    {
+
+        return ProductTypeEnum::shippingTypeList()[$this->value];
     }
 
     /**

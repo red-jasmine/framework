@@ -39,7 +39,7 @@ class Product extends Data
      * 当实物时选择配送方式
      * @var array
      */
-    public array $deliveryMethods = [];
+    public array $shippingTypes = [];
 
     // 产品标题
     public string $title;

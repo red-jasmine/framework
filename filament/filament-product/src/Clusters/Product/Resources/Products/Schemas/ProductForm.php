@@ -166,9 +166,75 @@ class ProductForm
                                  ->helperText('选择商品分组，便于商品管理')
                                  ->searchable(),
                    ]),
+            ...static::shippingFields(),
 
             ...static::specifications(),
             ...static::publishFields(),
+        ];
+    }
+
+    /**
+     * 发货字段
+     */
+    protected static function shippingFields() : array
+    {
+        return [
+            Section::make('发货设置')
+                   ->description('配置商品的发货和物流相关信息')
+                   ->icon('heroicon-o-truck')
+                   ->columns(2)
+                   ->schema([
+                       TextInput::make('delivery_time')
+                                ->label(__('red-jasmine-product::product.fields.delivery_time'))
+                                ->required()
+                                ->numeric()
+                                ->default(0)
+                                ->minValue(0)
+                                ->helperText('承诺发货时间（小时），0表示24小时内发货')
+                                ->prefixIcon('heroicon-o-clock')
+                                ->suffix('小时'),
+
+                       ToggleButtons::make('shipping_types')
+                                    ->label(__('red-jasmine-product::product.fields.shipping_types'))
+                                    ->inline()
+                                    ->multiple()
+                                    ->icons(ShippingTypeEnum::icons())
+                                    ->options(fn(Get $get) => collect(ShippingTypeEnum::options())->only(array_map(function ($type) {
+                                            return $type->value;
+                                        }, ProductTypeEnum::tryFrom($get('product_type')?->value)->shippingTypes())
+                                    )->toArray()
+                                    )
+                                    ->required()
+                                    ->helperText('选择支持的发货方式')
+                                    ->columnSpanFull(),
+
+                       // 当前选择 需要计算邮费的发货类型时 才需要这两个属性，而且 每个属性都有 一组这样的属性值
+                       ToggleButtons::make('freight_payer')
+                                    ->label(__('red-jasmine-product::product.fields.freight_payer'))
+                                    ->required()
+                                    ->default(FreightPayerEnum::SELLER)
+                                    ->useEnum(FreightPayerEnum::class)
+                                    ->live()
+                                    ->inline()
+                                    ->icons(FreightPayerEnum::icons())
+                                    ->visible(fn(Get $get
+                                    ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
+                                    ->helperText('选择谁承担运费')
+                                    ->columnSpanFull(),
+
+                       Select::make('freight_template_id')
+                             ->label(__('red-jasmine-product::product.fields.freight_template_id'))
+                             ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Get $get) {
+                                 return $query->where('owner_type', $get('owner_type'))->where('owner_id', $get('owner_id'));
+                             })
+                             ->formatStateUsing(fn($state) => (string) $state)
+                             ->required(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
+                             ->visible(fn(Get $get) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
+                             ->helperText('选择运费模板，买家承担运费时必选')
+                             ->prefixIcon('heroicon-o-document-text')
+                             ->searchable()
+                             ->preload(),
+                   ]),
         ];
     }
 
@@ -245,9 +311,7 @@ class ProductForm
                                             ->live()
                                             ->label(__('red-jasmine-product::product.fields.currency')),
 
-                       static::variants()
-                             ->deletable(false)
-                             ,
+                       static::variants()->deletable(false),
                    ]),
         ];
     }
@@ -834,69 +898,6 @@ class ProductForm
     }
 
     /**
-     * 发货字段
-     */
-    protected static function shippingFields() : array
-    {
-        return [
-            Section::make('发货设置')
-                   ->description('配置商品的发货和物流相关信息')
-                   ->icon('heroicon-o-truck')
-                   ->columns(2)
-                   ->schema([
-                       TextInput::make('delivery_time')
-                                ->label(__('red-jasmine-product::product.fields.delivery_time'))
-                                ->required()
-                                ->numeric()
-                                ->default(0)
-                                ->minValue(0)
-                                ->helperText('承诺发货时间（小时），0表示24小时内发货')
-                                ->prefixIcon('heroicon-o-clock')
-                                ->suffix('小时'),
-
-                       ToggleButtons::make('delivery_methods')
-                                    ->label(__('red-jasmine-product::product.fields.delivery_methods'))
-                                    ->inline()
-                                    ->multiple()
-                                    ->icons(ShippingTypeEnum::icons())
-                                    ->options(ShippingTypeEnum::deliveryMethods())
-                                    ->required(fn(Get $get
-                                    ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                                    ->visible(fn(Get $get
-                                    ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                                    ->helperText('选择支持的配送方式')
-                                    ->columnSpanFull(),
-
-                       ToggleButtons::make('freight_payer')
-                                    ->label(__('red-jasmine-product::product.fields.freight_payer'))
-                                    ->required()
-                                    ->default(FreightPayerEnum::SELLER)
-                                    ->useEnum(FreightPayerEnum::class)
-                                    ->live()
-                                    ->inline()
-                                    ->icons(FreightPayerEnum::icons())
-                                    ->visible(fn(Get $get
-                                    ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                                    ->helperText('选择谁承担运费')
-                                    ->columnSpanFull(),
-
-                       Select::make('freight_template_id')
-                             ->label(__('red-jasmine-product::product.fields.freight_template_id'))
-                             ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Get $get) {
-                                 return $query->where('owner_type', $get('owner_type'))->where('owner_id', $get('owner_id'));
-                             })
-                             ->formatStateUsing(fn($state) => (string) $state)
-                             ->required(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
-                             ->visible(fn(Get $get) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                             ->helperText('选择运费模板，买家承担运费时必选')
-                             ->prefixIcon('heroicon-o-document-text')
-                             ->searchable()
-                             ->preload(),
-                   ]),
-        ];
-    }
-
-    /**
      * 其他字段
      */
     protected static function otherFields() : array
@@ -962,6 +963,59 @@ class ProductForm
 
             Operators::make(),
         ];
+    }
+
+    protected static function sizes()
+    {
+        return Repeater::make('variants')
+                       ->relationship('variants')
+                       ->dehydrated()
+                       ->saveRelationshipsUsing(null)
+                       ->label(__('red-jasmine-product::product.fields.variants'))
+                       ->table([
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
+
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight_unit')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.width')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.height')),
+                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.dimension_unit')),
+
+                       ])
+                       ->schema([
+                           Hidden::make('attrs_sequence'),
+
+                           TextInput::make('attrs_name')->readOnly(),
+                           TextInput::make('sku')->readOnly(),
+                           TextInput::make('weight')->suffix('KG'),
+                           TextInput::make('weight_unit'),
+                           TextInput::make('length'),
+                           TextInput::make('width'),
+                           TextInput::make('height'),
+                           TextInput::make('dimension_unit'),
+
+                           TextInput::make('price')->required()
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null)->hidden(),
+                           TextInput::make('stock')->minValue(0)->integer()->required(),
+                           TextInput::make('market_price')
+                                    ->hidden()
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                           TextInput::make('cost_price')
+                                    ->hidden()
+                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
+                                        app()->getLocale()) : null)
+                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
+                       ])
+                       ->inlineLabel(false)
+                       ->columnSpan('full')
+                       ->reorderable(false)
+                       ->addable(false);
     }
 
 }

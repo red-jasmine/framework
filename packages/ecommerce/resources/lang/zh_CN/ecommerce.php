@@ -35,11 +35,13 @@ return [
         'shipping_type'             => [
             'logistics' => '快递',
             'dummy'     => '虚拟',
-            'cardKey'   => '卡密',
+            'digital'   => '数字卡',
             'delivery'  => '配送',
             'coupons'   => '卡券',
-            'pickup'    => '自提',
+            'pickup'    => '到店',
             'none'      => '免发',
+            'visit'     => '上门服务',
+            'instore'   => '到店',
         ],
         'order_quantity_limit_type' => [
 

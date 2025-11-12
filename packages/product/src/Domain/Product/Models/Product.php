@@ -200,7 +200,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
         return [
             'product_type'              => ProductTypeEnum::class,  // 商品类型
-            'delivery_methods'          => 'array',// 配送方式  可选，多个
+            'shipping_types'          => 'array',// 配送方式  可选，多个
             'status'                    => ProductStatusEnum::class,// 状态
             'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方
@@ -427,12 +427,12 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      */
     public function getAllowShippingTypes() : array
     {
-        $types = $this->product_type->getAllowShippingType();
+        $types = $this->product_type->getAllowShippingTypes();
         if (!$this->product_type->isAllowDeliveryMethods()) {
             return $types;
         }
         $allowShippingTypes = [];
-        foreach ($this->delivery_methods as $deliveryMethod) {
+        foreach ($this->shipping_types as $deliveryMethod) {
             if (in_array(ShippingTypeEnum::from($deliveryMethod), $types)) {
                 $allowShippingTypes[] = ShippingTypeEnum::from($deliveryMethod);
             }

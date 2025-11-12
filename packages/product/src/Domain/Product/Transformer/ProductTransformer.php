@@ -66,7 +66,7 @@ class ProductTransformer
         $product->brand_id                  = $command->brandId;
         $product->model_code                = $command->modelCode;
         $product->product_group_id          = $command->productGroupId;
-        $product->delivery_methods          = $command->deliveryMethods;
+        $product->shipping_types          = $command->shippingTypes;
         $product->freight_payer             = $command->freightPayer;
         $product->freight_template_id       = $command->freightTemplateId;
         $product->min_limit                 = $command->minLimit;
