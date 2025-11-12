@@ -47,9 +47,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('standard_product_id')->nullable()->comment('类目标品ID');
             // 商家分组
             $table->unsignedBigInteger('product_group_id')->nullable()->comment('商品分组');
-            // 运费
-            // 是否需要物流 requires_shipping TODO
-            $table->string('delivery_methods')->nullable()->comment(ShippingTypeEnum::comments('配送方式'));
+
+            // 支持的履约方式
+            $table->string('delivery_methods')->nullable()->comment(ShippingTypeEnum::comments('发货方式'));
+            //  仅仅作为 需要 计算邮费时 需要 填写
             $table->string('freight_payer', 32)->default(FreightPayerEnum::SELLER)->comment(FreightPayerEnum::comments('运费承担方'));
             $table->unsignedBigInteger('freight_template_id')->nullable()->comment('运费模板ID');
 

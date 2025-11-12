@@ -29,6 +29,7 @@ return [
             'digital' => '数字卡',
             'coupons' => '优惠券',
             'service' => '服务',
+            'food'    => '食品',
         ],
 
         'shipping_type'             => [

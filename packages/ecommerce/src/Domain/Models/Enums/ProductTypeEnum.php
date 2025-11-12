@@ -21,19 +21,93 @@ enum ProductTypeEnum: string
 
     case COUPONS = 'coupons'; // 卡券
 
+    case FOOD = 'food'; // 食品
 
 
+    public static function labels() : array
+    {
+        return [
+            self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
+            self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.digital'),
+            self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
+            self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
+            self::FOOD->value     => __('red-jasmine-ecommerce::ecommerce.enums.product_type.food'),
+        ];
+    }
 
-    public function getAllowShippingType(): array
+    public static function icons() : array
+    {
+        return [
+            self::PHYSICAL->value => 'heroicon-o-shopping-bag',
+            self::VIRTUAL->value  => 'heroicon-o-cloud',
+            self::COUPONS->value  => 'heroicon-o-ticket',
+            self::DIGITAL->value  => 'heroicon-o-key',
+            self::SERVICE->value  => 'heroicon-o-shield-check',
+            self::FOOD->value     => 'heroicon-o-gift-top',
+
+        ];
+    }
+
+    public static function tips() : array
+    {
+        return [];
+    }
+
+    public function getAllowShippingType() : array
     {
         return ProductTypeEnum::shippingTypes()[$this->value];
+    }
+
+    // 服务
+
+    public static function shippingTypes() : array
+    {
+
+        return [
+
+            // 实物
+            self::PHYSICAL->value => [
+                ShippingTypeEnum::LOGISTICS,
+                ShippingTypeEnum::DELIVERY,
+                ShippingTypeEnum::PICKUP,
+
+            ],
+
+            self::VIRTUAL->value => [
+                ShippingTypeEnum::DUMMY,
+            ],
+            self::DIGITAL->value => [
+                ShippingTypeEnum::DIGITAL,
+            ],
+
+
+            self::COUPONS->value => [
+                ShippingTypeEnum::COUPONS,
+            ],
+
+
+            self::SERVICE->value => [
+
+                ShippingTypeEnum::VISIT,
+                ShippingTypeEnum::INSTORE,
+                ShippingTypeEnum::NONE,
+
+            ],
+
+            self::FOOD->value => [
+                ShippingTypeEnum::DELIVERY,
+                ShippingTypeEnum::TAKEAWAY,
+                ShippingTypeEnum::DINE,
+            ],
+        ];
     }
 
     /**
      * 是否需要收货地址
      * @return bool
      */
-    public function isNeedDeliveryAddress(): bool
+    public function isNeedDeliveryAddress() : bool
     {
         return ($this->value === self::PHYSICAL->value);
     }
@@ -42,91 +116,9 @@ enum ProductTypeEnum: string
      * 是否允许选择配送方式
      * @return bool
      */
-    public function isAllowDeliveryMethods(): bool
+    public function isAllowDeliveryMethods() : bool
     {
         return ($this->value === self::PHYSICAL->value);
-    }
-
-
-    public static function shippingTypes(): array
-    {
-        return [
-
-            // 实物
-            self::PHYSICAL->value => [
-                ShippingTypeEnum::LOGISTICS,
-                ShippingTypeEnum::DELIVERY,
-                ShippingTypeEnum::PICKUP,
-                //ShippingTypeEnum::NONE->value,
-                //ShippingTypeEnum::COUPONS->value,
-                //ShippingTypeEnum::DUMMY->value,
-                //ShippingTypeEnum::CARD_KEY->value,
-            ],
-
-            self::VIRTUAL->value => [
-                //ShippingTypeEnum::LOGISTICS->value,
-                //ShippingTypeEnum::DELIVERY->value,
-                //ShippingTypeEnum::NONE->value,
-                ShippingTypeEnum::DUMMY,
-                //ShippingTypeEnum::CARD_KEY->value,
-            ],
-            self::DIGITAL->value => [
-                //ShippingTypeEnum::LOGISTICS->value,
-                //ShippingTypeEnum::DELIVERY->value,
-                //ShippingTypeEnum::NONE->value,
-                //ShippingTypeEnum::DUMMY->value,
-                ShippingTypeEnum::DIGITAL,
-            ],
-
-
-            self::COUPONS->value => [
-                ShippingTypeEnum::COUPONS,
-                //ShippingTypeEnum::LOGISTICS->value,
-                //ShippingTypeEnum::DELIVERY->value,
-            ],
-
-
-            self::SERVICE->value => [
-                //ShippingTypeEnum::LOGISTICS->value,
-                //ShippingTypeEnum::DELIVERY->value,
-                ShippingTypeEnum::NONE,
-                //ShippingTypeEnum::COUPONS->value,
-                //ShippingTypeEnum::DUMMY->value,
-                //ShippingTypeEnum::CARD_KEY->value,
-            ],
-
-
-        ];
-    }
-
-    // 服务
-
-    public static function labels(): array
-    {
-        return [
-            self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
-            self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
-            self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.digital'),
-            self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
-            self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
-        ];
-    }
-
-    public static function icons(): array
-    {
-        return [
-            self::PHYSICAL->value => 'heroicon-o-shopping-bag',
-            self::VIRTUAL->value  => 'heroicon-o-cloud',
-            self::COUPONS->value  => 'heroicon-o-ticket',
-            self::DIGITAL->value  => 'heroicon-o-key',
-            self::SERVICE->value  => 'heroicon-o-shield-check',
-
-        ];
-    }
-
-    public static function tips(): array
-    {
-        return [];
     }
 
 
