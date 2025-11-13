@@ -53,14 +53,14 @@ enum ShippingTypeEnum: string
     public static function icons() : array
     {
         return [
-            self::LOGISTICS->value => 'heroicon-o-truck',
-            self::DUMMY->value     => 'heroicon-o-bolt',
-            self::DIGITAL->value   => 'heroicon-o-key',
-            self::DELIVERY->value  => 'heroicon-o-home-modern',
-            self::COUPONS->value   => 'heroicon-o-ticket',
-            self::VISIT->value     => 'heroicon-o-home',
-            self::INSTORE->value   => 'heroicon-o-building-storefront',
-            self::NONE->value      => 'heroicon-o-cloud',
+            self::LOGISTICS->value => 'emoji-delivery-truck',
+            self::DUMMY->value     => 'emoji-high-voltage',
+            self::DIGITAL->value   => 'emoji-e-mail',
+            self::DELIVERY->value  => 'emoji-motor-scooter',
+            self::COUPONS->value   => 'emoji-ticket',
+            self::VISIT->value     => 'emoji-house-with-garden',
+            self::INSTORE->value   => 'emoji-house',
+            self::NONE->value      => 'emoji-prohibited',
 
         ];
     }

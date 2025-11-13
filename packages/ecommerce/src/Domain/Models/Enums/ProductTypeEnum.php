@@ -39,12 +39,12 @@ enum ProductTypeEnum: string
     public static function icons() : array
     {
         return [
-            self::PHYSICAL->value => 'heroicon-o-shopping-bag',
-            self::VIRTUAL->value  => 'heroicon-o-cloud',
-            self::COUPONS->value  => 'heroicon-o-ticket',
-            self::DIGITAL->value  => 'heroicon-o-key',
-            self::SERVICE->value  => 'heroicon-o-shield-check',
-            self::FOOD->value     => 'heroicon-o-gift-top',
+            self::PHYSICAL->value => 'emoji-shopping-bags',
+            self::VIRTUAL->value  => 'emoji-globe-with-meridians',
+            self::COUPONS->value  => 'emoji-admission-tickets',
+            self::DIGITAL->value  => 'emoji-left-luggage',
+            self::SERVICE->value  => 'emoji-woman-teacher',
+            self::FOOD->value     => 'emoji-steaming-bowl',
 
         ];
     }
