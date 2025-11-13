@@ -65,7 +65,7 @@ class CouponResource extends Resource
     protected static ?string                $model          = Coupon::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-ticket';
     protected static ?string                $cluster        = Coupons::class;
-    protected static ?int                    $navigationSort = 1;
+    protected static ?int                   $navigationSort = 1;
 
     public static function getModelLabel() : string
     {
@@ -90,7 +90,7 @@ class CouponResource extends Resource
                                Section::make()
                                       ->schema([
                                           Owner::make(),
-                                          Owner::make([],'cost_bearer'),
+                                          Owner::make([], 'cost_bearer'),
 
 
                                           TextInput::make('name')
@@ -192,7 +192,9 @@ class CouponResource extends Resource
 
 
                                               ]
-                                          )->label(__('red-jasmine-coupon::coupon.labels.discount')),
+                                          )
+                                                    ->columns(4)
+                                                    ->label(__('red-jasmine-coupon::coupon.labels.discount')),
 
 
                                           TextInput::make('max_discount_amount')
@@ -250,6 +252,7 @@ class CouponResource extends Resource
                                                         ->default(TimeUnitEnum::DAY)
                                                         ->required(),
                                               ])
+                                                    ->columns(2)
                                                     ->label(__('red-jasmine-coupon::coupon.fields.delayed_effective_time'))
                                               //->name('delayed_effective_time')
                                                     ->visible(fn(Get $get
@@ -269,10 +272,10 @@ class CouponResource extends Resource
                                                         ->default(TimeUnitEnum::DAY)
                                                         ->required(),
                                               ])
+                                                    ->columns(2)
                                                     ->label(__('red-jasmine-coupon::coupon.fields.validity_time'))
-                                              //->name('validity_time')
                                                     ->visible(fn(Get $get
-                                              ) => $get('validity_type') === ValidityTypeEnum::RELATIVE),
+                                                    ) => $get('validity_type') === ValidityTypeEnum::RELATIVE),
 
 
                                       ])
@@ -286,6 +289,12 @@ class CouponResource extends Resource
                                Section::make()
                                       ->schema([
                                           Repeater::make('usage_rules')
+                                                  ->table([
+                                                      Repeater\TableColumn::make('规则类型'),
+                                                      Repeater\TableColumn::make('规则类型'),
+                                                      Repeater\TableColumn::make('对象值'),
+                                                  ])
+                                                  ->reorderable(false)
                                                   ->label(__('red-jasmine-coupon::coupon.fields.usage_rules'))
                                                   ->schema([
                                                       Select::make('rule_type')
@@ -294,7 +303,7 @@ class CouponResource extends Resource
                                                             ->default(RuleTypeEnum::INCLUDE)
                                                             ->required(),
                                                       Select::make('object_type')
-                                                            ->label('规则类型')
+                                                            ->label('对象类型')
                                                             ->useEnum(RuleObjectTypeEnum::class)
                                                             ->default(RuleObjectTypeEnum::PRODUCT)
                                                             ->required(),
@@ -385,7 +394,7 @@ class CouponResource extends Resource
                           ->sortable()
                           ->toggleable(isToggledHiddenByDefault: true),
 
-                
+
             ])
             ->filters([
                 SelectFilter::make('status')
