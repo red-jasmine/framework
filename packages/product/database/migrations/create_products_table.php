@@ -16,12 +16,11 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-
-            // 开放渠道 门店、网店 TODO
-            // 卖家信息
+            $table->string('platform', 64)->default('mall')->comment('业务平台');
+            $table->string('market', 64)->default('default')->comment('市场'); // 根据 业务平台可选
+            $table->string('biz', 64)->default('self')->comment('业务线'); // 由平台商家定义
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
-            $table->string('market', 64)->default('default')->comment('市场'); // 市场
 
             $table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));

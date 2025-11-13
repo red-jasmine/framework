@@ -10,7 +10,10 @@ return new class extends Migration {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
-            $table->string('market', 64)->default('default')->comment('市场'); // 市场
+
+            $table->string('platform', 64)->default('mall')->comment('业务平台');
+            $table->string('market', 64)->default('default')->comment('市场');
+            $table->string('biz', 64)->default('self')->comment('业务线');
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
 
