@@ -54,6 +54,10 @@ enum ProductTypeEnum: string
         return [];
     }
 
+    public function defaultShippingTypes() : array
+    {
+        return $this->getAllowShippingTypes();
+    }
 
     public function getAllowShippingTypes() : array
     {

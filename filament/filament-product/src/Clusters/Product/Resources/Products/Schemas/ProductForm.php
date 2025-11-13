@@ -59,7 +59,7 @@ class ProductForm
             Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->schema(static::descriptionFields()),
             Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->schema(static::operateFields()),
             Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
-            Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
+            //Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
             Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->schema(static::otherFields()),
         ];
 
@@ -95,6 +95,11 @@ class ProductForm
                                     ->icons(ProductTypeEnum::icons())
                                     ->useEnum(ProductTypeEnum::class)
                                     ->helperText('选择商品类型：实物商品需要物流配送，虚拟商品无需物流')
+                                    ->afterStateUpdated(function (Get $get, Set $set, ProductTypeEnum $state) {
+                                        $set('freight_templates', []);
+                                        // 设置默认的 发货方式
+                                        $set('shipping_types', $state->defaultShippingTypes(), shouldCallUpdatedHooks: true);
+                                    })
                                     ->columnSpanFull(),
 
                        TextInput::make('title')
@@ -205,35 +210,82 @@ class ProductForm
                                     )->toArray()
                                     )
                                     ->required()
-                                    ->helperText('选择支持的发货方式')
-                                    ->columnSpanFull(),
-
-                       // 当前选择 需要计算邮费的发货类型时 才需要这两个属性，而且 每个属性都有 一组这样的属性值
-                       ToggleButtons::make('freight_payer')
-                                    ->label(__('red-jasmine-product::product.fields.freight_payer'))
-                                    ->required()
-                                    ->default(FreightPayerEnum::SELLER)
-                                    ->useEnum(FreightPayerEnum::class)
                                     ->live()
-                                    ->inline()
-                                    ->icons(FreightPayerEnum::icons())
-                                    ->visible(fn(Get $get
-                                    ) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                                    ->helperText('选择谁承担运费')
+                                    ->helperText('选择支持的发货方式')
+                                    ->afterStateUpdated(function (Set $set, Get $get, $state) {
+
+                                        $freightTemplates = $get('freight_templates');
+                                        $freightTemplates = collect($freightTemplates)->keyBy('shipping_type');
+                                        foreach ($state as $shippingTypeString) {
+                                            $shippingType = ShippingTypeEnum::from($shippingTypeString);
+                                            if (!$shippingType->requiresFreight()) {
+                                                $freightTemplates->pull($shippingTypeString);
+                                            } else {
+                                                if (!isset($freightTemplates[$shippingTypeString])) {
+                                                    $freightTemplates->put($shippingTypeString,
+                                                        [
+                                                            'shipping_type'       => $shippingTypeString,
+                                                            'freight_payer'       => FreightPayerEnum::SELLER,
+                                                            'freight_template_id' => null,
+                                                        ]);
+
+                                                }
+                                            }
+                                        }
+
+                                        foreach ($freightTemplates as $key => $freightTemplate) {
+                                            if (!in_array($key, $state)) {
+                                                $freightTemplates->pull($key);
+                                            }
+                                        }
+                                        $set('freight_templates', $freightTemplates->values()->toArray());
+
+
+                                    })
                                     ->columnSpanFull(),
 
-                       Select::make('freight_template_id')
-                             ->label(__('red-jasmine-product::product.fields.freight_template_id'))
-                             ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Get $get) {
-                                 return $query->where('owner_type', $get('owner_type'))->where('owner_id', $get('owner_id'));
-                             })
-                             ->formatStateUsing(fn($state) => (string) $state)
-                             ->required(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
-                             ->visible(fn(Get $get) => ProductTypeEnum::tryFrom($get('product_type')?->value) === ProductTypeEnum::PHYSICAL)
-                             ->helperText('选择运费模板，买家承担运费时必选')
-                             ->prefixIcon('heroicon-o-document-text')
-                             ->searchable()
-                             ->preload(),
+                       Repeater::make('freight_templates')
+                           ->label(__('red-jasmine-product::product.fields.freight_templates'))
+                               ->addable(false)
+                               ->deletable(false)
+                               ->inlineLabel(false)
+                               ->reorderable(false)
+                               ->default([])
+                               ->columnSpanFull()
+                               ->table([
+                                   Repeater\TableColumn::make(__('red-jasmine-product::product.fields.shipping_type')),
+                                   Repeater\TableColumn::make(__('red-jasmine-product::product.fields.freight_payer')),
+                                   Repeater\TableColumn::make(__('red-jasmine-product::product.fields.freight_template_id')),
+                               ])
+                               ->schema([
+                                   Select::make('shipping_type')
+                                         ->useEnum(ShippingTypeEnum::class)
+                                         // ->disabled( ) // 存在BUG TODO
+                                         ->visible(true)
+                                         ->distinct(),
+                                   Select::make('freight_payer')
+                                         ->label(__('red-jasmine-product::product.fields.freight_payer'))
+                                         ->required()
+                                         ->default(FreightPayerEnum::SELLER)
+                                         ->useEnum(FreightPayerEnum::class)
+                                         ->live()
+                                         ->columnSpanFull(),
+
+
+                                   Select::make('freight_template_id')
+                                         ->label(__('red-jasmine-product::product.fields.freight_template_id'))
+                                         ->relationship('freightTemplate', 'name', modifyQueryUsing: function ($query, Get $get) {
+                                             return $query->where('owner_type', $get('owner_type'))->where('owner_id', $get('owner_id'));
+                                         })
+                                         ->formatStateUsing(fn($state) => (string) $state)
+                                         ->required(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
+                                         ->visible(fn(Get $get, $state) => $get('freight_payer') === FreightPayerEnum::BUYER)
+                                         ->searchable()
+                                         ->preload(),
+
+                               ]),
+
+
                    ]),
         ];
     }

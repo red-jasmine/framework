@@ -50,9 +50,6 @@ return new class extends Migration {
 
             // 支持的履约方式
             $table->string('shipping_types')->nullable()->comment(ShippingTypeEnum::comments('发货方式'));
-            //  仅仅作为 需要 计算邮费时 需要 填写
-            $table->string('freight_payer', 32)->default(FreightPayerEnum::SELLER)->comment(FreightPayerEnum::comments('运费承担方'));
-            $table->unsignedBigInteger('freight_template_id')->nullable()->comment('运费模板ID');
 
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');

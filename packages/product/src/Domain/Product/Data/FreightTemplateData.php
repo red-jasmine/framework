@@ -2,16 +2,23 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
+use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Support\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
-class Freight extends Data
+class FreightTemplateData extends Data
 {
+
+    #[WithCast(EnumCast::class, ShippingTypeEnum::class)]
+    public ShippingTypeEnum $shippingType;
 
     /**
      * 运费支付人
      * @var FreightPayerEnum
      */
+    #[WithCast(EnumCast::class, FreightPayerEnum::class)]
     public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
 
 
@@ -19,8 +26,9 @@ class Freight extends Data
      * 运费模板id
      *
      * 当前运费承担方为 买家时、运费模板必须填写
-     * @var int|null
+     * @var ?string
      */
-    public ?int $freightTemplateId = null;
+    public ?string $freightTemplateId = null;
+
 
 }

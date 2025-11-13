@@ -20,9 +20,9 @@ class InputFilter extends Filter
 
 
                     ]);
-        // TODO 是否允许多个
+
         $this->query(function (Builder $query, array $data) : Builder {
-            return $query->when(Str::replace([ ',', ',', ' ' ], ',', $data['value'] ?? ''),
+            return $query->when(Str::replace([ ',', '，', ' ' ], ',', $data['value'] ?? ''),
                 fn(Builder $query, $value) : Builder => $query->whereIn($this->getName(), explode(',', $value)));
         });
     }

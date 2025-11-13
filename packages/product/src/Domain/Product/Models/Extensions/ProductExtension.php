@@ -14,6 +14,20 @@ class ProductExtension extends Model
 
     use SoftDeletes;
 
+    protected $casts = [
+        //'promise_services' => PromiseServicesCastTransformer::class,
+        'freight_templates'    => 'array',
+        'after_sales_services' => 'array',
+        'basic_attrs'          => 'array',
+        'sale_attrs'           => 'array',
+        'customize_attrs'      => 'array',
+        'images'               => 'array',
+        'videos'               => 'array',
+        'tools'                => 'array',
+        'extra'                => 'array',
+        'form'                 => 'array',
+    ];
+
     /**
      * @return string
      */
@@ -21,20 +35,5 @@ class ProductExtension extends Model
     {
         return 'products_extension';
     }
-
-
-
-    protected $casts = [
-        //'promise_services' => PromiseServicesCastTransformer::class,
-        'after_sales_services'      => 'array',
-        'basic_attrs'      => 'array',
-        'sale_attrs'       => 'array',
-        'customize_attrs'  => 'array',
-        'images'           => 'array',
-        'videos'           => 'array',
-        'tools'            => 'array',
-        'extra'          => 'array',
-        'form'             => 'array',
-    ];
 
 }

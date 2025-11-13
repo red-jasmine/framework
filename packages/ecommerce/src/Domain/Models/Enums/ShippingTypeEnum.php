@@ -27,7 +27,6 @@ enum ShippingTypeEnum: string
 
     case COUPONS = 'coupons'; // 卡券
 
-
     // 服务类 履约 有 上门、到店
 
     case VISIT = 'visit';        // 上门服务
@@ -118,8 +117,8 @@ enum ShippingTypeEnum: string
     {
         return match ($this) {
             self::LOGISTICS,
-            self::DELIVERY => true,
-            self::VISIT,
+            self::DELIVERY,
+            self::VISIT => true,
             self::INSTORE,
             self::DUMMY,
             self::DIGITAL,

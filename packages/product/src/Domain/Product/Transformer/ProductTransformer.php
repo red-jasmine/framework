@@ -66,9 +66,7 @@ class ProductTransformer
         $product->brand_id                  = $command->brandId;
         $product->model_code                = $command->modelCode;
         $product->product_group_id          = $command->productGroupId;
-        $product->shipping_types          = $command->shippingTypes;
-        $product->freight_payer             = $command->freightPayer;
-        $product->freight_template_id       = $command->freightTemplateId;
+        $product->shipping_types            = $command->shippingTypes;
         $product->min_limit                 = $command->minLimit;
         $product->max_limit                 = $command->maxLimit;
         $product->step_limit                = $command->stepLimit;
@@ -88,6 +86,7 @@ class ProductTransformer
 
         $product->extension->id                   = $product->id;
         $product->extension->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
+        $product->extension->freight_templates    = $command->freightTemplates;
         $product->extension->videos               = $command->videos;
         $product->extension->images               = $command->images;
         $product->extension->meta_title           = $command->metaTitle;

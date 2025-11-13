@@ -34,25 +34,30 @@ class Product extends Data
     public string $market = 'default';
     // 产品类型
     public ProductTypeEnum $productType;
+
     /**
-     * 配送方式
-     * 当实物时选择配送方式
+     * 支持的履约方式
      * @var array
      */
     public array $shippingTypes = [];
 
+    /**
+     * 运费模板
+     * @var FreightTemplateData[]
+     */
+    public array $freightTemplates = [];
+
     // 产品标题
     public string $title;
+
     // 产品副标题（可选）
     public ?string $slogan;
-
 
     public ?string $spu;
 
     // 产品状态，默认为“在售”
     public ProductStatusEnum $status = ProductStatusEnum::AVAILABLE;
-    // 运费支付者，默认为“卖家”
-    public FreightPayerEnum $freightPayer = FreightPayerEnum::SELLER;
+
     // 库存子类型，默认为“默认”
     public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
 
@@ -92,8 +97,7 @@ class Product extends Data
     public array $extendProductGroups = [];
     public array $tags                = [];
     public array $services            = [];
-    // 邮费模板ID（可选）
-    public ?int $freightTemplateId = null;
+
     // 最小购买限制（可选）
     public ?int $minLimit = 0;
     // 最大购买限制（可选）

@@ -11,6 +11,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             //
             $table->string('tips')->nullable()->comment('提示');
+
+            // 运费模板
+            $table->json('freight_templates')->nullable()->comment('运费模板');
             // 售后服务
             $table->json('after_sales_services')->nullable()->comment('售后服务');
             // 属性
