@@ -60,6 +60,7 @@ class SaleAttrsRepeater extends Repeater
 
                              TextInput::make('name')
                                       ->label(__('red-jasmine-product::product.attrs.alias'))
+                             ->readOnly()
                              ,
 
                              TextInput::make('alias')
