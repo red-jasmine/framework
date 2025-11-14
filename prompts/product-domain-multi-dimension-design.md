@@ -18,15 +18,16 @@
 - [一、方案概述](#一方案概述)
 - [二、三维度商品模型设计](#二三维度商品模型设计)
 - [三、多价格体系设计](#三多价格体系设计)
-- [四、多语言体系设计](#四多语言体系设计)
-- [五、数据库表设计清单](#五数据库表设计清单)
-- [六、详细表结构设计](#六详细表结构设计)
-- [七、核心代码组件](#七核心代码组件)
-- [八、实施路线图](#八实施路线图)
-- [九、技术栈说明](#九技术栈说明)
-- [十、预期收益](#十预期收益)
-- [十一、风险评估](#十一风险评估)
-- [十二、方案总结](#十二方案总结)
+- [四、多市场库存体系设计](#四多市场库存体系设计)
+- [五、多语言体系设计](#五多语言体系设计)
+- [六、数据库表设计清单](#六数据库表设计清单)
+- [七、详细表结构设计](#七详细表结构设计)
+- [八、核心代码组件](#八核心代码组件)
+- [九、实施路线图](#九实施路线图)
+- [十、技术栈说明](#十技术栈说明)
+- [十一、预期收益](#十一预期收益)
+- [十二、风险评估](#十二风险评估)
+- [十三、方案总结](#十三方案总结)
 - [附录](#附录)
 
 ---
@@ -331,10 +332,11 @@ return [
 核心原则：
 
 ✅ 基准价格：products 表保留基准价格（主市场默认价格）
-✅ 多维定价：product_prices 表管理多维度价格组合（market、user_level）
+✅ 多维定价：product_prices 表管理多维度价格组合（market、store、user_level）
 ✅ 业务平台隔离：商品本身已有 platform 字段，价格表不包含 platform 维度
 ✅ 业务线无关：价格体系与业务线（biz）无关，所有业务线使用相同的价格体系
 ✅ 渠道无关：价格体系不包含 channel 维度，渠道差异化定价通过促销系统实现
+✅ 门店差异化：通过 store 维度区分不同门店价格，支持默认门店（`default`）与具体门店编码
 ✅ 用户等级定价：通过 user_level 维度区分不同用户等级的价格（普通价、VIP价、黄金会员价等），不使用单独的 member_price 字段
 ✅ 灵活匹配：支持维度通配符和优先级匹配
 ✅ 职责分离：基础价格体系定义基准价格，促销系统处理渠道、时间、条件等营销策略
@@ -349,7 +351,8 @@ return [
 - **不包含业务平台维度**：商品本身已有 `platform` 字段，一个商品只能属于唯一业务平台，价格表通过 `product_id` 关联即可获取商品所属的业务平台
 - **不包含业务线维度**：价格体系与业务线（biz）无关，所有业务线使用相同的价格体系
 - **不包含渠道维度**：价格体系不包含 channel 维度，渠道差异化定价通过促销系统实现（如小程序专享价、APP首单优惠等）
-- **价格维度**：market（市场）、user_level（用户等级）
+- **价格维度**：market（市场）、store（门店）、user_level（用户等级）
+- **门店定价**：store 维度支持 `default`（通用门店）、具体门店编码（如 `store_001`），以及 `*` 通配符，满足连锁门店差异化定价需求
 - **用户等级定价**：通过 `user_level` 维度区分不同用户等级的价格，如 `default`（普通价）、`vip`（VIP价）、`gold`（黄金会员价）等，不再使用单独的 `member_price` 字段
 
 ```sql
@@ -360,6 +363,7 @@ CREATE TABLE product_prices (
     
     -- ========== 价格维度（支持通配符 *） ==========
     market VARCHAR(64) DEFAULT '*' COMMENT '市场：cn, us, de, *',
+    store VARCHAR(64) DEFAULT '*' COMMENT '门店：default-默认门店，store_xxx-具体门店，*-全部门店',
     user_level VARCHAR(32) DEFAULT '*' COMMENT '用户等级：default-普通, vip-VIP, gold-黄金会员, platinum-白金会员, *',
     
     -- ========== 价格信息 ==========
@@ -380,7 +384,7 @@ CREATE TABLE product_prices (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL,
     
-    INDEX idx_product_dimensions (product_id, market, user_level),
+    INDEX idx_product_dimensions (product_id, market, store, user_level),
     INDEX idx_product_variant (product_id, variant_id),
     
     COMMENT='商品-多维度价格表'
@@ -391,14 +395,16 @@ CREATE TABLE product_prices (
 
 通过 `user_level` 维度区分不同用户等级的价格：
 
-| product_id | market | user_level | price | 说明 |
-|-----------|--------|------------|-------|------|
-| 1001 | cn | default | 100.00 | 中国市场普通用户价格 |
-| 1001 | cn | vip | 90.00 | 中国市场VIP用户价格 |
-| 1001 | cn | gold | 85.00 | 中国市场黄金会员价格 |
-| 1001 | cn | platinum | 80.00 | 中国市场白金会员价格 |
-| 1001 | us | default | 15.00 | 美国市场普通用户价格（USD） |
-| 1001 | us | vip | 13.50 | 美国市场VIP用户价格（USD） |
+| product_id | market | store | user_level | price | 说明 |
+|-----------|--------|-------|------------|-------|------|
+| 1001 | cn | default | default | 100.00 | 中国市场通用门店普通用户价格 |
+| 1001 | cn | default | vip | 90.00 | 中国市场通用门店VIP用户价格 |
+| 1001 | cn | store_s001 | default | 95.00 | 中国市场上海徐汇门店普通价 |
+| 1001 | cn | store_s001 | vip | 88.00 | 中国市场上海徐汇门店VIP价 |
+| 1001 | cn | store_bj02 | gold | 83.00 | 中国市场北京国贸门店黄金会员价 |
+| 1001 | cn | default | platinum | 80.00 | 中国市场白金会员价格 |
+| 1001 | us | default | default | 15.00 | 美国市场普通用户价格（USD） |
+| 1001 | us | store_la01 | vip | 13.50 | 美国市场洛杉矶门店VIP价（USD） |
 
 **渠道差异化定价示例（通过促销系统实现）：**
 
@@ -437,141 +443,759 @@ user_level='vip' → 非通配符 +1    分
 注意：
 1. 业务平台（platform）不在价格维度中，因为商品本身已有 platform 字段，
    查询价格时通过 product_id 关联 products 表即可获取商品所属的业务平台。
-2. 业务线（biz）不在价格维度中，价格体系与业务线无关，所有业务线使用相同的价格体系。
-3. 渠道（channel）不在价格维度中，渠道差异化定价通过促销系统实现。
+2. 门店（store）作为新增维度，用于覆盖连锁门店差异化定价场景，支持 `default`、具体门店编码以及 `*` 通配符。
+3. 业务线（biz）不在价格维度中，价格体系与业务线无关，所有业务线使用相同的价格体系。
+4. 渠道（channel）不在价格维度中，渠道差异化定价通过促销系统实现。
    原因：渠道差异化定价具有时间限制、条件限制等特点，更适合通过促销系统处理。
    示例：小程序专享价通过促销规则实现，而不是在基础价格表中设置 channel='mini'。
-4. 用户等级定价：通过 user_level 维度区分不同用户等级的价格，不再使用单独的 member_price 字段。
+5. 用户等级定价：通过 user_level 维度区分不同用户等级的价格，不再使用单独的 member_price 字段。
    示例：user_level='default' → price=100（普通价），user_level='vip' → price=90（VIP价），user_level='gold' → price=85（黄金会员价）
 ```
 
 ---
 
-### 3.4 渠道差异化定价实现（促销系统）
+## 四、多市场库存体系设计
 
-**设计理念：**
-渠道差异化定价属于营销策略范畴，具有时间限制、条件限制等特点，更适合通过促销系统实现，而不是在基础价格体系中设置 channel 维度。
+### 4.1 设计原则
 
-#### **促销系统实现渠道差异**
+```
+核心原则：
+
+✅ 基准库存：product_variants 表保留总库存（所有市场共享库存或默认市场库存）
+✅ 多市场库存：product_stocks 表管理不同市场、门店的库存分配
+✅ 业务平台隔离：商品本身已有 platform 字段，库存表通过 product_id 关联即可获取商品所属的业务平台
+✅ 业务线无关：库存体系与业务线（biz）无关，所有业务线使用相同的库存体系
+✅ 库存分配策略：支持共享库存、独立库存两种模式，并可叠加门店维度
+✅ 库存扣减：支持按市场/门店精细扣减库存，支持库存锁定和释放
+✅ 库存同步：支持库存自动同步和手动分配
+✅ 性能优化：合理索引、查询缓存、库存预扣机制
+```
+
+---
+
+### 4.2 库存分配策略
+
+#### **策略1：共享库存模式（Shared Stock）**
+
+**定义：** 所有市场共享同一份库存，任一市场售出后，所有市场的可用库存同步减少。
+
+**适用场景：**
+- 跨境电商，商品从同一仓库发货
+- 多市场销售同一批商品
+- 库存管理简单，无需区分市场
+
+**特点：**
+- ✅ 库存利用率高，避免库存分散
+- ✅ 管理简单，无需分配库存
+- ✅ 适合库存充足的商品
+
+**示例：**
+```
+商品A总库存：1000件
+中国市场售出：50件
+美国市场可用库存：950件（自动同步）
+```
+
+---
+
+#### **策略2：独立库存模式（Independent Stock）**
+
+**定义：** 每个市场有独立的库存分配，市场间库存互不影响。
+
+**适用场景：**
+- 不同市场有独立的仓库或供应商
+- 需要控制各市场的库存分配
+- 某些市场有特殊库存限制
+
+**特点：**
+- ✅ 库存分配灵活，可精确控制
+- ✅ 市场间库存隔离，互不影响
+- ⚠️ 需要手动分配库存
+
+**示例：**
+```
+商品A总库存：1000件
+中国市场分配：600件
+美国市场分配：300件
+德国市场分配：100件
+
+中国市场售出：50件 → 中国市场剩余：550件
+美国市场可用库存：300件（不受影响）
+```
+
+---
+
+#### **策略3：混合模式（Hybrid）**
+
+**定义：** 部分市场共享库存，部分市场独立库存。
+
+**适用场景：**
+- 某些市场共享仓库，某些市场独立仓库
+- 需要灵活配置不同市场的库存策略
+
+**特点：**
+- ✅ 灵活性最高
+- ⚠️ 管理复杂度较高
+
+---
+
+### 4.3 库存表结构设计
+
+**设计说明：**
+- **不包含业务平台维度**：商品本身已有 `platform` 字段，库存表通过 `product_id` 关联即可获取商品所属的业务平台
+- **不包含业务线维度**：库存体系与业务线（biz）无关，所有业务线使用相同的库存体系
+- **库存维度**：market（市场）、store（门店）
+- **门店库存**：store 维度支持默认门店或具体门店编码（如 `store_sz01`），便于对不同门店库存进行精细化分配，可与 market 配合形成组合
+- **库存分配模式**：通过 `allocation_mode` 字段控制（shared-共享、independent-独立）
 
 ```sql
--- 促销表示例（简化版）
-CREATE TABLE promotions (
+CREATE TABLE product_stocks (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL COMMENT '促销名称',
+    product_id BIGINT UNSIGNED NOT NULL COMMENT '商品ID（通过 product_id 可获取商品的 platform）',
+    variant_id BIGINT UNSIGNED NULL COMMENT 'SKU ID',
     
-    -- 促销条件
-    channel VARCHAR(32) NULL COMMENT '渠道：web, app, mini, h5, *',
-    user_level VARCHAR(32) NULL COMMENT '用户等级：vip, gold, *',
-    market VARCHAR(64) NULL COMMENT '市场：cn, us, *',
+    -- ========== 库存维度 ==========
+    market VARCHAR(64) NOT NULL COMMENT '市场：cn, us, de, *（*表示共享库存）',
+    store VARCHAR(64) NOT NULL DEFAULT '*' COMMENT '门店：default-默认门店，store_xxx-具体门店，* 表示门店共享',
     
-    -- 促销规则
-    discount_type VARCHAR(32) NOT NULL COMMENT '折扣类型：percentage-百分比, fixed_amount-固定金额',
-    discount_value DECIMAL(10, 2) NOT NULL COMMENT '折扣值',
+    -- ========== 库存分配模式 ==========
+    allocation_mode VARCHAR(32) DEFAULT 'shared' COMMENT '分配模式：shared-共享库存, independent-独立库存',
     
-    -- 时间限制
-    start_time TIMESTAMP NULL COMMENT '开始时间',
-    end_time TIMESTAMP NULL COMMENT '结束时间',
+    -- ========== 库存数量 ==========
+    total_stock BIGINT DEFAULT 0 COMMENT '总库存（独立模式下为该市场分配的总库存）',
+    available_stock BIGINT DEFAULT 0 COMMENT '可用库存',
+    locked_stock BIGINT DEFAULT 0 COMMENT '锁定库存（已下单未支付）',
+    reserved_stock BIGINT DEFAULT 0 COMMENT '预留库存（已支付待发货）',
+    sold_stock BIGINT DEFAULT 0 COMMENT '已售库存',
+    safety_stock BIGINT DEFAULT 0 COMMENT '安全库存',
     
-    -- 其他条件
-    min_amount DECIMAL(12, 2) NULL COMMENT '最低金额',
-    max_discount DECIMAL(12, 2) NULL COMMENT '最大折扣金额',
-    is_first_order BOOLEAN DEFAULT FALSE COMMENT '是否仅限首单',
+    -- ========== 库存限制 ==========
+    min_stock BIGINT DEFAULT 0 COMMENT '最小库存（低于此值触发补货提醒）',
+    max_stock BIGINT DEFAULT 0 COMMENT '最大库存（独立模式下该市场的最大库存）',
     
-    is_active TINYINT(1) DEFAULT 1,
+    -- ========== 库存状态 ==========
+    is_active TINYINT(1) DEFAULT 1 COMMENT '是否启用',
+    is_tracked TINYINT(1) DEFAULT 1 COMMENT '是否跟踪库存',
+    stock_status VARCHAR(32) DEFAULT 'in_stock' COMMENT '库存状态：in_stock-有货, low_stock-低库存, out_of_stock-缺货',
+    
+    -- ========== 库存同步 ==========
+    last_synced_at TIMESTAMP NULL COMMENT '最后同步时间',
+    sync_mode VARCHAR(32) DEFAULT 'auto' COMMENT '同步模式：auto-自动同步, manual-手动同步',
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
     
-    INDEX idx_channel (channel),
-    INDEX idx_time_range (start_time, end_time),
+    UNIQUE KEY uk_product_variant_market_store (product_id, variant_id, market, store),
+    INDEX idx_product_market (product_id, market),
+    INDEX idx_product_market_store (product_id, market, store),
+    INDEX idx_variant_market (variant_id, market),
+    INDEX idx_stock_status (stock_status),
     
-    COMMENT='促销活动表'
+    COMMENT='商品-多市场库存表'
 );
 ```
 
-#### **价格计算流程**
+---
+
+### 4.4 库存数据示例
+
+#### **共享库存模式示例**
+
+| product_id | variant_id | market | store | allocation_mode | total_stock | available_stock | 说明 |
+|-----------|-----------|--------|-------|----------------|-------------|----------------|------|
+| 1001 | 10001 | * | * | shared | 1000 | 950 | 所有市场、所有门店共享库存 |
+| 1001 | 10001 | cn | default | shared | 0 | 0 | 中国市场默认门店使用共享库存（market=*，store=*） |
+| 1001 | 10001 | us | default | shared | 0 | 0 | 美国市场默认门店使用共享库存（market=*，store=*） |
+| 1001 | 10001 | cn | store_sh01 | shared | 0 | 0 | 中国市场上海门店复用共享库存 |
+
+**库存扣减逻辑：**
+- 中国市场售出 50 件 → `market='*'` 的 `available_stock` 减少 50
+- 美国市场可用库存自动同步为 950 件
+
+---
+
+#### **独立库存模式示例**
+
+| product_id | variant_id | market | store | allocation_mode | total_stock | available_stock | 说明 |
+|-----------|-----------|--------|-------|----------------|-------------|----------------|------|
+| 1002 | 10002 | cn | default | independent | 600 | 550 | 中国市场默认门店独立库存 |
+| 1002 | 10002 | cn | store_sz01 | independent | 200 | 180 | 中国市场深圳门店独立库存 |
+| 1002 | 10002 | us | default | independent | 300 | 300 | 美国市场默认门店独立库存 |
+| 1002 | 10002 | us | store_la01 | independent | 120 | 120 | 美国市场洛杉矶门店独立库存 |
+| 1002 | 10002 | de | default | independent | 100 | 100 | 德国市场独立库存 |
+
+**库存扣减逻辑：**
+- 中国市场售出 50 件 → `market='cn'` 的 `available_stock` 减少 50
+- 美国市场可用库存不受影响，仍为 300 件
+
+---
+
+### 4.5 库存扣减流程
 
 ```
-1. 查询基础价格（product_prices）
-   └─ 根据 market + user_level 获取基准价格
+库存扣减流程：
 
-2. 查询促销规则（promotions）
-   └─ 根据 channel + user_level + market + 时间条件匹配促销
+1. 下单时锁定库存（Lock Stock）
+   └─ 将 available_stock 减少，locked_stock 增加
+   └─ 设置锁定过期时间（如30分钟）
 
-3. 计算最终价格
-   └─ 基准价格 - 促销折扣 = 最终价格
+2. 支付成功后预留库存（Reserve Stock）
+   └─ 将 locked_stock 减少，reserved_stock 增加
+   └─ 准备发货
+
+3. 发货后扣减库存（Deduct Stock）
+   └─ 将 reserved_stock 减少，sold_stock 增加
+   └─ 更新 total_stock（如果是共享库存）
+
+4. 订单取消释放库存（Release Stock）
+   └─ 将 locked_stock 或 reserved_stock 释放回 available_stock
 ```
 
-#### **实现示例**
+---
+
+### 4.6 库存查询服务
+
+#### **ProductStockService**
 
 ```php
-// 价格计算服务
-class ProductPriceService
+<?php
+// packages/product/src/Domain/Stock/Services/ProductStockService.php
+
+namespace RedJasmine\Product\Domain\Stock\Services;
+
+use RedJasmine\Product\Domain\Stock\Models\ProductMarketStock;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductMarketStockRepositoryInterface;
+use RedJasmine\Support\Exceptions\BusinessException;
+
+class ProductStockService
 {
+    public function __construct(
+        protected ProductMarketStockRepositoryInterface $repository
+    ) {}
+    
     /**
-     * 获取商品价格（包含促销）
+     * 获取商品可用库存
+     * 
+     * @param int $productId 商品ID
+     * @param int|null $variantId SKU ID（可选）
+     * @param string $market 市场
+     * @return int 可用库存数量
      */
-    public function getPrice(
+    public function getAvailableStock(
         int $productId,
+        ?int $variantId,
         string $market,
-        string $userLevel,
-        string $channel
-    ): float {
-        // 1. 获取基础价格
-        $basePrice = $this->getBasePrice($productId, $market, $userLevel);
+        string $store = '*'
+    ): int {
+        // 1. 查询市场+门店库存记录，优先匹配具体门店
+        $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, $store);
         
-        // 2. 查询促销规则
-        $promotion = $this->getPromotion($market, $userLevel, $channel);
-        
-        // 3. 计算最终价格
-        if ($promotion && $promotion->isValid()) {
-            return $this->applyDiscount($basePrice, $promotion);
+        // 1.1 若门店未配置，回退到市场默认门店或所有门店
+        if (!$marketStock && $store !== 'default') {
+            $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, 'default');
+        }
+        if (!$marketStock) {
+            $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, '*');
         }
         
-        return $basePrice;
+        // 2. 如果是共享库存模式，查询全局共享库存（market='*' 且 store='*'）
+        if (!$marketStock || $marketStock->allocation_mode === 'shared') {
+            $sharedStock = $this->repository->findByMarketAndStore($productId, $variantId, '*', '*');
+            if ($sharedStock) {
+                return $sharedStock->available_stock;
+            }
+        }
+        
+        // 3. 如果是独立库存模式，返回该市场/门店的可用库存
+        if ($marketStock && $marketStock->allocation_mode === 'independent') {
+            return $marketStock->available_stock;
+        }
+        
+        // 4. 回退到 product_variants 表的 stock 字段
+        return $this->getFallbackStock($productId, $variantId);
     }
     
     /**
-     * 应用促销折扣
+     * 锁定库存
+     * 
+     * @param int $productId 商品ID
+     * @param int|null $variantId SKU ID
+     * @param string $market 市场
+     * @param int $quantity 数量
+     * @return bool 是否成功
      */
-    protected function applyDiscount(float $price, Promotion $promotion): float
+    public function lockStock(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        string $store,
+        int $quantity
+    ): bool {
+        $this->beginDatabaseTransaction();
+        
+        try {
+            // 1. 检查可用库存
+            $availableStock = $this->getAvailableStock($productId, $variantId, $market, $store);
+            if ($availableStock < $quantity) {
+                throw new BusinessException("库存不足，可用库存：{$availableStock}");
+            }
+            
+            // 2. 锁定库存
+            $marketStock = $this->getOrCreateMarketStock($productId, $variantId, $market, $store);
+            $marketStock->available_stock -= $quantity;
+            $marketStock->locked_stock += $quantity;
+            $marketStock->save();
+            
+            $this->commitDatabaseTransaction();
+            return true;
+        } catch (\Throwable $e) {
+            $this->rollBackDatabaseTransaction();
+            throw $e;
+        }
+    }
+    
+    /**
+     * 释放锁定库存
+     */
+    public function releaseLockedStock(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        string $store,
+        int $quantity
+    ): bool {
+        $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, $store);
+        if (!$marketStock) {
+            return false;
+        }
+        
+        $releaseQuantity = min($quantity, $marketStock->locked_stock);
+        $marketStock->available_stock += $releaseQuantity;
+        $marketStock->locked_stock -= $releaseQuantity;
+        $marketStock->save();
+        
+        return true;
+    }
+    
+    /**
+     * 扣减库存（发货后）
+     */
+    public function deductStock(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        string $store,
+        int $quantity
+    ): bool {
+        $this->beginDatabaseTransaction();
+        
+        try {
+            $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, $store);
+            if (!$marketStock) {
+                throw new BusinessException("库存记录不存在");
+            }
+            
+            // 扣减预留库存
+            if ($marketStock->reserved_stock < $quantity) {
+                throw new BusinessException("预留库存不足");
+            }
+            
+            $marketStock->reserved_stock -= $quantity;
+            $marketStock->sold_stock += $quantity;
+            
+            // 如果是共享库存，更新总库存
+            if ($marketStock->allocation_mode === 'shared' && $marketStock->market === '*' && $marketStock->store === '*') {
+                $marketStock->total_stock -= $quantity;
+            }
+            
+            $marketStock->save();
+            
+            $this->commitDatabaseTransaction();
+            return true;
+        } catch (\Throwable $e) {
+            $this->rollBackDatabaseTransaction();
+            throw $e;
+        }
+    }
+    
+    /**
+     * 分配库存到市场（独立库存模式）
+     */
+    public function allocateStockToMarket(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        string $store,
+        int $quantity
+    ): bool {
+        $this->beginDatabaseTransaction();
+        
+        try {
+            // 1. 检查总库存
+            $variant = $this->getVariant($productId, $variantId);
+            $totalAllocated = $this->repository->getTotalAllocatedStock($productId, $variantId);
+            $availableForAllocation = $variant->stock - $totalAllocated;
+            
+            if ($availableForAllocation < $quantity) {
+                throw new BusinessException(
+                    "可分配库存不足，剩余可分配：{$availableForAllocation}"
+                );
+            }
+            
+            // 2. 创建或更新市场库存记录
+            $marketStock = $this->getOrCreateMarketStock($productId, $variantId, $market, $store);
+            $marketStock->allocation_mode = 'independent';
+            $marketStock->total_stock += $quantity;
+            $marketStock->available_stock += $quantity;
+            $marketStock->save();
+            
+            $this->commitDatabaseTransaction();
+            return true;
+        } catch (\Throwable $e) {
+            $this->rollBackDatabaseTransaction();
+            throw $e;
+        }
+    }
+    
+    /**
+     * 同步共享库存（自动同步所有市场的可用库存）
+     */
+    public function syncSharedStock(int $productId, ?int $variantId): void
     {
-        if ($promotion->discount_type === 'percentage') {
-            $discount = $price * ($promotion->discount_value / 100);
-        } else {
-            $discount = $promotion->discount_value;
+        $sharedStock = $this->repository->findByMarketAndStore($productId, $variantId, '*', '*');
+        if (!$sharedStock) {
+            return;
         }
         
-        // 限制最大折扣金额
-        if ($promotion->max_discount) {
-            $discount = min($discount, $promotion->max_discount);
+        // 更新所有使用共享库存的市场记录（仅更新 available_stock 显示值）
+        $marketStocks = $this->repository->findByProductAndVariant($productId, $variantId);
+        foreach ($marketStocks as $marketStock) {
+            if ($marketStock->allocation_mode === 'shared' && ($marketStock->market !== '*' || $marketStock->store !== '*')) {
+                $marketStock->available_stock = $sharedStock->available_stock;
+                $marketStock->save();
+            }
+        }
+    }
+    
+    /**
+     * 获取或创建市场库存记录
+     */
+    protected function getOrCreateMarketStock(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        string $store
+    ): ProductMarketStock {
+        $marketStock = $this->repository->findByMarketAndStore($productId, $variantId, $market, $store);
+        
+        if (!$marketStock) {
+            // 检查是否存在共享库存
+            $sharedStock = $this->repository->findByMarketAndStore($productId, $variantId, '*', '*');
+            if ($sharedStock) {
+                // 使用共享库存
+                $marketStock = new ProductMarketStock([
+                    'product_id' => $productId,
+                    'variant_id' => $variantId,
+                    'market' => $market,
+                    'store' => $store,
+                    'allocation_mode' => 'shared',
+                    'total_stock' => 0,
+                    'available_stock' => $sharedStock->available_stock,
+                ]);
+            } else {
+                // 创建新的独立库存记录
+                $marketStock = new ProductMarketStock([
+                    'product_id' => $productId,
+                    'variant_id' => $variantId,
+                    'market' => $market,
+                    'store' => $store,
+                    'allocation_mode' => 'independent',
+                    'total_stock' => 0,
+                    'available_stock' => 0,
+                ]);
+            }
+            $marketStock->save();
         }
         
-        return max(0, $price - $discount);
+        return $marketStock;
     }
 }
 ```
 
-#### **业务场景示例**
+---
 
-| 场景 | 基础价格 | 促销规则 | 最终价格 |
-|------|---------|---------|---------|
-| Web 端 VIP 用户 | 90元 | 无促销 | 90元 |
-| 小程序 VIP 用户 | 90元 | 小程序专享 10% | 81元 |
-| APP 首单 VIP 用户 | 90元 | APP首单减5元 | 85元 |
-| Web 端会员日 VIP | 90元 | Web会员日 8% | 82.8元 |
+### 4.7 库存状态管理
 
-**优势：**
-- ✅ 职责清晰：基础价格体系稳定，促销系统灵活
-- ✅ 易于管理：促销活动可以随时开启/关闭，不影响基础价格
-- ✅ 支持复杂规则：时间限制、条件限制、组合优惠等
-- ✅ 符合行业实践：与主流电商系统一致
+#### **库存状态枚举**
+
+```php
+<?php
+// packages/product/src/Domain/Stock/Models/Enums/StockStatusEnum.php
+
+namespace RedJasmine\Product\Domain\Stock\Models\Enums;
+
+enum StockStatusEnum: string
+{
+    use EnumsHelper;
+    
+    case IN_STOCK = 'in_stock';           // 有货
+    case LOW_STOCK = 'low_stock';         // 低库存
+    case OUT_OF_STOCK = 'out_of_stock';   // 缺货
+    case PRE_ORDER = 'pre_order';         // 预售
+    
+    public static function labels(): array
+    {
+        return [
+            self::IN_STOCK->value => '有货',
+            self::LOW_STOCK->value => '低库存',
+            self::OUT_OF_STOCK->value => '缺货',
+            self::PRE_ORDER->value => '预售',
+        ];
+    }
+    
+    /**
+     * 根据可用库存计算状态
+     */
+    public static function calculateStatus(
+        int $availableStock,
+        int $safetyStock = 0
+    ): self {
+        if ($availableStock <= 0) {
+            return self::OUT_OF_STOCK;
+        }
+        
+        if ($availableStock <= $safetyStock) {
+            return self::LOW_STOCK;
+        }
+        
+        return self::IN_STOCK;
+    }
+}
+```
 
 ---
 
-## 四、多语言体系设计
+### 4.8 库存分配策略配置
 
-### 4.1 设计原则
+#### **商品级别配置**
+
+```php
+<?php
+// 在 products 表或 products_extension 表中添加字段
+
+$table->string('stock_allocation_mode', 32)
+    ->default('shared')
+    ->comment('库存分配模式：shared-共享库存, independent-独立库存');
+
+$table->json('market_stock_allocation')
+    ->nullable()
+    ->comment('市场/门店库存分配配置（独立库存或门店库存模式下使用）');
+```
+
+**market_stock_allocation 配置示例：**
+
+```json
+{
+    "cn": {
+        "allocation_mode": "independent",
+        "total_stock": 600,
+        "min_stock": 50,
+        "max_stock": 1000,
+        "stores": {
+            "store_bj01": {
+                "allocation_mode": "independent",
+                "total_stock": 200
+            },
+            "store_sh01": {
+                "allocation_mode": "independent",
+                "total_stock": 150
+            }
+        }
+    },
+    "us": {
+        "allocation_mode": "independent",
+        "total_stock": 300,
+        "min_stock": 30,
+        "max_stock": 500
+    },
+    "*": {
+        "allocation_mode": "shared",
+        "total_stock": 1000
+    }
+}
+```
+
+---
+
+### 4.9 库存同步机制
+
+#### **自动同步（共享库存模式）**
+
+```php
+/**
+ * 监听库存变更事件，自动同步共享库存
+ */
+class SyncSharedStockListener
+{
+    public function handle(StockChangedEvent $event): void
+    {
+        $productId = $event->productId;
+        $variantId = $event->variantId;
+        
+        // 如果是共享库存变更，同步所有市场
+        $service = app(ProductStockService::class);
+        $service->syncSharedStock($productId, $variantId);
+    }
+}
+```
+
+#### **手动同步（独立库存模式）**
+
+```php
+/**
+ * 手动分配库存到市场
+ */
+$stockService = app(ProductStockService::class);
+
+// 分配600件库存到中国市场
+$stockService->allocateStockToMarket(1001, 10001, 'cn', 600);
+
+// 分配300件库存到美国市场
+$stockService->allocateStockToMarket(1001, 10001, 'us', 300);
+```
+
+---
+
+### 4.10 库存查询优化
+
+#### **缓存策略**
+
+```php
+/**
+ * 库存查询缓存（Redis）
+ */
+class ProductStockCache
+{
+    protected string $cachePrefix = 'product_stock:';
+    protected int $cacheTtl = 300; // 5分钟
+    
+    public function getAvailableStock(
+        int $productId,
+        ?int $variantId,
+        string $market
+    ): ?int {
+        $key = $this->getCacheKey($productId, $variantId, $market);
+        return Cache::get($key);
+    }
+    
+    public function setAvailableStock(
+        int $productId,
+        ?int $variantId,
+        string $market,
+        int $stock
+    ): void {
+        $key = $this->getCacheKey($productId, $variantId, $market);
+        Cache::put($key, $stock, $this->cacheTtl);
+    }
+    
+    public function invalidate(int $productId, ?int $variantId = null): void
+    {
+        $pattern = $this->cachePrefix . "{$productId}:*";
+        if ($variantId) {
+            $pattern = $this->cachePrefix . "{$productId}:{$variantId}:*";
+        }
+        Cache::forget($pattern);
+    }
+}
+```
+
+---
+
+### 4.11 业务场景示例
+
+#### **场景1：跨境电商共享库存**
+
+```
+商品：iPhone 15 Pro
+总库存：1000件（存放在中国仓库）
+
+配置：
+- 中国市场：共享库存
+- 美国市场：共享库存
+- 德国市场：共享库存
+
+库存记录：
+market='*', allocation_mode='shared', total_stock=1000, available_stock=1000
+
+销售情况：
+- 中国市场售出：50件 → available_stock=950
+- 美国市场可用库存：950件（自动同步）
+- 德国市场可用库存：950件（自动同步）
+```
+
+---
+
+#### **场景2：多市场独立库存**
+
+```
+商品：定制T恤
+总库存：1000件
+
+配置：
+- 中国市场：独立库存 600件（中国供应商）
+- 美国市场：独立库存 300件（美国供应商）
+- 德国市场：独立库存 100件（德国供应商）
+
+库存记录：
+market='cn', allocation_mode='independent', total_stock=600, available_stock=600
+market='us', allocation_mode='independent', total_stock=300, available_stock=300
+market='de', allocation_mode='independent', total_stock=100, available_stock=100
+
+销售情况：
+- 中国市场售出：50件 → cn市场 available_stock=550
+- 美国市场可用库存：300件（不受影响）
+- 德国市场可用库存：100件（不受影响）
+```
+
+---
+
+#### **场景3：混合模式**
+
+```
+商品：限量版球鞋
+总库存：500件
+
+配置：
+- 中国市场：独立库存 300件（中国仓库）
+- 美国+欧洲市场：共享库存 200件（国际仓库）
+
+库存记录：
+market='cn', allocation_mode='independent', total_stock=300, available_stock=300
+market='*', allocation_mode='shared', total_stock=200, available_stock=200
+market='us', allocation_mode='shared', total_stock=0, available_stock=200（显示值）
+market='de', allocation_mode='shared', total_stock=0, available_stock=200（显示值）
+```
+
+---
+
+### 4.12 设计优势总结
+
+**多市场库存体系的核心优势：**
+
+- ✅ **灵活分配**：支持共享库存、独立库存、混合模式三种策略
+- ✅ **精确控制**：可以精确控制每个市场的库存分配
+- ✅ **自动同步**：共享库存模式下自动同步，减少管理成本
+- ✅ **性能优化**：合理的索引和缓存策略，查询响应快
+- ✅ **库存隔离**：独立库存模式下市场间互不影响
+- ✅ **易于扩展**：新增市场无需修改代码，只需配置即可
+- ✅ **职责清晰**：库存管理与价格管理分离，符合单一职责原则
+
+---
+
+## 五、多语言体系设计
+
+### 5.1 设计原则
 
 ```
 核心原则：
@@ -586,7 +1210,7 @@ class ProductPriceService
 
 ---
 
-### 4.2 需要翻译的实体清单
+### 5.2 需要翻译的实体清单
 
 | 实体 | 主表 | 翻译表 | 可翻译字段数 |
 |------|------|--------|--------------|
@@ -600,7 +1224,7 @@ class ProductPriceService
 
 ---
 
-### 4.3 翻译表结构示例
+### 5.3 翻译表结构示例
 
 ```sql
 CREATE TABLE product_translations (
@@ -634,9 +1258,9 @@ CREATE TABLE product_translations (
 
 ---
 
-## 五、数据库表设计清单
+## 六、数据库表设计清单
 
-### 5.1 需要修改的现有表
+### 6.1 需要修改的现有表
 
 | 表名 | 操作 | 新增字段 |
 |------|------|----------|
@@ -644,11 +1268,14 @@ CREATE TABLE product_translations (
 | `product_variants` | 修改 | platform, biz |
 | `product_attributes` | 修改 | 移除 name 字段 |
 
-### 5.2 需要新建的表
+### 6.2 需要新建的表
 
 #### **多价格表（2个）**
 - `product_prices` - 商品多维度价格表
 - `exchange_rates` - 汇率表（可选）
+
+#### **多市场库存表（1个）**
+- `product_stocks` - 商品多市场库存表
 
 #### **多语言翻译表（7个）**
 - `product_translations` - 商品翻译表
@@ -661,9 +1288,9 @@ CREATE TABLE product_translations (
 
 ---
 
-## 六、详细表结构设计
+## 七、详细表结构设计
 
-### 6.1 products 表修改
+### 7.1 products 表修改
 
 ```php
 // 在 owner_id 字段后添加三维度字段
@@ -686,9 +1313,9 @@ $table->index(['market', 'platform', 'biz'], 'idx_dimensions');
 
 ---
 
-## 七、抽象共享概念设计
+## 八、抽象共享概念设计
 
-### 7.1 跨领域统一概念：Partition（分区）
+### 8.1 跨领域统一概念：Partition（分区）
 
 #### **设计背景**
 
@@ -701,7 +1328,7 @@ $table->index(['market', 'platform', 'biz'], 'idx_dimensions');
 
 ---
 
-#### **7.1.1 HasPartition Trait**
+#### **8.1.1 HasPartition Trait**
 
 ```php
 <?php
@@ -767,7 +1394,7 @@ trait HasPartition
 
 ---
 
-#### **7.1.2 PartitionService**
+#### **8.1.2 PartitionService**
 
 ```php
 <?php
@@ -844,7 +1471,7 @@ class PartitionService
 
 ---
 
-#### **7.1.3 统一配置文件**
+#### **8.1.3 统一配置文件**
 
 ```php
 <?php
@@ -927,7 +1554,7 @@ return [
 
 ---
 
-#### **7.1.4 领域中的使用**
+#### **8.1.4 领域中的使用**
 
 **商品领域：使用 market**
 
@@ -979,7 +1606,7 @@ class Article extends Model
 
 ---
 
-### 7.2 业务平台与市场验证
+### 8.2 业务平台与市场验证
 
 #### **ProductValidator**
 
@@ -1042,9 +1669,9 @@ try {
 
 ---
 
-## 八、核心代码组件
+## 九、核心代码组件
 
-### 8.1 Trait: HasTranslations
+### 9.1 Trait: HasTranslations
 
 **文件位置：** `packages/support/src/Domain/Models/Traits/HasTranslations.php`
 
@@ -1060,7 +1687,7 @@ try {
 
 ---
 
-### 8.2 Service: ProductPriceService
+### 9.2 Service: ProductPriceService
 
 **文件位置：** `packages/product/src/Domain/Product/Services/ProductPriceService.php`
 
@@ -1074,7 +1701,7 @@ try {
 
 ---
 
-### 8.3 枚举类
+### 9.3 枚举类
 
 #### **PlatformEnum**
 
@@ -1144,7 +1771,7 @@ enum BizEnum: string
 
 ---
 
-## 九、实施路线图
+## 十、实施路线图
 
 ### Phase 1: 基础三维度（Week 1-2）⭐⭐⭐⭐⭐
 
@@ -1214,9 +1841,9 @@ enum BizEnum: string
 
 ---
 
-## 十、技术栈说明
+## 十一、技术栈说明
 
-### 9.1 核心依赖
+### 11.1 核心依赖
 
 ```json
 {
@@ -1229,7 +1856,7 @@ enum BizEnum: string
 }
 ```
 
-### 9.2 可选依赖
+### 11.2 可选依赖
 
 ```json
 {
@@ -1243,18 +1870,19 @@ enum BizEnum: string
 
 ---
 
-## 十一、预期收益
+## 十二、预期收益
 
-### 10.1 业务价值
+### 12.1 业务价值
 
 | 价值点 | 说明 | 量化指标 |
 |--------|------|----------|
 | **多业务平台支持** | 一套系统支持多种业务平台 | 支持 10+ 业务平台 |
 | **跨境电商** | 快速拓展海外市场 | 支持 20+ 国家 |
-| **灵活定价** | 多维度定价策略 | 支持 2 个价格维度（market、user_level），渠道差异化通过促销系统实现 |
+| **灵活定价** | 多维度定价策略 | 支持 3 个价格维度（market、store、user_level），渠道差异化依旧通过促销系统实现 |
+| **多市场库存** | 灵活的库存分配策略 | 支持共享库存、独立库存、混合模式三种策略 |
 | **多语言** | 完整的国际化支持 | 支持 10+ 语言 |
 
-### 10.2 技术价值
+### 12.2 技术价值
 
 - ✅ 架构清晰，易于维护
 - ✅ 扩展性强，可快速适配新业务平台
@@ -1264,9 +1892,9 @@ enum BizEnum: string
 
 ---
 
-## 十二、风险评估
+## 十三、风险评估
 
-### 11.1 技术风险
+### 13.1 技术风险
 
 | 风险项 | 等级 | 应对措施 |
 |--------|------|----------|
@@ -1274,7 +1902,7 @@ enum BizEnum: string
 | **查询性能下降** | 中 | 合理索引、缓存策略 |
 | **翻译准确性** | 低 | 人工审核、质量评分 |
 
-### 11.2 业务风险
+### 13.2 业务风险
 
 | 风险项 | 等级 | 应对措施 |
 |--------|------|----------|
@@ -1283,9 +1911,9 @@ enum BizEnum: string
 
 ---
 
-## 十三、方案总结
+## 十四、方案总结
 
-### 12.1 核心亮点
+### 14.1 核心亮点
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -1297,6 +1925,9 @@ enum BizEnum: string
 │                                                          │
 │  💰 多价格：支持市场、会员、阶梯、促销等多维度定价      │
 │     一个商品在不同维度组合下有不同价格                   │
+│                                                          │
+│  📦 多库存：支持共享库存、独立库存、混合模式            │
+│     灵活分配各市场库存，自动同步或精确控制               │
 │                                                          │
 │  🌐 国际化：完整的多语言翻译体系，支持 AI 翻译          │
 │     主表+翻译表，查询高效，回退机制完善                  │
@@ -1341,17 +1972,26 @@ enum BizEnum: string
    - 通配符支持：* 表示所有
    - 优先级匹配：精确匹配优先
 
-4. **多语言**：主表+翻译表模式
+4. **多市场库存**：支持 3 种库存分配策略
+   - 共享库存模式：所有市场共享同一份库存，自动同步
+   - 独立库存模式：每个市场独立库存分配，互不影响
+   - 混合模式：部分市场共享，部分市场独立
+   - 库存维度：market（市场）
+   - 库存状态：有货、低库存、缺货、预售
+   - 库存扣减：锁定 → 预留 → 扣减的完整流程
+
+5. **多语言**：主表+翻译表模式
    - 查询效率高（一次 JOIN）
    - 翻译回退机制
    - 支持 AI 批量翻译
 
-### 12.2 适用场景
+### 14.2 适用场景
 
 - ✅ 跨境电商平台
 - ✅ 多业务平台电商系统
 - ✅ SaaS 多租户电商系统
 - ✅ 企业级商品中心
+- ✅ 餐饮点餐/外卖系统（支持多平台、多门店差异化定价与库存）
 
 ---
 
