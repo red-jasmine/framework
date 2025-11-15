@@ -78,8 +78,6 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_series_table',
             'create_product_series_products_table',
 
-
-
             'create_products_table',
             'create_products_extension_table',
             'create_product_variants_table',
@@ -92,6 +90,12 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_tag_pivots_table',
             'create_product_services_table',
             'create_product_service_pivot_table',
+
+
+
+            // 多价格体系
+            'create_product_prices_table',
+            'create_product_variant_prices_table',
         ];
 
     }

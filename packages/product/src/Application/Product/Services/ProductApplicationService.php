@@ -13,6 +13,7 @@ use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateComman
 use RedJasmine\Product\Application\Product\Services\Commands\ProductUpdateCommandHandler;
 use RedJasmine\Product\Application\Product\Services\Queries\GetProductPriceQueryHandler;
 use RedJasmine\Product\Application\Product\Services\Queries\GetProductPurchaseQuery;
+use RedJasmine\Product\Application\Product\Services\Queries\UserProductListQueryHandler;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
@@ -27,6 +28,7 @@ use RedJasmine\Support\Domain\Data\Queries\FindQuery;
  * @method void update(ProductUpdateCommand $command)
  * @method void setStatus(ProductSetStatusCommand $command)
  * @method ProductAmountInfo  getProductPrice(GetProductPurchaseQuery $query)
+ * @method \Illuminate\Contracts\Pagination\LengthAwarePaginator userProductList(\RedJasmine\Product\Application\Product\Services\Queries\UserProductListQuery $query)
  */
 class ProductApplicationService extends ApplicationService
 {
@@ -59,6 +61,7 @@ class ProductApplicationService extends ApplicationService
 
         // 查询器
         'getProductPrice' => GetProductPriceQueryHandler::class,
+        'userProductList' => UserProductListQueryHandler::class,
     ];
 
     /**

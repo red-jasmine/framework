@@ -16,9 +16,9 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
 
             $table->unsignedBigInteger('id')->primary()->comment('ID');
-            $table->string('platform', 64)->default('mall')->comment('业务平台');
-            $table->string('market', 64)->default('default')->comment('市场'); // 根据 业务平台可选
-            $table->string('biz', 64)->default('self')->comment('业务线'); // 由平台商家定义
+
+            $table->string('market', 64)->default('default')->comment('市场');
+            // 注意：业务线（biz）是商家属性，不是商品属性，通过 owner 关联商家获取
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
 
@@ -33,7 +33,6 @@ return new class extends Migration {
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
             $table->boolean('is_pre_sale')->default(false)->comment('是否预售');
             $table->boolean('is_customized')->default(false)->comment('是否定制');
-            // 媒体资源
             $table->boolean('has_variants')->default(false)->comment('多规格');
 
 

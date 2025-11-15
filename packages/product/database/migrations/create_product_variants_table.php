@@ -11,9 +11,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
 
-            $table->string('platform', 64)->default('mall')->comment('业务平台');
+           
             $table->string('market', 64)->default('default')->comment('市场');
-            $table->string('biz', 64)->default('self')->comment('业务线');
+            // 注意：业务线（biz）是商家属性，不是商品属性，通过 owner 关联商家获取
             $table->string('owner_type', 64);
             $table->string('owner_id', 64);
 

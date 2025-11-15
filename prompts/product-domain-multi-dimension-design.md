@@ -4,7 +4,7 @@
 
 | 项目 | 内容 |
 |------|------|
-| **方案名称** | 商品领域多维度设计方案（三维度 + 多价格 + 多语言） |
+| **方案名称** | 商品领域多维度设计方案（单维度 + 多价格 + 多语言） |
 | **方案版本** | v1.0 |
 | **创建日期** | 2024-11-13 |
 | **文档作者** | Red Jasmine Team |
@@ -16,7 +16,7 @@
 ## 目录
 
 - [一、方案概述](#一方案概述)
-- [二、三维度商品模型设计](#二三维度商品模型设计)
+- [二、单维度商品模型设计](#二单维度商品模型设计)
 - [三、多价格体系设计](#三多价格体系设计)
 - [四、多市场库存体系设计](#四多市场库存体系设计)
 - [五、多语言体系设计](#五多语言体系设计)
@@ -36,13 +36,11 @@
 
 ### 1.1 设计目标
 
-构建一个支持**多业务平台、多市场、多业务线、多价格、多语言**的企业级商品中心，满足以下场景：
+构建一个支持**多市场、多价格、多语言**的企业级商品中心，满足以下场景：
 
 | 能力 | 说明 |
 |------|------|
-| ✅ **多业务平台支持** | 商城、外卖、点餐、旅游、企业采购等不同业务场景 |
 | ✅ **跨境电商** | 支持多国家/地区站点，多货币定价 |
-| ✅ **多经营模式** | 平台自营、POP商家、加盟商等不同经营主体 |
 | ✅ **灵活定价** | 支持市场定价、会员定价、阶梯定价、促销定价 |
 | ✅ **多语言体系** | 商品信息、属性、类目的完整多语言支持 |
 
@@ -52,43 +50,47 @@
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                   三维度层级设计                          │
+│                   单维度设计                            │
 ├──────────────────────────────────────────────────────────┤
 │                                                           │
-│  platform (业务平台)  ← 顶层，决定业务场景和市场范围    │
-│      ↓                                                    │
-│  market (市场)         ← 中层，受业务平台约束            │
-│      ↓                                                    │
-│  biz (业务线)          ← 底层，经营模式                  │
+│  market (市场)         ← 市场维度，决定货币、语言等      │
 │                                                           │
-│  层级关系：业务平台决定可用的 market 范围                 │
-│  示例：mall 业务平台支持多国市场，takeaway 可能只有中国  │
+│  设计理念：市场决定地域属性（货币、语言、税费、物流等）   │
+│  示例：中国市场商品、美国市场商品、德国市场商品           │
+│                                                           │
+│  注意：业务线（biz）是商家属性，不是商品属性             │
+│        商品通过 owner 关联商家，商家的 biz 属性决定      │
+│        结算方式、权限控制、运营策略等                     │
 └──────────────────────────────────────────────────────────┘
 ```
 
 **设计原则：**
 
-1. **层级性**：platform → market → biz，存在约束关系
-2. **业务平台优先**：业务平台决定了支持的市场范围
-3. **可扩展性**：新增维度值无需修改代码结构
+1. **单一维度**：商品只有 market（市场）一个维度
+2. **商家属性分离**：业务线（biz）是商家属性，通过 owner 关联获取
+3. **可扩展性**：新增市场值无需修改代码结构
 4. **向后兼容**：保留默认值，兼容现有数据
 5. **性能优先**：合理索引和缓存策略
 6. **用户无感知**：后端技术概念，前端转换为用户友好展示
 
-**层级约束示例：**
+**市场维度示例：**
 
 ```
-mall（商城业务平台）
-  ├─ 支持市场：cn, us, uk, de, fr, jp... （全球化）
-  └─ 业务线：self, pop, franchise
+市场维度（market）：
+  ├─ cn（中国站）：CNY货币，zh-CN语言
+  ├─ us（美国站）：USD货币，en-US语言
+  ├─ de（德国站）：EUR货币，de-DE语言
+  └─ jp（日本站）：JPY货币，ja-JP语言
 
-takeaway（外卖业务平台）
-  ├─ 支持市场：cn （仅中国）
-  └─ 业务线：self, pop
+商品示例：
+  ├─ 商品A（market=cn）：中国市场商品，CNY定价
+  ├─ 商品B（market=us）：美国市场商品，USD定价
+  └─ 商品C（market=de）：德国市场商品，EUR定价
 
-travel（旅游业务平台）
-  ├─ 支持市场：cn, us, jp, th （旅游目的地）
-  └─ 业务线：self, pop, agent
+商家业务线（通过 owner 关联）：
+  ├─ 商家1（biz=self）：平台自营商家
+  ├─ 商家2（biz=pop）：POP商家
+  └─ 商家3（biz=franchise）：加盟商
 ```
 
 ---
@@ -106,49 +108,11 @@ travel（旅游业务平台）
 
 ---
 
-## 二、三维度商品模型设计
+## 二、单维度商品模型设计
 
 ### 2.1 维度定义
 
-#### **维度1：platform（业务平台）**
-
-| 属性 | 值 |
-|------|-----|
-| **英文名** | platform |
-| **中文名** | 业务平台 |
-| **数据类型** | VARCHAR(64) |
-| **默认值** | 'default' |
-| **是否必填** | 是 |
-
-**定义：** 商品所属的业务平台类型，决定商品的功能特性、处理流程和支持的市场范围。业务平台是公司内部不同的业务线或业务场景，如低价商城、高端商城、二手平台等。
-
-**典型取值：**
-
-| 值 | 标签 | 说明 | 典型应用 |
-|----|------|------|----------|
-| `default` | 默认 | 通用平台 | 默认兼容 |
-| `mall` | 商城平台 | 标准电商平台 | 京东、天猫 |
-| `low_price` | 低价商城 | 低价商品商城平台 | 拼多多、特价商城 |
-| `luxury` | 高端商城 | 高端首饰商城平台 | 奢侈品电商 |
-| `secondhand` | 二手平台 | 区域性二手平台 | 闲鱼、转转 |
-| `takeaway` | 外卖平台 | 餐饮外卖配送 | 美团外卖、饿了么 |
-| `dine_in` | 堂食/点餐 | 门店点餐系统 | 扫码点餐小程序 |
-| `travel` | 旅游平台 | 旅游产品 | 携程、去哪儿 |
-| `hotel` | 酒店平台 | 酒店预订 | 酒店预订系统 |
-| `ticket` | 门票平台 | 景区门票 | 景区门票系统 |
-| `b2b` | 企业采购平台 | 批量采购 | 1688、阿里国际站 |
-| `service` | 服务平台 | 服务类商品 | O2O服务 |
-| `booking` | 预订平台 | 预约类商品 | 餐厅预订、车票 |
-
-**影响范围：**
-
-- **功能特性**：UI展示、必填字段、功能模块
-- **处理流程**：订单状态流转、库存扣减方式、时效管理
-- **业务规则**：退款规则、评价维度、支付方式
-
----
-
-#### **维度2：market（市场站点）**
+#### **market（市场站点）**
 
 | 属性 | 值 |
 |------|-----|
@@ -184,143 +148,42 @@ travel（旅游业务平台）
 - **税费相关**：税率、税费计算方式、发票类型
 - **合规相关**：海关编码、进出口限制、商品资质要求
 
----
+### 2.2 业务线说明
 
-#### **维度3：biz（业务线）**
+**重要说明：** 业务线（biz）不是商品的属性，而是**商家的属性**。
 
-| 属性 | 值 |
-|------|-----|
-| **英文名** | biz |
-| **中文名** | 业务线/经营模式 |
-| **数据类型** | VARCHAR(64) |
-| **默认值** | 'default' |
-| **是否必填** | 是 |
+- 商品通过 `owner` 字段关联商家
+- 商家的 `biz` 属性决定：
+  - 结算方式（佣金比例、结算周期）
+  - 权限控制（数据权限、功能权限）
+  - 运营策略（商品审核、活动参与）
+  - 财务流程（发票开具、退款流程）
 
-**定义：** 商品的经营主体和模式，决定结算方式、权限控制、运营策略。
+**典型业务线取值：**
 
-**典型取值：**
-
-| 值 | 标签 | 佣金率 | 说明 | 典型应用 |
-|----|------|--------|------|----------|
-| `default` | 默认 | 0% | 默认模式 | 默认兼容 |
-| `self` | 平台自营 | 0% | 平台采购销售 | 京东自营 |
-| `pop` | POP商家 | 3-10% | 第三方商家 | 天猫店铺 |
-| `franchise` | 加盟商 | 2-5% | 加盟合作 | 便利店加盟 |
-| `wholesale` | 批发商 | 1-3% | 大批量采购 | 1688批发 |
-| `agent` | 代理商 | 3-7% | 品牌代理 | 区域代理 |
-| `distributor` | 分销商 | 2-5% | 分销模式 | 社交电商 |
-
-**影响范围：**
-
-- **结算相关**：佣金比例、结算周期、结算主体
-- **权限相关**：数据权限、功能权限、操作权限
-- **运营相关**：商品审核、活动参与、展示权重
-- **财务相关**：发票开具、退款流程、对账流程
-- **用户展示**：店铺标识、物流信息、信任度
+| 值 | 标签 | 说明 | 典型应用 |
+|----|------|------|----------|
+| `self` | 平台自营 | 平台采购销售 | 京东自营 |
+| `pop` | POP商家 | 第三方商家 | 天猫店铺 |
+| `franchise` | 加盟商 | 加盟合作 | 便利店加盟 |
+| `wholesale` | 批发商 | 大批量采购 | 1688批发 |
+| `agent` | 代理商 | 品牌代理 | 区域代理 |
+| `distributor` | 分销商 | 分销模式 | 社交电商 |
 
 ---
 
-### 2.2 业务平台与市场的层级关系
-
-#### **业务平台决定市场范围**
-
-不同业务平台支持的市场范围不同，这是业务特性决定的：
-
-| 业务平台 | 支持的市场 | 原因 |
-|---------|-----------|------|
-| `mall` (商城业务平台) | cn, us, uk, de, fr, jp, kr... | 全球化电商，支持跨境 |
-| `low_price` (低价商城业务平台) | cn | 主要面向中国市场 |
-| `luxury` (高端商城业务平台) | cn, us, uk, de, fr, jp... | 高端市场全球化 |
-| `secondhand` (二手业务平台) | cn | 区域性业务，仅中国 |
-| `takeaway` (外卖业务平台) | cn | 配送范围限制，仅中国 |
-| `dine_in` (堂食业务平台) | cn | 门店业务，仅中国 |
-| `travel` (旅游业务平台) | cn, us, jp, th, sg... | 旅游目的地国家 |
-| `hotel` (酒店业务平台) | cn, us, jp, th, sg... | 酒店所在国家 |
-| `b2b` (企业采购业务平台) | cn, us, uk, de... | 企业采购市场 |
-
-#### **业务平台-市场配置**
-
-```php
-// config/platforms.php
-
-return [
-    'mall' => [
-        'name' => '商城业务平台',
-        'supported_markets' => ['cn', 'us', 'uk', 'de', 'fr', 'jp', 'kr', 'au', 'ca', 'sg'],
-        'default_market' => 'cn',
-        'features' => ['delivery', 'return', 'international_shipping'],
-    ],
-    
-    'low_price' => [
-        'name' => '低价商城业务平台',
-        'supported_markets' => ['cn'],  // 主要面向中国市场
-        'default_market' => 'cn',
-        'features' => ['bulk_discount', 'group_buying'],
-    ],
-    
-    'luxury' => [
-        'name' => '高端商城业务平台',
-        'supported_markets' => ['cn', 'us', 'uk', 'de', 'fr', 'jp'],
-        'default_market' => 'cn',
-        'features' => ['authenticity_guarantee', 'luxury_packaging'],
-    ],
-    
-    'secondhand' => [
-        'name' => '二手业务平台',
-        'supported_markets' => ['cn'],  // 区域性业务
-        'default_market' => 'cn',
-        'features' => ['quality_inspection', 'transaction_guarantee'],
-    ],
-    
-    'takeaway' => [
-        'name' => '外卖业务平台',
-        'supported_markets' => ['cn'],  // 仅支持中国
-        'default_market' => 'cn',
-        'features' => ['real_time_delivery', 'rider_tracking'],
-    ],
-    
-    'dine_in' => [
-        'name' => '堂食业务平台',
-        'supported_markets' => ['cn'],  // 仅支持中国
-        'default_market' => 'cn',
-        'features' => ['table_management', 'kitchen_printing'],
-    ],
-    
-    'travel' => [
-        'name' => '旅游业务平台',
-        'supported_markets' => ['cn', 'us', 'jp', 'th', 'sg', 'kr', 'fr', 'uk'],
-        'default_market' => 'cn',
-        'features' => ['calendar_booking', 'traveler_info', 'refund_rules'],
-    ],
-    
-    'b2b' => [
-        'name' => '企业采购业务平台',
-        'supported_markets' => ['cn', 'us', 'uk', 'de', 'jp'],
-        'default_market' => 'cn',
-        'features' => ['bulk_order', 'invoice', 'credit_payment'],
-    ],
-];
-```
-
 ---
 
-### 2.3 三维度组合示例
+| market | 业务场景描述 | 典型应用 |
+|--------|--------------|----------|
+| cn | 中国市场商品 | 中国站商品 |
+| us | 美国市场商品 | 美国站商品 |
+| de | 德国市场商品 | 德国站商品 |
+| jp | 日本市场商品 | 日本站商品 |
+| uk | 英国市场商品 | 英国站商品 |
+| fr | 法国市场商品 | 法国站商品 |
 
-| market | biz | platform | 业务场景描述 | 典型业务平台 |
-|--------|-----|----------|--------------|------------|
-| cn | self | mall | 中国站平台自营商城商品 | 京东自营 |
-| us | self | mall | 美国站平台自营商城商品 | Amazon Self |
-| cn | pop | mall | 中国站第三方商城店铺 | 天猫店铺 |
-| cn | pop | low_price | 中国站低价商城商品 | 拼多多 |
-| cn | pop | luxury | 中国站高端商城商品 | 奢侈品电商 |
-| cn | pop | secondhand | 中国站二手业务平台商品 | 闲鱼 |
-| cn | pop | takeaway | 中国站第三方外卖商家 | 美团外卖商家 |
-| cn | self | takeaway | 中国站平台自营外卖 | 美团优选 |
-| cn | pop | dine_in | 中国站商家堂食点餐 | 扫码点餐 |
-| de | pop | mall | 德国站第三方商城 | 德国电商 |
-| jp | self | b2b | 日本站企业采购自营 | 日本B2B |
-| cn | pop | travel | 中国站第三方旅游产品 | 携程商家 |
-| us | franchise | mall | 美国站加盟商商品 | 加盟店 |
+**说明：** 商品的业务线信息通过 `owner` 关联商家获取，商家有 `biz` 属性标识其业务线类型。
 
 ---
 
@@ -333,8 +196,6 @@ return [
 
 ✅ 基准价格：products 表保留基准价格（主市场默认价格）
 ✅ 多维定价：product_prices 表管理多维度价格组合（market、store、user_level）
-✅ 业务平台隔离：商品本身已有 platform 字段，价格表不包含 platform 维度
-✅ 业务线无关：价格体系与业务线（biz）无关，所有业务线使用相同的价格体系
 ✅ 渠道无关：价格体系不包含 channel 维度，渠道差异化定价通过促销系统实现
 ✅ 门店差异化：通过 store 维度区分不同门店价格，支持默认门店（`default`）与具体门店编码
 ✅ 用户等级定价：通过 user_level 维度区分不同用户等级的价格（普通价、VIP价、黄金会员价等），不使用单独的 member_price 字段
@@ -348,9 +209,8 @@ return [
 ### 3.2 价格表结构设计
 
 **设计说明：**
-- **不包含业务平台维度**：商品本身已有 `platform` 字段，一个商品只能属于唯一业务平台，价格表通过 `product_id` 关联即可获取商品所属的业务平台
-- **不包含业务线维度**：价格体系与业务线（biz）无关，所有业务线使用相同的价格体系
 - **不包含渠道维度**：价格体系不包含 channel 维度，渠道差异化定价通过促销系统实现（如小程序专享价、APP首单优惠等）
+- **不包含业务线维度**：业务线（biz）是商家属性，不是商品属性，价格体系与业务线无关
 - **价格维度**：market（市场）、store（门店）、user_level（用户等级）
 - **门店定价**：store 维度支持 `default`（通用门店）、具体门店编码（如 `store_001`），以及 `*` 通配符，满足连锁门店差异化定价需求
 - **用户等级定价**：通过 `user_level` 维度区分不同用户等级的价格，如 `default`（普通价）、`vip`（VIP价）、`gold`（黄金会员价）等，不再使用单独的 `member_price` 字段
@@ -358,7 +218,7 @@ return [
 ```sql
 CREATE TABLE product_prices (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    product_id BIGINT UNSIGNED NOT NULL COMMENT '商品ID（通过 product_id 可获取商品的 platform）',
+    product_id BIGINT UNSIGNED NOT NULL COMMENT '商品ID',
     variant_id BIGINT UNSIGNED NULL COMMENT 'SKU ID',
     
     -- ========== 价格维度（支持通配符 *） ==========
@@ -441,15 +301,13 @@ market='cn'      → 非通配符 +1000 分
 user_level='vip' → 非通配符 +1    分
 
 注意：
-1. 业务平台（platform）不在价格维度中，因为商品本身已有 platform 字段，
-   查询价格时通过 product_id 关联 products 表即可获取商品所属的业务平台。
-2. 门店（store）作为新增维度，用于覆盖连锁门店差异化定价场景，支持 `default`、具体门店编码以及 `*` 通配符。
-3. 业务线（biz）不在价格维度中，价格体系与业务线无关，所有业务线使用相同的价格体系。
-4. 渠道（channel）不在价格维度中，渠道差异化定价通过促销系统实现。
+1. 门店（store）作为新增维度，用于覆盖连锁门店差异化定价场景，支持 `default`、具体门店编码以及 `*` 通配符。
+2. 渠道（channel）不在价格维度中，渠道差异化定价通过促销系统实现。
    原因：渠道差异化定价具有时间限制、条件限制等特点，更适合通过促销系统处理。
    示例：小程序专享价通过促销规则实现，而不是在基础价格表中设置 channel='mini'。
-5. 用户等级定价：通过 user_level 维度区分不同用户等级的价格，不再使用单独的 member_price 字段。
+3. 用户等级定价：通过 user_level 维度区分不同用户等级的价格，不再使用单独的 member_price 字段。
    示例：user_level='default' → price=100（普通价），user_level='vip' → price=90（VIP价），user_level='gold' → price=85（黄金会员价）
+4. 业务线（biz）不在价格维度中：业务线是商家属性，不是商品属性，价格体系与业务线无关。
 ```
 
 ---
@@ -463,8 +321,6 @@ user_level='vip' → 非通配符 +1    分
 
 ✅ 基准库存：product_variants 表保留总库存（所有市场共享库存或默认市场库存）
 ✅ 多市场库存：product_stocks 表管理不同市场、门店的库存分配
-✅ 业务平台隔离：商品本身已有 platform 字段，库存表通过 product_id 关联即可获取商品所属的业务平台
-✅ 业务线无关：库存体系与业务线（biz）无关，所有业务线使用相同的库存体系
 ✅ 库存分配策略：支持共享库存、独立库存两种模式，并可叠加门店维度
 ✅ 库存扣减：支持按市场/门店精细扣减库存，支持库存锁定和释放
 ✅ 库存同步：支持库存自动同步和手动分配
@@ -542,16 +398,15 @@ user_level='vip' → 非通配符 +1    分
 ### 4.3 库存表结构设计
 
 **设计说明：**
-- **不包含业务平台维度**：商品本身已有 `platform` 字段，库存表通过 `product_id` 关联即可获取商品所属的业务平台
-- **不包含业务线维度**：库存体系与业务线（biz）无关，所有业务线使用相同的库存体系
 - **库存维度**：market（市场）、store（门店）
+- **不包含业务线维度**：业务线（biz）是商家属性，不是商品属性，库存体系与业务线无关
 - **门店库存**：store 维度支持默认门店或具体门店编码（如 `store_sz01`），便于对不同门店库存进行精细化分配，可与 market 配合形成组合
 - **库存分配模式**：通过 `allocation_mode` 字段控制（shared-共享、independent-独立）
 
 ```sql
 CREATE TABLE product_stocks (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    product_id BIGINT UNSIGNED NOT NULL COMMENT '商品ID（通过 product_id 可获取商品的 platform）',
+    product_id BIGINT UNSIGNED NOT NULL COMMENT '商品ID',
     variant_id BIGINT UNSIGNED NULL COMMENT 'SKU ID',
     
     -- ========== 库存维度 ==========
@@ -1264,8 +1119,8 @@ CREATE TABLE product_translations (
 
 | 表名 | 操作 | 新增字段 |
 |------|------|----------|
-| `products` | 修改 | platform, biz |
-| `product_variants` | 修改 | platform, biz |
+| `products` | 修改 | market |
+| `product_variants` | 修改 | market |
 | `product_attributes` | 修改 | 移除 name 字段 |
 
 ### 6.2 需要新建的表
@@ -1293,22 +1148,16 @@ CREATE TABLE product_translations (
 ### 7.1 products 表修改
 
 ```php
-// 在 owner_id 字段后添加三维度字段
+// 在 owner_id 字段后添加市场维度字段
 
 $table->string('market', 64)
     ->default('default')
     ->comment('市场站点：cn-中国, us-美国, de-德国');
 
-$table->string('platform', 64)
-    ->default('default')
-    ->comment('业务平台：mall-商城, low_price-低价商城, luxury-高端商城, secondhand-二手平台, takeaway-外卖, dine_in-点餐');
-
-$table->string('biz', 64)
-    ->default('default')
-    ->comment('业务线：self-自营, pop-POP, franchise-加盟');
+// 注意：业务线（biz）是商家属性，不是商品属性，通过 owner 关联商家获取
 
 // 索引
-$table->index(['market', 'platform', 'biz'], 'idx_dimensions');
+$table->index(['market'], 'idx_market');
 ```
 
 ---
@@ -1441,31 +1290,6 @@ class PartitionService
         return $this->getConfig($partition)['timezone'] ?? 'Asia/Shanghai';
     }
     
-    /**
-     * 检查业务平台是否支持该市场
-     */
-    public function isMarketSupportedByPlatform(
-        string $platform, 
-        string $market
-    ): bool {
-        $supportedMarkets = config(
-            "platforms.{$platform}.supported_markets", 
-            []
-        );
-        
-        return in_array($market, $supportedMarkets);
-    }
-    
-    /**
-     * 获取业务平台支持的市场列表
-     */
-    public function getSupportedMarkets(string $platform): array
-    {
-        return config(
-            "platforms.{$platform}.supported_markets", 
-            ['default']
-        );
-    }
 }
 ```
 
@@ -1606,67 +1430,6 @@ class Article extends Model
 
 ---
 
-### 8.2 业务平台与市场验证
-
-#### **ProductValidator**
-
-```php
-<?php
-// packages/product/src/Domain/Product/Services/ProductValidator.php
-
-namespace RedJasmine\Product\Domain\Product\Services;
-
-use RedJasmine\Support\Application\Services\PartitionService;
-use RedJasmine\Support\Exceptions\BusinessException;
-
-class ProductValidator
-{
-    public function __construct(
-        protected PartitionService $partitionService
-    ) {}
-    
-    /**
-     * 验证市场是否被业务平台支持
-     */
-    public function validateMarketForPlatform(
-        string $platform, 
-        string $market
-    ): void {
-        if (!$this->partitionService->isMarketSupportedByPlatform(
-            $platform, 
-            $market
-        )) {
-            $supportedMarkets = $this->partitionService
-                ->getSupportedMarkets($platform);
-            
-            throw new BusinessException(
-                "业务平台 {$platform} 不支持市场 {$market}，" .
-                "支持的市场：" . implode(', ', $supportedMarkets)
-            );
-        }
-    }
-}
-```
-
-**使用示例：**
-
-```php
-// 创建商品时验证
-$validator = app(ProductValidator::class);
-
-try {
-    // ✅ 正确：mall 业务平台支持 us 市场
-    $validator->validateMarketForPlatform('mall', 'us');
-    
-    // ❌ 错误：takeaway 业务平台不支持 us 市场
-    $validator->validateMarketForPlatform('takeaway', 'us');
-    // 抛出异常：业务平台 takeaway 不支持市场 us，支持的市场：cn
-    
-} catch (BusinessException $e) {
-    // 处理异常
-}
-```
-
 ---
 
 ## 九、核心代码组件
@@ -1703,44 +1466,6 @@ try {
 
 ### 9.3 枚举类
 
-#### **PlatformEnum**
-
-```php
-enum PlatformEnum: string
-{
-    use EnumsHelper;
-    
-    case DEFAULT = 'default';
-    case MALL = 'mall';
-    case LOW_PRICE = 'low_price';
-    case LUXURY = 'luxury';
-    case SECONDHAND = 'secondhand';
-    case TAKEAWAY = 'takeaway';
-    case DINE_IN = 'dine_in';
-    case TRAVEL = 'travel';
-    case HOTEL = 'hotel';
-    case TICKET = 'ticket';
-    case B2B = 'b2b';
-    
-    public static function labels(): array
-    {
-        return [
-            self::DEFAULT->value => '默认业务平台',
-            self::MALL->value => '商城业务平台',
-            self::LOW_PRICE->value => '低价商城业务平台',
-            self::LUXURY->value => '高端商城业务平台',
-            self::SECONDHAND->value => '二手业务平台',
-            self::TAKEAWAY->value => '外卖业务平台',
-            self::DINE_IN->value => '堂食业务平台',
-            self::TRAVEL->value => '旅游业务平台',
-            self::HOTEL->value => '酒店业务平台',
-            self::TICKET->value => '门票业务平台',
-            self::B2B->value => '企业采购业务平台',
-        ];
-    }
-}
-```
-
 #### **MarketEnum**
 
 ```php
@@ -1756,30 +1481,18 @@ enum MarketEnum: string
 }
 ```
 
-#### **BizEnum**
-
-```php
-enum BizEnum: string
-{
-    case DEFAULT = 'default';
-    case SELF = 'self';
-    case POP = 'pop';
-    case FRANCHISE = 'franchise';
-    case WHOLESALE = 'wholesale';
-}
-```
 
 ---
 
 ## 十、实施路线图
 
-### Phase 1: 基础三维度（Week 1-2）⭐⭐⭐⭐⭐
+### Phase 1: 基础单维度（Week 1-2）⭐⭐⭐⭐⭐
 
-**目标：** 搭建三维度基础架构
+**目标：** 搭建单维度基础架构
 
 **任务清单：**
-1. 修改 products 表添加三维度字段
-2. 创建三个枚举类
+1. 修改 products 表添加市场维度字段（market）
+2. 创建 MarketEnum 枚举类
 3. 修改 Product Model
 4. 修改 orders 表
 5. 单元测试
@@ -1876,7 +1589,6 @@ enum BizEnum: string
 
 | 价值点 | 说明 | 量化指标 |
 |--------|------|----------|
-| **多业务平台支持** | 一套系统支持多种业务平台 | 支持 10+ 业务平台 |
 | **跨境电商** | 快速拓展海外市场 | 支持 20+ 国家 |
 | **灵活定价** | 多维度定价策略 | 支持 3 个价格维度（market、store、user_level），渠道差异化依旧通过促销系统实现 |
 | **多市场库存** | 灵活的库存分配策略 | 支持共享库存、独立库存、混合模式三种策略 |
@@ -1885,7 +1597,7 @@ enum BizEnum: string
 ### 12.2 技术价值
 
 - ✅ 架构清晰，易于维护
-- ✅ 扩展性强，可快速适配新业务平台
+- ✅ 扩展性强，可快速适配新市场
 - ✅ 性能优化，支持大规模数据
 - ✅ 符合 DDD 架构原则
 - ✅ 代码复用性高
@@ -1920,8 +1632,8 @@ enum BizEnum: string
 │                    核心优势总结                          │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
-│  🎯 层级设计：platform → market → biz                  │
-│     业务平台决定市场范围，层级清晰，约束合理             │
+│  🎯 单维度设计：market                                    │
+│     市场维度决定地域属性（货币、语言、税费、物流等）     │
 │                                                          │
 │  💰 多价格：支持市场、会员、阶梯、促销等多维度定价      │
 │     一个商品在不同维度组合下有不同价格                   │
@@ -1941,22 +1653,21 @@ enum BizEnum: string
 │  📐 架构清：清晰的分层设计，符合 DDD 原则               │
 │     限界上下文清晰，通用语言准确，职责分明               │
 │                                                          │
-│  🔧 易扩展：新增业务平台/市场/语言无需修改核心代码      │
+│  🔧 易扩展：新增市场/语言无需修改核心代码               │
 │     配置驱动，枚举扩展，数据库兼容                       │
 │                                                          │
-│  ✅ 可验证：业务平台-市场约束自动验证                   │
-│     防止创建不合法的商品组合                             │
+│  ✅ 职责分离：业务线是商家属性，不是商品属性            │
+│     商品通过 owner 关联商家，商家的 biz 决定结算等      │
 │                                                          │
 └─────────────────────────────────────────────────────────┘
 ```
 
 **关键设计说明：**
 
-1. **层级关系**：业务平台（platform）决定可用的 market 范围
-   - mall 业务平台：支持全球市场（cn, us, uk, de...）
-   - low_price 业务平台：主要面向中国市场（cn）
-   - takeaway 业务平台：仅支持中国市场（cn）
-   - 通过配置文件和验证器保证数据一致性
+1. **单维度设计**：商品只有 market（市场）一个维度
+   - market 维度：决定货币、语言、税费、物流等地域属性
+   - 业务线（biz）是商家属性，不是商品属性
+   - 商品通过 `owner` 字段关联商家，商家的 `biz` 属性决定结算方式、权限控制、运营策略
 
 2. **抽象共享**：Partition 概念统一不同领域
    - 商品领域：market（市场）
@@ -1964,11 +1675,10 @@ enum BizEnum: string
    - 用户领域：region（地区）
    - 底层统一配置：config/partitions.php
 
-3. **多维定价**：支持 2 个维度组合定价
-   - market + user_level
-   - 业务平台（platform）不在价格维度中，因为商品本身已有 platform 字段
-   - 业务线（biz）不在价格维度中，价格体系与业务线无关
+3. **多维定价**：支持 3 个维度组合定价
+   - market + store + user_level
    - 渠道（channel）不在价格维度中，渠道差异化定价通过促销系统实现
+   - 业务线（biz）不在价格维度中，业务线是商家属性，不是商品属性
    - 通配符支持：* 表示所有
    - 优先级匹配：精确匹配优先
 
@@ -1988,10 +1698,9 @@ enum BizEnum: string
 ### 14.2 适用场景
 
 - ✅ 跨境电商平台
-- ✅ 多业务平台电商系统
 - ✅ SaaS 多租户电商系统
 - ✅ 企业级商品中心
-- ✅ 餐饮点餐/外卖系统（支持多平台、多门店差异化定价与库存）
+- ✅ 餐饮点餐/外卖系统（支持多市场、多门店差异化定价与库存）
 
 ---
 
@@ -2020,7 +1729,8 @@ enum BizEnum: string
 | 版本 | 日期 | 作者 | 变更说明 |
 |------|------|------|----------|
 | v1.0 | 2024-11-13 | Red Jasmine Team | 初始版本 |
-| v1.1 | 2024-11-13 | Red Jasmine Team | 将 business_type 替换为 platform |
+| v1.1 | 2024-11-13 | Red Jasmine Team | 去除 platform 维度，改为二维度设计（market + biz） |
+| v1.2 | 2024-11-13 | Red Jasmine Team | 去除 biz 维度，改为单维度设计（market），biz 作为商家属性 |
 
 ---
 

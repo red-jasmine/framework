@@ -196,6 +196,26 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');
     }
 
+    /**
+     * 价格列表
+     * @return HasMany
+     */
+    /**
+     * 商品级别价格汇总
+     */
+    public function prices() : HasMany
+    {
+        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductPrice::class, 'product_id', 'id');
+    }
+
+    /**
+     * 变体价格（通过变体关联）
+     */
+    public function variantPrices() : HasMany
+    {
+        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductVariantPrice::class, 'product_id', 'id');
+    }
+
     public function casts() : array
     {
         return [

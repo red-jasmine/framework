@@ -122,7 +122,8 @@ return [
 
     'commands' => [
         'listing' => '上架',
-        'removal' => '下架'
+        'removal' => '下架',
+        'price_settings' => '价格设置',
     ],
 
 

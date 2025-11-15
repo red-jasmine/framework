@@ -47,6 +47,15 @@ class ProductVariant extends Model implements OperatorInterface
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
+    /**
+     * 变体价格列表
+     * @return HasMany
+     */
+    public function prices() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductVariantPrice::class, 'variant_id', 'id');
+    }
+
     public function setDeleted() : void
     {
         $this->deleted_at = $this->deleted_at ?? now();
