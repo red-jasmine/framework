@@ -23,17 +23,26 @@ class ProductPriceRepository extends Repository implements ProductPriceRepositor
 
     /**
      * 根据维度查找商品级别价格汇总
+     *
+     * @param  int  $productId
+     * @param  string  $market
+     * @param  string  $store
+     * @param  string  $userLevel
+     * @param  int  $quantity
+     *
+     * @return ProductPrice|null
      */
     public function findByDimensions(
         int $productId,
         string $market,
         string $store,
-        string $userLevel
-    ): ?ProductPrice {
+        string $userLevel,
+        int $quantity
+    ) : ?ProductPrice {
         return $this->query()
-            ->where('product_id', $productId)
-            ->byDimensions($market, $store, $userLevel)
-            ->first();
+                    ->where('product_id', $productId)
+                    ->byDimensions($market, $store, $userLevel, $quantity)
+                    ->first();
     }
 
     /**
@@ -44,32 +53,32 @@ class ProductPriceRepository extends Repository implements ProductPriceRepositor
         string $market = '*',
         string $store = '*',
         string $userLevel = '*'
-    ): Collection {
+    ) : Collection {
         if (empty($productIds)) {
             return collect();
         }
 
         return $this->query()
-            ->whereIn('product_id', $productIds)
-            ->byDimensions($market, $store, $userLevel)
-            ->get()
-            ->keyBy('product_id');
+                    ->whereIn('product_id', $productIds)
+                    ->byDimensions($market, $store, $userLevel)
+                    ->get()
+                    ->keyBy('product_id');
     }
 
     /**
      * 根据商品ID查找所有价格汇总
      */
-    public function findByProduct(int $productId): Collection
+    public function findByProduct(int $productId) : Collection
     {
         return $this->query()
-            ->where('product_id', $productId)
-            ->get();
+                    ->where('product_id', $productId)
+                    ->get();
     }
 
     /**
      * 配置允许的过滤器
      */
-    protected function allowedFilters($query = null): array
+    protected function allowedFilters($query = null) : array
     {
         return [
             AllowedFilter::exact('id'),
@@ -84,7 +93,7 @@ class ProductPriceRepository extends Repository implements ProductPriceRepositor
     /**
      * 配置允许的排序字段
      */
-    protected function allowedSorts($query = null): array
+    protected function allowedSorts($query = null) : array
     {
         return [
             AllowedSort::field('price'),
@@ -98,7 +107,7 @@ class ProductPriceRepository extends Repository implements ProductPriceRepositor
     /**
      * 配置允许包含的关联
      */
-    protected function allowedIncludes($query = null): array
+    protected function allowedIncludes($query = null) : array
     {
         return [
             'product',

@@ -14,17 +14,20 @@ interface ProductPriceRepositoryInterface extends RepositoryInterface
     /**
      * 根据维度查找商品级别价格汇总
      *
-     * @param int $productId 商品ID
-     * @param string $market 市场
-     * @param string $store 门店
-     * @param string $userLevel 用户等级
+     * @param  int  $productId  商品ID
+     * @param  string  $market  市场
+     * @param  string  $store  门店
+     * @param  string  $userLevel  用户等级
+     * @param  int  $quantity
+     *
      * @return ProductPrice|null
      */
     public function findByDimensions(
         int $productId,
         string $market,
         string $store,
-        string $userLevel
+        string $userLevel,
+        int $quantity
     ): ?ProductPrice;
 
     /**

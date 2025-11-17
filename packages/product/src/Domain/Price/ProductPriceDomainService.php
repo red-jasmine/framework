@@ -3,15 +3,20 @@
 namespace RedJasmine\Product\Domain\Price;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
+use RedJasmine\Product\Domain\Price\Data\ProductPriceCommandData;
 use RedJasmine\Product\Domain\Price\Data\ProductPriceData;
+use RedJasmine\Product\Domain\Price\Data\ProductPriceVariantData;
 use RedJasmine\Product\Domain\Price\Models\ProductPrice;
 use RedJasmine\Product\Domain\Price\Models\ProductVariantPrice;
 use RedJasmine\Product\Domain\Price\Repositories\ProductPriceRepositoryInterface;
 use RedJasmine\Product\Domain\Price\Services\PriceMatcher;
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Product\Domain\Product\Models\ProductVariant;
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
@@ -30,35 +35,36 @@ class ProductPriceDomainService extends Service
      * - 市场价格
      * - 税率
      *
-     * @param ProductPurchaseFactor $data
+     * @param  ProductPurchaseFactor  $data
+     *
      * @return ProductAmountInfo
      */
-    public function getProductAmount(ProductPurchaseFactor $data): ProductAmountInfo
+    public function getProductAmount(ProductPurchaseFactor $data) : ProductAmountInfo
     {
-        $product = $this->repository->find($data->product->id);
+        $product       = $this->repository->find($data->product->id);
         $productAmount = new ProductAmountInfo(new Currency($product->currency->getCode()));
 
         $sku = $product->getSkuBySkuId($data->product->skuId);
 
         // 尝试从多维度价格表获取价格
-        $priceData = new ProductPriceData();
+        $priceData            = new ProductPriceData();
         $priceData->productId = $data->product->id;
-        $priceData->skuId = $data->product->skuId;
-        $priceData->market = $product->market ?? '*';
-        $priceData->store = '*';
+        $priceData->skuId     = $data->product->skuId;
+        $priceData->market    = $product->market ?? '*';
+        $priceData->store     = '*';
         // TODO: 从用户对象获取用户等级，目前使用默认值
         $priceData->userLevel = 'default';
-        $priceData->quantity = $data->quantity ?? 1;
+        $priceData->quantity  = $data->quantity ?? 1;
 
         $matchedPrice = $this->getPrice($priceData);
 
         if ($matchedPrice) {
-            $productAmount->price = $matchedPrice->price;
+            $productAmount->price       = $matchedPrice->price;
             $productAmount->marketPrice = $matchedPrice->market_price;
             $productAmount->setCostPrice($matchedPrice->cost_price ?? Money::parse(0));
         } else {
             // 回退到基准价格
-            $productAmount->price = $sku->price;
+            $productAmount->price       = $sku->price;
             $productAmount->marketPrice = $sku->market_price;
             $productAmount->setCostPrice($sku->cost_price ?? Money::parse(0));
         }
@@ -71,10 +77,11 @@ class ProductPriceDomainService extends Service
     /**
      * 获取商品变体价格（新接口）
      *
-     * @param ProductPriceData $data
+     * @param  ProductPriceData  $data
+     *
      * @return ProductVariantPrice|null
      */
-    public function getPrice(ProductPriceData $data): ?ProductVariantPrice
+    public function getPrice(ProductPriceData $data) : ?ProductVariantPrice
     {
         // 1. 尝试从 product_variant_prices 表匹配价格
         $matchedPrice = $this->matchPrice(
@@ -91,7 +98,7 @@ class ProductPriceDomainService extends Service
                 $tierPrice = $this->calculateTierPrice($matchedPrice, $data->quantity);
                 if ($tierPrice) {
                     // 创建临时价格对象返回阶梯价格
-                    $tierPriceObj = clone $matchedPrice;
+                    $tierPriceObj        = clone $matchedPrice;
                     $tierPriceObj->price = $tierPrice;
                     return $tierPriceObj;
                 }
@@ -112,11 +119,12 @@ class ProductPriceDomainService extends Service
     /**
      * 匹配变体价格
      *
-     * @param int $productId 商品ID
-     * @param int $variantId SKU ID（必填）
-     * @param string $market 市场
-     * @param string $store 门店
-     * @param string $userLevel 用户等级
+     * @param  int  $productId  商品ID
+     * @param  int  $variantId  SKU ID（必填）
+     * @param  string  $market  市场
+     * @param  string  $store  门店
+     * @param  string  $userLevel  用户等级
+     *
      * @return ProductVariantPrice|null
      */
     public function matchPrice(
@@ -125,13 +133,13 @@ class ProductPriceDomainService extends Service
         string $market,
         string $store,
         string $userLevel
-    ): ?ProductVariantPrice {
+    ) : ?ProductVariantPrice {
         // 查询所有可能匹配的价格
         $prices = ProductVariantPrice::query()
-            ->where('product_id', $productId)
-            ->where('variant_id', $variantId)
-            ->byDimensions($market, $store, $userLevel)
-            ->get();
+                                     ->where('product_id', $productId)
+                                     ->where('variant_id', $variantId)
+                                     ->byDimensions($market, $store, $userLevel)
+                                     ->get();
 
         if ($prices->isEmpty()) {
             return null;
@@ -144,17 +152,18 @@ class ProductPriceDomainService extends Service
     /**
      * 计算阶梯价格
      *
-     * @param ProductVariantPrice $price 价格对象
-     * @param int $quantity 数量
+     * @param  ProductVariantPrice  $price  价格对象
+     * @param  int  $quantity  数量
+     *
      * @return Money|null
      */
-    public function calculateTierPrice(ProductVariantPrice $price, int $quantity): ?Money
+    public function calculateTierPrice(ProductVariantPrice $price, int $quantity) : ?Money
     {
         if (!$price->quantity_tiers || empty($price->quantity_tiers)) {
             return null;
         }
 
-        $tiers = $price->quantity_tiers;
+        $tiers       = $price->quantity_tiers;
         $matchedTier = null;
 
         foreach ($tiers as $tier) {
@@ -177,23 +186,24 @@ class ProductPriceDomainService extends Service
     /**
      * 从 Variant 创建价格对象（用于回退）
      *
-     * @param \RedJasmine\Product\Domain\Product\Models\ProductVariant $variant
-     * @param ProductPriceData $data
+     * @param  ProductVariant  $variant
+     * @param  ProductPriceData  $data
+     *
      * @return ProductVariantPrice
      */
-    protected function createPriceFromVariant($variant, ProductPriceData $data): ProductVariantPrice
+    protected function createPriceFromVariant($variant, ProductPriceData $data) : ProductVariantPrice
     {
-        $price = new ProductVariantPrice();
-        $price->product_id = $data->productId;
-        $price->variant_id = $data->skuId;
-        $price->market = $data->market;
-        $price->store = $data->store;
-        $price->user_level = $data->userLevel;
-        $price->currency = $variant->currency->getCode();
-        $price->price = $variant->price;
+        $price               = new ProductVariantPrice();
+        $price->product_id   = $data->productId;
+        $price->variant_id   = $data->skuId;
+        $price->market       = $data->market;
+        $price->store        = $data->store;
+        $price->user_level   = $data->userLevel;
+        $price->currency     = $variant->currency->getCode();
+        $price->price        = $variant->price;
         $price->market_price = $variant->market_price;
-        $price->cost_price = $variant->cost_price;
-        $price->priority = 0;
+        $price->cost_price   = $variant->cost_price;
+        $price->priority     = 0;
 
         return $price;
     }
@@ -201,10 +211,11 @@ class ProductPriceDomainService extends Service
     /**
      * 批量获取商品级别价格汇总（用于商品列表）
      *
-     * @param Collection<Product> $products 商品集合
-     * @param string $market 市场
-     * @param string $store 门店
-     * @param string $userLevel 用户等级
+     * @param  Collection<Product>  $products  商品集合
+     * @param  string  $market  市场
+     * @param  string  $store  门店
+     * @param  string  $userLevel  用户等级
+     *
      * @return array<int, ProductPrice|null> key为 product_id，value为价格汇总对象或null
      */
     public function getBatchProductPrices(
@@ -212,7 +223,7 @@ class ProductPriceDomainService extends Service
         string $market = '*',
         string $store = '*',
         string $userLevel = '*'
-    ): array {
+    ) : array {
         if ($products->isEmpty()) {
             return [];
         }
@@ -239,11 +250,12 @@ class ProductPriceDomainService extends Service
     /**
      * 批量获取商品变体价格（用于商品详情）
      *
-     * @param Collection<Product> $products 商品集合
-     * @param string $market 市场
-     * @param string $store 门店
-     * @param string $userLevel 用户等级
-     * @param bool $useDefaultVariant 是否只查询默认变体（true：只查询默认变体，false：查询所有变体）
+     * @param  Collection<Product>  $products  商品集合
+     * @param  string  $market  市场
+     * @param  string  $store  门店
+     * @param  string  $userLevel  用户等级
+     * @param  bool  $useDefaultVariant  是否只查询默认变体（true：只查询默认变体，false：查询所有变体）
+     *
      * @return array<string, ProductVariantPrice|null> key为 "product_id-variant_id"，value为价格对象或null
      */
     public function getBatchPrices(
@@ -252,28 +264,32 @@ class ProductPriceDomainService extends Service
         string $store = '*',
         string $userLevel = '*',
         bool $useDefaultVariant = true
-    ): array {
+    ) : array {
         if ($products->isEmpty()) {
             return [];
         }
 
-        $productIds = $products->pluck('id')->toArray();
-        $variantIds = [];
-        $variantMap = []; // product_id => variant_id
+        $productIds     = $products->pluck('id')->toArray();
+        $variantIds     = [];
+        $variantMap     = []; // product_id => variant_id
         $variantDataMap = []; // variant_id => variant_data (用于回退价格)
 
         // 收集需要查询的变体ID
         if ($useDefaultVariant) {
             // 只查询默认变体：批量查询默认变体ID（避免预加载所有变体）
-            $defaultVariants = \RedJasmine\Product\Domain\Product\Models\ProductVariant::query()
-                ->whereIn('product_id', $productIds)
-                ->where('attrs_sequence', \RedJasmine\Product\Domain\Product\Models\Product::$defaultAttrsSequence)
-                ->get(['id', 'product_id', 'price', 'market_price', 'cost_price', 'currency']);
+            $defaultVariants = ProductVariant::query()
+                                             ->whereIn('product_id', $productIds)
+                                             ->where('attrs_sequence',
+                                                 Product::$defaultAttrsSequence)
+                                             ->get([
+                                                 'id', 'product_id', 'price', 'market_price',
+                                                 'cost_price', 'currency'
+                                             ]);
 
             foreach ($defaultVariants as $variant) {
-                $variantIds[] = $variant->id;
+                $variantIds[]                     = $variant->id;
                 $variantMap[$variant->product_id] = $variant->id;
-                $variantDataMap[$variant->id] = $variant;
+                $variantDataMap[$variant->id]     = $variant;
             }
         } else {
             // 查询所有变体（需要预加载 variants）
@@ -283,7 +299,7 @@ class ProductPriceDomainService extends Service
                     if (!isset($variantMap[$product->id])) {
                         $variantMap[$product->id] = [];
                     }
-                    $variantMap[$product->id][] = $variant->id;
+                    $variantMap[$product->id][]   = $variant->id;
                     $variantDataMap[$variant->id] = $variant;
                 }
             }
@@ -295,8 +311,8 @@ class ProductPriceDomainService extends Service
 
         // 批量查询变体价格
         $pricesQuery = ProductVariantPrice::query()
-            ->whereIn('product_id', $productIds)
-            ->byDimensions($market, $store, $userLevel);
+                                          ->whereIn('product_id', $productIds)
+                                          ->byDimensions($market, $store, $userLevel);
 
         if (!empty($variantIds)) {
             $pricesQuery->whereIn('variant_id', $variantIds);
@@ -336,13 +352,13 @@ class ProductPriceDomainService extends Service
                         // 回退到变体的基准价格（使用批量查询的变体数据）
                         $variant = $variantDataMap[$variantId] ?? null;
                         if ($variant && $variant->price) {
-                            $priceData = new ProductPriceData();
+                            $priceData            = new ProductPriceData();
                             $priceData->productId = $product->id;
-                            $priceData->skuId = $variantId;
-                            $priceData->market = $market;
-                            $priceData->store = $store;
+                            $priceData->skuId     = $variantId;
+                            $priceData->market    = $market;
+                            $priceData->store     = $store;
                             $priceData->userLevel = $userLevel;
-                            $result[$key] = $this->createPriceFromVariant($variant, $priceData);
+                            $result[$key]         = $this->createPriceFromVariant($variant, $priceData);
                         } else {
                             $result[$key] = null;
                         }
@@ -359,13 +375,13 @@ class ProductPriceDomainService extends Service
                         // 回退到变体的基准价格（使用预加载的变体数据）
                         $variant = $variantDataMap[$variantId] ?? null;
                         if ($variant && $variant->price) {
-                            $priceData = new ProductPriceData();
+                            $priceData            = new ProductPriceData();
                             $priceData->productId = $product->id;
-                            $priceData->skuId = $variantId;
-                            $priceData->market = $market;
-                            $priceData->store = $store;
+                            $priceData->skuId     = $variantId;
+                            $priceData->market    = $market;
+                            $priceData->store     = $store;
                             $priceData->userLevel = $userLevel;
-                            $result[$key] = $this->createPriceFromVariant($variant, $priceData);
+                            $result[$key]         = $this->createPriceFromVariant($variant, $priceData);
                         } else {
                             $result[$key] = null;
                         }
@@ -380,10 +396,11 @@ class ProductPriceDomainService extends Service
     /**
      * 获取商品级别价格汇总
      *
-     * @param int $productId 商品ID
-     * @param string $market 市场
-     * @param string $store 门店
-     * @param string $userLevel 用户等级
+     * @param  int  $productId  商品ID
+     * @param  string  $market  市场
+     * @param  string  $store  门店
+     * @param  string  $userLevel  用户等级
+     *
      * @return ProductPrice|null
      */
     public function getProductPrice(
@@ -391,7 +408,119 @@ class ProductPriceDomainService extends Service
         string $market = '*',
         string $store = '*',
         string $userLevel = '*'
-    ): ?ProductPrice {
+    ) : ?ProductPrice {
         return $this->priceRepository->findByDimensions($productId, $market, $store, $userLevel);
+    }
+
+
+    /**
+     * 设置商品多价格
+     *
+     * @param  Product  $product
+     * @param  ProductPriceCommandData  $command
+     *
+     * @return ProductPrice
+     */
+    public function setProductPrices(Product $product, ProductPriceCommandData $command) : ProductPrice
+    {
+
+
+        // 查询价格维度聚合根
+        $productPrice = $this->priceRepository->findByDimensions(
+            $command->productId,
+            $command->market,
+            $command->store,
+            $command->userLevel,
+            $command->quantity);
+
+        if (!$productPrice) {
+            $productPrice = new ProductPrice();
+        }
+        $productPrice->product_id = $command->productId;
+        $productPrice->market     = $command->market;
+        $productPrice->store      = $command->store;
+        $productPrice->user_level = $command->userLevel;
+        $productPrice->currency   = $command->currency;
+        $productPrice->quantity   = $command->quantity;
+
+
+        $productPrice->setRelation('variantPrices', Collection::make([]));
+
+        // 查询出当前价格维度 所有变体价格
+        if ($productPrice->exists()) {
+            $productVariantPriceModels = $productPrice->variantPrices()->withoutTrashed()->get();
+            $productVariantPriceModels->each(function (ProductVariantPrice $productVariantPrice) {
+                $productVariantPrice->deleted_at = Carbon::now();
+                return $productVariantPrice;
+            });
+
+            $productPrice->setRelation('variantPrices', $productVariantPriceModels);
+        }
+        $variantPriceCommands = collect($command->variants);
+
+        $productVariantPriceModels = Collection::make([]);
+        // 遍历所有变体
+        foreach ($product->variants as $variant) {
+            // 找到当前变体价格
+            /**
+             * @var ProductPriceVariantData $variantPriceCommand
+             */
+            $variantPriceCommand = $variantPriceCommands->where('variantId', $variant->id)->firstOrFail();
+
+            // 获取多维度下的变体价格model
+            $productVariantPriceModel = $productPrice->variantPrices->where('variant_id', $variant->id)->first();
+
+            if (!$productVariantPriceModel) {
+                $productVariantPriceModel = new ProductVariantPrice();
+            }
+            $price       = Money::parse($variantPriceCommand->price->getAmount(), $productPrice->currency);
+            $costPrice   = $variantPriceCommand->costPrice ? Money::parse($variantPriceCommand->costPrice->getAmount(),
+                $productPrice->currency) : null;
+            $marketPrice = $variantPriceCommand->marketPrice ? Money::parse($variantPriceCommand->marketPrice->getAmount(),
+                $productPrice->currency) : null;
+
+            $productVariantPriceModel->product_id   = $product->id;
+            $productVariantPriceModel->variant_id   = $variant->id;
+            $productVariantPriceModel->market       = $productPrice->market;
+            $productVariantPriceModel->store        = $productPrice->store;
+            $productVariantPriceModel->user_level   = $productPrice->user_level;
+            $productVariantPriceModel->currency     = $productPrice->currency;
+            $productVariantPriceModel->quantity     = $productPrice->quantity;
+            $productVariantPriceModel->price        = $price;
+            $productVariantPriceModel->cost_price   = $costPrice;
+            $productVariantPriceModel->market_price = $marketPrice;
+            $productVariantPriceModel->deleted_at   = null;
+
+
+            $productVariantPriceModels[] = $productVariantPriceModel;
+
+
+        }
+
+        $productVariantPriceModels = Collection::make($productVariantPriceModels);
+        $productPrice->setRelation('variantPrices', $productVariantPriceModels);
+
+
+        // 统计价格
+
+
+        $minPrice = $productVariantPriceModels
+            ->filter(fn($vp) => $vp->price !== null)
+            ->min(fn($vp) => $vp->price->getAmount());
+
+        $minMarketPrice = $productVariantPriceModels
+            ->filter(fn($vp) => $vp->market_price !== null)
+            ->min(fn($vp) => $vp->market_price->getAmount());
+
+        $minCostPrice = $productVariantPriceModels
+            ->filter(fn($vp) => $vp->cost_price !== null)
+            ->min(fn($vp) => $vp->cost_price->getAmount());
+
+        $productPrice->price        = $minPrice ? Money::parse((string) $minPrice, $productPrice->currency) : null;
+        $productPrice->market_price = $minMarketPrice ? Money::parse((string) $minMarketPrice, $productPrice->currency) : null;
+        $productPrice->cost_price   = $minCostPrice ? Money::parse((string) $minCostPrice, $productPrice->currency) : null;
+
+
+        return $productPrice;
     }
 }

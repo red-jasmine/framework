@@ -16,6 +16,7 @@ use RedJasmine\Product\Domain\Price\Models\ProductPrice;
 use RedJasmine\Product\Domain\Price\Models\ProductVariantPrice;
 use RedJasmine\Product\Domain\Price\ProductPriceDomainService;
 use RedJasmine\Product\Domain\Price\Repositories\ProductPriceRepositoryInterface;
+use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
@@ -45,7 +46,8 @@ class PriceApplicationService extends ApplicationService
 
     public function __construct(
         public ProductPriceRepositoryInterface $repository,
-        protected ProductPriceDomainService $domainService
+        public ProductRepositoryInterface $productRepository,
+        public ProductPriceDomainService $domainService
     ) {
     }
 
