@@ -1,0 +1,67 @@
+{
+    "name": "red-jasmine/filament-warehouse",
+    "description": "Filament管理端 - 仓库管理",
+    "keywords": [
+        "red-jasmine",
+        "laravel",
+        "filament-warehouse"
+    ],
+    "homepage": "https://github.com/red-jasmine/filament-warehouse",
+    "support": {
+        "issues": "https://github.com/red-jasmine/filament-warehouse/issues",
+        "source": "https://github.com/red-jasmine/filament-warehouse"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/warehouse": "1.0.x-dev"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\FilamentWarehouse\\": "src/",
+            "RedJasmine\\FilamentWarehouse\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\FilamentWarehouse\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RedJasmine\\FilamentWarehouse\\FilamentWarehouseServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

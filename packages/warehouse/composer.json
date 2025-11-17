@@ -1,0 +1,53 @@
+{
+    "name": "red-jasmine/warehouse",
+    "description": "轻量级仓库领域包，管理仓库、门店、配送中心等位置信息",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liushoukun",
+            "email": "liushoukun66@gmail.com",
+            "homepage": "https://github.com/liushoukun"
+        }
+    ],
+    "homepage": "https://github.com/red-jasmine/warehouse",
+    "keywords": ["Laravel", "Warehouse"],
+    "require": {
+        "red-jasmine/support": "1.0.x-dev"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "RedJasmine\\Warehouse\\": "src/",
+            "RedJasmine\\Warehouse\\Database\\Seeders\\": "./database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedJasmine\\Warehouse\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\RedJasmine\\Warehouse\\WarehousePackageServiceProvider",
+                "\\RedJasmine\\Warehouse\\Application\\WarehouseApplicationServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev",
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
+
