@@ -50,7 +50,7 @@ class OrderServiceIntegration implements OrderServiceInterface
     public function create(PointsExchangeOrder $exchangeOrder, ProductInfo $productInfo) : string
     {
 
-        $command      = new PointsExchangeOrderCreateCommandTransformer()->transform($exchangeOrder, $productInfo);
+        $command      = (new PointsExchangeOrderCreateCommandTransformer())->transform($exchangeOrder, $productInfo);
         $command->biz = static::BIZ;
 
         $order = $this->orderApplicationService->create($command);
