@@ -14,7 +14,7 @@ alwaysApply: true
 - **审批功能**: 有审批需求时添加审批功能
 - **生命周期钩子**: 使用 `saving`、`deleting`、`restoring` 等钩子处理业务逻辑
 
-### 必需配置
+### 必须
 ```php
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;

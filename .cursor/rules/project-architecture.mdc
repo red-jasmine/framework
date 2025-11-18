@@ -89,3 +89,91 @@ framework/
 │   └── views/                  # 视图文件
 ├── composer.json               # 包配置
 └── README.md                   # 包说明
+```
+
+## 服务提供者 (Service Provider)
+
+### 规范
+- **基类继承**: 继承 `Spatie\LaravelPackageTools\PackageServiceProvider`
+- **命名规范**: 服务提供者类名格式为 `{Domain}PackageServiceProvider`
+- **文件位置**: 位于 `src/{Domain}PackageServiceProvider.php`
+- **静态属性**: 定义 `$name` 和 `$viewNamespace` 静态属性
+- **配置方法**: 实现 `configurePackage()` 方法配置包功能
+- **命令管理**: 实现 `getCommands()` 方法返回命令列表
+- **迁移管理**: 实现 `getMigrations()` 方法返回迁移文件列表
+
+### 必需配置
+- **包名称**: 使用 `red-jasmine-{domain}` 格式
+- **视图命名空间**: 使用 `red-jasmine-{domain}` 格式
+- **路由注册**: 根据需求注册 `api` 或 `web` 路由
+- **迁移文件**: 通过 `getMigrations()` 方法管理迁移文件列表
+- **安装命令**: 配置安装命令，包括配置发布、迁移执行等
+
+### 代码示例
+```php
+class ProductPackageServiceProvider extends PackageServiceProvider
+{
+    public static string $name = 'red-jasmine-product';
+    public static string $viewNamespace = 'red-jasmine-product';
+
+    public function configurePackage(Package $package): void
+    {
+        $package->name(static::$name)
+                ->hasCommands($this->getCommands())
+                ->runsMigrations()
+                ->hasRoutes(['api'])
+                ->hasInstallCommand(function (InstallCommand $command) {
+                    $command
+                        ->publishConfigFile()
+                        ->askToRunMigrations()
+                        ->endWith(function (InstallCommand $command) {
+                            if ($command->confirm('Seed demo data')) {
+                                $command->call('db:seed', ['--class' => ProductPackageSeeder::class]);
+                            }
+                        });
+                });
+
+        $configFileName = $package->shortName();
+
+        // 条件性加载配置文件
+        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
+            $package->hasConfigFile();
+        }
+
+        // 条件性加载迁移文件
+        if (file_exists($package->basePath('/../database/migrations'))) {
+            $package->hasMigrations($this->getMigrations());
+        }
+
+        // 条件性加载翻译文件
+        if (file_exists($package->basePath('/../resources/lang'))) {
+            $package->hasTranslations();
+        }
+
+        // 条件性加载视图文件
+        if (file_exists($package->basePath('/../resources/views'))) {
+            $package->hasViews(static::$viewNamespace);
+        }
+    }
+
+    public function getCommands(): array
+    {
+        return [];
+    }
+
+    public function getMigrations(): array
+    {
+        return [
+            'create_products_table',
+            'create_product_categories_table',
+            // ... 更多迁移文件
+        ];
+    }
+}
+```
+
+### 配置说明
+- **条件性加载**: 使用 `file_exists()` 检查文件是否存在后再加载相应资源
+- **迁移文件命名**: 迁移文件名应清晰表达其功能，使用下划线分隔
+- **安装命令**: 可根据需要配置安装命令，包括数据填充等操作
+- **路由注册**: 根据包的实际需求注册 `api` 或 `web` 路由

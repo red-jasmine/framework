@@ -1,0 +1,448 @@
+---
+alwaysApply: true
+description: "数据库设计规范和迁移文件编写标准"
+---
+
+# 数据库设计规范
+
+## 核心设计原则
+
+### 强制规则
+1. **禁止使用外键约束**: 所有表设计禁止使用数据库外键约束，通过应用层代码保证数据完整性
+2. **统一使用雪花ID**: 主键统一使用 `unsignedBigInteger` 类型，支持雪花ID生成
+3. **必须使用软删除**: 所有业务表必须使用软删除功能
+4. **必须添加注释**: 所有字段和表必须添加中文注释
+5. **必须使用操作者追踪**: 所有业务表必须使用 `operator()` 宏添加操作者信息
+
+### 设计理念
+- **性能优先**: 优先考虑查询性能，合理使用索引
+- **扩展性**: 预留扩展字段（extra JSON字段）支持业务扩展
+- **可维护性**: 代码清晰、注释完整、命名规范
+- **应用层控制**: 数据完整性、业务逻辑在应用层控制，而非数据库层
+
+## 迁移文件规范
+
+### 文件命名规范
+- **命名格式**: `create_{table_name}_table.php`
+- **使用下划线**: 表名使用下划线分隔多个单词
+- **动词使用**: 使用 `create`、`modify`、`add` 等动词开头
+- **示例**:
+  - `create_products_table.php`
+  - `create_product_categories_table.php`
+  - `create_product_tag_pivots_table.php`
+
+### 迁移类结构
+- **匿名类**: 使用匿名类 `return new class extends Migration`
+- **方法定义**: 实现 `up()` 和 `down()` 方法
+- **返回类型**: `up()` 方法返回类型为 `void`
+
+### 代码示例
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            // 表结构定义
+            $table->comment('商品表');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
+```
+
+## 表结构设计规范
+
+### 主键设计
+- **ID类型**: 使用 `unsignedBigInteger('id')->primary()` 支持雪花ID
+- **非自增**: 主键不设置自增，由应用层生成
+- **注释**: 为主键添加注释说明
+
+```php
+$table->unsignedBigInteger('id')->primary()->comment('ID');
+```
+
+### 多态关联设计
+- **多态字段**: 使用 `owner_type` 和 `owner_id` 实现多态关联
+- **字段类型**: `owner_type` 使用 `string(64)`，`owner_id` 使用 `string(64)`
+- **业务说明**: 在注释中说明多态关联的业务含义
+
+```php
+$table->string('owner_type', 64)->comment('所有者类型');
+$table->string('owner_id', 64)->comment('所有者ID');
+```
+
+### 操作者追踪
+- **使用宏**: 使用 `operator()` 宏添加操作者信息
+- **包含字段**: 版本号、创建者、更新者、时间戳
+- **自动添加**: 自动添加 `version`、`creator_type`、`creator_id`、`creator_nickname`、`updater_type`、`updater_id`、`updater_nickname`、`created_at`、`updated_at`
+
+```php
+$table->operator();
+```
+
+### 软删除
+- **统一使用**: 所有业务表都应使用软删除
+- **位置**: 放在 `operator()` 之后
+
+```php
+$table->softDeletes();
+```
+
+### 字段注释规范
+- **中文注释**: 所有字段必须添加中文注释
+- **业务含义**: 注释应清晰表达字段的业务含义
+- **枚举注释**: 枚举字段使用枚举类的 `comments()` 方法生成注释
+
+```php
+$table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+$table->string('title')->comment('标题');
+```
+
+### 表注释
+- **必需添加**: 每个表都必须添加表注释
+- **格式**: 使用 `{业务领域}-{表用途}` 格式
+- **位置**: 放在表结构定义的末尾
+
+```php
+$table->comment('商品表');
+```
+
+## 字段类型规范
+
+### 字符串类型
+- **短字符串**: 使用 `string(length)`，长度根据业务需求设定
+- **长文本**: 使用 `text()` 或 `longText()`
+- **固定长度**: 货币代码等固定长度字段使用 `char(length)`
+
+```php
+$table->string('title')->comment('标题');
+$table->string('market', 64)->default('default')->comment('市场');
+$table->char('currency', 3)->default('CNY')->comment('货币');
+$table->text('description')->nullable()->comment('描述');
+$table->longText('detail')->nullable()->comment('详情');
+```
+
+### 数值类型
+- **整数**: 根据数值范围选择 `tinyInteger`、`smallInteger`、`integer`、`bigInteger`
+- **无符号**: 非负数使用 `unsigned` 前缀
+- **小数**: 使用 `decimal(precision, scale)`，如价格使用 `decimal(12, 2)`
+
+```php
+$table->unsignedBigInteger('product_id')->comment('商品ID');
+$table->unsignedTinyInteger('vip')->default(0)->comment('VIP等级');
+$table->decimal('price', 12)->default(0)->comment('销售价');
+$table->bigInteger('stock')->default(0)->comment('库存');
+```
+
+### 布尔类型
+- **使用**: 使用 `boolean()` 类型
+- **默认值**: 明确设置默认值
+
+```php
+$table->boolean('is_show')->default(false)->comment('是否展示');
+$table->boolean('is_hot')->default(false)->comment('是否热销');
+```
+
+### JSON类型
+- **结构化数据**: 存储数组、对象等结构化数据使用 `json()` 类型
+- **扩展字段**: 扩展信息使用 `json('extra')` 字段
+
+```php
+$table->json('images')->nullable()->comment('图片集');
+$table->json('freight_templates')->nullable()->comment('运费模板');
+$table->json('extra')->nullable()->comment('扩展字段');
+```
+
+### 时间类型
+- **时间戳**: 使用 `timestamp()` 类型
+- **可为空**: 根据业务需求设置 `nullable()`
+- **业务时间**: 使用有意义的字段名，如 `available_at`、`paused_at`
+
+```php
+$table->timestamps();
+$table->timestamp('available_at')->nullable()->comment('上架时间');
+$table->timestamp('paused_at')->nullable()->comment('暂停销售时间');
+```
+
+### 枚举类型
+- **字符串存储**: 使用 `string(length)` 存储枚举值
+- **注释生成**: 使用枚举类的 `comments()` 方法生成注释
+- **默认值**: 设置合理的默认值
+
+```php
+$table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+$table->string('product_type', 32)->comment(ProductTypeEnum::comments('商品类型'));
+```
+
+## 索引设计规范
+
+### 主键索引
+- **自动创建**: 使用 `primary()` 自动创建主键索引
+
+### 唯一索引
+- **命名规范**: 使用 `uk_{field_name}` 格式
+- **业务唯一**: 确保业务唯一性的字段创建唯一索引
+
+```php
+$table->unique('code', 'uk_code');
+$table->unique(['product_id', 'market', 'store', 'user_level', 'quantity'], 'idx_product_price_unique');
+```
+
+### 普通索引
+- **命名规范**: 使用 `idx_{field_name}` 或 `idx_{purpose}` 格式
+- **查询优化**: 为常用查询字段创建索引
+- **组合索引**: 根据查询模式创建组合索引
+
+```php
+$table->index('product_id', 'idx_product');
+$table->index(['product_id', 'market', 'store', 'user_level'], 'idx_product_price_dimensions');
+$table->index(['parent_id'], 'idx_parent');
+```
+
+### 外键约束
+- **禁止使用**: **强制不使用外键约束**
+- **原因**:
+  - 外键约束会影响数据库性能
+  - 不利于分库分表
+  - 增加数据库维护复杂度
+  - 影响数据迁移和备份恢复
+- **替代方案**: 通过应用层代码保证数据完整性，使用索引提高查询性能
+
+```php
+// ❌ 禁止使用外键约束
+// $table->foreign('category_id', 'fk_products_category')
+//       ->references('id')
+//       ->on('product_categories')
+//       ->onDelete('set null');
+
+// ✅ 正确做法：只创建索引
+$table->index('category_id', 'idx_category');
+```
+
+## 扩展表设计规范
+
+### 设计原则
+- **主表分离**: 将不常用的大字段或JSON数据分离到扩展表
+- **一对一关系**: 扩展表与主表是一对一关系
+- **主键关联**: 扩展表使用与主表相同的主键ID
+
+### 代码示例
+```php
+Schema::create('products_extension', function (Blueprint $table) {
+    $table->unsignedBigInteger('id')->primary()->comment('ID');
+
+    // JSON字段存储结构化数据
+    $table->json('images')->nullable()->comment('图片集');
+    $table->json('videos')->nullable()->comment('视频集');
+    $table->longText('detail')->nullable()->comment('详情');
+    $table->json('extra')->nullable()->comment('扩展字段');
+
+    $table->timestamps();
+    $table->softDeletes();
+    $table->comment('商品-附加信息表');
+});
+```
+
+## 关联表设计规范
+
+### 多对多关联表
+- **命名规范**: 使用 `{table1}_{table2}_pivot` 或 `{table1}_{table2}` 格式
+- **主键**: 使用自增ID或组合主键
+- **外键字段**: 明确命名，如 `product_id`、`tag_id`
+- **索引**: 为外键字段创建索引
+
+```php
+Schema::create('product_tag_pivot', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('product_id')->comment('商品ID');
+    $table->unsignedBigInteger('product_tag_id')->comment('标签ID');
+    $table->timestamps();
+
+    $table->index('product_id', 'idx_product');
+    $table->index('product_tag_id', 'idx_product_tag');
+});
+```
+
+## 分类表设计规范
+
+### 使用宏定义
+- **快捷方式**: 使用 `category()` 宏快速创建分类表结构
+- **自动字段**: 自动包含ID、父级ID、名称、描述、排序、状态等字段
+- **表注释**: 传入表注释参数
+
+```php
+Schema::create('product_categories', function (Blueprint $table) {
+    $table->category('商品-类目表');
+});
+```
+
+### 分类表包含字段
+- `id`: 主键ID
+- `parent_id`: 父级ID
+- `name`: 名称
+- `slug`: 标记
+- `description`: 描述
+- `cluster`: 群簇
+- `sort`: 排序
+- `is_leaf`: 是否叶子节点
+- `is_show`: 是否展示
+- `status`: 状态
+- `image`: 图片
+- `icon`: 图标
+- `color`: 颜色
+- `extra`: 扩展字段（JSON）
+- `operator()`: 操作者信息
+- `softDeletes()`: 软删除
+
+## 多市场/多租户设计
+
+### 市场字段
+- **字段名**: 使用 `market` 字段
+- **类型**: `string(64)`
+- **默认值**: 设置默认市场值
+- **索引**: 根据查询需求创建索引
+
+```php
+$table->string('market', 64)->default('default')->comment('市场');
+$table->index(['market', 'status'], 'idx_market_status');
+```
+
+### 业务线字段
+- **说明**: 业务线（biz）是商家属性，不是商品属性，通过 owner 关联商家获取
+- **避免冗余**: 不要在商品表中直接存储业务线字段
+
+## 审批功能设计
+
+### 审批字段
+- **使用宏**: 使用 `approval()` 宏添加审批相关字段
+- **包含字段**: 审批状态、审批时间、审批信息
+
+```php
+$table->approval();
+```
+
+### 审批字段说明
+- `approval_status`: 审批状态（枚举）
+- `approval_time`: 审批时间
+- `approval_message`: 审批信息
+
+## 统计字段设计
+
+### 统计字段类型
+- **计数字段**: 使用 `unsignedBigInteger` 类型
+- **默认值**: 设置为 `0`
+- **字段命名**: 使用复数形式，如 `sales`、`views`、`likes`
+
+```php
+$table->unsignedBigInteger('sales')->default(0)->comment('销售量');
+$table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+$table->unsignedBigInteger('likes')->default(0)->comment('喜欢量');
+$table->unsignedBigInteger('favorites')->default(0)->comment('收藏量');
+```
+
+## 价格字段设计
+
+### 价格字段规范
+- **精度**: 使用 `decimal(12, 2)` 存储价格
+- **货币**: 使用 `char(3)` 存储货币代码
+- **多价格**: 支持市场价、成本价等多种价格类型
+
+```php
+$table->char('currency', 3)->default('CNY')->comment('货币');
+$table->decimal('price', 12)->default(0)->comment('销售价');
+$table->decimal('market_price', 12)->nullable()->comment('市场价');
+$table->decimal('cost_price', 12)->nullable()->comment('成本价');
+```
+
+## 库存字段设计
+
+### 库存字段规范
+- **类型**: 使用 `bigInteger` 类型
+- **字段分类**: 区分总库存、渠道库存、锁定库存、安全库存
+
+```php
+$table->bigInteger('stock')->default(0)->comment('库存');
+$table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
+$table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
+$table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+```
+
+## 排序字段设计
+
+### 排序字段规范
+- **类型**: 使用 `bigInteger` 或 `unsignedInteger`
+- **默认值**: 设置为 `0`
+- **字段名**: 统一使用 `sort`
+
+```php
+$table->bigInteger('sort')->default(0)->comment('排序');
+```
+
+## 状态字段设计
+
+### 状态字段规范
+- **类型**: 使用 `string(32)` 存储枚举值
+- **注释**: 使用枚举类的 `comments()` 方法
+- **默认值**: 设置合理的默认状态
+
+```php
+$table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
+```
+
+## 最佳实践
+
+### 1. 字段顺序
+建议按照以下顺序组织字段：
+1. 主键ID
+2. 多态关联字段（owner_type, owner_id）
+3. 业务字段（按业务逻辑分组）
+4. 关联字段（外键）
+5. 状态字段
+6. 时间字段
+7. 操作者信息（operator）
+8. 软删除（softDeletes）
+
+### 2. 默认值设置
+- **明确设置**: 为所有字段设置明确的默认值
+- **业务合理**: 默认值应符合业务逻辑
+- **避免NULL**: 除非业务需要，否则避免使用 `nullable()`
+
+### 3. 字段分组
+- **注释分组**: 使用注释对相关字段进行分组
+- **逻辑清晰**: 相关字段放在一起
+
+```php
+// 基础信息
+$table->string('title')->comment('标题');
+$table->string('slogan')->nullable()->comment('广告语');
+
+// 价格信息
+$table->decimal('price', 12)->default(0)->comment('销售价');
+$table->decimal('market_price', 12)->nullable()->comment('市场价');
+```
+
+### 4. 索引优化
+- **查询分析**: 根据实际查询需求创建索引
+- **避免过度**: 不要为所有字段创建索引
+- **组合索引**: 合理使用组合索引提高查询效率
+
+### 5. 数据完整性
+- **字段约束**: 使用数据库约束保证数据完整性（NOT NULL、DEFAULT、CHECK等）
+- **外键约束**: **禁止使用外键约束**，通过应用层代码保证数据完整性
+- **唯一约束**: 为业务唯一字段创建唯一索引
+- **应用层验证**: 在应用层通过验证规则、事务、领域服务等方式保证数据完整性
+
+### 6. 扩展性考虑
+- **预留字段**: 使用 `extra` JSON字段存储扩展信息
+- **版本控制**: 使用 `version` 字段支持乐观锁
+- **软删除**: 统一使用软删除支持数据恢复
