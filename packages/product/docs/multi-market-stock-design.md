@@ -147,10 +147,10 @@ CREATE TABLE product_stocks (
     warehouse_id BIGINT UNSIGNED NULL COMMENT '仓库ID（关联warehouses表，NULL表示默认仓库/简单模式）',
     
     -- ========== 库存数量 ==========
-    total_stock BIGINT DEFAULT 0 COMMENT '总库存（该仓库分配的总库存）',
+    total_stock BIGINT DEFAULT 0 COMMENT '总库存',
     available_stock BIGINT DEFAULT 0 COMMENT '可用库存',
-    locked_stock BIGINT DEFAULT 0 COMMENT '锁定库存（已下单未支付）',
-    reserved_stock BIGINT DEFAULT 0 COMMENT '预留库存（已支付待发货）',
+    locked_stock BIGINT DEFAULT 0 COMMENT '锁定库存',
+    reserved_stock BIGINT DEFAULT 0 COMMENT '预留库存',
     sold_stock BIGINT DEFAULT 0 COMMENT '已售库存',
     safety_stock BIGINT DEFAULT 0 COMMENT '安全库存',
     
@@ -183,6 +183,52 @@ CREATE TABLE product_stocks (
     
     COMMENT='商品-多市场库存表（变体级别）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+**库存字段关系说明：**
+
+| 字段 | 计算公式 | 说明 |
+|------|----------|------|
+| `total_stock` | `total_stock = available_stock + locked_stock + reserved_stock + sold_stock` | 总库存 = 可用库存 + 锁定库存 + 预留库存 + 已售库存 |
+| `available_stock` | `available_stock = total_stock - locked_stock - reserved_stock - sold_stock` | 可用库存 = 总库存 - 锁定库存 - 预留库存 - 已售库存 |
+| `locked_stock` | 下单时：`available_stock -= quantity; locked_stock += quantity`<br>取消/支付时：`available_stock += quantity; locked_stock -= quantity` | 锁定库存：下单时从可用库存转移，支付或取消时释放回可用库存 |
+| `reserved_stock` | 支付时：`locked_stock -= quantity; reserved_stock += quantity`<br>发货时：`reserved_stock -= quantity; sold_stock += quantity` | 预留库存：支付时从锁定库存转移，发货时转移到已售库存 |
+| `sold_stock` | 发货时：`reserved_stock -= quantity; sold_stock += quantity; total_stock -= quantity` | 已售库存：发货时从预留库存转移，同时总库存减少 |
+| `safety_stock` | 不参与计算，仅用于预警判断 | 安全库存：预警阈值，当 `available_stock <= safety_stock` 时触发低库存预警 |
+
+**库存流转流程示例：**
+
+```
+初始状态：
+total_stock = 1000
+available_stock = 1000
+locked_stock = 0
+reserved_stock = 0
+sold_stock = 0
+
+1. 用户下单（数量=10）：
+   available_stock = 1000 - 10 = 990
+   locked_stock = 0 + 10 = 10
+   total_stock = 990 + 10 + 0 + 0 = 1000 ✓
+
+2. 用户支付（数量=10）：
+   locked_stock = 10 - 10 = 0
+   reserved_stock = 0 + 10 = 10
+   available_stock = 990（不变）
+   total_stock = 990 + 0 + 10 + 0 = 1000 ✓
+
+3. 商家发货（数量=10）：
+   reserved_stock = 10 - 10 = 0
+   sold_stock = 0 + 10 = 10
+   total_stock = 1000 - 10 = 990
+   available_stock = 990 - 0 - 0 - 10 = 980 ✓
+
+最终状态：
+total_stock = 990
+available_stock = 980
+locked_stock = 0
+reserved_stock = 0
+sold_stock = 10
 ```
 
 ### 2.4 product_stock_logs 表（库存操作日志表）
