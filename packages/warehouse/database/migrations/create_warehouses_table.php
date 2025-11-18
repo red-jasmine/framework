@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 64)->unique()->comment('仓库编码');
-            $table->string('name', 255)->comment('仓库名称');
 
             // ========== 所属者信息 ==========
             $table->string('owner_type', 64)->comment('所属者类型');
             $table->string('owner_id', 64)->comment('所属者ID');
+            $table->string('code', 64)->comment('仓库编码');
+            $table->string('name', 255)->comment('仓库名称');
+
+
 
             // ========== 仓库信息 ==========
-            $table->string('warehouse_type', 32)->default('warehouse')->comment('类型：warehouse-仓库, store-门店, distribution_center-配送中心');
+            $table->string('warehouse_type', 32)->default('warehouse')
+                                                ->comment('类型：warehouse-仓库, store-门店, distribution_center-配送中心');
             $table->text('address')->nullable()->comment('地址');
             $table->string('contact_phone', 32)->nullable()->comment('联系电话');
             $table->string('contact_person', 64)->nullable()->comment('联系人');

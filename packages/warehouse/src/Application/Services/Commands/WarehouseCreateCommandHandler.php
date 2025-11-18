@@ -23,8 +23,7 @@ class WarehouseCreateCommandHandler extends CommandHandler
             $model = $this->service->transformer->transform($command, $model);
             $this->service->repository->store($model);
 
-            // 保存后同步市场/门店关联
-            $this->service->transformer->syncMarketsAfterSave($model);
+
 
             $this->commitDatabaseTransaction();
             return $model;

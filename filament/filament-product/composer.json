@@ -21,6 +21,7 @@
     ],
     "require": {
         "red-jasmine/filament-core": "1.0.x-dev",
+        "red-jasmine/filament-warehouse": "1.0.x-dev",
         "red-jasmine/product": "1.0.x-dev",
         "red-jasmine/filament-region": "1.0.x-dev"
     },

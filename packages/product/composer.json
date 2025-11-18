@@ -15,6 +15,7 @@
         "red-jasmine/support": "1.0.x-dev",
         "red-jasmine/ecommerce": "1.0.x-dev",
         "red-jasmine/logistics": "1.0.x-dev",
+        "red-jasmine/warehouse": "1.0.x-dev",
         "ext-bcmath": "*"
     },
     "require-dev": {

@@ -14,7 +14,13 @@ class WarehouseUpdateCommandHandler extends CommandHandler
     ) {
     }
 
-    public function handle(WarehouseUpdateCommand $command): Warehouse
+    /**
+     * @param  WarehouseUpdateCommand  $command
+     *
+     * @return Warehouse
+     * @throws Throwable
+     */
+    public function handle(WarehouseUpdateCommand $command) : Warehouse
     {
         $this->beginDatabaseTransaction();
 
@@ -22,10 +28,6 @@ class WarehouseUpdateCommandHandler extends CommandHandler
             $model = $this->service->repository->find($command->id);
             $model = $this->service->transformer->transform($command, $model);
             $this->service->repository->update($model);
-
-            // 保存后同步市场/门店关联
-            $this->service->transformer->syncMarketsAfterSave($model);
-
             $this->commitDatabaseTransaction();
             return $model;
         } catch (Throwable $throwable) {

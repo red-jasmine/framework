@@ -13,7 +13,7 @@ description: "Filament 管理界面编码规范，适用于基于 Filament 的�
 
 ### 目录结构
 ```
-packages/filament-{domain}/
+filament/filament-{domain}/
 ├── src/
 │   ├── {DomainName}ServiceProvider.php    # 服务提供者
 │   ├── {DomainName}Plugin.php             # 插件类
@@ -21,6 +21,11 @@ packages/filament-{domain}/
 │   │   ├── {ClusterName}.php              # 集群定义
 │   │   └── {ClusterName}/                 # 集群资源
 │   │       └── Resources/                 # 资源文件
+│   │           └── {Entity}/               # 实体资源目录
+│   │               ├── {Entity}Resource.php
+│   │               ├── Pages/             # 页面类
+│   │               ├── Schemas/           # 表单配置类
+│   │               └── Tables/            # 表格配置类
 │   ├── Resources/                         # 独立资源
 │   ├── Forms/                             # 表单组件
 │   ├── Columns/                           # 列组件
@@ -69,10 +74,10 @@ class Filament{Domain}ServiceProvider extends PackageServiceProvider
             $this->getAssets(),
             $this->getAssetPackageName()
         );
-        
+
         // 图标注册
         FilamentIcon::register($this->getIcons());
-        
+
         // 宏定义
         $this->registerMacros();
     }
@@ -98,7 +103,7 @@ class Filament{Domain}Plugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->discoverClusters(
-            in: __DIR__ . '/Clusters/', 
+            in: __DIR__ . '/Clusters/',
             for: 'RedJasmine\\Filament{Domain}\\Clusters'
         );
     }
@@ -152,109 +157,403 @@ class {ClusterName} extends Cluster
 ```php
 <?php
 
-namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources;
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity};
 
-use Filament\Forms\Form;
+use BackedEnum;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use RedJasmine\{Domain}\Application\Services\{Entity}\{Entity}ApplicationService;
-use RedJasmine\{Domain}\Domain\Data\{Entity}Data;
-use RedJasmine\{Domain}\Domain\Models\{Entity};
+use RedJasmine\{Domain}\Application\{Entity}\Services\{Entity}ApplicationService;
+use RedJasmine\{Domain}\Application\{Entity}\Services\Commands\{Entity}CreateCommand;
+use RedJasmine\{Domain}\Application\{Entity}\Services\Commands\{Entity}DeleteCommand;
+use RedJasmine\{Domain}\Application\{Entity}\Services\Commands\{Entity}UpdateCommand;
+use RedJasmine\{Domain}\Domain\{Entity}\Models\{Entity} as Model;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages\Create{Entity};
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages\Edit{Entity};
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages\List{Entities};
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages\View{Entity};
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Schemas\{Entity}Form;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Tables\{Entity}Table;
+use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class {Entity}Resource extends Resource
 {
     use ResourcePageHelper;
 
-    // 必需的静态属性
+    /**
+     * @var class-string<{Entity}ApplicationService>
+     */
     protected static string $service = {Entity}ApplicationService::class;
-    protected static ?string $createCommand = {Entity}Data::class;
-    protected static ?string $updateCommand = {Entity}Data::class;
+
+    protected static ?string $createCommand = {Entity}CreateCommand::class;
+    protected static ?string $updateCommand = {Entity}UpdateCommand::class;
+    protected static ?string $deleteCommand = {Entity}DeleteCommand::class;
+
+    protected static ?string $cluster = \RedJasmine\Filament{Domain}\Clusters\{ClusterName}::class;
+    protected static ?string $model = Model::class;
+    protected static ?int $navigationSort = 1;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
     protected static bool $onlyOwner = true;
-
-    protected static ?string $model = {Entity}::class;
-    protected static ?string $navigationIcon = 'heroicon-c-document-text';
-    protected static ?string $cluster = {ClusterName}::class;
-
-    public static function getModelLabel(): string
-    {
-        return __('red-jasmine-{domain}::{entity}.labels.title');
-    }
-
-    public static function callFindQuery(FindQuery $findQuery): FindQuery
-    {
-        $findQuery->include = ['relation1', 'relation2'];
-        return $findQuery;
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form->schema([
-            // 表单字段定义
-            Forms\Components\Split::make([
-                Forms\Components\Section::make([
-                    // 主要字段
-                ]),
-                Forms\Components\Section::make([
-                    // 辅助字段
-                    ...static::ownerFormSchemas(),
-                    ...static::operateFormSchemas()
-                ])->grow(false),
-            ])->columnSpanFull(),
-        ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                // 表格列定义
-                ...static::ownerTableColumns(),
-                ...static::operateTableColumns()
-            ])
-            ->filters([
-                // 过滤器定义
-            ])
-            ->actions([
-                // 行动作定义
-            ])
-            ->bulkActions([
-                // 批量动作定义
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            // 关系管理器
-        ];
-    }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\List{Entities}::route('/'),
-            'create' => Pages\Create{Entity}::route('/create'),
-            'edit' => Pages\Edit{Entity}::route('/{record}/edit'),
+            'index' => List{Entities}::route('/'),
+            'create' => Create{Entity}::route('/create'),
+            'view' => View{Entity}::route('/{record}'),
+            'edit' => Edit{Entity}::route('/{record}/edit'),
         ];
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('red-jasmine-{domain}::{entity}.labels.{entity}');
+    }
+
+    public static function callFindQuery(FindQuery $findQuery): FindQuery
+    {
+        $findQuery->include = ['relation1', 'relation2', 'extension'];
+        return $findQuery;
+    }
+
+    public static function callResolveRecord(Model $model): Model
+    {
+        // 处理扩展表数据合并到主模型
+        if ($model->relationLoaded('extension')) {
+            foreach ($model->extension->getAttributes() as $key => $value) {
+                $model->setAttribute($key, $model->extension->{$key});
+            }
+        }
+        return $model;
+    }
+
+    public static function form(Schema $form): Schema
+    {
+        return {Entity}Form::configure($form);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return {Entity}Table::configure($table);
     }
 }
 ```
 
 ### 2. Page 页面类
+
+#### CreateRecord 创建页面
 ```php
 <?php
 
-namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}Resource\Pages;
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\{Entity}Resource;
 
 class Create{Entity} extends CreateRecord
 {
-    use ResourcePageHelper;
-    
     protected static string $resource = {Entity}Resource::class;
+
+    use ResourcePageHelper;
+}
+```
+
+#### EditRecord 编辑页面
+```php
+<?php
+
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages;
+
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\{Entity}Resource;
+
+class Edit{Entity} extends EditRecord
+{
+    protected static string $resource = {Entity}Resource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+
+    use ResourcePageHelper;
+}
+```
+
+#### ViewRecord 查看页面
+```php
+<?php
+
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages;
+
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
+use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\{Entity}Resource;
+
+class View{Entity} extends ViewRecord
+{
+    protected static string $resource = {Entity}Resource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            EditAction::make(),
+        ];
+    }
+
+    use ResourcePageHelper;
+}
+```
+
+#### ListRecords 列表页面
+```php
+<?php
+
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Pages;
+
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Database\Eloquent\Builder;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\{Entity}Resource;
+
+class List{Entities} extends ListRecords
+{
+    protected static string $resource = {Entity}Resource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
+        ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+            'all' => Tab::make()
+                ->label(__('red-jasmine-{domain}::{entity}.scopes.all')),
+            'active' => Tab::make()
+                ->badge(static::getResource()::getEloquentQuery()->active()->count())
+                ->label(__('red-jasmine-{domain}::{entity}.scopes.active'))
+                ->modifyQueryUsing(fn(Builder $query) => $query->active()),
+        ];
+    }
+}
+```
+
+## 表单和表格配置规范
+
+### 1. Form Schema 表单配置类
+```php
+<?php
+
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Schemas;
+
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+use RedJasmine\FilamentCore\Resources\Schemas\Operators;
+use RedJasmine\FilamentCore\Resources\Schemas\Owner;
+
+class {Entity}Form
+{
+    /**
+     * 配置表单
+     */
+    public static function configure(Schema $form): Schema
+    {
+        $schema = [
+            Tab::make('basic_info')
+                ->label(__('red-jasmine-{domain}::{entity}.labels.basic_info'))
+                ->columns(1)
+                ->schema(static::basicInfoFields()),
+            Tab::make('other')
+                ->label(__('red-jasmine-{domain}::{entity}.labels.other'))
+                ->columns(1)
+                ->schema(static::otherFields()),
+        ];
+
+        return $form
+            ->components([
+                Tabs::make(__('red-jasmine-{domain}::{entity}.labels.{entity}'))
+                    ->tabs($schema)
+                    ->persistTabInQueryString(),
+            ])
+            ->inlineLabel(true)
+            ->columns(1);
+    }
+
+    /**
+     * 基础信息字段
+     */
+    protected static function basicInfoFields(): array
+    {
+        return [
+            Owner::make(),
+
+            Section::make('基础信息')
+                ->description('设置基本信息')
+                ->icon('heroicon-o-information-circle')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('name')
+                        ->label(__('red-jasmine-{domain}::{entity}.fields.name'))
+                        ->required()
+                        ->maxLength(255),
+                    // 更多字段...
+                ]),
+        ];
+    }
+
+    /**
+     * 其他字段
+     */
+    protected static function otherFields(): array
+    {
+        return [
+            Section::make('其他设置')
+                ->columns(2)
+                ->schema([
+                    Toggle::make('is_active')
+                        ->label(__('red-jasmine-{domain}::{entity}.fields.is_active'))
+                        ->default(true),
+                    // 更多字段...
+                ]),
+            Operators::make(),
+        ];
+    }
+}
+```
+
+### 2. Table 表格配置类
+```php
+<?php
+
+namespace RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\Tables;
+
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use RedJasmine\Filament{Domain}\Clusters\{ClusterName}\Resources\{Entity}\{Entity}Resource;
+use RedJasmine\{Domain}\Domain\{Entity}\Models\Enums\{Entity}StatusEnum;
+
+class {Entity}Table
+{
+    /**
+     * 配置表格
+     */
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->deferLoading()
+            ->columns(static::getColumns())
+            ->filters(static::getFilters(), layout: FiltersLayout::AboveContentCollapsible)
+            ->deferFilters()
+            ->recordUrl(null)
+            ->recordActions(static::getRecordActions())
+            ->toolbarActions(static::getToolbarActions());
+    }
+
+    /**
+     * 获取表格列
+     */
+    protected static function getColumns(): array
+    {
+        return [
+            ...{Entity}Resource::ownerTableColumns(),
+
+            TextColumn::make('id')
+                ->label(__('red-jasmine-{domain}::{entity}.fields.id'))
+                ->copyable()
+                ->sortable()
+                ->searchable()
+                ->icon('heroicon-o-identification')
+                ->color('gray')
+                ->size('xs'),
+
+            TextColumn::make('name')
+                ->label(__('red-jasmine-{domain}::{entity}.fields.name'))
+                ->copyable()
+                ->searchable()
+                ->limit(30)
+                ->weight('bold'),
+
+            TextColumn::make('status')
+                ->label(__('red-jasmine-{domain}::{entity}.fields.status'))
+                ->badge()
+                ->useEnum(),
+
+            // 更多列...
+        ];
+    }
+
+    /**
+     * 获取筛选器
+     */
+    protected static function getFilters(): array
+    {
+        return [
+            SelectFilter::make('status')
+                ->multiple()
+                ->label(__('red-jasmine-{domain}::{entity}.fields.status'))
+                ->options({Entity}StatusEnum::options()),
+        ];
+    }
+
+    /**
+     * 获取记录操作
+     */
+    protected static function getRecordActions(): array
+    {
+        return [
+            EditAction::make(),
+            ActionGroup::make([
+                ViewAction::make(),
+                DeleteAction::make(),
+            ])
+                ->visible(static function ($record): bool {
+                    if (method_exists($record, 'trashed')) {
+                        return !$record->trashed();
+                    }
+                    return true;
+                }),
+            RestoreAction::make(),
+            ForceDeleteAction::make(),
+        ];
+    }
+
+    /**
+     * 获取工具栏操作
+     */
+    protected static function getToolbarActions(): array
+    {
+        return [
+            BulkActionGroup::make([
+                DeleteBulkAction::make(),
+            ]),
+        ];
+    }
 }
 ```
 
@@ -275,7 +574,7 @@ class {ComponentName} extends Field
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // 组件初始化逻辑
         $this->afterStateHydrated(function ({ComponentName} $component, $state) {
             // 状态处理逻辑
@@ -299,7 +598,7 @@ class {ComponentName} extends Column
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // 列初始化逻辑
     }
 }
@@ -319,11 +618,11 @@ class {FilterName} extends Filter
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->form([
             // 表单定义
         ]);
-        
+
         $this->query(function (Builder $query, array $data): Builder {
             // 查询逻辑
         });
@@ -343,15 +642,20 @@ class {FilterName} extends Filter
 ### 2. 静态属性规范
 ```php
 // 必需的静态属性
+/**
+ * @var class-string<{Entity}ApplicationService>
+ */
 protected static string $service = {Entity}ApplicationService::class;
-protected static ?string $createCommand = {Entity}Data::class;
-protected static ?string $updateCommand = {Entity}Data::class;
+protected static ?string $createCommand = {Entity}CreateCommand::class;
+protected static ?string $updateCommand = {Entity}UpdateCommand::class;
+protected static ?string $deleteCommand = {Entity}DeleteCommand::class;
 protected static bool $onlyOwner = true;
 
 // Filament 原生属性
 protected static ?string $model = {Entity}::class;
-protected static ?string $navigationIcon = 'heroicon-c-document-text';
 protected static ?string $cluster = {ClusterName}::class;
+protected static ?int $navigationSort = 1;
+protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 ```
 
 ### 3. 方法实现规范
@@ -359,76 +663,191 @@ protected static ?string $cluster = {ClusterName}::class;
 // 模型标签
 public static function getModelLabel(): string
 {
-    return __('red-jasmine-{domain}::{entity}.labels.title');
+    return __('red-jasmine-{domain}::{entity}.labels.{entity}');
 }
 
-// 查询定制
+// 查询定制 - 预加载关联数据
 public static function callFindQuery(FindQuery $findQuery): FindQuery
 {
-    $findQuery->include = ['relation1', 'relation2'];
+    $findQuery->include = ['relation1', 'relation2', 'extension'];
     return $findQuery;
 }
 
-// 解析记录
+// 解析记录 - 处理扩展表数据合并
 public static function callResolveRecord(Model $model): Model
 {
-    // 记录解析逻辑
+    // 处理扩展表数据合并到主模型
+    if ($model->relationLoaded('extension')) {
+        foreach ($model->extension->getAttributes() as $key => $value) {
+            $model->setAttribute($key, $model->extension->{$key});
+        }
+    }
     return $model;
+}
+
+// 表单配置 - 委托给独立的 Form 类
+public static function form(Schema $form): Schema
+{
+    return {Entity}Form::configure($form);
+}
+
+// 表格配置 - 委托给独立的 Table 类
+public static function table(Table $table): Table
+{
+    return {Entity}Table::configure($table);
 }
 ```
 
 ### 4. 表单设计规范
+
+#### 使用 Schema 和 Tabs 组织表单
 ```php
-public static function form(Form $form): Form
+// 在 Form Schema 类中
+public static function configure(Schema $form): Schema
 {
-    return $form->schema([
-        Forms\Components\Split::make([
-            // 主要内容区域
-            Forms\Components\Section::make([
-                // 核心字段
+    $schema = [
+        Tab::make('basic_info')
+            ->label(__('red-jasmine-{domain}::{entity}.labels.basic_info'))
+            ->columns(1)
+            ->schema(static::basicInfoFields()),
+        Tab::make('other')
+            ->label(__('red-jasmine-{domain}::{entity}.labels.other'))
+            ->columns(1)
+            ->schema(static::otherFields()),
+    ];
+
+    return $form
+        ->components([
+            Tabs::make(__('red-jasmine-{domain}::{entity}.labels.{entity}'))
+                ->tabs($schema)
+                ->persistTabInQueryString(),
+        ])
+        ->inlineLabel(true)
+        ->columns(1);
+}
+```
+
+#### 使用 Section 组织字段组
+```php
+protected static function basicInfoFields(): array
+{
+    return [
+        Owner::make(),
+
+        Section::make('基础信息')
+            ->description('设置基本信息')
+            ->icon('heroicon-o-information-circle')
+            ->columns(2)
+            ->schema([
+                TextInput::make('name')
+                    ->label(__('red-jasmine-{domain}::{entity}.fields.name'))
+                    ->required(),
+                // 更多字段...
             ]),
-            // 辅助信息区域
-            Forms\Components\Section::make([
-                // 所有者字段
-                ...static::ownerFormSchemas(),
-                // 操作字段
-                ...static::operateFormSchemas()
-            ])->grow(false),
-        ])->columnSpanFull(),
-    ]);
+    ];
+}
+```
+
+#### 使用 Operators 组件添加操作者信息
+```php
+protected static function otherFields(): array
+{
+    return [
+        Section::make('其他设置')
+            ->schema([
+                // 字段...
+            ]),
+        Operators::make(), // 操作者信息组件
+    ];
 }
 ```
 
 ### 5. 表格设计规范
+
+#### 在 Table 配置类中组织表格
 ```php
-public static function table(Table $table): Table
+public static function configure(Table $table): Table
 {
     return $table
-        ->columns([
-            // 基础列
-            Tables\Columns\TextColumn::make('id')
-                ->label(__('red-jasmine-filament-{domain}::{entity}.fields.id'))
-                ->sortable(),
-            
-            // 所有者列
-            ...static::ownerTableColumns(),
-            
-            // 枚举列使用 useEnum() 方法
-            Tables\Columns\TextColumn::make('status')
-                ->useEnum(),
-            
-            // 操作列
-            ...static::operateTableColumns()
+        ->deferLoading()  // 延迟加载，提升性能
+        ->columns(static::getColumns())
+        ->filters(static::getFilters(), layout: FiltersLayout::AboveContentCollapsible)
+        ->deferFilters()  // 延迟过滤器
+        ->recordUrl(null)  // 禁用默认记录链接
+        ->recordActions(static::getRecordActions())
+        ->toolbarActions(static::getToolbarActions());
+}
+```
+
+#### 列定义规范
+```php
+protected static function getColumns(): array
+{
+    return [
+        // 所有者列
+        ...{Entity}Resource::ownerTableColumns(),
+
+        // 基础列
+        TextColumn::make('id')
+            ->label(__('red-jasmine-{domain}::{entity}.fields.id'))
+            ->copyable()
+            ->sortable()
+            ->searchable()
+            ->icon('heroicon-o-identification')
+            ->color('gray')
+            ->size('xs'),
+
+        TextColumn::make('name')
+            ->label(__('red-jasmine-{domain}::{entity}.fields.name'))
+            ->copyable()
+            ->searchable()
+            ->limit(30)
+            ->weight('bold'),
+
+        // 枚举列使用 useEnum() 方法
+        TextColumn::make('status')
+            ->label(__('red-jasmine-{domain}::{entity}.fields.status'))
+            ->badge()
+            ->useEnum(),
+
+        // 操作列
+        ...{Entity}Resource::operateTableColumns(),
+    ];
+}
+```
+
+#### 过滤器定义规范
+```php
+protected static function getFilters(): array
+{
+    return [
+        SelectFilter::make('status')
+            ->multiple()
+            ->label(__('red-jasmine-{domain}::{entity}.fields.status'))
+            ->options({Entity}StatusEnum::options()),
+    ];
+}
+```
+
+#### 记录操作定义规范
+```php
+protected static function getRecordActions(): array
+{
+    return [
+        EditAction::make(),
+        ActionGroup::make([
+            ViewAction::make(),
+            DeleteAction::make(),
         ])
-        ->filters([
-            // 过滤器定义
-        ])
-        ->actions([
-            // 行动作
-        ])
-        ->bulkActions([
-            // 批量动作
-        ]);
+            ->visible(static function ($record): bool {
+                if (method_exists($record, 'trashed')) {
+                    return !$record->trashed();
+                }
+                return true;
+            }),
+        RestoreAction::make(),
+        ForceDeleteAction::make(),
+    ];
 }
 ```
 
@@ -466,7 +885,7 @@ return [
 ```
 ### 3.翻译文件存放在对应的领域包内
 - 如 red-jasmine-filament-product，这个是商品领域的管理面板，那么字段、命令、标题的翻译就应该在 red-jasmine-product 内
-  
+
 ## 架构集成规范
 
 ### 1. 与业务层解耦
@@ -483,7 +902,7 @@ protected static bool $onlyOwner = true;
 public static function getEloquentQuery(): Builder
 {
     $query = app(static::$service)->re->modelQuery();
-    
+
     if (static::onlyOwner()) {
         $user = auth()->user();
         if (!($user->isAdministrator() ?? false)) {
@@ -491,7 +910,7 @@ public static function getEloquentQuery(): Builder
             $query->onlyOwner($owner);
         }
     }
-    
+
     return $query;
 }
 ```
@@ -504,7 +923,7 @@ protected function handleRecordCreation(array $data): Model
     $resource = static::getResource();
     $commandService = app($resource::getService());
     $command = ($resource::getCreateCommand())::from($data);
-    
+
     return $commandService->create($command);
 }
 
@@ -515,7 +934,7 @@ protected function handleRecordUpdate(Model $record, array $data): Model
     $commandService = app($resource::getService());
     $command = ($resource::getUpdateCommand())::from($data);
     $command->setKey($record->getKey());
-    
+
     return $commandService->update($command);
 }
 ```
@@ -540,7 +959,7 @@ public function packageBooted(): void
         }
         return $this;
     });
-    
+
     // 字段宏 - 枚举使用
     Field::macro('useEnum', function (string $enumClassName) {
         $this->enum($enumClassName);
@@ -560,7 +979,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 class {Entity}Resource extends Resource
 {
     use ResourcePageHelper;
-    
+
     // 自动处理所有者相关逻辑
     // 自动处理操作相关逻辑
 }
@@ -593,7 +1012,7 @@ public function test_can_create_resource(): void
 public function test_only_owner_can_access_resources(): void
 {
     $otherUser = User::factory()->create();
-    
+
     $this->actingAs($otherUser)
          ->get(route('filament.admin.resources.{entities}.index'))
          ->assertStatus(403);
@@ -604,31 +1023,35 @@ public function test_only_owner_can_access_resources(): void
 
 ### 1. 查询优化
 ```php
-// 预加载关联
+// 预加载关联 - 在 Resource 中
 public static function callFindQuery(FindQuery $findQuery): FindQuery
 {
     $findQuery->include = ['category', 'tags', 'extension'];
     return $findQuery;
 }
 
-// 表格查询优化
-public static function table(Table $table): Table
+// 表格查询优化 - 在 Table 配置类中
+public static function configure(Table $table): Table
 {
     return $table
-        ->columns([
-            // 避免 N+1 查询
-            Tables\Columns\TextColumn::make('category.name')
-                ->label(__('Category'))
-        ])
-        ->modifyQueryUsing(fn (Builder $query) => $query->with(['category']));
+        ->deferLoading()  // 延迟加载
+        ->deferFilters()  // 延迟过滤器
+        ->modifyQueryUsing(fn (Builder $query) => $query->with(['category']))
+        ->columns(static::getColumns());
 }
+
+// 在列定义中避免 N+1 查询
+TextColumn::make('category.name')
+    ->label(__('red-jasmine-{domain}::{entity}.fields.category'))
+    ->badge()
+    ->color('info')
 ```
 
 ### 2. 缓存使用
 ```php
 // 选项缓存
 Forms\Components\Select::make('category_id')
-    ->options(fn () => Cache::remember('categories', 3600, fn () => 
+    ->options(fn () => Cache::remember('categories', 3600, fn () =>
         Category::pluck('name', 'id')
     ));
 ```

@@ -32,8 +32,6 @@ return new class extends Migration
             $table->index('warehouse_id');
             $table->index(['market', 'store']);
 
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
-
             $table->comment('仓库-市场/门店关联表');
         });
     }

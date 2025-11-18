@@ -77,6 +77,12 @@ class WarehouseForm
                 ->icon('heroicon-o-globe-alt')
                 ->schema([
                     Repeater::make('markets')
+                    ->table([
+                        Repeater\TableColumn::make(__('red-jasmine-warehouse::warehouse.fields.market')),
+                        Repeater\TableColumn::make(__('red-jasmine-warehouse::warehouse.fields.store')),
+                        Repeater\TableColumn::make(__('red-jasmine-warehouse::warehouse.fields.market_is_active')),
+                        Repeater\TableColumn::make(__('red-jasmine-warehouse::warehouse.fields.market_is_primary')),
+                    ])
                         ->label(__('red-jasmine-warehouse::warehouse.fields.markets'))
                         ->schema([
                             TextInput::make('market')
@@ -106,12 +112,12 @@ class WarehouseForm
                         ->columns(4)
                         ->defaultItems(0)
                         ->collapsible()
-                        ->itemLabel(fn(array $state): ?string => 
-                            ($state['market'] ?? null) && ($state['store'] ?? null) 
+                        ->itemLabel(fn(array $state): ?string =>
+                            ($state['market'] ?? null) && ($state['store'] ?? null)
                                 ? ($state['market'] . '/' . $state['store'])
                                 : null
                         )
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
                 ]),
         ]);
     }
