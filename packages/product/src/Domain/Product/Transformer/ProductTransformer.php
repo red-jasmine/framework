@@ -204,7 +204,6 @@ class ProductTransformer
         $variant->image            = $variantData->image;
         $variant->barcode          = $variantData->barcode;
         $variant->price            = $variantData->price;
-        $variant->safety_stock     = $variantData->safetyStock;
         $variant->market_price     = $variantData->marketPrice;
         $variant->cost_price       = $variantData->costPrice;
         $variant->weight           = $variantData->weight;

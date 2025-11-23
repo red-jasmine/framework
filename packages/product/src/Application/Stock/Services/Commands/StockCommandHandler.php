@@ -17,8 +17,7 @@ abstract class StockCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected ProductSkuRepositoryInterface $repository,
-        protected StockDomainService $domainService
+        protected ProductSkuRepositoryInterface $repository
     ) {
         $this->context = new HandleContext();
     }

@@ -15,6 +15,10 @@ return new class extends Migration {
             $table->string('owner_id', 64);
             $table->unsignedBigInteger('product_id')->comment('商品ID');
             $table->unsignedBigInteger('sku_id')->comment('SKU ID');
+            
+            // ========== 仓库信息（多仓库支持）==========
+            $table->unsignedBigInteger('warehouse_id')->default(0)->comment('仓库ID（0表示总仓/默认仓库/简单模式）');
+            
             $table->string('action_type', 32)->comment(ProductStockActionTypeEnum::comments('操作类型'));
             $table->bigInteger('action_stock')->comment('操作库存');
             $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
@@ -35,6 +39,8 @@ return new class extends Migration {
             $table->comment('商品-库存-记录');
             $table->index(['product_id',], 'idx_product');
             $table->index(['sku_id',], 'idx_sku');
+            $table->index(['warehouse_id',], 'idx_warehouse');
+            $table->index(['warehouse_id', 'sku_id'], 'idx_warehouse_sku');
         });
     }
 

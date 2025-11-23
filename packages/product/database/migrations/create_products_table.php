@@ -68,10 +68,11 @@ return new class extends Migration {
             // 库存
             $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             // 商品级别库存制作统计使用
-            $table->bigInteger('stock')->default(0)->comment('库存');
-            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
-            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
-            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+            $table->bigInteger('stock')->default(0)->comment('总库存');
+            $table->bigInteger('available_stock')->default(0)->comment('总可用库存');
+            $table->bigInteger('locked_stock')->default(0)->comment('总锁定库存');
+            $table->bigInteger('reserved_stock')->default(0)->comment('总预留库存');
+
 
             // 发货期限
             $table->unsignedInteger('delivery_time')->default(0)->comment('发货时间');

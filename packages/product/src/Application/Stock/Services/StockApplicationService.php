@@ -12,7 +12,6 @@ use RedJasmine\Product\Application\Stock\Services\Commands\StockResetCommandHand
 use RedJasmine\Product\Application\Stock\Services\Commands\StockSubCommandHandler;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockUnlockCommandHandler;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
-use RedJasmine\Product\Domain\Stock\StockDomainService;
 use RedJasmine\Support\Application\ApplicationService;
 
 
@@ -49,8 +48,7 @@ class StockApplicationService extends ApplicationService
     ];
 
     public function __construct(
-        public ProductSkuRepositoryInterface $repository,
-        public StockDomainService $domainService
+        public ProductSkuRepositoryInterface $repository
     ) {
 
     }

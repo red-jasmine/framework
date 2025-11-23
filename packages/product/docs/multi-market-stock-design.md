@@ -144,14 +144,13 @@ CREATE TABLE product_stocks (
     variant_id BIGINT UNSIGNED NOT NULL COMMENT 'SKU ID（变体ID，必填）',
     
     -- ========== 库存维度（关联仓库）==========
-    warehouse_id BIGINT UNSIGNED NULL COMMENT '仓库ID（关联warehouses表，NULL表示默认仓库/简单模式）',
+    warehouse_id BIGINT UNSIGNED DEFAULT 0 COMMENT '仓库ID（关联warehouses表，0表示总仓/默认仓库/简单模式）',
     
     -- ========== 库存数量 ==========
-    total_stock BIGINT DEFAULT 0 COMMENT '总库存',
+    stock BIGINT DEFAULT 0 COMMENT '总库存',
     available_stock BIGINT DEFAULT 0 COMMENT '可用库存',
     locked_stock BIGINT DEFAULT 0 COMMENT '锁定库存',
     reserved_stock BIGINT DEFAULT 0 COMMENT '预留库存',
-    sold_stock BIGINT DEFAULT 0 COMMENT '已售库存',
     safety_stock BIGINT DEFAULT 0 COMMENT '安全库存',
     
     -- ========== 库存状态 ==========
@@ -173,13 +172,12 @@ CREATE TABLE product_stocks (
     UNIQUE KEY uk_variant_warehouse (variant_id, warehouse_id),
     INDEX idx_warehouse (warehouse_id),
     INDEX idx_product_variant (product_id, variant_id),
-    -- 注意：MySQL 中 NULL 值在唯一索引中的处理：
-    -- 1. NULL 值可以参与唯一索引，但多个 NULL 值不违反唯一性约束
-    -- 2. 为了确保简单模式下每个变体只有一条 warehouse_id=NULL 的记录，需要在应用层保证
-    -- 3. 或者使用触发器/应用层逻辑确保唯一性
+    -- 注意：warehouse_id = 0 表示总仓（默认仓库），用于简单库存模式
+    -- 为了确保简单模式下每个变体只有一条 warehouse_id=0 的记录，唯一索引会自动保证
     
     FOREIGN KEY (warehouse_id) REFERENCES warehouses(id) ON DELETE RESTRICT,
-    -- 注意：warehouse_id 允许为 NULL，NULL 值不受外键约束限制
+    -- 注意：warehouse_id = 0 不受外键约束限制（0 值不引用 warehouses 表）
+    -- 当 warehouse_id > 0 时，必须引用 warehouses 表中存在的记录
     
     COMMENT='商品-多市场库存表（变体级别）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -189,46 +187,48 @@ CREATE TABLE product_stocks (
 
 | 字段 | 计算公式 | 说明 |
 |------|----------|------|
-| `total_stock` | `total_stock = available_stock + locked_stock + reserved_stock + sold_stock` | 总库存 = 可用库存 + 锁定库存 + 预留库存 + 已售库存 |
-| `available_stock` | `available_stock = total_stock - locked_stock - reserved_stock - sold_stock` | 可用库存 = 总库存 - 锁定库存 - 预留库存 - 已售库存 |
+| `stock` | `stock = available_stock + locked_stock + reserved_stock` | 总库存 = 可用库存 + 锁定库存 + 预留库存 |
+| `available_stock` | `available_stock = stock - locked_stock - reserved_stock` | 可用库存 = 总库存 - 锁定库存 - 预留库存 |
 | `locked_stock` | 下单时：`available_stock -= quantity; locked_stock += quantity`<br>取消/支付时：`available_stock += quantity; locked_stock -= quantity` | 锁定库存：下单时从可用库存转移，支付或取消时释放回可用库存 |
-| `reserved_stock` | 支付时：`locked_stock -= quantity; reserved_stock += quantity`<br>发货时：`reserved_stock -= quantity; sold_stock += quantity` | 预留库存：支付时从锁定库存转移，发货时转移到已售库存 |
-| `sold_stock` | 发货时：`reserved_stock -= quantity; sold_stock += quantity; total_stock -= quantity` | 已售库存：发货时从预留库存转移，同时总库存减少 |
+| `reserved_stock` | 支付时：`locked_stock -= quantity; reserved_stock += quantity`<br>发货时：`reserved_stock -= quantity; stock -= quantity` | 预留库存：支付时从锁定库存转移，发货时直接从预留库存扣减，同时总库存减少 |
 | `safety_stock` | 不参与计算，仅用于预警判断 | 安全库存：预警阈值，当 `available_stock <= safety_stock` 时触发低库存预警 |
+
+**重要说明：**
+- **已售数量统计**：已售数量不在库存表中维护，需要从订单表统计（订单状态为已发货）
+- **发货时库存扣减**：发货时直接从预留库存扣减，同时总库存减少，逻辑更简洁
 
 **库存流转流程示例：**
 
 ```
 初始状态：
-total_stock = 1000
+stock = 1000
 available_stock = 1000
 locked_stock = 0
 reserved_stock = 0
-sold_stock = 0
 
 1. 用户下单（数量=10）：
    available_stock = 1000 - 10 = 990
    locked_stock = 0 + 10 = 10
-   total_stock = 990 + 10 + 0 + 0 = 1000 ✓
+   stock = 990 + 10 + 0 = 1000 ✓
 
 2. 用户支付（数量=10）：
    locked_stock = 10 - 10 = 0
    reserved_stock = 0 + 10 = 10
    available_stock = 990（不变）
-   total_stock = 990 + 0 + 10 + 0 = 1000 ✓
+   stock = 990 + 0 + 10 = 1000 ✓
 
 3. 商家发货（数量=10）：
    reserved_stock = 10 - 10 = 0
-   sold_stock = 0 + 10 = 10
-   total_stock = 1000 - 10 = 990
-   available_stock = 990 - 0 - 0 - 10 = 980 ✓
+   stock = 1000 - 10 = 990
+   available_stock = 990 - 0 - 0 = 990 ✓
 
 最终状态：
-total_stock = 990
-available_stock = 980
+stock = 990
+available_stock = 990
 locked_stock = 0
 reserved_stock = 0
-sold_stock = 10
+
+注意：已售数量从订单表统计，不在库存表中维护
 ```
 
 ### 2.4 product_stock_logs 表（库存操作日志表）
@@ -241,7 +241,7 @@ sold_stock = 10
 - 记录所有库存操作（锁定、解锁、预留、扣减、释放、调整、分配等）
 - 支持多仓库场景，通过 `warehouse_id` 字段标识操作的仓库
 - 记录操作前后的库存状态，便于追溯和审计
-- 简单模式下 `warehouse_id` 为 NULL，高级模式下为具体仓库ID
+- 简单模式下 `warehouse_id` 为 0（总仓），高级模式下为具体仓库ID（> 0）
 
 ```sql
 CREATE TABLE product_stock_logs (
@@ -256,7 +256,7 @@ CREATE TABLE product_stock_logs (
     sku_id BIGINT UNSIGNED NOT NULL COMMENT 'SKU ID（变体ID）',
     
     -- ========== 仓库信息（多仓库支持）==========
-    warehouse_id BIGINT UNSIGNED NULL COMMENT '仓库ID（NULL表示默认仓库/简单模式）',
+    warehouse_id BIGINT UNSIGNED DEFAULT 0 COMMENT '仓库ID（0表示总仓/默认仓库/简单模式）',
     
     -- ========== 操作信息 ==========
     action_type VARCHAR(32) NOT NULL COMMENT '操作类型：add-增加, sub-扣减, reset-设置, lock-锁定, unlock-解锁, confirm-确认',
@@ -298,7 +298,8 @@ CREATE TABLE product_stock_logs (
     INDEX idx_created_at (created_at),
     
     FOREIGN KEY (warehouse_id) REFERENCES warehouses(id) ON DELETE RESTRICT,
-    -- 注意：warehouse_id 允许为 NULL，NULL 值不受外键约束限制
+    -- 注意：warehouse_id = 0 不受外键约束限制（0 值不引用 warehouses 表）
+    -- 当 warehouse_id > 0 时，必须引用 warehouses 表中存在的记录
     
     COMMENT='商品-库存操作日志表（支持多仓库）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -308,7 +309,7 @@ CREATE TABLE product_stock_logs (
 
 | 字段 | 说明 | 备注 |
 |------|------|------|
-| `warehouse_id` | 仓库ID | NULL表示默认仓库（简单模式），具体ID表示高级模式下的仓库 |
+| `warehouse_id` | 仓库ID | 0表示总仓/默认仓库（简单模式），具体ID（> 0）表示高级模式下的仓库 |
 | `action_type` | 操作类型 | add-增加, sub-扣减, reset-设置, lock-锁定, unlock-解锁, confirm-确认 |
 | `action_stock` | 操作库存数量 | 正数表示增加，负数表示减少 |
 | `before_stock` | 操作前可用库存 | 从 `product_stocks.available_stock` 记录 |
@@ -330,8 +331,8 @@ CREATE TABLE product_stock_logs (
    - 库存分配
 
 2. **多仓库场景下的日志记录**：
-   - 简单模式（`warehouse_id=NULL`）：记录一条日志，`warehouse_id` 为 NULL
-   - 高级模式（`warehouse_id` 为具体仓库ID）：记录一条日志，`warehouse_id` 为具体仓库ID
+   - 简单模式（`warehouse_id=0`）：记录一条日志，`warehouse_id` 为 0（总仓）
+   - 高级模式（`warehouse_id` 为具体仓库ID，> 0）：记录一条日志，`warehouse_id` 为具体仓库ID
 
 3. **日志记录时机**：
    - 在库存操作成功后立即记录
@@ -347,16 +348,29 @@ CREATE TABLE product_stock_logs (
 - `safety_stock` - 安全库存
 - `is_advanced_stock` - **是否启用高级库存模式**（新增字段）
   - `true`：启用高级库存模式，使用多个仓库的库存集合（仓库库存List）
-  - `false`：使用简单库存模式，统一使用 `warehouse_id=NULL`（默认仓库）的库存
+  - `false`：使用简单库存模式，统一使用 `warehouse_id=0`（总仓/默认仓库）的库存
 
 **product_variants 表：**
-- `stock` - SKU级别总库存（基准库存，所有市场共享或默认市场库存）
-- `channel_stock` - SKU渠道库存（保留）
-- `lock_stock` - SKU锁定库存（基准锁定库存）
-- `safety_stock` - SKU安全库存
+- `stock` - SKU级别总库存（汇总数据，从 `product_stocks` 汇总所有仓库的 `stock`）
+- `available_stock` - SKU可用库存（汇总数据，从 `product_stocks` 汇总所有仓库的 `available_stock`）
+- `locked_stock` - SKU锁定库存（汇总数据，从 `product_stocks` 汇总所有仓库的 `locked_stock`）
+- `reserved_stock` - SKU预留库存（汇总数据，从 `product_stocks` 汇总所有仓库的 `reserved_stock`）
+- `channel_stock` - SKU渠道库存（保留，用于渠道活动）
 - `is_tracked` - **是否跟踪库存**（新增字段）
   - `true`：跟踪库存，库存扣减和查询正常进行
   - `false`：不跟踪库存，库存始终显示为有货，不进行库存扣减
+
+**注意：**
+- `stock` 字段就是总库存，`product_stocks` 表中字段名为 `stock`
+- `safety_stock` 字段不在 `product_variants` 表中维护，安全库存查询直接从 `product_stocks` 表获取
+
+**汇总字段说明：**
+- 所有汇总字段仅用于**统计展示**和**快速查询**，不作为库存操作的依据
+- 库存操作（锁定、预留、扣减等）统一使用 `product_stocks` 表
+- 汇总字段在以下场景更新：
+  - 编辑商品时：从 `product_stocks` 汇总到 `product_variants`
+  - 库存操作后：异步或定时任务更新汇总字段（可选，用于报表）
+  - 查询时：如果汇总字段过期，可以实时计算（通过 `product_stocks` 表）
 
 **重要说明：** 
 - 库存管理均为**变体级别**，不支持商品级别库存
@@ -370,21 +384,28 @@ CREATE TABLE product_stock_logs (
 - **统一使用 `product_stocks` 表管理所有库存**，`product_variants.stock` 和 `products.stock` 仅作为汇总数据用于统计展示
 - **库存模式控制**：
   - 当 `products.is_advanced_stock = false` 时（简单库存模式）：
-    * 统一使用 `warehouse_id = NULL`（默认仓库）的一条库存记录
+    * 统一使用 `warehouse_id = 0`（总仓/默认仓库）的一条库存记录
     * 商品创建时必须创建库存记录
     * 商品编辑时只显示一个库存输入框
-    * 下单时从 `warehouse_id=NULL` 的库存扣减
+    * 下单时从 `warehouse_id=0` 的库存扣减
   - 当 `products.is_advanced_stock = true` 时（高级库存模式）：
-    * 使用多个仓库的库存集合（仓库库存List），`warehouse_id` 为具体的仓库ID
+    * 使用多个仓库的库存集合（仓库库存List），`warehouse_id` 为具体的仓库ID（> 0）
     * 商品创建时必须创建至少一个仓库的库存记录
     * 商品编辑时显示仓库库存列表，可以配置多个仓库的库存
     * 下单时根据订单的仓库ID从对应仓库扣减库存
-- `product_variants.stock` 字段作为**汇总数据**保留，用于：
-  - 从 `product_stocks` 汇总而来（所有仓库库存的总和）
-  - 统计展示：商品级别的库存汇总
+- `product_variants` 表的库存字段作为**汇总数据**保留，包括：
+  - `stock` - 总库存汇总（所有仓库 `stock` 的总和）
+  - `available_stock` - 可用库存汇总（所有仓库 `available_stock` 的总和）
+  - `locked_stock` - 锁定库存汇总（所有仓库 `locked_stock` 的总和）
+  - `reserved_stock` - 预留库存汇总（所有仓库 `reserved_stock` 的总和）
+  - 用途：统计展示、快速查询、报表分析
   - **不作为库存源**：查询和扣减库存时统一使用 `product_stocks` 表
+  - **注意**：`safety_stock` 不在 `product_variants` 表中维护，安全库存查询直接从 `product_stocks` 表获取
 - `products.stock` 字段作为**统计汇总数据**，所有变体库存的汇总，仅用于统计展示
-- **汇总逻辑**：编辑商品时，从 `product_stocks` 汇总到 `product_variants.stock`，再从 `product_variants.stock` 汇总到 `products.stock`（用于统计展示）
+- **汇总逻辑**：
+  - 编辑商品时：从 `product_stocks` 汇总所有字段到 `product_variants`
+  - 库存操作后：可异步或定时任务更新汇总字段（可选，用于报表）
+  - 查询时：如果汇总字段过期，可以实时计算（通过 `product_stocks` 表）
 - **库存记录要求**：商品创建时必须创建库存记录，确保查询时一定有数据，不再使用回退机制
 
 ---
@@ -403,7 +424,7 @@ CREATE TABLE product_stock_logs (
    b) 如果提供了 market+store：通过 warehouse_markets 表查找对应的 warehouseId
       - 如果找到多个仓库，使用仓库选择策略（见下方说明）
    c) 如果都未提供：
-      - 如果 products.is_advanced_stock = false：使用 warehouse_id = NULL（默认仓库）
+      - 如果 products.is_advanced_stock = false：使用 warehouse_id = 0（总仓/默认仓库）
       - 如果 products.is_advanced_stock = true：使用默认仓库（is_default=1）
 
 2. 检查是否跟踪库存：
@@ -413,7 +434,7 @@ CREATE TABLE product_stock_logs (
 
 3. 查询 product_stocks 表，匹配条件：
    - variant_id = {variantId}（必填，变体ID）
-   - warehouse_id = {warehouseId}（简单模式为NULL，高级模式为具体仓库ID）
+   - warehouse_id = {warehouseId}（简单模式为0，高级模式为具体仓库ID，> 0）
 
 4. 返回该仓库的 available_stock
    - 如果 product_stocks 表中没有匹配记录，返回 0（商品创建时必须创建库存记录）
@@ -427,9 +448,9 @@ CREATE TABLE product_stock_logs (
 注意：
 - 所有库存操作都是变体级别，variant_id 为必填参数
 - 所有库存都统一使用 product_stocks 表，只是聚合方式不同
-- 简单模式：统一使用 warehouse_id=NULL 的库存（NULL 表示默认仓库）
-- 高级模式：使用多个仓库的库存集合（warehouse_id 为具体的仓库ID）
-- warehouse_id 允许为 NULL，NULL 值不受外键约束限制
+- 简单模式：统一使用 warehouse_id=0 的库存（0 表示总仓/默认仓库）
+- 高级模式：使用多个仓库的库存集合（warehouse_id 为具体的仓库ID，> 0）
+- warehouse_id = 0 不受外键约束限制（0 值不引用 warehouses 表）
 - `is_tracked` 字段在 `product_variants` 表中，是变体级别的属性，不因仓库而异
 - **重要**：如果订单需要指定具体仓库，建议在订单创建时明确指定 warehouseId，避免自动选择的不确定性
 ```
@@ -444,7 +465,7 @@ CREATE TABLE product_stock_logs (
    - 如果 product_variants.is_tracked = true：继续执行库存状态计算
 
 2. 获取可用库存：available_stock（从 product_stocks 表）
-3. 获取安全库存：safety_stock（从 product_stocks 表或 product_variants 表）
+3. 获取安全库存：safety_stock（从 product_stocks 表获取，不在 product_variants 表中维护）
 4. 判断逻辑：
    - available_stock <= 0 → out_of_stock（缺货）
    - available_stock <= safety_stock → low_stock（低库存）
@@ -465,7 +486,7 @@ CREATE TABLE product_stock_logs (
 
 1. 为每个仓库创建库存记录：
    - warehouse_id = {具体仓库ID}
-   - total_stock = {分配的总库存}
+   - stock = {分配的总库存}
    - available_stock = {分配的总库存}
 
 2. 库存扣减：
@@ -586,7 +607,7 @@ CREATE TABLE product_stock_logs (
    - available_stock = available_stock - quantity
    - locked_stock = locked_stock + quantity
 6. 记录库存日志（product_stock_logs）：
-   - warehouse_id: 当前操作的仓库ID（简单模式为NULL，高级模式为具体仓库ID）
+   - warehouse_id: 当前操作的仓库ID（简单模式为0，高级模式为具体仓库ID，> 0）
    - action_type: 'lock'
    - action_stock: quantity（正数）
    - before_stock: 操作前的 available_stock
@@ -614,7 +635,7 @@ CREATE TABLE product_stock_logs (
    - locked_stock = locked_stock - quantity
    - reserved_stock = reserved_stock + quantity
 5. 记录库存日志（product_stock_logs）：
-   - warehouse_id: 当前操作的仓库ID（简单模式为NULL，高级模式为具体仓库ID）
+   - warehouse_id: 当前操作的仓库ID（简单模式为0，高级模式为具体仓库ID，> 0）
    - action_type: 'confirm'
    - action_stock: quantity（正数）
    - before_stock: 操作前的 available_stock（不变）
@@ -640,12 +661,12 @@ CREATE TABLE product_stock_logs (
 3. 记录操作前库存状态（用于日志）
 4. 扣减库存：
    - reserved_stock = reserved_stock - quantity
-   - sold_stock = sold_stock + quantity
-   - total_stock = total_stock - quantity
+   - stock = stock - quantity
+   - available_stock 自动计算：available_stock = stock - locked_stock - reserved_stock
 5. 更新 product_variants.stock（汇总数据，用于统计展示）
 6. 更新 products.stock（汇总数据，用于统计展示）
 7. 记录库存日志（product_stock_logs）：
-   - warehouse_id: 当前操作的仓库ID（简单模式为NULL，高级模式为具体仓库ID）
+   - warehouse_id: 当前操作的仓库ID（简单模式为0，高级模式为具体仓库ID，> 0）
    - action_type: 'sub'
    - action_stock: quantity（负数，表示扣减）
    - before_stock: 操作前的 available_stock（不变，因为已预留）
@@ -655,7 +676,10 @@ CREATE TABLE product_stock_logs (
    - change_type: 'sale'
    - change_detail: 订单号
 
-注意：`is_tracked=false` 时，不进行库存扣减，但可以记录销量（sold_stock）。
+注意：
+- `is_tracked=false` 时，不进行库存扣减
+- 已售数量从订单表统计，不在库存表中维护
+- 发货时直接从预留库存扣减，同时总库存减少，逻辑更简洁
 ```
 
 #### **3.3.4 释放库存（订单取消）**
@@ -678,7 +702,7 @@ CREATE TABLE product_stock_logs (
    - reserved_stock = reserved_stock - quantity（已支付）
 
 5. 记录库存日志（product_stock_logs）：
-   - warehouse_id: 当前操作的仓库ID（简单模式为NULL，高级模式为具体仓库ID）
+   - warehouse_id: 当前操作的仓库ID（简单模式为0，高级模式为具体仓库ID，> 0）
    - action_type: 'unlock'（未支付）或 'sub'（已支付，释放预留库存）
    - action_stock: quantity（正数，表示释放）
    - before_stock: 操作前的 available_stock
@@ -698,7 +722,7 @@ CREATE TABLE product_stock_logs (
 
 1. 分配库存到指定仓库：
    - 创建或更新 product_stocks 记录
-   - total_stock = total_stock + quantity
+   - stock = stock + quantity
    - available_stock = available_stock + quantity
 
 2. 更新汇总数据（可选，用于统计展示）：
@@ -763,7 +787,7 @@ ProductStockService 核心方法（变体级别）：
 10. logStockOperation(variantId, warehouseId, actionType, quantity, beforeStock, afterStock, beforeLockStock, afterLockStock, changeType, changeDetail)
    → 记录库存操作日志
    → variantId: 必填，变体ID
-   → warehouseId: 必填，仓库ID（简单模式为NULL）
+   → warehouseId: 必填，仓库ID（简单模式为0，高级模式为具体仓库ID，> 0）
    → actionType: 操作类型（lock, unlock, confirm, sub, add, reset）
    → quantity: 操作数量
    → beforeStock: 操作前可用库存
@@ -825,15 +849,16 @@ ProductStockService 核心方法（变体级别）：
 **设计说明：**
 
 在商品表中添加 `is_advanced_stock` 字段，用于控制库存的聚合方式和仓库选择。**所有库存都统一使用 `product_stocks` 表**，只是聚合方式不同：
-- 简单模式：统一使用 `warehouse_id=NULL`（NULL 表示默认仓库）的库存
-- 高级模式：使用多个仓库的库存集合（`warehouse_id` 为具体的仓库ID）
+- 简单模式：统一使用 `warehouse_id=0`（0 表示总仓/默认仓库）的库存
+- 高级模式：使用多个仓库的库存集合（`warehouse_id` 为具体的仓库ID，> 0）
 
 这样可以：
 - 统一使用 `product_stocks` 表，逻辑统一
 - 通过 `is_advanced_stock` 控制聚合方式和仓库选择
 - 下单时根据模式决定从哪个仓库扣减
 - 代码逻辑更统一，只是聚合方式不同
-- `warehouse_id=NULL` 语义清晰，符合数据库设计规范
+- `warehouse_id=0` 表示总仓，语义清晰，符合数据库设计规范
+- `warehouse_id=0` 表示总仓，语义清晰，符合数据库设计规范
 
 **字段定义：**
 
@@ -851,8 +876,8 @@ if ($product->is_advanced_stock) {
     $warehouseId = $warehouseId ?? $this->getDefaultWarehouse()->id;
     $stock = $this->productStockService->getAvailableStock($variantId, $warehouseId);
 } else {
-    // 简单库存模式：统一使用 warehouse_id=NULL（默认仓库）
-    $stock = $this->productStockService->getAvailableStock($variantId, null);
+    // 简单库存模式：统一使用 warehouse_id=0（总仓/默认仓库）
+    $stock = $this->productStockService->getAvailableStock($variantId, 0);
 }
 ```
 
@@ -865,8 +890,8 @@ if ($product->is_advanced_stock) {
     $warehouseId = $warehouseId ?? $this->getDefaultWarehouse()->id;
     $this->productStockService->lockStock($variantId, $warehouseId, $quantity);
 } else {
-    // 简单库存模式：统一从 warehouse_id=NULL 扣减
-    $this->productStockService->lockStock($variantId, null, $quantity);
+    // 简单库存模式：统一从 warehouse_id=0 扣减（总仓）
+    $this->productStockService->lockStock($variantId, 0, $quantity);
 }
 ```
 
@@ -898,8 +923,9 @@ class VariantStockConfig extends Data
     
     /**
      * 总库存（该仓库分配的总库存）
+     * 对应 product_stocks.stock 字段
      */
-    public int $totalStock = 0;
+    public int $stock = 0;
     
     /**
      * 安全库存
@@ -943,7 +969,7 @@ class Variant extends Data
     /**
      * 仓库库存配置集合（高级库存模式使用）
      * 当 products.is_advanced_stock = true 时，此字段必填
-     * 当 products.is_advanced_stock = false 时，此字段为空，使用 warehouse_id=NULL 的库存
+     * 当 products.is_advanced_stock = false 时，此字段为空，使用 warehouse_id=0 的库存（总仓）
      * 
      * @var Collection<VariantStockConfig>|null
      */
@@ -982,7 +1008,7 @@ protected function handleStock(Product $product, Product $command): void
                 $this->handleDefaultWarehouseStock($sku, $variantData->stock ?? $command->stock);
             }
         } else {
-            // 简单库存模式：统一使用 warehouse_id=NULL
+            // 简单库存模式：统一使用 warehouse_id=0（总仓）
             $this->handleSimpleStockMode($sku, $variantData->stock ?? $command->stock);
         }
     }
@@ -992,17 +1018,17 @@ protected function handleStock(Product $product, Product $command): void
 }
 
 /**
- * 处理简单库存模式（统一使用 warehouse_id=NULL）
+ * 处理简单库存模式（统一使用 warehouse_id=0）
  */
 protected function handleSimpleStockMode(ProductVariant $variant, int $stock): void
 {
-    // 简单库存模式：统一使用 warehouse_id=NULL（NULL 表示默认仓库）
-    // 注意：使用 updateOrCreate 确保每个变体只有一条 warehouse_id=NULL 的记录
+    // 简单库存模式：统一使用 warehouse_id=0（0 表示总仓/默认仓库）
+    // 注意：使用 updateOrCreate 确保每个变体只有一条 warehouse_id=0 的记录
         $this->stockService->updateOrCreateStock(
         variantId: $variant->id,
-        warehouseId: null, // NULL 表示默认仓库
-        totalStock: $stock,
-        safetyStock: $variant->safety_stock ?? 0
+        warehouseId: 0, // 0 表示总仓/默认仓库
+        stock: $stock,
+        safetyStock: 0 // safety_stock 从 product_stocks 表获取，不在 variant 中维护
     );
 }
 
@@ -1017,7 +1043,7 @@ protected function handleMultiWarehouseStocks(
         $this->stockService->allocateStockToWarehouse(
             variantId: $variant->id,
             warehouseId: $config->warehouseId,
-            totalStock: $config->totalStock,
+            stock: $config->stock,
             safetyStock: $config->safetyStock,
             isActive: $config->isActive
         );
@@ -1039,8 +1065,8 @@ protected function handleDefaultWarehouseStock(ProductVariant $variant, int $sto
     $this->stockService->allocateStockToWarehouse(
         variantId: $variant->id,
         warehouseId: $defaultWarehouse->id,
-        totalStock: $stock,
-        safetyStock: $variant->safety_stock ?? 0
+        stock: $stock,
+        safetyStock: 0 // safety_stock 从 product_stocks 表获取，不在 variant 中维护
     );
 }
 
@@ -1050,9 +1076,12 @@ protected function handleDefaultWarehouseStock(ProductVariant $variant, int $sto
 protected function syncSummaryStock(Product $product): void
 {
     foreach ($product->variants as $variant) {
-        // 汇总 product_stocks 到 product_variants.stock（用于统计展示）
-        $totalStock = $this->stockService->getTotalStock($variant->id);
-        $variant->stock = $totalStock;
+        // 汇总 product_stocks 到 product_variants（用于统计展示）
+        $stocks = $this->stockService->getStockSummary($variant->id);
+        $variant->stock = $stocks['stock']; // 汇总所有仓库的 stock
+        $variant->available_stock = $stocks['available_stock'];
+        $variant->locked_stock = $stocks['locked_stock'];
+        $variant->reserved_stock = $stocks['reserved_stock'];
         $variant->save();
     }
     
@@ -1060,6 +1089,28 @@ protected function syncSummaryStock(Product $product): void
     $productStock = $product->variants()->sum('stock');
     $product->stock = $productStock;
     $product->save();
+}
+
+/**
+ * 获取变体库存汇总（从 product_stocks 表汇总）
+ */
+protected function getStockSummary(int $variantId): array
+{
+    $stocks = ProductStock::where('variant_id', $variantId)
+        ->selectRaw('
+            COALESCE(SUM(stock), 0) as stock,
+            COALESCE(SUM(available_stock), 0) as available_stock,
+            COALESCE(SUM(locked_stock), 0) as locked_stock,
+            COALESCE(SUM(reserved_stock), 0) as reserved_stock
+        ')
+        ->first();
+    
+    return [
+        'stock' => (int) $stocks->stock,
+        'available_stock' => (int) $stocks->available_stock,
+        'locked_stock' => (int) $stocks->locked_stock,
+        'reserved_stock' => (int) $stocks->reserved_stock,
+    ];
 }
 ```
 
@@ -1070,22 +1121,22 @@ protected function syncSummaryStock(Product $product): void
 
 1. 前端提交：
    - 简单模式（is_advanced_stock=false）：variants[].stock = 100
-     * 后端自动创建 warehouse_id=NULL 的 product_stocks 记录
+     * 后端自动创建 warehouse_id=0 的 product_stocks 记录（总仓）
    - 高级模式（is_advanced_stock=true）：variants[].warehouseStocks = [
-       {warehouseId: 1, totalStock: 500},
-       {warehouseId: 2, totalStock: 300},
-       {warehouseId: 3, totalStock: 200}
+       {warehouseId: 1, stock: 500},
+       {warehouseId: 2, stock: 300},
+       {warehouseId: 3, stock: 200}
      ]
 
 2. 后端处理（统一使用 product_stocks 表）：
-   - 简单模式：创建/更新 warehouse_id=NULL 的 product_stocks 记录
+   - 简单模式：创建/更新 warehouse_id=0 的 product_stocks 记录（总仓）
    - 高级模式：解析 warehouseStocks 集合，创建/更新多个仓库的 product_stocks 记录
    - 汇总 product_stocks 到 product_variants.stock（汇总数据，用于统计展示）
    - 汇总所有变体库存到 products.stock（汇总数据，用于统计展示）
 
 3. 查询时（统一使用 product_stocks 表）：
-   - 简单模式：查询 warehouse_id=NULL 的库存
-   - 高级模式：查询指定 warehouse_id 的库存
+   - 简单模式：查询 warehouse_id=0 的库存（总仓）
+   - 高级模式：查询指定 warehouse_id 的库存（> 0）
    - 商品创建时必须创建库存记录，确保查询时一定有数据
 ```
 
@@ -1095,28 +1146,28 @@ protected function syncSummaryStock(Product $product): void
 统一库存处理逻辑：
 
 1. 所有库存都统一使用 product_stocks 表：
-   - 简单模式（is_advanced_stock=false）：统一使用 warehouse_id=NULL 的库存（NULL 表示默认仓库）
-   - 高级模式（is_advanced_stock=true）：使用多个仓库的库存集合（warehouse_id 为具体的仓库ID）
+   - 简单模式（is_advanced_stock=false）：统一使用 warehouse_id=0 的库存（0 表示总仓/默认仓库）
+   - 高级模式（is_advanced_stock=true）：使用多个仓库的库存集合（warehouse_id 为具体的仓库ID，> 0）
 
 2. 商品编辑时：
-   - 简单模式：只显示一个库存输入框（对应 warehouse_id=NULL）
+   - 简单模式：只显示一个库存输入框（对应 warehouse_id=0，总仓）
    - 高级模式：显示仓库库存列表（warehouseStocks），可以配置多个仓库的库存
 
 3. 下单时：
-   - 简单模式：统一从 warehouse_id=NULL 扣减库存
+   - 简单模式：统一从 warehouse_id=0 扣减库存（总仓）
    - 高级模式：
      * **推荐**：订单创建时明确指定 warehouseId，从指定仓库扣减库存
      * **自动选择**：如果订单未指定 warehouseId，使用仓库选择策略自动选择仓库（见 3.2.2）
      * 多个仓库支持同一市场时，需要明确选择策略，避免不确定性
 
 4. 查询时（统一使用 product_stocks 表）：
-   - 简单模式：查询 warehouse_id=NULL 的库存
-   - 高级模式：查询指定 warehouse_id 的库存
+   - 简单模式：查询 warehouse_id=0 的库存（总仓）
+   - 高级模式：查询指定 warehouse_id 的库存（> 0）
    - 商品创建时必须创建库存记录，确保查询时一定有数据
 
 5. 外键约束：
-   - warehouse_id 允许为 NULL，NULL 值不受外键约束限制
-   - 当 warehouse_id 不为 NULL 时，必须引用 warehouses 表中存在的记录
+   - warehouse_id = 0 不受外键约束限制（0 值不引用 warehouses 表）
+   - 当 warehouse_id > 0 时，必须引用 warehouses 表中存在的记录
 ```
 
 6. **模式切换说明**
@@ -1126,12 +1177,12 @@ protected function syncSummaryStock(Product $product): void
 
 1. 从简单模式切换到高级模式：
    - 设置 products.is_advanced_stock = true
-   - 将现有的 warehouse_id=NULL 的库存记录迁移到指定仓库
-   - 或者保留 warehouse_id=NULL 的记录，新增其他仓库的库存记录
+   - 将现有的 warehouse_id=0 的库存记录迁移到指定仓库
+   - 或者保留 warehouse_id=0 的记录，新增其他仓库的库存记录
 
 2. 从高级模式切换到简单模式：
    - 设置 products.is_advanced_stock = false
-   - 汇总所有仓库的库存到 warehouse_id=NULL
+   - 汇总所有仓库的库存到 warehouse_id=0（总仓）
    - 保留其他仓库的库存记录（不删除），以便后续切换回来
 
 3. 切换时的数据迁移：
@@ -1139,7 +1190,7 @@ protected function syncSummaryStock(Product $product): void
    - 建议在业务低峰期进行切换
    - 切换后验证库存数据是否正确
    - 注意：所有库存都使用 product_stocks 表，切换只是改变聚合方式
-   - warehouse_id=NULL 表示默认仓库，不受外键约束限制
+   - warehouse_id=0 表示总仓/默认仓库，不受外键约束限制
 ```
 
 ---
@@ -1173,12 +1224,12 @@ protected function syncSummaryStock(Product $product): void
 | 8  | 8            | us     | store_la01 | 1 |
 
 **product_stocks 表记录：**
-| id | product_id | variant_id | warehouse_id | total_stock | available_stock | locked_stock |
-|----|-----------|-----------|--------------|-------------|----------------|--------------|
-| 5  | 1002      | 10002     | 5            | 600         | 550            | 0            |
-| 6  | 1002      | 10002     | 6            | 200         | 180            | 0            |
-| 7  | 1002      | 10002     | 7            | 300         | 300            | 0            |
-| 8  | 1002      | 10002     | 8            | 120         | 120            | 0            |
+| id | product_id | variant_id | warehouse_id | stock | available_stock | locked_stock |
+|----|-----------|-----------|--------------|-------|----------------|--------------|
+| 5  | 1002      | 10002     | 5            | 600   | 550            | 0            |
+| 6  | 1002      | 10002     | 6            | 200   | 180            | 0            |
+| 7  | 1002      | 10002     | 7            | 300   | 300            | 0            |
+| 8  | 1002      | 10002     | 8            | 120   | 120            | 0            |
 
 **说明：**
 - 每个仓库都有独立的库存记录
@@ -1234,10 +1285,10 @@ protected function syncSummaryStock(Product $product): void
 ### Phase 4: 集成现有代码（Week 3-4）
 
 **任务：**
-1. 改造 `StockApplicationService`，支持 warehouseId 参数（简单模式为NULL，高级模式为具体仓库ID）
-2. 改造 `StockCommand`，增加 warehouseId 字段（简单模式为NULL，高级模式为具体仓库ID）
+1. 改造 `StockApplicationService`，支持 warehouseId 参数（简单模式为0，高级模式为具体仓库ID，> 0）
+2. 改造 `StockCommand`，增加 warehouseId 字段（简单模式为0，高级模式为具体仓库ID，> 0）
 3. 改造 `ProductSkuRepository`，调用新的库存服务
-4. 简单模式统一使用 warehouse_id=NULL，高级模式根据订单使用具体仓库ID
+4. 简单模式统一使用 warehouse_id=0（总仓），高级模式根据订单使用具体仓库ID（> 0）
 5. 在所有库存操作中集成日志记录功能
    - 锁定库存时记录日志
    - 解锁库存时记录日志
@@ -1263,13 +1314,13 @@ protected function syncSummaryStock(Product $product): void
 1. **统一数据源**：所有库存数据统一使用 `product_stocks` 表，`product_variants.stock` 仅作为汇总数据用于统计展示
 2. **变体级别库存**：所有库存操作都是变体级别，`variant_id` 为必填参数
 3. **默认值处理**：
-   - 简单模式（is_advanced_stock=false）：统一使用 warehouse_id=NULL
+   - 简单模式（is_advanced_stock=false）：统一使用 warehouse_id=0（总仓）
    - 高级模式（is_advanced_stock=true）：如果未提供 warehouseId，使用默认仓库（is_default=1）
 4. **库存记录要求**：商品创建时必须创建库存记录，确保查询时一定有数据，不再使用回退机制
 5. **仓库关联**：`product_stocks` 表通过 `warehouse_id` 关联 `warehouses` 表
-6. **NULL 值唯一性**：
-   - MySQL 中多个 NULL 值在唯一索引中不违反唯一性约束
-   - 需要在应用层保证简单模式下每个变体只有一条 `warehouse_id=NULL` 的记录
+6. **总仓标识**：
+   - `warehouse_id=0` 表示总仓/默认仓库，用于简单库存模式
+   - 唯一索引 `uk_variant_warehouse` 自动保证每个变体只有一条 `warehouse_id=0` 的记录
    - 建议在 `handleSimpleStockMode` 方法中使用 `updateOrCreate` 确保唯一性
 
 ### 6.2 性能优化
@@ -1297,8 +1348,8 @@ protected function syncSummaryStock(Product $product): void
    - 如果日志记录失败，不影响库存操作（可异步重试）
 
 2. **多仓库日志记录**：
-   - 简单模式（`warehouse_id=NULL`）：记录一条日志，`warehouse_id` 为 NULL
-   - 高级模式（`warehouse_id` 为具体仓库ID）：记录一条日志，`warehouse_id` 为具体仓库ID
+   - 简单模式（`warehouse_id=0`）：记录一条日志，`warehouse_id` 为 0（总仓）
+   - 高级模式（`warehouse_id` 为具体仓库ID，> 0）：记录一条日志，`warehouse_id` 为具体仓库ID
 
 3. **日志查询优化**：
    - 支持按 `warehouse_id` 查询日志，便于多仓库场景下的日志分析
@@ -1323,10 +1374,10 @@ protected function syncSummaryStock(Product $product): void
 ## 八、总结
 
 本方案在现有库存体系基础上，通过引入**轻量级仓库领域（Warehouse Domain）**和新增 `product_stocks` 表实现多仓库的**变体级别**库存管理。**所有库存都统一使用 `product_stocks` 表**，通过 `is_advanced_stock` 字段控制聚合方式：
-- 简单模式：统一使用 `warehouse_id=NULL` 的库存（NULL 表示默认仓库）
-- 高级模式：使用多个仓库的库存集合（`warehouse_id` 为具体的仓库ID）
+- 简单模式：统一使用 `warehouse_id=0` 的库存（0 表示总仓/默认仓库）
+- 高级模式：使用多个仓库的库存集合（`warehouse_id` 为具体的仓库ID，> 0）
 
-每个仓库独立管理库存，逻辑统一，代码简洁。`warehouse_id` 允许为 NULL，符合数据库设计规范，语义清晰。
+每个仓库独立管理库存，逻辑统一，代码简洁。`warehouse_id=0` 表示总仓，不受外键约束限制，语义清晰。
 
 **核心特点：**
 - ✅ **统一库存表设计**：所有库存都统一使用 `product_stocks` 表，逻辑统一，代码简洁
@@ -1338,10 +1389,10 @@ protected function syncSummaryStock(Product $product): void
   - `product_stocks` 表通过 `warehouse_id` 关联 `warehouses` 表，统一使用仓库ID管理库存
   - 支持一个仓库服务多个市场/门店
 - ✅ **模式控制**：
-  - 简单模式（`is_advanced_stock=false`）：统一使用 `warehouse_id=NULL` 的库存（NULL 表示默认仓库）
-  - 高级模式（`is_advanced_stock=true`）：使用多个仓库的库存集合（仓库库存List）
+  - 简单模式（`is_advanced_stock=false`）：统一使用 `warehouse_id=0` 的库存（0 表示总仓/默认仓库）
+  - 高级模式（`is_advanced_stock=true`）：使用多个仓库的库存集合（仓库库存List，warehouse_id > 0）
   - 商品编辑时根据模式显示不同的UI（简单模式：单个库存输入框；高级模式：仓库库存列表）
-  - `warehouse_id` 允许为 NULL，NULL 值不受外键约束限制，语义清晰
+  - `warehouse_id=0` 表示总仓，不受外键约束限制，语义清晰
 - ✅ **完整的库存操作日志**：
   - `product_stock_logs` 表记录所有库存操作，支持多仓库场景
   - 记录操作前后的库存状态，便于追溯和审计

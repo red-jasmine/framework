@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id')->primary()->comment('SKU ID');
             $table->unsignedBigInteger('product_id')->default(0)->comment('商品ID');
 
-           
+
             $table->string('market', 64)->default('default')->comment('市场');
             // 注意：业务线（biz）是商家属性，不是商品属性，通过 owner 关联商家获取
             $table->string('owner_type', 64);
@@ -29,11 +29,12 @@ return new class extends Migration {
             $table->decimal('market_price', 12)->nullable()->comment('市场价');
             $table->decimal('cost_price', 12)->nullable()->comment('成本价');
 
-            // 库存
-            $table->bigInteger('stock')->default(0)->comment('库存');
-            $table->bigInteger('channel_stock')->default(0)->comment('渠道库存');
-            $table->bigInteger('lock_stock')->default(0)->comment('锁定库存');
-            $table->unsignedBigInteger('safety_stock')->default(0)->comment('安全库存');
+            // 库存（汇总数据，从 product_stocks 汇总而来，仅用于统计展示）
+            $table->bigInteger('stock')->default(0)->comment('总库存');
+            $table->bigInteger('available_stock')->default(0)->comment('总可用库存');
+            $table->bigInteger('locked_stock')->default(0)->comment('总锁定库存');
+            $table->bigInteger('reserved_stock')->default(0)->comment('总预留库存');
+
             // 信息
             $table->string('image')->nullable()->comment('主图');
             $table->string('sku')->nullable()->comment('SKU编码');
@@ -51,7 +52,7 @@ return new class extends Migration {
 
             // 销量
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
-            
+
             // 包装单位
             $table->unsignedBigInteger('package_quantity')->default(1)->comment('包内数量');
             $table->string('package_unit')->nullable()->comment('包装单位');
