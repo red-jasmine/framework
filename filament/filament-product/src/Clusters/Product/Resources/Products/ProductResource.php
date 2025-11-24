@@ -61,7 +61,7 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = ['variants', 'extension', 'extendProductGroups', 'tags'];
+        $findQuery->include = ['variants','variants.stocks', 'extension', 'extendProductGroups', 'tags'];
         return $findQuery;
     }
 
@@ -72,6 +72,7 @@ class ProductResource extends Resource
         foreach ($model->extension->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->extension->{$key});
         }
+
         //dd($model->variants->first()->toArray());
         //$model->setAttribute('variants', $model->variants->toArray());
 

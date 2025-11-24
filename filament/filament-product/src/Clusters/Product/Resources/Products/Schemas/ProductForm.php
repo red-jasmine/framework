@@ -245,7 +245,7 @@ class ProductForm
                                     ->columnSpanFull(),
 
                        Repeater::make('freight_templates')
-                           ->label(__('red-jasmine-product::product.fields.freight_templates'))
+                               ->label(__('red-jasmine-product::product.fields.freight_templates'))
                                ->addable(false)
                                ->deletable(false)
                                ->inlineLabel(false)
@@ -260,7 +260,7 @@ class ProductForm
                                ->schema([
                                    Select::make('shipping_type')
                                          ->useEnum(ShippingTypeEnum::class)
-                                         // ->disabled( ) // 存在BUG TODO
+                                       // ->disabled( ) // 存在BUG TODO
                                          ->visible(true)
                                          ->distinct(),
                                    Select::make('freight_payer')
@@ -306,12 +306,22 @@ class ProductForm
                              ->live()
                              ->partiallyRenderComponentsAfterStateUpdated(['sale_attrs', 'variants'])
                              ->inline()
-                             ->default(0)
+                             ->default(false)
                              ->onIcon('heroicon-o-check-circle')
                              ->offIcon('heroicon-o-x-circle')
                              ->onColor('success')
                              ->offColor('gray')
-                             ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）'),
+                             ->helperText('开启后可以设置商品的多个规格（如颜色、尺码等）')
+                             ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
+                                 if ($state === false) {
+                                     $set('sale_attrs', []);
+                                     $set('variants', [static::defaultVariant()]);
+                                 } else {
+                                     $set('variants', []);
+                                     $set('sale_attrs', []);
+                                 }
+                             })
+                       ,
 
                        SaleAttrsRepeater::make('sale_attrs')
                                         ->partiallyRenderComponentsAfterStateUpdated(['variants'])
@@ -336,21 +346,13 @@ class ProductForm
 
                                                 $oldSku = collect($oldSku)->keyBy('attrs_sequence');
 
-                                                $variants = [];
+                                                $variants       = [];
+                                                $defaultVariant = static::defaultVariant();
                                                 foreach ($crossJoin as $properties => $propertyName) {
-                                                    $sku               = $oldSku[$properties] ?? [
-                                                        'attrs_sequence' => $properties,
-                                                        'attrs_name'     => $propertyName,
-                                                        'image'          => null,
-                                                        'price'          => null,
-                                                        'market_price'   => null,
-                                                        'cost_price'     => null,
-                                                        'stock'          => null,
-                                                        'safety_stock'   => 0,
-                                                        'status'         => ProductStatusEnum::AVAILABLE->value,
-                                                    ];
-                                                    $sku['attrs_name'] = $propertyName;
-                                                    $variants[]        = $sku;
+                                                    $sku                   = $oldSku[$properties] ?? $defaultVariant;
+                                                    $sku['attrs_sequence'] = $properties;
+                                                    $sku['attrs_name']     = $propertyName;
+                                                    $variants[]            = $sku;
                                                 }
 
                                                 $set('variants', $variants, shouldCallUpdatedHooks: true);
@@ -363,8 +365,33 @@ class ProductForm
                                             ->live()
                                             ->label(__('red-jasmine-product::product.fields.currency')),
 
-                       static::variants()->deletable(false),
+                       static::variants()
+                             ->default([
+                                 static::defaultVariant(),
+                             ])
+                             ->deletable(false),
                    ]),
+        ];
+    }
+
+    public static function defaultVariant() : array
+    {
+        return [
+            'attrs_sequence' => '',
+            'attrs_name'     => '',
+            'image'          => null,
+            'price'          => null,
+            'market_price'   => null,
+            'cost_price'     => null,
+            'stocks'         => [
+                [
+                    'warehouse_id' => 0,
+                    'stock'        => 0,
+                    'safety_stock' => 0,
+                ]
+            ],
+
+            'status' => ProductStatusEnum::AVAILABLE->value,
         ];
     }
 
@@ -373,6 +400,7 @@ class ProductForm
      */
     protected static function variants() : Repeater
     {
+        return VariantsRepeater::make('variants');
         return Repeater::make('variants')
                        ->relationship('variants')
                        ->dehydrated()
