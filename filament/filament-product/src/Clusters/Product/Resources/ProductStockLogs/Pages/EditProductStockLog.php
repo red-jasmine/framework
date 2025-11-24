@@ -1,11 +1,10 @@
 <?php
 
-namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource\Pages;
+namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogs\Pages;
 
 use Filament\Actions\DeleteAction;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogResource;
+use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductStockLogs\ProductStockLogResource;
 
 class EditProductStockLog extends EditRecord
 {
