@@ -401,69 +401,7 @@ class ProductForm
     protected static function variants() : Repeater
     {
         return VariantsRepeater::make('variants');
-        return Repeater::make('variants')
-                       ->relationship('variants')
-                       ->dehydrated()
-                       ->saveRelationshipsUsing(null)
-                       ->label(__('red-jasmine-product::product.fields.variants'))
-                       ->table([
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.stock'))->markAsRequired(),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
-                           Repeater\TableColumn::make('更多')->width('120px'),
-                       ])
-                       ->schema([
-                           Hidden::make('attrs_sequence'),
-                           FileUpload::make('image')->image()->panelLayout('compact'),
-                           TextInput::make('attrs_name')->readOnly(),
-                           TextInput::make('sku'),
-                           TextInput::make('price')->required()
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('stock')->minValue(0)->integer()->required(),
-                           TextInput::make('market_price')
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('cost_price')
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('safety_stock')->numeric()->default(0),
-                           TextInput::make('package_unit')
-                                    ->label(__('red-jasmine-product::product.fields.package_unit'))
-                                    ->maxLength(32)
-                                    ->placeholder('SKU的包装单位:件/个/套/箱'),
-                           TextInput::make('package_quantity')
-                                    ->label(__('red-jasmine-product::product.fields.package_quantity'))
-                                    ->integer()
-                                    ->default(1)
-                                    ->minValue(1)
-                                    ->placeholder('每个包装单位包含的数量'),
-                           TextInput::make('barcode')->maxLength(32),
-                           TextInput::make('weight')->suffix('KG'),
-                           Select::make('status')
-                                 ->selectablePlaceholder(false)
-                                 ->required()
-                                 ->default(ProductStatusEnum::AVAILABLE->value)
-                                 ->options(ProductStatusEnum::variantStatus()),
 
-                       ])
-                       ->inlineLabel(false)
-                       ->columnSpan('full')
-                       ->reorderable(false)
-                       ->addable(false);
     }
 
     /**

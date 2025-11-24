@@ -7,6 +7,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Stock\Models\ProductStock;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class StockAlarmWidget extends BaseWidget
@@ -31,11 +32,11 @@ class StockAlarmWidget extends BaseWidget
 
         return $table
             ->query(
-                Product::query()
+                ProductStock::query()
                     ->where('owner_type',$owner->getType())
                     ->where('owner_id', $owner->getId())
                     ->whereRaw('stock <= safety_stock')
-                    ->where('status', ProductStatusEnum::AVAILABLE)
+
                     ->orderBy('stock', 'asc')
                     ->limit(10)
             )

@@ -6,6 +6,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Stock\Models\ProductStock;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 
 class ProductStatsOverviewWidget extends BaseWidget
@@ -47,11 +48,10 @@ class ProductStatsOverviewWidget extends BaseWidget
             ->count();
 
         // 获取库存预警商品数量
-        $stockAlarmingProducts = Product::query()
+        $stockAlarmingProducts = ProductStock::query()
             ->where('owner_type',$owner->getType())
             ->where('owner_id', $owner->id)
             ->whereRaw('stock <= safety_stock')
-            ->where('status', ProductStatusEnum::AVAILABLE)
             ->count();
 
         return [
