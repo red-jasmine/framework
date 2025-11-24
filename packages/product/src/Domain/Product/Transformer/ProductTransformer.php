@@ -192,7 +192,7 @@ class ProductTransformer
         $product->price        = $variants->min('price');
         $product->market_price = $variants->min('market_price');
         $product->cost_price   = $variants->min('cost_price');
-        $product->safety_stock = $variants->sum('safety_stock');
+
 
     }
 
@@ -231,7 +231,6 @@ class ProductTransformer
         $variant->price        = $product->price ?? 0;
         $variant->cost_price   = $product->cost_price ?? null;
         $variant->market_price = $product->market_price ?? null;
-        $variant->safety_stock = $product->safety_stock ?? 0;
         $variant->image        = $product->image;
         // 同步变体货币：从商品表继承
         $variant->currency = $product->currency;

@@ -14,9 +14,9 @@ return [
         'product_id'    => '商品ID',
         'sku_id'        => '规格ID',
         'stock'         => '库存',
-        'lock_stock'    => '锁定库存',
-        'channel_type'  => '渠道类型',
-        'channel_id'    => '渠道ID',
+        'priority'      => '优先级',
+
+
         'creator_type'  => '创建者类型',
         'creator_id'    => '创建者UID',
     ],

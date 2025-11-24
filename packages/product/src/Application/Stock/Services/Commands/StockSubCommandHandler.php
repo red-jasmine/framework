@@ -23,11 +23,9 @@ class StockSubCommandHandler extends StockCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $sku = $this->repository->find($command->skuId);
+            $sku = $this->repository->add($command->variantId, $command->warehouseId, $command->actionStock);
 
-            $sku = $this->repository->sub($sku, $command->actionStock);
-
-            $this->log($sku, $command);
+            $this->addLog($sku, $command);
 
             $this->commitDatabaseTransaction();
 

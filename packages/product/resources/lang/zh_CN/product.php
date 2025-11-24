@@ -62,6 +62,7 @@ return [
         'order_quantity_limit_num'  => '限制数量',
         'sub_stock'                 => '减库存方式',
         'stock'                     => '库存',
+        'stocks'                    => '库存',
         'lock_stock'                => '锁定库存',
         'safety_stock'              => '安全库存',
         'sales'                     => '销量',
@@ -121,8 +122,8 @@ return [
     ],
 
     'commands' => [
-        'listing' => '上架',
-        'removal' => '下架',
+        'listing'        => '上架',
+        'removal'        => '下架',
         'price_settings' => '价格设置',
     ],
 

@@ -23,9 +23,8 @@ class StockAddCommandHandler extends StockCommandHandler
         $this->beginDatabaseTransaction();
 
         try {
-            $sku = $this->repository->find($command->skuId);
-            $sku = $this->repository->add($sku, $command->actionStock);
-            $this->log($sku,  $command);
+            $sku = $this->repository->add($command->variantId, $command->warehouseId, $command->actionStock);
+            $this->addLog($sku, $command);
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {
             $this->rollBackDatabaseTransaction();

@@ -222,11 +222,6 @@ class Product extends Data
      */
     public ?Form $form = null;
 
-
-    // 如果 启用了多规格那么就使用规格中的数据
-    public int $stock = 0;
-
-    public int $safetyStock = 0;
     /**
      * 商品价格货币
      * @var Currency

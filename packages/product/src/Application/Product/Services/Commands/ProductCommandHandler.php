@@ -7,10 +7,13 @@ use RedJasmine\Product\Application\Brand\Services\BrandApplicationService;
 use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationService;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockActionCommand;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
+use RedJasmine\Product\Application\Stock\Services\Commands\StockSetCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\AttributeFormatter;
+use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Services\ProductDomainService;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
@@ -53,26 +56,30 @@ class ProductCommandHandler extends CommandHandler
     {
 
 
-        $skuCommand = $command->variants?->keyBy('properties');
+        $variantsCommands = $command->variants->keyBy('properties');
 
-        foreach ($product->variants as $sku) {
+
+        foreach ($product->variants as $variant) {
 
             // 修改库存 把 删除的库存设置为 0
-            if ($sku->deleted_at) {
-                $stock = 0;
-            } else {
-                $stock = $skuCommand[$sku->properties]?->stock ?? $command->stock;
+            if ($variant->deleted_at) {
+                $variant->stock = 0;
             }
-
-            $stockCommand              = new StockCommand();
-            $stockCommand->productId   = $sku->product_id;
-            $stockCommand->actionType  = ProductStockActionTypeEnum::RESET;
-            $stockCommand->skuId       = $sku->id;
-            $stockCommand->actionStock = $stock;
-            $stockCommand->changeType  = ProductStockChangeTypeEnum::SELLER;
-
-            // 设置库存
-            $this->stockCommandService->reset($stockCommand);
+            /**
+             * @var Variant $variantCommand
+             */
+            $variantCommand = $variantsCommands[$variant->properties];
+            foreach ($variantCommand->stocks as $stockData) {
+                // 设置库存
+                $stockCommand              = new StockSetCommand();
+                $stockCommand->owner       = $variant->owner;
+                $stockCommand->productId   = $variant->product_id;
+                $stockCommand->variantId   = $variant->id;
+                $stockCommand->warehouseId = $stockData->warehouseId;
+                $stockCommand->actionType  = ProductStockActionTypeEnum::RESET;
+                $stockCommand->actionStock = $stockData->stock;
+                $this->stockCommandService->reset($stockCommand);
+            }
         }
     }
 

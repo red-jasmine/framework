@@ -3,7 +3,9 @@
 namespace RedJasmine\Product\Application\Stock\Services\Commands;
 
 use RedJasmine\Product\Application\Stock\Services\CommandHandlers\Exception;
+use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
+use RedJasmine\Product\Domain\Stock\Models\ProductStock;
 use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Domain\Stock\Models\ProductStockLog;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
@@ -17,11 +19,54 @@ abstract class StockCommandHandler extends CommandHandler
 {
 
     public function __construct(
-        protected ProductSkuRepositoryInterface $repository
+
+        protected StockApplicationService $service,
+
     ) {
-        $this->context = new HandleContext();
+        $this->repository = $this->service->repository;
+        $this->context    = new HandleContext();
     }
 
+    /**
+     * 添加库存记录
+     *
+     * @param  ProductStock  $productStock
+     * @param  StockCommand  $command
+     *
+     * @return void
+     */
+    public function addLog(ProductStock $productStock, StockCommand $command) : void
+    {
+        $log                  = new ProductStockLog;
+        $log->owner           = $productStock->owner;
+        $log->product_id      = $productStock->product_id;
+        $log->variant_id      = $productStock->variant_id;
+        $log->warehouse_id    = $productStock->warehouse_id;
+        $log->business_type   = $command->businessType;
+        $log->business_no     = $command->businessNo;
+        $log->business_detail = $command->businessNo;
+
+
+        $log->action_type  = $command->actionType;
+        $log->action_stock = $command->actionStock;
+        $log->creator      = ServiceContext::getOperator();
+
+
+        $log->after_stock           = $productStock->stock;
+        $log->after_available_stock = $productStock->available_stock;
+        $log->after_locked_stock    = $productStock->locked_stock;
+        $log->after_reserved_stock  = $productStock->reserved_stock;
+
+
+        $log->before_stock           = $productStock->getOriginal('stock');
+        $log->before_available_stock = $productStock->getOriginal('available_stock');
+        $log->before_locked_stock    = $productStock->getOriginal('locked_stock');
+        $log->before_reserved_stock  = $productStock->getOriginal('reserved_stock');
+
+        $this->service->logRepository->store($log);
+
+
+    }
 
     /**
      * @param  StockCommand  $command
@@ -51,74 +96,6 @@ abstract class StockCommandHandler extends CommandHandler
             throw new StockException('操作库存 数量必须大于 0');
         }
         return $quantity;
-    }
-
-    /**
-     * 记录
-     *
-     * @param  ProductVariant  $sku
-     * @param  StockCommand  $command
-     * @param  int|null  $restStock
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function log(
-        ProductVariant $sku,
-        StockCommand $command,
-        ?int $restStock = 0
-    ) : void {
-
-        $log                = new ProductStockLog;
-        $log->owner         = $sku->owner;
-        $log->product_id    = $command->productId;
-        $log->sku_id        = $command->skuId;
-        $log->change_type   = $command->changeType;
-        $log->change_detail = $command->changeDetail;
-        //$log->channel_type  = $command->channelType;
-        //$log->channel_id    = $command->channelId;
-        $log->action_type = $command->actionType;
-        $log->creator     = ServiceContext::getOperator();
-
-        $log->after_lock_stock  = $sku->lock_stock;
-        $log->before_lock_stock = $sku->getOldLockStock();
-        $log->after_stock       = $sku->stock;
-        $log->before_stock      = $sku->getOldStock();
-
-        switch ($command->actionType) {
-            case ProductStockActionTypeEnum::ADD:
-                $log->action_stock = $command->actionStock;
-                $log->lock_stock   = 0;
-                break;
-            case ProductStockActionTypeEnum::RESET:
-                $log->action_stock = $restStock;
-                $log->lock_stock   = 0;
-                break;
-            case ProductStockActionTypeEnum::SUB:
-                $log->action_stock = -$command->actionStock;
-                $log->lock_stock   = 0;
-                break;
-            case ProductStockActionTypeEnum::LOCK:
-                $log->action_stock = -$command->actionStock;
-                $log->lock_stock   = $command->actionStock;
-                break;
-            case ProductStockActionTypeEnum::UNLOCK:
-                $log->action_stock = $command->actionStock;
-                $log->lock_stock   = -$command->actionStock;
-                break;
-            case ProductStockActionTypeEnum::CONFIRM:
-                $log->action_stock = 0;
-                $log->lock_stock   = -$command->actionStock;
-        }
-
-        $hasLog = true;
-        if ($command->actionType === ProductStockActionTypeEnum::RESET && $restStock === 0) {
-            $hasLog = false;
-        }
-        if ($hasLog) {
-            $this->repository->log($log);
-        }
-
     }
 
 

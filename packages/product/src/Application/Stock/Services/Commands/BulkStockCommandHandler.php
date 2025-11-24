@@ -34,30 +34,23 @@ class BulkStockCommandHandler extends StockCommandHandler
                 }
                 switch ($stockCommand->actionType) {
 
+                    case ProductStockActionTypeEnum::SUB:
                     case ProductStockActionTypeEnum::ADD:
                         if ($stockCommand->actionStock === 0) {
                             continue 2;
                         }
-                        $this->repository->add($sku, $stockCommand->actionStock);
+                        $sku = $this->repository->add($stockCommand->variantId, $stockCommand->warehouseId, $stockCommand->actionStock);
+
                         break;
                     case ProductStockActionTypeEnum::RESET:
+                        $sku = $this->repository->add($stockCommand->variantId, $stockCommand->warehouseId, $stockCommand->actionStock);
 
-                        $sku = $this->repository->reset($sku, $stockCommand->actionStock);
-                        $restStock = (int)bcsub($sku->stock,$sku->getOldStock(),0);
                         break;
-                    case ProductStockActionTypeEnum::SUB:
-                        if ($stockCommand->actionStock === 0) {
-                            continue 2;
-                        }
-                        $this->repository->sub($sku, $stockCommand->actionStock);
-                        break;
-                    case ProductStockActionTypeEnum::LOCK:
-                    case ProductStockActionTypeEnum::UNLOCK:
-                    case ProductStockActionTypeEnum::CONFIRM:
+                    default:
                         throw new RuntimeException('To be implemented');
                 }
 
-                $this->log($sku, $stockCommand, $restStock);
+                $this->addLog($sku, $stockCommand);
 
             }
             $this->commitDatabaseTransaction();

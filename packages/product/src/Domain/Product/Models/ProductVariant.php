@@ -2,14 +2,17 @@
 
 namespace RedJasmine\Product\Domain\Product\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Money\Casts\CurrencyCast;
+use RedJasmine\Product\Domain\Price\Models\ProductVariantPrice;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Money\Casts\MoneyCast;
+use RedJasmine\Product\Domain\Stock\Models\ProductStock;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -51,9 +54,9 @@ class ProductVariant extends Model implements OperatorInterface
      * 变体价格列表
      * @return HasMany
      */
-    public function prices() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function prices() : HasMany
     {
-        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductVariantPrice::class, 'variant_id', 'id');
+        return $this->hasMany(ProductVariantPrice::class, 'variant_id', 'id');
     }
 
     public function setDeleted() : void
@@ -73,6 +76,11 @@ class ProductVariant extends Model implements OperatorInterface
         $this->status     = ProductStatusEnum::AVAILABLE;
         $this->deleted_at = null;
 
+    }
+
+    public function stocks() : HasMany
+    {
+        return $this->hasMany(ProductStock::class, 'variant_id', 'id');
     }
 
     protected function casts() : array

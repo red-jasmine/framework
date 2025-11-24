@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 
 use RedJasmine\Money\Data\Money;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Stock\Data\WarehouseStockData;
 use RedJasmine\Support\Data\Data;
 
 
@@ -46,8 +47,11 @@ class Variant extends Data
      */
     public ?string $barcode = null;
 
-    public int $stock       = 0;
-    public int $safetyStock = 0;
+
+    /**
+     * @var WarehouseStockData[]
+     */
+    public array $stocks = [];
 
     // 包装单位（可选）
     public ?string $packageUnit = null;

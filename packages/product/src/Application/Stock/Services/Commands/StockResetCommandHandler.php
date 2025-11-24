@@ -13,20 +13,28 @@ class StockResetCommandHandler extends StockCommandHandler
      * @throws AbstractException
      * @throws Throwable
      */
-    public function handle(StockCommand $command) : void
+    public function handle(StockSetCommand $command) : void
     {
         $command->actionType = ProductStockActionTypeEnum::RESET;
         $this->context->setCommand($command);
 
         $this->validate($command);
+
+
         $this->beginDatabaseTransaction();
 
         try {
-            $sku       = $this->repository->find($command->skuId);
-            $sku       = $this->repository->reset($sku, $command->actionStock);
 
-            $restStock = (int) bcsub($sku->stock, $sku->getOldStock(), 0);
-            $this->log($sku, $command, $restStock);
+            $sku = $this->repository->reset(
+                $command->variantId,
+                $command->warehouseId,
+                $command->actionStock,
+                $command->productId,
+                $command->owner->getType(),
+                $command->owner->getID(),
+            );
+
+            $this->addLog($sku, $command);
 
             $this->commitDatabaseTransaction();
         } catch (AbstractException $exception) {

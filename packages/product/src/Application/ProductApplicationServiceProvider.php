@@ -13,21 +13,21 @@ use RedJasmine\Product\Domain\Price\Repositories\ProductPriceRepositoryInterface
 use RedJasmine\Product\Domain\Product\Repositories\ProductRepositoryInterface;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
 use RedJasmine\Product\Domain\Service\Repositories\ProductServiceRepositoryInterface;
-use RedJasmine\Product\Domain\Stock\Repositories\ProductSkuRepositoryInterface;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductStockLogRepositoryInterface;
+use RedJasmine\Product\Domain\Stock\Repositories\ProductStockRepositoryInterface;
 use RedJasmine\Product\Domain\Tag\Repositories\ProductTagRepositoryInterface;
 use RedJasmine\Product\Infrastructure\Repositories\BrandRepository;
-use RedJasmine\Product\Infrastructure\Repositories\ProductCategoryRepository;
-use RedJasmine\Product\Infrastructure\Repositories\ProductGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductAttributeGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductAttributeRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductAttributeValueRepository;
+use RedJasmine\Product\Infrastructure\Repositories\ProductCategoryRepository;
+use RedJasmine\Product\Infrastructure\Repositories\ProductGroupRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductPriceRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductSeriesRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductServiceRepository;
-use RedJasmine\Product\Infrastructure\Repositories\ProductSkuRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductStockLogRepository;
+use RedJasmine\Product\Infrastructure\Repositories\ProductStockRepository;
 use RedJasmine\Product\Infrastructure\Repositories\ProductTagRepository;
 
 class ProductApplicationServiceProvider extends ServiceProvider
@@ -45,7 +45,7 @@ class ProductApplicationServiceProvider extends ServiceProvider
         $this->app->bind(ProductServiceRepositoryInterface::class, ProductServiceRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductPriceRepositoryInterface::class, ProductPriceRepository::class);
-        $this->app->bind(ProductSkuRepositoryInterface::class, ProductSkuRepository::class);
+        $this->app->bind(ProductStockRepositoryInterface::class, ProductStockRepository::class);
         $this->app->bind(ProductStockLogRepositoryInterface::class, ProductStockLogRepository::class);
 
         // Relation::enforceMorphMap([

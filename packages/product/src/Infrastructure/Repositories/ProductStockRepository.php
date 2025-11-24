@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Product\Domain\Stock\Models\ProductStock;
+use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
 use RedJasmine\Product\Domain\Stock\Repositories\ProductStockRepositoryInterface;
 use RedJasmine\Product\Exceptions\StockException;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
@@ -104,8 +105,9 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
 
     /**
      * 锁定库存（下单时）
+     * @throws StockException
      */
-    public function lockStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function lock(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -114,7 +116,7 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
         }
 
         // 计算可用库存
-        $availableStock = max(0, $stock->stock - $stock->locked_stock - $stock->reserved_stock);
+        $availableStock = $stock->available_stock;
 
         if ($availableStock < $quantity) {
             throw new StockException("库存不足，可用库存：{$availableStock}，需要：{$quantity}");
@@ -125,13 +127,13 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
         $this->updateAvailableStock($stock);
         $stock->save();
 
-        return $stock->fresh();
+        return $stock;
     }
 
     /**
      * 解锁库存（订单取消时）
      */
-    public function unlockStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function unlock(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -148,14 +150,14 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
         $this->updateAvailableStock($stock);
         $stock->save();
 
-        return $stock->fresh();
+        return $stock;
     }
 
     /**
      * 预留库存（支付成功时）
      * 将锁定库存转为预留库存
      */
-    public function reserveStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function reserve(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -180,7 +182,7 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
      * 扣减库存（发货后）
      * 扣减总库存和预留库存
      */
-    public function deductStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function deduct(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -204,7 +206,7 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
     /**
      * 增加库存
      */
-    public function addStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function add(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -217,14 +219,14 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
         $this->updateAvailableStock($stock);
         $stock->save();
 
-        return $stock->fresh();
+        return $stock;
     }
 
     /**
-     * 重置库存
-     * 设置总库存和可用库存为指定值
+     * 减少库存
+     * @throws StockException
      */
-    public function resetStock(int $variantId, int $warehouseId, int $stockValue) : ProductStock
+    public function sub(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 
@@ -232,20 +234,120 @@ class ProductStockRepository extends Repository implements ProductStockRepositor
             throw new StockException("库存记录不存在：变体ID={$variantId}, 仓库ID={$warehouseId}");
         }
 
-        // 重置库存：设置 stock 为指定值
-        // 注意：locked_stock 和 reserved_stock 保持不变
-        $stock->stock = $stockValue;
+        // 增加库存：stock += quantity
+        $stock->stock += $quantity;
         $this->updateAvailableStock($stock);
         $stock->save();
 
-        return $stock->fresh();
+        return $stock;
+    }
+
+    /**
+     * 重置库存
+     * 设置总库存和可用库存为指定值
+     * 如果库存记录不存在，会自动创建一条新记录
+     *
+     * @param  int  $variantId  变体ID（SKU ID）
+     * @param  int  $warehouseId  仓库ID（0表示总仓/默认仓库）
+     * @param  int  $stockValue  库存数量
+     * @param  int|null  $productId  商品ID（创建库存记录时需要，可选）
+     * @param  string|null  $ownerType  所有者类型（创建库存记录时需要，可选）
+     * @param  string|null  $ownerId  所有者ID（创建库存记录时需要，可选）
+     *
+     * @return ProductStock 重置后的库存记录
+     * @throws StockException
+     */
+    public function reset(
+        int $variantId,
+        int $warehouseId,
+        int $stockValue,
+        ?int $productId = null,
+        ?string $ownerType = null,
+        ?string $ownerId = null
+    ) : ProductStock {
+        $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
+
+        if (!$stock) {
+            // 如果库存记录不存在，创建一条新记录
+            $stock = $this->createStockRecord(
+                $variantId,
+                $warehouseId,
+                $stockValue,
+                $productId,
+                $ownerType,
+                $ownerId
+            );
+        } else {
+            // 重置库存：设置 stock 为指定值
+            // 注意：locked_stock 和 reserved_stock 保持不变
+            $stock->stock = $stockValue;
+            $this->updateAvailableStock($stock);
+            $stock->save();
+        }
+
+        return $stock;
+    }
+
+    /**
+     * 创建库存记录
+     * 用于首次为某个变体在指定仓库创建库存记录
+     *
+     * @param  int  $variantId  变体ID（SKU ID）
+     * @param  int  $warehouseId  仓库ID（0表示总仓/默认仓库）
+     * @param  int  $stockValue  初始库存值
+     * @param  int|null  $productId  商品ID（可选，未提供时从变体查询）
+     * @param  string|null  $ownerType  所有者类型（可选，未提供时从变体查询）
+     * @param  string|null  $ownerId  所有者ID（可选，未提供时从变体查询）
+     *
+     * @return ProductStock 创建的库存记录
+     * @throws StockException 变体不存在或必要信息缺失时抛出异常
+     */
+    protected function createStockRecord(
+        int $variantId,
+        int $warehouseId,
+        int $stockValue,
+        ?int $productId = null,
+        ?string $ownerType = null,
+        ?string $ownerId = null
+    ) : ProductStock {
+        // 如果必要信息未提供，则从变体查询（向后兼容，但不推荐）
+        if ($productId === null || $ownerType === null || $ownerId === null) {
+            $variant = ProductVariant::withTrashed()
+                ->lockForUpdate()
+                ->find($variantId);
+
+            if (!$variant) {
+                throw new StockException("变体不存在：变体ID={$variantId}");
+            }
+
+            $productId = $productId ?? $variant->product_id;
+            $ownerType = $ownerType ?? $variant->owner_type;
+            $ownerId = $ownerId ?? $variant->owner_id;
+        }
+
+        // 创建库存记录
+        $stock = new ProductStock();
+        $stock->product_id = $productId;
+        $stock->variant_id = $variantId;
+        $stock->warehouse_id = $warehouseId;
+        $stock->owner_type = $ownerType;
+        $stock->owner_id = $ownerId;
+        $stock->stock = $stockValue;
+        $stock->available_stock = $stockValue; // 初始时 locked_stock 和 reserved_stock 为 0
+        $stock->locked_stock = 0;
+        $stock->reserved_stock = 0;
+        $stock->safety_stock = 0;
+        $stock->is_active = true;
+        $stock->save();
+
+        return $stock;
     }
 
     /**
      * 释放库存（订单取消时，释放预留库存）
      * 将预留库存转回可用库存
      */
-    public function releaseStock(int $variantId, int $warehouseId, int $quantity) : ProductStock
+    public function release(int $variantId, int $warehouseId, int $quantity) : ProductStock
     {
         $stock = $this->findByVariantAndWarehouseLock($variantId, $warehouseId);
 

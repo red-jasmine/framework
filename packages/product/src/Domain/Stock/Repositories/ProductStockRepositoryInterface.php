@@ -91,7 +91,7 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      * @return ProductStock 锁定后的库存记录
      * @throws StockException 库存不足时抛出异常
      */
-    public function lockStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function lock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 
     /**
      * 解锁库存（订单取消时）
@@ -103,7 +103,7 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      * @return ProductStock 解锁后的库存记录
      * @throws StockException 锁定库存不足时抛出异常
      */
-    public function unlockStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function unlock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 
     /**
      * 预留库存（支付成功时）
@@ -116,7 +116,7 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      * @return ProductStock 预留后的库存记录
      * @throws StockException 锁定库存不足时抛出异常
      */
-    public function reserveStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function reserve(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 
     /**
      * 扣减库存（发货后）
@@ -129,7 +129,7 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      * @return ProductStock 扣减后的库存记录
      * @throws StockException 预留库存不足时抛出异常
      */
-    public function deductStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function deduct(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 
     /**
      * 增加库存
@@ -140,19 +140,39 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      *
      * @return ProductStock 增加后的库存记录
      */
-    public function addStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function add(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+
+    /**
+     * @param  int  $variantId
+     * @param  int  $warehouseId
+     * @param  int  $quantity
+     *
+     * @return ProductStock
+     */
+    public function sub(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 
     /**
      * 重置库存
      * 设置总库存和可用库存为指定值
+     * 如果库存记录不存在，会自动创建一条新记录
      *
      * @param  int  $variantId  变体ID（SKU ID）
      * @param  int  $warehouseId  仓库ID（0表示总仓/默认仓库）
      * @param  int  $stock  库存数量
+     * @param  int  $productId  商品ID（创建库存记录时需要，可选）
+     * @param  string  $ownerType  所有者类型（创建库存记录时需要，可选）
+     * @param  string  $ownerId  所有者ID（创建库存记录时需要，可选）
      *
      * @return ProductStock 重置后的库存记录
      */
-    public function resetStock(int $variantId, int $warehouseId, int $stock) : ProductStock;
+    public function reset(
+        int $variantId,
+        int $warehouseId,
+        int $stock,
+        int $productId,
+        string $ownerType,
+        string $ownerId
+    ) : ProductStock;
 
     /**
      * 释放库存（订单取消时，释放预留库存）
@@ -165,5 +185,5 @@ interface ProductStockRepositoryInterface extends RepositoryInterface
      * @return ProductStock 释放后的库存记录
      * @throws StockException 预留库存不足时抛出异常
      */
-    public function releaseStock(int $variantId, int $warehouseId, int $quantity) : ProductStock;
+    public function release(int $variantId, int $warehouseId, int $quantity) : ProductStock;
 }

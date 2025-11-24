@@ -22,10 +22,12 @@ return new class extends Migration {
             $table->bigInteger('available_stock')->default(0)->comment('可用库存');
             $table->bigInteger('locked_stock')->default(0)->comment('锁定库存');
             $table->bigInteger('reserved_stock')->default(0)->comment('预留库存');
-            $table->bigInteger('safety_stock')->default(0)->comment('安全库存');
+
 
             // ========== 库存状态 ==========
             $table->boolean('is_active')->default(true)->comment('是否启用');
+            $table->unsignedInteger('priority')->default(0)->comment('优先级');
+            $table->bigInteger('safety_stock')->default(0)->comment('安全库存');
 
             // ========== 操作信息 ==========
             $table->operator();
