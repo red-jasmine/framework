@@ -13,14 +13,7 @@ return new class extends Migration {
             $table->string('owner_id',64);
             $table->string('name')->comment('系列名称');
             $table->string('remarks')->nullable()->comment('备注');
-            $table->unsignedBigInteger('version')->default(0)->comment('版本');
-            $table->string('creator_type', 64)->nullable();
-            $table->string('creator_id', 64)->nullable();
-            $table->string('creator_nickname', 64)->nullable();
-            $table->string('updater_type', 64)->nullable();
-            $table->string('updater_id', 64)->nullable();
-            $table->string('updater_nickname', 64)->nullable();
-            $table->timestamps();
+            $table->operator();
             $table->comment('商品-系列表');
         });
     }
