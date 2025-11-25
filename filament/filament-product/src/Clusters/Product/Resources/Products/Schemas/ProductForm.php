@@ -83,17 +83,26 @@ class ProductForm
             Owner::make(),
 
 
-            Section::make('商品类型')
+            Section::make('商品基本信息')
                    ->description('设置商品的基本信息和分类')
                    ->icon('heroicon-o-information-circle')
                    ->columns(2)
                    ->schema([
+                       TextInput::make('title')
+                                ->label(__('red-jasmine-product::product.fields.title'))
+                                ->required()
+                                ->maxLength(60)
+                                ->placeholder('请输入商品标题，建议60字以内')
+                                ->helperText('商品标题将在商品列表和详情页展示')
+                                ->prefixIcon('heroicon-o-document-text')
+                                ->columnSpanFull(),
+
                        ToggleButtons::make('product_type')
                                     ->label(__('red-jasmine-product::product.fields.product_type'))
                                     ->required()
                                     ->inline()
                                     ->live()
-                                    ->default(ProductTypeEnum::PHYSICAL->value)
+                                    ->default(ProductTypeEnum::VIRTUAL->value)
                                     ->icons(ProductTypeEnum::icons())
                                     ->useEnum(ProductTypeEnum::class)
                                     ->helperText('选择商品类型：实物商品需要物流配送，虚拟商品无需物流')
@@ -185,11 +194,10 @@ class ProductForm
                                     ->inline()
                                     ->multiple()
                                     ->icons(ShippingTypeEnum::icons())
+                                    ->default([ShippingTypeEnum::DUMMY])
                                     ->options(fn(Get $get) => collect(ShippingTypeEnum::options())->only(array_map(function ($type) {
-                                            return $type->value;
-                                        }, ProductTypeEnum::tryFrom($get('product_type')?->value)->shippingTypes())
-                                    )->toArray()
-                                    )
+                                        return $type->value;
+                                    }, ProductTypeEnum::tryFrom($get('product_type')?->value)->shippingTypes()))->toArray())
                                     ->required()
                                     ->live()
                                     ->helperText('选择支持的发货方式')
@@ -241,7 +249,7 @@ class ProductForm
                                ->schema([
                                    Select::make('shipping_type')
                                          ->useEnum(ShippingTypeEnum::class)
-                                       // ->disabled( ) // 存在BUG TODO
+                                         ->disabled( ) // 存在BUG TODO
                                          ->visible(true)
                                          ->distinct(),
                                    Select::make('freight_payer')
@@ -698,14 +706,7 @@ class ProductForm
                       ->icon('heroicon-o-information-circle')
                       ->columns(2)
                       ->schema([
-                          TextInput::make('title')
-                                   ->label(__('red-jasmine-product::product.fields.title'))
-                                   ->required()
-                                   ->maxLength(60)
-                                   ->placeholder('请输入商品标题，建议60字以内')
-                                   ->helperText('商品标题将在商品列表和详情页展示')
-                                   ->prefixIcon('heroicon-o-document-text')
-                                   ->columnSpanFull(),
+
                           TextInput::make('slogan')
                                    ->label(__('red-jasmine-product::product.fields.slogan'))
                                    ->maxLength(255)
