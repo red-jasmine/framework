@@ -70,7 +70,6 @@ class ProductTransformer
         $product->min_limit                 = $command->minLimit;
         $product->max_limit                 = $command->maxLimit;
         $product->step_limit                = $command->stepLimit;
-        $product->sub_stock                 = $command->subStock;
         $product->delivery_time             = $command->deliveryTime;
         $product->order_quantity_limit_type = $command->orderQuantityLimitType;
         $product->order_quantity_limit_num  = $command->orderQuantityLimitNum;

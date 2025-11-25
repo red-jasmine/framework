@@ -8,7 +8,6 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 
 return new class extends Migration {
     public function up() : void
@@ -66,7 +65,6 @@ return new class extends Migration {
 
 
             // 库存
-            $table->string('sub_stock', 32)->comment(SubStockTypeEnum::comments('减库存方式'));
             // 商品级别库存制作统计使用
             $table->bigInteger('stock')->default(0)->comment('总库存');
             $table->bigInteger('available_stock')->default(0)->comment('总可用库存');

@@ -14,7 +14,6 @@ use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
 use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
@@ -55,11 +54,8 @@ class Product extends Data
 
     public ?string $spu;
 
-    // 产品状态，默认为“在售”
+    // 产品状态，默认为"在售"
     public ProductStatusEnum $status = ProductStatusEnum::AVAILABLE;
-
-    // 库存子类型，默认为“默认”
-    public SubStockTypeEnum $subStock = SubStockTypeEnum::DEFAULT;
 
     // 是否单独下单
     public bool $isAloneOrder = false;

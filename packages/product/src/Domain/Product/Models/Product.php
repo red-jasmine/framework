@@ -24,7 +24,6 @@ use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\Enums\SubStockTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Extensions\ProductExtension;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
@@ -222,7 +221,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'product_type'              => ProductTypeEnum::class,  // 商品类型
             'shipping_types'          => 'array',// 配送方式  可选，多个
             'status'                    => ProductStatusEnum::class,// 状态
-            'sub_stock'                 => SubStockTypeEnum::class,// 扣库存方式
             'freight_payer'             => FreightPayerEnum::class,// 运费承担方
             'has_variants'              => 'boolean',
             'is_brand_new'              => 'boolean',

@@ -30,7 +30,6 @@ class ProductResource extends JsonResource
             'price'                 => (string)$this->price,
             'market_price'          => $this->market_price?->value(),
             'cost_price'            => $this->cost_price?->value(),
-            'sub_stock'             => $this->sub_stock,
             'stock'                 => $this->stock,
             'channel_stock'         => $this->channel_stock,
             'lock_stock'            => $this->lock_stock,
