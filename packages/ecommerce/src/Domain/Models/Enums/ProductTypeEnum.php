@@ -21,18 +21,15 @@ enum ProductTypeEnum: string
 
     case COUPONS = 'coupons'; // 卡券
 
-    case FOOD = 'food'; // 食品
-
 
     public static function labels() : array
     {
         return [
-            self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
             self::VIRTUAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.virtual'),
+            self::PHYSICAL->value => __('red-jasmine-ecommerce::ecommerce.enums.product_type.goods'),
             self::DIGITAL->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.digital'),
             self::COUPONS->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.coupons'),
             self::SERVICE->value  => __('red-jasmine-ecommerce::ecommerce.enums.product_type.service'),
-            self::FOOD->value     => __('red-jasmine-ecommerce::ecommerce.enums.product_type.food'),
         ];
     }
 
@@ -44,7 +41,6 @@ enum ProductTypeEnum: string
             self::COUPONS->value  => 'emoji-admission-tickets',
             self::DIGITAL->value  => 'emoji-left-luggage',
             self::SERVICE->value  => 'emoji-woman-teacher',
-            self::FOOD->value     => 'emoji-steaming-bowl',
 
         ];
     }
@@ -96,11 +92,6 @@ enum ProductTypeEnum: string
                 ShippingTypeEnum::INSTORE,
                 ShippingTypeEnum::NONE,
 
-            ],
-
-            self::FOOD->value => [
-                ShippingTypeEnum::DELIVERY,
-                ShippingTypeEnum::INSTORE,
             ],
         ];
     }
