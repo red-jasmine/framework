@@ -25,7 +25,6 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use LaraZeus\Quantity\Components\Quantity;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
@@ -52,13 +51,15 @@ class ProductForm
     public static function configure(Schema $form) : Schema
     {
         $schema = [
-            Tab::make('basic_info')->label(__('red-jasmine-product::product.labels.basic_info'))->columns(1)->schema(static::basicInfoFields()),
+            Tab::make('basic_info')
+               ->label(__('red-jasmine-product::product.labels.basic_info'))
+               ->columns(1)->schema(static::basicInfoFields()),
             Tab::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->schema(static::productAttributesFields()),
             Tab::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->schema(static::saleInfoFields()),
             Tab::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->schema(static::afterSalesServices()),
             Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->schema(static::descriptionFields()),
             Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->schema(static::operateFields()),
-            Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
+            //Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
             //Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
             Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->schema(static::otherFields()),
         ];
@@ -67,6 +68,7 @@ class ProductForm
             ->components([
                 Tabs::make(__('red-jasmine-product::product.labels.product'))
                     ->tabs($schema)
+                    ->vertical()
                     ->persistTabInQueryString(),
             ])
             ->inlineLabel(true)
@@ -81,7 +83,8 @@ class ProductForm
         return [
             Owner::make(),
 
-            Section::make('商品基础信息')
+
+            Section::make('商品类型')
                    ->description('设置商品的基本信息和分类')
                    ->icon('heroicon-o-information-circle')
                    ->columns(2)
@@ -102,29 +105,7 @@ class ProductForm
                                     })
                                     ->columnSpanFull(),
 
-                       TextInput::make('title')
-                                ->label(__('red-jasmine-product::product.fields.title'))
-                                ->required()
-                                ->maxLength(60)
-                                ->placeholder('请输入商品标题，建议60字以内')
-                                ->helperText('商品标题将在商品列表和详情页展示')
-                                ->prefixIcon('heroicon-o-document-text')
-                                ->columnSpanFull(),
 
-                       TextInput::make('slogan')
-                                ->label(__('red-jasmine-product::product.fields.slogan'))
-                                ->maxLength(255)
-                                ->placeholder('请输入商品卖点，吸引买家购买')
-                                ->helperText('卖点文案，建议突出商品特色和优势')
-                                ->prefixIcon('heroicon-o-megaphone')
-                                ->columnSpanFull(),
-                   ]),
-
-            Section::make('分类与品牌')
-                   ->description('设置商品的分类、品牌和分组')
-                   ->icon('heroicon-o-tag')
-                   ->columns(2)
-                   ->schema([
                        SelectTree::make('category_id')
                                  ->label(__('red-jasmine-product::product.fields.category_id'))
                                  ->relationship('category', 'name', 'parent_id')
@@ -171,6 +152,7 @@ class ProductForm
                                  ->helperText('选择商品分组，便于商品管理')
                                  ->searchable(),
                    ]),
+
             ...static::shippingFields(),
 
             ...static::specifications(),
@@ -643,6 +625,7 @@ class ProductForm
     protected static function descriptionFields() : array
     {
         return [
+            static::contents(),
             Section::make('商品图片')
                    ->description('上传商品主图、轮播图和视频')
                    ->icon('heroicon-o-photo')
@@ -708,6 +691,68 @@ class ProductForm
                                  ->columnSpanFull(),
                    ]),
         ];
+    }
+
+    public static function contents()
+    {
+        return Section::make('商品内容')
+                      ->icon('heroicon-o-information-circle')
+                      ->columns(2)
+                      ->schema([
+                          TextInput::make('title')
+                                   ->label(__('red-jasmine-product::product.fields.title'))
+                                   ->required()
+                                   ->maxLength(60)
+                                   ->placeholder('请输入商品标题，建议60字以内')
+                                   ->helperText('商品标题将在商品列表和详情页展示')
+                                   ->prefixIcon('heroicon-o-document-text')
+                                   ->columnSpanFull(),
+                          TextInput::make('slogan')
+                                   ->label(__('red-jasmine-product::product.fields.slogan'))
+                                   ->maxLength(255)
+                                   ->placeholder('请输入商品卖点，吸引买家购买')
+                                   ->helperText('卖点文案，建议突出商品特色和优势')
+                                   ->prefixIcon('heroicon-o-megaphone')
+                                   ->columnSpanFull(),
+
+
+                          TextInput::make('tips')
+                                   ->label(__('red-jasmine-product::product.fields.tips'))
+                                   ->maxLength(255)
+                                   ->placeholder('温馨提示或重要说明')
+                                   ->helperText('显示在商品详情页的提示信息')
+                                   ->prefixIcon('heroicon-o-information-circle')
+                                   ->columnSpanFull(),
+
+
+                          Section::make('搜索引擎优化')
+                                 ->description('优化商品在搜索引擎中的展示效果')
+                                 ->icon('heroicon-o-magnifying-glass')
+                                 ->columns(1)
+                                 ->columnSpanFull()
+                                 ->schema([
+                                     TextInput::make('meta_title')
+                                              ->label(__('red-jasmine-product::product.fields.meta_title'))
+                                              ->maxLength(255)
+                                              ->placeholder('商品SEO标题')
+                                              ->helperText('搜索引擎显示的标题，建议60字以内')
+                                              ->prefixIcon('heroicon-o-document-text'),
+
+                                     TextInput::make('meta_keywords')
+                                              ->label(__('red-jasmine-product::product.fields.meta_keywords'))
+                                              ->maxLength(255)
+                                              ->placeholder('关键词1, 关键词2, 关键词3')
+                                              ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
+                                              ->prefixIcon('heroicon-o-hashtag'),
+
+                                     Textarea::make('meta_description')
+                                             ->label(__('red-jasmine-product::product.fields.meta_description'))
+                                             ->maxLength(200)
+                                             ->placeholder('商品简短描述')
+                                             ->helperText('显示在搜索结果中的描述，建议120-160字')
+                                     ,
+                                 ]),
+                      ]);
     }
 
     /**
@@ -781,13 +826,6 @@ class ProductForm
                                         false => 'gray',
                                     ]),
 
-                       TextInput::make('tips')
-                                ->label(__('red-jasmine-product::product.fields.tips'))
-                                ->maxLength(255)
-                                ->placeholder('温馨提示或重要说明')
-                                ->helperText('显示在商品详情页的提示信息')
-                                ->prefixIcon('heroicon-o-information-circle')
-                                ->columnSpanFull(),
 
                        TextInput::make('gift_point')
                                 ->label(__('red-jasmine-product::product.fields.gift_point'))
@@ -799,15 +837,15 @@ class ProductForm
                                 ->prefixIcon('heroicon-o-gift')
                                 ->suffix('积分'),
 
-                       Quantity::make('vip')
-                               ->label(__('red-jasmine-product::product.fields.vip'))
-                               ->required()
-                               ->numeric()
-                               ->minValue(0)
-                               ->maxValue(10)
-                               ->default(0)
-                               ->helperText('购买需要的VIP等级，0表示无需VIP')
-                               ->suffix('级'),
+                       TextInput::make('vip')
+                                ->label(__('red-jasmine-product::product.fields.vip'))
+                                ->required()
+                                ->integer()
+                                ->minValue(0)
+                                ->maxValue(10)
+                                ->default(0)
+                                ->helperText('购买需要的VIP等级，0表示无需VIP')
+                                ->suffix('级'),
                    ]),
 
             Section::make('购买限制')
@@ -832,32 +870,32 @@ class ProductForm
                                     ->helperText('开启后，此商品需单独下单，不能与其他商品一起购买')
                                     ->columnSpanFull(),
 
-                       Quantity::make('min_limit')
-                               ->label(__('red-jasmine-product::product.fields.min_limit'))
-                               ->required()
-                               ->numeric()
-                               ->minValue(1)
-                               ->default(1)
-                               ->helperText('最少购买数量')
-                               ->suffix('件'),
+                       TextInput::make('min_limit')
+                                ->label(__('red-jasmine-product::product.fields.min_limit'))
+                                ->required()
+                                ->integer()
+                                ->minValue(1)
+                                ->default(1)
+                                ->helperText('最少购买数量')
+                                ->suffix('件'),
 
-                       Quantity::make('max_limit')
-                               ->label(__('red-jasmine-product::product.fields.max_limit'))
-                               ->required()
-                               ->numeric()
-                               ->minValue(0)
-                               ->default(0)
-                               ->helperText('最多购买数量，0表示不限制')
-                               ->suffix('件'),
+                       TextInput::make('max_limit')
+                                ->label(__('red-jasmine-product::product.fields.max_limit'))
+                                ->required()
+                                ->integer()
+                                ->minValue(0)
+                                ->default(0)
+                                ->helperText('最多购买数量，0表示不限制')
+                                ->suffix('件'),
 
-                       Quantity::make('step_limit')
-                               ->label(__('red-jasmine-product::product.fields.step_limit'))
-                               ->required()
-                               ->numeric()
-                               ->minValue(1)
-                               ->default(1)
-                               ->helperText('购买数量必须是此值的倍数')
-                               ->suffix('件'),
+                       TextInput::make('step_limit')
+                                ->label(__('red-jasmine-product::product.fields.step_limit'))
+                                ->required()
+                                ->integer()
+                                ->minValue(1)
+                                ->default(1)
+                                ->helperText('购买数量必须是此值的倍数')
+                                ->suffix('件'),
 
                        ToggleButtons::make('order_quantity_limit_type')
                                     ->label(__('red-jasmine-product::product.fields.order_quantity_limit_type'))
@@ -868,51 +906,17 @@ class ProductForm
                                     ->default(OrderQuantityLimitTypeEnum::UNLIMITED->value)
                                     ->columnSpanFull(),
 
-                       Quantity::make('order_quantity_limit_num')
-                               ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
-                               ->numeric()
-                               ->minValue(1)
-                               ->default(1)
-                               ->suffix('件')
-                               ->helperText('单次下单限购数量')
-                               ->required(fn(Get $get
-                               ) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
-                               ->hidden(fn(Get $get) => $get('order_quantity_limit_type') === OrderQuantityLimitTypeEnum::UNLIMITED->value),
-                   ]),
-        ];
-    }
-
-    /**
-     * SEO 字段
-     */
-    protected static function seoFields() : array
-    {
-        return [
-            Section::make('搜索引擎优化')
-                   ->description('优化商品在搜索引擎中的展示效果')
-                   ->icon('heroicon-o-magnifying-glass')
-                   ->columns(1)
-                   ->schema([
-                       TextInput::make('meta_title')
-                                ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                ->maxLength(255)
-                                ->placeholder('商品SEO标题')
-                                ->helperText('搜索引擎显示的标题，建议60字以内')
-                                ->prefixIcon('heroicon-o-document-text'),
-
-                       TextInput::make('meta_keywords')
-                                ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                ->maxLength(255)
-                                ->placeholder('关键词1, 关键词2, 关键词3')
-                                ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
-                                ->prefixIcon('heroicon-o-hashtag'),
-
-                       Textarea::make('meta_description')
-                               ->label(__('red-jasmine-product::product.fields.meta_description'))
-                               ->maxLength(200)
-                               ->placeholder('商品简短描述')
-                               ->helperText('显示在搜索结果中的描述，建议120-160字')
-                       ,
+                       TextInput::make('order_quantity_limit_num')
+                                ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
+                                ->integer()
+                                ->minValue(1)
+                                ->default(1)
+                                ->suffix('件')
+                                ->helperText('单次下单限购数量')
+                                ->required(fn(Get $get
+                                ) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
+                                ->hidden(fn(Get $get
+                                ) => $get('order_quantity_limit_type') === OrderQuantityLimitTypeEnum::UNLIMITED->value),
                    ]),
         ];
     }
@@ -982,6 +986,41 @@ class ProductForm
                      ->default(0),
 
             Operators::make(),
+        ];
+    }
+
+    /**
+     * SEO 字段
+     */
+    protected static function seoFields() : array
+    {
+        return [
+            Section::make('搜索引擎优化')
+                   ->description('优化商品在搜索引擎中的展示效果')
+                   ->icon('heroicon-o-magnifying-glass')
+                   ->columns(1)
+                   ->schema([
+                       TextInput::make('meta_title')
+                                ->label(__('red-jasmine-product::product.fields.meta_title'))
+                                ->maxLength(255)
+                                ->placeholder('商品SEO标题')
+                                ->helperText('搜索引擎显示的标题，建议60字以内')
+                                ->prefixIcon('heroicon-o-document-text'),
+
+                       TextInput::make('meta_keywords')
+                                ->label(__('red-jasmine-product::product.fields.meta_keywords'))
+                                ->maxLength(255)
+                                ->placeholder('关键词1, 关键词2, 关键词3')
+                                ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
+                                ->prefixIcon('heroicon-o-hashtag'),
+
+                       Textarea::make('meta_description')
+                               ->label(__('red-jasmine-product::product.fields.meta_description'))
+                               ->maxLength(200)
+                               ->placeholder('商品简短描述')
+                               ->helperText('显示在搜索结果中的描述，建议120-160字')
+                       ,
+                   ]),
         ];
     }
 
