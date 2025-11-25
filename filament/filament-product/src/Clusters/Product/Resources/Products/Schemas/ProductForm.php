@@ -388,6 +388,8 @@ class ProductForm
                     'warehouse_id' => 0,
                     'stock'        => 0,
                     'safety_stock' => 0,
+                    'is_active'    => 1,
+                    'priority'     => 0,
                 ]
             ],
 

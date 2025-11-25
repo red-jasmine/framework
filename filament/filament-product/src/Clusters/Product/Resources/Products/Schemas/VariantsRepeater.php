@@ -85,17 +85,28 @@ class VariantsRepeater extends Repeater
                     ->relationship('stocks')
                     ->dehydrated()
                     ->saveRelationshipsUsing(null)
-                    ->label('测试')
+                    ->label(__('red-jasmine-product::product.fields.stocks'))
                     ->schema([
                         FusedGroup::make(
                             [
                                 TextInput::make('warehouse_id')
-                                         ->distinct(true)
-                                         ->label('warehouse_id')->prefix('仓库')->default(0)->required(),
-                                TextInput::make('stock')->prefix('库存')->minValue(0)->integer()->required(),
-                                TextInput::make('safety_stock')->prefix('安全库存')->minValue(0)->integer()->required(),
+                                         ->distinct()
+                                         ->label(__('red-jasmine-product::product-stock.fields.warehouse_id'))
+                                         ->prefix(__('red-jasmine-product::product-stock.fields.warehouse_id'))
+                                         ->default(0)
+                                         ->required(),
+                                TextInput::make('stock')
+                                         ->prefix(__('red-jasmine-product::product-stock.fields.stock'))
+                                         ->minValue(0)
+                                         ->integer()
+                                         ->required(),
+                                TextInput::make('safety_stock')
+                                         ->prefix(__('red-jasmine-product::product-stock.fields.safety_stock'))
+                                         ->minValue(0)
+                                         ->integer()
+                                         ->required(),
                                 Select::make('is_active')
-                                      ->prefix('是否启用')
+                                      ->prefix(__('red-jasmine-product::product-stock.fields.is_active'))
                                       ->required()
                                       ->boolean()
                                       ->default(1)
