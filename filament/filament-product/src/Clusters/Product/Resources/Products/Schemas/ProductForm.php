@@ -28,7 +28,6 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
@@ -896,27 +895,6 @@ class ProductForm
                                 ->default(1)
                                 ->helperText('购买数量必须是此值的倍数')
                                 ->suffix('件'),
-
-                       ToggleButtons::make('order_quantity_limit_type')
-                                    ->label(__('red-jasmine-product::product.fields.order_quantity_limit_type'))
-                                    ->required()
-                                    ->live()
-                                    ->grouped()
-                                    ->useEnum(OrderQuantityLimitTypeEnum::class)
-                                    ->default(OrderQuantityLimitTypeEnum::UNLIMITED->value)
-                                    ->columnSpanFull(),
-
-                       TextInput::make('order_quantity_limit_num')
-                                ->label(__('red-jasmine-product::product.fields.order_quantity_limit_num'))
-                                ->integer()
-                                ->minValue(1)
-                                ->default(1)
-                                ->suffix('件')
-                                ->helperText('单次下单限购数量')
-                                ->required(fn(Get $get
-                                ) => $get('order_quantity_limit_type') !== OrderQuantityLimitTypeEnum::UNLIMITED->value)
-                                ->hidden(fn(Get $get
-                                ) => $get('order_quantity_limit_type') === OrderQuantityLimitTypeEnum::UNLIMITED->value),
                    ]),
         ];
     }

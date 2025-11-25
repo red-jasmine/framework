@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Field;
 use RedJasmine\Ecommerce\Domain\Form\Data\Form;
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
@@ -103,11 +102,6 @@ class Product extends Data
     // VIP等级
     public int $vip = 0;
 
-    // 订单数量限制类型
-    public OrderQuantityLimitTypeEnum $orderQuantityLimitType = OrderQuantityLimitTypeEnum::UNLIMITED;
-
-    // 订单数量限制数量（可选）
-    public ?int $orderQuantityLimitNum = null;
     // 积分
     public int $giftPoint = 0;
     // 是否热门

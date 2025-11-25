@@ -71,8 +71,6 @@ class ProductTransformer
         $product->max_limit                 = $command->maxLimit;
         $product->step_limit                = $command->stepLimit;
         $product->delivery_time             = $command->deliveryTime;
-        $product->order_quantity_limit_type = $command->orderQuantityLimitType;
-        $product->order_quantity_limit_num  = $command->orderQuantityLimitNum;
         $product->vip                       = $command->vip;
         $product->gift_point                = $command->giftPoint;
         $product->is_hot                    = $command->isHot;

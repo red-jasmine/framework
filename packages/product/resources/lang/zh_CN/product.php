@@ -58,8 +58,6 @@ return [
         'min_limit'                 => '起购量',
         'max_limit'                 => '限购量',
         'step_limit'                => '购买倍数',
-        'order_quantity_limit_type' => '下单限制',
-        'order_quantity_limit_num'  => '限制数量',
         'stock'                     => '库存',
         'stocks'                    => '库存',
         'lock_stock'                => '锁定库存',

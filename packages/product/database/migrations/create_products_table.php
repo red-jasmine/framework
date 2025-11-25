@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
@@ -50,8 +49,6 @@ return new class extends Migration {
 
             // 限购设置
             $table->unsignedTinyInteger('vip')->default(0)->comment('VIP');
-            $table->string('order_quantity_limit_type')->default(OrderQuantityLimitTypeEnum::UNLIMITED)->comment(OrderQuantityLimitTypeEnum::comments('下单数量限制类型'));
-            $table->unsignedBigInteger('order_quantity_limit_num')->default(0)->nullable()->comment('下单数量限制数量');
 
             // 商品统一价格货币
             $table->string('currency', 3)->default('CNY')->comment('货币');

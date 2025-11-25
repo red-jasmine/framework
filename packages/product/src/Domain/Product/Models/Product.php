@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderQuantityLimitTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
@@ -242,7 +241,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             'price'                     => MoneyCast::class.':currency,price,1',
             'market_price'              => MoneyCast::class.':currency,market_price,1',
             'cost_price'                => MoneyCast::class.':currency,cost_price,1',
-            'order_quantity_limit_type' => OrderQuantityLimitTypeEnum::class,
         ];
     }
 
