@@ -44,17 +44,80 @@
 - **实现方式**：基于 Laravel Translatable 包，封装为 `HasTranslations` Trait
 - **数据库设计**：主表 + 翻译表（1:N 关系）
 
+### 1.4 字段命名规范
+
+#### **富文本详情字段命名**
+
+根据主流开源电商平台的实践，统一使用 `description` 作为富文本详情字段名：
+
+| 平台 | 字段名 | 说明 |
+|------|--------|------|
+| **Magento 2** | `description` | 富文本详情（HTML格式） |
+| **WooCommerce** | `description` | 商品详细描述（富文本） |
+| **PrestaShop** | `description` | 商品详细描述（HTML格式） |
+| **Bagisto** | `description` | 富文本详情 |
+| **行业标准** | `description` | ✅ 统一使用此字段名 |
+
+**字段区分**：
+- `short_description`：简短描述（纯文本，用于列表页、卡片等）
+- `description`：富文本详情（HTML格式，用于详情页）
+
+**注意**：当前代码中 `products_extension.detail` 字段将在数据迁移时映射到 `product_translations.description` 字段。
+
+### 1.5 行业标准参考
+
+主流开源电商平台的多语言设计实践：
+
+#### **Magento 2**
+- **Store View 机制**：每个 Store View 对应一种语言/地区
+- **完整翻译支持**：商品的所有文本字段（标题、短描述、富文本详情）都支持多语言
+- **字段命名**：使用 `description` 作为富文本详情字段（`short_description` 为简短描述）
+- **实现方式**：使用 `catalog_product_entity_text` 等 EAV 表存储不同 Store View 的内容
+- **特点**：富文本详情（`description`）完全支持多语言，是标准功能
+
+#### **WooCommerce + WPML**
+- **插件机制**：通过 WPML（WordPress Multilingual）插件实现多语言
+- **翻译支持**：商品标题、描述、短描述、富文本详情都支持翻译
+- **实现方式**：使用 `wp_postmeta` 表存储不同语言的翻译内容
+- **特点**：富文本详情是必须翻译的字段之一
+
+#### **PrestaShop**
+- **多语言系统**：内置完整的多语言支持系统
+- **翻译管理**：商品的所有文本字段都可以为每种语言设置不同内容
+- **字段命名**：使用 `description`（富文本详情）和 `description_short`（简短描述）
+- **实现方式**：使用 `ps_product_lang` 表存储多语言内容
+- **特点**：`description`（富文本详情）和 `description_short` 字段都支持多语言
+
+#### **Bagisto（Laravel 电商框架）**
+- **Laravel Translatable**：基于 `astrotomic/laravel-translatable` 包
+- **完整翻译**：商品描述、富文本详情等所有文本字段支持多语言
+- **实现方式**：使用翻译表（`product_translations`）存储多语言内容
+- **特点**：与我们的方案类似，富文本详情是标准翻译字段
+
+#### **行业共识**
+
+✅ **富文本详情必须支持多语言**，原因：
+1. **用户体验**：不同语言用户需要看到本地化的商品详情
+2. **SEO 优化**：多语言详情有助于不同地区的 SEO
+3. **合规要求**：某些地区要求商品信息必须使用当地语言
+4. **营销需求**：不同市场可能需要不同的营销文案和展示方式
+
+✅ **行业标准做法**：
+- 商品标题、描述、短描述、富文本详情 → **必须翻译**
+- 商品图片、视频、结构化数据 → **通常不翻译**（但可能需要本地化）
+- SEO 相关字段（meta_title, meta_description）→ **必须翻译**
+
 ---
 
 ## 二、需要翻译的实体清单
 
 | 实体 | 主表 | 翻译表 | 可翻译字段数 | 优先级 |
 |------|------|--------|--------------|--------|
-| 商品 | products | product_translations | 9个 | ⭐⭐⭐⭐⭐ |
+| 商品 | products | product_translations | 7个 | ⭐⭐⭐⭐⭐ |
 | 属性 | product_attributes | product_attribute_translations | 4个 | ⭐⭐⭐⭐ |
 | 属性值 | product_attribute_values | product_attribute_value_translations | 2个 | ⭐⭐⭐⭐ |
 | 属性组 | product_attribute_groups | product_attribute_group_translations | 2个 | ⭐⭐⭐ |
-| 类目 | product_categories | product_category_translations | 7个 | ⭐⭐⭐⭐⭐ |
+| 类目 | product_categories | product_category_translations | 6个 | ⭐⭐⭐⭐⭐ |
 | 品牌 | product_brands | product_brand_translations | 3个 | ⭐⭐⭐⭐ |
 | 标签 | product_tags | product_tag_translations | 2个 | ⭐⭐⭐ |
 
@@ -74,17 +137,12 @@ CREATE TABLE product_translations (
     title VARCHAR(255) NOT NULL COMMENT '商品标题',
     slogan VARCHAR(255) NULL COMMENT '广告语/副标题',
     short_description TEXT NULL COMMENT '简短描述',
-    description LONGTEXT NULL COMMENT '详细描述',
+    description LONGTEXT NULL COMMENT '富文本详情（HTML格式，详细描述）',
     
     -- ========== SEO 相关 ==========
     meta_title VARCHAR(255) NULL COMMENT 'SEO标题',
     meta_keywords VARCHAR(255) NULL COMMENT 'SEO关键词',
     meta_description TEXT NULL COMMENT 'SEO描述',
-    
-    -- ========== URL 和提示文本 ==========
-    url_slug VARCHAR(255) NULL COMMENT 'URL友好标识',
-    available_text VARCHAR(255) NULL COMMENT '有货提示文本',
-    unavailable_text VARCHAR(255) NULL COMMENT '缺货提示文本',
     
     -- ========== 翻译状态 ==========
     translation_status VARCHAR(32) DEFAULT 'pending' COMMENT '翻译状态：pending-待翻译, translated-已翻译, reviewed-已审核',
@@ -205,7 +263,6 @@ CREATE TABLE product_category_translations (
     meta_title VARCHAR(255) NULL COMMENT 'SEO标题',
     meta_keywords VARCHAR(255) NULL COMMENT 'SEO关键词',
     meta_description TEXT NULL COMMENT 'SEO描述',
-    url_slug VARCHAR(255) NULL COMMENT 'URL友好标识',
     image_alt VARCHAR(255) NULL COMMENT '图片Alt文本',
     
     translation_status VARCHAR(32) DEFAULT 'pending',
@@ -286,7 +343,13 @@ CREATE TABLE product_tag_translations (
 
 #### **products 表**
 - 保留现有字段作为默认语言（zh-CN）内容
-- 字段保持不变：`title`, `slogan`, `short_description`, `description`, `meta_title`, `meta_keywords`, `meta_description`, `url_slug`
+- 字段保持不变：`title`, `slogan`, `short_description`, `description`, `meta_title`, `meta_keywords`, `meta_description`
+- 通用字段（无需翻译）：`url_slug`, `available_text`, `unavailable_text` 保留在主表中
+
+#### **products_extension 表**
+- `detail` 字段（富文本详情）需要多语言支持，已迁移到 `product_translations.description` 字段
+- 其他字段（如 `images`, `videos`, `freight_templates` 等）为结构化数据，通常不需要翻译
+- **注意**：根据行业标准（Magento、WooCommerce、PrestaShop），统一使用 `description` 作为富文本详情字段名，而不是 `detail`
 
 #### **product_attributes 表**
 - 保留 `name` 字段作为默认语言内容（不删除，向后兼容）
@@ -497,13 +560,10 @@ class Product extends Model
         'title',
         'slogan',
         'short_description',
-        'description',
+        'description',  // 富文本详情（HTML格式）
         'meta_title',
         'meta_keywords',
         'meta_description',
-        'url_slug',
-        'available_text',
-        'unavailable_text',
     ];
 
     /**
@@ -526,14 +586,23 @@ class Product extends Model
     }
 
     /**
-     * 获取翻译后的描述
+     * 获取翻译后的富文本详情
      * 
      * @param string|null $locale
      * @return string|null
      */
     public function getTranslatedDescription(?string $locale = null): ?string
     {
-        return $this->getTranslatedAttribute('description', $locale) ?: $this->description;
+        // 优先从翻译表获取
+        $description = $this->getTranslatedAttribute('description', $locale);
+        
+        // 如果翻译表中没有，从扩展表获取（向后兼容）
+        if (!$description && $this->extension) {
+            $description = $this->extension->detail;
+        }
+        
+        // 如果扩展表也没有，回退到主表（如果有的话）
+        return $description ?: ($this->description ?? null);
     }
 }
 ```
@@ -560,7 +629,6 @@ class ProductCategory extends Model
         'meta_title',
         'meta_keywords',
         'meta_description',
-        'url_slug',
         'image_alt',
     ];
 
@@ -596,13 +664,10 @@ class ProductTranslation extends Model
         'title',
         'slogan',
         'short_description',
-        'description',
+        'description',  // 富文本详情（HTML格式）
         'meta_title',
         'meta_keywords',
         'meta_description',
-        'url_slug',
-        'available_text',
-        'unavailable_text',
         'translation_status',
         'translated_at',
         'reviewed_at',
@@ -661,7 +726,8 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->getTranslatedTitle($locale),
-            'description' => $this->getTranslatedDescription($locale),
+            'short_description' => $this->getTranslatedAttribute('short_description', $locale),
+            'description' => $this->getTranslatedDescription($locale),  // 富文本详情
             'slogan' => $this->getTranslatedAttribute('slogan', $locale),
             // ... 其他字段
         ];
@@ -680,13 +746,15 @@ class ProductCreateRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'short_description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],  // 富文本详情（HTML格式）
             
             // 翻译数据
             'translations' => ['nullable', 'array'],
             'translations.*.locale' => ['required', 'string'],
             'translations.*.title' => ['required', 'string', 'max:255'],
-            'translations.*.description' => ['nullable', 'string'],
+            'translations.*.short_description' => ['nullable', 'string'],
+            'translations.*.description' => ['nullable', 'string'],  // 富文本详情
         ];
     }
 }
@@ -773,18 +841,25 @@ class MigrateProductTranslations extends Migration
     public function up()
     {
         // 将现有 products 表数据迁移到 product_translations 表（zh-CN）
+        // 迁移主表数据到翻译表
         DB::statement("
             INSERT INTO product_translations (
                 product_id, locale, title, slogan, short_description, description,
-                meta_title, meta_keywords, meta_description, url_slug,
-                available_text, unavailable_text, translation_status, created_at, updated_at
+                meta_title, meta_keywords, meta_description, translation_status, created_at, updated_at
             )
             SELECT 
-                id, 'zh-CN', title, slogan, short_description, description,
-                meta_title, meta_keywords, meta_description, url_slug,
-                available_text, unavailable_text, 'reviewed', created_at, updated_at
+                id, 'zh-CN', title, slogan, short_description, NULL,
+                meta_title, meta_keywords, meta_description, 'reviewed', created_at, updated_at
             FROM products
             WHERE title IS NOT NULL
+        ");
+        
+        // 迁移扩展表的 detail 字段到翻译表的 description 字段
+        DB::statement("
+            UPDATE product_translations pt
+            INNER JOIN products_extension pe ON pt.product_id = pe.id
+            SET pt.description = pe.detail
+            WHERE pt.locale = 'zh-CN' AND pe.detail IS NOT NULL
         ");
     }
 
@@ -840,7 +915,8 @@ class TranslationService
 
             $product->setTranslation($locale, [
                 'title' => $translation['title'],
-                'description' => $translation['description'] ?? null,
+                'short_description' => $translation['short_description'] ?? null,
+                'description' => $translation['description'] ?? null,  // 富文本详情
                 'translation_status' => TranslationStatusEnum::TRANSLATED,
                 'translated_at' => now(),
             ]);
@@ -972,12 +1048,14 @@ class TranslationService
 
 本方案基于 `astrotomic/laravel-translatable` 包，通过封装 `HasTranslations` Trait 实现统一的多语言翻译体系。方案特点：
 
+- ✅ **符合行业标准**：参考 Magento、WooCommerce、PrestaShop 等主流平台的设计，富文本详情支持多语言是标准做法
 - ✅ **向后兼容**：主表字段保留，现有代码无需大幅修改
 - ✅ **易于使用**：通过 Trait 简单扩展，配置可翻译字段即可
 - ✅ **性能优化**：合理的索引和缓存策略
 - ✅ **翻译回退**：找不到翻译时自动回退到默认语言
 - ✅ **状态管理**：支持翻译状态跟踪
 - ✅ **易于扩展**：支持批量翻译和 AI 翻译集成
+- ✅ **完整翻译**：商品标题、描述、短描述、**富文本详情**、SEO 字段等核心内容都支持多语言
 
 ---
 
