@@ -2,7 +2,6 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
-use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -770,6 +769,7 @@ class ProductForm
                           // // 多语言翻译
                           Repeater::make('translations')
                                   ->relationship('translations')
+                                  ->view('red-jasmine-filament-product::forms.components.translatable-tabs')
                                   ->dehydrated()
                                   ->saveRelationshipsUsing(null)
                                   ->label('多语言翻译')
@@ -845,8 +845,8 @@ class ProductForm
                                   ->itemLabel(fn(array $state
                                   ) : ?string => $supportedLocales[$state['locale']] ?? $state['locale'] ?? '新翻译')
                               //->collapsible()
-                                  ->defaultItems(0)
-                                  ->addActionLabel('添加翻译')
+                              //->defaultItems(0)
+                              //->addActionLabel('添加翻译')
                                   ->columnSpanFull(),
                       ]);
     }
