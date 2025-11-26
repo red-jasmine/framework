@@ -19,7 +19,7 @@ class ProductExtensionResource extends JsonResource
             'description'      => $this->description,
             'images'           => $this->images,
             'videos'           => $this->videos,
-            'detail'           => $this->detail,
+            'description'           => $this->description,
             'remarks'          => $this->remarks,
             'tools'            => $this->tools,
             'extra'          => $this->extra,

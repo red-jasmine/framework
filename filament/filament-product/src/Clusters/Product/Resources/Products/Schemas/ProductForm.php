@@ -97,6 +97,18 @@ class ProductForm
                                 ->prefixIcon('heroicon-o-document-text')
                                 ->columnSpanFull(),
 
+                       TextInput::make('slug')
+                                ->label(__('red-jasmine-product::product.fields.slug'))
+                                ->maxLength(255)
+                                ->placeholder('自动生成或手动输入URL友好标识')
+                                ->helperText('用于生成商品URL，留空将自动从标题生成')
+                                ->prefixIcon('heroicon-o-link')
+                                ->unique(ignoreRecord: true, modifyRuleUsing: function ($rule, $get) {
+                                    return $rule->where('owner_type', $get('owner_type'))
+                                                ->where('owner_id', $get('owner_id'));
+                                })
+                                ->columnSpanFull(),
+
                        ToggleButtons::make('product_type')
                                     ->label(__('red-jasmine-product::product.fields.product_type'))
                                     ->required()
@@ -678,10 +690,10 @@ class ProductForm
                    ->description('编写商品的详细描述')
                    ->icon('heroicon-o-document-text')
                    ->schema([
-                       RichEditor::make('detail')
+                       RichEditor::make('description')
                                  ->inlineLabel(false)
                                  ->hiddenLabel()
-                                 ->label(__('red-jasmine-product::product.fields.detail'))
+                                 ->label(__('red-jasmine-product::product.fields.description'))
                                  ->toolbarButtons([
                                      'bold',
                                      'italic',

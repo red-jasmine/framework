@@ -27,7 +27,7 @@ return new class extends Migration {
             // 内容
             $table->json('images')->nullable()->comment('图片集');
             $table->json('videos')->nullable()->comment('视频集');
-            $table->longText('detail')->nullable()->comment('详情');
+            $table->longText('description')->nullable()->comment('详情');
 
             $table->json('form')->nullable()->comment('表单');
             $table->json('tools')->nullable()->comment('工具');

@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->string('title')->comment('标题');
             $table->string('slogan')->nullable()->comment('广告语');
             $table->string('image')->nullable()->comment('主图');
+            $table->string('slug')->nullable()->comment('URL友好标识');
+
 
             $table->boolean('is_brand_new')->default(true)->comment('是否全新');
             $table->boolean('is_alone_order')->default(false)->comment('是否单独下单');
@@ -113,7 +115,7 @@ return new class extends Migration {
             // 是否违规
 
             $table->comment('商品表');
-
+            $table->unique([ 'owner_type', 'owner_id', 'slug'], 'uk_product_slug');
 
         });
 

@@ -57,6 +57,7 @@ class ProductTransformer
         $product->is_pre_sale               = $command->isPreSale;
         $product->title                     = $command->title;
         $product->slogan                    = $command->slogan;
+        $product->slug                      = $command->slug;
         $product->spu                       = $command->spu;
         $product->image                     = $command->image;
         $product->is_customized             = $command->isCustomized;
@@ -90,7 +91,7 @@ class ProductTransformer
         $product->extension->meta_keywords        = $command->metaKeywords;
         $product->extension->meta_description     = $command->metaDescription;
         $product->extension->tips                 = $command->tips;
-        $product->extension->detail               = $command->detail;
+        $product->extension->description               = $command->description;
         $product->extension->remarks              = $command->remarks;
         $product->extension->tools                = $command->tools;
         $product->extension->extra                = $command->extra;

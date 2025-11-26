@@ -51,6 +51,9 @@ class Product extends Data
     // 产品副标题（可选）
     public ?string $slogan;
 
+    // URL友好标识
+    public ?string $slug = null;
+
     public ?string $spu;
 
     // 产品状态，默认为"在售"
@@ -139,7 +142,7 @@ class Product extends Data
      * 产品详情
      * @var string|null
      */
-    public ?string $detail = null;
+    public ?string $description = null;
 
     /**
      *  图片

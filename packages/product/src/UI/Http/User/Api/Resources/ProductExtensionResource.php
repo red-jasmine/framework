@@ -18,7 +18,7 @@ class ProductExtensionResource extends JsonResource
             'description'      => $this->description,
             'images'           => $this->images,
             'videos'           => $this->videos,
-            'detail'           => $this->detail,
+            'description'           => $this->description,
             'weight'           => $this->weight,
             'width'            => $this->width,
             'height'           => $this->height,
