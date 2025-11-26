@@ -34,7 +34,7 @@ class SaleAttrsRepeater extends Repeater
 
         $this->defaultItems(0);
         $this->reorderable(false);
-
+        $this->compact();
         $this->label(__('red-jasmine-product::product.fields.sale_attrs'))
              ->schema([
                  Hidden::make('aid')
@@ -53,6 +53,7 @@ class SaleAttrsRepeater extends Repeater
                              Repeater\TableColumn::make(__('red-jasmine-product::product-attribute-value.labels.product-attribute-value')),
                              Repeater\TableColumn::make('别名'),
                          ])
+                         ->compact()
                          ->label(__('red-jasmine-product::product.attrs.values'))
                          ->schema([
                              Hidden::make('vid')
@@ -60,7 +61,7 @@ class SaleAttrsRepeater extends Repeater
 
                              TextInput::make('name')
                                       ->label(__('red-jasmine-product::product.attrs.alias'))
-                             ->readOnly()
+                                      ->readOnly()
                              ,
 
                              TextInput::make('alias')
@@ -123,71 +124,71 @@ class SaleAttrsRepeater extends Repeater
                          ->reorderable(false)
                  ,
              ])
-            ->addAction(function (Action $action, Get $get, Set $set) {
-                $action->icon(Heroicon::Plus)
-                       ->label('快速添加销售属性')
-                       ->schema([
-                           Select::make('aid')
-                                 ->label(__('red-jasmine-product::product.attrs.aid'))
-                                 ->live()
-                                 ->required()
-                                 ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
-                                 ->searchable()
-                                 ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
-                                     "%{$search}%")),
+             ->addAction(function (Action $action, Get $get, Set $set) {
+                 $action->icon(Heroicon::Plus)
+                        ->label('快速添加销售属性')
+                        ->schema([
+                            Select::make('aid')
+                                  ->label(__('red-jasmine-product::product.attrs.aid'))
+                                  ->live()
+                                  ->required()
+                                  ->options(ProductAttribute::limit(10)->pluck('name', 'id')->toArray())
+                                  ->searchable()
+                                  ->getSearchResultsUsing(fn(string $search) : array => ProductAttribute::where('name', 'like',
+                                      "%{$search}%")),
 
-                           CheckboxList::make('vids')
-                                       ->label(__('red-jasmine-product::product.attrs.values'))
-                                       ->columns(6)
-                                       ->required()
-                                       ->options(fn(Get $get) => $get('aid')
-                                           ? ProductAttributeValue::where('aid', $get('aid'))->pluck('name', 'id')->toArray()
-                                           : []
-                                       )
-                                       ->hidden(fn(Get $get) => !$get('aid')),
-                       ])
-                       ->action(function (array $data) use ($get, $set) : void {
-                           $aid  = $data['aid'] ?? null;
-                           $vids = $data['vids'] ?? [];
+                            CheckboxList::make('vids')
+                                        ->label(__('red-jasmine-product::product.attrs.values'))
+                                        ->columns(6)
+                                        ->required()
+                                        ->options(fn(Get $get) => $get('aid')
+                                            ? ProductAttributeValue::where('aid', $get('aid'))->pluck('name', 'id')->toArray()
+                                            : []
+                                        )
+                                        ->hidden(fn(Get $get) => !$get('aid')),
+                        ])
+                        ->action(function (array $data) use ($get, $set) : void {
+                            $aid  = $data['aid'] ?? null;
+                            $vids = $data['vids'] ?? [];
 
-                           if ($aid && !empty($vids)) {
-                               $attribute = ProductAttribute::find($aid);
-                               if ($attribute) {
-                                   $attributeValues = ProductAttributeValue::select(['id', 'name'])
-                                                                           ->whereIn('id', $vids)
-                                                                           ->get();
+                            if ($aid && !empty($vids)) {
+                                $attribute = ProductAttribute::find($aid);
+                                if ($attribute) {
+                                    $attributeValues = ProductAttributeValue::select(['id', 'name'])
+                                                                            ->whereIn('id', $vids)
+                                                                            ->get();
 
-                                   $values = [];
-                                   foreach ($attributeValues as $attrValue) {
-                                       $values[] = [
-                                           'vid'   => (string) $attrValue->id,
-                                           'name'  => $attrValue->name,
-                                           'alias' => '',
-                                       ];
-                                   }
+                                    $values = [];
+                                    foreach ($attributeValues as $attrValue) {
+                                        $values[] = [
+                                            'vid'   => (string) $attrValue->id,
+                                            'name'  => $attrValue->name,
+                                            'alias' => '',
+                                        ];
+                                    }
 
-                                   $saleAttrs = $get('sale_attrs') ?? [];
-                                   if (!is_array($saleAttrs)) {
-                                       $saleAttrs = [];
-                                   }
-                                   $saleAttrs[] = [
-                                       'aid'    => (string) $attribute->id,
-                                       'name'   => $attribute->name,
-                                       'values' => $values,
-                                   ];
-                                   $saleAttrs   = array_values(array_filter($saleAttrs, function ($item) {
-                                       return is_array($item) && isset($item['aid']) && !empty($item['aid']);
-                                   }));
-                                   $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
-                               }
-                           }
-                       });
-            })
-            ->deletable(true)
-            ->default([])
-            ->addActionAlignment(Alignment::Start)
-            ->inlineLabel(false)
-            ->columnSpan('full')
-            ->reorderable(false);
+                                    $saleAttrs = $get('sale_attrs') ?? [];
+                                    if (!is_array($saleAttrs)) {
+                                        $saleAttrs = [];
+                                    }
+                                    $saleAttrs[] = [
+                                        'aid'    => (string) $attribute->id,
+                                        'name'   => $attribute->name,
+                                        'values' => $values,
+                                    ];
+                                    $saleAttrs   = array_values(array_filter($saleAttrs, function ($item) {
+                                        return is_array($item) && isset($item['aid']) && !empty($item['aid']);
+                                    }));
+                                    $set('sale_attrs', $saleAttrs, shouldCallUpdatedHooks: true);
+                                }
+                            }
+                        });
+             })
+             ->deletable(true)
+             ->default([])
+             ->addActionAlignment(Alignment::Start)
+             ->inlineLabel(false)
+             ->columnSpan('full')
+             ->reorderable(false);
     }
 }

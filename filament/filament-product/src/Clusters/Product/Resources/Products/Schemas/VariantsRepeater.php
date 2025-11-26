@@ -22,11 +22,12 @@ class VariantsRepeater extends Repeater
         parent::setUp();
 
         $this->relationship('variants');
+        $this->compact();
         $this->dehydrated();
         $this->saveRelationshipsUsing(null);
         $this->label(__('red-jasmine-product::product.fields.variants'));
         $this->table([
-            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
+            //Repeater\TableColumn::make(__('red-jasmine-product::product.fields.image'))->width('100px'),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.price'))->markAsRequired(),
@@ -45,7 +46,7 @@ class VariantsRepeater extends Repeater
         ]);
         $this->schema([
             Hidden::make('attrs_sequence'),
-            FileUpload::make('image')->image()->panelLayout('compact'),
+            //FileUpload::make('image')->image()->panelLayout('compact'),
             TextInput::make('attrs_name')->readOnly(),
             TextInput::make('sku'),
             TextInput::make('price')->required()
@@ -113,12 +114,14 @@ class VariantsRepeater extends Repeater
 
 
                             ]
-                        )->columns(4),
+                        )
+                                  ->columns(4),
                     ])
+                    ->compact()
                     ->inlineLabel(false)
                     ->columnSpan('full')
                     ->reorderable(false)
-                    ->addable(true)
+                    ->addable(false)
                     ->deletable(false)
                     ->default([]),
 
