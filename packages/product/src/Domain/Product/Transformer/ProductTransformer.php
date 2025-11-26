@@ -50,34 +50,33 @@ class ProductTransformer
      */
     protected function fillProduct(Product $product, Command $command) : void
     {
-        $product->market                    = $command->market;
-        $product->owner                     = $command->owner;
-        $product->product_type              = $command->productType;
-        $product->is_alone_order            = $command->isAloneOrder;
-        $product->is_pre_sale               = $command->isPreSale;
-        $product->title                     = $command->title;
-        $product->slogan                    = $command->slogan;
-        $product->slug                      = $command->slug;
-        $product->spu                       = $command->spu;
-        $product->image                     = $command->image;
-        $product->is_customized             = $command->isCustomized;
-        $product->is_brand_new              = $command->isBrandNew;
-        $product->sort                      = $command->sort;
-        $product->category_id               = $command->categoryId;
-        $product->brand_id                  = $command->brandId;
-        $product->model_code                = $command->modelCode;
-        $product->product_group_id          = $command->productGroupId;
-        $product->shipping_types            = $command->shippingTypes;
-        $product->min_limit                 = $command->minLimit;
-        $product->max_limit                 = $command->maxLimit;
-        $product->step_limit                = $command->stepLimit;
-        $product->delivery_time             = $command->deliveryTime;
-        $product->vip                       = $command->vip;
-        $product->gift_point                = $command->giftPoint;
-        $product->is_hot                    = $command->isHot;
-        $product->is_new                    = $command->isNew;
-        $product->is_best                   = $command->isBest;
-        $product->is_benefit                = $command->isBenefit;
+        $product->market           = $command->market;
+        $product->owner            = $command->owner;
+        $product->product_type     = $command->productType;
+        $product->is_alone_order   = $command->isAloneOrder;
+        $product->is_pre_sale      = $command->isPreSale;
+        $product->title            = $command->title;
+        $product->slug             = $command->slug;
+        $product->spu              = $command->spu;
+        $product->image            = $command->image;
+        $product->is_customized    = $command->isCustomized;
+        $product->is_brand_new     = $command->isBrandNew;
+        $product->sort             = $command->sort;
+        $product->category_id      = $command->categoryId;
+        $product->brand_id         = $command->brandId;
+        $product->model_code       = $command->modelCode;
+        $product->product_group_id = $command->productGroupId;
+        $product->shipping_types   = $command->shippingTypes;
+        $product->min_limit        = $command->minLimit;
+        $product->max_limit        = $command->maxLimit;
+        $product->step_limit       = $command->stepLimit;
+        $product->delivery_time    = $command->deliveryTime;
+        $product->vip              = $command->vip;
+        $product->gift_point       = $command->giftPoint;
+        $product->is_hot           = $command->isHot;
+        $product->is_new           = $command->isNew;
+        $product->is_best          = $command->isBest;
+        $product->is_benefit       = $command->isBenefit;
         // 设置商品货币
         $product->currency = $command->currency;
 
@@ -90,8 +89,9 @@ class ProductTransformer
         $product->extension->meta_title           = $command->metaTitle;
         $product->extension->meta_keywords        = $command->metaKeywords;
         $product->extension->meta_description     = $command->metaDescription;
+        $product->extension->slogan               = $command->slogan;
         $product->extension->tips                 = $command->tips;
-        $product->extension->description               = $command->description;
+        $product->extension->description          = $command->description;
         $product->extension->remarks              = $command->remarks;
         $product->extension->tools                = $command->tools;
         $product->extension->extra                = $command->extra;
