@@ -61,7 +61,7 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = ['variants','variants.stocks', 'extension', 'extendProductGroups', 'tags'];
+        $findQuery->include = ['variants','variants.stocks', 'extension','translations', 'extendProductGroups', 'tags'];
         return $findQuery;
     }
 

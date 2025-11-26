@@ -93,6 +93,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             'extendProductGroups',
             'series',
             'tags',
+            'translations',
             'variants.stocks',
         ];
     }

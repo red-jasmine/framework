@@ -215,6 +215,13 @@ class Product extends Data
      */
     public ?Form $form = null;
 
+
+    /**
+     * 多语言
+     * @var ProductTranslation[]
+     */
+    public array $translations = [];
+
     /**
      * 商品价格货币
      * @var Currency
@@ -246,5 +253,6 @@ class Product extends Data
         }
         return $services;
     }
+
 
 }

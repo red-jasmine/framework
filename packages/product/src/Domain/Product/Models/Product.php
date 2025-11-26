@@ -36,6 +36,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasTranslations;
 
 
 /**
@@ -60,12 +61,50 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     use HasOperator;
 
+    use HasTranslations;
+
     use SoftDeletes;
 
     public static string $defaultAttrsName     = '';
     public static string $defaultAttrsSequence = '';
     public               $incrementing         = false;
     protected            $appends              = ['price', 'market_price', 'cost_price'];
+
+    /**
+     * 翻译模型类名
+     */
+    public static string $translationModel = ProductTranslation::class;
+
+    /**
+     * 翻译表名
+     */
+    public static string $translationTable = 'product_translations';
+
+    /**
+     * 翻译外键字段名
+     */
+    public static string $translationForeignKey = 'product_id';
+
+    /**
+     * 可翻译字段
+     *
+     * 字段来源：
+     * - title: 来自 products 表
+     * - slogan, description, meta_title, meta_keywords, meta_description: 来自 products_extension 表
+     */
+    protected array $translatable = [
+        'title',              // 商品标题（来自 products 表）
+        'slogan',            // 广告语（来自 products_extension 表）
+        'description',        // 富文本详情（来自 products_extension 表）
+        'meta_title',         // SEO标题（来自 products_extension 表）
+        'meta_keywords',      // SEO关键词（来自 products_extension 表）
+        'meta_description',   // SEO描述（来自 products_extension 表）
+    ];
+
+    /**
+     * 翻译属性缓存（由 astrotomic/laravel-translatable 自动填充）
+     */
+    protected array $translatedAttributes = [];
 
     protected static function boot() : void
     {
@@ -183,6 +222,14 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     {
 
         return $this->hasOne(ProductExtension::class, 'id', 'id');
+    }
+
+    /**
+     * 翻译关联
+     */
+    public function translations()
+    {
+        return $this->hasMany(ProductTranslation::class, 'product_id', 'id');
     }
 
     /**
@@ -474,5 +521,107 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         $defaultVariant->attrs_sequence = static::$defaultAttrsSequence;
         $defaultVariant->attrs_name     = static::$defaultAttrsName;
         return $defaultVariant;
+    }
+
+    /**
+     * 获取翻译后的标题
+     *
+     * @param string|null $locale
+     * @return string
+     */
+    public function getTranslatedTitle(?string $locale = null): string
+    {
+        return $this->getTranslatedAttribute('title', $locale) ?: $this->title;
+    }
+
+    /**
+     * 获取翻译后的广告语
+     *
+     * @param string|null $locale
+     * @return string|null
+     */
+    public function getTranslatedSlogan(?string $locale = null): ?string
+    {
+        $slogan = $this->getTranslatedAttribute('slogan', $locale);
+
+        // 如果翻译表中没有，从扩展表获取（向后兼容）
+        if (!$slogan && $this->relationLoaded('extension') && $this->extension) {
+            $slogan = $this->extension->slogan;
+        }
+
+        return $slogan;
+    }
+
+    /**
+     * 获取翻译后的富文本详情
+     *
+     * @param string|null $locale
+     * @return string|null
+     */
+    public function getTranslatedDescription(?string $locale = null): ?string
+    {
+        // 优先从翻译表获取
+        $description = $this->getTranslatedAttribute('description', $locale);
+
+        // 如果翻译表中没有，从扩展表获取（向后兼容）
+        if (!$description && $this->relationLoaded('extension') && $this->extension) {
+            $description = $this->extension->description;
+        }
+
+        return $description;
+    }
+
+    /**
+     * 获取翻译后的SEO标题
+     *
+     * @param string|null $locale
+     * @return string|null
+     */
+    public function getTranslatedMetaTitle(?string $locale = null): ?string
+    {
+        $metaTitle = $this->getTranslatedAttribute('meta_title', $locale);
+
+        // 向后兼容：从扩展表获取
+        if (!$metaTitle && $this->relationLoaded('extension') && $this->extension) {
+            $metaTitle = $this->extension->meta_title;
+        }
+
+        return $metaTitle;
+    }
+
+    /**
+     * 获取翻译后的SEO关键词
+     *
+     * @param string|null $locale
+     * @return string|null
+     */
+    public function getTranslatedMetaKeywords(?string $locale = null): ?string
+    {
+        $metaKeywords = $this->getTranslatedAttribute('meta_keywords', $locale);
+
+        // 向后兼容：从扩展表获取
+        if (!$metaKeywords && $this->relationLoaded('extension') && $this->extension) {
+            $metaKeywords = $this->extension->meta_keywords;
+        }
+
+        return $metaKeywords;
+    }
+
+    /**
+     * 获取翻译后的SEO描述
+     *
+     * @param string|null $locale
+     * @return string|null
+     */
+    public function getTranslatedMetaDescription(?string $locale = null): ?string
+    {
+        $metaDescription = $this->getTranslatedAttribute('meta_description', $locale);
+
+        // 向后兼容：从扩展表获取
+        if (!$metaDescription && $this->relationLoaded('extension') && $this->extension) {
+            $metaDescription = $this->extension->meta_description;
+        }
+
+        return $metaDescription;
     }
 }

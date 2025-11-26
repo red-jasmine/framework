@@ -5,6 +5,7 @@ namespace RedJasmine\Product\Domain\Product\Transformer;
 use JsonException;
 use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
+use RedJasmine\Product\Domain\Product\Data\ProductTranslation as ProductTranslationData;
 use RedJasmine\Product\Domain\Product\Data\Variant;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
@@ -36,6 +37,8 @@ class ProductTransformer
         $this->fillProduct($product, $command);
 
         $this->handleVariants($product, $command);
+
+        $this->handleTranslations($product, $command);
 
         return $product;
 
@@ -233,6 +236,94 @@ class ProductTransformer
         // 同步变体货币：从商品表继承
         $variant->currency = $product->currency;
 
+    }
+
+    /**
+     * 处理商品多语言翻译
+     *
+     * @param  Product  $product
+     * @param  Command  $command
+     *
+     * @return void
+     */
+    protected function handleTranslations(Product $product, Command $command) : void
+    {
+        // 如果商品已存在，需要处理删除的翻译
+        if ($product->exists) {
+            // 获取表单提交的翻译语言列表
+
+
+            // 获取数据库中现有的未删除翻译
+            $existingTranslations = $product->translations()
+                                            ->withTrashed()
+                                            ->get();
+
+            $product->setRelation('translations', $existingTranslations);
+
+
+            // 软删除表单中不存在的翻译
+            foreach ($product->translations as $translation) {
+                $translation->deleted_at = now(); // 使用软删除
+            }
+        }
+
+        // 如果没有翻译数据，直接返回
+        if (empty($command->translations)) {
+            return;
+        }
+
+
+
+        // 遍历翻译数据，设置到商品模型中
+        foreach ($command->translations as $translationData) {
+            // 检查是否已存在该语言的翻译（包括已软删除的）
+            $existingTranslation = $product->translations->where('locale', $translationData->locale)
+                ->first();
+
+            // 如果存在已软删除的翻译，先恢复
+            if ($existingTranslation ) {
+                $existingTranslation->deleted_at = null;
+            }
+
+            // 将 ProductTranslation DTO 转换为数组
+            $translationAttributes = $this->prepareTranslationAttributes($translationData);
+
+            // 使用 Product 模型的 setTranslation 方法设置翻译
+            $product->setTranslation($translationData->locale, $translationAttributes);
+        }
+    }
+
+    /**
+     * 准备翻译属性数组
+     *
+     * @param  ProductTranslationData  $translationData
+     *
+     * @return array
+     */
+    protected function prepareTranslationAttributes(ProductTranslationData $translationData) : array
+    {
+        $attributes = [
+            'title' => $translationData->title,
+            'slogan' => $translationData->slogan,
+            'description' => $translationData->description,
+            'meta_title' => $translationData->metaTitle,
+            'meta_keywords' => $translationData->metaKeywords,
+            'meta_description' => $translationData->metaDescription,
+            'translation_status' => $translationData->translationStatus->value,
+        ];
+
+        // 如果翻译状态为已翻译，设置翻译时间
+        if ($translationData->translationStatus->value === 'translated' ||
+            $translationData->translationStatus->value === 'reviewed') {
+            $attributes['translated_at'] = now();
+        }
+
+        // 如果翻译状态为已审核，设置审核时间
+        if ($translationData->translationStatus->value === 'reviewed') {
+            $attributes['reviewed_at'] = now();
+        }
+
+        return $attributes;
     }
 
 

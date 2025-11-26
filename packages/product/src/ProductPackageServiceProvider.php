@@ -93,6 +93,10 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             // 多价格体系
             'create_product_prices_table',
             'create_product_variant_prices_table',
+
+
+            // 多语言体系
+            'create_product_translations_table',
         ];
 
     }

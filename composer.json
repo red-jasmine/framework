@@ -30,7 +30,8 @@
         "red-jasmine/promotion": "1.0.x-dev",
         "red-jasmine/announcement": "1.0.x-dev",
         "red-jasmine/distribution": "1.0.x-dev",
-        "red-jasmine/region": "1.0.x-dev"
+        "red-jasmine/region": "1.0.x-dev",
+        "abdulmajeed-jamaan/filament-translatable-tabs": "4.x-dev"
     },
     "require-dev": {
         "pestphp/pest": "3.x-dev",
