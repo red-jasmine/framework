@@ -673,7 +673,9 @@ class ProductForm
                                  ->reorderable()
                                  ->imageEditor()
                                  ->maxSize(2048)
+                                 ->panelLayout('grid')
                                  ->helperText('商品轮播图，最多上传10张')
+                                 ->appendFiles()
                                  ->columnSpanFull(),
 
                        FileUpload::make('videos')
