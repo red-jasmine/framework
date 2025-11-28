@@ -5,6 +5,7 @@ namespace RedJasmine\FilamentCore\Helpers;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -168,9 +169,11 @@ trait ResourcePageHelper
         $findQuery = static::getFindQuery()::make([]);
         $findQuery->setKey($key);
 
-        $model = $queryService->find($resource::callFindQuery($findQuery));
-
-        return $resource::callResolveRecord($model);
+        $record = $queryService->find($resource::callFindQuery($findQuery));
+        if ($record === null) {
+            throw (new ModelNotFoundException)->setModel($this->getModel(), [$key]);
+        }
+        return $resource::callResolveRecord($record);
 
     }
 
