@@ -76,10 +76,6 @@ class ProductTransformer
         $product->delivery_time    = $command->deliveryTime;
         $product->vip              = $command->vip;
         $product->gift_point       = $command->giftPoint;
-        $product->is_hot           = $command->isHot;
-        $product->is_new           = $command->isNew;
-        $product->is_best          = $command->isBest;
-        $product->is_benefit       = $command->isBenefit;
         // 设置商品货币
         $product->currency = $command->currency;
 

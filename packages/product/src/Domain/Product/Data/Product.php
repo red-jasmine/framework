@@ -107,14 +107,6 @@ class Product extends Data
 
     // 积分
     public int $giftPoint = 0;
-    // 是否热门
-    public bool $isHot = false;
-    // 是否新品
-    public bool $isNew = false;
-    // 是否最佳
-    public bool $isBest = false;
-    // 是否优惠
-    public bool $isBenefit = false;
 
     /**
      * 提示

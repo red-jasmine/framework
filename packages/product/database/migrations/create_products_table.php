@@ -88,11 +88,7 @@ return new class extends Migration {
             $table->string('origin_country', 2)->nullable()->comment('原产国');
             $table->string('hs_code', 64)->nullable()->comment('海关编码');
 
-            // 运营类
-            $table->boolean('is_hot')->default(false)->comment('热销');
-            $table->boolean('is_new')->default(false)->comment('新品');
-            $table->boolean('is_best')->default(false)->comment('精品');
-            $table->boolean('is_benefit')->default(false)->comment('特惠');
+
             $table->bigInteger('sort')->default(0)->comment('排序');
 
             // 统计项

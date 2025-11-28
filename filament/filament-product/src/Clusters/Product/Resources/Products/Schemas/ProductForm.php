@@ -708,7 +708,7 @@ class ProductForm
                       ->columns(1)
                       ->schema([
                           // 默认语言字段（中文）
-                          Fieldset::make('默认语言（中文）')
+                          Fieldset::make('产品内容')
                                   ->columns(2)
                                   ->schema([
                                       TextInput::make('slogan')
@@ -774,79 +774,77 @@ class ProductForm
                                   ->saveRelationshipsUsing(null)
                                   ->label('多语言翻译')
                                   ->inlineLabel(false)
-                              //->helperText('为商品添加其他语言的翻译内容')
                                   ->schema([
-                                  Select::make('locale')
-                                        ->label('语言')
-                                        ->required()
-                                        ->options($supportedLocales)
-                                        ->searchable()
-                                        ->distinct()
-                                        ->native(false)
-                                        ->prefixIcon('heroicon-o-globe-alt')
-                                        ->columnSpanFull(),
-
-                                  TextInput::make('title')
-                                           ->label(__('red-jasmine-product::product.fields.title'))
-                                           ->required()
-                                           ->maxLength(255)
-                                           ->placeholder('商品标题')
-                                           ->prefixIcon('heroicon-o-document-text')
-                                           ->columnSpanFull(),
-
-                                  TextInput::make('slogan')
-                                           ->label(__('red-jasmine-product::product.fields.slogan'))
-                                           ->maxLength(255)
-                                           ->placeholder('商品卖点')
-                                           ->helperText('卖点文案，建议突出商品特色和优势')
-                                           ->prefixIcon('heroicon-o-megaphone')
-                                           ->columnSpanFull(),
-
-                                  TextInput::make('meta_title')
-                                           ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                           ->maxLength(255)
-                                           ->placeholder('SEO标题')
-                                           ->helperText('搜索引擎显示的标题，建议60字以内')
-                                           ->prefixIcon('heroicon-o-document-text'),
-
-                                  TextInput::make('meta_keywords')
-                                           ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                           ->maxLength(255)
-                                           ->placeholder('关键词1, 关键词2, 关键词3')
-                                           ->helperText('用逗号分隔多个关键词')
-                                           ->prefixIcon('heroicon-o-hashtag'),
-
-                                  Textarea::make('meta_description')
-                                          ->label(__('red-jasmine-product::product.fields.meta_description'))
-                                          ->maxLength(200)
-                                          ->placeholder('SEO描述')
-                                          ->helperText('显示在搜索结果中的描述，建议120-160字')
-                                          ->rows(3),
-
-                                  RichEditor::make('description')
-                                            ->label(__('red-jasmine-product::product.fields.description'))
-                                            ->toolbarButtons([
-                                                'bold',
-                                                'italic',
-                                                'underline',
-                                                'strike',
-                                                'h2',
-                                                'h3',
-                                                'bulletList',
-                                                'orderedList',
-                                                'link',
-                                                'blockquote',
-                                                'codeBlock',
-                                                'grid',
-                                            ])
+                                      Select::make('locale')
+                                            ->label('语言')
+                                            ->required()
+                                            ->options($supportedLocales)
+                                            ->searchable()
+                                            ->distinct()
+                                            ->native(false)
+                                            ->prefixIcon('heroicon-o-globe-alt')
                                             ->columnSpanFull(),
-                              ])
+
+                                      TextInput::make('title')
+                                               ->label(__('red-jasmine-product::product.fields.title'))
+                                               ->required()
+                                               ->maxLength(255)
+                                               ->placeholder('商品标题')
+                                               ->prefixIcon('heroicon-o-document-text')
+                                               ->columnSpanFull(),
+
+                                      TextInput::make('slogan')
+                                               ->label(__('red-jasmine-product::product.fields.slogan'))
+                                               ->maxLength(255)
+                                               ->placeholder('商品卖点')
+                                               ->helperText('卖点文案，建议突出商品特色和优势')
+                                               ->prefixIcon('heroicon-o-megaphone')
+                                               ->columnSpanFull(),
+
+                                      TextInput::make('meta_title')
+                                               ->label(__('red-jasmine-product::product.fields.meta_title'))
+                                               ->maxLength(255)
+                                               ->placeholder('SEO标题')
+                                               ->helperText('搜索引擎显示的标题，建议60字以内')
+                                               ->prefixIcon('heroicon-o-document-text'),
+
+                                      TextInput::make('meta_keywords')
+                                               ->label(__('red-jasmine-product::product.fields.meta_keywords'))
+                                               ->maxLength(255)
+                                               ->placeholder('关键词1, 关键词2, 关键词3')
+                                               ->helperText('用逗号分隔多个关键词')
+                                               ->prefixIcon('heroicon-o-hashtag'),
+
+                                      Textarea::make('meta_description')
+                                              ->label(__('red-jasmine-product::product.fields.meta_description'))
+                                              ->maxLength(200)
+                                              ->placeholder('SEO描述')
+                                              ->helperText('显示在搜索结果中的描述，建议120-160字')
+                                              ->rows(3),
+
+                                      RichEditor::make('description')
+                                                ->label(__('red-jasmine-product::product.fields.description'))
+                                                ->toolbarButtons([
+                                                    'bold',
+                                                    'italic',
+                                                    'underline',
+                                                    'strike',
+                                                    'h2',
+                                                    'h3',
+                                                    'bulletList',
+                                                    'orderedList',
+                                                    'link',
+                                                    'blockquote',
+                                                    'codeBlock',
+                                                    'grid',
+                                                ])
+                                                ->columnSpanFull(),
+                                  ])
+                                  ->default([])
                                   ->columns(1)
                                   ->itemLabel(fn(array $state
                                   ) : ?string => $supportedLocales[$state['locale']] ?? $state['locale'] ?? '新翻译')
-                              //->collapsible()
-                              //->defaultItems(0)
-                              //->addActionLabel('添加翻译')
+                                  ->defaultItems(0)
                                   ->columnSpanFull(),
                       ]);
     }
@@ -860,69 +858,8 @@ class ProductForm
             Section::make('运营标签')
                    ->description('设置商品的运营标签，用于商品推荐和营销')
                    ->icon('heroicon-o-flag')
-                   ->columns(4)
+                   ->columns(2)
                    ->schema([
-                       ToggleButtons::make('is_hot')
-                                    ->label(__('red-jasmine-product::product.fields.is_hot'))
-                                    ->required()
-                                    ->boolean()
-                                    ->inline()
-                                    ->default(0)
-                                    ->icons([
-                                        true  => 'heroicon-o-fire',
-                                        false => 'heroicon-o-minus-circle',
-                                    ])
-                                    ->colors([
-                                        true  => 'danger',
-                                        false => 'gray',
-                                    ]),
-
-                       ToggleButtons::make('is_new')
-                                    ->label(__('red-jasmine-product::product.fields.is_new'))
-                                    ->required()
-                                    ->boolean()
-                                    ->inline()
-                                    ->default(0)
-                                    ->icons([
-                                        true  => 'heroicon-o-sparkles',
-                                        false => 'heroicon-o-minus-circle',
-                                    ])
-                                    ->colors([
-                                        true  => 'success',
-                                        false => 'gray',
-                                    ]),
-
-                       ToggleButtons::make('is_best')
-                                    ->label(__('red-jasmine-product::product.fields.is_best'))
-                                    ->required()
-                                    ->boolean()
-                                    ->inline()
-                                    ->default(0)
-                                    ->icons([
-                                        true  => 'heroicon-o-star',
-                                        false => 'heroicon-o-minus-circle',
-                                    ])
-                                    ->colors([
-                                        true  => 'warning',
-                                        false => 'gray',
-                                    ]),
-
-                       ToggleButtons::make('is_benefit')
-                                    ->label(__('red-jasmine-product::product.fields.is_benefit'))
-                                    ->required()
-                                    ->boolean()
-                                    ->inline()
-                                    ->default(0)
-                                    ->icons([
-                                        true  => 'heroicon-o-gift',
-                                        false => 'heroicon-o-minus-circle',
-                                    ])
-                                    ->colors([
-                                        true  => 'info',
-                                        false => 'gray',
-                                    ]),
-
-
                        TextInput::make('gift_point')
                                 ->label(__('red-jasmine-product::product.fields.gift_point'))
                                 ->required()
