@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('status', 32)->comment(ProductStatusEnum::comments('状态'));
             // 基础信息
             $table->string('title')->comment('标题');
-            $table->string('image')->nullable()->comment('主图');
+            $table->string('image')->nullable()->comment('主图'); // 冗余
             $table->string('slug')->nullable()->comment('URL友好标识');
 
 

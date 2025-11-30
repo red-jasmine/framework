@@ -66,10 +66,6 @@ class Product extends Data
     public bool $isBrandNew = false;
 
 
-    // 产品图片（可选）
-    public ?string $image = null;
-
-
     // 是否定制化
     public bool $isCustomized = false;
     // 发货时间
@@ -128,7 +124,11 @@ class Product extends Data
      */
     public ?string $metaDescription = null;
 
-
+    /**
+     * 商品描述
+     * @var string|null
+     */
+    public ?string $description = null;
     /**
      * 媒体
      * 产品级别的媒体

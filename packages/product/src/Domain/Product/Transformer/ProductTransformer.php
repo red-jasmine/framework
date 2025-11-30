@@ -65,7 +65,6 @@ class ProductTransformer
         $product->title            = $command->title;
         $product->slug             = $command->slug;
         $product->spu              = $command->spu;
-        $product->image            = $command->image;
         $product->is_customized    = $command->isCustomized;
         $product->is_brand_new     = $command->isBrandNew;
         $product->sort             = $command->sort;
@@ -87,8 +86,6 @@ class ProductTransformer
         $product->extension->id                   = $product->id;
         $product->extension->after_sales_services = blank($command->afterSalesServices) ? $command::defaultAfterSalesServices() : $command->afterSalesServices;
         $product->extension->freight_templates    = $command->freightTemplates;
-        $product->extension->videos               = $command->videos;
-        $product->extension->images               = $command->images;
         $product->extension->meta_title           = $command->metaTitle;
         $product->extension->meta_keywords        = $command->metaKeywords;
         $product->extension->meta_description     = $command->metaDescription;
@@ -204,7 +201,6 @@ class ProductTransformer
         $variant->attrs_sequence   = $variantData->attrsSequence;
         $variant->attrs_name       = $variantData->getAttrsName();
         $variant->sku              = $variantData->sku;
-        $variant->image            = $variantData->image;
         $variant->barcode          = $variantData->barcode;
         $variant->price            = $variantData->price;
         $variant->market_price     = $variantData->marketPrice;
@@ -234,10 +230,6 @@ class ProductTransformer
      */
     protected function handleModelMedia(Product|ProductVariant $model, array $mediaCollect = []) : void
     {
-
-        // if (!$model->relationLoaded('media')) {
-        //     $model->setRelation('media', $model->media()->get());
-        // }
         $model->media;
         foreach ($model->media as $media) {
             $media->deleted_at = $media->deleted_at ?? now();
@@ -251,6 +243,10 @@ class ProductTransformer
             $mediaModel->is_primary = $media->isPrimary;
             $mediaModel->position   = $media->position;
             $model->addMedia($mediaModel);
+            // 冗余主图
+            if ($mediaModel->is_primary) {
+                $model->image = $media->path;
+            }
         }
     }
 

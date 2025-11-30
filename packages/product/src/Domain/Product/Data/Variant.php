@@ -35,8 +35,6 @@ class Variant extends Data
     public ?Money $costPrice = null;
 
 
-    public ?string $image = null;
-
     /**
      * 媒体
      * 变体级别媒体
