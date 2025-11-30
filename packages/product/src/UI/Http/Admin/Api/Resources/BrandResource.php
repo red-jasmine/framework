@@ -15,14 +15,18 @@ class BrandResource extends JsonResource
 
     public function toArray(Request $request) : array
     {
+        $locale = $request->get('locale', app()->getLocale());
+
         return [
-            'id'           => $this->id,
-            'parent_id'    => $this->parent_id,
-            'name'         => $this->name,
-            'is_show'      => $this->is_show,
-            'logo'         => $this->logo,
-            'status'       => $this->status,
-            'extra'      => $this->extra,
+            'id'          => $this->id,
+            'parent_id'   => $this->parent_id,
+            'name'        => $this->getTranslatedName($locale),
+            'description' => $this->getTranslatedDescription($locale),
+            'slogan'      => $this->getTranslatedSlogan($locale),
+            'is_show'     => $this->is_show,
+            'logo'        => $this->logo,
+            'status'      => $this->status,
+            'extra'       => $this->extra,
         ];
     }
 }

@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Guava\IconPicker\Forms\Components\IconPicker;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
@@ -56,40 +57,31 @@ class CategoryForm
                              ->label(__('red-jasmine-support::category.fields.name'))
                              ->required()
                              ->maxLength(255),
-
-                    ToggleButtons::make('is_leaf')
-                                 ->label(__('red-jasmine-support::category.fields.is_leaf'))
-                                 ->required()
-                                 ->boolean()
-                                 ->inline()
-                                 ->inlineLabel()
-                                 ->default(false),
-                    TextInput::make('slug')
-                             ->label(__('red-jasmine-support::category.fields.slug'))
-                             ->maxLength(255),
                     TextInput::make('description')
                              ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
-                    FileUpload::make('image')
-                              ->label(__('red-jasmine-support::category.fields.image'))
-                              ->image(),
-                    FileUpload::make('icon')
-                              ->label(__('red-jasmine-support::category.fields.icon'))
-                              ->image(),
-                    ColorPicker::make('color')
-                               ->label(__('red-jasmine-support::category.fields.color'))
-                    ,
+
                     TextInput::make('cluster')
                              ->label(__('red-jasmine-support::category.fields.cluster'))
                              ->maxLength(255),
 
                     KeyValue::make('extra')
-                        ->default([])
+                            ->default([])
                             ->label(__('red-jasmine-user::user-group.fields.extra')),
 
                 ]),
                 Section::make([
-
-
+                    FileUpload::make('image')
+                              ->label(__('red-jasmine-support::category.fields.image'))
+                              ->image(),
+                    IconPicker::make('icon')
+                              ->label(__('red-jasmine-support::category.fields.icon'))
+                    ,
+                    ColorPicker::make('color')
+                               ->label(__('red-jasmine-support::category.fields.color'))
+                    ,
+                    TextInput::make('slug')
+                             ->label(__('red-jasmine-support::category.fields.slug'))
+                             ->maxLength(255),
                     TextInput::make('sort')
                              ->label(__('red-jasmine-support::category.fields.sort'))
                              ->required()
@@ -100,6 +92,13 @@ class CategoryForm
                           ->required()
                           ->inline()
                           ->default(true),
+                    ToggleButtons::make('is_leaf')
+                                 ->label(__('red-jasmine-support::category.fields.is_leaf'))
+                                 ->required()
+                                 ->boolean()
+                                 ->inline()
+                                 ->inlineLabel()
+                                 ->default(false),
                     ToggleButtons::make('status')
                                  ->label(__('red-jasmine-support::category.fields.status'))
                                  ->required()

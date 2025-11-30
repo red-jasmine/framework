@@ -74,10 +74,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      * 翻译模型类名
      */
     public static string $translationModel = ProductTranslation::class;
-    /**
-     * 翻译表名
-     */
-    public static string $translationTable = 'product_translations';
+
     /**
      * 翻译外键字段名
      */

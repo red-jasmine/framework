@@ -41,11 +41,13 @@ class MigrationService
              */
             $this->unsignedBigInteger('id')->primary()->comment('ID');
             $this->unsignedBigInteger('parent_id')->default(0)->comment('父级ID');
-            $this->string('name')->comment('名称');
+
             $this->string('slug')->nullable()->comment('标记');
+            $this->string('name')->comment('名称');
             $this->string('description')->nullable()->comment('描述');
             $this->string('cluster')->nullable()->comment('群簇');
             $this->bigInteger('sort')->default(0)->comment('排序');
+
             $this->boolean('is_leaf')->default(false)->comment('是否叶子');
             $this->boolean('is_show')->default(false)->comment('是否展示');
             $this->string('status', 32)->comment(UniversalStatusEnum::comments('状态'));
@@ -53,7 +55,6 @@ class MigrationService
             $this->string('icon')->nullable()->comment('图标');
             $this->string('color')->nullable()->comment('颜色');
             $this->json('extra')->nullable()->comment('扩展字段');
-
 
             $this->operator();
             $this->softDeletes();

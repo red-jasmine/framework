@@ -15,7 +15,7 @@ return [
         'color'       => '颜色',
         'cluster'     => '群簇',
         'sort'        => '排序',
-        'is_leaf'     => '是否叶子节点',
+        'is_leaf'     => '叶子节点',
         'is_show'     => '是否显示',
         'status'      => '状态',
     ],

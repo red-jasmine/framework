@@ -27,7 +27,8 @@
         "ibrahim-bougaoua/filaprogress": "*",
         "codewithdennis/filament-select-tree": "*",
         "malzariey/filament-daterangepicker-filter": "*",
-        "maiden-voyage-software/blade-emojis": "^0.1.5"
+        "maiden-voyage-software/blade-emojis": "^0.1.5",
+        "guava/filament-icon-picker": "^3.0"
     },
     "require-dev": {
 

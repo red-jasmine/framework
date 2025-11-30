@@ -170,6 +170,7 @@ trait ResourcePageHelper
         $findQuery->setKey($key);
 
         $record = $queryService->find($resource::callFindQuery($findQuery));
+
         if ($record === null) {
             throw (new ModelNotFoundException)->setModel($this->getModel(), [$key]);
         }

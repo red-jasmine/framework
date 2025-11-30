@@ -20,6 +20,12 @@ class BrandController extends Controller
 
     public function index(Request $request) : AnonymousResourceCollection
     {
+        $locale = $request->get('locale', app()->getLocale());
+        
+        // 预加载翻译数据
+        $this->service->repository->withQuery(function ($query) use ($locale) {
+            $query->withTranslation($locale);
+        });
 
         $result = $this->service->paginate(PaginateQuery::from($request));
         return BrandResource::collection($result->appends($request->query()));
@@ -27,6 +33,13 @@ class BrandController extends Controller
 
     public function show(Request $request, $id) : BrandResource
     {
+        $locale = $request->get('locale', app()->getLocale());
+        
+        // 预加载翻译数据
+        $this->service->repository->withQuery(function ($query) use ($locale) {
+            $query->withTranslation($locale);
+        });
+
         $result = $this->service->find(FindQuery::make($id, $request));
         return BrandResource::make($result);
     }
