@@ -45,7 +45,7 @@ abstract class PanelProvider extends FilamentPanelProvider
               ->authMiddleware([
                   Authenticate::class,
               ])
-              ->sidebarWidth('10rem')
+              ->sidebarWidth('16rem')
               ->passwordReset()
               ->emailVerification()
               ->profile();
