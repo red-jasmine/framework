@@ -53,9 +53,6 @@ return new class extends Migration {
             // 销量
             $table->unsignedBigInteger('sales')->default(0)->comment('销量');
 
-            // 包装单位
-            $table->unsignedBigInteger('package_quantity')->default(1)->comment('包内数量');
-            $table->string('package_unit')->nullable()->comment('包装单位');
             // 操作
 
             $table->timestamp('modified_at')->nullable()->comment('修改时间');

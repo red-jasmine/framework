@@ -212,8 +212,6 @@ class ProductTransformer
         $variant->length           = $variantData->length;
         $variant->volume           = $variantData->volume;
         $variant->dimension_unit   = $variantData->dimensionUnit;
-        $variant->package_unit     = $variantData->packageUnit;
-        $variant->package_quantity = $variantData->packageQuantity;
         $variant->status           = $variantData->status;
         $variant->deleted_at       = null;
 

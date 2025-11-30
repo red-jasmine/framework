@@ -35,8 +35,6 @@ class VariantsRepeater extends Repeater
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.market_price')),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.cost_price')),
             // Repeater\TableColumn::make(__('red-jasmine-product::product.fields.safety_stock')),
-            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_unit')),
-            Repeater\TableColumn::make(__('red-jasmine-product::product.fields.package_quantity'))->markAsRequired(),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.barcode')),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
             Repeater\TableColumn::make(__('red-jasmine-product::product.fields.status'))->width('120px'),
@@ -64,16 +62,6 @@ class VariantsRepeater extends Repeater
                          app()->getLocale()) : null)
                      ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
             // TextInput::make('safety_stock')->numeric()->default(0),
-            TextInput::make('package_unit')
-                     ->label(__('red-jasmine-product::product.fields.package_unit'))
-                     ->maxLength(32)
-                     ->placeholder('SKU的包装单位:件/个/套/箱'),
-            TextInput::make('package_quantity')
-                     ->label(__('red-jasmine-product::product.fields.package_quantity'))
-                     ->integer()
-                     ->default(1)
-                     ->minValue(1)
-                     ->placeholder('每个包装单位包含的数量'),
             TextInput::make('barcode')->maxLength(32),
             TextInput::make('weight')->suffix('KG'),
             Select::make('status')

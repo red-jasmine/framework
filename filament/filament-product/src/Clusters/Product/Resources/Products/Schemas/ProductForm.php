@@ -657,9 +657,9 @@ class ProductForm
                                  ->afterStateHydrated(function (
                                      FileUpload $component,
                                      $state,
-                                     \RedJasmine\Product\Domain\Product\Models\Product $record
+                                     ?\RedJasmine\Product\Domain\Product\Models\Product $record
                                  ) {
-                                     $component->state($record->media->sortBy('position')->pluck('path')->toArray());
+                                     $component->state($record?$record->media->sortBy('position')->pluck('path')->toArray():[]);
                                  })
                                  ->dehydrateStateUsing(function ($state) {
 

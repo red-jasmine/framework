@@ -54,8 +54,6 @@ return [
         'freight_payer'        => '运费承担方',
         'freight_template_id'  => '运费模板',
         'freight_templates'    => '运费模板配置',
-        'package_unit'         => '包装单位',
-        'package_quantity'     => '包内数量',
         'min_limit'            => '起购量',
         'max_limit'            => '限购量',
         'step_limit'           => '购买倍数',

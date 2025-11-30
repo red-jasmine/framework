@@ -60,11 +60,6 @@ class Variant extends Data
      */
     public array $stocks = [];
 
-    // 包装单位（可选）
-    public ?string $packageUnit = null;
-    // 包装数量
-    public int $packageQuantity = 1;
-
     // 重量（可选）
     public ?string $weight;
 
