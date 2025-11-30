@@ -61,13 +61,14 @@ class ProductResource extends Resource
 
     public static function callFindQuery(FindQuery $findQuery) : FindQuery
     {
-        $findQuery->include = ['variants','variants.stocks', 'extension','translations', 'extendProductGroups', 'tags'];
+        $findQuery->include = ['variants','media','variants.media','variants.stocks', 'extension','translations', 'extendProductGroups', 'tags'];
         return $findQuery;
     }
 
 
     public static function callResolveRecord(Model $model) : Model
     {
+
 
         foreach ($model->extension->getAttributes() as $key => $value) {
             $model->setAttribute($key, $model->extension->{$key});

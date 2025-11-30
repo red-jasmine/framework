@@ -21,6 +21,9 @@ use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
+use RedJasmine\Product\Domain\Media\Models\ProductMedia;
+use RedJasmine\Product\Domain\Price\Models\ProductPrice;
+use RedJasmine\Product\Domain\Price\Models\ProductVariantPrice;
 use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Product\Models\Extensions\ProductExtension;
@@ -67,24 +70,20 @@ class Product extends Model implements OperatorInterface, OwnerInterface
 
     public static string $defaultAttrsName     = '';
     public static string $defaultAttrsSequence = '';
-    public               $incrementing         = false;
-    protected            $appends              = ['price', 'market_price', 'cost_price'];
-
     /**
      * 翻译模型类名
      */
     public static string $translationModel = ProductTranslation::class;
-
     /**
      * 翻译表名
      */
     public static string $translationTable = 'product_translations';
-
     /**
      * 翻译外键字段名
      */
     public static string $translationForeignKey = 'product_id';
-
+    public               $incrementing          = false;
+    protected            $appends               = ['price', 'market_price', 'cost_price'];
     /**
      * 可翻译字段
      *
@@ -225,14 +224,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
-     * 翻译关联
-     */
-    public function translations()
-    {
-        return $this->hasMany(ProductTranslation::class, 'product_id', 'id');
-    }
-
-    /**
      * 所有规格
      * @return HasMany
      */
@@ -242,15 +233,24 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     }
 
     /**
+     * 翻译关联
+     */
+    public function translations() : HasMany
+    {
+        return $this->hasMany(ProductTranslation::class, 'product_id', 'id');
+    }
+
+    /**
      * 价格列表
      * @return HasMany
      */
+
     /**
      * 商品级别价格汇总
      */
     public function prices() : HasMany
     {
-        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductPrice::class, 'product_id', 'id');
+        return $this->hasMany(ProductPrice::class, 'product_id', 'id');
     }
 
     /**
@@ -258,32 +258,41 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      */
     public function variantPrices() : HasMany
     {
-        return $this->hasMany(\RedJasmine\Product\Domain\Price\Models\ProductVariantPrice::class, 'product_id', 'id');
+        return $this->hasMany(ProductVariantPrice::class, 'product_id', 'id');
+    }
+
+    /**
+     * 商品媒体资源
+     * @return HasMany
+     */
+    public function media() : HasMany
+    {
+        return $this->hasMany(ProductMedia::class, 'product_id', 'id')->whereNull('variant_id');
     }
 
     public function casts() : array
     {
         return [
-            'product_type'              => ProductTypeEnum::class,  // 商品类型
-            'shipping_types'          => 'array',// 配送方式  可选，多个
-            'status'                    => ProductStatusEnum::class,// 状态
-            'freight_payer'             => FreightPayerEnum::class,// 运费承担方
-            'has_variants'              => 'boolean',
-            'is_brand_new'              => 'boolean',
-            'taxable'                   => 'boolean',
-            'available_at'              => 'datetime',
-            'paused_at'                 => 'datetime',
-            'unavailable_at'            => 'datetime',
-            'modified_at'               => 'datetime',
-            'start_sale_time'           => 'datetime',
-            'end_sale_time'             => 'datetime',
-            'is_customized'             => 'boolean',
-            'is_alone_order'            => 'boolean',
-            'is_pre_sale'               => 'boolean',
-            'currency'                  => CurrencyCast::class,
-            'price'                     => MoneyCast::class.':currency,price,1',
-            'market_price'              => MoneyCast::class.':currency,market_price,1',
-            'cost_price'                => MoneyCast::class.':currency,cost_price,1',
+            'product_type'    => ProductTypeEnum::class,  // 商品类型
+            'shipping_types'  => 'array',// 配送方式  可选，多个
+            'status'          => ProductStatusEnum::class,// 状态
+            'freight_payer'   => FreightPayerEnum::class,// 运费承担方
+            'has_variants'    => 'boolean',
+            'is_brand_new'    => 'boolean',
+            'taxable'         => 'boolean',
+            'available_at'    => 'datetime',
+            'paused_at'       => 'datetime',
+            'unavailable_at'  => 'datetime',
+            'modified_at'     => 'datetime',
+            'start_sale_time' => 'datetime',
+            'end_sale_time'   => 'datetime',
+            'is_customized'   => 'boolean',
+            'is_alone_order'  => 'boolean',
+            'is_pre_sale'     => 'boolean',
+            'currency'        => CurrencyCast::class,
+            'price'           => MoneyCast::class.':currency,price,1',
+            'market_price'    => MoneyCast::class.':currency,market_price,1',
+            'cost_price'      => MoneyCast::class.':currency,cost_price,1',
         ];
     }
 
@@ -297,6 +306,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
             $instance->setRelation('variants', Collection::make());
             $instance->setRelation('extendProductGroups', Collection::make());
             $instance->setRelation('tags', Collection::make());
+            $instance->setRelation('media', Collection::make());
         }
 
         return $instance;
@@ -522,10 +532,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的标题
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string
      */
-    public function getTranslatedTitle(?string $locale = null): string
+    public function getTranslatedTitle(?string $locale = null) : string
     {
         return $this->getTranslatedAttribute('title', $locale) ?: $this->title;
     }
@@ -533,10 +544,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的广告语
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string|null
      */
-    public function getTranslatedSlogan(?string $locale = null): ?string
+    public function getTranslatedSlogan(?string $locale = null) : ?string
     {
         $slogan = $this->getTranslatedAttribute('slogan', $locale);
 
@@ -551,10 +563,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的富文本详情
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string|null
      */
-    public function getTranslatedDescription(?string $locale = null): ?string
+    public function getTranslatedDescription(?string $locale = null) : ?string
     {
         // 优先从翻译表获取
         $description = $this->getTranslatedAttribute('description', $locale);
@@ -570,10 +583,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的SEO标题
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string|null
      */
-    public function getTranslatedMetaTitle(?string $locale = null): ?string
+    public function getTranslatedMetaTitle(?string $locale = null) : ?string
     {
         $metaTitle = $this->getTranslatedAttribute('meta_title', $locale);
 
@@ -588,10 +602,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的SEO关键词
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string|null
      */
-    public function getTranslatedMetaKeywords(?string $locale = null): ?string
+    public function getTranslatedMetaKeywords(?string $locale = null) : ?string
     {
         $metaKeywords = $this->getTranslatedAttribute('meta_keywords', $locale);
 
@@ -606,10 +621,11 @@ class Product extends Model implements OperatorInterface, OwnerInterface
     /**
      * 获取翻译后的SEO描述
      *
-     * @param string|null $locale
+     * @param  string|null  $locale
+     *
      * @return string|null
      */
-    public function getTranslatedMetaDescription(?string $locale = null): ?string
+    public function getTranslatedMetaDescription(?string $locale = null) : ?string
     {
         $metaDescription = $this->getTranslatedAttribute('meta_description', $locale);
 
@@ -619,5 +635,15 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         }
 
         return $metaDescription;
+    }
+
+
+    public function addMedia(ProductMedia $media) : void
+    {
+        $media->owner      = $this->owner;
+        $media->product_id = $this->id;
+        $media->variant_id = null;
+        $this->media->push($media);
+
     }
 }

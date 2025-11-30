@@ -36,6 +36,15 @@ class Variant extends Data
 
 
     public ?string $image = null;
+
+    /**
+     * 媒体
+     * 变体级别媒体
+     * @var ProductMedia[]
+     */
+    public array $media = [];
+
+
     /**
      * sku
      * @var string|null

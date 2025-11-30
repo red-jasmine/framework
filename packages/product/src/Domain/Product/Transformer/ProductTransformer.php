@@ -4,6 +4,8 @@ namespace RedJasmine\Product\Domain\Product\Transformer;
 
 use JsonException;
 use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
+use RedJasmine\Product\Domain\Media\Models\Enums\MediaTypeEnum;
+use RedJasmine\Product\Domain\Media\Models\ProductMedia;
 use RedJasmine\Product\Domain\Product\Data\Product as Command;
 use RedJasmine\Product\Domain\Product\Data\ProductTranslation as ProductTranslationData;
 use RedJasmine\Product\Domain\Product\Data\Variant;
@@ -39,6 +41,8 @@ class ProductTransformer
         $this->handleVariants($product, $command);
 
         $this->handleTranslations($product, $command);
+
+        $this->handleMedia($product, $command);
 
         return $product;
 
@@ -110,7 +114,6 @@ class ProductTransformer
         $product->setStatus($command->status);
     }
 
-
     /**
      * @param  Product  $product
      * @param  Command  $command
@@ -145,6 +148,9 @@ class ProductTransformer
                     }
                     $this->fillVariant($variant, $variantData, $product);
                     $product->addVariant($variant);
+
+                    // 处理规格媒体资源
+                    $this->handleModelMedia($variant, $variantData->media);
                 });
 
                 // 加入默认规格
@@ -220,6 +226,34 @@ class ProductTransformer
 
     }
 
+    /**
+     * @param  Product|ProductVariant  $model
+     * @param  \RedJasmine\Product\Domain\Product\Data\ProductMedia[]  $mediaCollect
+     *
+     * @return void
+     */
+    protected function handleModelMedia(Product|ProductVariant $model, array $mediaCollect = []) : void
+    {
+
+        // if (!$model->relationLoaded('media')) {
+        //     $model->setRelation('media', $model->media()->get());
+        // }
+        $model->media;
+        foreach ($model->media as $media) {
+            $media->deleted_at = $media->deleted_at ?? now();
+        }
+
+        foreach ($mediaCollect as $media) {
+            $mediaModel             = $model->media->where('path', $media->path)->first() ?? new ProductMedia();
+            $mediaModel->deleted_at = null;
+            $mediaModel->media_type = MediaTypeEnum::IMAGE; // 判断媒体类型
+            $mediaModel->path       = $media->path;
+            $mediaModel->is_primary = $media->isPrimary;
+            $mediaModel->position   = $media->position;
+            $model->addMedia($mediaModel);
+        }
+    }
+
     protected function setDefaultVariant(Product $product, ProductVariant $variant) : void
     {
         $variant->status       = ProductStatusEnum::AVAILABLE;
@@ -269,15 +303,14 @@ class ProductTransformer
         }
 
 
-
         // 遍历翻译数据，设置到商品模型中
         foreach ($command->translations as $translationData) {
             // 检查是否已存在该语言的翻译（包括已软删除的）
             $existingTranslation = $product->translations->where('locale', $translationData->locale)
-                ->first();
+                                                         ->first();
 
             // 如果存在已软删除的翻译，先恢复
-            if ($existingTranslation ) {
+            if ($existingTranslation) {
                 $existingTranslation->deleted_at = null;
             }
 
@@ -299,12 +332,12 @@ class ProductTransformer
     protected function prepareTranslationAttributes(ProductTranslationData $translationData) : array
     {
         $attributes = [
-            'title' => $translationData->title,
-            'slogan' => $translationData->slogan,
-            'description' => $translationData->description,
-            'meta_title' => $translationData->metaTitle,
-            'meta_keywords' => $translationData->metaKeywords,
-            'meta_description' => $translationData->metaDescription,
+            'title'              => $translationData->title,
+            'slogan'             => $translationData->slogan,
+            'description'        => $translationData->description,
+            'meta_title'         => $translationData->metaTitle,
+            'meta_keywords'      => $translationData->metaKeywords,
+            'meta_description'   => $translationData->metaDescription,
             'translation_status' => $translationData->translationStatus->value,
         ];
 
@@ -322,5 +355,22 @@ class ProductTransformer
         return $attributes;
     }
 
+    /**
+     * 处理媒体
+     *
+     * @param  Product  $product
+     * @param  Command  $command
+     *
+     * @return void
+     */
+    public function handleMedia(Product $product, Command $command) : void
+    {
+        // 处理产品级别 媒体
+        $product->media;
+
+        $this->handleModelMedia($product, $command->media);
+
+
+    }
 
 }

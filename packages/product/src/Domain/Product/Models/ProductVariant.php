@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Money\Casts\CurrencyCast;
+use RedJasmine\Product\Domain\Media\Models\ProductMedia;
 use RedJasmine\Product\Domain\Price\Models\ProductVariantPrice;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Money\Casts\MoneyCast;
@@ -83,6 +84,25 @@ class ProductVariant extends Model implements OperatorInterface
         return $this->hasMany(ProductStock::class, 'variant_id', 'id');
     }
 
+    /**
+     * 变体媒体资源
+     * @return HasMany
+     */
+    public function media() : HasMany
+    {
+        return $this->hasMany(ProductMedia::class, 'variant_id', 'id');
+    }
+
+    public function addMedia(ProductMedia $media) : void
+    {
+        $media->owner      = $this->owner;
+        $media->product_id = $this->product_id;
+        $media->variant_id = $this->id;
+
+
+        $this->media->push($media);
+    }
+
     protected function casts() : array
     {
         return [
@@ -94,4 +114,5 @@ class ProductVariant extends Model implements OperatorInterface
             'cost_price'   => MoneyCast::class.':currency,cost_price,1',
         ];
     }
+
 }

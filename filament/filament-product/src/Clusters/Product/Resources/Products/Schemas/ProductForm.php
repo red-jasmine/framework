@@ -645,47 +645,46 @@ class ProductForm
     {
         return [
             static::contents(),
-            Section::make('商品图片')
+            Section::make('媒体')
                    ->description('上传商品主图、轮播图和视频')
                    ->icon('heroicon-o-photo')
                    ->columns(1)
                    ->schema([
-                       FileUpload::make('image')
-                                 ->label(__('red-jasmine-product::product.fields.image'))
-                                 ->image()
-                                 ->directory('products')
-                                 ->fetchFileInformation(false)
-                                 ->imageEditor()
-                                 ->imageEditorAspectRatios([
-                                     '1:1',
-                                     '4:3',
-                                     '16:9',
-                                 ])
-                                 ->maxSize(2048)
-                                 ->helperText('建议尺寸：800x800像素，支持JPG、PNG格式，大小不超过2MB')
-                                 ->columnSpanFull(),
-
-                       FileUpload::make('images')
+                       FileUpload::make('media')
+                                 ->inlineLabel(false)
                                  ->label(__('red-jasmine-product::product.fields.images'))
-                                 ->image()
+                                 ->saveRelationshipsUsing(null)
+                                 ->afterStateHydrated(function (
+                                     FileUpload $component,
+                                     $state,
+                                     \RedJasmine\Product\Domain\Product\Models\Product $record
+                                 ) {
+                                     $component->state($record->media->sortBy('position')->pluck('path')->toArray());
+                                 })
+                                 ->dehydrateStateUsing(function ($state) {
+
+                                     $media = [];
+                                     foreach ($state as $index => $item) {
+                                         $media[] = [
+                                             'path'       => $item,
+                                             'position'   => $index,
+                                             'is_primary' => $index === 0,
+                                             'is_enabled' => true,
+                                         ];
+                                     }
+                                     return $media;
+                                 })
+                                 ->directory('products')
                                  ->multiple()
-                                 ->maxFiles(10)
+                                 ->maxFiles(30)
                                  ->reorderable()
                                  ->imageEditor()
                                  ->maxSize(2048)
                                  ->panelLayout('grid')
-                                 ->helperText('商品轮播图，最多上传10张')
+                                 ->helperText('商品轮播图，第一张为商品主图')
                                  ->appendFiles()
                                  ->columnSpanFull(),
 
-                       FileUpload::make('videos')
-                                 ->label(__('red-jasmine-product::product.fields.videos'))
-                                 ->acceptedFileTypes(['video/mp4', 'video/mpeg', 'video/quicktime'])
-                                 ->multiple()
-                                 ->maxFiles(3)
-                                 ->maxSize(20480)
-                                 ->helperText('商品视频，最多上传3个，单个视频不超过20MB')
-                                 ->columnSpanFull(),
                    ]),
 
         ];

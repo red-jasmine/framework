@@ -87,6 +87,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             'extension',
             'services',
             'variants',
+            'media',
             'brand',
             'category',
             'productGroups',
@@ -95,6 +96,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
             'tags',
             'translations',
             'variants.stocks',
+            'variants.media',
         ];
     }
 }

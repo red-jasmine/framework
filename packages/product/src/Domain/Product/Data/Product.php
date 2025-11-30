@@ -11,9 +11,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesServices;
 use RedJasmine\Money\Casts\CurrencyCast;
-use RedJasmine\Product\Domain\Product\Models\Enums\FreightPayerEnum;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Product\Domain\Product\Models\ValueObjects\Medium;
 use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -130,23 +128,13 @@ class Product extends Data
      */
     public ?string $metaDescription = null;
 
-    /**
-     * 产品详情
-     * @var string|null
-     */
-    public ?string $description = null;
 
     /**
-     *  图片
-     * @var Medium[]|null
+     * 媒体
+     * 产品级别的媒体
+     * @var ProductMedia[]
      */
-    public ?array $images = null;
-
-    /**
-     * 基础属性
-     * @var Medium[]|null
-     */
-    public ?array $videos = null;
+    public array $media = [];
 
 
     // 备注（可选）
