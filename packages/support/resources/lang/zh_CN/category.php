@@ -11,7 +11,7 @@ return [
         'slug'        => '标记',
         'description' => '描述',
         'image'       => '图片',
-        'icon'        => '图片',
+        'icon'        => '图标',
         'color'       => '颜色',
         'cluster'     => '群簇',
         'sort'        => '排序',

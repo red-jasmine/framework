@@ -83,6 +83,7 @@ class CategoryForm
                              ->maxLength(255),
 
                     KeyValue::make('extra')
+                        ->default([])
                             ->label(__('red-jasmine-user::user-group.fields.extra')),
 
                 ]),

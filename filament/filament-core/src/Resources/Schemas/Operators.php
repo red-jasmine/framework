@@ -13,6 +13,7 @@ class Operators extends Fieldset
     {
         parent::setUp();
         $this->label(__('red-jasmine-support::support.operators'));
+        $this->visibleOn('view');
         $this->schema([
             TextInput::make('creator_type')
                      ->label(__('red-jasmine-support::support.creator_type'))
