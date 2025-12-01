@@ -32,6 +32,7 @@ class ProductTagResource extends Resource
     protected static ?string $updateCommand = ProductTagUpdateCommand::class;
     protected static ?string $deleteCommand = ProductTagDeleteCommand::class;
     protected static bool    $onlyOwner     = true;
+    protected static bool $isTranslatable = true;
 
     public static function getModelLabel() : string
     {
