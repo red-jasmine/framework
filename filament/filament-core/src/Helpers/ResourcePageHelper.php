@@ -114,7 +114,6 @@ trait ResourcePageHelper
     protected function handleRecordCreation(array $data) : Model
     {
 
-
         $resource = static::getResource();
 
         try {

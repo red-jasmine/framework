@@ -72,14 +72,7 @@ class CategoryForm
 
                                        ]
                                    )
-                    // ->localeOptions([
-                    //     'zh-CN' => '简体中文',
-                    //     'en-US' => 'English (US)',
-                    //     'ja-JP' => '日本語',
-                    // ])
-                    // ->defaultLocaleLabel('默认'),
-
-                    ,
+             ,
 
                     KeyValue::make('extra')
                             ->default([])

@@ -16,18 +16,10 @@ use Filament\Support\Icons\Heroicon;
 class TranslationTabs extends Section
 {
     const REPEATER_SCHEMA_KEY = 'repeater';
-    protected string $view          = 'red-jasmine-filament-core::forms.components.translation-tabs';
-    protected array  $localeOptions = [];
+    protected string       $view           = 'red-jasmine-filament-core::forms.components.translation-tabs';
+    protected array        $localeOptions  = [];
     protected bool|Closure $isTranslatable = false;
 
-    public function getChildSchema($key = null) : ?Schema
-    {
-
-
-        return parent::getChildSchema($key);
-
-        $this->getChildComponents();
-    }
 
     /**
      * @param  bool|Closure  $condition
@@ -70,6 +62,8 @@ class TranslationTabs extends Section
                             ->saveRelationshipsUsing(null)
                             ->label('多语言翻译')
                             ->inlineLabel(false)
+                            ->default([])
+                            ->defaultItems(0)
                             ->schema([...$newComponents, Hidden::make('locale')])
                             ->itemLabel(fn(array $state) : ?string => $availableLocales[$state['locale']] ?? $state['locale'] ?? '新翻译');
 
@@ -132,6 +126,7 @@ class TranslationTabs extends Section
                            if (!$exists) {
                                // 创建新的翻译项，设置 locale 字段
                                $newTranslation = ['locale' => $locale];
+
                                $translations[] = $newTranslation;
                                $set('translations', $translations, shouldCallUpdatedHooks: true);
                            }
