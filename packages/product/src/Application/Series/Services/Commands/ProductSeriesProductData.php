@@ -8,6 +8,6 @@ class ProductSeriesProductData extends Data
 {
     public int $productId;
 
-    public string $name;
+    public int $position = 0;
 
 }

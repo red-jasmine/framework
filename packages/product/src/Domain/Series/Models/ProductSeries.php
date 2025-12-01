@@ -28,7 +28,7 @@ class ProductSeries extends Model implements OperatorInterface
 
     public function products() : HasMany
     {
-        return $this->hasMany(ProductSeriesProduct::class, 'series_id', 'id');
+        return $this->hasMany(ProductSeriesProduct::class, 'series_id', 'id')->orderBy('position');
     }
 
 }

@@ -37,7 +37,6 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
             $model->owner   = $command->owner;
             $model->remarks = $command->remarks;
             $model->name    = $command->name;
-
             if ($command->products) {
                 $products = collect($command->products);
                 // 验证重复
@@ -45,10 +44,10 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
                     throw new ProductException('商品重复');
                 }
 
-                $products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
+                $products->each(function (ProductSeriesProductData $productSeriesProductData, $index) use ($model) {
                     $productSeriesProduct             = new ProductSeriesProduct();
                     $productSeriesProduct->product_id = $productSeriesProductData->productId;
-                    $productSeriesProduct->name       = $productSeriesProductData->name;
+                    $productSeriesProduct->position   = $productSeriesProductData->position ?? $index;
                     $model->products->push($productSeriesProduct);
                 });
             }

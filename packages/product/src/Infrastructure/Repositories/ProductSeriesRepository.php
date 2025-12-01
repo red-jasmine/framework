@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Product\Domain\Series\Repositories\ProductSeriesRepositoryInterface;
+use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -41,9 +42,9 @@ class ProductSeriesRepository extends Repository implements ProductSeriesReposit
             $values = [
                 'series_id'  => $model->id,
                 'product_id' => $product->product_id,
-                'name'       => $product->name,
+                'position'   => $product->position ?? 0,
             ];
-            ProductSeriesProduct::updateOrCreate(['product_id' => $product->product_id], $values);
+            ProductSeriesProduct::updateOrCreate(['series_id' => $model->id, 'product_id' => $product->product_id], $values);
         });
         return $model;
     }
@@ -63,9 +64,9 @@ class ProductSeriesRepository extends Repository implements ProductSeriesReposit
             $values = [
                 'series_id'  => $model->id,
                 'product_id' => $product->product_id,
-                'name'       => $product->name,
+                'position'   => $product->position ?? 0,
             ];
-            ProductSeriesProduct::updateOrCreate(['product_id' => $product->product_id], $values);
+            ProductSeriesProduct::updateOrCreate(['series_id' => $model->id, 'product_id' => $product->product_id], $values);
         });
         return $model;
     }
@@ -91,6 +92,13 @@ class ProductSeriesRepository extends Repository implements ProductSeriesReposit
             AllowedFilter::exact('owner_type'),
             AllowedFilter::exact('owner_id'),
             AllowedFilter::exact('status'),
+        ];
+    }
+
+    protected function allowedIncludes(?Query $query = null) : array
+    {
+        return  [
+            'products'
         ];
     }
 }

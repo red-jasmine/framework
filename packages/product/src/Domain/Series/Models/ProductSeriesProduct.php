@@ -13,7 +13,7 @@ class ProductSeriesProduct extends Model
     use HasDateTimeFormatter;
 
     protected $fillable = [
-        'series_id', 'product_id', 'name'
+        'series_id', 'product_id', 'position'
     ];
 
 

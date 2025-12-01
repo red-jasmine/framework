@@ -37,12 +37,14 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
             $model->name    = $command->name;
 
             $model->products = Collection::make();
+
+
             if ($command->products) {
                 $products = Collection::make($command->products);
-                $products->each(function (ProductSeriesProductData $productSeriesProductData) use ($model) {
+                $products->each(function (ProductSeriesProductData $productSeriesProductData, $index) use ($model) {
                     $productSeriesProduct             = new ProductSeriesProduct();
                     $productSeriesProduct->product_id = $productSeriesProductData->productId;
-                    $productSeriesProduct->name       = $productSeriesProductData->name;
+                    $productSeriesProduct->position   = $productSeriesProductData->position ?? $index;
                     $model->products->push($productSeriesProduct);
                 });
             }

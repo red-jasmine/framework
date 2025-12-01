@@ -17,6 +17,7 @@ return [
         'product'      => [
             'product_id' => '商品',
             'name'       => '名称',
+            'position'   => '排序',
         ],
 
     ],

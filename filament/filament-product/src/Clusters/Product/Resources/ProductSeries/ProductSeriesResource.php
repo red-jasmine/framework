@@ -2,6 +2,7 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductSeries;
 
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -41,7 +43,7 @@ class ProductSeriesResource extends Resource
 
     protected static ?string $model = ProductSeries::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-view-columns';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-view-columns';
 
     protected static ?string $cluster = Product::class;
 
@@ -55,8 +57,8 @@ class ProductSeriesResource extends Resource
     protected static bool $onlyOwner = true;
 
 
-    protected static ?string $service        = ProductSeriesApplicationService::class;
-  
+    protected static ?string $service = ProductSeriesApplicationService::class;
+
 
     protected static ?string $productQueryService = ProductApplicationService::class;
     protected static ?string $createCommand       = ProductSeriesCreateCommand::class;
@@ -70,75 +72,87 @@ class ProductSeriesResource extends Resource
         return $findQuery;
     }
 
-
     public static function callResolveRecord(Model $model) : Model
     {
-        $model->products = $model->products->toArray();
+
         return $model;
     }
+
 
     public static function form(Schema $schema) : Schema
     {
         return $schema
+            ->columns(1)
             ->components([
+
                 Owner::make(),
                 TextInput::make('name')
-                                          ->label(__('red-jasmine-product::product-series.fields.name'))
-                                          ->required()
-                                          ->maxLength(255),
+                         ->label(__('red-jasmine-product::product-series.fields.name'))
+                         ->required()
+                         ->maxLength(255),
                 TextInput::make('remarks')
-                                          ->label(__('red-jasmine-product::product-series.fields.remarks'))
-                                          ->maxLength(255),
-
+                         ->label(__('red-jasmine-product::product-series.fields.remarks'))
+                         ->maxLength(255),
 
                 Repeater::make('products')
-                                         ->label(__('red-jasmine-product::product-series.fields.products'))
-                                         ->schema(
-                                             [
-                                                 Select::make('product_id')
-                                                                        ->label(__('red-jasmine-product::product-series.fields.product.product_id'))
-                                                                        ->searchable()
-                                                                        ->inlineLabel()
-                                                                        ->options(fn(Get $get
-                                                                        ) => app(static::$productQueryService)->repository->query()->where('owner_type',
-                                                                            $get('../../owner_type'))
-                                                                                                                              ->where('owner_id',
-                                                                                                                  (int) $get('../../owner_id'))->select([
-                                                                                'id', 'title'
-                                                                            ])->limit(10)->pluck('title', 'id')->toArray())
-                                                                        ->getSearchResultsUsing(
-                                                                            fn(Get $get
-                                                                            ) => app(static::$productQueryService)->repository->query()->where('owner_type',
-                                                                                $get('../../owner_type'))
-                                                                                                                                  ->where('owner_id',
-                                                                                                                      (int) $get('../../owner_id'))->select([
-                                                                                    'id', 'title'
-                                                                                ])->limit(10)->pluck('title', 'id')->toArray())
-                                                                        ->getOptionLabelUsing(
-                                                                            fn(
-                                                                                Get $get,
-                                                                                $value
-                                                                            ) => app(static::$productQueryService)->repository->query()->where('owner_type',
-                                                                                $get('../../owner_type'))
-                                                                                                                                  ->where('owner_id',
-                                                                                                                      (int) $get('../../owner_id'))
-                                                                                                                                  ->where('id',
-                                                                                                                      $value)->first()?->title
+                        ->relationship('products')
+                        ->dehydrated()
+                        ->saveRelationshipsUsing(null)
+                        ->compact()
+                        ->table([
+                            Repeater\TableColumn::make(__('red-jasmine-product::product-series.fields.product.product_id')),
+                            Repeater\TableColumn::make(__('red-jasmine-product::product-series.fields.product.position')),
+                        ])
+                        ->label(__('red-jasmine-product::product-series.fields.products'))
+                        ->schema(
+                            [
+                                Select::make('product_id')
+                                      ->distinct()
+                                      ->label(__('red-jasmine-product::product-series.fields.product.product_id'))
+                                      ->searchable()
+                                      ->inlineLabel()
+                                      ->options(fn(Get $get
+                                      ) => app(static::$productQueryService)->repository->query()->where('owner_type',
+                                          $get('../../owner_type'))
+                                                                                        ->where('owner_id',
+                                                                                            (int) $get('../../owner_id'))->select([
+                                              'id', 'title'
+                                          ])->limit(10)->pluck('title', 'id')->toArray())
+                                      ->getSearchResultsUsing(
+                                          fn(Get $get
+                                          ) => app(static::$productQueryService)->repository->query()->where('owner_type',
+                                              $get('../../owner_type'))
+                                                                                            ->where('owner_id',
+                                                                                                (int) $get('../../owner_id'))->select([
+                                                  'id', 'title'
+                                              ])->limit(10)->pluck('title', 'id')->toArray())
+                                      ->getOptionLabelUsing(
+                                          fn(
+                                              Get $get,
+                                              $value
+                                          ) => app(static::$productQueryService)->repository->query()->where('owner_type',
+                                              $get('../../owner_type'))
+                                                                                            ->where('owner_id',
+                                                                                                (int) $get('../../owner_id'))
+                                                                                            ->where('id',
+                                                                                                $value)->first()?->title
 
-                                                                        )
-                                                                        ->required(),
-                                                 TextInput::make('name')
-                                                                           ->label(__('red-jasmine-product::product-series.fields.product.name'))
-                                                                           ->required()
-                                                                           ->inlineLabel()
-                                                                           ->maxLength(10)
-                                             ]
+                                      )
+                                      ->required(),
+                                TextInput::make('position')
+                                         ->label(__('red-jasmine-product::product-series.fields.product.position'))
+                                         ->required()
+                                         ->integer()
+                                         ->default(0)
+                                         ->inlineLabel()
+                                         ->maxLength(10)
+                            ]
 
-                                         )
-                                         ->reorderable(false)
-                                         ->columns(2)
-                                         ->grid(2)
-                                         ->columnSpanFull()
+                        )
+                        ->reorderable(false)
+                        ->columns(2)
+                        ->grid(2)
+                        ->columnSpanFull()
                 ,
 
                 Operators::make(),
@@ -151,19 +165,18 @@ class ProductSeriesResource extends Resource
             ->modifyQueryUsing(fn(Builder $query) => $query->withCount('products'))
             ->columns([
                 TextColumn::make('id')
-                                         ->label('ID')
-                                         ->sortable(),
+                          ->label('ID')
+                          ->sortable(),
                 ... static::ownerTableColumns(),
                 TextColumn::make('name')
-                                         ->label(__('red-jasmine-product::product-series.fields.name'))
-                                         ->searchable(),
+                          ->label(__('red-jasmine-product::product-series.fields.name'))
+                          ->searchable(),
                 TextColumn::make('products_count')
-                                         ->label('数量')
+                          ->label('数量')
                 ,
                 TextColumn::make('remarks')
-                                         ->label(__('red-jasmine-product::product-series.fields.remarks'))
-                                         ->searchable(),
-
+                          ->label(__('red-jasmine-product::product-series.fields.remarks'))
+                          ->searchable(),
 
 
             ])

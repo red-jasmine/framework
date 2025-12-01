@@ -17,9 +17,9 @@ class ProductSeriesCreateCommand extends Data
     public ?string $remarks = null;
 
     /**
-     * @var  Collection<int,ProductSeriesProductData>|null
+     * @var  ProductSeriesProductData[]
      */
-    public ?Collection $products;
+    public array $products = [];
 
 
 }

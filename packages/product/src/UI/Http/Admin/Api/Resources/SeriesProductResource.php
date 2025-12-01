@@ -16,7 +16,7 @@ class SeriesProductResource extends JsonResource
     {
         return [
             'product_id' => $this->product_id,
-            'name'       => $this->name,
+            'position'   => $this->position,
         ];
     }
 

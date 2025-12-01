@@ -18,8 +18,7 @@ class SeriesProductResource extends JsonResource
         return [
             'series_id'  => (string) $this->series_id,
             'product_id' => (string) $this->product_id,
-            'name'       => (string) $this->name,
-
+            'position'   => $this->position,
         ];
     }
 
