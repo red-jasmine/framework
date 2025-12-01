@@ -62,7 +62,7 @@
             @endphp
 
             <x-filament::tabs.item
-                    :x-bind:alpine-active="$alpineActive"
+                    :alpine-active="$alpineActive"
                     :x-on:click="$alpineClick"
             >
                 {{ $repeater->getItemLabel($itemKey) }}
