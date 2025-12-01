@@ -2,38 +2,9 @@
 
 namespace RedJasmine\Product\Application\Attribute\Services\Commands;
 
-use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
-use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
-use RedJasmine\Support\Data\Data;
-use Spatie\LaravelData\Support\Validation\ValidationContext;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeGroupData;
 
-
-class ProductAttributeGroupCreateCommand extends Data
+class ProductAttributeGroupCreateCommand extends ProductAttributeGroupData
 {
-    public string             $name;
-    public ?string            $description = null;
-    public int                        $sort   = 0;
-    public ProductAttributeStatusEnum $status = ProductAttributeStatusEnum::ENABLE;
 
-
-    public static function attributes(...$args) : array
-    {
-
-        return [
-            'name'        => __('red-jasmine-product::product-attribute-group.fields.name'),
-            'description' => __('red-jasmine-product::product-attribute-group.fields.description'),
-            'sort'        => __('red-jasmine-product::product-attribute-group.fields.sort'),
-            'status'      => __('red-jasmine-product::product-attribute-group.fields.status'),
-        ];
-    }
-
-    public static function rules(ValidationContext $context) : array
-    {
-
-        return [
-            'name'        => [ 'required', 'max:64', new ProductAttributeNameRule() ],
-            'description' => [ 'sometimes', 'nullable', 'string', 'max:255' ],
-
-        ];
-    }
 }

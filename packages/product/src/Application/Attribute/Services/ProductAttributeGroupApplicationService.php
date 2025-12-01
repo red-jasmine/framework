@@ -7,6 +7,7 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeG
 use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupUpdateCommand;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeGroup;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeGroupRepositoryInterface;
+use RedJasmine\Product\Domain\Attribute\Transformer\ProductAttributeGroupTransformer;
 use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -28,7 +29,7 @@ class ProductAttributeGroupApplicationService extends ApplicationService
 
     public function __construct(
         public ProductAttributeGroupRepositoryInterface $repository,
-
+        public ProductAttributeGroupTransformer $transformer,
     ) {
 
     }

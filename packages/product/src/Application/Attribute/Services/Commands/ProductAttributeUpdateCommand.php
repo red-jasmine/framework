@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Application\Attribute\Services\Commands;
 
-class ProductAttributeUpdateCommand extends ProductAttributeCreateCommand
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeData;
+
+class ProductAttributeUpdateCommand extends ProductAttributeData
 {
-
     public int $id;
-
 }

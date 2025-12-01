@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttribute
 
 use App\Filament\Clusters\Product\Resources\ProductAttributeGroupResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductAttributeGroupResource\RelationManagers;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -40,7 +41,7 @@ class ProductAttributeGroupResource extends Resource
     protected static ?string $cluster = Product::class;
     protected static ?string $model   = ProductAttributeGroup::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-list-bullet';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-list-bullet';
 
 
     use ResourcePageHelper;
@@ -50,6 +51,7 @@ class ProductAttributeGroupResource extends Resource
     protected static ?string $updateCommand  = ProductAttributeGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductAttributeGroupDeleteCommand::class;
     protected static ?int    $navigationSort = 6;
+    protected static bool    $isTranslatable = true;
 
     public static function getModelLabel() : string
     {
@@ -60,7 +62,8 @@ class ProductAttributeGroupResource extends Resource
     {
         return __('red-jasmine-product::product-attribute.labels.attribute');
     }
-     use CategoryResource;
+
+    use CategoryResource;
 
     public static function getRelations() : array
     {

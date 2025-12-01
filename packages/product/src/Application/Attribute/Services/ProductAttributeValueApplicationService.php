@@ -10,6 +10,7 @@ use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttribute
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeValueUpdatePipeline;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
+use RedJasmine\Product\Domain\Attribute\Transformer\ProductAttributeValueTransformer;
 use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 
@@ -32,6 +33,7 @@ class ProductAttributeValueApplicationService extends ApplicationService
 
     public function __construct(
         public ProductAttributeValueRepositoryInterface $repository,
+        public ProductAttributeValueTransformer $transformer,
     ) {
 
     }

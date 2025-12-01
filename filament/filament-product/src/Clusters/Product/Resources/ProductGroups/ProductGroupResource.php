@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductGroups;
 
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductGroupResource\RelationManagers;
+use BackedEnum;
 use Filament\Resources\Resource;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\CategoryResource;
@@ -21,21 +22,21 @@ class ProductGroupResource extends Resource
 {
 
 
-
-    protected static ?int    $navigationSort = 4;
-    protected static ?string $cluster        = Product::class;
-    protected static ?string $model          = ProductGroup::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static ?int                    $navigationSort = 4;
+    protected static ?string                 $cluster        = Product::class;
+    protected static ?string                $model          = ProductGroup::class;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-group';
 
     use ResourcePageHelper;
-    protected static ?string $service = ProductGroupApplicationService::class;
+
+    protected static ?string $service        = ProductGroupApplicationService::class;
     protected static ?string $commandService = ProductGroupApplicationService::class;
 
     protected static ?string $createCommand  = ProductGroupCreateCommand::class;
     protected static ?string $updateCommand  = ProductGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductGroupDeleteCommand::class;
     protected static bool    $onlyOwner      = true;
-    protected static bool $isTranslatable = true;
+    protected static bool    $isTranslatable = true;
 
 
     public static function getModelLabel() : string

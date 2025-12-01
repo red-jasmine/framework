@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttribute
 
 use App\Filament\Clusters\Product\Resources\ProductAttributeResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductAttributeResource\RelationManagers;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +18,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -24,6 +27,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use RedJasmine\FilamentCore\Forms\Components\TranslationTabs;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product;
@@ -43,15 +47,15 @@ class ProductAttributeResource extends Resource
 {
     protected static ?string $model = ProductAttribute::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cube-transparent';
 
     use ResourcePageHelper;
 
     protected static ?string $service        = ProductAttributeApplicationService::class;
     protected static ?string $commandService = ProductAttributeApplicationService::class;
-    protected static ?string $createCommand = ProductAttributeCreateCommand::class;
-    protected static ?string $updateCommand = ProductAttributeUpdateCommand::class;
-    protected static ?string $deleteCommand = ProductAttributeDeleteCommand::class;
+    protected static ?string $createCommand  = ProductAttributeCreateCommand::class;
+    protected static ?string $updateCommand  = ProductAttributeUpdateCommand::class;
+    protected static ?string $deleteCommand  = ProductAttributeDeleteCommand::class;
 
 
     public static function getModelLabel() : string
@@ -71,58 +75,74 @@ class ProductAttributeResource extends Resource
     {
         return $schema
             ->components([
+                Flex::make([
+                    Section::make([
+                        TranslationTabs::make('translations')
+                                       ->translatable(true)
+                                       ->schema([
+                                           TextInput::make('name')->label(__('red-jasmine-product::product-attribute.fields.name'))
+                                                    ->required()
+                                                    ->maxLength(255),
+                                           TextInput::make('description')->label(__('red-jasmine-product::product-attribute.fields.description'))
+                                                    ->maxLength(255),
+
+                                           TextInput::make('unit')
+                                                    ->label(__('red-jasmine-product::product-attribute.fields.unit'))
+                                                    ->maxLength(10),
+
+                                       ]),
+
+                        Operators::make(),
+                    ]),
+                    Section::make([
+                        ToggleButtons::make('type')
+                                     ->label(__('red-jasmine-product::product-attribute.fields.type'))
+                                     ->required()
+                                     ->inline()
+                                     ->default(ProductAttributeTypeEnum::SELECT)
+                                     ->options(ProductAttributeTypeEnum::options()),
 
 
-                ToggleButtons::make('type')
-                                              ->label(__('red-jasmine-product::product-attribute.fields.type'))
-                                              ->required()
-                                              ->inline()
-                                              ->default(ProductAttributeTypeEnum::SELECT)
-                                              ->options(ProductAttributeTypeEnum::options()),
-                TextInput::make('name')->label(__('red-jasmine-product::product-attribute.fields.name'))
-                                          ->required()
-                                          ->maxLength(255),
-                TextInput::make('description')->label(__('red-jasmine-product::product-attribute.fields.description'))
-                                          ->maxLength(255),
+                        Select::make('group_id')
+                              ->label(__('red-jasmine-product::product-attribute.fields.group.name'))
+                              ->relationship('group', 'name')
+                              ->searchable(['name'])
+                              ->preload()
+                              ->nullable()
+                              ->saveRelationshipsUsing(null)
+                              ->defaultZero(),
 
-                TextInput::make('unit')
-                                          ->label(__('red-jasmine-product::product-attribute.fields.unit'))
-                                          ->maxLength(10),
-                Select::make('group_id')
-                                       ->label(__('red-jasmine-product::product-attribute.fields.group.name'))
-                                       ->relationship('group', 'name')
-                                       ->searchable(['name'])
-                                       ->preload()
-                                       ->nullable()
-                                       ->saveRelationshipsUsing(null)
-                                       ->defaultZero()
-                ,
 
-                TextInput::make('sort')
-                                          ->label(__('red-jasmine-product::product-attribute.fields.sort'))
-                                          ->required()->integer()->default(0),
-                Radio::make('is_required')
-                                      ->label(__('red-jasmine-product::product-attribute.fields.is_required'))
-                                      ->default(false)->boolean()
-                                      ->inline()->required(),
-                Radio::make('is_allow_multiple')
-                                      ->label(__('red-jasmine-product::product-attribute.fields.is_allow_multiple'))
-                                      ->default(false)->boolean()->inline()->required(),
-                Radio::make('is_allow_alias')
-                                      ->label(__('red-jasmine-product::product-attribute.fields.is_allow_alias'))
-                                      ->default(false)->boolean()->inline()
-                                      ->required(),
+                        TextInput::make('sort')
+                                 ->label(__('red-jasmine-product::product-attribute.fields.sort'))
+                                 ->required()->integer()->default(0),
 
-                ToggleButtons::make('status')
-                                              ->label(__('red-jasmine-product::product-attribute.fields.status'))
-                                              ->inline()
-                                              ->required()
-                                              ->grouped()
-                                              ->default(ProductAttributeStatusEnum::ENABLE)
-                                              ->useEnum(ProductAttributeStatusEnum::class)
-                ,
 
-                Operators::make(),
+                        Radio::make('is_required')
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_required'))
+                             ->default(false)->boolean()
+                             ->inline()->required(),
+                        Radio::make('is_allow_multiple')
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_allow_multiple'))
+                             ->default(false)->boolean()->inline()->required(),
+                        Radio::make('is_allow_alias')
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_allow_alias'))
+                             ->default(false)->boolean()->inline()
+                             ->required(),
+
+                        ToggleButtons::make('status')
+                                     ->label(__('red-jasmine-product::product-attribute.fields.status'))
+                                     ->inline()
+                                     ->required()
+                                     ->grouped()
+                                     ->default(ProductAttributeStatusEnum::ENABLE)
+                                     ->useEnum(ProductAttributeStatusEnum::class)
+                        ,
+
+                    ])->grow(false),
+
+
+                ])->columnSpanFull()
 
 
             ])
@@ -136,7 +156,7 @@ class ProductAttributeResource extends Resource
                 TextColumn::make('id')->label(__('red-jasmine-product::product-attribute.fields.id'))->copyable()->sortable(),
                 TextColumn::make('group.name')->label(__('red-jasmine-product::product-attribute.fields.group.name'))->numeric(),
                 TextColumn::make('type')->label(__('red-jasmine-product::product-attribute.fields.type'))
-                                         ->useEnum(),
+                          ->useEnum(),
                 TextColumn::make('name')->label(__('red-jasmine-product::product-attribute.fields.name'))->searchable(),
                 TextColumn::make('unit')->label(__('red-jasmine-product::product-attribute.fields.unit'))
                 ,
@@ -145,29 +165,29 @@ class ProductAttributeResource extends Resource
                 IconColumn::make('is_allow_alias')->label(__('red-jasmine-product::product-attribute.fields.is_allow_alias'))->boolean(),
                 TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute.fields.sort'))->sortable(),
                 TextColumn::make('status')->label(__('red-jasmine-product::product-attribute.fields.status'))
-                                         ->useEnum(),
-                
+                          ->useEnum(),
+
             ])
             ->filters([
                 SelectFilter::make('group_id')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.group.name'))
-                                           ->relationship('group', 'name')
-                                           ->searchable()
-                                           ->optionsLimit(50)
-                                           ->preload(),
+                            ->label(__('red-jasmine-product::product-attribute-value.fields.group.name'))
+                            ->relationship('group', 'name')
+                            ->searchable()
+                            ->optionsLimit(50)
+                            ->preload(),
                 SelectFilter::make('status')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
-                                           ->options(ProductAttributeStatusEnum::options()),
+                            ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
+                            ->options(ProductAttributeStatusEnum::options()),
 
                 TernaryFilter::make('is_required')
-                                            ->label(__('red-jasmine-product::product-attribute.fields.is_required'))
-                                            ->boolean(true),
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_required'))
+                             ->boolean(true),
                 TernaryFilter::make('is_allow_multiple')
-                                            ->label(__('red-jasmine-product::product-attribute.fields.is_allow_multiple'))
-                                            ->boolean(true),
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_allow_multiple'))
+                             ->boolean(true),
                 TernaryFilter::make('is_allow_alias')
-                                            ->label(__('red-jasmine-product::product-attribute.fields.is_allow_alias'))
-                                            ->boolean(true),
+                             ->label(__('red-jasmine-product::product-attribute.fields.is_allow_alias'))
+                             ->boolean(true),
                 TrashedFilter::make(),
             ])
             ->recordUrl(null)

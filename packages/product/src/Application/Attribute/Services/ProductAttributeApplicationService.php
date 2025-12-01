@@ -8,6 +8,7 @@ use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeU
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeGroupRulePipeline;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
+use RedJasmine\Product\Domain\Attribute\Transformer\ProductAttributeTransformer;
 use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Handlers\CreateCommandHandler;
@@ -28,6 +29,7 @@ class ProductAttributeApplicationService extends ApplicationService
 
     public function __construct(
         public ProductAttributeRepositoryInterface $repository,
+        public ProductAttributeTransformer $transformer,
     ) {
 
     }

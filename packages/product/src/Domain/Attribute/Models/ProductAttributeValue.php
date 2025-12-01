@@ -12,6 +12,7 @@ use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Domain\Models\Traits\HasTranslations;
 
 class ProductAttributeValue extends Model implements OperatorInterface
 {
@@ -24,8 +25,28 @@ class ProductAttributeValue extends Model implements OperatorInterface
 
     use HasOperator;
 
+    use HasTranslations;
 
     use SoftDeletes;
+
+    /**
+     * 翻译模型类名
+     */
+    public static string $translationModel = ProductAttributeValueTranslation::class;
+
+    /**
+     * 翻译外键字段名
+     */
+    public  string $translationForeignKey = 'value_id';
+
+    /**
+     * 可翻译字段
+     */
+    protected array $translatable = [
+        'name',
+        'description',
+    ];
+    protected array $translatedAttributes = [];
 
     public $incrementing = false;
 
@@ -42,7 +63,8 @@ class ProductAttributeValue extends Model implements OperatorInterface
         'description',
         'group_id',
         'status',
-        'sort'
+        'sort',
+        'extra'
     ];
 
 

@@ -4,6 +4,7 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttribute
 
 use App\Filament\Clusters\Product\Resources\ProductAttributeValueResource\Pages;
 use App\Filament\Clusters\Product\Resources\ProductAttributeValueResource\RelationManagers;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -16,11 +17,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use RedJasmine\FilamentCore\Forms\Components\TranslationTabs;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product;
@@ -39,8 +43,8 @@ class ProductAttributeValueResource extends Resource
 {
     protected static ?string $model = ProductAttributeValue::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bookmark-square';
-    protected static ?string $cluster        = Product::class;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bookmark-square';
+    protected static ?string                $cluster        = Product::class;
 
 
     use ResourcePageHelper;
@@ -65,45 +69,57 @@ class ProductAttributeValueResource extends Resource
     {
         return $schema
             ->columns(1)
-            ->inlineLabel()
             ->components([
-                Select::make('aid')
-                                       ->label(__('red-jasmine-product::product-attribute-value.fields.aid'))
-                                       ->required()
-                                       ->relationship('attribute', 'name')
-                                       ->searchable(['name'])
-                                       ->preload()
-                                       ->optionsLimit(50)
-                ,
-                TextInput::make('name')
-                                          ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
-                                          ->required()
-                                          ->maxLength(64),
-                Select::make('group_id')
-                                       ->label(__('red-jasmine-product::product-attribute-value.fields.group_id'))
-                                       ->relationship('group', 'name')
-                                       ->searchable(['name'])
-                                       ->preload()
-                                       ->nullable()
-                                       ->saveRelationshipsUsing(null)
-                                       ->defaultZero()
-                                       ->optionsLimit(50)
-                ,
+                Flex::make([
+                    Section::make([
+
+                        Select::make('aid')
+                              ->label(__('red-jasmine-product::product-attribute-value.fields.aid'))
+                              ->required()
+                              ->relationship('attribute', 'name')
+                              ->searchable(['name'])
+                              ->preload()
+                              ->optionsLimit(50),
+                        TranslationTabs::make('translations')
+                                       ->schema([
+                                           TextInput::make('name')
+                                                    ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
+                                                    ->required()
+                                                    ->maxLength(64),
+                                           TextInput::make('description')->label(__('red-jasmine-product::product-attribute-value.fields.description'))->maxLength(255),
+                                       ]),
 
 
-                TextInput::make('description')
-                                          ->label(__('red-jasmine-product::product-attribute-value.fields.description'))->maxLength(255),
-                TextInput::make('sort')
-                                          ->label(__('red-jasmine-product::product-attribute-value.fields.sort'))
-                                          ->required()->integer()->default(0),
-                ToggleButtons::make('status')
-                                              ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
-                                              ->required()
-                                              ->inline()
-                                              ->default(ProductAttributeStatusEnum::ENABLE)
-                                              ->useEnum(ProductAttributeStatusEnum::class),
 
-                Operators::make(),
+
+
+                    ]),
+                    Section::make([
+                        Select::make('group_id')
+                              ->label(__('red-jasmine-product::product-attribute-value.fields.group_id'))
+                              ->relationship('group', 'name')
+                              ->searchable(['name'])
+                              ->preload()
+                              ->nullable()
+                              ->saveRelationshipsUsing(null)
+                              ->defaultZero()
+                              ->optionsLimit(50),
+
+                        TextInput::make('sort')
+                                 ->label(__('red-jasmine-product::product-attribute-value.fields.sort'))
+                                 ->required()->integer()->default(0),
+                        ToggleButtons::make('status')
+                                     ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
+                                     ->required()
+                                     ->inline()
+                                     ->default(ProductAttributeStatusEnum::ENABLE)
+                                     ->useEnum(ProductAttributeStatusEnum::class),
+
+                        Operators::make(),
+
+                    ])->grow(false),
+
+                ])
             ]);
     }
 
@@ -112,42 +128,42 @@ class ProductAttributeValueResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                                         ->label('ID')
-                                         ->label(__('red-jasmine-product::product-attribute-value.fields.id'))
-                                         ->copyable()
-                                         ->sortable(),
+                          ->label('ID')
+                          ->label(__('red-jasmine-product::product-attribute-value.fields.id'))
+                          ->copyable()
+                          ->sortable(),
                 TextColumn::make('attribute.name')
-                                         ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name')),
+                          ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name')),
 
                 TextColumn::make('name')
-                                         ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
-                                         ->copyable()
-                                         ->searchable()
+                          ->label(__('red-jasmine-product::product-attribute-value.fields.name'))
+                          ->copyable()
+                          ->searchable()
                 ,
                 TextColumn::make('group.name')->label(__('red-jasmine-product::product-attribute-value.fields.group.name')),
                 TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute-value.fields.sort'))->sortable(),
                 TextColumn::make('status')->label(__('red-jasmine-product::product-attribute-value.fields.status'))
-                                         ->useEnum(),
+                          ->useEnum(),
 
-                
+
             ])
             ->filters([
                 SelectFilter::make('aid')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name'))
-                                           ->relationship('attribute', 'name')
-                                           ->searchable()
-                                           ->optionsLimit(50)
-                                           ->preload(),
+                            ->label(__('red-jasmine-product::product-attribute-value.fields.attribute.name'))
+                            ->relationship('attribute', 'name')
+                            ->searchable()
+                            ->optionsLimit(50)
+                            ->preload(),
 
                 SelectFilter::make('group_id')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.group.name'))
-                                           ->relationship('group', 'name')
-                                           ->searchable()
-                                           ->optionsLimit(50)
-                                           ->preload(),
+                            ->label(__('red-jasmine-product::product-attribute-value.fields.group.name'))
+                            ->relationship('group', 'name')
+                            ->searchable()
+                            ->optionsLimit(50)
+                            ->preload(),
                 SelectFilter::make('status')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
-                                           ->options(ProductAttributeStatusEnum::options())
+                            ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
+                            ->options(ProductAttributeStatusEnum::options())
                 ,
                 TrashedFilter::make(),
 
