@@ -2,95 +2,15 @@
 
 namespace RedJasmine\Product\Domain\Category\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
-use RedJasmine\Support\Domain\Models\Traits\HasDefaultConnection;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\Traits\ModelTree;
+use RedJasmine\Support\Domain\Models\Traits\HasCategoryTranslations;
 
-class ProductCategory extends Model implements OperatorInterface
+class ProductCategory extends BaseCategoryModel
 {
+    use HasCategoryTranslations;
 
-    public $uniqueShortId = true;
-
-    use HasDefaultConnection;
-
-    use HasSnowflakeId;
-
-    use HasDateTimeFormatter;
-
-    use HasOperator;
-
-    use ModelTree;
-
-    use SoftDeletes;
-
-
-    public $incrementing = false;
-
-    // 父级ID字段名称，默认值为 parent_id
-    protected string $parentColumn = 'parent_id';
-
-    // 排序字段名称，默认值为 order
-    protected string $orderColumn = 'sort';
-
-    // 标题字段名称，默认值为 title
-    protected string $titleColumn = 'name';
-
-
-    protected $fillable = [
-        'parent_id',
-        'name',
-        'cluster',
-        'image',
-        'sort',
-        'is_leaf',
-        'is_show',
-        'status',
-
-    ];
-
-    protected $casts = [
-        'status'  => UniversalStatusEnum::class,
-        'is_leaf' => 'boolean',
-        'is_show' => 'boolean',
-        'extra'   => 'array',
-    ];
-
-    public function parent() : BelongsTo
-    {
-        return $this->belongsTo(static::class, 'parent_id', 'id');
-    }
-
-
-    public function scopeShow(Builder $query) : Builder
-    {
-        return $query->enable()->where('is_show', true);
-    }
-
-
-    public function scopeEnable(Builder $query) : Builder
-    {
-        return $query->where('status', UniversalStatusEnum::ENABLE->value);
-    }
-
-    /**
-     * 叶子目录
-     *
-     * @param  Builder  $query
-     *
-     * @return Builder
-     */
-    public function scopeLeaf(Builder $query) : Builder
-    {
-        return $query->where('is_leaf', true);
-    }
+    protected string $translationModel = ProductCategoryTranslation::class;
 
     /**
      * @return bool

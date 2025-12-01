@@ -9,6 +9,7 @@ use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryUpd
 use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
+use RedJasmine\Product\Domain\Category\Transformer\ProductCategoryTransformer;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
@@ -35,6 +36,7 @@ class ProductCategoryApplicationService extends ApplicationService
 
     public function __construct(
         public ProductCategoryRepositoryInterface $repository,
+        public ProductCategoryTransformer $transformer,
     ) {
 
     }
@@ -56,7 +58,7 @@ class ProductCategoryApplicationService extends ApplicationService
 
     public function isAllowUse(int $id) : bool
     {
-        return (bool)($this->repository->find($id)?->isAllowUse());
+        return (bool) ($this->repository->find($id)?->isAllowUse());
     }
 
 

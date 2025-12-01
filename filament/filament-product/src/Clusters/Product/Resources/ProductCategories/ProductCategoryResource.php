@@ -48,6 +48,8 @@ class ProductCategoryResource extends Resource
 
     use CategoryResource;
 
+    public static  bool $isTranslatable = true;
+
     public static function getPages() : array
     {
         return [
