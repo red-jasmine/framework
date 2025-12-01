@@ -23,7 +23,7 @@ class CategoryForm
 {
 
 
-    public static function configure(Schema $schema, bool $hasOwner = false) : Schema
+    public static function configure(Schema $schema, bool $hasOwner = false, bool $isTranslatable = false) : Schema
     {
         $owner = $hasOwner ? [Owner::make()] : [];
         $schema->components([
@@ -56,22 +56,23 @@ class CategoryForm
                               ->dehydrateStateUsing(fn($state) => (int) $state),
 
                     TranslationTabs::make('内容')
-                                    ->schema(
-                                        [
-                                            TextInput::make('name')
-                                                     ->label(__('red-jasmine-support::category.fields.name'))
-                                                     ->required()
-                                                     ->maxLength(255),
-                                            TextInput::make('description')
-                                                     ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
+                                   ->translatable($isTranslatable)
+                                   ->schema(
+                                       [
+                                           TextInput::make('name')
+                                                    ->label(__('red-jasmine-support::category.fields.name'))
+                                                    ->required()
+                                                    ->maxLength(255),
+                                           TextInput::make('description')
+                                                    ->label(__('red-jasmine-support::category.fields.description'))->maxLength(255),
 
-                                            TextInput::make('cluster')
-                                                     ->label(__('red-jasmine-support::category.fields.cluster'))
-                                                     ->maxLength(255),
+                                           TextInput::make('cluster')
+                                                    ->label(__('red-jasmine-support::category.fields.cluster'))
+                                                    ->maxLength(255),
 
-                                        ]
-                                    )
-                                    // ->localeOptions([
+                                       ]
+                                   )
+                    // ->localeOptions([
                     //     'zh-CN' => '简体中文',
                     //     'en-US' => 'English (US)',
                     //     'ja-JP' => '日本語',

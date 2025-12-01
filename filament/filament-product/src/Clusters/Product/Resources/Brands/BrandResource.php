@@ -31,7 +31,7 @@ class BrandResource extends Resource
     protected static ?string $createCommand  = BrandCreateCommand::class;
     protected static ?string $updateCommand  = BrandUpdateCommand::class;
     protected static ?string $deleteCommand  = BrandDeleteCommand::class;
-
+    protected static bool    $isTranslatable = true;
 
     public static function getModelLabel() : string
     {
