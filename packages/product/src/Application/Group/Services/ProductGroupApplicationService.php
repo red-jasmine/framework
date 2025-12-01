@@ -9,6 +9,7 @@ use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCom
 use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupTreeQuery;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
+use RedJasmine\Product\Domain\Group\Transformer\GroupTransformer;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Contracts\UserInterface;
@@ -34,7 +35,8 @@ class ProductGroupApplicationService extends ApplicationService
     protected static string $modelClass = ProductGroup::class;
 
     public function __construct(
-        public ProductGroupRepositoryInterface $repository
+        public ProductGroupRepositoryInterface $repository,
+        public GroupTransformer $transformer,
     ) {
     }
 

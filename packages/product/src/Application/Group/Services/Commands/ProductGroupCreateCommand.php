@@ -2,14 +2,12 @@
 
 namespace RedJasmine\Product\Application\Group\Services\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Product\Domain\Group\Data\GroupData;
 
-class ProductGroupCreateCommand extends BaseCategoryData
+/**
+ * 商品分组创建命令
+ */
+class ProductGroupCreateCommand extends GroupData
 {
-
-
-    public UserInterface $owner;
-
 
 }

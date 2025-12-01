@@ -30,7 +30,6 @@ class ProductGroupResource extends Resource
     use ResourcePageHelper;
 
     protected static ?string $service        = ProductGroupApplicationService::class;
-    protected static ?string $commandService = ProductGroupApplicationService::class;
 
     protected static ?string $createCommand  = ProductGroupCreateCommand::class;
     protected static ?string $updateCommand  = ProductGroupUpdateCommand::class;
