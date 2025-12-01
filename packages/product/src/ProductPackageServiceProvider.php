@@ -99,6 +99,7 @@ class ProductPackageServiceProvider extends PackageServiceProvider
             'create_product_translations_table',
             'create_product_brand_translations_table',
             'create_product_category_translations_table',
+            'create_product_group_translations_table',
             'create_product_service_translations_table',
 
             // 媒体资源体系

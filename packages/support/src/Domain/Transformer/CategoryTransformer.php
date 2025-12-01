@@ -5,6 +5,7 @@ namespace RedJasmine\Support\Domain\Transformer;
 use RedJasmine\Support\Domain\Data\BaseCategoryData;
 use RedJasmine\Support\Domain\Data\BaseCategoryTranslationData;
 use RedJasmine\Support\Domain\Models\BaseCategoryModel;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 
 class CategoryTransformer implements TransformerInterface
 {
@@ -35,6 +36,10 @@ class CategoryTransformer implements TransformerInterface
         $model->sort        = $data->sort;
         $model->extra       = $data->extra;
 
+        // 如果模型实现了 OwnerInterface，并且数据中有 owner 属性，则设置 owner
+        if ($model instanceof OwnerInterface) {
+            $model->owner = $data->owner;
+        }
 
         $this->handleTranslations($model, $data);
         return $model;

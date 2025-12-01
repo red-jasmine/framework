@@ -35,6 +35,7 @@ class ProductGroupResource extends Resource
     protected static ?string $updateCommand  = ProductGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductGroupDeleteCommand::class;
     protected static bool    $onlyOwner      = true;
+    protected static bool $isTranslatable = true;
 
 
     public static function getModelLabel() : string
