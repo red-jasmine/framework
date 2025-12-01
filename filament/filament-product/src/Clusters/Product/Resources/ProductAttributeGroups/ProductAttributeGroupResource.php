@@ -21,6 +21,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
+use RedJasmine\FilamentCore\Resources\CategoryResource;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeGroups\Pages\CreateProductAttributeGroup;
@@ -45,7 +46,6 @@ class ProductAttributeGroupResource extends Resource
     use ResourcePageHelper;
 
     protected static ?string $service        = ProductAttributeGroupApplicationService::class;
-    protected static ?string $commandService = ProductAttributeGroupApplicationService::class;
     protected static ?string $createCommand  = ProductAttributeGroupCreateCommand::class;
     protected static ?string $updateCommand  = ProductAttributeGroupUpdateCommand::class;
     protected static ?string $deleteCommand  = ProductAttributeGroupDeleteCommand::class;
@@ -60,71 +60,7 @@ class ProductAttributeGroupResource extends Resource
     {
         return __('red-jasmine-product::product-attribute.labels.attribute');
     }
-
-    public static function form(Schema $schema) : Schema
-    {
-        return $schema
-            ->components([
-                TextInput::make('name')
-                                          ->label(__('red-jasmine-product::product-attribute-group.fields.name'))
-                                          ->required()->maxLength(255),
-                TextInput::make('description')
-                                          ->label(__('red-jasmine-product::product-attribute-group.fields.description'))
-                                          ->maxLength(255),
-                TextInput::make('sort')->label(__('red-jasmine-product::product-attribute-group.fields.sort'))
-                                          ->required()
-                                          ->integer()
-                                          ->default(0),
-                ToggleButtons::make('status')->label(__('red-jasmine-product::product-attribute-group.fields.status'))
-                                              ->inline()
-                                              ->required()
-                                              ->default(ProductAttributeStatusEnum::ENABLE)
-                                              ->useEnum(ProductAttributeStatusEnum::class)
-                ,
-
-                Operators::make(),
-            ])->columns(1);
-    }
-
-    public static function table(Table $table) : Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('id')
-                                         ->label(__('red-jasmine-product::product-attribute-group.fields.id'))
-                                         ->sortable(),
-                TextColumn::make('name')->label(__('red-jasmine-product::product-attribute-group.fields.name'))
-                                         ->searchable(),
-                TextColumn::make('sort')->label(__('red-jasmine-product::product-attribute-group.fields.sort'))
-                                         ->numeric()
-                                         ->sortable(),
-                TextColumn::make('status')->label(__('red-jasmine-product::product-attribute-group.fields.status'))
-                                         ->useEnum(),
-
-
-                
-            ])
-            ->filters([
-                SelectFilter::make('status')
-                                           ->label(__('red-jasmine-product::product-attribute-value.fields.status'))
-                                           ->options(ProductAttributeStatusEnum::options()),
-                TrashedFilter::make(),
-            ])
-            ->deferFilters()
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                RestoreAction::make(),
-                ForceDeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
-            ]);
-    }
+     use CategoryResource;
 
     public static function getRelations() : array
     {

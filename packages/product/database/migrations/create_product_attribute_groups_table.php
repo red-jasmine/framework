@@ -10,15 +10,8 @@ return new class extends Migration {
     {
 
         Schema::create('product_attribute_groups', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary()->comment('属性分组ID');
-            $table->string('name')->comment('名称');
-            $table->string('description')->nullable()->comment('描述');
-            $table->bigInteger('sort')->default(0)->comment('排序');
-            $table->string('status', 32)->comment(ProductAttributeStatusEnum::comments('状态'));
 
-            $table->operator();
-            $table->softDeletes();
-
+            $table->category('商品-属性分组表');
             $table->comment('商品-属性分组表');
         });
     }
