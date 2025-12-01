@@ -18,7 +18,7 @@ class TranslationTabs extends Section
     const REPEATER_SCHEMA_KEY = 'repeater';
     protected string $view          = 'red-jasmine-filament-core::forms.components.translation-tabs';
     protected array  $localeOptions = [];
-    protected bool|Closure $isTranslatable = true;
+    protected bool|Closure $isTranslatable = false;
 
     public function getChildSchema($key = null) : ?Schema
     {
@@ -166,7 +166,6 @@ class TranslationTabs extends Section
         $repeaterComponents = $components;
 
         if ($this->isTranslatable()) {
-
             $this->childComponents($this->buildRepeater($repeaterComponents), static::REPEATER_SCHEMA_KEY);
         }
         parent::schema($components);

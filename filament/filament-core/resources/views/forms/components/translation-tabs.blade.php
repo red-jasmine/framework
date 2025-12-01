@@ -18,13 +18,16 @@
     $isSecondary = $isSecondary();
     $id = $getId();
 
-    $repeater = $getChildSchema($schemaComponent::REPEATER_SCHEMA_KEY)->getComponents()[0];
+    $isTranslatable = $isTranslatable();
+    if($isTranslatable){
+        $repeater = $getChildSchema($schemaComponent::REPEATER_SCHEMA_KEY)->getComponents()[0];
+        $items = $repeater->getItems();
 
-    $items = $repeater->getItems();
+        $addAction = $repeater->getAction($repeater->getAddActionName());
+        $addActionAlignment =  $repeater->getAddActionAlignment();
+        $isAddable = $repeater->isAddable();
+    }
 
-    $addAction = $repeater->getAction($repeater->getAddActionName());
-    $addActionAlignment =  $repeater->getAddActionAlignment();
-   $isAddable = $repeater->isAddable();
 @endphp
 
 <div
@@ -42,51 +45,55 @@
             activeTab: 'default',
         }"
 >
-    <x-filament::tabs
-            :contained="true"
-            :vertical="false"
-    >
-        <x-filament::tabs.item
-                alpine-active="activeTab ==='default'"
-                @click="activeTab ='default'"
+    @if($isTranslatable)
+        <x-filament::tabs
+                :contained="true"
+                :vertical="false"
         >
-            默认
-        </x-filament::tabs.item>
-        @foreach ($items as $itemKey => $item)
-            @php
-                $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
-                $alpineActive = "activeTab === {$keyJs}";
-                $alpineClick = "activeTab = {$keyJs}";
-                $deleteActionForItem = $repeater->getAction($repeater->getDeleteActionName())(['item' => $itemKey]);
-                $isDeletable = $repeater->isDeletable();
-            @endphp
-
             <x-filament::tabs.item
-                    :alpine-active="$alpineActive"
-                    :x-on:click="$alpineClick"
+                    alpine-active="activeTab ==='default'"
+                    @click="activeTab ='default'"
             >
-                {{ $repeater->getItemLabel($itemKey) }}
-                @if ($isDeletable && $deleteActionForItem->isVisible())
-                    <span x-on:click.stop class="ml-1">
+                默认
+            </x-filament::tabs.item>
+
+            @foreach ($items as $itemKey => $item)
+                @php
+                    $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
+                    $alpineActive = "activeTab === {$keyJs}";
+                    $alpineClick = "activeTab = {$keyJs}";
+                    $deleteActionForItem = $repeater->getAction($repeater->getDeleteActionName())(['item' => $itemKey]);
+                    $isDeletable = $repeater->isDeletable();
+                @endphp
+
+                <x-filament::tabs.item
+                        :alpine-active="$alpineActive"
+                        :x-on:click="$alpineClick"
+                >
+                    {{ $repeater->getItemLabel($itemKey) }}
+                    @if ($isDeletable && $deleteActionForItem->isVisible())
+                        <span x-on:click.stop class="ml-1">
                             {{ $deleteActionForItem }}
                         </span>
-                @endif
-            </x-filament::tabs.item>
-            {{-- 添加翻译按钮 --}}
-        @endforeach
-        @if ($isAddable && $addAction->isVisible())
-            <div
-                    @class([
-                        'fi-tabs-item',
-                        ($addActionAlignment instanceof Alignment) ? ('fi-align-' . $addActionAlignment->value) : $addActionAlignment,
-                    ])
-            >
-                {{ $addAction }}
-            </div>
-        @endif
-    </x-filament::tabs>
+                    @endif
+                </x-filament::tabs.item>
+                {{-- 添加翻译按钮 --}}
+            @endforeach
+            @if ($isAddable && $addAction->isVisible())
+                <div
+                        @class([
+                            'fi-tabs-item',
+                            ($addActionAlignment instanceof Alignment) ? ('fi-align-' . $addActionAlignment->value) : $addActionAlignment,
+                        ])
+                >
+                    {{ $addAction }}
+                </div>
+            @endif
 
-        {{-- Tab 内容 --}}
+
+        </x-filament::tabs>
+    @endif
+    {{-- Tab 内容 --}}
     <div class="mt-4">
         <div
                 x-show="activeTab ==='default'"
@@ -94,21 +101,23 @@
             {{ $getChildSchema()->gap(! $isDivided)->extraAttributes(['class' => 'fi-section-content']) }}
 
         </div>
-        @foreach ($items as $itemKey => $item)
-            @php
-                $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
-                $showExpression = "activeTab === {$keyJs}";
-                $childSchema = $repeater->getChildSchema($itemKey);
-            @endphp
-            <div
-                    x-show="{{ $showExpression }}"
-                    x-cloak
-                    wire:key="{{ $childSchema->getLivewireKey() }}.item"
-                    wire:ignore.self
-            >
-                {{ $childSchema }}
-            </div>
-        @endforeach
+        @if($isTranslatable)
+            @foreach ($items as $itemKey => $item)
+                @php
+                    $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
+                    $showExpression = "activeTab === {$keyJs}";
+                    $childSchema = $repeater->getChildSchema($itemKey);
+                @endphp
+                <div
+                        x-show="{{ $showExpression }}"
+                        x-cloak
+                        wire:key="{{ $childSchema->getLivewireKey() }}.item"
+                        wire:ignore.self
+                >
+                    {{ $childSchema }}
+                </div>
+            @endforeach
+        @endif
     </div>
 
 
