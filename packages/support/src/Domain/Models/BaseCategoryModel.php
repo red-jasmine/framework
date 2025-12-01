@@ -43,10 +43,8 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
     use ModelTree;
 
     use SoftDeletes;
-
-    protected $withOperatorNickname = true;
-
     public $incrementing = false;
+    protected $withOperatorNickname = true;
 
     // 父级ID字段名称，默认值为 parent_id
     protected string $parentColumn = 'parent_id';
@@ -70,27 +68,15 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
 
     ];
 
-    protected function casts() : array
-    {
-        return [
-            'status'  => UniversalStatusEnum::class,
-            'is_leaf' => 'boolean',
-            'is_show' => 'boolean',
-            'extra'   => 'array',
-        ];
-    }
-
     public function parent() : BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id', 'id');
     }
 
-
     public function scopeShow(Builder $query) : Builder
     {
         return $query->enable()->where('is_show', true);
     }
-
 
     public function scopeEnable(Builder $query) : Builder
     {
@@ -125,4 +111,15 @@ abstract class BaseCategoryModel extends Model implements OperatorInterface
         return true;
     }
 
+
+
+    protected function casts() : array
+    {
+        return [
+            'status'  => UniversalStatusEnum::class,
+            'is_leaf' => 'boolean',
+            'is_show' => 'boolean',
+            'extra'   => 'array',
+        ];
+    }
 }

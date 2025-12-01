@@ -4,6 +4,7 @@ namespace RedJasmine\Support\Services;
 
 use Illuminate\Database\Schema\Blueprint;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
+use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
 class MigrationService
@@ -68,6 +69,39 @@ class MigrationService
             }
         });
 
+        Blueprint::macro('categoryTranslations', function (?string $comment = null) {
+
+            /***
+             * @var Blueprint $this
+             */
+            $this->unsignedBigInteger('id')->primary()->comment('ID');
+            $this->unsignedBigInteger('locale_id')->comment('翻译对象ID');
+            $this->string('locale', 10)->comment('语言代码');
+
+            // 翻译字段
+            $this->string('name')->comment('名称');
+            $this->string('description')->nullable()->comment('描述');
+            $this->string('cluster')->nullable()->comment('群簇');
+
+            // ========== 翻译状态 ==========
+            $this->string('translation_status',
+                32)->default(TranslationStatusEnum::REVIEWED->value)->comment(TranslationStatusEnum::comments('翻译状态'));
+            $this->timestamp('translated_at')->nullable()->comment('翻译完成时间');
+            $this->timestamp('reviewed_at')->nullable()->comment('审核完成时间');
+
+            $this->operator();
+            $this->softDeletes();
+
+
+            $this->index(['locale_id', 'locale'], 'idx_locale_id');
+            $this->index('locale', 'idx_locale');
+            $this->index('translation_status', 'idx_translation_status');
+            $this->index('locale_id', 'locale_id');
+            $this->fullText(['name'], 'idx_search');
+            if ($comment) {
+                $this->comment($comment);
+            }
+        });
 
         Blueprint::macro('approval', function () {
             $this->enum('approval_status', ApprovalStatusEnum::values())

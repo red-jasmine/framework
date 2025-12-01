@@ -10,9 +10,11 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 class BaseCategoryData extends Data
 {
-    public string              $name;
+
     public ?string             $slug;
+    public string              $name;
     public ?string             $description = null;
+    public ?string             $cluster     = null;
     public int                 $parentId    = 0;
     #[WithCast(EnumCast::class, UniversalStatusEnum::class)]
     public UniversalStatusEnum $status      = UniversalStatusEnum::ENABLE;
@@ -22,8 +24,14 @@ class BaseCategoryData extends Data
     public ?string             $image       = null;
     public ?string             $icon        = null;
     public ?string             $color       = null;
-    public ?string             $cluster     = null;
+
     public ?array              $extra       = null;
+
+
+    /**
+     * @var BaseCategoryTranslationData[]|null
+     */
+    public ?array $translations = null;
 
 
     public static function attributes() : array
