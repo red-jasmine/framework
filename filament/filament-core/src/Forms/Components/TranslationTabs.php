@@ -7,30 +7,27 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
-class TransTabs extends Section
+class TranslationTabs extends Section
 {
     const REPEATER_SCHEMA_KEY = 'repeater';
-    protected string $view          = 'red-jasmine-filament-core::forms.components.section';
+    protected string $view          = 'red-jasmine-filament-core::forms.components.translation-tabs';
     protected array  $localeOptions = [];
+    protected bool|Closure $isTranslatable = true;
+
     public function getChildSchema($key = null) : ?Schema
     {
-
 
 
         return parent::getChildSchema($key);
 
         $this->getChildComponents();
     }
-
-    protected bool|Closure $isTranslatable = true;
-
 
     /**
      * @param  bool|Closure  $condition
@@ -41,11 +38,6 @@ class TransTabs extends Section
     {
         $this->isTranslatable = $condition;
         return $this;
-    }
-
-    public function isTranslatable() : bool
-    {
-        return $this->evaluate($this->isTranslatable);
     }
 
     /**
@@ -74,7 +66,6 @@ class TransTabs extends Section
 
         $repeater = Repeater::make('translations')
                             ->relationship('translations')
-                            ->view('red-jasmine-filament-product::forms.components.translatable-tabs')
                             ->dehydrated()
                             ->saveRelationshipsUsing(null)
                             ->label('多语言翻译')
@@ -174,12 +165,17 @@ class TransTabs extends Section
     {
         $repeaterComponents = $components;
 
-        if($this->isTranslatable()){
+        if ($this->isTranslatable()) {
 
-            $this->childComponents($this->buildRepeater($repeaterComponents),static::REPEATER_SCHEMA_KEY);
+            $this->childComponents($this->buildRepeater($repeaterComponents), static::REPEATER_SCHEMA_KEY);
         }
         parent::schema($components);
         return $this;
+    }
+
+    public function isTranslatable() : bool
+    {
+        return $this->evaluate($this->isTranslatable);
     }
 
 }

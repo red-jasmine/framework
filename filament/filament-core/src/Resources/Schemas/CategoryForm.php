@@ -16,7 +16,7 @@ use Filament\Schemas\Schema;
 use Guava\IconPicker\Forms\Components\IconPicker;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\FilamentCore\Forms\Components\TranslatableTabs;
-use RedJasmine\FilamentCore\Forms\Components\TransTabs;
+use RedJasmine\FilamentCore\Forms\Components\TranslationTabs;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
 class CategoryForm
@@ -55,7 +55,7 @@ class CategoryForm
                               ->parentNullValue(0)
                               ->dehydrateStateUsing(fn($state) => (int) $state),
 
-                    TransTabs::make('内容')
+                    TranslationTabs::make('内容')
                                     ->schema(
                                         [
                                             TextInput::make('name')
@@ -72,13 +72,13 @@ class CategoryForm
                                         ]
                                     )
                                     // ->localeOptions([
-                                    //     'zh-CN' => '简体中文',
-                                    //     'en-US' => 'English (US)',
-                                    //     'ja-JP' => '日本語',
-                                    // ])
-                                    // ->defaultLocaleLabel('默认'),
+                    //     'zh-CN' => '简体中文',
+                    //     'en-US' => 'English (US)',
+                    //     'ja-JP' => '日本語',
+                    // ])
+                    // ->defaultLocaleLabel('默认'),
 
-        ,
+                    ,
 
                     KeyValue::make('extra')
                             ->default([])
