@@ -209,7 +209,7 @@ trait ResourcePageHelper
     protected function handleRecordUpdate(Model $record, array $data) : Model
     {
 
-        dd($data);
+
         try {
             $resource = static::getResource();
 

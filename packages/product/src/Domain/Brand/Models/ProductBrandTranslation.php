@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
+use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 /**
  * 品牌翻译模型
@@ -30,6 +31,7 @@ class ProductBrandTranslation extends Model implements OperatorInterface
 {
     use SoftDeletes;
     use HasOperator;
+    use HasSnowflakeId;
 
     protected $table = 'product_brand_translations';
 
