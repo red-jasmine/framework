@@ -11,12 +11,13 @@ return new class extends Migration {
         Schema::create('product_brand_translations', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->comment('ID');
             $table->unsignedBigInteger('product_brand_id')->comment('品牌ID');
-            $table->string('locale', 10)->comment('语言代码：zh-CN, en-US, de-DE, ja-JP');
+            $table->string('locale', 10)->comment('语言代码');
 
             // ========== 可翻译字段 ==========
             $table->string('name', 255)->comment('品牌名称');
-            $table->text('description')->nullable()->comment('品牌描述');
             $table->string('slogan', 255)->nullable()->comment('品牌口号');
+            $table->text('description')->nullable()->comment('品牌描述');
+
 
             // ========== 翻译状态 ==========
             $table->string('translation_status', 32)->default(TranslationStatusEnum::PENDING->value)->comment(TranslationStatusEnum::comments('翻译状态'));

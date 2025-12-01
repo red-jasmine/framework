@@ -46,11 +46,10 @@
             @foreach ($items as $itemKey => $item)
                 @php
                     $itemLabel = $getItemLabel($itemKey);
-                      $itemData = $rawState[$itemKey] ?? [];
-                      $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
-                      $alpineActive = "activeTab === {$keyJs}";
-                      $alpineClick = "activeTab = {$keyJs}";
-                      $deleteActionForItem = $deleteAction(['item' => $itemKey]);
+                    $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
+                    $alpineActive = "activeTab === {$keyJs}";
+                    $alpineClick = "activeTab = {$keyJs}";
+                    $deleteActionForItem = $deleteAction(['item' => $itemKey]);
                 @endphp
                 <x-filament::tabs.item
                         :x-bind:alpine-active="$alpineActive"
@@ -106,22 +105,42 @@
                 activeTab: config.activeTab !== null ? String(config.activeTab) : null,
 
                 init() {
-                    // 监听 Livewire 更新，自动切换到新添加的项
                     const statePath = @js($statePath);
-                    this.$watch(`$wire.${statePath}`, () => {
+                    let previousKeys = [];
+                    let isInitialized = false;
+
+                    // 初始化 previousKeys
+                    this.$nextTick(() => {
+                        const state = this.$wire.get(statePath) || {};
+                        previousKeys = Object.keys(state).map(k => String(k));
+                        isInitialized = true;
+
+                        // 如果没有活跃的 tab，切换到第一个
+                        if (previousKeys.length > 0 && !this.activeTab) {
+                            this.activeTab = previousKeys[0];
+                        }
+                    });
+
+                    // 监听 Livewire 更新
+                    this.$watch(`$wire.${statePath}`, (newState) => {
+                        if (!isInitialized) return;
+
                         this.$nextTick(() => {
-                            // 获取最新的状态
                             const state = this.$wire.get(statePath) || {};
                             const keys = Object.keys(state).map(k => String(k));
 
-                            // 如果添加了新项，切换到最后一个
-                            if (keys.length > 0 && !keys.includes(String(this.activeTab))) {
-                                this.activeTab = keys[keys.length - 1];
-                            } else if (keys.length > 0 && !this.activeTab) {
-                                this.activeTab = keys[0];
+                            // 检查是否有新添加的项
+                            const newKeys = keys.filter(k => !previousKeys.includes(k));
+
+                            if (newKeys.length > 0) {
+                                // 如果有新添加的项，切换到最后一个新添加的项
+                                this.activeTab = newKeys[newKeys.length - 1];
                             }
+
+                            // 更新 previousKeys
+                            previousKeys = keys;
                         });
-                    }, {deep: true});
+                    }, {deep: true, immediate: false});
                 }
             }));
         });
