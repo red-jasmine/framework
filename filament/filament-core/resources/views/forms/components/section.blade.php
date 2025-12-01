@@ -17,61 +17,99 @@
     $shouldPersistCollapsed = $shouldPersistCollapsed();
     $isSecondary = $isSecondary();
     $id = $getId();
-    
+
+    $repeater = $getChildSchema($schemaComponent::REPEATER_SCHEMA_KEY)->getComponents()[0];
+
+    $items = $repeater->getItems();
+
+    $addAction = $repeater->getAction($repeater->getAddActionName());
+    $addActionAlignment =  $repeater->getAddActionAlignment();
+   $isAddable = $repeater->isAddable();
 @endphp
 
 <div
-    {{
-        $attributes
-            ->merge([
-                'id' => $id,
-            ], escape: false)
-            ->merge($getExtraAttributes(), escape: false)
-            ->merge($getExtraAlpineAttributes(), escape: false)
-            ->class(['fi-sc-section'])
-    }}
+        {{
+            $attributes
+                ->merge([
+                    'id' => $id,
+                ], escape: false)
+                ->merge($getExtraAttributes(), escape: false)
+                ->merge($getExtraAlpineAttributes(), escape: false)
+                ->class(['fi-sc-section'])
+        }}
+
+        x-data="{
+            activeTab: 'default',
+        }"
 >
-    @if (filled($label = $getLabel()))
-        <div class="fi-sc-section-label-ctn">
-            {{ $getChildSchema($schemaComponent::BEFORE_LABEL_SCHEMA_KEY) }}
-
-            <div class="fi-sc-section-label">
-                {{ $label }}
-            </div>
-
-            {{ $getChildSchema($schemaComponent::AFTER_LABEL_SCHEMA_KEY) }}
-        </div>
-    @endif
-
-    @if ($aboveContentContainer = $getChildSchema($schemaComponent::ABOVE_CONTENT_SCHEMA_KEY)?->toHtmlString())
-        {{ $aboveContentContainer }}
-    @endif
-
-    <x-filament::section
-        :after-header="$afterHeader"
-        :aside="$isAside"
-        :collapsed="$isCollapsed"
-        :collapse-id="$id"
-        :collapsible="$isCollapsible && (! $isAside)"
-        :compact="$isCompact"
-        :contained="$isContained"
-        :content-before="$isFormBefore"
-        :description="$description"
-        :divided="$isDivided"
-        :footer="$footer"
-        :has-content-el="false"
-        :heading="$heading"
-        :heading-tag="$headingTag"
-        :icon="$icon"
-        :icon-color="$iconColor"
-        :icon-size="$iconSize"
-        :persist-collapsed="$shouldPersistCollapsed"
-        :secondary="$isSecondary"
+    <x-filament::tabs
+            :contained="true"
+            :vertical="false"
     >
-        {{ $getChildSchema()->gap(! $isDivided)->extraAttributes(['class' => 'fi-section-content']) }}
-    </x-filament::section>
+        <x-filament::tabs.item
+                alpine-active="activeTab ==='default'"
+                @click="activeTab ='default'"
+        >
+            默认
+        </x-filament::tabs.item>
+        @foreach ($items as $itemKey => $item)
+            @php
+                $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
+                $alpineActive = "activeTab === {$keyJs}";
+                $alpineClick = "activeTab = {$keyJs}";
+                $deleteActionForItem = $repeater->getAction($repeater->getDeleteActionName())(['item' => $itemKey]);
+                $isDeletable = $repeater->isDeletable();
+            @endphp
 
-    @if ($belowContentContainer = $getChildSchema($schemaComponent::BELOW_CONTENT_SCHEMA_KEY)?->toHtmlString())
-        {{ $belowContentContainer }}
-    @endif
+            <x-filament::tabs.item
+                    :x-bind:alpine-active="$alpineActive"
+                    :x-on:click="$alpineClick"
+            >
+                {{ $repeater->getItemLabel($itemKey) }}
+                @if ($isDeletable && $deleteActionForItem->isVisible())
+                    <span x-on:click.stop class="ml-1">
+                            {{ $deleteActionForItem }}
+                        </span>
+                @endif
+            </x-filament::tabs.item>
+            {{-- 添加翻译按钮 --}}
+        @endforeach
+        @if ($isAddable && $addAction->isVisible())
+            <div
+                    @class([
+                        'fi-tabs-item',
+                        ($addActionAlignment instanceof Alignment) ? ('fi-align-' . $addActionAlignment->value) : $addActionAlignment,
+                    ])
+            >
+                {{ $addAction }}
+            </div>
+        @endif
+    </x-filament::tabs>
+
+        {{-- Tab 内容 --}}
+    <div class="mt-4">
+        <div
+                x-show="activeTab ==='default'"
+        >
+            {{ $getChildSchema()->gap(! $isDivided)->extraAttributes(['class' => 'fi-section-content']) }}
+
+        </div>
+        @foreach ($items as $itemKey => $item)
+            @php
+                $keyJs = is_string($itemKey) ? "'" . addslashes($itemKey) . "'" : (string)$itemKey;
+                $showExpression = "activeTab === {$keyJs}";
+                $childSchema = $repeater->getChildSchema($itemKey);
+            @endphp
+            <div
+                    x-show="{{ $showExpression }}"
+                    x-cloak
+                    wire:key="{{ $childSchema->getLivewireKey() }}.item"
+                    wire:ignore.self
+            >
+                {{ $childSchema }}
+            </div>
+        @endforeach
+    </div>
+
+
 </div>

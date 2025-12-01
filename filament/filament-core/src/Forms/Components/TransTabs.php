@@ -11,14 +11,23 @@ use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
 class TransTabs extends Section
 {
-
+    const REPEATER_SCHEMA_KEY = 'repeater';
     protected string $view          = 'red-jasmine-filament-core::forms.components.section';
     protected array  $localeOptions = [];
+    public function getChildSchema($key = null) : ?Schema
+    {
 
+
+
+        return parent::getChildSchema($key);
+
+        $this->getChildComponents();
+    }
 
     protected bool|Closure $isTranslatable = true;
 
@@ -164,12 +173,12 @@ class TransTabs extends Section
     public function schema(array|Closure $components) : static
     {
         $repeaterComponents = $components;
-        $addRepeaterComponents = [];
-        if($this->isTranslatable()){
-            $addRepeaterComponents[]  = $this->buildRepeater($repeaterComponents);
-        }
 
-        parent::schema([...$components, ...$addRepeaterComponents]);
+        if($this->isTranslatable()){
+
+            $this->childComponents($this->buildRepeater($repeaterComponents),static::REPEATER_SCHEMA_KEY);
+        }
+        parent::schema($components);
         return $this;
     }
 
