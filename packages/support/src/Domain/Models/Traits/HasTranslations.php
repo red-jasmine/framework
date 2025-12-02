@@ -2,6 +2,7 @@
 
 namespace RedJasmine\Support\Domain\Models\Traits;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
@@ -20,6 +21,20 @@ trait HasTranslations
 
     use Relationship, Scopes;
 
+    public static function bootHasTranslations(): void
+    {
+        static::saved(function (Model $model) {
+            /* @var static $model */
+            return $model->saveTranslations();
+        });
+
+        static::deleting(function (Model $model) {
+            /* @var static $model */
+            if (self::$deleteTranslationsCascade === true) {
+                return $model->deleteTranslations();
+            }
+        });
+    }
     protected static $autoloadTranslations = null;
 
     protected static $deleteTranslationsCascade = false;
