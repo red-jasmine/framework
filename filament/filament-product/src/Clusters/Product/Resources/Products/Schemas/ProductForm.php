@@ -2,7 +2,8 @@
 
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
-use CodeWithDennis\FilamentSelectTree\SelectTree;
+
+use RedJasmine\FilamentCore\Forms\Components\SelectTree;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
@@ -192,6 +193,7 @@ class ProductForm
 
 
                        SelectTree::make('category_id')
+                                 ->withTranslation()
                                  ->label(__('red-jasmine-product::product.fields.category_id'))
                                  ->relationship('category', 'name', 'parent_id')
                                  ->parentNullValue(0)
@@ -200,15 +202,15 @@ class ProductForm
                                  ->helperText('选择商品所属类目')
                                  ->searchable(),
 
-                       \RedJasmine\FilamentCore\Forms\Components\SelectTree::make('brand_id')
-                                                                           ->label(__('red-jasmine-product::product.fields.brand_id'))
-                                                                           ->withTranslation()
-                                                                           ->relationship('brand', 'name', 'parent_id')
-                                                                           ->parentNullValue(0)
-                                                                           ->default(0)
-                                                                           ->defaultZero()
-                                                                           ->helperText('选择商品品牌')
-                                                                           ->searchable(),
+                       SelectTree::make('brand_id')
+                                 ->label(__('red-jasmine-product::product.fields.brand_id'))
+                                 ->withTranslation()
+                                 ->relationship('brand', 'name', 'parent_id')
+                                 ->parentNullValue(0)
+                                 ->default(0)
+                                 ->defaultZero()
+                                 ->helperText('选择商品品牌')
+                                 ->searchable(),
 
                        TextInput::make('model_code')
                                 ->label(__('red-jasmine-product::product.fields.model_code'))
