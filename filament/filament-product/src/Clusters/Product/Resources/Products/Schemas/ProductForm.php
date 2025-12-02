@@ -3,6 +3,7 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
 
+use Filament\Schemas\Components\Flex;
 use RedJasmine\FilamentCore\Forms\Components\SelectTree;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -46,11 +47,14 @@ use Throwable;
 
 class ProductForm
 {
+
+
     /**
      * 配置表单
      */
     public static function configure(Schema $form) : Schema
     {
+       return ProductFormFlex::configure($form);
         $schema = [
             Tab::make('basic_info')
                ->label(__('red-jasmine-product::product.labels.basic_info'))
@@ -68,9 +72,7 @@ class ProductForm
         return $form
             ->components([
                 Tabs::make(__('red-jasmine-product::product.labels.product'))
-                    ->tabs($schema)
-                    ->vertical()
-                    ->persistTabInQueryString(),
+                    ->tabs($schema),
             ])
             ->inlineLabel(true)
             ->columns(1);

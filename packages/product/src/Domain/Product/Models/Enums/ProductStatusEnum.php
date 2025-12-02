@@ -36,9 +36,9 @@ enum ProductStatusEnum: string
     public static function labels() : array
     {
         return [
+            self::AVAILABLE->value   => __('red-jasmine-product::product.enums.status.available'),
             self::DRAFT->value       => __('red-jasmine-product::product.enums.status.draft'),
             self::PENDING->value     => __('red-jasmine-product::product.enums.status.pending'),
-            self::AVAILABLE->value   => __('red-jasmine-product::product.enums.status.available'),
             self::PAUSED->value      => __('red-jasmine-product::product.enums.status.paused'),
             self::UNAVAILABLE->value => __('red-jasmine-product::product.enums.status.unavailable'),
             self::FORBIDDEN->value   => __('red-jasmine-product::product.enums.status.forbidden'),
