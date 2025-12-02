@@ -105,6 +105,53 @@ trait HasTranslations
 
         return $this;
     }
+    // TODO 是否需要自动转换 自动转换 传入表单 会输出翻译后的数据，和原始表单不一致
+    public function getAttribute23($key)
+    {
+        [$attribute, $locale] = $this->getAttributeAndLocale($key);
+
+        if ($this->isTranslationAttribute($attribute)) {
+            if ($this->getTranslation($locale) === null) {
+                return $this->getAttributeValue($attribute);
+            }
+
+            // If the given $attribute has a mutator, we push it to $attributes and then call getAttributeValue
+            // on it. This way, we can use Eloquent's checking for Mutation, type casting, and
+            // Date fields.
+            if ($this->hasGetMutator($attribute)) {
+                $this->attributes[$attribute] = $this->getAttributeOrFallback($locale, $attribute);
+
+                return $this->getAttributeValue($attribute);
+            }
+
+            return $this->getAttributeOrFallback($locale, $attribute);
+        }
+
+        return parent::getAttribute($key);
+    }
+    public function attributesToArray23()
+    {
+        $attributes = parent::attributesToArray();
+
+        if (
+            (! $this->relationLoaded('translations') && ! $this->toArrayAlwaysLoadsTranslations() && is_null(self::$autoloadTranslations))
+            || self::$autoloadTranslations === false
+        ) {
+            return $attributes;
+        }
+
+        $hiddenAttributes = $this->getHidden();
+
+        foreach ($this->translatedAttributes as $field) {
+            if (in_array($field, $hiddenAttributes)) {
+                continue;
+            }
+
+            $attributes[$field] = $this->getAttributeOrFallback(null, $field);
+        }
+
+        return $attributes;
+    }
 
 
     public function isWrapperAttribute(string $key) : bool
