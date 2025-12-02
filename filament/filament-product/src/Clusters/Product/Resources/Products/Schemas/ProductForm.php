@@ -135,14 +135,15 @@ class ProductForm
                                  ->helperText('选择商品所属类目')
                                  ->searchable(),
 
-                       SelectTree::make('brand_id')
-                                 ->label(__('red-jasmine-product::product.fields.brand_id'))
-                                 ->relationship('brand', 'name', 'parent_id')
-                                 ->parentNullValue(0)
-                                 ->default(0)
-                                 ->defaultZero()
-                                 ->helperText('选择商品品牌')
-                                 ->searchable(),
+                       \RedJasmine\FilamentCore\Forms\Components\SelectTree::make('brand_id')
+                                                                           ->label(__('red-jasmine-product::product.fields.brand_id'))
+                                                                           ->withTranslation()
+                                                                           ->relationship('brand', 'name', 'parent_id')
+                                                                           ->parentNullValue(0)
+                                                                           ->default(0)
+                                                                           ->defaultZero()
+                                                                           ->helperText('选择商品品牌')
+                                                                           ->searchable(),
 
                        TextInput::make('model_code')
                                 ->label(__('red-jasmine-product::product.fields.model_code'))
@@ -659,7 +660,7 @@ class ProductForm
                                      $state,
                                      ?\RedJasmine\Product\Domain\Product\Models\Product $record
                                  ) {
-                                     $component->state($record?$record->media->sortBy('position')->pluck('path')->toArray():[]);
+                                     $component->state($record ? $record->media->sortBy('position')->pluck('path')->toArray() : []);
                                  })
                                  ->dehydrateStateUsing(function ($state) {
 

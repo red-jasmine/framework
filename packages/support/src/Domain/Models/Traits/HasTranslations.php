@@ -172,6 +172,7 @@ trait HasTranslations
         return $newInstance;
     }
 
+
     public function translate(?string $locale = null, bool $withFallback = false) : ?Model
     {
         return $this->getTranslation($locale, $withFallback);
