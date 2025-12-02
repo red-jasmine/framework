@@ -40,15 +40,12 @@ class ProductAttribute extends Model implements OperatorInterface
      */
     public  string $translationForeignKey = 'attribute_id';
 
-    /**
-     * 可翻译字段
-     */
-    protected array $translatable         = [
+
+    protected array $translatedAttributes = [
         'name',
         'description',
         'unit',
     ];
-    protected array $translatedAttributes = [];
 
     public $incrementing = false;
 

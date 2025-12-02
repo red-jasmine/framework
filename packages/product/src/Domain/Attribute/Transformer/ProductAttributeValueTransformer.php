@@ -87,7 +87,7 @@ class ProductAttributeValueTransformer implements TransformerInterface
             $translationAttributes = $this->prepareTranslationAttributes($translationData);
 
             // 使用模型的 setTranslation 方法设置翻译
-            $model->setTranslation($translationData->locale, $translationAttributes);
+            $model->translateOrNew($translationData->locale)->fill($translationAttributes);
         }
     }
 

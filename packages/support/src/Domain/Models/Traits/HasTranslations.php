@@ -2,8 +2,11 @@
 
 namespace RedJasmine\Support\Domain\Models\Traits;
 
-use Astrotomic\Translatable\Translatable;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
+use RedJasmine\Support\Domain\Models\Traits\Translations\Relationship;
+use RedJasmine\Support\Domain\Models\Traits\Translations\Scopes;
 
 /**
  * 多语言翻译 Trait
@@ -13,111 +16,325 @@ use Illuminate\Database\Eloquent\Builder;
  */
 trait HasTranslations
 {
-    use Translatable;
 
-    /**
-     * 获取翻译字段列表
-     * 子类需要覆盖此方法或定义 $translatable 属性
-     */
-    public function getTranslatableAttributes(): array
+
+    use Relationship, Scopes;
+
+    protected static $autoloadTranslations = null;
+
+    protected static $deleteTranslationsCascade = false;
+
+    protected $defaultLocale;
+
+    public static function defaultAutoloadTranslations() : void
     {
-        return $this->translatable ?? [];
+        self::$autoloadTranslations = null;
     }
 
-    /**
-     * 获取默认语言
-     */
-    public function getDefaultLocale(): ?string
+    public static function disableAutoloadTranslations() : void
     {
-        return  config('app.locale', 'zh-CN');
+        self::$autoloadTranslations = false;
     }
 
-    /**
-     * 获取指定语言的翻译（带回退）
-     *
-     * @param string|null $locale 语言代码，null 使用当前语言
-     * @param bool $withFallback 是否回退到默认语言
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function translate(?string $locale = null, bool $withFallback = true)
+    public static function enableAutoloadTranslations() : void
     {
-        $locale = $locale ?: $this->getLocale();
+        self::$autoloadTranslations = true;
+    }
 
-        if (!$withFallback) {
-            return parent::translate($locale, false);
+    public static function disableDeleteTranslationsCascade() : void
+    {
+        self::$deleteTranslationsCascade = false;
+    }
+
+    public static function enableDeleteTranslationsCascade() : void
+    {
+        self::$deleteTranslationsCascade = true;
+    }
+
+    public function getTranslationsArray() : array
+    {
+        $translations = [];
+
+        foreach ($this->translations as $translation) {
+            foreach ($this->translatedAttributes as $attr) {
+                $translations[$translation->{$this->getLocaleKey()}][$attr] = $translation->{$attr};
+            }
         }
 
-        // 先尝试获取指定语言的翻译
-        $translation = parent::translate($locale, false);
+        return $translations;
+    }
 
-        // 如果没有找到，回退到默认语言
-        if (!$translation && $locale !== $this->getDefaultLocale()) {
-            $translation = parent::translate($this->getDefaultLocale(), false);
+    /**
+     * @internal will change to protected
+     */
+    public function getLocaleKey() : string
+    {
+        return $this->localeKey ?: config('translatable.locale_key', 'locale');
+    }
+
+    public function hasTranslation(?string $locale = null) : bool
+    {
+        $locale = $locale ?: $this->locale();
+
+        foreach ($this->translations as $translation) {
+            if ($translation->getAttribute($this->getLocaleKey()) == $locale) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function locale() : string
+    {
+        if ($this->getDefaultLocale()) {
+            return $this->getDefaultLocale();
+        }
+
+        return config('app.locale');
+    }
+
+    public function getDefaultLocale() : ?string
+    {
+        return $this->defaultLocale;
+    }
+
+    public function setDefaultLocale(?string $locale)
+    {
+        $this->defaultLocale = $locale;
+
+        return $this;
+    }
+
+
+    public function isWrapperAttribute(string $key) : bool
+    {
+        return $key === config('translatable.translations_wrapper');
+    }
+
+    public function replicateWithTranslations(?array $except = null) : Model
+    {
+        $newInstance = $this->replicate($except);
+
+        unset($newInstance->translations);
+        foreach ($this->translations as $translation) {
+            $newTranslation = $translation->replicate();
+            $newInstance->translations->add($newTranslation);
+        }
+
+        return $newInstance;
+    }
+
+    public function translate(?string $locale = null, bool $withFallback = false) : ?Model
+    {
+        return $this->getTranslation($locale, $withFallback);
+    }
+
+    public function getTranslation(?string $locale = null, ?bool $withFallback = null) : ?Model
+    {
+        $configFallbackLocale = $this->getFallbackLocale();
+        $locale               = $locale ?: $this->locale();
+        $withFallback         = $withFallback === null ? $this->useFallback() : $withFallback;
+        $fallbackLocale       = $this->getFallbackLocale($locale);
+
+        if ($translation = $this->getTranslationByLocaleKey($locale)) {
+            return $translation;
+        }
+
+        if ($withFallback && $fallbackLocale) {
+            if ($translation = $this->getTranslationByLocaleKey($fallbackLocale)) {
+                return $translation;
+            }
+
+            if (
+                is_string($configFallbackLocale)
+                && $fallbackLocale !== $configFallbackLocale
+                && $translation = $this->getTranslationByLocaleKey($configFallbackLocale)
+            ) {
+                return $translation;
+            }
+        }
+
+
+        return null;
+    }
+
+    protected function getFallbackLocale(?string $locale = null) : ?string
+    {
+
+
+        return config('app.fallback_locale');
+    }
+
+    protected function useFallback() : bool
+    {
+        if (isset($this->useTranslationFallback) && is_bool($this->useTranslationFallback)) {
+            return $this->useTranslationFallback;
+        }
+
+        return (bool) true;
+    }
+
+    protected function getTranslationByLocaleKey(string $key) : ?Model
+    {
+        if (
+            $this->relationLoaded('translation')
+            && $this->translation
+            && $this->translation->getAttribute($this->getLocaleKey()) == $key
+        ) {
+            return $this->translation;
+        }
+
+        return $this->translations->firstWhere($this->getLocaleKey(), $key);
+    }
+
+    public function translateOrDefault(?string $locale = null) : ?Model
+    {
+        return $this->getTranslation($locale, true);
+    }
+
+    public function translateOrNew(?string $locale = null) : Model
+    {
+        return $this->getTranslationOrNew($locale);
+    }
+
+    public function getTranslationOrNew(?string $locale = null) : Model
+    {
+        $locale = $locale ?: $this->locale();
+
+        if (($translation = $this->getTranslation($locale, false)) === null) {
+            $translation = $this->getNewTranslation($locale);
         }
 
         return $translation;
     }
 
-    /**
-     * 获取翻译字段值（带回退）
-     *
-     * @param string $key 字段名
-     * @param string|null $locale 语言代码
-     * @return mixed
-     */
-    public function getTranslatedAttribute(string $key, ?string $locale = null)
+    public function getNewTranslation(string $locale) : Model
     {
-        $translation = $this->translate($locale);
+        $modelName = $this->getTranslationModelName();
 
-        if ($translation && $translation->hasAttribute($key)) {
-            return $translation->getAttribute($key);
+        /** @var Model $translation */
+        $translation = new $modelName;
+        $translation->setAttribute($this->getLocaleKey(), $locale);
+        $translation->setAttribute($this->getTranslationRelationKey(), $this->getKey());
+        $this->translations->add($translation);
+
+        return $translation;
+    }
+
+    public function setAttribute23($key, $value)
+    {
+        [$attribute, $locale] = $this->getAttributeAndLocale($key);
+
+        if ($this->isTranslationAttribute($attribute)) {
+            $this->getTranslationOrNew($locale)->$attribute = $value;
+
+            return $this;
         }
 
-        // 回退到主表字段
-        return $this->getAttribute($key);
+        return parent::setAttribute($key, $value);
     }
 
-    /**
-     * 设置翻译
-     *
-     * @param string $locale 语言代码
-     * @param array $attributes 翻译字段
-     * @return $this
-     */
-    public function setTranslation(string $locale, array $attributes)
+    protected function getAttributeAndLocale(string $key) : array
     {
-        $this->translateOrNew($locale)->fill($attributes);
-        return $this;
+        if (Str::contains($key, ':')) {
+            return explode(':', $key);
+        }
+
+        return [$key, $this->locale()];
     }
 
-    /**
-     * 查询作用域：预加载翻译
-     *
-     * @param Builder $query
-     * @param string|null $locale 语言代码
-     * @return Builder
-     */
-    public function scopeWithTranslation(Builder $query, ?string $locale = null): Builder
+    public function isTranslationAttribute(string $key) : bool
     {
-        return $query->with(['translations' => function ($query) use ($locale) {
-            if ($locale) {
-                $query->where('locale', $locale);
+        return in_array($key, $this->translatedAttributes);
+    }
+
+    public function translateOrFail(string $locale) : Model
+    {
+        return $this->getTranslationOrFail($locale);
+    }
+
+    public function getTranslationOrFail(string $locale) : Model
+    {
+        if (($translation = $this->getTranslation($locale, false)) === null) {
+            throw (new ModelNotFoundException)->setModel($this->getTranslationModelName(), $locale);
+        }
+
+        return $translation;
+    }
+
+    public function __isset($key)
+    {
+        return $this->isTranslationAttribute($key) || parent::__isset($key);
+    }
+
+    protected function saveTranslations() : bool
+    {
+        $saved = true;
+
+        if (!$this->relationLoaded('translations')) {
+            return $saved;
+        }
+
+        foreach ($this->translations as $translation) {
+            if ($saved && $this->isTranslationDirty($translation)) {
+                if (!empty($connectionName = $this->getConnectionName())) {
+                    $translation->setConnection($connectionName);
+                }
+
+                $translation->setAttribute($this->getTranslationRelationKey(), $this->getKey());
+                $saved = $translation->save();
             }
-        }]);
+        }
+
+        return $saved;
     }
 
-    /**
-     * 查询作用域：按语言过滤
-     *
-     * @param Builder $query
-     * @param string $locale 语言代码
-     * @return Builder
-     */
-    public function scopeHasTranslation(Builder $query, string $locale): Builder
+    protected function isTranslationDirty(Model $translation) : bool
     {
-        return $query->whereHas('translations', function ($q) use ($locale) {
-            $q->where('locale', $locale);
-        });
+        $dirtyAttributes = $translation->getDirty();
+        unset($dirtyAttributes[$this->getLocaleKey()]);
+        unset($dirtyAttributes[$this->getTranslationRelationKey()]);
+
+        return count($dirtyAttributes) > 0;
     }
+
+    protected function getAttributeOrFallback(?string $locale, string $attribute)
+    {
+        $translation = $this->getTranslation($locale);
+
+        if (
+            (
+                !$translation instanceof Model
+                || $this->isEmptyTranslatableAttribute($attribute, $translation->$attribute)
+            )
+            && $this->usePropertyFallback()
+        ) {
+            $translation = $this->getTranslation($this->getFallbackLocale(), false);
+        }
+
+        if ($translation instanceof Model) {
+            return $translation->$attribute;
+        }
+
+        return null;
+    }
+
+    protected function isEmptyTranslatableAttribute(string $key, $value) : bool
+    {
+        return empty($value);
+    }
+
+    protected function usePropertyFallback() : bool
+    {
+        return $this->useFallback() && config('translatable.use_property_fallback', false);
+    }
+
+    protected function toArrayAlwaysLoadsTranslations() : bool
+    {
+        return config('translatable.to_array_always_loads_translations', true);
+    }
+
+
 }
 

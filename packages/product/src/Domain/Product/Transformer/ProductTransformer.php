@@ -312,7 +312,8 @@ class ProductTransformer
             $translationAttributes = $this->prepareTranslationAttributes($translationData);
 
             // 使用 Product 模型的 setTranslation 方法设置翻译
-            $product->setTranslation($translationData->locale, $translationAttributes);
+            $product->translateOrNew($translationData->locale)->fill($translationAttributes);
+
         }
     }
 

@@ -88,7 +88,7 @@ class Product extends Model implements OperatorInterface, OwnerInterface
      * - title: 来自 products 表
      * - slogan, description, meta_title, meta_keywords, meta_description: 来自 products_extension 表
      */
-    protected array $translatable = [
+    protected array $translatedAttributes = [
         'title',              // 商品标题（来自 products 表）
         'slogan',            // 广告语（来自 products_extension 表）
         'description',        // 富文本详情（来自 products_extension 表）
@@ -96,11 +96,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         'meta_keywords',      // SEO关键词（来自 products_extension 表）
         'meta_description',   // SEO描述（来自 products_extension 表）
     ];
-
-    /**
-     * 翻译属性缓存（由 astrotomic/laravel-translatable 自动填充）
-     */
-    protected array $translatedAttributes = [];
 
     protected static function boot() : void
     {
@@ -526,113 +521,6 @@ class Product extends Model implements OperatorInterface, OwnerInterface
         return $defaultVariant;
     }
 
-    /**
-     * 获取翻译后的标题
-     *
-     * @param  string|null  $locale
-     *
-     * @return string
-     */
-    public function getTranslatedTitle(?string $locale = null) : string
-    {
-        return $this->getTranslatedAttribute('title', $locale) ?: $this->title;
-    }
-
-    /**
-     * 获取翻译后的广告语
-     *
-     * @param  string|null  $locale
-     *
-     * @return string|null
-     */
-    public function getTranslatedSlogan(?string $locale = null) : ?string
-    {
-        $slogan = $this->getTranslatedAttribute('slogan', $locale);
-
-        // 如果翻译表中没有，从扩展表获取（向后兼容）
-        if (!$slogan && $this->relationLoaded('extension') && $this->extension) {
-            $slogan = $this->extension->slogan;
-        }
-
-        return $slogan;
-    }
-
-    /**
-     * 获取翻译后的富文本详情
-     *
-     * @param  string|null  $locale
-     *
-     * @return string|null
-     */
-    public function getTranslatedDescription(?string $locale = null) : ?string
-    {
-        // 优先从翻译表获取
-        $description = $this->getTranslatedAttribute('description', $locale);
-
-        // 如果翻译表中没有，从扩展表获取（向后兼容）
-        if (!$description && $this->relationLoaded('extension') && $this->extension) {
-            $description = $this->extension->description;
-        }
-
-        return $description;
-    }
-
-    /**
-     * 获取翻译后的SEO标题
-     *
-     * @param  string|null  $locale
-     *
-     * @return string|null
-     */
-    public function getTranslatedMetaTitle(?string $locale = null) : ?string
-    {
-        $metaTitle = $this->getTranslatedAttribute('meta_title', $locale);
-
-        // 向后兼容：从扩展表获取
-        if (!$metaTitle && $this->relationLoaded('extension') && $this->extension) {
-            $metaTitle = $this->extension->meta_title;
-        }
-
-        return $metaTitle;
-    }
-
-    /**
-     * 获取翻译后的SEO关键词
-     *
-     * @param  string|null  $locale
-     *
-     * @return string|null
-     */
-    public function getTranslatedMetaKeywords(?string $locale = null) : ?string
-    {
-        $metaKeywords = $this->getTranslatedAttribute('meta_keywords', $locale);
-
-        // 向后兼容：从扩展表获取
-        if (!$metaKeywords && $this->relationLoaded('extension') && $this->extension) {
-            $metaKeywords = $this->extension->meta_keywords;
-        }
-
-        return $metaKeywords;
-    }
-
-    /**
-     * 获取翻译后的SEO描述
-     *
-     * @param  string|null  $locale
-     *
-     * @return string|null
-     */
-    public function getTranslatedMetaDescription(?string $locale = null) : ?string
-    {
-        $metaDescription = $this->getTranslatedAttribute('meta_description', $locale);
-
-        // 向后兼容：从扩展表获取
-        if (!$metaDescription && $this->relationLoaded('extension') && $this->extension) {
-            $metaDescription = $this->extension->meta_description;
-        }
-
-        return $metaDescription;
-    }
 
 
     public function addMedia(ProductMedia $media) : void

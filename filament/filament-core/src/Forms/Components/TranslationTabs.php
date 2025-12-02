@@ -145,14 +145,13 @@ class TranslationTabs extends Section
     protected function getDefaultLocaleOptions() : array
     {
         return [
-            'zh-CN' => '简体中文',
-            'en-US' => 'English (US)',
-            'en-GB' => 'English (UK)',
-            'ja-JP' => '日本語',
-            'ko-KR' => '한국어',
-            'de-DE' => 'Deutsch',
-            'fr-FR' => 'Français',
-            'es-ES' => 'Español',
+            'zh_CN' => '简体中文',
+            'en'    => 'English',
+            'ja'    => '日本語',
+            'ko'    => '한국어',
+            'de'    => 'Deutsch',
+            'fr'    => 'Français',
+            'es'    => 'Español',
         ];
     }
 
