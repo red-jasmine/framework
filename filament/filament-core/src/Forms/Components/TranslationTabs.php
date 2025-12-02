@@ -7,6 +7,8 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Concerns\HasInlineLabel;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -61,7 +63,6 @@ class TranslationTabs extends Section
                             ->dehydrated()
                             ->saveRelationshipsUsing(null)
                             ->label('多语言翻译')
-                            ->inlineLabel(false)
                             ->default([])
                             ->defaultItems(0)
                             ->schema([...$newComponents, Hidden::make('locale')])

@@ -13,16 +13,6 @@ class Owner extends FusedGroup
 
     protected string $ownerKey = 'owner';
 
-
-    public static function make(array|Closure $schema = [], string $ownerKey = 'owner', $disabled = false) : static
-    {
-        $static           = app(static::class, ['schema' => $schema,]);
-        $static->ownerKey = $ownerKey;
-        $static->configure();
-        return $static;
-
-    }
-
     protected function setUp() : void
     {
         $user  = auth()->user();
@@ -31,21 +21,31 @@ class Owner extends FusedGroup
 
         $this->schema([
             TextInput::make($this->ownerKey.'_type')
-                     ->prefix(__('red-jasmine-support::support.owner_type'))
+                     //->prefix(__('red-jasmine-support::support.owner_type'))
                      ->label(__('red-jasmine-support::support.owner_type'))
                      ->default($owner->getType())
                      ->required()
                      ->maxLength(64)
                      ->live(),
             TextInput::make($this->ownerKey.'_id')
-                     ->prefix(__('red-jasmine-support::support.owner_id'))
+                     ->prefix('ID')
                      ->label(__('red-jasmine-support::support.owner_id'))
                      ->required()
                      ->default($owner->getID())
                      ->live(),
+
         ]);
 
         $this->label(__('red-jasmine-support::support.owner'));
         $this->columns(2);
+    }
+
+    public static function make(array|Closure $schema = [], string $ownerKey = 'owner', $disabled = false) : static
+    {
+        $static           = app(static::class, ['schema' => $schema,]);
+        $static->ownerKey = $ownerKey;
+        $static->configure();
+        return $static;
+
     }
 }

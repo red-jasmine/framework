@@ -94,7 +94,7 @@
         </x-filament::tabs>
     @endif
     {{-- Tab 内容 --}}
-    <div class="mt-4">
+    <div >
         <div
                 x-show="activeTab ==='default'"
         >
