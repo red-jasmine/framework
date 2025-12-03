@@ -11,7 +11,6 @@ use Spatie\LaravelData\Casts\EnumCast;
 
 class AfterSalesService extends Data
 {
-
     /**
      * 服务类型
      * @var RefundTypeEnum
@@ -19,33 +18,19 @@ class AfterSalesService extends Data
     #[WithCast(EnumCast::class, type: RefundTypeEnum::class)]
     public RefundTypeEnum $refundType;
 
+    /**
+     * 是否允许
+     * 支持整体关闭
+     * @var bool
+     */
+    public bool $isAllowed = false;
 
     /**
-     * 允许阶段
-     * @var OrderAfterSaleServiceAllowStageEnum
+     * 策略
+     *
+     * @var AfterSalesStrategy[]
      */
-    #[WithCast(EnumCast::class, type: OrderAfterSaleServiceAllowStageEnum::class)]
-    public OrderAfterSaleServiceAllowStageEnum $allowStage = OrderAfterSaleServiceAllowStageEnum::NEVER;
+    public array $strategies = [];
 
-
-    /**
-     * 限制时间
-     * @var int
-     */
-    public int $timeLimit = 0;
-
-
-    /**
-     * 限制时长
-     * @var OrderAfterSaleServiceTimeUnit
-     */
-    #[WithCast(EnumCast::class, type: OrderAfterSaleServiceTimeUnit::class)]
-    public OrderAfterSaleServiceTimeUnit $timeLimitUnit = OrderAfterSaleServiceTimeUnit::Hour;
-
-
-    public function getAddValue() : string
-    {
-        return $this->timeLimit . $this->timeLimitUnit->value;
-    }
 
 }

@@ -32,6 +32,7 @@ use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\StrategyTypeEnum;
 use RedJasmine\FilamentCore\Forms\Components\SelectTree;
 use RedJasmine\FilamentCore\Forms\Components\TranslationTabs;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
@@ -665,40 +666,73 @@ class ProductFormFlex
                                ->deletable(false)
                                ->default(collect(Product::defaultAfterSalesServices())->toArray())
                                ->schema([
+                                   Select::make('refund_type')
+                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))
+                                         ->selectablePlaceholder(false)
+                                         ->disabled()
+                                         ->dehydrated()
+                                         ->distinct()
+                                         ->fixIndistinctState()
+                                         ->options(RefundTypeEnum::options()),
 
-                                   FusedGroup::make()->schema([
-                                       Select::make('refund_type')
-                                             ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))
-                                             ->selectablePlaceholder(false)
-                                             ->disabled()
-                                             ->dehydrated()
-                                             ->distinct()
-                                             ->fixIndistinctState()
-                                             ->options(RefundTypeEnum::options()),
-                                       Select::make('allow_stage')
-                                             ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
-                                             ->selectablePlaceholder(false)
-                                             ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                             ->options(OrderAfterSaleServiceAllowStageEnum::options()),
+                                   ToggleButtons::make('is_allowed')
+                                                ->label(__('red-jasmine-product::product.fields.is_alone_order'))
+                                                ->required()
+                                                ->boolean()
+                                                ->inline()
+                                                ->default(false)
+                                                ->icons([
+                                                    true  => 'heroicon-o-shopping-cart',
+                                                    false => 'heroicon-o-minus-circle',
+                                                ])
+                                                ->colors([
+                                                    true  => 'warning',
+                                                    false => 'gray',
+                                                ])
+                                                ->helperText('开启后，此商品需单独下单，不能与其他商品一起购买')
+                                   ,
 
-                                       FusedGroup::make([
-                                           TextInput::make('time_limit')
-                                                    ->hiddenLabel()
-                                                    ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
-                                           ,
-                                           Select::make('time_limit_unit')
-                                                 ->hiddenLabel()
-                                                 ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
-                                                 ->nullable()
-                                                 ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
-                                                 ->options(OrderAfterSaleServiceTimeUnit::options()),
-                                       ])
-                                                 ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
-                                                 ->columns(2)
+                                   Repeater::make('strategies')
+                                       ->reorderable(false)
+                                           ->schema([
+
+                                               Select::make('type')
+                                                     ->required()
+                                                     ->label('策略类型')
+                                                     ->selectablePlaceholder(false)
+                                                     ->default(StrategyTypeEnum::ALLOWED->value)
+                                                     ->options(StrategyTypeEnum::options()),
+                                               Select::make('start')
+                                                     ->required()
+                                                     ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
+                                                     ->selectablePlaceholder(false)
+                                                     ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
+                                                     ->options(OrderAfterSaleServiceAllowStageEnum::options()),
+                                               Select::make('end')
+                                                     ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
+                                                     ->selectablePlaceholder(false)
+                                                     ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
+                                                     ->options(OrderAfterSaleServiceAllowStageEnum::options()),
+
+
+                                               FusedGroup::make([
+                                                   TextInput::make('time_limit')
+                                                            ->hiddenLabel()
+                                                            ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
+                                                   ,
+                                                   Select::make('time_limit_unit')
+                                                         ->hiddenLabel()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
+                                                         ->nullable()
+                                                         ->default(OrderAfterSaleServiceTimeUnit::Day->value)
+                                                         ->options(OrderAfterSaleServiceTimeUnit::options()),
+                                               ])
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
+                                                         ->columns(2)
+                                           ]),
 
 
 
-                                   ])->columns(3),
 
 
                                ])

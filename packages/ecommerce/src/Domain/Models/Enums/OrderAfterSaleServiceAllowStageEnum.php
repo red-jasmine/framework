@@ -14,17 +14,19 @@ enum OrderAfterSaleServiceAllowStageEnum: string
 
     case  NEVER = 'never';
 
-    // 支付后
-    case  PAYED = 'payed';
+    case  ALL = 'all'; // 全阶段
 
-    case  SHIPPING = 'shipping';
+    // 支付后
+    case  PAYED = 'payed'; // 下单后 、发货前
+
+    case  SHIPPING = 'shipping'; // 开始货后
     // 发货后
-    case  SHIPPED = 'shipped';
+    case  SHIPPED = 'shipped'; //  完成发货后
     // 签收后
-    case  SIGNED = 'signed';
+    case  SIGNED = 'signed'; // 签收后
 
     // 完成后
-    case  COMPLETED = 'completed';
+    case  COMPLETED = 'completed'; // 确认后
 
 
     public static function labels() : array
