@@ -32,7 +32,7 @@ class AfterSalesStrategy extends Data
      * @var OrderAfterSaleServiceAllowStageEnum
      */
     #[WithCast(EnumCast::class, type: OrderAfterSaleServiceAllowStageEnum::class)]
-    public OrderAfterSaleServiceAllowStageEnum $start = OrderAfterSaleServiceAllowStageEnum::NEVER;
+    public OrderAfterSaleServiceAllowStageEnum $start = OrderAfterSaleServiceAllowStageEnum::PAYED;
 
 
     /**
@@ -55,12 +55,42 @@ class AfterSalesStrategy extends Data
     public OrderAfterSaleServiceTimeUnit $timeLimitUnit = OrderAfterSaleServiceTimeUnit::Hour;
 
 
-    /**
-     * 理由类型
-     * @var RefundReasonTypeEnum[]|null
-     */
-    public ?array $allowedReasons = null;
 
+    /**
+     * 是否限制理由
+     * false: 不限制，允许所有理由类型
+     * true: 限制，根据 $reasonTypeScopes 白名单判断
+     * @var bool
+     */
+    public bool $isReasonTypeRestricted = false;
+
+    /**
+     * 允许的理由类型
+     * @var RefundReasonTypeEnum[]
+     */
+    public array $reasonTypeScopes = [];
+
+
+    /**
+     * 判断是否允许指定的理由类型
+     * @param RefundReasonTypeEnum $reasonType
+     * @return bool
+     */
+    public function isReasonTypeAllowed(RefundReasonTypeEnum $reasonType): bool
+    {
+        // 不限制，允许所有理由类型
+        if (!$this->isReasonRestricted) {
+            return true;
+        }
+
+        // 限制模式：空数组表示不允许任何理由类型
+        if (empty($this->allowedReasons)) {
+            return false;
+        }
+
+        // 检查是否在白名单中
+        return in_array($reasonType, $this->allowedReasons, true);
+    }
 
     public function getAddValue() : string
     {

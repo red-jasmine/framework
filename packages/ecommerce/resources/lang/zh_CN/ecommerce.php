@@ -13,12 +13,23 @@ return [
         'refund_type'               => '售后类型',
 
         'after_sales_service' => [
-            'refund_type'     => '售后类型',
-            'allow_stage'     => '允许阶段',
-            'time'            => '时间限制',
-            'time_limit'      => '时长',
-            'time_limit_unit' => '时间单位',
+            'refund_type' => '售后类型',
+            'is_allowed'  => '是否允许',
+            'strategies'  => '策略',
+            'strategy'    => [
+                'type'                      => '策略类型',
+                'stage'                     => '阶段',
+                'start'                     => '开始',
+                'end'                       => '结束',
+                'time_limit'                => '限制时长',
+                'time_limit_unit'           => '限制时长单位',
+                'is_reason_type_restricted' => '是否限制理由分类',
+                'reason_type_scopes'        => '理由分类范围',
+
+
+            ],
         ],
+
     ],
 
     'enums' => [

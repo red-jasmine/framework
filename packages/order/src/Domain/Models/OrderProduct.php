@@ -258,9 +258,7 @@ class OrderProduct extends Model implements UniqueNoInterface
         if (!$afterSalesService) {
             return false;
         }
-        if ($afterSalesService->allowStage === OrderAfterSaleServiceAllowStageEnum::NEVER) {
-            return false;
-        }
+
         // 判断状态 TODO
         $lastTime = now();
         // 计算剩余时间

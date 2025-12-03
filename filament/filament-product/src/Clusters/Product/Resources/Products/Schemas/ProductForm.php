@@ -3,8 +3,6 @@
 namespace RedJasmine\FilamentProduct\Clusters\Product\Resources\Products\Schemas;
 
 
-use Filament\Schemas\Components\Flex;
-use RedJasmine\FilamentCore\Forms\Components\SelectTree;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
@@ -18,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -31,8 +30,11 @@ use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\RefundReasonTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Ecommerce\Domain\Models\Enums\StrategyTypeEnum;
+use RedJasmine\FilamentCore\Forms\Components\SelectTree;
 use RedJasmine\FilamentCore\Forms\Components\TranslationTabs;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentCore\Resources\Schemas\Owner;
@@ -48,135 +50,190 @@ use Throwable;
 class ProductForm
 {
 
+    public static function configure(Schema $form) : Schema
+    {
+        $form->schema([
+            Flex::make([
+                Section::make([
+                    ...static::baseInfoFields(),
+                    ...static::variantsFields(),
+                    ...static::mediaFields(),
+                    ...static::shippingFields(),
+                    ...static::productAttributesFields(),
+                    ...static::afterSalesServices(),
+                    ...static::otherFields(),
+                    ...static::operateFields(),
+                ])->columns(1),
+
+                Section::make()
+                       ->schema([
+
+                           Fieldset::make()->schema([
+                               TextInput::make('slug')
+                                        ->label(__('red-jasmine-product::product.fields.slug'))
+                                        ->maxLength(255)
+                                        ->placeholder('自动生成或手动输入URL友好标识')
+                                        ->helperText('用于生成商品URL，留空将自动从标题生成')
+                                        ->prefixIcon('heroicon-o-link')
+                                        ->unique(ignoreRecord: true, modifyRuleUsing: function ($rule, $get) {
+                                            return $rule->where('owner_type', $get('owner_type'))
+                                                        ->where('owner_id', $get('owner_id'));
+                                        })
+                                        ->columnSpanFull(),
+
+
+                               ToggleButtons::make('status')
+                                            ->label(__('red-jasmine-product::product.fields.status'))
+                                            ->required()
+                                            ->inline()
+                                            ->grouped()
+                                            ->default(ProductStatusEnum::AVAILABLE)
+                                            ->icons(ProductStatusEnum::icons())
+                                            ->colors(ProductStatusEnum::colors())
+                                            ->options(function ($operation, ?Model $record) {
+                                                if ($operation == 'edit') {
+                                                    return $record->status->updatingAllowed();
+                                                }
+                                                if ($operation == 'create') {
+                                                    return ProductStatusEnum::creatingAllowed();
+                                                }
+                                                if ($operation == 'view') {
+                                                    return [
+                                                        $record->status->value => $record->status->label()
+                                                    ];
+                                                }
+                                                return ProductStatusEnum::options();
+                                            })
+                                            ->live()
+                                            ->helperText('选择商品状态：在售-上架销售；待售-保存草稿')
+                                            ->columnSpanFull(),
+
+                           ])->columns(1),
+                           Fieldset::make()->columns(1)->schema([
+                               SelectTree::make('product_group_id')
+                                         ->label(__('red-jasmine-product::product.fields.product_group_id'))
+                                         ->relationship(
+                                             relationship: 'productGroup',
+                                             titleAttribute: 'name',
+                                             parentAttribute: 'parent_id',
+                                             modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
+                                                 ->where('owner_type', $get('owner_type'))
+                                                 ->where('owner_id', $get('owner_id')),
+                                             modifyChildQueryUsing: fn($query, Get $get, ?Model $record) => $query
+                                                 ->where('owner_type', $get('owner_type'))
+                                                 ->where('owner_id', $get('owner_id')),
+                                         )
+                                         ->parentNullValue(0)
+                                         ->independent(false)
+                                         ->storeResults()
+                                         ->default(0)
+                                         ->defaultZero()
+                                         ->helperText('选择商品分组，便于商品管理')
+                                         ->searchable(),
+
+                           ]),
+
+                           Fieldset::make()->columns(1)->schema([
+
+
+                               SelectTree::make('brand_id')
+                                         ->label(__('red-jasmine-product::product.fields.brand_id'))
+                                         ->withTranslation()
+                                         ->relationship('brand', 'name', 'parent_id')
+                                         ->parentNullValue(0)
+                                         ->default(0)
+                                         ->defaultZero()
+                                         ->helperText('选择商品品牌')
+                                         ->searchable(),
+                               TextInput::make('model_code')
+                                        ->label(__('red-jasmine-product::product.fields.model_code'))
+                                        ->maxLength(60)
+                                        ->placeholder('请输入商品型号')
+                                        ->helperText('商品型号或款式编码')
+                                        ->prefixIcon('heroicon-o-identification'),
+
+                           ]),
+
+
+                           Fieldset::make()->columns(1)->schema([
+
+                               SelectTree::make('extend_product_groups')
+                                         ->label(__('red-jasmine-product::product.fields.extend_groups'))
+                                         ->relationship(
+                                             relationship: 'extendProductGroups',
+                                             titleAttribute: 'name',
+                                             parentAttribute: 'parent_id',
+                                             modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
+                                                 ->where('owner_type', $get('owner_type'))
+                                                 ->where('owner_id', $get('owner_id')),
+                                             modifyChildQueryUsing: fn($query, Get $get, ?Model $record) => $query
+                                                 ->where('owner_type', $get('owner_type'))
+                                                 ->where('owner_id', $get('owner_id')),
+                                         )
+                                         ->dehydrated()
+                                         ->saveRelationshipsUsing(null)
+                                         ->parentNullValue(0)
+                                         ->default([])
+                                         ->helperText('选择商品的扩展分组，支持多选')
+                                         ->searchable(),
+
+                               Select::make('tags')
+                                     ->multiple()
+                                     ->label(__('red-jasmine-product::product.fields.tags'))
+                                     ->relationship(
+                                         name: 'tags',
+                                         titleAttribute: 'name',
+                                         modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
+                                             ->where('owner_type', $get('owner_type'))
+                                             ->where('owner_id', $get('owner_id')),
+                                     )
+                                     ->pivotData([])
+                                     ->saveRelationshipsUsing(null)
+                                     ->dehydrated()
+                                     ->preload()
+                                     ->default([])
+                                     ->helperText('为商品添加标签，便于分类和搜索')
+                                     ->searchable(),
+
+                           ]),
+
+                           TextInput::make('remarks')
+                                    ->label(__('red-jasmine-product::product.fields.remarks'))
+                                    ->maxLength(255),
+
+                           TextInput::make('sort')
+                                    ->label(__('red-jasmine-product::product.fields.sort'))
+                                    ->required()
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->default(0),
+
+                           Operators::make(),
+
+
+                       ])
+                       ->grow(false),
+
+
+            ])->columnSpanFull(),
+
+        ]);
+
+        return $form;
+    }
 
     /**
      * 配置表单
      */
-    public static function configure(Schema $form) : Schema
-    {
-       return ProductFormFlex::configure($form);
-        $schema = [
-            Tab::make('basic_info')
-               ->label(__('red-jasmine-product::product.labels.basic_info'))
-               ->columns(1)->schema(static::basicInfoFields()),
-            Tab::make('product_attributes')->label(__('red-jasmine-product::product.labels.product_attributes'))->columns(1)->schema(static::productAttributesFields()),
-            Tab::make('sale_info')->label(__('red-jasmine-product::product.labels.sale_info'))->columns(1)->schema(static::saleInfoFields()),
-            Tab::make('after_sales_services')->label(__('red-jasmine-product::product.labels.after_sales_services'))->columns(1)->schema(static::afterSalesServices()),
-            Tab::make('description')->label(__('red-jasmine-product::product.labels.description'))->columns(1)->schema(static::descriptionFields()),
-            Tab::make('operate')->label(__('red-jasmine-product::product.labels.operate'))->columns(1)->schema(static::operateFields()),
-            //Tab::make('seo')->label(__('red-jasmine-product::product.labels.seo'))->columns(1)->schema(static::seoFields()),
-            //Tab::make('shipping')->label(__('red-jasmine-product::product.labels.shipping'))->columns(1)->schema(static::shippingFields()),
-            Tab::make('other')->label(__('red-jasmine-product::product.labels.other'))->columns(1)->schema(static::otherFields()),
-        ];
 
-        return $form
-            ->components([
-                Tabs::make(__('red-jasmine-product::product.labels.product'))
-                    ->tabs($schema),
-            ])
-            ->inlineLabel(true)
-            ->columns(1);
-    }
 
-    /**
-     * 基础信息字段
-     */
-    protected static function basicInfoFields() : array
+    protected static function baseInfoFields() : array
     {
         return [
             Owner::make(),
-
-
-            Section::make('商品基本信息')
-                   ->description('设置商品的基本信息和分类')
-                   ->icon('heroicon-o-information-circle')
-                   ->columns(2)
+            Section::make(__('red-jasmine-product::product.labels.basic_info'))
+                   ->icon('heroicon-o-squares-2x2')
                    ->schema([
-
-                       TranslationTabs::make('translations')
-                                      ->schema([
-                                          TextInput::make('title')
-                                                   ->inlineLabel(true)
-                                                   ->label(__('red-jasmine-product::product.fields.title'))
-                                                   ->required()
-                                                   ->maxLength(60)
-                                                   ->placeholder('请输入商品标题，建议60字以内')
-                                                   ->helperText('商品标题将在商品列表和详情页展示')
-                                                   ->prefixIcon('heroicon-o-document-text')
-                                                   ->columnSpanFull(),
-                                          TextInput::make('slogan')
-                                                   ->inlineLabel(true)
-                                                   ->label(__('red-jasmine-product::product.fields.slogan'))
-                                                   ->maxLength(255)
-                                                   ->placeholder('请输入商品卖点，吸引买家购买')
-                                                   ->helperText('卖点文案，建议突出商品特色和优势')
-                                                   ->prefixIcon('heroicon-o-megaphone')
-                                                   ->columnSpanFull(),
-                                          TextInput::make('tips')
-                                                   ->inlineLabel(true)
-                                                   ->label(__('red-jasmine-product::product.fields.tips'))
-                                                   ->maxLength(255)
-                                                   ->placeholder('温馨提示或重要说明')
-                                                   ->helperText('显示在商品详情页的提示信息')
-                                                   ->prefixIcon('heroicon-o-information-circle')
-                                                   ->columnSpanFull(),
-                                          TextInput::make('meta_title')
-                                                   ->inlineLabel(true)
-                                                   ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                                   ->maxLength(255)
-                                                   ->placeholder('商品SEO标题')
-                                                   ->helperText('搜索引擎显示的标题，建议60字以内')
-                                                   ->prefixIcon('heroicon-o-document-text'),
-
-                                          TextInput::make('meta_keywords')
-                                                   ->inlineLabel(true)
-                                                   ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                                   ->maxLength(255)
-                                                   ->placeholder('关键词1, 关键词2, 关键词3')
-                                                   ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
-                                                   ->prefixIcon('heroicon-o-hashtag'),
-
-                                          Textarea::make('meta_description')
-                                                  ->inlineLabel(true)
-                                                  ->label(__('red-jasmine-product::product.fields.meta_description'))
-                                                  ->maxLength(200)
-                                                  ->placeholder('商品简短描述')
-                                                  ->helperText('显示在搜索结果中的描述，建议120-160字'),
-
-                                          RichEditor::make('description')
-                                                    ->inlineLabel(false)
-                                                    ->label(__('red-jasmine-product::product.fields.description'))
-                                                    ->toolbarButtons([
-                                                        'bold',
-                                                        'italic',
-                                                        'underline',
-                                                        'strike',
-                                                        'h2',
-                                                        'h3',
-                                                        'bulletList',
-                                                        'orderedList',
-                                                        'link',
-                                                        'blockquote',
-                                                        'codeBlock',
-                                                        'grid',
-                                                    ])
-                                                    ->columnSpanFull(),
-
-                                      ])->columnSpanFull(),
-
-
-                       TextInput::make('slug')
-                                ->label(__('red-jasmine-product::product.fields.slug'))
-                                ->maxLength(255)
-                                ->placeholder('自动生成或手动输入URL友好标识')
-                                ->helperText('用于生成商品URL，留空将自动从标题生成')
-                                ->prefixIcon('heroicon-o-link')
-                                ->unique(ignoreRecord: true, modifyRuleUsing: function ($rule, $get) {
-                                    return $rule->where('owner_type', $get('owner_type'))
-                                                ->where('owner_id', $get('owner_id'));
-                                })
-                                ->columnSpanFull(),
-
                        ToggleButtons::make('product_type')
                                     ->label(__('red-jasmine-product::product.fields.product_type'))
                                     ->required()
@@ -192,8 +249,6 @@ class ProductForm
                                         $set('shipping_types', $state->defaultShippingTypes(), shouldCallUpdatedHooks: true);
                                     })
                                     ->columnSpanFull(),
-
-
                        SelectTree::make('category_id')
                                  ->withTranslation()
                                  ->label(__('red-jasmine-product::product.fields.category_id'))
@@ -203,50 +258,76 @@ class ProductForm
                                  ->default(0)
                                  ->helperText('选择商品所属类目')
                                  ->searchable(),
+                       TranslationTabs::make('translations')
+                                      ->schema([
 
-                       SelectTree::make('brand_id')
-                                 ->label(__('red-jasmine-product::product.fields.brand_id'))
-                                 ->withTranslation()
-                                 ->relationship('brand', 'name', 'parent_id')
-                                 ->parentNullValue(0)
-                                 ->default(0)
-                                 ->defaultZero()
-                                 ->helperText('选择商品品牌')
-                                 ->searchable(),
+                                          Fieldset::make()->schema([
+                                              TextInput::make('title')
+                                                       ->inlineLabel(false)
+                                                       ->label(__('red-jasmine-product::product.fields.title'))
+                                                       ->required()
+                                                       ->maxLength(60)
+                                                       ->placeholder('请输入商品标题，建议60字以内')
+                                                       ->helperText('商品标题将在商品列表和详情页展示')
+                                                       ->prefixIcon('heroicon-o-document-text')
+                                                       ->columnSpanFull(),
+                                              TextInput::make('slogan')
+                                                       ->inlineLabel(false)
+                                                       ->label(__('red-jasmine-product::product.fields.slogan'))
+                                                       ->maxLength(255)
+                                                       ->placeholder('请输入商品卖点，吸引买家购买')
+                                                       ->helperText('卖点文案，建议突出商品特色和优势')
+                                                       ->prefixIcon('heroicon-o-megaphone')
+                                              ,
+                                              TextInput::make('tips')
+                                                       ->inlineLabel(false)
+                                                       ->label(__('red-jasmine-product::product.fields.tips'))
+                                                       ->maxLength(255)
+                                                       ->placeholder('温馨提示或重要说明')
+                                                       ->helperText('显示在商品详情页的提示信息')
+                                                       ->prefixIcon('heroicon-o-information-circle')
+                                              ,
+                                          ])->columns(2),
+                                          Section::make('SEO')
+                                                 ->schema([
 
-                       TextInput::make('model_code')
-                                ->label(__('red-jasmine-product::product.fields.model_code'))
-                                ->maxLength(60)
-                                ->placeholder('请输入商品型号')
-                                ->helperText('商品型号或款式编码')
-                                ->prefixIcon('heroicon-o-identification'),
+                                                     TextInput::make('meta_title')
+                                                              ->inlineLabel(false)
+                                                              ->label(__('red-jasmine-product::product.fields.meta_title'))
+                                                              ->maxLength(255)
+                                                              ->placeholder('商品SEO标题')
+                                                              ->helperText('搜索引擎显示的标题，建议60字以内')
+                                                              ->prefixIcon('heroicon-o-document-text'),
 
-                       SelectTree::make('product_group_id')
-                                 ->label(__('red-jasmine-product::product.fields.product_group_id'))
-                                 ->relationship(
-                                     relationship: 'productGroup',
-                                     titleAttribute: 'name',
-                                     parentAttribute: 'parent_id',
-                                     modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
-                                         ->where('owner_type', $get('owner_type'))
-                                         ->where('owner_id', $get('owner_id')),
-                                     modifyChildQueryUsing: fn($query, Get $get, ?Model $record) => $query
-                                         ->where('owner_type', $get('owner_type'))
-                                         ->where('owner_id', $get('owner_id')),
-                                 )
-                                 ->parentNullValue(0)
-                                 ->independent(false)
-                                 ->storeResults()
-                                 ->default(0)
-                                 ->defaultZero()
-                                 ->helperText('选择商品分组，便于商品管理')
-                                 ->searchable(),
+                                                     TextInput::make('meta_keywords')
+                                                              ->inlineLabel(false)
+                                                              ->label(__('red-jasmine-product::product.fields.meta_keywords'))
+                                                              ->maxLength(255)
+                                                              ->placeholder('关键词1, 关键词2, 关键词3')
+                                                              ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
+                                                              ->prefixIcon('heroicon-o-hashtag'),
+
+                                                     Textarea::make('meta_description')
+                                                             ->inlineLabel(false)
+                                                             ->label(__('red-jasmine-product::product.fields.meta_description'))
+                                                             ->maxLength(200)
+                                                             ->placeholder('商品简短描述')
+                                                             ->helperText('显示在搜索结果中的描述，建议120-160字'),
+                                                 ])
+                                                 ->collapsed(true)
+                                                 ->collapsible(),
+
+
+                                          RichEditor::make('description')
+                                                    ->inlineLabel(false)
+                                                    ->label(__('red-jasmine-product::product.fields.description'))
+                                                    ->columnSpanFull(),
+
+                                      ])
+                                      ->columnSpanFull(),
+
+
                    ]),
-
-            ...static::shippingFields(),
-
-            ...static::specifications(),
-            ...static::publishFields(),
         ];
     }
 
@@ -364,13 +445,16 @@ class ProductForm
     /**
      * 规格配置
      */
-    protected static function specifications() : array
+    protected static function variantsFields() : array
     {
         return [
             Section::make('商品规格')
                    ->description('设置商品的多规格配置')
                    ->icon('heroicon-o-squares-2x2')
                    ->schema([
+                       ProductCurrencySelect::make('currency')
+                                            ->live()
+                                            ->label(__('red-jasmine-product::product.fields.currency')),
                        Toggle::make('has_variants')
                              ->label(__('red-jasmine-product::product.fields.has_variants'))
                              ->required()
@@ -386,13 +470,14 @@ class ProductForm
                              ->afterStateUpdated(function ($state, $old, Get $get, Set $set) {
                                  if ($state === false) {
                                      $set('sale_attrs', []);
-                                     $set('variants', [static::defaultVariant()]);
+                                     $set('variantsFields', [static::defaultVariant()]);
                                  } else {
-                                     $set('variants', []);
+                                     $set('variantsFields', []);
                                      $set('sale_attrs', []);
                                  }
                              })
                        ,
+
 
                        SaleAttrsRepeater::make('sale_attrs')
                                         ->partiallyRenderComponentsAfterStateUpdated(['variants'])
@@ -408,7 +493,7 @@ class ProductForm
                                                 }, $saleAttrs);
 
 
-                                                $oldSku = $get('variants') ?? [];
+                                                $oldSku = $get('variantsFields') ?? [];
                                                 if ($oldSku === null) {
                                                     $oldSku = [];
                                                 }
@@ -426,21 +511,18 @@ class ProductForm
                                                     $variants[]            = $sku;
                                                 }
 
-                                                $set('variants', $variants, shouldCallUpdatedHooks: true);
+                                                $set('variantsFields', $variants, shouldCallUpdatedHooks: true);
                                             } catch (Throwable $throwable) {
-                                                $set('variants', [], shouldCallUpdatedHooks: true);
+                                                $set('variantsFields', [], shouldCallUpdatedHooks: true);
                                             }
                                         }),
 
-                       ProductCurrencySelect::make('currency')
-                                            ->live()
-                                            ->label(__('red-jasmine-product::product.fields.currency')),
+                       VariantsRepeater::make('variants')->default([
+                           static::defaultVariant(),
+                       ])
+                                       ->deletable(false),
 
-                       static::variants()
-                             ->default([
-                                 static::defaultVariant(),
-                             ])
-                             ->deletable(false),
+
                    ]),
         ];
     }
@@ -468,48 +550,6 @@ class ProductForm
         ];
     }
 
-    /**
-     * SKU 变体
-     */
-    protected static function variants() : Repeater
-    {
-        return VariantsRepeater::make('variants');
-
-    }
-
-    /**
-     * 发布状态字段
-     */
-    protected static function publishFields() : array
-    {
-        return [
-            Section::make('发布状态')
-                   ->description('设置商品的发布状态')
-                   ->icon('heroicon-o-rocket-launch')
-                   ->schema([
-                       ToggleButtons::make('status')
-                                    ->label(__('red-jasmine-product::product.fields.status'))
-                                    ->required()
-                                    ->inline()
-                                    ->grouped()
-                                    ->default(ProductStatusEnum::AVAILABLE)
-                                    ->icons(ProductStatusEnum::icons())
-                                    ->colors(ProductStatusEnum::colors())
-                                    ->options(function ($operation, ?Model $record) {
-                                        if ($operation == 'edit') {
-                                            return $record->status->updatingAllowed();
-                                        }
-                                        if ($operation == 'create') {
-                                            return ProductStatusEnum::creatingAllowed();
-                                        }
-                                        return ProductStatusEnum::options();
-                                    })
-                                    ->live()
-                                    ->helperText('选择商品状态：在售-上架销售；待售-保存草稿')
-                                    ->columnSpanFull(),
-                   ]),
-        ];
-    }
 
     /**
      * 商品属性字段
@@ -517,49 +557,7 @@ class ProductForm
     protected static function productAttributesFields() : array
     {
         return [
-            Section::make('商品分类')
-                   ->description('设置商品的扩展分组和标签')
-                   ->icon('heroicon-o-folder-open')
-                   ->columns(1)
-                   ->schema([
-                       SelectTree::make('extend_product_groups')
-                                 ->label(__('red-jasmine-product::product.fields.extend_groups'))
-                                 ->relationship(
-                                     relationship: 'extendProductGroups',
-                                     titleAttribute: 'name',
-                                     parentAttribute: 'parent_id',
-                                     modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
-                                         ->where('owner_type', $get('owner_type'))
-                                         ->where('owner_id', $get('owner_id')),
-                                     modifyChildQueryUsing: fn($query, Get $get, ?Model $record) => $query
-                                         ->where('owner_type', $get('owner_type'))
-                                         ->where('owner_id', $get('owner_id')),
-                                 )
-                                 ->dehydrated()
-                                 ->saveRelationshipsUsing(null)
-                                 ->parentNullValue(0)
-                                 ->default([])
-                                 ->helperText('选择商品的扩展分组，支持多选')
-                                 ->searchable(),
 
-                       Select::make('tags')
-                             ->multiple()
-                             ->label(__('red-jasmine-product::product.fields.tags'))
-                             ->relationship(
-                                 name: 'tags',
-                                 titleAttribute: 'name',
-                                 modifyQueryUsing: fn($query, Get $get, ?Model $record) => $query
-                                     ->where('owner_type', $get('owner_type'))
-                                     ->where('owner_id', $get('owner_id')),
-                             )
-                             ->pivotData([])
-                             ->saveRelationshipsUsing(null)
-                             ->dehydrated()
-                             ->preload()
-                             ->default([])
-                             ->helperText('为商品添加标签，便于分类和搜索')
-                             ->searchable(),
-                   ]),
 
             Section::make(__('red-jasmine-product::product.fields.attrs'))
                    ->description('设置商品的基础属性和自定义属性')
@@ -657,18 +655,23 @@ class ProductForm
 
                        Repeater::make('after_sales_services')
                                ->label(__('red-jasmine-product::product.fields.after_sales_services'))
-                               ->table([
-                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type')),
-                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage')),
-                                   Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit')),
-                               ])
-                               ->columnSpanFull()
+                           // ->table([
+                           //     Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type')),
+                           //     Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage')),
+                           //     Repeater\TableColumn::make(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit')),
+                           // ])
+                               ->columnSpan(1)
                                ->inlineLabel(false)
                                ->reorderable(false)
                                ->addable(false)
                                ->deletable(false)
                                ->default(collect(Product::defaultAfterSalesServices())->toArray())
                                ->schema([
+                                   Toggle::make('is_allowed')
+                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.is_allowed'))
+                                         ->required()
+                                         ->live()
+                                         ->default(false),
                                    Select::make('refund_type')
                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.refund_type'))
                                          ->selectablePlaceholder(false)
@@ -677,29 +680,73 @@ class ProductForm
                                          ->distinct()
                                          ->fixIndistinctState()
                                          ->options(RefundTypeEnum::options()),
-                                   Select::make('allow_stage')
-                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.allow_stage'))
-                                         ->selectablePlaceholder(false)
-                                         ->live()
-                                         ->default(OrderAfterSaleServiceAllowStageEnum::NEVER->value)
-                                         ->options(OrderAfterSaleServiceAllowStageEnum::options()),
+                                   Repeater::make('strategies')
+                                           ->visible(fn(Get $get) => $get('is_allowed'))
+                                           ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategies'))
+                                           ->reorderable(false)
+                                           ->schema([
+                                               FusedGroup::make([
+                                                   Select::make('type')
+                                                         ->required()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.type'))
+                                                         ->selectablePlaceholder(false)
+                                                         ->default(StrategyTypeEnum::ALLOWED->value)
+                                                         ->options(StrategyTypeEnum::options()),
+                                                   Select::make('start')
+                                                         ->required()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.start'))
+                                                         ->selectablePlaceholder(false)
+                                                         ->default(OrderAfterSaleServiceAllowStageEnum::PAYED)
+                                                         ->useEnum(OrderAfterSaleServiceAllowStageEnum::class)
+                                                         ->suffix('-'),
+                                                   Select::make('end')
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.end'))
+                                                         ->selectablePlaceholder(true)
+                                                         ->nullable()
+                                                         ->default(OrderAfterSaleServiceAllowStageEnum::COMPLETED)
+                                                         ->useEnum(OrderAfterSaleServiceAllowStageEnum::class),
+                                               ])
+                                                         ->markAsRequired()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.stage'))
+                                                         ->columns(3),
+                                               FusedGroup::make([
+                                                   TextInput::make('time_limit')
+                                                            ->prefix(fn(Get $get) => $get('start')->label().'后')
+                                                            ->hiddenLabel()
+                                                            ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit.is_reason_type_restricted'))
+                                                            ->default(0)
+                                                   ,
+                                                   Select::make('time_limit_unit')
+                                                         ->hiddenLabel()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.time_limit_unit'))
+                                                         ->selectablePlaceholder(false)
+                                                         ->default(OrderAfterSaleServiceTimeUnit::Day)
+                                                         ->useEnum(OrderAfterSaleServiceTimeUnit::class),
+                                               ])
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.time_limit'))
+                                                         ->columns(2),
 
-                                   FusedGroup::make([
-                                       TextInput::make('time_limit')
-                                                ->hiddenLabel()
-                                                ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
-                                       ,
-                                       Select::make('time_limit_unit')
-                                             ->hiddenLabel()
-                                             ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit_unit'))
-                                             ->nullable()
-                                             ->default(OrderAfterSaleServiceTimeUnit::Hour->value)
-                                             ->options(OrderAfterSaleServiceTimeUnit::options()),
-                                   ])
-                                             ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.time_limit'))
-                                             ->columns(2)
-                                             ->visible(fn(Get $get
-                                             ) => $get('allow_stage') !== OrderAfterSaleServiceAllowStageEnum::NEVER->value),
+
+                                               FusedGroup::make([
+                                                   Select::make('is_reason_type_restricted')
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.is_reason_type_restricted'))
+                                                         ->default(false)
+                                                         ->required()
+                                                         ->selectablePlaceholder(false)
+                                                         ->boolean()->columnSpan(2),
+
+                                                   Select::make('allowed_reasons')
+                                                         ->multiple()
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.is_reason_type_restricted'))
+                                                         ->selectablePlaceholder(false)
+                                                         ->useEnum(RefundReasonTypeEnum::class)
+                                                         ->columnSpan(8),
+                                               ])
+                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.is_reason_type_restricted'))
+                                                         ->columns(10),
+
+                                           ]),
+
 
                                ])
                    ])
@@ -711,7 +758,7 @@ class ProductForm
     /**
      * 商品描述字段
      */
-    protected static function descriptionFields() : array
+    protected static function mediaFields() : array
     {
         return [
 
@@ -850,314 +897,58 @@ class ProductForm
     protected static function otherFields() : array
     {
         return [
-            Radio::make('is_customized')
-                 ->label(__('red-jasmine-product::product.fields.is_customized'))
-                 ->required()
-                 ->boolean()
-                 ->inline()
-                 ->default(0),
-
-            Fieldset::make('表单')
-                    ->columns(1)
-                    ->inlineLabel()
-                    ->schema([
-                        Repeater::make('form.schemas')
-                                ->label(__('red-jasmine-product::product.fields.form'))
-                                ->default(null)
-                                ->schema([
-                                    TextInput::make('label')->inlineLabel()->required()->maxLength(32),
-                                    TextInput::make('name')->inlineLabel()->required()->maxLength(32),
-                                    Select::make('type')
-                                          ->inlineLabel()
-                                          ->required()
-                                          ->default(FieldTypeEnum::TEXT)
-                                          ->useEnum(FieldTypeEnum::class),
-                                    Checkbox::make('is_required')->inlineLabel(),
-                                    TextInput::make('default')->inlineLabel(),
-                                    TextInput::make('placeholder')->inlineLabel(),
-                                    TextInput::make('hint')->inlineLabel(),
-
-                                    Repeater::make('options')->default(null)->schema([
-                                        TextInput::make('label')
-                                                 ->hiddenLabel()
-                                                 ->required()
-                                                 ->maxLength(32),
-                                        TextInput::make('value')
-                                                 ->hiddenLabel()
-                                                 ->required()
-                                                 ->maxLength(128),
-                                    ])
-                                            ->columns(2)
-                                            ->grid(5)
-                                            ->columnSpan('full'),
-                                ])
-                                ->inlineLabel(false)
-                                ->hiddenLabel()
-                                ->columns(7)
-                                ->columnSpan('full')
-                    ]),
-
-            TextInput::make('remarks')
-                     ->label(__('red-jasmine-product::product.fields.remarks'))
-                     ->maxLength(255),
-
-            TextInput::make('sort')
-                     ->label(__('red-jasmine-product::product.fields.sort'))
+            Section::make('其他')->schema([
+                Radio::make('is_customized')
+                     ->label(__('red-jasmine-product::product.fields.is_customized'))
                      ->required()
-                     ->numeric()
-                     ->minValue(0)
+                     ->boolean()
+                     ->inline()
                      ->default(0),
 
-            Operators::make(),
+                Fieldset::make('表单')
+                        ->columns(1)
+                        ->inlineLabel()
+                        ->schema([
+                            Repeater::make('form.schemas')
+                                    ->label(__('red-jasmine-product::product.fields.form'))
+                                    ->default(null)
+                                    ->schema([
+                                        TextInput::make('label')->inlineLabel()->required()->maxLength(32),
+                                        TextInput::make('name')->inlineLabel()->required()->maxLength(32),
+                                        Select::make('type')
+                                              ->inlineLabel()
+                                              ->required()
+                                              ->default(FieldTypeEnum::TEXT)
+                                              ->useEnum(FieldTypeEnum::class),
+                                        Checkbox::make('is_required')->inlineLabel(),
+                                        TextInput::make('default')->inlineLabel(),
+                                        TextInput::make('placeholder')->inlineLabel(),
+                                        TextInput::make('hint')->inlineLabel(),
+
+                                        Repeater::make('options')->default(null)->schema([
+                                            TextInput::make('label')
+                                                     ->hiddenLabel()
+                                                     ->required()
+                                                     ->maxLength(32),
+                                            TextInput::make('value')
+                                                     ->hiddenLabel()
+                                                     ->required()
+                                                     ->maxLength(128),
+                                        ])
+                                                ->columns(2)
+                                                ->grid(5)
+                                                ->columnSpan('full'),
+                                    ])
+                                    ->inlineLabel(false)
+                                    ->hiddenLabel()
+                                    ->columns(7)
+                                    ->columnSpan('full')
+                        ]),
+
+
+            ]),
+
         ];
-    }
-
-    public static function contents()
-    {
-        // 支持的语言列表
-        $supportedLocales = [
-            'zh-CN' => '简体中文',
-            'en-US' => 'English (US)',
-            'en-GB' => 'English (UK)',
-            'ja-JP' => '日本語',
-            'ko-KR' => '한국어',
-            'de-DE' => 'Deutsch',
-            'fr-FR' => 'Français',
-            'es-ES' => 'Español',
-        ];
-
-        return Section::make('商品内容')
-                      ->icon('heroicon-o-information-circle')
-                      ->columns(1)
-                      ->schema([
-                          // 默认语言字段（中文）
-                          Fieldset::make('产品内容')
-                                  ->columns(2)
-                                  ->schema([
-                                      TextInput::make('slogan')
-                                               ->label(__('red-jasmine-product::product.fields.slogan'))
-                                               ->maxLength(255)
-                                               ->placeholder('请输入商品卖点，吸引买家购买')
-                                               ->helperText('卖点文案，建议突出商品特色和优势')
-                                               ->prefixIcon('heroicon-o-megaphone')
-                                               ->columnSpanFull(),
-                                      TextInput::make('tips')
-                                               ->label(__('red-jasmine-product::product.fields.tips'))
-                                               ->maxLength(255)
-                                               ->placeholder('温馨提示或重要说明')
-                                               ->helperText('显示在商品详情页的提示信息')
-                                               ->prefixIcon('heroicon-o-information-circle')
-                                               ->columnSpanFull(),
-                                      TextInput::make('meta_title')
-                                               ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                               ->maxLength(255)
-                                               ->placeholder('商品SEO标题')
-                                               ->helperText('搜索引擎显示的标题，建议60字以内')
-                                               ->prefixIcon('heroicon-o-document-text'),
-
-                                      TextInput::make('meta_keywords')
-                                               ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                               ->maxLength(255)
-                                               ->placeholder('关键词1, 关键词2, 关键词3')
-                                               ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
-                                               ->prefixIcon('heroicon-o-hashtag'),
-
-                                      Textarea::make('meta_description')
-                                              ->label(__('red-jasmine-product::product.fields.meta_description'))
-                                              ->maxLength(200)
-                                              ->placeholder('商品简短描述')
-                                              ->helperText('显示在搜索结果中的描述，建议120-160字'),
-
-                                      RichEditor::make('description')
-                                                ->inlineLabel(false)
-                                                ->hiddenLabel()
-                                                ->label(__('red-jasmine-product::product.fields.description'))
-                                                ->toolbarButtons([
-                                                    'bold',
-                                                    'italic',
-                                                    'underline',
-                                                    'strike',
-                                                    'h2',
-                                                    'h3',
-                                                    'bulletList',
-                                                    'orderedList',
-                                                    'link',
-                                                    'blockquote',
-                                                    'codeBlock',
-                                                    'grid',
-                                                ])
-                                                ->columnSpanFull(),
-                                  ]),
-
-                          // // 多语言翻译
-                          Repeater::make('translations')
-                                  ->relationship('translations')
-                                  ->view('red-jasmine-filament-product::forms.components.translatable-tabs')
-                                  ->dehydrated()
-                                  ->saveRelationshipsUsing(null)
-                                  ->label('多语言翻译')
-                                  ->inlineLabel(false)
-                                  ->schema([
-                                      Select::make('locale')
-                                            ->label('语言')
-                                            ->required()
-                                            ->options($supportedLocales)
-                                            ->searchable()
-                                            ->distinct()
-                                            ->native(false)
-                                            ->prefixIcon('heroicon-o-globe-alt')
-                                            ->columnSpanFull(),
-
-                                      TextInput::make('title')
-                                               ->label(__('red-jasmine-product::product.fields.title'))
-                                               ->required()
-                                               ->maxLength(255)
-                                               ->placeholder('商品标题')
-                                               ->prefixIcon('heroicon-o-document-text')
-                                               ->columnSpanFull(),
-
-                                      TextInput::make('slogan')
-                                               ->label(__('red-jasmine-product::product.fields.slogan'))
-                                               ->maxLength(255)
-                                               ->placeholder('商品卖点')
-                                               ->helperText('卖点文案，建议突出商品特色和优势')
-                                               ->prefixIcon('heroicon-o-megaphone')
-                                               ->columnSpanFull(),
-
-                                      TextInput::make('meta_title')
-                                               ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                               ->maxLength(255)
-                                               ->placeholder('SEO标题')
-                                               ->helperText('搜索引擎显示的标题，建议60字以内')
-                                               ->prefixIcon('heroicon-o-document-text'),
-
-                                      TextInput::make('meta_keywords')
-                                               ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                               ->maxLength(255)
-                                               ->placeholder('关键词1, 关键词2, 关键词3')
-                                               ->helperText('用逗号分隔多个关键词')
-                                               ->prefixIcon('heroicon-o-hashtag'),
-
-                                      Textarea::make('meta_description')
-                                              ->label(__('red-jasmine-product::product.fields.meta_description'))
-                                              ->maxLength(200)
-                                              ->placeholder('SEO描述')
-                                              ->helperText('显示在搜索结果中的描述，建议120-160字')
-                                              ->rows(3),
-
-                                      RichEditor::make('description')
-                                                ->label(__('red-jasmine-product::product.fields.description'))
-                                                ->toolbarButtons([
-                                                    'bold',
-                                                    'italic',
-                                                    'underline',
-                                                    'strike',
-                                                    'h2',
-                                                    'h3',
-                                                    'bulletList',
-                                                    'orderedList',
-                                                    'link',
-                                                    'blockquote',
-                                                    'codeBlock',
-                                                    'grid',
-                                                ])
-                                                ->columnSpanFull(),
-                                  ])
-                                  ->default([])
-                                  ->columns(1)
-                                  ->itemLabel(fn(array $state
-                                  ) : ?string => $supportedLocales[$state['locale']] ?? $state['locale'] ?? '新翻译')
-                                  ->defaultItems(0)
-                                  ->columnSpanFull(),
-                      ]);
-    }
-
-    /**
-     * SEO 字段
-     */
-    protected static function seoFields() : array
-    {
-        return [
-            Section::make('搜索引擎优化')
-                   ->description('优化商品在搜索引擎中的展示效果')
-                   ->icon('heroicon-o-magnifying-glass')
-                   ->columns(1)
-                   ->schema([
-                       TextInput::make('meta_title')
-                                ->label(__('red-jasmine-product::product.fields.meta_title'))
-                                ->maxLength(255)
-                                ->placeholder('商品SEO标题')
-                                ->helperText('搜索引擎显示的标题，建议60字以内')
-                                ->prefixIcon('heroicon-o-document-text'),
-
-                       TextInput::make('meta_keywords')
-                                ->label(__('red-jasmine-product::product.fields.meta_keywords'))
-                                ->maxLength(255)
-                                ->placeholder('关键词1, 关键词2, 关键词3')
-                                ->helperText('用逗号分隔多个关键词，有助于搜索引擎收录')
-                                ->prefixIcon('heroicon-o-hashtag'),
-
-                       Textarea::make('meta_description')
-                               ->label(__('red-jasmine-product::product.fields.meta_description'))
-                               ->maxLength(200)
-                               ->placeholder('商品简短描述')
-                               ->helperText('显示在搜索结果中的描述，建议120-160字')
-                       ,
-                   ]),
-        ];
-    }
-
-    protected static function sizes()
-    {
-        return Repeater::make('variants')
-                       ->relationship('variants')
-                       ->dehydrated()
-                       ->saveRelationshipsUsing(null)
-                       ->label(__('red-jasmine-product::product.fields.variants'))
-                       ->table([
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.attrs_name')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.sku')),
-
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.weight_unit')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.length')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.width')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.height')),
-                           Repeater\TableColumn::make(__('red-jasmine-product::product.fields.dimension_unit')),
-
-                       ])
-                       ->schema([
-                           Hidden::make('attrs_sequence'),
-
-                           TextInput::make('attrs_name')->readOnly(),
-                           TextInput::make('sku')->readOnly(),
-                           TextInput::make('weight')->suffix('KG'),
-                           TextInput::make('weight_unit'),
-                           TextInput::make('length'),
-                           TextInput::make('width'),
-                           TextInput::make('height'),
-                           TextInput::make('dimension_unit'),
-
-                           TextInput::make('price')->required()
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null)->hidden(),
-                           TextInput::make('stock')->minValue(0)->integer()->required(),
-                           TextInput::make('market_price')
-                                    ->hidden()
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                           TextInput::make('cost_price')
-                                    ->hidden()
-                                    ->prefix(fn(Get $get) => $get('../../currency') ? Currencies::getSymbol($get('../../currency'),
-                                        app()->getLocale()) : null)
-                                    ->formatStateUsing(fn($state) => $state['formatted'] ?? null),
-                       ])
-                       ->inlineLabel(false)
-                       ->columnSpan('full')
-                       ->reorderable(false)
-                       ->addable(false);
     }
 
 }

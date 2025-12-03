@@ -32,12 +32,13 @@ enum OrderAfterSaleServiceAllowStageEnum: string
     public static function labels() : array
     {
         return [
-            self::NEVER->value     => '不支持',
-            self::PAYED->value     => '支付后',
-            self::SHIPPING->value  => '开始发货后',
-            self::SHIPPED->value   => '完成发货后',
-            self::SIGNED->value    => '签收后',
-            self::COMPLETED->value => '确认后',
+
+            self::ALL->value       => '全流程',
+            self::PAYED->value     => '支付成功',
+            self::SHIPPING->value  => '开始发货',
+            self::SHIPPED->value   => '发货完成',
+            self::SIGNED->value    => '签收完成',
+            self::COMPLETED->value => '确认完成',
         ];
     }
 
