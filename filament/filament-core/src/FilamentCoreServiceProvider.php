@@ -32,6 +32,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
          */
         $package->name(static::$name)
                 ->hasCommands($this->getCommands())
+                ->runsMigrations()
                 ->hasInstallCommand(function (InstallCommand $command) {
                     $command
                         ->publishConfigFile()
@@ -45,6 +46,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
         if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
             $package->hasConfigFile();
         }
+
 
         if (file_exists($package->basePath('/../database/migrations'))) {
             $package->hasMigrations($this->getMigrations());
@@ -75,7 +77,7 @@ class FilamentCoreServiceProvider extends PackageServiceProvider
     protected function getMigrations() : array
     {
         return [
-
+            'create_json_schemas_table',
         ];
     }
 
