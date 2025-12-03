@@ -679,26 +679,31 @@ class ProductForm
                                          ->dehydrated()
                                          ->distinct()
                                          ->fixIndistinctState()
-                                         ->options(RefundTypeEnum::options()),
+                                         ->options(RefundTypeEnum::options())
+
+                                   ,
                                    Repeater::make('strategies')
                                            ->visible(fn(Get $get) => $get('is_allowed'))
                                            ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategies'))
                                            ->reorderable(false)
                                            ->schema([
+                                               Select::make('type')
+                                                     ->required()
+                                                     ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.type'))
+                                                     ->selectablePlaceholder(false)
+                                                     ->default(StrategyTypeEnum::ALLOWED->value)
+                                                     ->options(StrategyTypeEnum::options()),
                                                FusedGroup::make([
-                                                   Select::make('type')
-                                                         ->required()
-                                                         ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.type'))
-                                                         ->selectablePlaceholder(false)
-                                                         ->default(StrategyTypeEnum::ALLOWED->value)
-                                                         ->options(StrategyTypeEnum::options()),
+
                                                    Select::make('start')
                                                          ->required()
                                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.start'))
                                                          ->selectablePlaceholder(false)
                                                          ->default(OrderAfterSaleServiceAllowStageEnum::PAYED)
                                                          ->useEnum(OrderAfterSaleServiceAllowStageEnum::class)
-                                                         ->suffix('-'),
+                                                         ->suffix('-')
+                                                         ->live()
+                                                   ,
                                                    Select::make('end')
                                                          ->label(__('red-jasmine-ecommerce::ecommerce.fields.after_sales_service.strategy.end'))
                                                          ->selectablePlaceholder(true)
