@@ -40,13 +40,14 @@ trait Hookable
     /**
      * 注册管道
      *
-     * @param $pipeline
+     * @param  mixed  $pipeline  管道处理器
+     * @param  int  $priority  优先级，数值越小越先执行，默认为100
      *
      * @return void
      */
-    public static function register($pipeline) : void
+    public static function register($pipeline, int $priority = 100) : void
     {
-        Hook::register(static::getHookName(), $pipeline);
+        Hook::register(static::getHookName(), $pipeline, $priority);
 
     }
 

@@ -16,26 +16,43 @@ class HookManage
 
     /**
      * 注册一个钩子及其对应的管道。
-     * 如果管道是一个字符串并且尚未注册，则直接注册。
-     * 否则，将管道添加到注册的管道列表中。
+     * 支持优先级控制，优先级数值越小越先执行。
      *
      * @param  string  $hook  钩子的名称。
      * @param  mixed  $pipeline  管道的名称或实现，可以是一个字符串或实现了特定接口的对象。
+     *                           支持数组格式: ['pipeline' => ClassName::class, 'priority' => 10]
+     * @param  int  $priority  优先级，数值越小越先执行，默认为100。
      */
-    public function register(string $hook, mixed $pipeline) : void
+    public function register(string $hook, mixed $pipeline, int $priority = 100) : void
     {
         $pipelines = is_array($pipeline) ? $pipeline : [$pipeline];
 
         foreach ($pipelines as $item) {
-            if (is_string($item) && !isset($this->hooks[$hook][$item])) {
-
-                $this->hooks[$hook][$item] = $item;
-
+            // 如果是数组且包含pipeline键，则使用其中的优先级
+            if (is_array($item) && isset($item['pipeline'])) {
+                $pipelineItem = $item['pipeline'];
+                $itemPriority = $item['priority'] ?? $priority;
             } else {
-                $this->hooks[$hook][] = $item;
+                $pipelineItem = $item;
+                $itemPriority = $priority;
             }
+
+            // 初始化钩子数组
+            if (!isset($this->hooks[$hook])) {
+                $this->hooks[$hook] = [];
+            }
+
+            // 添加管道项，包含优先级信息
+            $this->hooks[$hook][] = [
+                'pipeline' => $pipelineItem,
+                'priority' => $itemPriority,
+            ];
         }
 
+        // 按优先级排序(数值越小越先执行)
+        if (isset($this->hooks[$hook])) {
+            usort($this->hooks[$hook], fn($a, $b) => $a['priority'] <=> $b['priority']);
+        }
     }
 
     /**
@@ -59,6 +76,7 @@ class HookManage
     /**
      * 获取钩子的管道列表。
      * 优先从配置中获取管道，如果配置中没有，则从注册的管道中获取。
+     * 返回按优先级排序后的管道列表。
      *
      * @param  string  $hook  钩子的名称。
      *
@@ -69,21 +87,66 @@ class HookManage
         // 通过配置获取
         $configHooks = $this->getConfigHookPipelines($hook);
         // 通过注册添加
-        $hooks = $this->hooks[$hook] ?? [];
-        return [...$configHooks, ...array_values($hooks)];
+        $registeredHooks = $this->hooks[$hook] ?? [];
+
+        // 合并配置和注册的钩子
+        $allHooks = [...$configHooks, ...$registeredHooks];
+
+        // 按优先级排序
+        usort($allHooks, fn($a, $b) =>
+            ($a['priority'] ?? 100) <=> ($b['priority'] ?? 100)
+        );
+
+        // 提取管道类/闭包
+        return array_map(
+            fn($item) => is_array($item) ? $item['pipeline'] : $item,
+            $allHooks
+        );
     }
 
     /**
      * 从配置中获取钩子的管道列表。
-     * 此方法目前未实现，需要根据实际情况进行实现。
+     * 支持从配置文件中读取钩子定义，包括优先级信息。
+     *
+     * 配置格式示例:
+     * 'hooks' => [
+     *     'order.application.order.command.create' => [
+     *         ['pipeline' => NotificationHook::class, 'priority' => 10],
+     *         ['pipeline' => LogHook::class, 'priority' => 20],
+     *     ],
+     * ]
      *
      * @param  string  $hook  钩子的名称。
      *
-     * @return array 从配置中获取的管道列表。
+     * @return array 从配置中获取的管道列表，包含优先级信息。
      */
     protected function getConfigHookPipelines(string $hook) : array
     {
-        // TODO 获取配置信息
-        return [];
+        $config = config('hooks.' . $hook, []);
+
+        // 如果配置为空，返回空数组
+        if (empty($config)) {
+            return [];
+        }
+
+        // 标准化配置格式
+        $pipelines = [];
+        foreach ($config as $item) {
+            if (is_array($item) && isset($item['pipeline'])) {
+                // 已经是标准格式
+                $pipelines[] = [
+                    'pipeline' => $item['pipeline'],
+                    'priority' => $item['priority'] ?? 100,
+                ];
+            } elseif (is_string($item) || $item instanceof Closure) {
+                // 简单格式，使用默认优先级
+                $pipelines[] = [
+                    'pipeline' => $item,
+                    'priority' => 100,
+                ];
+            }
+        }
+
+        return $pipelines;
     }
 }

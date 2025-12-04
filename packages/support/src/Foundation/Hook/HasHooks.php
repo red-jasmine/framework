@@ -58,10 +58,19 @@ trait HasHooks
         return [];
     }
 
-    public static function registerHook(string $hook, mixed $pipeline) : void
+    /**
+     * 注册钩子
+     *
+     * @param  string  $hook  钩子名称
+     * @param  mixed  $pipeline  管道处理器
+     * @param  int  $priority  优先级，数值越小越先执行，默认为100
+     *
+     * @return void
+     */
+    public static function registerHook(string $hook, mixed $pipeline, int $priority = 100) : void
     {
         if (static::getHookName($hook)) {
-            Hook::register(static::getHookName($hook), $pipeline);
+            Hook::register(static::getHookName($hook), $pipeline, $priority);
         }
 
     }
