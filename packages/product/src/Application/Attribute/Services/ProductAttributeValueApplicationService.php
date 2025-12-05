@@ -43,22 +43,6 @@ class ProductAttributeValueApplicationService extends ApplicationService
         return parent::newModel($data);
     }
 
-    /**
-     * 钩子配置
-     *
-     * 注意：验证逻辑已迁移到 Domain 层的 Laravel ValidationRule
-     * 通过 ProductAttributeValueData::rules() 方法定义验证规则
-     * 验证会在 Data::from() 时自动执行
-     *
-     * @return array
-     */
-    protected function hooks() : array
-    {
-        return [
-            // 验证逻辑已迁移到 Domain 层的 Laravel ValidationRule
-            // 通过 ProductAttributeValueData::rules() 方法定义
-        ];
-    }
 
 
 }

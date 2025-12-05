@@ -74,6 +74,7 @@ class ProductAttributeData extends Data
             'description'       => ['sometimes', 'nullable', 'string', 'max:255'],
             'group_id'          => [
                 'sometimes', 'nullable', 'integer',
+                // TODO 这个设计到领域内的知识，不应该放在数据传输层中，如果是简单的CURD 没有关系？
                 new ProductAttributeGroupExistsRule(), // 使用 Laravel 验证规则验证属性组是否存在
             ],
             'is_required'       => ['boolean'],

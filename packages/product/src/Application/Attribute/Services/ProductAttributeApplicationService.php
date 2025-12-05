@@ -3,7 +3,6 @@
 namespace RedJasmine\Product\Application\Attribute\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeGroupRulePipeline;
 use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeData;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
@@ -20,8 +19,8 @@ use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
  */
 class ProductAttributeApplicationService extends ApplicationService
 {
-    public static string $hookNamePrefix = 'product.application.product-attribute.command';
-    protected static string $modelClass = ProductAttribute::class;
+    public static string    $hookNamePrefix = 'product.application.product-attribute.command';
+    protected static string $modelClass     = ProductAttribute::class;
 
     public function __construct(
         public ProductAttributeRepositoryInterface $repository,
@@ -36,18 +35,6 @@ class ProductAttributeApplicationService extends ApplicationService
             throw new ProductAttributeException('名称已存在');
         }
         return parent::newModel($data);
-    }
-
-    protected function hooks() : array
-    {
-        return [
-            'create' => [
-                ProductAttributeGroupRulePipeline::class,
-            ],
-            'update' => [
-                ProductAttributeGroupRulePipeline::class,
-            ],
-        ];
     }
 
 
