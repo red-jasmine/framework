@@ -14,10 +14,6 @@ class MemberApplicationService extends BaseUserApplicationService
 
     protected static string $modelClass     = Member::class;
 
-    protected static $macros = [
-        'hire' => \RedJasmine\Organization\Application\Services\Member\Commands\MemberHireCommandHandler::class,
-        'resign' => \RedJasmine\Organization\Application\Services\Member\Commands\MemberResignCommandHandler::class,
-    ];
 
     public function __construct(
         public MemberRepositoryInterface $repository,
