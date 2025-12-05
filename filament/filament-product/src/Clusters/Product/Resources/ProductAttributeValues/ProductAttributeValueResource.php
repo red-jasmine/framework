@@ -32,10 +32,8 @@ use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeValues
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeValues\Pages\EditProductAttributeValue;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeValues\Pages\ListProductAttributeValues;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributeValues\Pages\ViewProductAttributeValue;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueDeleteCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueApplicationService;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeValueData;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 
@@ -49,11 +47,9 @@ class ProductAttributeValueResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductAttributeValueApplicationService::class;
-    protected static ?string $commandService = ProductAttributeValueApplicationService::class;
-    protected static ?string $createCommand  = ProductAttributeValueCreateCommand::class;
-    protected static ?string $updateCommand  = ProductAttributeValueUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductAttributeValueDeleteCommand::class;
+    protected static ?string $service   = ProductAttributeValueApplicationService::class;
+    protected static ?string $dataClass = ProductAttributeValueData::class;
+
 
     public static function getModelLabel() : string
     {
@@ -88,9 +84,6 @@ class ProductAttributeValueResource extends Resource
                                                     ->maxLength(64),
                                            TextInput::make('description')->label(__('red-jasmine-product::product-attribute-value.fields.description'))->maxLength(255),
                                        ]),
-
-
-
 
 
                     ]),

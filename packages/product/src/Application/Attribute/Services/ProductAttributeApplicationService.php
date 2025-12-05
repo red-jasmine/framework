@@ -3,9 +3,8 @@
 namespace RedJasmine\Product\Application\Attribute\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeGroupRulePipeline;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeData;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeRepositoryInterface;
 use RedJasmine\Product\Domain\Attribute\Transformer\ProductAttributeTransformer;
@@ -16,16 +15,13 @@ use RedJasmine\Support\Application\Handlers\DeleteCommandHandler;
 use RedJasmine\Support\Application\Handlers\UpdateCommandHandler;
 
 /**
- * @method ProductAttribute create(ProductAttributeCreateCommand $command)
- * @method void update(ProductAttributeUpdateCommand $command)
+ * @method ProductAttribute create(ProductAttributeData $command)
+ * @method void update(ProductAttributeData $command)
  */
 class ProductAttributeApplicationService extends ApplicationService
 {
-    protected static string $modelClass = ProductAttribute::class;
-
-
     public static string $hookNamePrefix = 'product.application.product-attribute.command';
-
+    protected static string $modelClass = ProductAttribute::class;
 
     public function __construct(
         public ProductAttributeRepositoryInterface $repository,

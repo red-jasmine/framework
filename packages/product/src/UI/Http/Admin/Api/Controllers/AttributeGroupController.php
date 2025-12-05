@@ -5,12 +5,11 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupDeleteCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeGroupUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeGroupApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeGroupPaginateQuery;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeGroupData;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeGroupResource;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class AttributeGroupController extends Controller
@@ -31,7 +30,7 @@ class AttributeGroupController extends Controller
     public function store(Request $request) : AttributeGroupResource
     {
 
-        $result = $this->service->create(ProductAttributeGroupCreateCommand::from($request));
+        $result = $this->service->create(ProductAttributeGroupData::from($request));
         return AttributeGroupResource::make($result);
 
     }
@@ -46,14 +45,14 @@ class AttributeGroupController extends Controller
     public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->service->update(ProductAttributeGroupUpdateCommand::from($request));
+        $this->service->update(ProductAttributeGroupData::from($request));
         return self::success();
     }
 
     public function destroy(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->service->delete(ProductAttributeGroupDeleteCommand::from($request));
+        $this->service->delete(Data::from($request));
         return self::success();
     }
 }

@@ -18,6 +18,7 @@ class ProductAttributeRulePipeline
 
     public function handle(Data $command, Closure $next) : mixed
     {
+        // 属于业务规则 不应该放在这里 TODO
         $command = $command;
         $this->repository->findByQuery(FindQuery::from(['id' => $command->aid]));
         return $next($command);

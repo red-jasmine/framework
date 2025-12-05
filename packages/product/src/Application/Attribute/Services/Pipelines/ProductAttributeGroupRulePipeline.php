@@ -21,7 +21,7 @@ class ProductAttributeGroupRulePipeline
      */
     public function handle(Data $command, \Closure $next, string $attributeName = 'groupId') : mixed
     {
-
+        // 属于业务规则 不应该放在这里 TODO
         $groupId = $command->{$attributeName};
         if ($groupId) {
             try {

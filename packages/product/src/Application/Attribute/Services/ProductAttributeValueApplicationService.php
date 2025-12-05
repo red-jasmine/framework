@@ -3,11 +3,10 @@
 namespace RedJasmine\Product\Application\Attribute\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeGroupRulePipeline;
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeRulePipeline;
 use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeValueUpdatePipeline;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeValueData;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
 use RedJasmine\Product\Domain\Attribute\Transformer\ProductAttributeValueTransformer;
@@ -15,8 +14,8 @@ use RedJasmine\Product\Exceptions\ProductAttributeException;
 use RedJasmine\Support\Application\ApplicationService;
 
 /**
- * @method ProductAttributeValue create(ProductAttributeValueCreateCommand $command)
- * @method void update(ProductAttributeValueUpdateCommand $command)
+ * @method ProductAttributeValue create(ProductAttributeValueData $command)
+ * @method void update(ProductAttributeValueData $command)
  */
 class ProductAttributeValueApplicationService extends ApplicationService
 {

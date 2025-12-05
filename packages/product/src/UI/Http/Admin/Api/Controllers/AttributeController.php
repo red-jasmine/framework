@@ -5,12 +5,11 @@ namespace RedJasmine\Product\UI\Http\Admin\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeDeleteCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributePaginateQuery;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeData;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeResource;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class AttributeController extends Controller
@@ -30,7 +29,7 @@ class AttributeController extends Controller
 
     public function store(Request $request) : AttributeResource
     {
-        $result = $this->service->create(ProductAttributeCreateCommand::from($request));
+        $result = $this->service->create(ProductAttributeData::from($request));
         return AttributeResource::make($result);
     }
 
@@ -44,14 +43,14 @@ class AttributeController extends Controller
     public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->service->update(ProductAttributeUpdateCommand::from($request));
+        $this->service->update(ProductAttributeData::from($request));
         return static::success();
     }
 
     public function destroy(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->service->delete(ProductAttributeDeleteCommand::from($request));
+        $this->service->delete(Data::from($request));
         return self::success();
     }
 }

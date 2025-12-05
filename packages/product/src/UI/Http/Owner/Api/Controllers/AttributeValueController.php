@@ -5,12 +5,11 @@ namespace RedJasmine\Product\UI\Http\Owner\Api\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueDeleteCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeValueUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueApplicationService;
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeValuePaginateQuery;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeValueData;
 use RedJasmine\Product\UI\Http\Owner\Api\Resources\AttributeValueResource;
+use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 class AttributeValueController extends Controller
@@ -34,7 +33,7 @@ class AttributeValueController extends Controller
     public function store(Request $request) : AttributeValueResource
     {
 
-        $result = $this->service->create(ProductAttributeValueCreateCommand::from($request));
+        $result = $this->service->create(ProductAttributeValueData::from($request));
 
         return AttributeValueResource::make($result);
     }
@@ -49,7 +48,7 @@ class AttributeValueController extends Controller
     public function update(Request $request, $id) : JsonResponse
     {
         $request->offsetSet('id', $id);
-        $this->service->update(ProductAttributeValueUpdateCommand::from($request));
+        $this->service->update(ProductAttributeValueData::from($request));
         return static::success();
     }
 
@@ -57,7 +56,7 @@ class AttributeValueController extends Controller
     {
         $request->offsetSet('id', $id);
 
-        $this->service->delete(ProductAttributeValueDeleteCommand::from($request));
+        $this->service->delete(Data::from($request));
 
         return static::success();
     }

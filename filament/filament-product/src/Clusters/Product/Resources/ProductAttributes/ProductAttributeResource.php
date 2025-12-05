@@ -35,10 +35,8 @@ use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributes\Page
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributes\Pages\EditProductAttribute;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributes\Pages\ListProductAttributes;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductAttributes\Pages\ViewProductAttribute;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeCreateCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeDeleteCommand;
-use RedJasmine\Product\Application\Attribute\Services\Commands\ProductAttributeUpdateCommand;
 use RedJasmine\Product\Application\Attribute\Services\ProductAttributeApplicationService;
+use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeData;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttribute;
@@ -51,20 +49,14 @@ class ProductAttributeResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductAttributeApplicationService::class;
-    protected static ?string $commandService = ProductAttributeApplicationService::class;
-    protected static ?string $createCommand  = ProductAttributeCreateCommand::class;
-    protected static ?string $updateCommand  = ProductAttributeUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductAttributeDeleteCommand::class;
-
+    protected static ?string $service   = ProductAttributeApplicationService::class;
+    protected static ?string $dataClass = ProductAttributeData::class;
+    protected static ?string $cluster   = Product::class;
 
     public static function getModelLabel() : string
     {
         return __('red-jasmine-product::product-attribute.labels.product-attribute');
     }
-
-    protected static ?string $cluster = Product::class;
-
 
     public static function getNavigationGroup() : ?string
     {
