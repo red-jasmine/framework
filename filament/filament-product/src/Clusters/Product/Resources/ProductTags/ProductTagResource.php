@@ -14,6 +14,7 @@ use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagCreateCommand
 use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagDeleteCommand;
 use RedJasmine\Product\Application\Tag\Services\Commands\ProductTagUpdateCommand;
 use RedJasmine\Product\Application\Tag\Services\ProductTagApplicationService;
+use RedJasmine\Product\Domain\Tag\Data\ProductTagData;
 use RedJasmine\Product\Domain\Tag\Models\ProductTag;
 
 class ProductTagResource extends Resource
@@ -22,24 +23,21 @@ class ProductTagResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
     protected static ?string                $cluster        = Product::class;
-    protected static ?int                    $navigationSort = 5;
+    protected static ?int                   $navigationSort = 5;
 
     use ResourcePageHelper;
+    use CategoryResource;
 
     protected static ?string $service = ProductTagApplicationService::class;
-
-    protected static ?string $createCommand = ProductTagCreateCommand::class;
-    protected static ?string $updateCommand = ProductTagUpdateCommand::class;
-    protected static ?string $deleteCommand = ProductTagDeleteCommand::class;
-    protected static bool    $onlyOwner     = true;
-    protected static bool $isTranslatable = true;
+    protected static ?string $dataClass      = ProductTagData::class;
+    protected static bool    $onlyOwner      = true;
+    protected static bool    $isTranslatable = true;
 
     public static function getModelLabel() : string
     {
         return __('red-jasmine-product::product-tag.labels.tag');
     }
 
-    use CategoryResource;
 
     public static function getRelations() : array
     {

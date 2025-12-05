@@ -16,34 +16,32 @@ use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupCreateCom
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupDeleteCommand;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCommand;
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
+use RedJasmine\Product\Domain\Group\Data\GroupData;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 
 class ProductGroupResource extends Resource
 {
 
 
-    protected static ?int                    $navigationSort = 4;
-    protected static ?string                 $cluster        = Product::class;
+    protected static ?int                   $navigationSort = 4;
+    protected static ?string                $cluster        = Product::class;
     protected static ?string                $model          = ProductGroup::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-group';
 
     use ResourcePageHelper;
 
-    protected static ?string $service        = ProductGroupApplicationService::class;
-
-    protected static ?string $createCommand  = ProductGroupCreateCommand::class;
-    protected static ?string $updateCommand  = ProductGroupUpdateCommand::class;
-    protected static ?string $deleteCommand  = ProductGroupDeleteCommand::class;
+    protected static ?string $service = ProductGroupApplicationService::class;
+    protected static ?string $dataClass      = GroupData::class;
     protected static bool    $onlyOwner      = true;
     protected static bool    $isTranslatable = true;
-
+    use CategoryResource;
 
     public static function getModelLabel() : string
     {
         return __('red-jasmine-product::product-group.labels.group');
     }
 
-    use CategoryResource;
+
 
     public static function getRelations() : array
     {

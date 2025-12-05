@@ -26,6 +26,7 @@ class ProductTagApplicationService extends ApplicationService
 
     public function newModel($data = null) : Model
     {
+        // TODO 层次放的不正确
         if ($model = $this->repository
             ->withQuery(fn($query) => $query->onlyOwner($data->owner))
             ->findByName($data->name)) {

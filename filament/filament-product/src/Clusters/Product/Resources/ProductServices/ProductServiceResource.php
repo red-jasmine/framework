@@ -10,10 +10,8 @@ use RedJasmine\FilamentProduct\Clusters\Product;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServices\Pages\CreateProductService;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServices\Pages\EditProductService;
 use RedJasmine\FilamentProduct\Clusters\Product\Resources\ProductServices\Pages\ListProductServices;
-use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceCreateCommand;
-use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceDeleteCommand;
-use RedJasmine\Product\Application\Service\Services\Commands\ProductServiceUpdateCommand;
 use RedJasmine\Product\Application\Service\Services\ProductServiceApplicationService;
+use RedJasmine\Product\Domain\Service\Data\ProductServiceData;
 use RedJasmine\Product\Domain\Service\Models\ProductService;
 
 class ProductServiceResource extends Resource
@@ -29,18 +27,16 @@ class ProductServiceResource extends Resource
 
     use ResourcePageHelper;
 
-    protected static ?string $service       = ProductServiceApplicationService::class;
-    protected static ?string $createCommand = ProductServiceCreateCommand::class;
-    protected static ?string $updateCommand = ProductServiceUpdateCommand::class;
-    protected static ?string $deleteCommand = ProductServiceDeleteCommand::class;
-    protected static bool $isTranslatable = true;
-
+    protected static ?string $service        = ProductServiceApplicationService::class;
+    protected static ?string $dataClass      = ProductServiceData::class;
+    protected static bool    $isTranslatable = true;
+    use CategoryResource;
     public static function getModelLabel() : string
     {
         return __('red-jasmine-product::product-service.labels.service');
     }
 
-    use CategoryResource;
+
 
     public static function getNavigationGroup() : ?string
     {

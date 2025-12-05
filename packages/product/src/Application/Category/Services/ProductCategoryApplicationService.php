@@ -3,22 +3,19 @@
 namespace RedJasmine\Product\Application\Category\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryCreateCommand;
-use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryDeleteCommand;
-use RedJasmine\Product\Application\Category\Services\Commands\ProductCategoryUpdateCommand;
 use RedJasmine\Product\Application\Category\Services\Queries\ProductCategoryTreeQuery;
+use RedJasmine\Product\Domain\Category\Data\CategoryData;
 use RedJasmine\Product\Domain\Category\Models\ProductCategory;
 use RedJasmine\Product\Domain\Category\Repositories\ProductCategoryRepositoryInterface;
 use RedJasmine\Product\Domain\Category\Transformer\ProductCategoryTransformer;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 
 /**
- * @method  create(ProductCategoryCreateCommand $command)
- * @method void update(ProductCategoryUpdateCommand $command)
- * @method void delete(ProductCategoryDeleteCommand $command)
+ * @method  create(CategoryData $command)
+ * @method void update(CategoryData $command)
+ * @method void delete(CategoryData $command)
  * @method ProductCategory find(int $id)
  */
 class ProductCategoryApplicationService extends ApplicationService
@@ -44,6 +41,7 @@ class ProductCategoryApplicationService extends ApplicationService
 
     public function newModel($data = null) : Model
     {
+        // TODO 属于业务规则 需要调整到领域层
         if ($model = $this->repository->findByName($data->name)) {
             throw new CategoryException('名称存在重复');
         }

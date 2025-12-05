@@ -5,20 +5,17 @@ namespace RedJasmine\Product\Application\Brand\Services;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandCreateCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandDeleteCommand;
 use RedJasmine\Product\Application\Brand\Services\Commands\BrandUpdateCommand;
+use RedJasmine\Product\Domain\Brand\Data\BrandData;
 use RedJasmine\Product\Domain\Brand\Models\ProductBrand;
 use RedJasmine\Product\Domain\Brand\Repositories\BrandRepositoryInterface;
 use RedJasmine\Product\Domain\Brand\Transformer\BrandTransformer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Application\Commands\CreateCommandHandler;
-use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
-use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 
 /**
  *
- * @method ProductBrand create(BrandCreateCommand $command)
- * @method void update(BrandUpdateCommand $command)
- * @method void delete(BrandDeleteCommand $command)
+ * @method ProductBrand create(BrandData $command)
+ * @method void update(BrandData $command)
+ * @method void delete(BrandData $command)
  */
 class BrandApplicationService extends ApplicationService
 {
@@ -35,6 +32,7 @@ class BrandApplicationService extends ApplicationService
      */
     protected static string $modelClass = ProductBrand::class;
 
+
     /**
      * 仓库和转换器
      *
@@ -46,17 +44,6 @@ class BrandApplicationService extends ApplicationService
         public BrandTransformer $transformer,
     ) {
     }
-
-    /**
-     * 配置宏方法
-     *
-     * @var array
-     */
-    protected static $macros = [
-        'create' => CreateCommandHandler::class,
-        'update' => UpdateCommandHandler::class,
-        'delete' => DeleteCommandHandler::class,
-    ];
 
     public function isAllowUse(int $id) : bool
     {

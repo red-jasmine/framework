@@ -11,7 +11,7 @@ use RedJasmine\Support\Domain\Data\BaseCategoryData;
  * @property UserInterface $owner 所属者
  * @property array|null $translations 翻译数据数组
  */
-class ProductTag extends BaseCategoryData
+class ProductTagData extends BaseCategoryData
 {
     public UserInterface $owner;
 }

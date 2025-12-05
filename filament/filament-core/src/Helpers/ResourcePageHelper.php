@@ -14,11 +14,11 @@ use RedJasmine\Support\Exceptions\BaseException;
 /**
  * @property string $translationNamespace
  * @property string $service
- * @property string $createCommand
- * @property string $updateCommand
- * @property string $deleteCommand
- * @property string $findQuery
- * @property string $dataClass
+ * @property string $dataClass 默认的 DTO
+ * @property string $createCommand 创建命令
+ * @property string $updateCommand 更新命令
+ * @property string $deleteCommand 删除命令
+ * @property string $findQuery 查询服务
  */
 trait ResourcePageHelper
 {

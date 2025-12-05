@@ -7,6 +7,7 @@ use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupCreateCom
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupDeleteCommand;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCommand;
 use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupTreeQuery;
+use RedJasmine\Product\Domain\Group\Data\GroupData;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Domain\Group\Transformer\GroupTransformer;
@@ -18,9 +19,9 @@ use RedJasmine\Support\Domain\Data\Queries\Query;
 
 
 /**
- * @method int create(ProductGroupCreateCommand $command)
- * @method void update(ProductGroupUpdateCommand $command)
- * @method void delete(ProductGroupDeleteCommand $command)
+ * @method int create(GroupData $command)
+ * @method void update(GroupData $command)
+ * @method void delete(GroupData $command)
  * @method ProductGroup find(int $id)
  */
 class ProductGroupApplicationService extends ApplicationService
@@ -42,6 +43,7 @@ class ProductGroupApplicationService extends ApplicationService
 
     public function newModel($data = null) : Model
     {
+        // TODO 属于业务规则 需要放在领域层
 
         if ($model = $this->repository
             ->withQuery(fn($query) => $query->onlyOwner($data->owner)->where('parent_id',$data->parentId))
