@@ -29,8 +29,12 @@ class BaseException extends RuntimeException implements HttpExceptionInterface
 
     // 通用错误码
     protected static array $codes = [];
-    protected array $errors;
-    protected int   $statusCode;
+    protected array        $errors;
+    /**
+     * 状态码
+     * @var int
+     */
+    protected int   $statusCode = 400;
     protected array $headers;
     protected mixed $data;
 
