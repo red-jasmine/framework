@@ -3,7 +3,7 @@
 namespace RedJasmine\Interaction\Domain\Types;
 
 use RedJasmine\Interaction\Domain\Contracts\InteractionTypeInterface;
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 /**
  * @method InteractionTypeInterface create(string $name)

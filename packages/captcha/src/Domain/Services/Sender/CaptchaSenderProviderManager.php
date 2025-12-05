@@ -4,7 +4,7 @@ namespace RedJasmine\Captcha\Domain\Services\Sender;
 
 use RedJasmine\Captcha\Domain\Services\Sender\Contracts\CaptchaSenderInterface;
 use RedJasmine\Captcha\Domain\Services\Sender\Providers\SmsCaptchaSenderProvider;
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 /**
  * @method CaptchaSenderInterface create(string $name)

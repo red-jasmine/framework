@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\Login\Providers;
 
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 use RedJasmine\UserCore\Domain\Services\Login\Contracts\UserLoginServiceProviderInterface;
 
 /**

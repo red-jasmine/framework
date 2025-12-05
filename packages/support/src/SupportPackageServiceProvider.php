@@ -8,11 +8,11 @@ use Illuminate\Container\Container;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\Str;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Foundation\Extensions\MigrationExtension;
+use RedJasmine\Support\Foundation\Extensions\QueryLogExtension;
 use RedJasmine\Support\Foundation\Hook\HookManage;
 use RedJasmine\Support\Helpers\Encrypter\AES;
 use RedJasmine\Support\Infrastructure\ServiceContextManage;
-use RedJasmine\Support\Services\MigrationService;
-use RedJasmine\Support\Services\SQLLogService;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -63,9 +63,9 @@ class SupportPackageServiceProvider extends PackageServiceProvider
     {
         $this->registerAes();
 
-        SQLLogService::register();
+        QueryLogExtension::register();
 
-        MigrationService::register();
+        MigrationExtension::register();
 
         $this->app->singleton(ServiceContextManage::class, function () {
             return new ServiceContextManage(fn() => Container::getInstance());

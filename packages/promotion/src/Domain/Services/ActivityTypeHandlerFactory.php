@@ -9,7 +9,7 @@ use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlers\DiscountActivityHa
 use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlers\FlashSaleActivityHandler;
 use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlers\FullReductionActivityHandler;
 use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlers\GroupBuyingActivityHandler;
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 /**
  * 活动类型处理器工厂

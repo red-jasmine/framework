@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Services;
+namespace RedJasmine\Support\Foundation\Extensions;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +10,7 @@ use Throwable;
 /**
  * SQL 记录
  */
-class SQLLogService
+class QueryLogExtension
 {
     public static function register() : void
     {

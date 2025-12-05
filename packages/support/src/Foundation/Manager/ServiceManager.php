@@ -1,11 +1,11 @@
 <?php
 
-namespace RedJasmine\Support\Helpers\Services;
+namespace RedJasmine\Support\Foundation\Manager;
 
 use Closure;
 use Illuminate\Support\Arr;
-use function strtolower;
 use InvalidArgumentException;
+use function strtolower;
 
 abstract class ServiceManager
 {

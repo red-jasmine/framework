@@ -1,13 +1,13 @@
 <?php
 
-namespace RedJasmine\Support\Services;
+namespace RedJasmine\Support\Foundation\Extensions;
 
 use Illuminate\Database\Schema\Blueprint;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
 use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 
-class MigrationService
+class MigrationExtension
 {
     public static function register() : void
     {

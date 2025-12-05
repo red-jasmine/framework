@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\ChangeAccount\Providers;
 
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 class UserChangeAccountServiceProviderManager extends ServiceManager
 {

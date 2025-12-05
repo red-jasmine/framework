@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\ForgotPassword\Providers;
 
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 use RedJasmine\UserCore\Domain\Services\ForgotPassword\Contracts\UserForgotPasswordServiceProviderInterface;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Types;
 
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 class OrderTypeManage extends ServiceManager
 {

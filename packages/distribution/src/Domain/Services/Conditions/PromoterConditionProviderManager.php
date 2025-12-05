@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Distribution\Domain\Services\Conditions;
 
-use RedJasmine\Support\Helpers\Services\ServiceManager;
+use RedJasmine\Support\Foundation\Manager\ServiceManager;
 
 class PromoterConditionProviderManager extends ServiceManager
 {
