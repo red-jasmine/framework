@@ -4,9 +4,9 @@ namespace RedJasmine\Distribution\Domain\Transformers;
 
 use RedJasmine\Distribution\Domain\Data\PromoterTeamData;
 use RedJasmine\Distribution\Domain\Models\PromoterTeam;
-use RedJasmine\Support\Domain\Models\BaseCategoryModel;
-use RedJasmine\Support\Domain\Transformer\CategoryTransformer;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryModel;
+use RedJasmine\Support\Presets\Category\Domain\Transformer\CategoryTransformer;
 
 class PromoterTeamTransformer extends CategoryTransformer implements TransformerInterface
 {

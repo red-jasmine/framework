@@ -3,15 +3,10 @@
 namespace RedJasmine\Product\Domain\Service\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use RedJasmine\Support\Domain\Data\BaseCategoryTranslationData;
-use RedJasmine\Support\Domain\Models\BaseCategoryTranslationModel;
 use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\Traits\HasOperator;
-use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryTranslationModel;
 
 /**
  * 商品服务翻译模型

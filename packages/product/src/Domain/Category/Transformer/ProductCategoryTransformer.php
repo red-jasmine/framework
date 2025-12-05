@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Category\Transformer;
 
-use RedJasmine\Support\Domain\Transformer\CategoryTransformer;
+use RedJasmine\Support\Presets\Category\Domain\Transformer\CategoryTransformer;
 
 class ProductCategoryTransformer extends CategoryTransformer
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Tag\Data;
 
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 
 /**
  * 商品标签数据传输对象

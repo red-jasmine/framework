@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Announcement\Domain\Transformers;
 
-use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryModel;
 
-class CategoryTransformer extends \RedJasmine\Support\Domain\Transformer\CategoryTransformer implements TransformerInterface
+class CategoryTransformer extends \RedJasmine\Support\Presets\Category\Domain\Transformer\CategoryTransformer implements TransformerInterface
 {
     /**
      * @param  BaseCategoryData  $data

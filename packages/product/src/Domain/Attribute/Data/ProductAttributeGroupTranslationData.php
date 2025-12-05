@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Attribute\Data;
 
-use RedJasmine\Support\Domain\Data\BaseCategoryTranslationData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryTranslationData;
 
 /**
  * 商品属性组翻译数据传输对象

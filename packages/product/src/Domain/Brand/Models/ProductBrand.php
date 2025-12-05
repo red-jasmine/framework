@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Domain\Brand\Models;
 
-use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
 use RedJasmine\Support\Domain\Models\Traits\HasCategoryTranslations;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryModel;
 
 
 /**

@@ -2,12 +2,7 @@
 
 namespace RedJasmine\Article\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Article\Domain\Data\ArticleTagData;
-use RedJasmine\Article\Domain\Models\ArticleTag;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Transformer\CategoryTransformer;
-use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Presets\Category\Domain\Transformer\CategoryTransformer;
 
 class ArticleTagTransformer extends CategoryTransformer
 {

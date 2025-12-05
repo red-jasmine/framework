@@ -3,8 +3,8 @@
 namespace RedJasmine\Product\Domain\Brand\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Support\Domain\Models\BaseCategoryTranslationModel;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryTranslationModel;
 
 
 class ProductBrandTranslation extends BaseCategoryTranslationModel implements OperatorInterface

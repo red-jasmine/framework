@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Attribute\Data;
 
 use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 /**

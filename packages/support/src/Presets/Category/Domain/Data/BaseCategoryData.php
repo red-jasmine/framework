@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Domain\Data;
+namespace RedJasmine\Support\Presets\Category\Domain\Data;
 
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;

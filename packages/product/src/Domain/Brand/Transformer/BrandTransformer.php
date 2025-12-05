@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Product\Domain\Brand\Transformer;
 
-use RedJasmine\Support\Domain\Transformer\CategoryTransformer;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Presets\Category\Domain\Transformer\CategoryTransformer;
 
 /**
  * 品牌转换器

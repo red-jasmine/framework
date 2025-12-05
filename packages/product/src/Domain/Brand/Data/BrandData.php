@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Brand\Data;
 
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 
 /**
  * 品牌数据传输对象

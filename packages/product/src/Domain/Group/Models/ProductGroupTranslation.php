@@ -3,8 +3,8 @@
 namespace RedJasmine\Product\Domain\Group\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Support\Domain\Models\BaseCategoryTranslationModel;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryTranslationModel;
 
 /**
  * 商品分组翻译模型

@@ -13,7 +13,7 @@ use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicCategoryResou
 use RedJasmine\FilamentCommunity\Clusters\Community\Resources\TopicCategoryResource\RelationManagers;
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\CategoryResource;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 
 class TopicCategoryResource extends Resource
 {

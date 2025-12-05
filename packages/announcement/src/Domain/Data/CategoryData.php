@@ -2,9 +2,8 @@
 
 namespace RedJasmine\Announcement\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 
 class CategoryData extends BaseCategoryData
 {

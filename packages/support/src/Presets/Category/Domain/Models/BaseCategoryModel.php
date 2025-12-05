@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Domain\Models;
+namespace RedJasmine\Support\Presets\Category\Domain\Models;
 
 
 use Illuminate\Database\Eloquent\Builder;
@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Support\Domain\Models\Enums\UniversalStatusEnum;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;

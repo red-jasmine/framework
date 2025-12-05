@@ -1,11 +1,12 @@
 <?php
 
-namespace RedJasmine\Support\Domain\Transformer;
+namespace RedJasmine\Support\Presets\Category\Domain\Transformer;
 
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
-use RedJasmine\Support\Domain\Data\BaseCategoryTranslationData;
-use RedJasmine\Support\Domain\Models\BaseCategoryModel;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryTranslationData;
+use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryModel;
 
 class CategoryTransformer implements TransformerInterface
 {

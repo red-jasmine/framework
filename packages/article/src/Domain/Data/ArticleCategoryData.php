@@ -4,7 +4,7 @@ namespace RedJasmine\Article\Domain\Data;
 
 
 use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\BaseCategoryData;
+use RedJasmine\Support\Presets\Category\Domain\Data\BaseCategoryData;
 
 class ArticleCategoryData extends BaseCategoryData
 {
