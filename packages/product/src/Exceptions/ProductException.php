@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class ProductException extends AbstractException
+class ProductException extends BaseException
 {
 
     public const PRODUCT_FORBID_SALE  = 201101; // 禁止销售

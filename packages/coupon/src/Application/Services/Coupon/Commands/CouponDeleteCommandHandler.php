@@ -6,7 +6,7 @@ use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class CouponDeleteCommandHandler extends CommandHandler
@@ -18,8 +18,9 @@ class CouponDeleteCommandHandler extends CommandHandler
 
     /**
      * @param Data $command
+     *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(Data $command): bool
@@ -31,7 +32,7 @@ class CouponDeleteCommandHandler extends CommandHandler
             $this->service->repository->delete($model);
             
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw $exception;
         } catch (Throwable $throwable) {

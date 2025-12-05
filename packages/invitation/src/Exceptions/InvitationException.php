@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Invitation\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 /**
  * 邀请领域异常
  */
-class InvitationException extends AbstractException
+class InvitationException extends BaseException
 {
     // 邀请码相关错误码
     public const CODE_NOT_FOUND = 10001;

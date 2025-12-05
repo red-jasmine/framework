@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 /**
  * @property string $translationNamespace
@@ -109,7 +109,7 @@ trait ResourcePageHelper
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      */
     protected function handleRecordCreation(array $data) : Model
     {
@@ -130,7 +130,7 @@ trait ResourcePageHelper
                         ->danger()
                         ->send();
             throw $exception;
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             Notification::make()
                         ->title($abstractException->getMessage())
                         ->danger()
@@ -203,7 +203,7 @@ trait ResourcePageHelper
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      */
     protected function handleRecordUpdate(Model $record, array $data) : Model
     {
@@ -224,7 +224,7 @@ trait ResourcePageHelper
                         ->danger()
                         ->send();
             throw $exception;
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             Notification::make()
                         ->title($abstractException->getMessage())
                         ->danger()

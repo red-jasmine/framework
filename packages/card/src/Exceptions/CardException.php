@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Card\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class CardException extends AbstractException
+class CardException extends BaseException
 {
 
 }

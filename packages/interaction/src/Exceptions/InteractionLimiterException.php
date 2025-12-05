@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Interaction\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class InteractionLimiterException extends AbstractException
+class InteractionLimiterException extends BaseException
 {
 
 }

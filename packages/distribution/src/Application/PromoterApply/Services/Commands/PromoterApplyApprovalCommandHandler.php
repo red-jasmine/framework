@@ -7,7 +7,7 @@ use RedJasmine\Distribution\Domain\Models\PromoterApply;
 use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\ApprovalData;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 /**
@@ -27,7 +27,7 @@ class PromoterApplyApprovalCommandHandler extends CommandHandler
      * @param  PromoterApplyApprovalCommand  $command
      *
      * @return PromoterApply
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterApplyApprovalCommand $command) : PromoterApply
@@ -47,7 +47,7 @@ class PromoterApplyApprovalCommandHandler extends CommandHandler
 
             return $apply;
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw $exception;
         } catch (Throwable $throwable) {

@@ -9,7 +9,7 @@ use RedJasmine\Interaction\Domain\Facades\InteractionType;
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 use RedJasmine\Interaction\Domain\Services\InteractionDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class InteractionRecordCreateCommandHandler extends CommandHandler
@@ -25,7 +25,7 @@ class InteractionRecordCreateCommandHandler extends CommandHandler
      * @param  InteractionData  $command
      *
      * @return InteractionRecord
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(InteractionData $command) : InteractionRecord
@@ -48,7 +48,7 @@ class InteractionRecordCreateCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

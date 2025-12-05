@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 use RedJasmine\Payment\Application\Services\Transfer\TransferApplicationService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class TransferFailCommandHandler extends CommandHandler
@@ -21,7 +21,7 @@ class TransferFailCommandHandler extends CommandHandler
      * @param TransferFailCommand $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws PaymentException
      */
@@ -39,7 +39,7 @@ class TransferFailCommandHandler extends CommandHandler
             $this->service->repository->update($transfer);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

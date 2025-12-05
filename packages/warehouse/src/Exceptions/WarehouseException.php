@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Warehouse\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class WarehouseException extends AbstractException
+class WarehouseException extends BaseException
 {
     public const WAREHOUSE_NOT_FOUND = 301001; // 仓库不存在
     public const WAREHOUSE_CODE_EXISTS = 301002; // 仓库编码已存在

@@ -4,7 +4,7 @@ namespace RedJasmine\Article\Application\Services\Article\Commands;
 
 use RedJasmine\Community\Application\Services\Topic\TopicApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class TopicPublishCommandHandler extends CommandHandler
@@ -20,7 +20,7 @@ class TopicPublishCommandHandler extends CommandHandler
      * @param  TopicPublishCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(TopicPublishCommand $command) : bool
@@ -38,7 +38,7 @@ class TopicPublishCommandHandler extends CommandHandler
             $this->commitDatabaseTransaction();
 
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

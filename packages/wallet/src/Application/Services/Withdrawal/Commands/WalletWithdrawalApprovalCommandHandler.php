@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Application\Services\Withdrawal\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\Wallet\Application\Services\Withdrawal\WalletWithdrawalApplicationService;
 use RedJasmine\Wallet\Domain\Services\WalletWithdrawalService;
 use RedJasmine\Wallet\Exceptions\WalletException;
@@ -28,7 +28,7 @@ class WalletWithdrawalApprovalCommandHandler extends CommandHandler
      * @param  WalletWithdrawalApprovalCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws WalletException
      * @throws WalletWithdrawalException
@@ -47,7 +47,7 @@ class WalletWithdrawalApprovalCommandHandler extends CommandHandler
             $this->service->repository->update($withdrawal);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

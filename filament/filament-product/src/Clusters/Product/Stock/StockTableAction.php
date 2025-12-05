@@ -17,7 +17,7 @@ use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\ProductVariant;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 class StockTableAction extends Action
 {
@@ -115,7 +115,7 @@ class StockTableAction extends Action
 
 
                      Notification::make()->title('成功')->success()->send();
-                 } catch (AbstractException $throwable) {
+                 } catch (BaseException $throwable) {
 //                             throw $throwable;
                      Notification::make()->title('失败')
                                  ->body($throwable->getMessage())

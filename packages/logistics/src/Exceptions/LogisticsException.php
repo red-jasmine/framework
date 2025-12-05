@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Logistics\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class LogisticsException extends AbstractException
+class LogisticsException extends BaseException
 {
 
 }

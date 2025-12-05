@@ -5,7 +5,7 @@ namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 use Exception;
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
@@ -39,7 +39,7 @@ class RefundReturnGoodsCommandHandler extends AbstractRefundCommandHandler
             $this->service->repository->update($refund);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

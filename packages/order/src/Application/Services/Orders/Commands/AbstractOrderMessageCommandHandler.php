@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 abstract class AbstractOrderMessageCommandHandler extends AbstractOrderCommandHandler
@@ -26,8 +26,9 @@ abstract class AbstractOrderMessageCommandHandler extends AbstractOrderCommandHa
 
     /**
      * @param OrderMessageCommand $command
+     *
      * @return void
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(OrderMessageCommand $command) : void
@@ -44,7 +45,7 @@ abstract class AbstractOrderMessageCommandHandler extends AbstractOrderCommandHa
             $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

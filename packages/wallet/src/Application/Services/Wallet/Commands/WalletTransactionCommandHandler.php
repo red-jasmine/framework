@@ -4,7 +4,7 @@ namespace RedJasmine\Wallet\Application\Services\Wallet\Commands;
 
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
 use RedJasmine\Wallet\Domain\Models\WalletTransaction;
 use RedJasmine\Wallet\Domain\Services\WalletService;
@@ -26,7 +26,7 @@ class WalletTransactionCommandHandler extends CommandHandler
      * @param  WalletTransactionCommand  $command
      *
      * @return WalletTransaction
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws WalletException
      */
@@ -45,7 +45,7 @@ class WalletTransactionCommandHandler extends CommandHandler
             $this->service->repository->update($wallet);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

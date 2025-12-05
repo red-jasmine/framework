@@ -3,7 +3,7 @@
 namespace RedJasmine\UserCore\Application\Services\Commands\SetAccount;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\UserChangeAccountService;
 use Throwable;
@@ -22,7 +22,7 @@ class UserSetAccountCommandHandler extends CommandHandler
      * @param  UserSetAccountCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserSetAccountCommand $command) : bool
@@ -40,7 +40,7 @@ class UserSetAccountCommandHandler extends CommandHandler
             $this->service->repository->update($user);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

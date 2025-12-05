@@ -9,7 +9,7 @@ use RedJasmine\Payment\Domain\Models\Transfer;
 use RedJasmine\Payment\Domain\Services\ChannelAppPermissionService;
 use RedJasmine\Payment\Domain\Services\Routing\TransferRoutingService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class TransferCreateCommandHandler extends CommandHandler
@@ -25,7 +25,7 @@ class TransferCreateCommandHandler extends CommandHandler
      * @param  TransferCreateCommand  $command
      *
      * @return Transfer
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws PaymentException
      */
@@ -57,7 +57,7 @@ class TransferCreateCommandHandler extends CommandHandler
             $this->service->repository->store($transfer);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

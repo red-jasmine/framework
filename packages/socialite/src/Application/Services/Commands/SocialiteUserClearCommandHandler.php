@@ -5,7 +5,7 @@ namespace RedJasmine\Socialite\Application\Services\Commands;
 use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class SocialiteUserClearCommandHandler extends CommandHandler
@@ -23,7 +23,7 @@ class SocialiteUserClearCommandHandler extends CommandHandler
      * @param  SocialiteUserClearCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(SocialiteUserClearCommand $command) : bool
@@ -41,7 +41,7 @@ class SocialiteUserClearCommandHandler extends CommandHandler
                 $this->service->repository->update($socialiteUser);
             }
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

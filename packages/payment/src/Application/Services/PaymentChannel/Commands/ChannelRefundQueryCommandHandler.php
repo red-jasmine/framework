@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 use RedJasmine\Payment\Application\Services\CommandHandlers\PaymentChannel\Throwable;
 use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 class ChannelRefundQueryCommandHandler extends CommandHandler
 {
@@ -32,7 +32,7 @@ class ChannelRefundQueryCommandHandler extends CommandHandler
             $this->service->refundRepository->update($refund);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

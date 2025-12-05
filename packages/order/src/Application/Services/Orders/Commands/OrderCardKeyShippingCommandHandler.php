@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Order\Domain\Models\OrderCardKey;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
@@ -32,7 +32,7 @@ class OrderCardKeyShippingCommandHandler extends AbstractOrderCommandHandler
             $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

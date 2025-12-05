@@ -18,7 +18,7 @@ use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderResource;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 /**
  * @property Schema $dummy
@@ -150,7 +150,7 @@ class Shipping extends Page
 
         try {
             app(static::getResource()::getCommandService())->dummyShipping($command);
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             Notification::make()->danger()
                         ->title($abstractException->getMessage())
                         ->send();
@@ -200,7 +200,7 @@ class Shipping extends Page
         $command    = OrderLogisticsShippingCommand::from($data);
         try {
             app(static::getResource()::getCommandService())->logisticsShipping($command);
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             Notification::make()->danger()
                         ->title($abstractException->getMessage())
                         ->send();

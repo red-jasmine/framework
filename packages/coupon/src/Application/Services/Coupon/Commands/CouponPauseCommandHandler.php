@@ -7,7 +7,7 @@ use RedJasmine\Coupon\Domain\Models\Enums\CouponStatusEnum;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class CouponPauseCommandHandler extends CommandHandler
@@ -19,8 +19,9 @@ class CouponPauseCommandHandler extends CommandHandler
 
     /**
      * @param CouponPauseCommand $command
+     *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(CouponPauseCommand $command): bool
@@ -33,7 +34,7 @@ class CouponPauseCommandHandler extends CommandHandler
             $this->service->repository->update($model);
             
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw $exception;
         } catch (Throwable $throwable) {

@@ -3,15 +3,16 @@
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Order\Application\Services\Handlers\Others\Throwable;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 class OrderStarCommandHandler extends AbstractOrderCommandHandler
 {
 
     /**
      * @param OrderStarCommand $command
+     *
      * @return void
-     * @throws AbstractException
+     * @throws BaseException
      */
     public function handle(OrderStarCommand $command) : void
     {
@@ -26,7 +27,7 @@ class OrderStarCommandHandler extends AbstractOrderCommandHandler
             $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

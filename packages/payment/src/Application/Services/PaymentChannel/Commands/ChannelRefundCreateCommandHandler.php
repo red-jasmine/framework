@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplicationService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class ChannelRefundCreateCommandHandler extends CommandHandler
@@ -20,7 +20,7 @@ class ChannelRefundCreateCommandHandler extends CommandHandler
      * @param  ChannelRefundCreateCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws PaymentException
      * @throws Throwable
      */
@@ -40,7 +40,7 @@ class ChannelRefundCreateCommandHandler extends CommandHandler
             $this->service->refundRepository->update($refund);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Order\Domain\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class RefundException extends AbstractException
+class RefundException extends BaseException
 {
 
 

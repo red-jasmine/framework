@@ -5,7 +5,7 @@ namespace RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Command
 use RedJasmine\Ecommerce\Domain\Data\Payment\PaymentTradeResult;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\PointsExchangeOrderApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 
@@ -42,7 +42,7 @@ class PointsExchangeOrderPaidCommandHandler extends CommandHandler
 
             $this->service->repository->update($pointsExchangeOrder);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Article\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class ArticleException extends AbstractException
+class ArticleException extends BaseException
 {
 
 }

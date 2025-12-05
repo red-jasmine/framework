@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Vip\Domain\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class VipException extends AbstractException
+class VipException extends BaseException
 {
 
 }

@@ -7,7 +7,7 @@ use RedJasmine\Payment\Domain\Data\SettleData;
 use RedJasmine\Payment\Domain\Models\Settle;
 use RedJasmine\Payment\Domain\Services\SettleService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class SettleCreateCommandHandler extends CommandHandler
@@ -24,7 +24,7 @@ class SettleCreateCommandHandler extends CommandHandler
      * @param  SettleCreateCommand  $command
      *
      * @return Settle
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(SettleCreateCommand $command) : Settle
@@ -38,7 +38,7 @@ class SettleCreateCommandHandler extends CommandHandler
 
             $this->service->repository->store($settle);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

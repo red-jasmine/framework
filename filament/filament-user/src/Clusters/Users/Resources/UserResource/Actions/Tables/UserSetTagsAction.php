@@ -6,7 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\User\Application\Services\Commands\UserSetTagsCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
 
@@ -75,7 +75,7 @@ class UserSetTagsAction extends Action
                 $command = UserSetTagsCommand::from($data);
                 $command->setKey($record->getKey());
                 app($this->service)->setTags($command);
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())
                             ->send();

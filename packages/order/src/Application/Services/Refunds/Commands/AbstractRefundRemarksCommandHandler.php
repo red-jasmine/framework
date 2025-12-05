@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
 use RedJasmine\Order\Domain\Models\Enums\TradePartyEnums;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class AbstractRefundRemarksCommandHandler extends AbstractRefundCommandHandler
@@ -34,7 +34,7 @@ class AbstractRefundRemarksCommandHandler extends AbstractRefundCommandHandler
 
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

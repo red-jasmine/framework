@@ -3,7 +3,7 @@
 namespace RedJasmine\UserCore\Application\Services\Commands\SetPassword;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Application\Services\Commands\SetStatus\UserSetPasswordCommand;
 use Throwable;
@@ -20,7 +20,7 @@ class UserSetPasswordCommandHandler extends CommandHandler
      * @param  UserSetPasswordCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserSetPasswordCommand $command) : bool
@@ -36,7 +36,7 @@ class UserSetPasswordCommandHandler extends CommandHandler
             $this->service->repository->update($user);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

@@ -38,7 +38,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterBindUserCommand $command): PromoterBindUser
@@ -74,7 +74,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
             PromoterBindUserEvent::dispatch($bindUser);
 
             $this->commitDatabaseTransaction(); // ✅ 提交事务
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction(); // ✅ 回滚事务
             throw $abstractException;
         } catch (Throwable $throwable) {
@@ -97,7 +97,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
 
 ### 2. ✅ 异常处理
 - **统一的异常处理机制**
-  - 捕获 `AbstractException` 和 `Throwable`
+  - 捕获 `BaseException` 和 `Throwable`
   - 异常时自动回滚事务
   - 保持异常的原始类型向上抛出
 
@@ -119,7 +119,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
 
 ### 6. ✅ 完整的文档注释
 - **添加异常声明**
-  - `@throws AbstractException`
+  - `@throws BaseException`
   - `@throws Throwable`
 
 ## 解绑命令处理器同样改进
@@ -133,7 +133,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterUnbindUserCommand $command): bool
@@ -167,7 +167,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
             PromoterUnbindUserEvent::dispatch($bindUser);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (\RedJasmine\Support\Exceptions\BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\UserCore\Domain\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class UserRegisterException extends AbstractException
+class UserRegisterException extends BaseException
 {
 
 }

@@ -3,9 +3,9 @@
 namespace RedJasmine\UserCore\Domain\Exceptions;
 
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class UserNotFoundException extends AbstractException
+class UserNotFoundException extends BaseException
 {
 
 

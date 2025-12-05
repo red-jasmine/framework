@@ -8,7 +8,7 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterUnbindUserCommandHandler extends CommandHandler
@@ -19,7 +19,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterUnbindUserCommand $command): bool
@@ -49,7 +49,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
             PromoterUnbindUserEvent::dispatch($bindUser);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

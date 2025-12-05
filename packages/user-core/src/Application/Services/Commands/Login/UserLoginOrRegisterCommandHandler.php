@@ -5,7 +5,7 @@ namespace RedJasmine\UserCore\Application\Services\Commands\Login;
 use RedJasmine\Socialite\Application\Services\Commands\SocialiteUserBindCommand;
 use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Domain\Data\UserData;
 use RedJasmine\UserCore\Domain\Exceptions\UserNotFoundException;
@@ -69,7 +69,7 @@ class UserLoginOrRegisterCommandHandler extends CommandHandler
 
             }
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

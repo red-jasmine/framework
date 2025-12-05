@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Commands\ApprovalCommand;
 use RedJasmine\Support\Application\Commands\SubmitApprovalCommand;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 class SubmitApprovalAction extends Action
 {
@@ -40,7 +40,7 @@ class SubmitApprovalAction extends Action
                      $result = $service->submitApproval($command);
 
                      Notification::make()->title('成功')->success()->send();
-                 } catch (AbstractException $throwable) {
+                 } catch (BaseException $throwable) {
                      Notification::make()->title('失败')
                                  ->body($throwable->getMessage())
                                  ->warning()->send();

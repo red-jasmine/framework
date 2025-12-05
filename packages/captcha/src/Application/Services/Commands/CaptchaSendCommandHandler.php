@@ -7,7 +7,7 @@ use RedJasmine\Captcha\Domain\Services\CaptchaSenderService;
 use RedJasmine\Captcha\Exceptions\CaptchaException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class CaptchaSendCommandHandler extends CommandHandler
@@ -47,7 +47,7 @@ class CaptchaSendCommandHandler extends CommandHandler
 
             $this->service->repository->update($this->context->getModel());
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

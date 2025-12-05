@@ -6,7 +6,7 @@ use RedJasmine\Payment\Application\Services\Refund\RefundApplicationService;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Payment\Domain\Models\Refund;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class RefundExecutingCommandHandler extends CommandHandler
@@ -20,7 +20,7 @@ class RefundExecutingCommandHandler extends CommandHandler
      * @param  RefundExecutingCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws PaymentException
      */
@@ -38,7 +38,7 @@ class RefundExecutingCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

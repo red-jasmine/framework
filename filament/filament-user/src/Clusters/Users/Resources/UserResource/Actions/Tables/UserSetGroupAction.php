@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\
 use Filament\Actions\Action;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Notifications\Notification;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\User\Application\Services\Commands\UserSetGroupCommand;
 use RedJasmine\User\Application\Services\UserApplicationService;
 
@@ -66,7 +66,7 @@ class UserSetGroupAction extends Action
                 $command = UserSetGroupCommand::from($data);
                 $command->setKey($record->getKey());
                 app($this->service)->setGroup($command);
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())
                             ->send();

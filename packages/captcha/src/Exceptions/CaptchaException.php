@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Captcha\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class CaptchaException extends AbstractException
+class CaptchaException extends BaseException
 {
 
     public const SEND_ERROR        = '411011'; // 发送状态错

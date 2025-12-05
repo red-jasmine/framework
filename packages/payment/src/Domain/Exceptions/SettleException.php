@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Payment\Domain\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class SettleException extends AbstractException
+class SettleException extends BaseException
 {
     // 错误码
     // 错误信息

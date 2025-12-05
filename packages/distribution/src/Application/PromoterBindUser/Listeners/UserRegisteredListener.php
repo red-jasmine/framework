@@ -7,7 +7,7 @@ use RedJasmine\Distribution\Application\Promoter\Services\PromoterApplicationSer
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindByOwnerQuery;
 use RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands\PromoterBindUserCommand;
 use RedJasmine\Distribution\Application\PromoterBindUser\Services\PromoterBindUserApplicationService;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\User\Domain\Events\UserRegisteredEvent;
 use Throwable;
 
@@ -44,7 +44,7 @@ class UserRegisteredListener
             $promoterBindUserCommand->user       = $user;
 
             $this->promoterBindUserApplicationService->bind($promoterBindUserCommand);
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             Log::info($abstractException->getMessage());
         } catch (Throwable $throwable) {
             throw $throwable;

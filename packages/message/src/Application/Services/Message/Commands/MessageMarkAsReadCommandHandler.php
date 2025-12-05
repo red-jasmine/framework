@@ -4,7 +4,7 @@ namespace RedJasmine\Message\Application\Services\Message\Commands;
 
 use RedJasmine\Message\Application\Services\Message\MessageApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class MessageMarkAsReadCommandHandler extends CommandHandler
@@ -19,7 +19,7 @@ class MessageMarkAsReadCommandHandler extends CommandHandler
      * @param  MessageMarkAsReadCommand  $command
      *
      * @return void
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(MessageMarkAsReadCommand $command) : void
@@ -30,7 +30,7 @@ class MessageMarkAsReadCommandHandler extends CommandHandler
         try {
             $this->service->repository->markAsRead([$command->getKey()], $command->biz, $command->owner);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

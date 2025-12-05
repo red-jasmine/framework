@@ -3,7 +3,7 @@
 namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\User\Domain\Services\UserSocialiteService;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
@@ -22,7 +22,7 @@ class UserUnbindSocialiteCommandHandler extends CommandHandler
      * @param  UserUnbindSocialiteCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserUnbindSocialiteCommand $command) : bool
@@ -36,7 +36,7 @@ class UserUnbindSocialiteCommandHandler extends CommandHandler
             $this->userSocialiteService->unbind($user, $command->provider);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

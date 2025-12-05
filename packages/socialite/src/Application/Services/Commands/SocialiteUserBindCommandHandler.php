@@ -6,7 +6,7 @@ use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class SocialiteUserBindCommandHandler extends CommandHandler
@@ -24,7 +24,7 @@ class SocialiteUserBindCommandHandler extends CommandHandler
      * @param  SocialiteUserBindCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(SocialiteUserBindCommand $command) : bool
@@ -54,7 +54,7 @@ class SocialiteUserBindCommandHandler extends CommandHandler
             $this->service->repository->update($socialiteUser);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

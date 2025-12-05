@@ -3,14 +3,14 @@
 namespace RedJasmine\Product\Application\Stock\Services\Commands;
 
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class StockSubCommandHandler extends StockCommandHandler
 {
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(StockCommand $command) : bool
@@ -29,7 +29,7 @@ class StockSubCommandHandler extends StockCommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

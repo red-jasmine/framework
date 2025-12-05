@@ -6,7 +6,7 @@ use RedJasmine\Distribution\Application\PromoterBindUser\Services\PromoterBindUs
 use RedJasmine\Distribution\Domain\Services\PromoterBindUserService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterBindUserCommandHandler extends CommandHandler
@@ -17,7 +17,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterBindUserCommand $command) : bool
@@ -42,7 +42,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
             }
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

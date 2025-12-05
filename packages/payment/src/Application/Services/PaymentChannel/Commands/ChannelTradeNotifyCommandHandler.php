@@ -9,7 +9,7 @@ use RedJasmine\Payment\Application\Services\PaymentChannel\PaymentChannelApplica
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class ChannelTradeNotifyCommandHandler extends CommandHandler
@@ -25,7 +25,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
      * @param  ChannelNotifyTradeCommand  $command
      *
      * @return Response
-     * @throws AbstractException
+     * @throws BaseException
      * @throws PaymentException
      * @throws Throwable
      */
@@ -57,7 +57,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
      * @param ChannelTradeData $channelTradeData
      *
      * @return true
-     * @throws AbstractException
+     * @throws BaseException
      * @throws PaymentException
      * @throws Throwable
      */
@@ -80,7 +80,7 @@ class ChannelTradeNotifyCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             Log::info('Payment-Notify', [ 'message' => $exception->getMessage() ]);
             throw $exception;

@@ -4,7 +4,7 @@ namespace RedJasmine\UserCore\Application\Services\Commands\ChangeAccount;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\UserChangeAccountService;
 use Throwable;
@@ -39,7 +39,7 @@ class ChangeAccountCaptchaCommandHandler extends CommandHandler
             $this->changeAccountService->captcha($user, $command);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

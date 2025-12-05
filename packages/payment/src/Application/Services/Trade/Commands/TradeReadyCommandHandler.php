@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 use Closure;
 use RedJasmine\Payment\Domain\Data\Trades\PaymentMethod;
 use RedJasmine\Payment\Domain\Data\Trades\PaymentTradeResult;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 
@@ -17,7 +17,7 @@ class TradeReadyCommandHandler extends AbstractTradeCommandHandler
      * @param  TradeReadyCommand  $command
      *
      * @return PaymentTradeResult
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(TradeReadyCommand $command) : PaymentTradeResult
@@ -38,7 +38,7 @@ class TradeReadyCommandHandler extends AbstractTradeCommandHandler
             // 返回支付场景等信息
             $this->commitDatabaseTransaction();
             return $paymentTradeResult;
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

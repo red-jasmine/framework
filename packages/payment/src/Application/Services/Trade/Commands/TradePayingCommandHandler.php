@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Exceptions\PaymentException;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 /**
@@ -17,7 +17,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
      * @param TradePayingCommand $command
      *
      * @return ChannelTradeData
-     * @throws AbstractException
+     * @throws BaseException
      * @throws PaymentException
      * @throws Throwable
      */
@@ -49,7 +49,7 @@ class TradePayingCommandHandler extends AbstractTradeCommandHandler
             // 提交数据库事务
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

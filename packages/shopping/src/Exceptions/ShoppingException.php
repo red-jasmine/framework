@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Shopping\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class ShoppingException extends AbstractException
+class ShoppingException extends BaseException
 {
 
 

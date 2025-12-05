@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsShipperEnum;
 use RedJasmine\Order\Domain\Models\OrderLogistics;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
@@ -34,7 +34,7 @@ class OrderLogisticsShippingCommandHandler extends AbstractOrderCommandHandler
             $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

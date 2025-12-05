@@ -45,7 +45,7 @@ trait Hookable
      *
      * @return void
      */
-    public static function register($pipeline, int $priority = 100) : void
+    public static function register(mixed $pipeline, int $priority = 100) : void
     {
         Hook::register(static::getHookName(), $pipeline, $priority);
 

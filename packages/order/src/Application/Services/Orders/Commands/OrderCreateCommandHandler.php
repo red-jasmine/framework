@@ -7,7 +7,7 @@ use RedJasmine\Order\Application\Mappers\OrderAddressMapper;
 use RedJasmine\Order\Application\Mappers\OrderMapper;
 use RedJasmine\Order\Application\Mappers\OrderProductMapper;
 use RedJasmine\Order\Domain\Models\Order;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderCreateCommandHandler extends AbstractOrderCommandHandler
@@ -18,7 +18,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
      * @param  OrderCreateCommand  $command
      *
      * @return Order
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(OrderCreateCommand $command) : Order
@@ -56,7 +56,7 @@ class OrderCreateCommandHandler extends AbstractOrderCommandHandler
 
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

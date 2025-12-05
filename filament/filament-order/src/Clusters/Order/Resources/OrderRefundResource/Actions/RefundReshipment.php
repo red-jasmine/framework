@@ -17,7 +17,7 @@ use RedJasmine\Order\Application\Services\Refunds\Commands\RefundCardKeyReshipme
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Order\Domain\Models\Refund;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 trait RefundReshipment
 {
@@ -54,7 +54,7 @@ trait RefundReshipment
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
 
                 };
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())
                             ->send();

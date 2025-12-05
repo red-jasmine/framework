@@ -11,7 +11,7 @@ use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\Commands\ApprovalCommand;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 class ApprovalAction extends Action
 {
@@ -53,7 +53,7 @@ class ApprovalAction extends Action
                      $result = $service->approval($command);
 
                      Notification::make()->title('成功')->success()->send();
-                 } catch (AbstractException $throwable) {
+                 } catch (BaseException $throwable) {
                      Notification::make()->title('失败')
                                  ->body($throwable->getMessage())
                                  ->warning()->send();

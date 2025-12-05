@@ -4,7 +4,7 @@ namespace RedJasmine\UserCore\Application\Services\Commands\ChangeAccount;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\User\Application\Services\Commands\ChangeAccount\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Domain\Services\ChangeAccount\UserChangeAccountService;
 use Throwable;
@@ -39,7 +39,7 @@ class ChangeAccountVerifyCommandHandler extends CommandHandler
             $this->changeAccountService->verify($user, $command);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

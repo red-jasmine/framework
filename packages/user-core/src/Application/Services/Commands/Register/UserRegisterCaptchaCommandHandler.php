@@ -3,7 +3,7 @@
 namespace RedJasmine\UserCore\Application\Services\Commands\Register;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use RedJasmine\UserCore\Domain\Services\Login\UserLoginService;
 use RedJasmine\UserCore\Domain\Services\Register\UserRegisterService;
@@ -32,7 +32,7 @@ class UserRegisterCaptchaCommandHandler extends CommandHandler
      * @param  UserRegisterCaptchaCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserRegisterCaptchaCommand $command) : bool
@@ -46,7 +46,7 @@ class UserRegisterCaptchaCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

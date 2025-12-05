@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Wallet\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class WalletRechargeException extends AbstractException
+class WalletRechargeException extends BaseException
 {
 
 }

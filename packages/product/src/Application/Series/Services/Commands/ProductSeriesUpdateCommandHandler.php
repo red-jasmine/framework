@@ -7,7 +7,7 @@ use RedJasmine\Product\Application\Series\Services\ProductSeriesApplicationServi
 use RedJasmine\Product\Domain\Series\Models\ProductSeries;
 use RedJasmine\Product\Domain\Series\Models\ProductSeriesProduct;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class ProductSeriesUpdateCommandHandler extends CommandHandler
@@ -21,7 +21,7 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(ProductSeriesUpdateCommand $command) : ProductSeries
@@ -52,7 +52,7 @@ class ProductSeriesUpdateCommandHandler extends CommandHandler
             $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
 

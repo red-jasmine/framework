@@ -6,7 +6,7 @@ use RedJasmine\Payment\Application\Services\ChannelApp\ChannelAppCommandService;
 use RedJasmine\Payment\Domain\Data\MerchantChannelAppPermissionData;
 use RedJasmine\Payment\Domain\Models\MerchantChannelAppPermission;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class MerchantChannelAppPermissionCommandHandler extends CommandHandler
@@ -20,7 +20,7 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
      * @param MerchantChannelAppPermissionData $command
      *
      * @return void
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(MerchantChannelAppPermissionData $command) : void
@@ -40,7 +40,7 @@ class MerchantChannelAppPermissionCommandHandler extends CommandHandler
             $permission->status          = $command->status;
             $this->service->permissionRepository->store($permission);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

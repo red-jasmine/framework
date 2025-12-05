@@ -8,7 +8,7 @@ use RedJasmine\Invitation\Domain\Models\InvitationRecord;
 use RedJasmine\Invitation\Exceptions\InvitationException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 /**
@@ -26,7 +26,7 @@ class InvitationCodeUseCommandHandler extends CommandHandler
      * @param  UseInvitationCodeData  $command
      *
      * @return InvitationRecord
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UseInvitationCodeData $command) : InvitationRecord
@@ -55,7 +55,7 @@ class InvitationCodeUseCommandHandler extends CommandHandler
 
             $this->service->repository->update($invitationCode);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw $exception;
         } catch (Throwable $throwable) {

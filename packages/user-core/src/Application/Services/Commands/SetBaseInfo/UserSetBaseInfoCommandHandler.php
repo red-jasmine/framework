@@ -3,7 +3,7 @@
 namespace RedJasmine\UserCore\Application\Services\Commands\SetBaseInfo;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\User\Domain\Models\User;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
@@ -21,7 +21,7 @@ class UserSetBaseInfoCommandHandler extends CommandHandler
      * @param  UserSetBaseInfoCommand  $command
      *
      * @return User
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserSetBaseInfoCommand $command) : User
@@ -37,7 +37,7 @@ class UserSetBaseInfoCommandHandler extends CommandHandler
             $this->service->repository->update($user);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

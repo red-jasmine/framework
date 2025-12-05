@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Application\Services\Trade\Commands;
 
 use RedJasmine\Payment\Domain\Models\Trade;
 use RedJasmine\Payment\Domain\Transformer\TradeTransformer;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 
@@ -14,7 +14,7 @@ class TradeCreateCommandHandler extends AbstractTradeCommandHandler
      * @param  TradeCreateCommand  $command
      *
      * @return Trade
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(TradeCreateCommand $command) : Trade
@@ -37,7 +37,7 @@ class TradeCreateCommandHandler extends AbstractTradeCommandHandler
             $this->service->repository->store($model);
             // 提交事务
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

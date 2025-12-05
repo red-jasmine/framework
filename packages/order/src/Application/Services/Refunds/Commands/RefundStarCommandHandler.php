@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class RefundStarCommandHandler extends AbstractRefundCommandHandler
@@ -22,7 +22,7 @@ class RefundStarCommandHandler extends AbstractRefundCommandHandler
 
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

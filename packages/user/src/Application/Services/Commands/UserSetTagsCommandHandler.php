@@ -3,7 +3,7 @@
 namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
 
@@ -26,7 +26,7 @@ class UserSetTagsCommandHandler extends CommandHandler
             $user->setRelation('tags', collect($command->tags));
             $this->service->repository->update($user);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

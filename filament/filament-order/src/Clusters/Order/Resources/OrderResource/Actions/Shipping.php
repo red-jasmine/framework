@@ -16,7 +16,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderDummyShippingComm
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderLogisticsShippingCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 trait Shipping
 {
@@ -55,7 +55,7 @@ trait Shipping
                     ShippingTypeEnum::NONE => $this->dummyAction($data, $record),
 
                 };
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 Notification::make()->danger()
                             ->title($abstractException->getMessage())
                             ->send();

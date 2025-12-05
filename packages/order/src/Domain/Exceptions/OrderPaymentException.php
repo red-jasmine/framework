@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Order\Domain\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class OrderPaymentException extends AbstractException
+class OrderPaymentException extends BaseException
 {
 
 

@@ -7,7 +7,7 @@ use RedJasmine\Coupon\Domain\Repositories\UserCouponRepositoryInterface;
 use RedJasmine\Coupon\Domain\Services\CouponUserService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class CouponIssueCommandHandler extends CommandHandler
@@ -23,7 +23,7 @@ class CouponIssueCommandHandler extends CommandHandler
      * @param  CouponIssueCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(CouponIssueCommand $command) : bool
@@ -39,7 +39,7 @@ class CouponIssueCommandHandler extends CommandHandler
             $this->repository->store($userCoupon);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw $exception;
         } catch (Throwable $throwable) {

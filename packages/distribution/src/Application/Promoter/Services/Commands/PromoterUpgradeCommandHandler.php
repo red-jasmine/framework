@@ -7,7 +7,7 @@ use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterUpgradeCommandHandler extends CommandHandler
@@ -18,7 +18,7 @@ class PromoterUpgradeCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterUpgradeCommand $command) : Promoter
@@ -35,7 +35,7 @@ class PromoterUpgradeCommandHandler extends CommandHandler
             $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

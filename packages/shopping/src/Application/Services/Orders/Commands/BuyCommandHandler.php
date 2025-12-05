@@ -9,7 +9,7 @@ use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Application\UserCases\Commands\OrderBuyCommand;
 use RedJasmine\Shopping\Domain\Services\OrderDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 // 定义一个处理购买命令的类，继承自CommandHandler基类
@@ -34,7 +34,7 @@ class BuyCommandHandler extends CommandHandler
      * @param  BuyCommand  $command
      *
      * @return OrdersData
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(BuyCommand $command) : OrdersData
@@ -44,7 +44,7 @@ class BuyCommandHandler extends CommandHandler
             $orders = $this->orderDomainService->buy($command);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             Log::info('下单失败:'.$exception->getMessage(), $command->toArray());
             throw $exception;

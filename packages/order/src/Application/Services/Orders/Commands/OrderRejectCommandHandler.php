@@ -2,9 +2,10 @@
 
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
-use RedJasmine\Order\Application\Services\Handlers\AbstractException;
+
 use RedJasmine\Order\Domain\Events\OrderPaidEvent;
 use RedJasmine\Order\Domain\Exceptions\OrderException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderRejectCommandHandler extends AbstractOrderCommandHandler
@@ -30,7 +31,7 @@ class OrderRejectCommandHandler extends AbstractOrderCommandHandler
             $this->service->repository->update($order);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

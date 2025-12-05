@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentOrder\Clusters\Order\Resources\OrderRefundResource\
 use RedJasmine\Order\Application\Services\Refunds\Commands\RefundAgreeReshipmentCommand;
 use RedJasmine\Order\Application\Services\Refunds\RefundApplicationService;
 use RedJasmine\Order\Domain\Models\Refund;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 trait RefundAgreeReshipment
 {
@@ -28,7 +28,7 @@ trait RefundAgreeReshipment
             try {
                 app(RefundApplicationService::class)->agreeReshipment(RefundAgreeReshipmentCommand::from($data));
 
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->sendFailureNotification();
                 return $this->halt();

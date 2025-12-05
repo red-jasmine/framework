@@ -3,7 +3,7 @@
 namespace RedJasmine\Support\Application\Commands;
 
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class ApprovalCommandHandler extends CommandHandler
@@ -20,7 +20,7 @@ class ApprovalCommandHandler extends CommandHandler
      * @param  ApprovalCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(ApprovalCommand $command) : bool
@@ -35,7 +35,7 @@ class ApprovalCommandHandler extends CommandHandler
             $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

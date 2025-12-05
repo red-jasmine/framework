@@ -34,7 +34,7 @@ public function handle(PromoterBindUserCommand $command): PromoterBindUser
         PromoterBindUserEvent::dispatch($bindUser);
         
         $this->commitDatabaseTransaction();
-    } catch (AbstractException $abstractException) {
+    } catch (BaseException $abstractException) {
         $this->rollBackDatabaseTransaction();
         throw $abstractException;
     } catch (Throwable $throwable) {
@@ -49,7 +49,7 @@ public function handle(PromoterBindUserCommand $command): PromoterBindUser
 ### 2. 统一的异常处理
 
 **改进内容：**
-- 添加了 `AbstractException` 和 `Throwable` 的异常处理
+- 添加了 `BaseException` 和 `Throwable` 的异常处理
 - 确保异常发生时自动回滚事务
 - 保持异常的原始类型向上抛出
 
@@ -106,7 +106,7 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterBindUserCommandHandler extends CommandHandler
@@ -117,7 +117,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterBindUserCommand $command): PromoterBindUser
@@ -153,7 +153,7 @@ class PromoterBindUserCommandHandler extends CommandHandler
             PromoterBindUserEvent::dispatch($bindUser);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {
@@ -179,7 +179,7 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterUnbindUserCommandHandler extends CommandHandler
@@ -190,7 +190,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterUnbindUserCommand $command): bool
@@ -224,7 +224,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
             PromoterUnbindUserEvent::dispatch($bindUser);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

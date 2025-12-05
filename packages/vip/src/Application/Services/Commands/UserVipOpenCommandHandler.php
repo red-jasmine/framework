@@ -3,7 +3,7 @@
 namespace RedJasmine\Vip\Application\Services\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\Vip\Application\Services\UserVipApplicationService;
 use RedJasmine\Vip\Domain\Exceptions\VipException;
 use Throwable;
@@ -20,7 +20,7 @@ class UserVipOpenCommandHandler extends CommandHandler
      * @param  UserVipOpenCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws VipException
      */
@@ -40,7 +40,7 @@ class UserVipOpenCommandHandler extends CommandHandler
             $this->service->domainService->flushOrders();
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

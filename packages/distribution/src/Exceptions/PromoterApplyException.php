@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Distribution\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class PromoterApplyException extends AbstractException
+class PromoterApplyException extends BaseException
 {
 }

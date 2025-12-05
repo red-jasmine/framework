@@ -6,7 +6,7 @@ use RedJasmine\Order\Application\Services\Orders\Commands\OrderAcceptCommand;
 use RedJasmine\Order\Application\Services\Orders\Commands\OrderRejectCommand;
 use RedJasmine\Order\Application\Services\Orders\OrderApplicationService;
 use RedJasmine\Order\Domain\Models\Enums\AcceptStatusEnum;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
 trait Accept
 {
@@ -44,7 +44,7 @@ trait Accept
                     app(OrderApplicationService::class)->reject(OrderRejectCommand::from($data));
                 }
 
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->sendFailureNotification();
                 return $this->halt();

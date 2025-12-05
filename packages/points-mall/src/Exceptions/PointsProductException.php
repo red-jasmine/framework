@@ -2,9 +2,9 @@
 
 namespace RedJasmine\PointsMall\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class PointsProductException extends AbstractException
+class PointsProductException extends BaseException
 {
 
 }

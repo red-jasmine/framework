@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Application\Services\Orders\Commands;
 
 use RedJasmine\Order\Domain\Exceptions\OrderException;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderProgressCommandHandler extends AbstractOrderCommandHandler
@@ -11,8 +11,9 @@ class OrderProgressCommandHandler extends AbstractOrderCommandHandler
 
     /**
      * @param OrderProgressCommand $command
+     *
      * @return int
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      * @throws OrderException
      */
@@ -30,7 +31,7 @@ class OrderProgressCommandHandler extends AbstractOrderCommandHandler
             $progress = $order->setProductProgress($command->orderProductNo, $command->progress, $command->isAppend, $command->isAllowLess);
             $this->service->repository->update($order);
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

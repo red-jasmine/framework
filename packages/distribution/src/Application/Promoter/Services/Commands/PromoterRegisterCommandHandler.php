@@ -10,7 +10,7 @@ use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PromoterRegisterCommandHandler extends CommandHandler
@@ -21,7 +21,7 @@ class PromoterRegisterCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(PromoterRegisterCommand $command) : Promoter
@@ -44,7 +44,7 @@ class PromoterRegisterCommandHandler extends CommandHandler
             $this->service->repository->store($model);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $abstractException) {
+        } catch (BaseException $abstractException) {
             $this->rollBackDatabaseTransaction();
             throw $abstractException;
         } catch (Throwable $throwable) {

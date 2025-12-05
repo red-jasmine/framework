@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\
 use Filament\Actions\Action;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\Commands\SetPassword\UserSetStatusCommand;
 use RedJasmine\UserCore\Domain\Enums\UserStatusEnum;
 
@@ -66,7 +66,7 @@ class UserSetStatusAction extends Action
                 $command = UserSetStatusCommand::from($data);
                 $command->setKey($record->getKey());
                 app($this->service)->setStatus($command);
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->failure();
 

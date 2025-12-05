@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentUser\Clusters\Users\Resources\UserResource\Actions\
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\Commands\SetAccount\UserSetAccountCommand;
 
 class UserSetAccountAction extends Action
@@ -74,7 +74,7 @@ class UserSetAccountAction extends Action
                 $command = UserSetAccountCommand::from($data);
                 $command->setKey($record->getKey());
                 app($this->service)->setAccount($command);
-            } catch (AbstractException $abstractException) {
+            } catch (BaseException $abstractException) {
                 $this->failureNotificationTitle($abstractException->getMessage());
                 $this->failure();
 

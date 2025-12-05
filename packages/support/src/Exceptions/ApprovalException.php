@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Exceptions;
 
-class ApprovalException extends AbstractException
+class ApprovalException extends BaseException
 {
 
 }

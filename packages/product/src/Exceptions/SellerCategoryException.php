@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Product\Exceptions;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class SellerCategoryException extends AbstractException
+class SellerCategoryException extends BaseException
 {
 
 

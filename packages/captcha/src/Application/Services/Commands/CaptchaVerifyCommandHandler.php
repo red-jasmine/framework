@@ -8,6 +8,7 @@ use RedJasmine\Captcha\Domain\Services\CaptchaVerifyService;
 use RedJasmine\Captcha\Exceptions\CaptchaException;
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Application\HandleContext;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class CaptchaVerifyCommandHandler extends CommandHandler
@@ -49,7 +50,7 @@ class CaptchaVerifyCommandHandler extends CommandHandler
             $this->commitDatabaseTransaction();
 
             return true;
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

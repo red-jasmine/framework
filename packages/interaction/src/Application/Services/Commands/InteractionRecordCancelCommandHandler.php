@@ -9,7 +9,7 @@ use RedJasmine\Interaction\Domain\Facades\InteractionType;
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
 use RedJasmine\Interaction\Domain\Services\InteractionDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class InteractionRecordCancelCommandHandler extends CommandHandler
@@ -25,7 +25,7 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
      * @param  InteractionData  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(InteractionData $command) : bool
@@ -54,7 +54,7 @@ class InteractionRecordCancelCommandHandler extends CommandHandler
 
             $this->commitDatabaseTransaction();
 
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

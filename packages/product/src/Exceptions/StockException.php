@@ -3,9 +3,9 @@
 namespace RedJasmine\Product\Exceptions;
 
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 
-class StockException extends AbstractException
+class StockException extends BaseException
 {
 
 

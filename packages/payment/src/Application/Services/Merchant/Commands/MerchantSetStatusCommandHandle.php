@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Payment\Application\Services\Merchant\Commands;
 
-use RedJasmine\Payment\Application\Services\CommandHandlers\AbstractException;
 use RedJasmine\Payment\Application\Services\Merchant\MerchantCommandService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class MerchantSetStatusCommandHandle extends CommandHandler
@@ -31,7 +31,7 @@ class MerchantSetStatusCommandHandle extends CommandHandler
             $this->service->repository->update($model);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

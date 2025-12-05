@@ -7,6 +7,7 @@ use RedJasmine\Shopping\Application\Services\HasDomainService;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\Domain\Services\OrderDomainService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class PaidCommandHandler extends CommandHandler
@@ -48,7 +49,7 @@ class PaidCommandHandler extends CommandHandler
 
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

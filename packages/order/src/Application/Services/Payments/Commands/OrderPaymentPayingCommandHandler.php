@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Payments\Commands;
 
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
 class OrderPaymentPayingCommandHandler extends AbstractOrderPaymentCommandHandler
@@ -11,8 +11,9 @@ class OrderPaymentPayingCommandHandler extends AbstractOrderPaymentCommandHandle
 
     /**
      * @param OrderPaymentPayingCommand $command
+     *
      * @return void
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(OrderPaymentPayingCommand $command)
@@ -28,7 +29,7 @@ class OrderPaymentPayingCommandHandler extends AbstractOrderPaymentCommandHandle
             $this->orderPaymentRepository->update($orderPayment);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {

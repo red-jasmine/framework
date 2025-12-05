@@ -4,7 +4,7 @@ namespace RedJasmine\User\Application\Services\Commands;
 
 use RedJasmine\Support\Application\Commands\CommandHandler;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Exceptions\AbstractException;
+use RedJasmine\Support\Exceptions\BaseException;
 use RedJasmine\UserCore\Application\Services\BaseUserApplicationService;
 use Throwable;
 
@@ -24,7 +24,7 @@ class UserSetGroupCommandHandler extends CommandHandler
      * @param  UserSetGroupCommand  $command
      *
      * @return bool
-     * @throws AbstractException
+     * @throws BaseException
      * @throws Throwable
      */
     public function handle(UserSetGroupCommand $command) : bool
@@ -43,7 +43,7 @@ class UserSetGroupCommandHandler extends CommandHandler
             $this->service->repository->update($user);
 
             $this->commitDatabaseTransaction();
-        } catch (AbstractException $exception) {
+        } catch (BaseException $exception) {
             $this->rollBackDatabaseTransaction();
             throw  $exception;
         } catch (Throwable $throwable) {
