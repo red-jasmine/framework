@@ -4,8 +4,8 @@ namespace RedJasmine\Support\Application\Queries;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use RedJasmine\Support\Application\ApplicationService;
+use RedJasmine\Support\Domain\Contracts\UniqueNoInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 /**
  * @property ApplicationService $service

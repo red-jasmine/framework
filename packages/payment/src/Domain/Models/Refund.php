@@ -3,10 +3,10 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Payment\Domain\Data\ChannelRefundData;
 use RedJasmine\Payment\Domain\Data\NotifyData;
 use RedJasmine\Payment\Domain\Events\Refunds\RefundAbnormalEvent;
@@ -22,10 +22,10 @@ use RedJasmine\Payment\Domain\Models\Enums\NotifyBusinessTypeEnum;
 use RedJasmine\Payment\Domain\Models\Enums\RefundStatusEnum;
 use RedJasmine\Payment\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Contracts\UniqueNoInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 
 /**

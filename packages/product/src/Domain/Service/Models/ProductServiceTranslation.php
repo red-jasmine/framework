@@ -4,8 +4,8 @@ namespace RedJasmine\Product\Domain\Service\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryTranslationModel;
 
 /**

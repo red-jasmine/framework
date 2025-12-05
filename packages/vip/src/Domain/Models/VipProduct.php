@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Vip\Domain\Models;
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Group\Models;
 
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasCategoryTranslations;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Presets\Category\Domain\Models\BaseCategoryModel;

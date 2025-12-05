@@ -6,7 +6,7 @@ use RedJasmine\Distribution\Domain\Data\ConditionData;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyMethodEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApprovalMethodEnum;
 use RedJasmine\Payment\Domain\Models\Model;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use Spatie\LaravelData\DataCollection;
 

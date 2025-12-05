@@ -3,7 +3,7 @@
 namespace RedJasmine\Interaction\Domain\Models\Records;
 
 use RedJasmine\Interaction\Domain\Models\InteractionRecord;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 
 /**

@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Application\Commands;
 
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class CreateCommandHandler extends CommonCommandHandler

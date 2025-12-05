@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Promotion\Domain\Events\UserParticipatedEvent;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityOrderStatusEnum;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 

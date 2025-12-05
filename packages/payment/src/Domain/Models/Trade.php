@@ -3,12 +3,12 @@
 namespace RedJasmine\Payment\Domain\Models;
 
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Payment\Domain\Contracts\AsyncNotifyInterface;
 use RedJasmine\Payment\Domain\Data\ChannelTradeData;
 use RedJasmine\Payment\Domain\Data\NotifyData;
@@ -22,10 +22,10 @@ use RedJasmine\Payment\Domain\Models\Extensions\TradeExtension;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Environment;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
+use RedJasmine\Support\Domain\Contracts\UniqueNoInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 
 /**

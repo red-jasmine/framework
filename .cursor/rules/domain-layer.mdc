@@ -15,9 +15,9 @@ alwaysApply: true
 - **生命周期钩子**: 使用 `saving`、`deleting`、`restoring` 等钩子处理业务逻辑
 
 ### 必须
+
 ```php
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 
 class Product extends Model implements OperatorInterface, OwnerInterface
 {
@@ -143,9 +143,9 @@ class ArticleData extends Data
 - **生命周期钩子**: 使用 `saving`、`deleting`、`restoring` 等钩子处理业务逻辑
 
 ### 必需配置
+
 ```php
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 
 class Product extends Model implements OperatorInterface, OwnerInterface
 {

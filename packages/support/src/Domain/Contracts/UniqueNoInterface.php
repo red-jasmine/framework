@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Domain\Models;
+namespace RedJasmine\Support\Domain\Contracts;
 
 interface UniqueNoInterface
 {

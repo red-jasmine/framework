@@ -9,14 +9,14 @@ use RedJasmine\PointsMall\Domain\Models\Enums\PointsExchangeOrderStatusEnum;
 use RedJasmine\PointsMall\Domain\Models\Enums\PointsProductPaymentModeEnum;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\UniqueNoInterface;
 use RedJasmine\Support\Domain\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 /**
  * @property UserInterface $user

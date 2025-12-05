@@ -4,10 +4,9 @@ namespace RedJasmine\Product\Domain\Stock\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;

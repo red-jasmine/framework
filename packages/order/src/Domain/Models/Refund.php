@@ -2,7 +2,6 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Order\Domain\Events\RefundAgreedEvent;
 use RedJasmine\Order\Domain\Events\RefundAgreedReturnGoodsEvent;
 use RedJasmine\Order\Domain\Events\RefundCanceledEvent;
@@ -33,12 +33,12 @@ use RedJasmine\Order\Domain\Models\Extensions\RefundExtension;
 use RedJasmine\Order\Domain\Models\Features\HasStar;
 use RedJasmine\Order\Domain\Models\Features\HasUrge;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\UniqueNoInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 use RedJasmine\Support\Domain\Models\Traits\HasUniqueNo;
-use RedJasmine\Support\Domain\Models\UniqueNoInterface;
 
 
 /**

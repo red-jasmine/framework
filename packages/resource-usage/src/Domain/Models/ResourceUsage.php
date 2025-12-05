@@ -4,8 +4,8 @@ namespace RedJasmine\ResourceUsage\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\ResourceUsage\Domain\Models\Enums\ResourceUsageStatusEnum;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;

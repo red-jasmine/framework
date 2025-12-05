@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Wallet\Domain\Models;
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;

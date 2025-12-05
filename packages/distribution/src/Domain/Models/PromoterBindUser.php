@@ -10,9 +10,9 @@ use Illuminate\Support\Carbon;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterUnboundUserTypeEnum;
 use RedJasmine\Distribution\Domain\Services\DistributionConfigService;
+use RedJasmine\Support\Domain\Contracts\OperatorInterface;
 use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\UserData;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 

@@ -3,8 +3,8 @@
 namespace RedJasmine\Socialite\Domain\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use RedJasmine\Support\Domain\Contracts\OwnerInterface;
 use RedJasmine\Support\Domain\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
