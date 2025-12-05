@@ -27,15 +27,15 @@ class ProductAttributeValueData extends Data
 {
     public string $name;
     public ?string $description = null;
-    
+
     #[WithCast(EnumCast::class, ProductAttributeStatusEnum::class)]
     public ProductAttributeStatusEnum $status = ProductAttributeStatusEnum::ENABLE;
-    
+
     public int $aid;
     public int $groupId = 0;
     public int $sort = 0;
 
-    
+
     /**
      * @var ProductAttributeValueTranslationData[]|null
      */
@@ -56,10 +56,10 @@ class ProductAttributeValueData extends Data
 
     /**
      * 定义验证规则
-     * 
+     *
      * 使用 Laravel 标准的验证规则，包括自定义验证规则类
      * 这样可以充分利用 Spatie Laravel Data 的自动验证机制
-     * 
+     *
      * @param ValidationContext $context 验证上下文
      * @return array
      */

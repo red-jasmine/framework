@@ -4,7 +4,6 @@ namespace RedJasmine\Product\Domain\Attribute\Data;
 
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
-use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeGroupExistsRule;
 use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -74,8 +73,7 @@ class ProductAttributeData extends Data
             'description'       => ['sometimes', 'nullable', 'string', 'max:255'],
             'group_id'          => [
                 'sometimes', 'nullable', 'integer',
-                // TODO 这个设计到领域内的知识，不应该放在数据传输层中，如果是简单的CURD 没有关系？
-                new ProductAttributeGroupExistsRule(), // 使用 Laravel 验证规则验证属性组是否存在
+                // 领域验证已移至命令处理器中处理
             ],
             'is_required'       => ['boolean'],
             'is_allow_multiple' => ['boolean'],
