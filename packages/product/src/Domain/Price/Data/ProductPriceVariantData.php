@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Price\Data;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 商品价格命令数据

@@ -3,14 +3,13 @@
 namespace RedJasmine\Admin\Domain\Models;
 
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Admin\Domain\Events\AdminCancelEvent;
 use RedJasmine\Admin\Domain\Events\AdminLoginEvent;
 use RedJasmine\Admin\Domain\Events\AdminRegisteredEvent;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
-use RedJasmine\Support\Contracts\SystemAdmin;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\System;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Contracts\SystemAdmin;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\System;
 use RedJasmine\User\Domain\Models\User;
 use Spatie\Permission\Traits\HasRoles;
 

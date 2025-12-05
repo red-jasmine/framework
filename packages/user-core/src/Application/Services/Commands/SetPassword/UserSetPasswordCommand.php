@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Application\Services\Commands\SetStatus;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserSetPasswordCommand extends Data
 {

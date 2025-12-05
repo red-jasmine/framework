@@ -3,7 +3,7 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 优惠明细

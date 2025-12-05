@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Ecommerce\Domain\Models\ValueObjects;
 
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceAllowStageEnum;
-use RedJasmine\Ecommerce\Domain\Models\Enums\OrderAfterSaleServiceTimeUnit;
 use RedJasmine\Ecommerce\Domain\Models\Enums\RefundTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

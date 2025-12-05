@@ -5,7 +5,7 @@ namespace RedJasmine\PointsMall\Infrastructure\Services;
 use Cknow\Money\Money;
 use RedJasmine\PointsMall\Domain\Contracts\WalletServiceInterface;
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Wallet\Application\Services\Wallet\Commands\WalletTransactionCommand;
 use RedJasmine\Wallet\Application\Services\Wallet\Queries\FindByOwnerTypeQuery;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;

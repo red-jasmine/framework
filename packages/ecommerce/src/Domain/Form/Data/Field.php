@@ -4,7 +4,7 @@ namespace RedJasmine\Ecommerce\Domain\Form\Data;
 
 
 use RedJasmine\Ecommerce\Domain\Form\Models\Enums\FieldTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class Field extends Data
 {

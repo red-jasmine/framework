@@ -4,7 +4,7 @@ namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ProductInfo extends Data
 {

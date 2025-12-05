@@ -3,12 +3,12 @@
 namespace RedJasmine\Order\Domain\Data;
 
 
-use RedJasmine\Money\Data\Money;
 use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
 use RedJasmine\Ecommerce\Domain\Models\ValueObjects\AfterSalesService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

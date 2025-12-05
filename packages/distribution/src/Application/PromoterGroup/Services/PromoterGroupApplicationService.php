@@ -2,16 +2,14 @@
 
 namespace RedJasmine\Distribution\Application\PromoterGroup\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Distribution\Application\PromoterGroup\Services\Commands\CreatePromoterGroupCommand;
 use RedJasmine\Distribution\Application\PromoterGroup\Services\Commands\DeletePromoterGroupCommand;
 use RedJasmine\Distribution\Application\PromoterGroup\Services\Commands\UpdatePromoterGroupCommand;
-use RedJasmine\Distribution\Domain\Data\PromoterGroupData;
 use RedJasmine\Distribution\Domain\Models\PromoterGroup;
 use RedJasmine\Distribution\Domain\Repositories\PromoterGroupRepositoryInterface;
 use RedJasmine\Distribution\Domain\Transformers\PromoterGroupTransformer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 

@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Payment\Application\Services\Refund\Commands;
 
-use RedJasmine\Payment\Domain\Data\GoodDetailData;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Money\Data\Money;
+use RedJasmine\Payment\Domain\Data\GoodDetailData;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class RefundData extends Data
 {

@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Vip\Domain\Models\Enums\VipStatusEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

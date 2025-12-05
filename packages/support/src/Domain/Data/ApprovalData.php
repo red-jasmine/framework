@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Support\Domain\Data;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Enums\ApprovalStatusEnum;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

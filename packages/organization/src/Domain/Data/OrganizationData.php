@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Organization\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Organization\Domain\Models\Enums\OrganizationStatusEnum;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
-use RedJasmine\Organization\Domain\Models\Enums\OrganizationStatusEnum;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 class OrganizationData extends Data

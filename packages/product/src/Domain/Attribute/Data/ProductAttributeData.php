@@ -5,7 +5,7 @@ namespace RedJasmine\Product\Domain\Attribute\Data;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
 use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Support\Validation\ValidationContext;

@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Domain\Data\ChannelAppData;
 use RedJasmine\Payment\Domain\Models\ChannelApp;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class ChannelAppTransformer implements TransformerInterface

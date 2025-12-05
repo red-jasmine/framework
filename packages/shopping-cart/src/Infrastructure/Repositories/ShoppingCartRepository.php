@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
 use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**

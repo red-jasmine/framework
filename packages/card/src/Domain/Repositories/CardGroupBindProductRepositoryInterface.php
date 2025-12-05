@@ -3,7 +3,7 @@
 namespace RedJasmine\Card\Domain\Repositories;
 
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**

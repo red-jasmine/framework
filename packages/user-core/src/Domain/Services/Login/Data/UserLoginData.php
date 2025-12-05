@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\Login\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 
 class UserLoginData extends Data

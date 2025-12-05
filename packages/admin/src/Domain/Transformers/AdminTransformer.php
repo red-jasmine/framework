@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Admin\Domain\Data\AdminBaseInfoData;
 use RedJasmine\Admin\Domain\Data\AdminData;
 use RedJasmine\Admin\Domain\Models\Admin;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class AdminTransformer implements TransformerInterface
 {

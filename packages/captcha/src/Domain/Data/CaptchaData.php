@@ -2,10 +2,7 @@
 
 namespace RedJasmine\Captcha\Domain\Data;
 
-use RedJasmine\Captcha\Domain\Models\Enums\NotifiableTypeEnum;
-use RedJasmine\Support\Data\Data;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CaptchaData extends Data
 {

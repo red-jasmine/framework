@@ -3,8 +3,8 @@
 namespace RedJasmine\Support\Domain\Casts;
 
 use http\Exception\InvalidArgumentException;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\UserData;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;

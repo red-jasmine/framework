@@ -79,9 +79,7 @@
 
 namespace RedJasmine\Support\Application\Commands;
 
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Data\Data;
+use Illuminate\Database\Eloquent\Model;use RedJasmine\Support\Application\HandleContext;use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 默认创建命令处理器
@@ -393,7 +391,7 @@ class ArticleTag extends Model
 
 namespace RedJasmine\Article\Domain\Tag\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ArticleTagData extends Data
 {

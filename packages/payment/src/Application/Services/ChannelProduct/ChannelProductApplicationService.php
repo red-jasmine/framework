@@ -6,7 +6,7 @@ use RedJasmine\Payment\Domain\Models\ChannelProduct;
 use RedJasmine\Payment\Domain\Repositories\ChannelProductRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\ChannelProductTransformer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * @method ChannelProduct create(Data $command)

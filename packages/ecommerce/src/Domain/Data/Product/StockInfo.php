@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class StockInfo extends Data
 {

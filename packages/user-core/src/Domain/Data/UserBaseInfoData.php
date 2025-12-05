@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\UserCore\Domain\Enums\UserGenderEnum;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\WithCast;

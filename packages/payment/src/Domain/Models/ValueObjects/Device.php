@@ -6,7 +6,7 @@ namespace RedJasmine\Payment\Domain\Models\ValueObjects;
  * 引入基础数据类，为设备类提供数据管理功能
  */
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 设备类，继承自Data，用于表示和操作支付设备的相关信息

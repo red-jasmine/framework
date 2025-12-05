@@ -3,8 +3,8 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Payment;
 
 use Cknow\Money\Money;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 
 class PaymentTradeData extends Data

@@ -4,7 +4,7 @@ namespace RedJasmine\Project\Domain\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Project\Domain\Models\ProjectMember;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 interface ProjectMemberRepositoryInterface extends RepositoryInterface

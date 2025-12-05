@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace RedJasmine\Message\Domain\Repositories;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 /**

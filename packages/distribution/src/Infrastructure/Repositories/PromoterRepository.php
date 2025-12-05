@@ -5,7 +5,7 @@ namespace RedJasmine\Distribution\Infrastructure\Repositories;
 use Illuminate\Database\Eloquent\Builder;
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Repositories\PromoterRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;

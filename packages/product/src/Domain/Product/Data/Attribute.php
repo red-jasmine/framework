@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Data;
 
 use Illuminate\Support\Collection;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class Attribute extends Data
 {

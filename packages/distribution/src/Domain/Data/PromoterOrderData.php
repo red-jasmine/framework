@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Distribution\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Contracts\UserInterface;
 use Illuminate\Support\Carbon;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 

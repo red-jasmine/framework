@@ -885,12 +885,13 @@ public class SimpleCommandBus implements CommandBus {
 ```
 
 #### PHP 优化实现
+
 ```php
 <?php
 
 namespace RedJasmine\Support\Application\Bus;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 命令总线接口
@@ -1066,12 +1067,13 @@ $result = $commandBus->execute($command);
 ### 优化 6：引入 QueryBus（查询总线）
 
 #### PHP 实现
+
 ```php
 <?php
 
 namespace RedJasmine\Support\Application\Bus;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 查询总线接口
@@ -1292,14 +1294,13 @@ public class OrderDTOAssembler implements DTOAssembler<Order, OrderDTO> {
 ```
 
 #### PHP 优化实现
+
 ```php
 <?php
 
 namespace RedJasmine\Support\Application\Assemblers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use RedJasmine\Support\Data\Data;
+use Illuminate\Database\Eloquent\Model;use Illuminate\Support\Collection;use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * DTO 组装器接口
@@ -1420,28 +1421,7 @@ class ArticleApplicationService extends ApplicationService
 
 namespace RedJasmine\Support\Application;
 
-use Closure;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
-use RedJasmine\Support\Application\Assemblers\AssemblerInterface;
-use RedJasmine\Support\Application\Bus\CommandBusInterface;
-use RedJasmine\Support\Application\Bus\QueryBusInterface;
-use RedJasmine\Support\Application\Commands\CreateCommandHandler;
-use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
-use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
-use RedJasmine\Support\Application\Queries\FindQueryHandler;
-use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
-use RedJasmine\Support\Domain\Events\EventBusInterface;
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
-use RedJasmine\Support\Domain\Services\DomainServiceContainer;
-use RedJasmine\Support\Domain\Specification\SpecificationInterface;
-use RedJasmine\Support\Domain\Transformer\TransformerInterface;
-use RedJasmine\Support\Foundation\Service\Service;
-use Throwable;
+use Closure;use Illuminate\Contracts\Pagination\Paginator;use Illuminate\Database\Eloquent\Model;use Illuminate\Pagination\LengthAwarePaginator;use RedJasmine\Support\Application\Assemblers\AssemblerInterface;use RedJasmine\Support\Application\Bus\CommandBusInterface;use RedJasmine\Support\Application\Bus\QueryBusInterface;use RedJasmine\Support\Application\Commands\CreateCommandHandler;use RedJasmine\Support\Application\Commands\DeleteCommandHandler;use RedJasmine\Support\Application\Commands\UpdateCommandHandler;use RedJasmine\Support\Application\Queries\FindQueryHandler;use RedJasmine\Support\Application\Queries\PaginateQueryHandler;use RedJasmine\Support\Domain\Data\Queries\FindQuery;use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;use RedJasmine\Support\Domain\Events\EventBusInterface;use RedJasmine\Support\Domain\Repositories\RepositoryInterface;use RedJasmine\Support\Domain\Services\DomainServiceContainer;use RedJasmine\Support\Domain\Specification\SpecificationInterface;use RedJasmine\Support\Domain\Transformer\TransformerInterface;use RedJasmine\Support\Foundation\Data\Data;use RedJasmine\Support\Foundation\Service\Service;use Throwable;
 
 /**
  * 应用服务基类（完整优化版）

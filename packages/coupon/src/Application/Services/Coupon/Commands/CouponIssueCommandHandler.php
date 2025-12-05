@@ -6,7 +6,6 @@ use RedJasmine\Coupon\Application\Services\Coupon\CouponApplicationService;
 use RedJasmine\Coupon\Domain\Repositories\UserCouponRepositoryInterface;
 use RedJasmine\Coupon\Domain\Services\CouponUserService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 

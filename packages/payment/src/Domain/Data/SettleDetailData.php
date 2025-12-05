@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\Validation\Max;
 
 class SettleDetailData extends Data

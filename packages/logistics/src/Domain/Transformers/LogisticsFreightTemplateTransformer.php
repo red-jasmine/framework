@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Logistics\Domain\Transformers;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Logistics\Domain\Data\LogisticsFreightTemplateData;
 use RedJasmine\Logistics\Domain\Models\LogisticsFreightTemplate;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class LogisticsFreightTemplateTransformer implements TransformerInterface

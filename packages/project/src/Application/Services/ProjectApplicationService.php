@@ -12,13 +12,11 @@ use RedJasmine\Project\Domain\Models\ProjectRole;
 use RedJasmine\Project\Domain\Repositories\ProjectMemberRepositoryInterface;
 use RedJasmine\Project\Domain\Repositories\ProjectRepositoryInterface;
 use RedJasmine\Project\Domain\Repositories\ProjectRoleRepositoryInterface;
-use RedJasmine\Project\Domain\Transformers\ProjectMemberTransformer;
-use RedJasmine\Project\Domain\Transformers\ProjectRoleTransformer;
 use RedJasmine\Project\Domain\Transformers\ProjectTransformer;
 use RedJasmine\Project\Infrastructure\Helpers\ProjectCodeGenerator;
 use RedJasmine\Project\Infrastructure\Services\ProjectRoleInitializer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class ProjectApplicationService extends ApplicationService
 {

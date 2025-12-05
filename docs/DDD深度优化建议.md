@@ -835,10 +835,7 @@ class ProductRepository extends Repository implements ProductRepositoryInterface
 
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
-use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Application\Commands\BaseCommandHandler;
-use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Data\Data;
+use Illuminate\Database\Eloquent\Model;use RedJasmine\Support\Application\Commands\BaseCommandHandler;use RedJasmine\Support\Application\HandleContext;use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 商品创建命令处理器（最佳实践版）

@@ -1,9 +1,10 @@
 <?php
 
-namespace RedJasmine\Support\Data;
+namespace RedJasmine\Support\Domain\Data;
 
 use Illuminate\Contracts\Support\Arrayable;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use Stringable;
 
 

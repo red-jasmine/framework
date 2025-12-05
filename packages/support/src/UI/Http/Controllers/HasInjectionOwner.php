@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\UI\Http\Controllers;
 
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Data\UserData;
 use function request;
 
 /**

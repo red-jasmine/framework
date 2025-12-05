@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 
 class GoodDetail extends Data

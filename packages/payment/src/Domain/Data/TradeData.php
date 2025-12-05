@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Money\Data\Money;
 use DateTime;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Store;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class TradeData extends Data
 {

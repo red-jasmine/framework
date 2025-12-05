@@ -3,8 +3,8 @@
 namespace RedJasmine\Ecommerce\Domain\Data;
 
 use RedJasmine\Ecommerce\Domain\Models\Enums\ShippingTypeEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 购买因子

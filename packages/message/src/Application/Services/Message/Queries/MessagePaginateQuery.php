@@ -6,7 +6,7 @@ namespace RedJasmine\Message\Application\Services\Message\Queries;
 
 use RedJasmine\Message\Domain\Models\Enums\MessagePriorityEnum;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

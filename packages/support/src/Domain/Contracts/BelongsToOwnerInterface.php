@@ -1,6 +1,6 @@
 <?php
 
-namespace RedJasmine\Support\Contracts;
+namespace RedJasmine\Support\Domain\Contracts;
 
 interface BelongsToOwnerInterface
 {

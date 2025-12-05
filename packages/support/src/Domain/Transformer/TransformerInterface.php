@@ -3,7 +3,7 @@
 namespace RedJasmine\Support\Domain\Transformer;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 interface TransformerInterface
 {

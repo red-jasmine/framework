@@ -4,7 +4,7 @@ namespace RedJasmine\Card\Infrastructure\Repositories;
 
 use RedJasmine\Card\Domain\Models\CardGroupBindProduct;
 use RedJasmine\Card\Domain\Repositories\CardGroupBindProductRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 

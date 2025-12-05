@@ -7,7 +7,7 @@ use RedJasmine\Project\Domain\Models\Project;
 use RedJasmine\Project\Domain\Models\ProjectMember;
 use RedJasmine\Project\Domain\Models\ProjectRole;
 use RedJasmine\Project\Domain\Repositories\ProjectRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 

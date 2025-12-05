@@ -2,9 +2,9 @@
 
 namespace RedJasmine\Wallet\Domain\Data\Recharge;
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Support\Carbon;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 

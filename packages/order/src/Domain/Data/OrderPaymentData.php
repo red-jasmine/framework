@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class OrderPaymentData extends Data
 {

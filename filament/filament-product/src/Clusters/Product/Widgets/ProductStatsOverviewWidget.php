@@ -4,10 +4,10 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
+use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Stock\Models\ProductStock;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
 
 class ProductStatsOverviewWidget extends BaseWidget
 {

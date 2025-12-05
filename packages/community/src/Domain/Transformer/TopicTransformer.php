@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Community\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Community\Domain\Data\TopicData;
 use RedJasmine\Community\Domain\Models\Topic;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class TopicTransformer implements TransformerInterface

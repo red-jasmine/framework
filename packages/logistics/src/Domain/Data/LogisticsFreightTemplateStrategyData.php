@@ -4,7 +4,7 @@ namespace RedJasmine\Logistics\Domain\Data;
 
 use Cknow\Money\Money;
 use RedJasmine\Logistics\Domain\Models\Enums\FreightTemplates\FreightTemplateStrategyTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class LogisticsFreightTemplateStrategyData extends Data
 {

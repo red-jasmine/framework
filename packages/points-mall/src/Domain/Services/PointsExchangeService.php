@@ -17,7 +17,7 @@ use RedJasmine\PointsMall\Domain\Repositories\PointsExchangeOrderRepositoryInter
 use RedJasmine\PointsMall\Domain\Repositories\PointsProductRepositoryInterface;
 use RedJasmine\PointsMall\Exceptions\PointsExchangeOrderException;
 use RedJasmine\PointsMall\Exceptions\PointsProductException;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
 class PointsExchangeService extends Service

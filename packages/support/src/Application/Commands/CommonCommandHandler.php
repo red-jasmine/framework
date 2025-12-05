@@ -5,7 +5,7 @@ namespace RedJasmine\Support\Application\Commands;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Throwable;
 
 /**

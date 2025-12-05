@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Socialite\Application\Services\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\Validation\Required;
 
 class SocialiteUserLoginCommand extends Data

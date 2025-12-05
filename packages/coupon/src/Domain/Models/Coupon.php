@@ -3,7 +3,6 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,10 +18,10 @@ use RedJasmine\Coupon\Exceptions\CouponException;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\System;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Domain\Casts\TimeConfigCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\TimeConfigData;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;

@@ -9,8 +9,8 @@ use RedJasmine\Product\Application\Attribute\Services\ProductAttributeValueAppli
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeValuePaginateQuery;
 use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeValueData;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeValueResource;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class AttributeValueController extends Controller
 {

@@ -4,9 +4,9 @@ namespace RedJasmine\JwtAuth\Models;
 
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
-use RedJasmine\Support\Contracts\SystemAdmin;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Contracts\SystemAdmin;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class JwtUser extends Authenticatable implements JWTSubject, UserInterface, BelongsToOwnerInterface,SystemAdmin

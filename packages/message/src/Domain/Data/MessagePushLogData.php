@@ -6,7 +6,7 @@ namespace RedJasmine\Message\Domain\Data;
 
 use RedJasmine\Message\Domain\Models\Enums\PushChannelEnum;
 use RedJasmine\Message\Domain\Models\Enums\PushStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

@@ -2,9 +2,8 @@
 
 namespace RedJasmine\Coupon\Application\Services\UserCoupon\Commands;
 
-use RedJasmine\Money\Data\Money;
 use RedJasmine\Coupon\Domain\Data\UserCouponUseData;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserCouponUseCommand extends Data
 {

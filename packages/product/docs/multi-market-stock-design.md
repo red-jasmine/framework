@@ -912,7 +912,7 @@ if ($product->is_advanced_stock) {
 ```php
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class VariantStockConfig extends Data
 {

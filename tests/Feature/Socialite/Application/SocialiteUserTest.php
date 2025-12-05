@@ -7,7 +7,7 @@ use RedJasmine\Socialite\Application\Services\SocialiteUserApplicationService;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Data\UserData;
 
 beforeEach(function () {
 

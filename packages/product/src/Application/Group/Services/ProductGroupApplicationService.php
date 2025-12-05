@@ -6,15 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupCreateCommand;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupDeleteCommand;
 use RedJasmine\Product\Application\Group\Services\Commands\ProductGroupUpdateCommand;
-use RedJasmine\Product\Application\Group\Services\Queries\ProductGroupTreeQuery;
 use RedJasmine\Product\Domain\Group\Data\GroupData;
 use RedJasmine\Product\Domain\Group\Models\ProductGroup;
 use RedJasmine\Product\Domain\Group\Repositories\ProductGroupRepositoryInterface;
 use RedJasmine\Product\Domain\Group\Transformer\GroupTransformer;
 use RedJasmine\Product\Exceptions\CategoryException;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
 

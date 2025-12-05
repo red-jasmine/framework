@@ -4,9 +4,9 @@ namespace RedJasmine\Admin\Infrastructure\Repositories;
 
 use RedJasmine\Admin\Domain\Models\Admin;
 use RedJasmine\Admin\Domain\Repositories\AdminRepositoryInterface;
-use RedJasmine\Support\Facades\AES;
-use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Support\Domain\Data\Queries\Query;
+use RedJasmine\Support\Foundation\Facades\AES;
+use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 

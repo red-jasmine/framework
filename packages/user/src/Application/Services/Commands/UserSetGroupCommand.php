@@ -2,7 +2,7 @@
 
 namespace RedJasmine\User\Application\Services\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserSetGroupCommand extends Data
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Domain\Data;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Wallet\Domain\Models\ValueObjects\Payee;
 
 class WalletWithdrawalData extends Data

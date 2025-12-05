@@ -6,7 +6,7 @@ use RedJasmine\Promotion\Domain\Data\ActivityData;
 use RedJasmine\Promotion\Domain\Models\Activity;
 use RedJasmine\Promotion\Domain\Models\ActivityOrder;
 use RedJasmine\Promotion\Domain\Models\ActivityProduct;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 活动类型处理器接口

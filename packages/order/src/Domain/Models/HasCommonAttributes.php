@@ -2,12 +2,12 @@
 
 namespace RedJasmine\Order\Domain\Models;
 
-use RedJasmine\Money\Data\Money;
 use RedJasmine\Money\Casts\CurrencyCast;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
-use RedJasmine\Support\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * @property OrderTypeEnum $order_type

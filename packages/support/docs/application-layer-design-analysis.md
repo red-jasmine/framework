@@ -800,22 +800,7 @@ protected function validate(HandleContext $context): void
 
 namespace RedJasmine\Support\Application;
 
-use Closure;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
-use RedJasmine\Support\Application\Commands\CreateCommandHandler;
-use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
-use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
-use RedJasmine\Support\Application\Queries\FindQueryHandler;
-use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Data\Queries\FindQuery;
-use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
-use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
-use RedJasmine\Support\Domain\Transformer\TransformerInterface;
-use RedJasmine\Support\Foundation\Service\Service;
-use Throwable;
+use Closure;use Illuminate\Contracts\Pagination\Paginator;use Illuminate\Database\Eloquent\Model;use Illuminate\Pagination\LengthAwarePaginator;use RedJasmine\Support\Application\Commands\CreateCommandHandler;use RedJasmine\Support\Application\Commands\DeleteCommandHandler;use RedJasmine\Support\Application\Commands\UpdateCommandHandler;use RedJasmine\Support\Application\Queries\FindQueryHandler;use RedJasmine\Support\Application\Queries\PaginateQueryHandler;use RedJasmine\Support\Domain\Data\Queries\FindQuery;use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;use RedJasmine\Support\Domain\Repositories\RepositoryInterface;use RedJasmine\Support\Domain\Transformer\TransformerInterface;use RedJasmine\Support\Foundation\Data\Data;use RedJasmine\Support\Foundation\Service\Service;use Throwable;
 
 /**
  * 应用服务基类

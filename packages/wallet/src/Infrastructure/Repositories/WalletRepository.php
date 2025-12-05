@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Infrastructure\Repositories;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Wallet\Domain\Models\Wallet;
 use RedJasmine\Wallet\Domain\Repositories\WalletRepositoryInterface;

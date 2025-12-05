@@ -3,13 +3,13 @@
 namespace RedJasmine\Coupon\Domain\Models;
 
 use Carbon\Carbon;
-use RedJasmine\Money\Data\Money;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
 use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;

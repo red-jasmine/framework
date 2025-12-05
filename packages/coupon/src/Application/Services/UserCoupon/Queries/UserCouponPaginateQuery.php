@@ -6,7 +6,7 @@ namespace RedJasmine\Coupon\Application\Services\UserCoupon\Queries;
 
 use RedJasmine\Coupon\Domain\Models\Enums\UserCouponStatusEnum;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 
 /**

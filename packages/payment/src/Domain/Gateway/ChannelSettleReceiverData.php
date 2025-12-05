@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Gateway;
 
 
 use RedJasmine\Payment\Domain\Models\Enums\AccountTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;

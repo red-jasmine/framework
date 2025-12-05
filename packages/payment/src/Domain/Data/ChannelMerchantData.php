@@ -4,8 +4,8 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\ChannelMerchantStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\MerchantTypeEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ChannelMerchantData extends Data
 {

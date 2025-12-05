@@ -3,7 +3,7 @@
 namespace RedJasmine\Project\Domain\Data;
 
 use RedJasmine\Project\Domain\Models\Enums\ProjectRoleStatus;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

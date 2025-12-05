@@ -2,8 +2,6 @@
 
 namespace RedJasmine\Invitation\Application\Services\Queries;
 
-use RedJasmine\Support\Data\Data;
-
 /**
  * 分页查询
  */

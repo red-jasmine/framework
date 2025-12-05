@@ -3,8 +3,8 @@
 namespace RedJasmine\Support\Domain\Data;
 
 use Illuminate\Support\Carbon;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 时间配置

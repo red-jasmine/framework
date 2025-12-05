@@ -2,13 +2,11 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data\Order;
 
-use RedJasmine\Money\Data\Money;
 use Money\Currency;
-use phpDocumentor\Reflection\Types\This;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Product\ProductAmountInfo;
-use RedJasmine\Ecommerce\Domain\Data\Product\ProductInfo;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class OrderAmountInfoData extends Data
 {

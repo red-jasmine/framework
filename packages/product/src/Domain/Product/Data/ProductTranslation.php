@@ -2,9 +2,8 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use Carbon\Carbon;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Models\Enums\TranslationStatusEnum;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

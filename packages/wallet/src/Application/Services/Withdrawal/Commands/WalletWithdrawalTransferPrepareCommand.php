@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Application\Services\Withdrawal\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class WalletWithdrawalTransferPrepareCommand extends Data
 {

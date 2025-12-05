@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\AsyncNotify\Commands;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Application\Services\AsyncNotify\AsyncNotifyCommandService;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class NotifyCreateCommandHandler extends CreateCommandHandler
 {

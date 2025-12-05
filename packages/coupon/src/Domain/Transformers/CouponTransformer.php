@@ -2,13 +2,12 @@
 
 namespace RedJasmine\Coupon\Domain\Transformers;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Coupon\Domain\Data\CouponData;
 use RedJasmine\Coupon\Domain\Models\Coupon;
 use RedJasmine\Coupon\Domain\Models\Enums\CouponTypeEnum;
 use RedJasmine\Coupon\Domain\Models\Enums\RuleCheckTypeEnum;
 use RedJasmine\Coupon\Exceptions\CouponException;
-use RedJasmine\Support\Data\System;
+use RedJasmine\Support\Domain\Data\System;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class CouponTransformer implements TransformerInterface

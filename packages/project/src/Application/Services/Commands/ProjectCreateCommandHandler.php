@@ -5,7 +5,6 @@ namespace RedJasmine\Project\Application\Services\Commands;
 use RedJasmine\Project\Domain\Events\ProjectCreated;
 use RedJasmine\Project\Domain\Models\Project;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Contracts\UserInterface;
 
 class ProjectCreateCommandHandler extends CommandHandler
 {

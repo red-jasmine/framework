@@ -3,10 +3,10 @@
 namespace RedJasmine\Ecommerce\Domain\Data\Product;
 
 
-use RedJasmine\Money\Data\Money;
 use Money\Currency;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 商品金额信息

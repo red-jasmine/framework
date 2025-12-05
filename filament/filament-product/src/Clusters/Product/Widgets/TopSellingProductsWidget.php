@@ -5,9 +5,9 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Widgets;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
 
 class TopSellingProductsWidget extends BaseWidget
 {

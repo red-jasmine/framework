@@ -4,7 +4,7 @@ namespace RedJasmine\Product\Domain\Price\Data;
 
 use Money\Currency;
 use RedJasmine\Money\Casts\CurrencyCast;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 
 

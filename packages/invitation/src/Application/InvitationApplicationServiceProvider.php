@@ -8,7 +8,7 @@ use RedJasmine\Invitation\Domain\Repositories\InvitationCodeRepositoryInterface;
 use RedJasmine\Invitation\Domain\Repositories\InvitationRecordRepositoryInterface;
 use RedJasmine\Invitation\Infrastructure\Repositories\InvitationCodeRepository;
 use RedJasmine\Invitation\Infrastructure\Repositories\InvitationRecordRepository;
-use RedJasmine\Support\Facades\Hook;
+use RedJasmine\Support\Foundation\Facades\Hook;
 
 /**
  * 邀请应用服务提供者

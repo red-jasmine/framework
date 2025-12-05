@@ -5,7 +5,7 @@ namespace RedJasmine\Ecommerce\Domain\Data\Order;
 use RedJasmine\Ecommerce\Domain\Data\PurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Helpers\HasSerialNumber;
 use RedJasmine\Order\Domain\Data\OrderAddressData;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 和订单领域 共享结构

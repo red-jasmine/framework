@@ -3,7 +3,7 @@
 namespace RedJasmine\Card\Application\UserCases\Command\Groups;
 
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CardGroupDeleteCommand extends Data
 {

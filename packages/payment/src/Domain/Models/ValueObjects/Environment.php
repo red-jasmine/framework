@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
 use RedJasmine\Payment\Domain\Models\Enums\SceneEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

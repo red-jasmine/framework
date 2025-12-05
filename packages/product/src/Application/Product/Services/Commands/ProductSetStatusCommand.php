@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ProductSetStatusCommand extends Data
 {

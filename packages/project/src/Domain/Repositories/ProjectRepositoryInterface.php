@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Project\Domain\Models\Project;
 use RedJasmine\Project\Domain\Models\ProjectMember;
 use RedJasmine\Project\Domain\Models\ProjectRole;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
 
 interface ProjectRepositoryInterface extends RepositoryInterface

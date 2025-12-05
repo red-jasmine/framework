@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Message\Application\Services\Message\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class MessageMarkAsReadCommand extends Data
 {

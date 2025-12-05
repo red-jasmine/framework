@@ -2,10 +2,10 @@
 
 namespace RedJasmine\Ecommerce\Domain\Data\Coupon;
 
-use RedJasmine\Money\Data\Money;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Money\Data\Money;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 优惠券

@@ -10,7 +10,7 @@ use RedJasmine\Message\Domain\Data\MessageData;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
 use RedJasmine\Message\Domain\Repositories\MessageTemplateRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 消息发送领域服务

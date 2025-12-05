@@ -3,9 +3,8 @@
 namespace RedJasmine\Support\Application\Commands;
 
 use Illuminate\Database\Eloquent\Model;
-
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Foundation\Context\Context;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * @property-read Data $command

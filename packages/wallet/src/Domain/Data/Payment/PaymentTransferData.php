@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Domain\Data\Payment;
 
 use Illuminate\Support\Carbon;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Wallet\Domain\Models\Enums\PaymentStatusEnum;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;

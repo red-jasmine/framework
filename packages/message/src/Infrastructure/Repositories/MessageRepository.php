@@ -4,14 +4,13 @@ declare(strict_types = 1);
 
 namespace RedJasmine\Message\Infrastructure\Repositories;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Message\Domain\Models\Enums\MessageStatusEnum;
 use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\UserData;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;

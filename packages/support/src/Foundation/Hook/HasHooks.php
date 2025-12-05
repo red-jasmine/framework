@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Foundation\Hook;
 
 
 use Closure;
-use RedJasmine\Support\Facades\Hook;
+use RedJasmine\Support\Foundation\Facades\Hook;
 
 /**
  * 有 hooks 能力

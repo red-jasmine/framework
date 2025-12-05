@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Project\Application\Services\Queries;
 
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
-use RedJasmine\Support\Contracts\UserInterface;
 
 class ProjectMemberListQuery extends PaginateQuery
 {

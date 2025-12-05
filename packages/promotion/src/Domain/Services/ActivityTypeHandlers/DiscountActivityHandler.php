@@ -8,7 +8,7 @@ use RedJasmine\Promotion\Domain\Models\ActivityOrder;
 use RedJasmine\Promotion\Domain\Models\ActivityProduct;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityTypeEnum;
 use RedJasmine\Promotion\Domain\Services\AbstractActivityTypeHandler;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 折扣活动处理器

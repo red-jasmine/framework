@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Captcha\Application\Services\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CaptchaSendCommand extends Data
 {

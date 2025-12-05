@@ -1,14 +1,15 @@
 <?php
 
-namespace RedJasmine\Support\Infrastructure;
+namespace RedJasmine\Support\Foundation\Context;
 
 
 use Illuminate\Support\Facades\Auth;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\UserData;
 
 /**
  * 全局上下文
+ * TODO 改写
  */
 class ServiceContextManage
 {

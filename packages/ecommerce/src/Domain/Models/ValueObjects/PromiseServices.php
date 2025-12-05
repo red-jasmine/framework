@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Models\ValueObjects;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class PromiseServices extends Data
 {

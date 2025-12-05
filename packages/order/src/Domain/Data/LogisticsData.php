@@ -3,7 +3,7 @@
 namespace RedJasmine\Order\Domain\Data;
 
 use RedJasmine\Order\Domain\Models\Enums\Logistics\LogisticsStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class LogisticsData extends Data
 {

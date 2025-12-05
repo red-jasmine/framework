@@ -9,8 +9,8 @@ use RedJasmine\Promotion\Domain\Models\ValueObjects\ActivityRules;
 use RedJasmine\Promotion\Domain\Models\ValueObjects\ProductRequirements;
 use RedJasmine\Promotion\Domain\Models\ValueObjects\ShopRequirements;
 use RedJasmine\Promotion\Domain\Models\ValueObjects\UserRequirements;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

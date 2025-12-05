@@ -1,9 +1,10 @@
 <?php
 
-namespace RedJasmine\Support\Data;
+namespace RedJasmine\Support\Foundation\Data;
 
 use Illuminate\Support\Str;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Data\UserData;
 use Spatie\LaravelData\DataPipes\DataPipe;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataClass;

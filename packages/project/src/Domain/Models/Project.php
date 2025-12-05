@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RedJasmine\Project\Domain\Models\Enums\ProjectMemberStatus;
 use RedJasmine\Project\Domain\Models\Enums\ProjectStatus;
 use RedJasmine\Project\Domain\Models\Enums\ProjectType;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Models\OperatorInterface;
+use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
-use RedJasmine\Support\Domain\Models\OperatorInterface;
-use RedJasmine\Support\Domain\Models\OwnerInterface;
 
 class Project extends Model implements OperatorInterface, OwnerInterface
 {

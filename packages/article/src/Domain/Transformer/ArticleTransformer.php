@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Article\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Article\Domain\Data\ArticleData;
 use RedJasmine\Article\Domain\Models\Article;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class ArticleTransformer implements TransformerInterface

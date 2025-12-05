@@ -1,9 +1,9 @@
 <?php
 
-namespace RedJasmine\Support\Facades;
+namespace RedJasmine\Support\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use RedJasmine\Support\Infrastructure\ServiceContextManage;
+use RedJasmine\Support\Foundation\Context\ServiceContextManage;
 
 /**
  * @method static get($key)

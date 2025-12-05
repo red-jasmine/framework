@@ -6,7 +6,7 @@ use RedJasmine\Payment\Domain\Models\SettleReceiver;
 use RedJasmine\Payment\Domain\Repositories\SettleReceiverRepositoryInterface;
 use RedJasmine\Payment\Domain\Transformer\SettleReceiverTransformer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * @method SettleReceiver create(Data $command)

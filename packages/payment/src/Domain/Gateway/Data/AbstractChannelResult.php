@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Gateway\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 渠道返回的结果

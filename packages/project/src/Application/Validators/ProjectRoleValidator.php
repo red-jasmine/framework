@@ -3,8 +3,7 @@
 namespace RedJasmine\Project\Application\Validators;
 
 use RedJasmine\Project\Application\Services\ProjectApplicationService;
-use RedJasmine\Project\Domain\Models\Enums\ProjectRoleStatus;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class ProjectRoleValidator
 {

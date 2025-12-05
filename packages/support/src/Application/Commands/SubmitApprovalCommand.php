@@ -2,8 +2,7 @@
 
 namespace RedJasmine\Support\Application\Commands;
 
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Domain\Data\ApprovalData;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class SubmitApprovalCommand extends Data
 {

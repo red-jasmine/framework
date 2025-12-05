@@ -6,7 +6,7 @@ use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 use RedJasmine\Ecommerce\Domain\Models\Enums\ProductTypeEnum;
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
 
 class ProductTypeChartWidget extends ChartWidget
 {

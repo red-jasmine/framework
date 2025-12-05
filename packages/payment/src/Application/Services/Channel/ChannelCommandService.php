@@ -5,7 +5,7 @@ namespace RedJasmine\Payment\Application\Services\Channel;
 use RedJasmine\Payment\Domain\Models\Channel;
 use RedJasmine\Payment\Domain\Repositories\ChannelRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * @method Channel create(Data $command)

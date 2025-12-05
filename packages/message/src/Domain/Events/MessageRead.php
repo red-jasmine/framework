@@ -7,7 +7,7 @@ namespace RedJasmine\Message\Domain\Events;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use RedJasmine\Message\Domain\Models\Message;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 消息阅读事件

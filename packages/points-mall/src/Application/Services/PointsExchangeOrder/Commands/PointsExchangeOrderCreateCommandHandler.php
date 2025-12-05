@@ -4,11 +4,9 @@ namespace RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\Command
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\PointsMall\Application\Services\PointsExchangeOrder\PointsExchangeOrderApplicationService;
-use RedJasmine\PointsMall\Application\Services\PointsProduct\PointsProductApplicationService;
 use RedJasmine\PointsMall\Domain\Data\PointsExchangeOrderData;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
-use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Throwable;
 
 

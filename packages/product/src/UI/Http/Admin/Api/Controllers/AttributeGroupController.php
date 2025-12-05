@@ -9,8 +9,8 @@ use RedJasmine\Product\Application\Attribute\Services\ProductAttributeGroupAppli
 use RedJasmine\Product\Application\Attribute\Services\Queries\ProductAttributeGroupPaginateQuery;
 use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeGroupData;
 use RedJasmine\Product\UI\Http\Admin\Api\Resources\AttributeGroupResource;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class AttributeGroupController extends Controller
 {

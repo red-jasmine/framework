@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Application\Group\Services\Queries;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
 class ProductGroupTreeQuery extends Query

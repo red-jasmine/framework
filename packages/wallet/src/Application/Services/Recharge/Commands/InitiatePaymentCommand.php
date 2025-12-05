@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Application\Services\Recharge\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class InitiatePaymentCommand
 {

@@ -3,7 +3,7 @@
 namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\PaymentTriggerTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class PaymentTrigger extends Data
 {

@@ -2,9 +2,8 @@
 
 namespace RedJasmine\Wallet\Domain\Data;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Wallet\Domain\Data\Config\ExchangeCurrencyConfigData;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Wallet\Domain\Data\Config\WalletExchangeConfigData;
 
 class WalletConfigData extends Data

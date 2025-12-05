@@ -5,8 +5,8 @@ namespace RedJasmine\Ecommerce\Domain\Data;
 use Cknow\Money\Money;
 use RedJasmine\Ecommerce\Domain\Data\Coupon\CouponInfoData;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class OrdersData extends Data
 {

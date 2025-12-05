@@ -4,7 +4,7 @@ namespace RedJasmine\Order\Domain\Data;
 
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyContentTypeEnum;
 use RedJasmine\Order\Domain\Models\Enums\CardKeys\OrderCardKeyStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CardKeyData extends Data
 {

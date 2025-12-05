@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**

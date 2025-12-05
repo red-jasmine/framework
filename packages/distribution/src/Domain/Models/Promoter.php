@@ -13,7 +13,7 @@ use RedJasmine\Distribution\Domain\Events\Promoter\PromoterEnabled;
 use RedJasmine\Distribution\Domain\Events\Promoter\PromoterUpgraded;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyTypeEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\OwnerInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;

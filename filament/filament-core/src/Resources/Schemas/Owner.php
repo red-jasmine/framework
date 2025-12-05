@@ -5,7 +5,7 @@ namespace RedJasmine\FilamentCore\Resources\Schemas;
 use Closure;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\FusedGroup;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
 
 class Owner extends FusedGroup
 {

@@ -22,7 +22,7 @@ use RedJasmine\ShoppingCart\Domain\Models\ShoppingCart;
 use RedJasmine\ShoppingCart\Domain\Models\ShoppingCartProduct;
 use RedJasmine\ShoppingCart\Domain\Repositories\ShoppingCartRepositoryInterface;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 购物车应用服务

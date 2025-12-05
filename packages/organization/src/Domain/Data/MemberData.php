@@ -3,8 +3,7 @@
 namespace RedJasmine\Organization\Domain\Data;
 
 use RedJasmine\Organization\Domain\Models\Enums\MemberStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Support\Validation\ValidationContext;

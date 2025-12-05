@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Domain\Models\ValueObjects;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class Store extends Data
 {

@@ -5,7 +5,7 @@ namespace RedJasmine\Captcha\Infrastructure\Repositories;
 use RedJasmine\Captcha\Domain\Data\CaptchaData;
 use RedJasmine\Captcha\Domain\Models\Captcha;
 use RedJasmine\Captcha\Domain\Repositories\CaptchaRepositoryInterface;
-use RedJasmine\Support\Facades\AES;
+use RedJasmine\Support\Foundation\Facades\AES;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;

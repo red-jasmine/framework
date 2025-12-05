@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Domain\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Facades\AES;
+use RedJasmine\Support\Foundation\Facades\AES;
 use Throwable;
 
 class AesEncrypted implements CastsAttributes

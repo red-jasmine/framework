@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Domain\Data\Queries;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class Query extends Data
 {

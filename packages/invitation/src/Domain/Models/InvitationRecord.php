@@ -5,7 +5,7 @@ namespace RedJasmine\Invitation\Domain\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\OperatorInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOperator;
@@ -92,7 +92,7 @@ class InvitationRecord extends Model implements OperatorInterface
     public function getInviterAttribute(): ?UserInterface
     {
         if ($this->inviter_type && $this->inviter_id) {
-            return \RedJasmine\Support\Data\UserData::from([
+            return \RedJasmine\Support\Domain\Data\UserData::from([
                 'type' => $this->inviter_type,
                 'id' => $this->inviter_id,
             ]);
@@ -119,7 +119,7 @@ class InvitationRecord extends Model implements OperatorInterface
     public function getInviteeAttribute(): ?UserInterface
     {
         if ($this->invitee_type && $this->invitee_id) {
-            return \RedJasmine\Support\Data\UserData::from([
+            return \RedJasmine\Support\Domain\Data\UserData::from([
                 'type' => $this->invitee_type,
                 'id' => $this->invitee_id,
                 'nickname' => $this->invitee_nickname,

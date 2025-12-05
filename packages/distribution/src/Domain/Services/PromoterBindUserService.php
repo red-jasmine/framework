@@ -9,7 +9,7 @@ use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Distribution\Domain\Repositories\PromoterBindUserRepositoryInterface;
 use RedJasmine\Distribution\Exceptions\PromoterBindUserException;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
 class PromoterBindUserService extends Service

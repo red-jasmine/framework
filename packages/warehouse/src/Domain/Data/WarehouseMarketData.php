@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Warehouse\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 class WarehouseMarketData extends Data

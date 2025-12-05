@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Application\Services\PaymentChannel\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ChannelTransferCreateCommand extends Data
 {

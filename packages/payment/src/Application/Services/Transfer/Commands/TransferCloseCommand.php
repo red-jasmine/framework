@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Payment\Application\Services\Transfer\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 
 class TransferCloseCommand extends Data

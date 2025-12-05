@@ -11,10 +11,10 @@ use RedJasmine\Support\Application\Commands\DeleteCommandHandler;
 use RedJasmine\Support\Application\Commands\UpdateCommandHandler;
 use RedJasmine\Support\Application\Queries\FindQueryHandler;
 use RedJasmine\Support\Application\Queries\PaginateQueryHandler;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
 use RedJasmine\Support\Domain\Repositories\RepositoryInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**

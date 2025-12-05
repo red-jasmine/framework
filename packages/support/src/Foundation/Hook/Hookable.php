@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Support\Foundation\Hook;
 
-use RedJasmine\Support\Facades\Hook;
+use RedJasmine\Support\Foundation\Facades\Hook;
 
 /**
  * 钩子调用

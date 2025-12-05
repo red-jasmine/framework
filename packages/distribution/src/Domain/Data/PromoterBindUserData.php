@@ -2,13 +2,13 @@
 
 namespace RedJasmine\Distribution\Domain\Data;
 
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Illuminate\Support\Carbon;
+use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
+use Spatie\LaravelData\Casts\EnumCast;
 
 class PromoterBindUserData extends Data
 {

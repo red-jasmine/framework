@@ -3,8 +3,7 @@
 namespace RedJasmine\Promotion\Domain\Services;
 
 use RedJasmine\Promotion\Domain\Models\Activity;
-use RedJasmine\Promotion\Domain\Services\ActivityTypeHandlerFactory;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 
 /**

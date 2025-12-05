@@ -4,7 +4,7 @@ namespace RedJasmine\Payment\Domain\Data;
 
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelProductTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ChannelProductData extends Data
 {

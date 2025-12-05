@@ -3,9 +3,9 @@
 namespace RedJasmine\Vip\Infrastructure;
 
 use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Enums\TimeUnitEnum;
+use RedJasmine\Support\Domain\Data\UserData;
 use RedJasmine\Vip\Domain\Models\VipProduct;
 
 class ProductDomainConverter

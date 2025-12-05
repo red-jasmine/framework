@@ -4,8 +4,6 @@ namespace RedJasmine\Support\Application\Commands;
 
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Application\CommandHandlers\Throwable;
-use RedJasmine\Support\Application\HandleContext;
-use RedJasmine\Support\Data\Data;
 
 /**
  * 删除命令处理器类

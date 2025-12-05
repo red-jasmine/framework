@@ -2,7 +2,7 @@
 
 namespace RedJasmine\FilamentCore\Panel;
 
-use RedJasmine\Support\Facades\AES;
+use RedJasmine\Support\Foundation\Facades\AES;
 
 class Login extends \Filament\Auth\Pages\Login
 {

@@ -1,9 +1,8 @@
 <?php
 
-namespace RedJasmine\Support\Data;
+namespace RedJasmine\Support\Foundation\Data;
 
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapOutputName;

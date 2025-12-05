@@ -5,8 +5,8 @@ namespace RedJasmine\Distribution\Domain\Transformers;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Distribution\Domain\Data\PromoterData;
 use RedJasmine\Distribution\Domain\Models\Promoter;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class PromoterTransformer implements TransformerInterface
 {

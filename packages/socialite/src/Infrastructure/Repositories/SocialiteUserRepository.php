@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use RedJasmine\Socialite\Domain\Models\SocialiteUser;
 use RedJasmine\Socialite\Domain\Repositories\Queries\SocialiteUserFindUserQuery;
 use RedJasmine\Socialite\Domain\Repositories\SocialiteUserRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 
 /**

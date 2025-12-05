@@ -3,7 +3,7 @@
 namespace RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands;
 
 use RedJasmine\Distribution\Domain\Data\PromoterBindUserData;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class PromoterBindUserCommand extends PromoterBindUserData
 {

@@ -90,7 +90,7 @@ class ActivityApplicationService extends ApplicationService
      * 处理用户参与活动
      *
      * @param  Activity  $activity
-     * @param  \RedJasmine\Support\Contracts\UserInterface  $user
+     * @param  \RedJasmine\Support\Domain\Contracts\UserInterface  $user
      * @param  array  $participationData
      *
      * @return \RedJasmine\Promotion\Domain\Models\ActivityOrder
@@ -179,7 +179,7 @@ class ActivityApplicationService extends ApplicationService
      * 检查活动是否可以参与
      *
      * @param  Activity  $activity
-     * @param  \RedJasmine\Support\Contracts\UserInterface  $user
+     * @param  \RedJasmine\Support\Domain\Contracts\UserInterface  $user
      * @param  array  $participationData
      *
      * @return bool
@@ -199,7 +199,7 @@ class ActivityApplicationService extends ApplicationService
      * 获取活动参与失败原因
      *
      * @param  Activity  $activity
-     * @param  \RedJasmine\Support\Contracts\UserInterface  $user
+     * @param  \RedJasmine\Support\Domain\Contracts\UserInterface  $user
      * @param  array  $participationData
      *
      * @return string|null

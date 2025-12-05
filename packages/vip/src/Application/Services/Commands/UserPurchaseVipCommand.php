@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Vip\Application\Services\Commands;
 
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserPurchaseVipCommand extends Data
 {

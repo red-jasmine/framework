@@ -3,7 +3,7 @@
 namespace RedJasmine\Project\Infrastructure\Helpers;
 
 use RedJasmine\Project\Domain\Repositories\ProjectRepositoryInterface;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class ProjectCodeGenerator
 {

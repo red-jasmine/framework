@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace RedJasmine\Message\Application\Services\Message\Queries;
 
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Data\Queries\Query;
 
 /**

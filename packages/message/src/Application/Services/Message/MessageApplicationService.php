@@ -15,7 +15,7 @@ use RedJasmine\Message\Domain\Models\Message;
 use RedJasmine\Message\Domain\Repositories\MessageRepositoryInterface;
 use RedJasmine\Message\Domain\Transformers\MessageTransformer;
 use RedJasmine\Support\Application\ApplicationService;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 消息应用服务

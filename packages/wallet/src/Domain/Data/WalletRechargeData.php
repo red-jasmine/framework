@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Domain\Data;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 钱包充值

@@ -8,7 +8,7 @@ use RedJasmine\Payment\Application\Services\Transfer\Commands\TransferCreateComm
 use RedJasmine\Payment\Application\Services\Transfer\TransferApplicationService;
 use RedJasmine\Payment\Domain\Data\TransferPayee;
 use RedJasmine\Payment\Domain\Models\Enums\TransferSceneEnum;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Wallet\Domain\Contracts\PaymentServiceInterface;
 use RedJasmine\Wallet\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Wallet\Domain\Data\Payment\PaymentTransferData;

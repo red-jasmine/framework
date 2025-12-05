@@ -4,9 +4,9 @@ namespace RedJasmine\FilamentProduct\Clusters\Product\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
-use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
-use RedJasmine\Support\Contracts\BelongsToOwnerInterface;
+use RedJasmine\Product\Domain\Product\Models\Product;
+use RedJasmine\Support\Domain\Contracts\BelongsToOwnerInterface;
 
 class ProductStatusChartWidget extends ChartWidget
 {

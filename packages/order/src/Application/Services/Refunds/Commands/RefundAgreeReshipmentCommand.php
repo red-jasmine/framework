@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Application\Services\Refunds\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class RefundAgreeReshipmentCommand extends Data
 {

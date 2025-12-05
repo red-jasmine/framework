@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Vip\Infrastructure\Repositories;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\Vip\Domain\Models\UserVip;
 use RedJasmine\Vip\Domain\Repositories\UserVipRepositoryInterface;

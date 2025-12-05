@@ -5,7 +5,7 @@ namespace RedJasmine\Distribution\Domain\Data;
 
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyMethodEnum;
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterApplyTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

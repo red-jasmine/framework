@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Data\Config;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ExchangeCurrencyConfigData extends Data
 {

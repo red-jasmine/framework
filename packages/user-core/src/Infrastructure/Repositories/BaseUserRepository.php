@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Infrastructure\Repositories;
 
-use RedJasmine\Support\Facades\AES;
+use RedJasmine\Support\Foundation\Facades\AES;
 use RedJasmine\Support\Infrastructure\Repositories\Repository;
 use RedJasmine\UserCore\Domain\Models\User;
 use RedJasmine\UserCore\Domain\Repositories\BaseUserRepositoryInterface;

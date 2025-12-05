@@ -17,7 +17,7 @@ use RedJasmine\Message\Domain\Models\Enums\PushStatusEnum;
 use RedJasmine\Message\Domain\Models\ValueObjects\MessageContent;
 use RedJasmine\Message\Domain\Models\ValueObjects\MessageData;
 use RedJasmine\Message\Domain\Models\ValueObjects\PushConfig;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Domain\Models\Traits\HasDateTimeFormatter;
 use RedJasmine\Support\Domain\Models\Traits\HasOwner;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;

@@ -4,7 +4,7 @@ namespace RedJasmine\Support\Domain\Models\ValueObjects;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Throwable;
 
 class ValueObject extends Data implements CastsAttributes

@@ -2,11 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Payment\Domain\Models\Enums\ChannelAppStatusEnum;
-use RedJasmine\Payment\Domain\Models\Enums\ChannelProductStatusEnum;
 use RedJasmine\Payment\Domain\Models\Enums\ChannelStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ChannelData extends Data
 {

@@ -3,8 +3,8 @@
 namespace RedJasmine\Card\Domain\Data;
 
 use RedJasmine\Card\Domain\Enums\CardStatus;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CardData extends Data
 {

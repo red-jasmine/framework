@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Wallet\Domain\Contracts;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Wallet\Domain\Data\Payment\PaymentTradeData;
 use RedJasmine\Wallet\Domain\Data\Payment\PaymentTransferData;
 use RedJasmine\Wallet\Domain\Data\Payment\WalletTradeData;

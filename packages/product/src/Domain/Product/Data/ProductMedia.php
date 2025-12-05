@@ -3,7 +3,7 @@
 namespace RedJasmine\Product\Domain\Product\Data;
 
 use RedJasmine\Product\Domain\Media\Models\Enums\MediaTypeEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

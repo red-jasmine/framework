@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Product\Domain\Product\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class AttributeValue extends Data
 {

@@ -31,7 +31,7 @@ use RedJasmine\FilamentCard\Clusters\Cards\Resources\CardGroupBindProductResourc
 use RedJasmine\FilamentCore\Helpers\ResourcePageHelper;
 use RedJasmine\FilamentCore\Resources\Schemas\Operators;
 use RedJasmine\FilamentCore\Resources\Schemas\Owner;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Data\UserData;
 
 class CardGroupBindProductResource extends Resource
 {

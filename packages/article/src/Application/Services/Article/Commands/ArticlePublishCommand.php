@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Article\Application\Services\Article\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ArticlePublishCommand extends Data
 {

@@ -2,10 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Payment\Domain\Data\TradeData;
 use RedJasmine\Payment\Domain\Models\Trade;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class TradeTransformer implements TransformerInterface

@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace RedJasmine\Message\Application\Services\Message\Queries;
 
 use RedJasmine\Support\Application\Queries\FindQuery;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 查找消息查询

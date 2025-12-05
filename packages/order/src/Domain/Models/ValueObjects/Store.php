@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Order\Domain\Models\ValueObjects;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 门店

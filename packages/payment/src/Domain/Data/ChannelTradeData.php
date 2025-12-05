@@ -2,11 +2,11 @@
 
 namespace RedJasmine\Payment\Domain\Data;
 
-use RedJasmine\Money\Data\Money;
 use Illuminate\Support\Carbon;
+use RedJasmine\Money\Data\Money;
 use RedJasmine\Payment\Domain\Models\Enums\TradeStatusEnum;
 use RedJasmine\Payment\Domain\Models\ValueObjects\Payer;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 

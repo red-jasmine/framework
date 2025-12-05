@@ -3,7 +3,7 @@
 namespace RedJasmine\Captcha\Domain\Services\Sender\Contracts;
 
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CaptchaSenderResult extends Data
 {

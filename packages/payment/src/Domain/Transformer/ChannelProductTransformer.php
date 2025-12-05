@@ -2,11 +2,8 @@
 
 namespace RedJasmine\Payment\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
-use JetBrains\PhpStorm\NoReturn;
 use RedJasmine\Payment\Domain\Data\ChannelProductData;
 use RedJasmine\Payment\Domain\Models\ChannelProduct;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class ChannelProductTransformer implements TransformerInterface

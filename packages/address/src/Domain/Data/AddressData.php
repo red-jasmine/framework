@@ -3,8 +3,8 @@
 namespace RedJasmine\Address\Domain\Data;
 
 use RedJasmine\Address\Domain\Models\Enums\AddressStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

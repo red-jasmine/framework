@@ -6,9 +6,9 @@ namespace Workbench\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 //use Laravel\Sanctum\HasApiTokens;
-use RedJasmine\Support\Contracts\UserInterface;
 
 class User extends Authenticatable implements UserInterface
 {

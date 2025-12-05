@@ -3,7 +3,7 @@
 namespace RedJasmine\Coupon\Domain\Data;
 
 use RedJasmine\Money\Data\Money;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 /**
  * 用户优惠券使用数据

@@ -4,8 +4,8 @@ namespace RedJasmine\Promotion\Domain\Data;
 
 use Cknow\Money\Money;
 use RedJasmine\Promotion\Domain\Models\Enums\ActivityProductStatusEnum;
-use RedJasmine\Support\Contracts\UserInterface;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 

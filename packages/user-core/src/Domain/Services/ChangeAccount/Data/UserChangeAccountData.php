@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\ChangeAccount\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserChangeAccountData extends Data
 {

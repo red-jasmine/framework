@@ -17,7 +17,7 @@ use RedJasmine\Ecommerce\Domain\Data\Product\ProductPurchaseFactor;
 use RedJasmine\Ecommerce\Domain\Models\Enums\DiscountLevelEnum;
 use RedJasmine\Shopping\Domain\Contracts\CouponServiceInterface;
 use RedJasmine\Shopping\Domain\Contracts\CouponUsageData;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 class CouponServiceIntegration implements CouponServiceInterface
 {

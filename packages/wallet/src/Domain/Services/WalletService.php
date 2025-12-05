@@ -3,7 +3,7 @@
 namespace RedJasmine\Wallet\Domain\Services;
 
 use Illuminate\Support\Carbon;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 use RedJasmine\Support\Foundation\Service\Service;
 use RedJasmine\Wallet\Domain\Data\WalletConfigData;
 use RedJasmine\Wallet\Domain\Data\WalletTransactionData;

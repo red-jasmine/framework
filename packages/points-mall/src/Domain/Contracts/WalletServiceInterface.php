@@ -3,7 +3,7 @@
 namespace RedJasmine\PointsMall\Domain\Contracts;
 
 use RedJasmine\PointsMall\Domain\Models\PointsExchangeOrder;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 interface WalletServiceInterface
 {

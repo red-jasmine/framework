@@ -5,7 +5,7 @@ namespace RedJasmine\Product\Domain\Product\Data;
 use RedJasmine\Money\Data\Money;
 use RedJasmine\Product\Domain\Product\Models\Enums\ProductStatusEnum;
 use RedJasmine\Product\Domain\Stock\Data\WarehouseStockData;
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 
 class Variant extends Data

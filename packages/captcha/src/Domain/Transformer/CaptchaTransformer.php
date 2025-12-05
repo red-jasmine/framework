@@ -2,12 +2,10 @@
 
 namespace RedJasmine\Captcha\Domain\Transformer;
 
-use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Captcha\Domain\Data\CaptchaData;
 use RedJasmine\Captcha\Domain\Models\Captcha;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Transformer\TransformerInterface;
 
 class CaptchaTransformer implements TransformerInterface

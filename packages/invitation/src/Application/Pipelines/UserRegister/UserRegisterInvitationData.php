@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Invitation\Application\Pipelines\UserRegister;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class UserRegisterInvitationData extends Data
 {

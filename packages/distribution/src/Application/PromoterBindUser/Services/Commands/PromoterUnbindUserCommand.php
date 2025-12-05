@@ -2,8 +2,8 @@
 
 namespace RedJasmine\Distribution\Application\PromoterBindUser\Services\Commands;
 
-use RedJasmine\Support\Data\Data;
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class PromoterUnbindUserCommand extends Data
 {

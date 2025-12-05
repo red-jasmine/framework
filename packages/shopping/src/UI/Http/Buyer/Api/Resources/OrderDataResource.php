@@ -4,7 +4,7 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Resources;
 
 use Illuminate\Http\Request;
 use RedJasmine\Ecommerce\Domain\Data\Order\OrderData;
-use RedJasmine\Support\Data\UserData;
+use RedJasmine\Support\Domain\Data\UserData;
 use RedJasmine\Support\UI\Http\Resources\Json\JsonResource;
 
 /**

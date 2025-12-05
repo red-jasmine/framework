@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Distribution\Application\Promoter\Services\Commands;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class PromoterDowngradeCommand extends Data
 {

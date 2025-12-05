@@ -2,7 +2,7 @@
 
 namespace RedJasmine\UserCore\Domain\Services\ForgotPassword\Data;
 
-use RedJasmine\Support\Data\Data;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class ForgotPasswordData extends Data
 {

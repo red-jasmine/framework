@@ -3,8 +3,8 @@
 namespace RedJasmine\Card\Application\Services\Pipelines;
 
 use RedJasmine\Card\Application\Services\CardGroupApplicationService;
-use RedJasmine\Support\Data\Data;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\Foundation\Data\Data;
 
 class CardGroupPipeline
 {

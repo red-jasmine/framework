@@ -2,7 +2,7 @@
 
 namespace RedJasmine\Ecommerce\Domain\Contracts;
 
-use RedJasmine\Support\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Contracts\UserInterface;
 
 /**
  * 运费模板服务接口
