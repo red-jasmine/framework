@@ -16,7 +16,7 @@ class ChangeAccountCaptchaCommandHandler extends CommandHandler
         public UserChangeAccountService $changeAccountService,
     ) {
 
-        $this->context = new HandleContext();
+        
     }
 
     /**

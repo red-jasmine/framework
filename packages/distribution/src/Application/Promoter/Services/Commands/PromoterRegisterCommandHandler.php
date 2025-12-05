@@ -9,7 +9,7 @@ use RedJasmine\Distribution\Domain\Models\Enums\PromoterStatusEnum;
 use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\ApplicationService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Application\HandleContext;
+
 use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
@@ -17,7 +17,7 @@ class PromoterRegisterCommandHandler extends CommandHandler
 {
     public function __construct(protected PromoterApplicationService $service)
     {
-        $this->context = new HandleContext();
+        
     }
 
     /**

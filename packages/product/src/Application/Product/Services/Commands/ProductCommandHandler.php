@@ -8,7 +8,6 @@ use RedJasmine\Product\Application\Category\Services\ProductCategoryApplicationS
 use RedJasmine\Product\Application\Group\Services\ProductGroupApplicationService;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockActionCommand;
-use RedJasmine\Product\Application\Stock\Services\Commands\StockCommand;
 use RedJasmine\Product\Application\Stock\Services\Commands\StockSetCommand;
 use RedJasmine\Product\Application\Stock\Services\StockApplicationService;
 use RedJasmine\Product\Domain\Attribute\Services\ProductAttributeValidateService;
@@ -18,16 +17,15 @@ use RedJasmine\Product\Domain\Product\Models\Product;
 use RedJasmine\Product\Domain\Product\Services\ProductDomainService;
 use RedJasmine\Product\Domain\Product\Transformer\ProductTransformer;
 use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockActionTypeEnum;
-use RedJasmine\Product\Domain\Stock\Models\Enums\ProductStockChangeTypeEnum;
 use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Product\Exceptions\StockException;
-use RedJasmine\Support\Application\Commands\CommandHandler;
+use RedJasmine\Support\Application\Commands\CommandContext;
+use RedJasmine\Support\Application\Commands\CommonCommandHandler;
 use Throwable;
 
 /**
  * @method  ProductApplicationService getService()
  */
-class ProductCommandHandler extends CommandHandler
+abstract class ProductCommandHandler extends CommonCommandHandler
 {
 
     public function __construct(
@@ -45,52 +43,9 @@ class ProductCommandHandler extends CommandHandler
 
     }
 
-    /**
-     * @param  Product  $product
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
-     *
-     * @return void
-     * @throws Throwable
-     */
-    protected function handleStock(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void
+    protected function validate(CommandContext $context) : void
     {
-
-
-        $variantsCommands = $command->variants->keyBy('properties');
-
-
-        foreach ($product->variants as $variant) {
-
-            // 修改库存 把 删除的库存设置为 0
-            if ($variant->deleted_at) {
-                $variant->stock = 0;
-            }
-            /**
-             * @var Variant $variantCommand
-             */
-            $variantCommand = $variantsCommands[$variant->properties];
-            foreach ($variantCommand->stocks as $stockData) {
-                // 设置库存
-                $stockCommand              = new StockSetCommand();
-                $stockCommand->owner       = $variant->owner;
-                $stockCommand->productId   = $variant->product_id;
-                $stockCommand->variantId   = $variant->id;
-                $stockCommand->warehouseId = $stockData->warehouseId;
-                $stockCommand->actionType  = ProductStockActionTypeEnum::RESET;
-                $stockCommand->actionStock = $stockData->stock;
-                $this->stockCommandService->reset($stockCommand);
-            }
-        }
-    }
-
-    /**
-     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
-     *
-     * @return void
-     * @throws ProductException
-     */
-    protected function validate(\RedJasmine\Product\Domain\Product\Data\Product $command) : void
-    {
+        $command = $context->getCommand();
 
         $this->validateBrand($command);
 
@@ -99,7 +54,6 @@ class ProductCommandHandler extends CommandHandler
         $this->validateSellerCategory($command);
 
         $this->validateAttributes($command);
-
     }
 
     /**
@@ -159,7 +113,6 @@ class ProductCommandHandler extends CommandHandler
         }
     }
 
-
     /**
      * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
      *
@@ -170,5 +123,77 @@ class ProductCommandHandler extends CommandHandler
     {
         // 使用领域服务验证商品属性规则
         $this->productDomainService->validateAttributes($command);
+    }
+
+
+    protected function execute(CommandContext $context)
+    {
+        $this->productTransformer->transform($context->getModel(), $context->getCommand());
+    }
+
+
+    /**
+     * @param  Product  $product
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     *
+     * @return void
+     * @throws Throwable
+     */
+    protected function handleStock(Product $product, \RedJasmine\Product\Domain\Product\Data\Product $command) : void
+    {
+
+
+        $variantsCommands = $command->variants->keyBy('properties');
+
+
+        foreach ($product->variants as $variant) {
+
+            // 修改库存 把 删除的库存设置为 0
+            if ($variant->deleted_at) {
+                $variant->stock = 0;
+            }
+            /**
+             * @var Variant $variantCommand
+             */
+            $variantCommand = $variantsCommands[$variant->properties];
+            foreach ($variantCommand->stocks as $stockData) {
+                // 设置库存
+                $stockCommand              = new StockSetCommand();
+                $stockCommand->owner       = $variant->owner;
+                $stockCommand->productId   = $variant->product_id;
+                $stockCommand->variantId   = $variant->id;
+                $stockCommand->warehouseId = $stockData->warehouseId;
+                $stockCommand->actionType  = ProductStockActionTypeEnum::RESET;
+                $stockCommand->actionStock = $stockData->stock;
+                $this->stockCommandService->reset($stockCommand);
+            }
+        }
+    }
+
+    /**
+     * @param  \RedJasmine\Product\Domain\Product\Data\Product  $command
+     *
+     * @return void
+     * @throws ProductException
+     */
+    protected function validate2(\RedJasmine\Product\Domain\Product\Data\Product $command) : void
+    {
+
+        $this->validateBrand($command);
+
+        $this->validateCategory($command);
+
+        $this->validateSellerCategory($command);
+
+        $this->validateAttributes($command);
+
+    }
+
+    protected function persist(CommandContext $context) : void
+    {
+        $product = $context->getModel();
+        $this->service->repository->store($product);
+
+        $this->handleStock($product, $context->getCommand());
     }
 }

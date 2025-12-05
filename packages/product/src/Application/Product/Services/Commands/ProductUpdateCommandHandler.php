@@ -2,69 +2,34 @@
 
 namespace RedJasmine\Product\Application\Product\Services\Commands;
 
-use JsonException;
+use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Product\Application\Product\Services\ProductApplicationService;
-use RedJasmine\Product\Domain\Product\Models\Product;
-use RedJasmine\Product\Exceptions\ProductException;
-use RedJasmine\Product\Exceptions\ProductAttributeException;
-use RedJasmine\Product\Exceptions\StockException;
-use Throwable;
+use RedJasmine\Support\Application\Commands\CommandContext;
 
 /**
  * @method  ProductApplicationService getService()
+ * @property
  */
 class ProductUpdateCommandHandler extends ProductCommandHandler
 {
+    protected string $name = 'update';
 
-
-    /**
-     * @param ProductUpdateCommand $command
-     *
-     * @return Product|null
-     * @throws Throwable
-     * @throws JsonException
-     * @throws ProductException
-     * @throws ProductAttributeException
-     * @throws StockException
-     */
-    public function handle(ProductUpdateCommand $command) : ?Product
+    protected function resolve(CommandContext $context) : Model
     {
-
-
-
-
-
-        $this->beginDatabaseTransaction();
-        try {
-            $product = $this->service->repository->find($command->getKey());
-            $product->setRelation('variants', $product->variants()->withTrashed()->get());
-
-            $product->variants->each(function ($sku) {
-                $sku->setDeleted();
-            });
-
-            $this->service->hook('update.validate', $command, fn() => $this->validate($command));
-
-            $product = $this->service->hook('update.fill', $command,
-                fn() => $this->productTransformer->transform($product, $command));
-
-            $product->modified_at = now();
-
-            $this->service->repository->update($product);
-
-            $this->handleStock($product, $command);
-
-            $this->commitDatabaseTransaction();
-
-            return $product;
-        } catch (Throwable $throwable) {
-
-            $this->rollBackDatabaseTransaction();
-            throw  $throwable;
-        }
-
-
+        /**
+         * @var ProductUpdateCommand $command
+         */
+        $command = $context->getCommand();
+        $product = $this->service->repository->find($command->getKey());
+        $product->setRelation('variants', $product->variants()->withTrashed()->get());
+        // 这里的逻辑应该 放到领域层
+        $product->variants->each(function ($sku) {
+            $sku->setDeleted();
+        });
+        return $product;
     }
+
+
 
 
 }

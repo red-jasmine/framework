@@ -16,7 +16,7 @@ class ProductSeriesCreateCommandHandler extends CommandHandler
 
     public function __construct(protected ApplicationService $service)
     {
-        $this->context = new HandleContext();
+        
     }
 
 

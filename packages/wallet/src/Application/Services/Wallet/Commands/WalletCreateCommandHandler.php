@@ -3,6 +3,7 @@
 namespace RedJasmine\Wallet\Application\Services\Wallet\Commands;
 
 
+use RedJasmine\Support\Application\Commands\CommandContext;
 use RedJasmine\Support\Application\Commands\CreateCommandHandler;
 use RedJasmine\Support\Application\HandleContext;
 use RedJasmine\Wallet\Application\Services\Wallet\WalletApplicationService;
@@ -18,12 +19,12 @@ class WalletCreateCommandHandler extends CreateCommandHandler
     protected WalletApplicationService $service;
 
     /**
-     * @param  HandleContext  $context
+     * @param  CommandContext  $context
      *
      * @return void
      * @throws WalletException
      */
-    protected function validate(HandleContext $context) : void
+    protected function validate(CommandContext $context) : void
     {
         parent::validate($context);
         /**

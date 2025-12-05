@@ -16,7 +16,7 @@ class ChangeAccountVerifyCommandHandler extends CommandHandler
         public UserChangeAccountService $changeAccountService,
     ) {
 
-        $this->context = new HandleContext();
+        
     }
 
     /**

@@ -7,7 +7,7 @@ use RedJasmine\Distribution\Domain\Events\PromoterBindUser\PromoterUnbindUserEve
 use RedJasmine\Distribution\Domain\Models\Enums\PromoterBindUserStatusEnum;
 use RedJasmine\Distribution\Domain\Models\PromoterBindUser;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Application\HandleContext;
+
 use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
@@ -15,7 +15,7 @@ class PromoterUnbindUserCommandHandler extends CommandHandler
 {
     public function __construct(protected PromoterBindUserApplicationService $service)
     {
-        $this->context = new HandleContext();
+        
     }
 
     /**

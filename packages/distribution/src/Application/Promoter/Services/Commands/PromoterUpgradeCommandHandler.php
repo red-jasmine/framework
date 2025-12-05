@@ -6,7 +6,7 @@ use RedJasmine\Distribution\Application\Promoter\Services\PromoterApplicationSer
 use RedJasmine\Distribution\Domain\Models\Promoter;
 use RedJasmine\Distribution\Domain\Services\PromoterService;
 use RedJasmine\Support\Application\Commands\CommandHandler;
-use RedJasmine\Support\Application\HandleContext;
+
 use RedJasmine\Support\Exceptions\BaseException;
 use Throwable;
 
@@ -14,7 +14,7 @@ class PromoterUpgradeCommandHandler extends CommandHandler
 {
     public function __construct(protected PromoterApplicationService $service)
     {
-        $this->context = new HandleContext();
+        
     }
 
     /**

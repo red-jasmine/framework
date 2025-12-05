@@ -16,7 +16,7 @@ class ChangeAccountChangeCommandHandler extends CommandHandler
         public UserChangeAccountService $changeAccountService,
     ) {
 
-        $this->context = new HandleContext();
+        
     }
 
     /**

@@ -22,7 +22,7 @@ class InvitationCodeCreateCommandHandler extends CommandHandler
     )
     {
 
-        $this->context = new HandleContext();
+        
 
     }
 

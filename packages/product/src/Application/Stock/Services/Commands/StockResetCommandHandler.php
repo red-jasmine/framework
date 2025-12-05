@@ -16,7 +16,7 @@ class StockResetCommandHandler extends StockCommandHandler
     public function handle(StockSetCommand $command) : void
     {
         $command->actionType = ProductStockActionTypeEnum::RESET;
-        $this->context->setCommand($command);
+        $this->getContext()->setCommand($command);
 
         $this->validate($command);
 

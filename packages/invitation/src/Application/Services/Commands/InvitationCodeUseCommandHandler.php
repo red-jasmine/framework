@@ -19,7 +19,7 @@ class InvitationCodeUseCommandHandler extends CommandHandler
     public function __construct(
         protected InvitationCodeApplicationService $service
     ) {
-        $this->context = new HandleContext();
+        
     }
 
     /**

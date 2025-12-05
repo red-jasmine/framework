@@ -20,7 +20,7 @@ class CaptchaVerifyCommandHandler extends CommandHandler
         public CaptchaSenderService $senderService,
         public CaptchaVerifyService $verifyService,
     ) {
-        $this->context = new HandleContext();
+
     }
 
     /**

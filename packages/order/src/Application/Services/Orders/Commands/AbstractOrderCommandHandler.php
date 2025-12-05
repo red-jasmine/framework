@@ -18,7 +18,7 @@ abstract class AbstractOrderCommandHandler extends CommandHandler
         protected OrderApplicationService $service
     ) {
 
-        $this->context = new HandleContext();
+        
     }
 
 
