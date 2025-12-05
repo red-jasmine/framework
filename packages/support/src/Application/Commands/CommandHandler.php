@@ -13,12 +13,21 @@ use RedJasmine\Support\Foundation\Service\CanUseDatabaseTransactions;
  */
 abstract class CommandHandler
 {
+    /**
+     *  Hook 能力
+     */
     use HasHooks;
 
+    /**
+     * 数据库事务能力
+     */
     use CanUseDatabaseTransactions;
 
 
-
+    /**
+     * 命令上下文
+     * @var CommandContext
+     */
     protected CommandContext $context;
 
     public function getContext() : CommandContext
