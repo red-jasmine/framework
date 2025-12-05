@@ -33,6 +33,10 @@ class ApplicationService extends Service
      * @var string
      */
     protected static string $modelClass = Model::class;
+
+    // 仓库
+
+
     protected static array $handlers = [
         'create'   => CreateCommandHandler::class,
         'update'   => UpdateCommandHandler::class,

@@ -11,36 +11,43 @@ use RedJasmine\Support\Data\Data;
  * 删除命令处理器类
  * 继承自CommandHandler，提供删除数据的处理逻辑
  */
-class DeleteCommandHandler extends BaseCommandHandler
+class DeleteCommandHandler extends CommonCommandHandler
 {
 
 
     protected string $name = 'delete';
 
-    public function __construct(
-        protected $service
-    ) {
-        $this->initHandleContext();
+    public function __construct($service)
+    {
+        $this->service = $service;
     }
 
-    protected function getModel(Data $command) : Model
+    protected function validate(CommandContext $context) : void
     {
-        return $this->service->repository->find($command->getKey());
+        // TODO: Implement validate() method.
     }
 
-    protected function validate(HandleContext $context) : void
+
+    protected function resolve(CommandContext $context) : Model
     {
-        return;
+        $command = $context->getCommand();
+        if (isset($this->service->repository)) {
+            return $this->service->repository->find($command->getKey()); // TODO key?
+        }
+        return $this->getModelClass()::findOrFail($command->getKey());
     }
 
-    protected function fill(HandleContext $context) : void
+    protected function execute(CommandContext $context)
     {
-
+        // TODO: Implement execute() method.
     }
 
-    protected function save(HandleContext $context) : void
+    protected function persist(CommandContext $context) : ?bool
     {
-        $this->service->repository->delete($this->context->getModel());
+        if (isset($this->service->repository)) {
+            return $this->service->repository->delete($this->context->getModel());
+        }
+        return $this->context->getModel()->delete();
     }
 
 

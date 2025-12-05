@@ -5,6 +5,9 @@ namespace RedJasmine\Support\Application;
 use Illuminate\Database\Eloquent\Model;
 use RedJasmine\Support\Data\Data;
 
+/**
+ * @deprecated
+ */
 class HandleContext
 {
 
