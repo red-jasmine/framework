@@ -4,6 +4,7 @@ namespace RedJasmine\Product\Domain\Attribute\Data;
 
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeTypeEnum;
+use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeGroupExistsRule;
 use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -27,9 +28,9 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
  */
 class ProductAttributeData extends Data
 {
-    public string $name;
+    public string  $name;
     public ?string $description = null;
-    public ?string $unit = null;
+    public ?string $unit        = null;
 
     #[WithCast(EnumCast::class, ProductAttributeTypeEnum::class)]
     public ProductAttributeTypeEnum $type = ProductAttributeTypeEnum::SELECT;
@@ -37,44 +38,47 @@ class ProductAttributeData extends Data
     #[WithCast(EnumCast::class, ProductAttributeStatusEnum::class)]
     public ProductAttributeStatusEnum $status = ProductAttributeStatusEnum::ENABLE;
 
-    public int $groupId = 0;
-    public int $sort = 0;
-    public bool $isRequired = false;
+    public int  $groupId         = 0;
+    public int  $sort            = 0;
+    public bool $isRequired      = false;
     public bool $isAllowMultiple = false;
-    public bool $isAllowAlias = false;
+    public bool $isAllowAlias    = false;
 
     /**
      * @var ProductAttributeTranslationData[]|null
      */
     public ?array $translations = null;
 
-    public static function attributes(): array
+    public static function attributes() : array
     {
         return [
-            'name' => __('red-jasmine-product::product-attribute.fields.name'),
-            'type' => __('red-jasmine-product::product-attribute.fields.type'),
-            'unit' => __('red-jasmine-product::product-attribute.fields.unit'),
-            'description' => __('red-jasmine-product::product-attribute.fields.description'),
-            'sort' => __('red-jasmine-product::product-attribute.fields.sort'),
-            'group_id' => __('red-jasmine-product::product-attribute.fields.group_id'),
-            'is_required' => __('red-jasmine-product::product-attribute.fields.is_required'),
+            'name'              => __('red-jasmine-product::product-attribute.fields.name'),
+            'type'              => __('red-jasmine-product::product-attribute.fields.type'),
+            'unit'              => __('red-jasmine-product::product-attribute.fields.unit'),
+            'description'       => __('red-jasmine-product::product-attribute.fields.description'),
+            'sort'              => __('red-jasmine-product::product-attribute.fields.sort'),
+            'group_id'          => __('red-jasmine-product::product-attribute.fields.group_id'),
+            'is_required'       => __('red-jasmine-product::product-attribute.fields.is_required'),
             'is_allow_multiple' => __('red-jasmine-product::product-attribute.fields.is_allow_multiple'),
-            'is_allow_alias' => __('red-jasmine-product::product-attribute.fields.is_allow_alias'),
-            'status' => __('red-jasmine-product::product-attribute.fields.status'),
+            'is_allow_alias'    => __('red-jasmine-product::product-attribute.fields.is_allow_alias'),
+            'status'            => __('red-jasmine-product::product-attribute.fields.status'),
         ];
     }
 
-    public static function rules(ValidationContext $context): array
+    public static function rules(ValidationContext $context) : array
     {
         return [
-            'name' => ['required', 'string', 'max:64', new ProductAttributeNameRule()],
-            'unit' => ['sometimes', 'nullable', 'string', 'max:10'],
-            'sort' => ['integer'],
-            'description' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'group_id' => ['sometimes', 'nullable', 'integer'],
-            'is_required' => ['boolean'],
+            'name'              => ['required', 'string', 'max:64', new ProductAttributeNameRule()],
+            'unit'              => ['sometimes', 'nullable', 'string', 'max:10'],
+            'sort'              => ['integer'],
+            'description'       => ['sometimes', 'nullable', 'string', 'max:255'],
+            'group_id'          => [
+                'sometimes', 'nullable', 'integer',
+                new ProductAttributeGroupExistsRule(), // 使用 Laravel 验证规则验证属性组是否存在
+            ],
+            'is_required'       => ['boolean'],
             'is_allow_multiple' => ['boolean'],
-            'is_allow_alias' => ['boolean'],
+            'is_allow_alias'    => ['boolean'],
         ];
     }
 }

@@ -17,10 +17,14 @@ class UpdateCommandHandler extends CommonCommandHandler
 
     protected function validate(CommandContext $context) : void
     {
-
-        // 业务逻辑验证
-        if (method_exists($context->getCommand(), 'validateBusinessRules')) {
-            $context->getCommand()->validateBusinessRules();
+        // 验证逻辑已通过 Spatie Laravel Data 的 rules() 方法自动执行
+        // 在 Data::from() 时会自动验证，失败会抛出 ValidationException
+        
+        // 如果需要额外的业务规则验证，可以在这里添加
+        $command = $context->getCommand();
+        if (method_exists($command, 'validateBusinessRules')) {
+            // 传递上下文给验证方法，支持验证器访问上下文信息
+            $command->validateBusinessRules($context);
         }
     }
 

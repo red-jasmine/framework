@@ -119,7 +119,7 @@ trait ResourcePageHelper
         try {
             $commandService = app($resource::getService());
 
-
+            ($resource::getUpdateCommand())::validate($data);
             $command = ($resource::getCreateCommand())::from($data);
 
             return $commandService->create($command);
@@ -213,7 +213,9 @@ trait ResourcePageHelper
             $resource = static::getResource();
 
             $commandService = app($resource::getService());
+           ($resource::getUpdateCommand())::validate($data);
             $command        = ($resource::getUpdateCommand())::from($data);
+
             $command->setKey($record->getKey());
             return $commandService->update($command);
 

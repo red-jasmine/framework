@@ -3,6 +3,8 @@
 namespace RedJasmine\Product\Domain\Attribute\Data;
 
 use RedJasmine\Product\Domain\Attribute\Models\Enums\ProductAttributeStatusEnum;
+use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeExistsRule;
+use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeGroupExistsRule;
 use RedJasmine\Product\Domain\Attribute\Rules\ProductAttributeNameRule;
 use RedJasmine\Support\Data\Data;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -52,13 +54,31 @@ class ProductAttributeValueData extends Data
         ];
     }
 
+    /**
+     * 定义验证规则
+     * 
+     * 使用 Laravel 标准的验证规则，包括自定义验证规则类
+     * 这样可以充分利用 Spatie Laravel Data 的自动验证机制
+     * 
+     * @param ValidationContext $context 验证上下文
+     * @return array
+     */
     public static function rules(ValidationContext $context): array
     {
         return [
             'name' => ['required', 'string', 'max:64', new ProductAttributeNameRule()],
             'description' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'aid' => ['required', 'integer'],
-            'group_id' => ['sometimes', 'nullable', 'integer'],
+            'aid' => [
+                'required',
+                'integer',
+                new ProductAttributeExistsRule(), // 使用 Laravel 验证规则验证属性是否存在
+            ],
+            'group_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                new ProductAttributeGroupExistsRule(), // 使用 Laravel 验证规则验证属性组是否存在
+            ],
             'sort' => ['integer'],
             'extra' => ['sometimes', 'nullable', 'array'],
         ];

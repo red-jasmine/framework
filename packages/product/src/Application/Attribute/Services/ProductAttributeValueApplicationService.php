@@ -3,9 +3,6 @@
 namespace RedJasmine\Product\Application\Attribute\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeGroupRulePipeline;
-use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeRulePipeline;
-use RedJasmine\Product\Application\Attribute\Services\Pipelines\ProductAttributeValueUpdatePipeline;
 use RedJasmine\Product\Domain\Attribute\Data\ProductAttributeValueData;
 use RedJasmine\Product\Domain\Attribute\Models\ProductAttributeValue;
 use RedJasmine\Product\Domain\Attribute\Repositories\ProductAttributeValueRepositoryInterface;
@@ -46,19 +43,20 @@ class ProductAttributeValueApplicationService extends ApplicationService
         return parent::newModel($data);
     }
 
+    /**
+     * 钩子配置
+     *
+     * 注意：验证逻辑已迁移到 Domain 层的 Laravel ValidationRule
+     * 通过 ProductAttributeValueData::rules() 方法定义验证规则
+     * 验证会在 Data::from() 时自动执行
+     *
+     * @return array
+     */
     protected function hooks() : array
     {
         return [
-
-            'create' => [
-                ProductAttributeRulePipeline::class,
-                ProductAttributeGroupRulePipeline::class,
-            ],
-            'update' => [
-                //ProductAttributeRulePipeline::class,
-                ProductAttributeValueUpdatePipeline::class,
-                ProductAttributeGroupRulePipeline::class,
-            ],
+            // 验证逻辑已迁移到 Domain 层的 Laravel ValidationRule
+            // 通过 ProductAttributeValueData::rules() 方法定义
         ];
     }
 
