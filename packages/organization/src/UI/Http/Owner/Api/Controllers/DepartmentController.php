@@ -2,15 +2,15 @@
 
 namespace RedJasmine\Organization\UI\Http\Owner\Api\Controllers;
 
+use Illuminate\Http\Request;
 use RedJasmine\Organization\Application\Services\Department\DepartmentApplicationService;
 use RedJasmine\Organization\Application\Services\Department\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\DepartmentData;
 use RedJasmine\Organization\Domain\Models\Department;
 use RedJasmine\Organization\UI\Http\Owner\Api\Resources\DepartmentResource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
-use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {

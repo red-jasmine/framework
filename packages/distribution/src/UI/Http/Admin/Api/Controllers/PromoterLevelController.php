@@ -4,15 +4,15 @@ namespace RedJasmine\Distribution\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\Request;
 use RedJasmine\Distribution\Application\PromoterLevel\Services\Commands\CreatePromoterLevelCommand;
-use RedJasmine\Distribution\Application\PromoterLevel\Services\Commands\UpdatePromoterLevelCommand;
 use RedJasmine\Distribution\Application\PromoterLevel\Services\Commands\DeletePromoterLevelCommand;
+use RedJasmine\Distribution\Application\PromoterLevel\Services\Commands\UpdatePromoterLevelCommand;
 use RedJasmine\Distribution\Application\PromoterLevel\Services\PromoterLevelApplicationService;
-use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\PromoterLevelPaginateQuery;
 use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\FindPromoterLevelQuery;
+use RedJasmine\Distribution\Application\PromoterLevel\Services\Queries\PromoterLevelPaginateQuery;
 use RedJasmine\Distribution\Domain\Data\PromoterLevelData as Data;
 use RedJasmine\Distribution\Domain\Models\PromoterLevel as Model;
 use RedJasmine\Distribution\UI\Http\Admin\Api\Resources\PromoterLevelResource as Resource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 
 class PromoterLevelController extends Controller
 {

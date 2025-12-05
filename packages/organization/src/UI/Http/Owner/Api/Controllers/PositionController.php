@@ -7,7 +7,7 @@ use RedJasmine\Organization\Application\Services\Position\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\PositionData;
 use RedJasmine\Organization\Domain\Models\Position;
 use RedJasmine\Organization\UI\Http\Owner\Api\Resources\PositionResource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
 

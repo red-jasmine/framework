@@ -3,15 +3,15 @@
 namespace RedJasmine\Distribution\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\Request;
-use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterUpgradeCommand;
 use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterDowngradeCommand;
+use RedJasmine\Distribution\Application\Promoter\Services\Commands\PromoterUpgradeCommand;
 use RedJasmine\Distribution\Application\Promoter\Services\PromoterApplicationService;
 use RedJasmine\Distribution\Application\Promoter\Services\Queries\FindPromoterByIdQuery;
 use RedJasmine\Distribution\Domain\Data\PromoterData as Data;
 use RedJasmine\Distribution\Domain\Models\Promoter as Model;
 use RedJasmine\Distribution\UI\Http\Admin\Api\Resources\PromoterResource as Resource;
-use RedJasmine\Support\Http\Controllers\Controller;
 use RedJasmine\Support\Domain\Data\Queries\PaginateQuery;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 
 class PromoterController extends Controller
 {

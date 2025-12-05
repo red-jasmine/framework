@@ -6,13 +6,8 @@ use RedJasmine\Article\Application\Services\ArticleTag\ArticleTagApplicationServ
 use RedJasmine\Article\Domain\Data\ArticleTagData;
 use RedJasmine\Article\Domain\Data\Queries\ArticleTagListQuery;
 use RedJasmine\Article\UI\Http\Owner\Api\Resources\ArticleTagResource;
-use RedJasmine\Article\UI\Http\Owner\Api\Requests\ArticleTagCreateRequest;
-use RedJasmine\Article\UI\Http\Owner\Api\Requests\ArticleTagUpdateRequest;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
-use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * 文章标签 Owner 端控制器

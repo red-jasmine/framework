@@ -7,10 +7,9 @@ use RedJasmine\Organization\Application\Services\Member\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\MemberData;
 use RedJasmine\Organization\Domain\Models\Member;
 use RedJasmine\Organization\UI\Http\Owner\Api\Resources\MemberResource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
-use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {

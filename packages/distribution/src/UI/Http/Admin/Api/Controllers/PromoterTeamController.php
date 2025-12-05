@@ -4,15 +4,15 @@ namespace RedJasmine\Distribution\UI\Http\Admin\Api\Controllers;
 
 use Illuminate\Http\Request;
 use RedJasmine\Distribution\Application\PromoterTeam\Services\Commands\CreatePromoterTeamCommand;
-use RedJasmine\Distribution\Application\PromoterTeam\Services\Commands\UpdatePromoterTeamCommand;
 use RedJasmine\Distribution\Application\PromoterTeam\Services\Commands\DeletePromoterTeamCommand;
+use RedJasmine\Distribution\Application\PromoterTeam\Services\Commands\UpdatePromoterTeamCommand;
 use RedJasmine\Distribution\Application\PromoterTeam\Services\PromoterTeamApplicationService;
-use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\PromoterTeamPaginateQuery;
 use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\FindPromoterTeamQuery;
+use RedJasmine\Distribution\Application\PromoterTeam\Services\Queries\PromoterTeamPaginateQuery;
 use RedJasmine\Distribution\Domain\Data\PromoterTeamData as Data;
 use RedJasmine\Distribution\Domain\Models\PromoterTeam as Model;
 use RedJasmine\Distribution\UI\Http\Admin\Api\Resources\PromoterTeamResource as Resource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 
 class PromoterTeamController extends Controller
 {

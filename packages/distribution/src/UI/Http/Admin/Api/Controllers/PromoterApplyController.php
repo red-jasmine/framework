@@ -9,8 +9,8 @@ use RedJasmine\Distribution\Application\PromoterApply\Services\Queries\PromoterA
 use RedJasmine\Distribution\Domain\Data\PromoterApplyData as Data;
 use RedJasmine\Distribution\Domain\Models\PromoterApply as Model;
 use RedJasmine\Distribution\UI\Http\Admin\Api\Resources\PromoterApplyResource as Resource;
-use RedJasmine\Support\Http\Controllers\Controller;
 use RedJasmine\Support\Domain\Data\Queries\FindQuery;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 
 class PromoterApplyController extends Controller
 {

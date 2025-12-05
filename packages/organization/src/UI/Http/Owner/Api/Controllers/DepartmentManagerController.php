@@ -6,7 +6,7 @@ use RedJasmine\Organization\Application\Services\DepartmentManager\DepartmentMan
 use RedJasmine\Organization\Application\Services\DepartmentManager\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\DepartmentManagerData;
 use RedJasmine\Organization\Domain\Models\DepartmentManager;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
 

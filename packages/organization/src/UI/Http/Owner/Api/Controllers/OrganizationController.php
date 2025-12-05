@@ -6,7 +6,7 @@ use RedJasmine\Organization\Application\Services\Organization\OrganizationApplic
 use RedJasmine\Organization\Application\Services\Organization\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\OrganizationData;
 use RedJasmine\Organization\Domain\Models\Organization;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
 

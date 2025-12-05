@@ -6,13 +6,8 @@ use RedJasmine\Article\Application\Services\Article\ArticleApplicationService;
 use RedJasmine\Article\Domain\Data\ArticleData;
 use RedJasmine\Article\Domain\Data\Queries\ArticleListQuery;
 use RedJasmine\Article\UI\Http\Owner\Api\Resources\ArticleResource;
-use RedJasmine\Article\UI\Http\Owner\Api\Requests\ArticleCreateRequest;
-use RedJasmine\Article\UI\Http\Owner\Api\Requests\ArticleUpdateRequest;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
-use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 
 /**

@@ -6,7 +6,7 @@ use RedJasmine\Organization\Application\Services\MemberDepartment\MemberDepartme
 use RedJasmine\Organization\Application\Services\MemberDepartment\Queries\PaginateQuery;
 use RedJasmine\Organization\Domain\Data\MemberDepartmentData;
 use RedJasmine\Organization\Domain\Models\MemberDepartment;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 use RedJasmine\Support\UI\Http\Controllers\RestControllerActions;
 use RedJasmine\Support\UI\Http\Controllers\UserOwnerTools;
 

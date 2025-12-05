@@ -5,13 +5,12 @@ namespace RedJasmine\Shopping\UI\Http\Buyer\Api\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\BuyCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\CheckCommand;
 use RedJasmine\Shopping\Application\Services\Orders\Commands\PayCommand;
 use RedJasmine\Shopping\Application\Services\Orders\ShoppingOrderCommandService;
 use RedJasmine\Shopping\UI\Http\Buyer\Api\Resources\OrdersDataResource;
-use RedJasmine\Support\Http\Controllers\Controller;
+use RedJasmine\Support\UI\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
