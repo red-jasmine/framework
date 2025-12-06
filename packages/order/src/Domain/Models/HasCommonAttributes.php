@@ -6,8 +6,8 @@ use RedJasmine\Money\Casts\CurrencyCast;
 use RedJasmine\Money\Data\Money;
 use RedJasmine\Order\Domain\Models\Enums\OrderTypeEnum;
 use RedJasmine\Support\Domain\Casts\MoneyCast;
-use RedJasmine\Support\Domain\Casts\UserInterfaceCast;
 use RedJasmine\Support\Domain\Contracts\UserInterface;
+use RedJasmine\Support\Domain\Models\Casts\UserInterfaceCast;
 
 /**
  * @property OrderTypeEnum $order_type

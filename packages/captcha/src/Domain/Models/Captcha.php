@@ -8,7 +8,7 @@ use RedJasmine\Captcha\Domain\Events\CaptchaCreatedEvent;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaSendStatusEnum;
 use RedJasmine\Captcha\Domain\Models\Enums\CaptchaStatusEnum;
 use RedJasmine\Captcha\Domain\Services\Sender\Contracts\CaptchaSenderResult;
-use RedJasmine\Support\Domain\Casts\AesEncrypted;
+use RedJasmine\Support\Domain\Models\Casts\AesEncrypted;
 use RedJasmine\Support\Domain\Models\Traits\HasSnowflakeId;
 
 class Captcha extends Model
